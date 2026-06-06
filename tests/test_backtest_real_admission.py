@@ -20,9 +20,16 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+import pytest
 from core.recommender import RecommendRequest, recommend
 
 
+@pytest.mark.parametrize("subject,year", [
+    ("物理", 2025),
+    ("历史", 2025),
+    ("物理", 2024),
+    ("历史", 2024),
+])
 def test_subject_admission(subject: str, year: int, sample_n: int = 50):
     """对某科类投档表,采样 N 条做回测"""
     print(f"\n=== {year} {subject} 真实投档表回测 (样本 {sample_n} 条) ===")
