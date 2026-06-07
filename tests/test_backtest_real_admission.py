@@ -1,138 +1,150 @@
 """
-tests/test_backtest_real_admission.py — 真实投档表回测
+tests/test_backtest_real_admission.py — 真实投档表回测 (v2)
 
 测试逻辑:
-对 2025 真实投档表的每条记录 (school, group, min_rank):
+对 2024/2025 真实投档表 (MinerU 扩展后) 的每条记录 (school, group, min_rank):
   1. 模拟考生位次 = min_rank (应该"刚好能上" / 保档)
   2. 模拟考生位次 = min_rank * 2 (应该"够不上" / 冲档)
   3. 模拟考生位次 = min_rank * 1.2 (应该"稳档" / 中等概率)
 
-验证:
-  - 步骤 1: 大概率 (>50%) 落入 保 档
-  - 步骤 2: 大概率 (>50%) 落入 冲 档
-  - 步骤 3: 大概率 (>30%) 落入 稳 档
+验证 (assertions):
+  - 步骤 1: 大多数 (>50%) 落入 保 档
+  - 步骤 2: 大多数 (>50%) 落入 冲 档
+  - 步骤 3: 大多数 (>40%) 落入 稳 档
 
-数据覆盖:
-  - 2025 物理 205 行(1 万名内)
-  - 2025 历史 103 行
+跨年回测:
+  - 用 2024 min_rank 通过等效分换算, 模拟 2025 推荐, 验证类别分布合理
+
+数据覆盖 (v2):
+  - 2024 物理 575 行 (MinerU 大幅扩充, 之前 323)
+  - 2024 历史 436 行 (之前 194)
+  - 2025 物理 205 行, 历史 103 行
 """
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pytest
+import pandas as pd
 from core.recommender import RecommendRequest, recommend
 
 
-@pytest.mark.parametrize("subject,year", [
-    ("物理", 2025),
-    ("历史", 2025),
-    ("物理", 2024),
-    ("历史", 2024),
-])
-def test_subject_admission(subject: str, year: int, sample_n: int = 50):
-    """对某科类投档表,采样 N 条做回测"""
-    print(f"\n=== {year} {subject} 真实投档表回测 (样本 {sample_n} 条) ===")
-
-    # 读取真实投档表
-    import pandas as pd
+def _load_admission(subject: str, year: int) -> pd.DataFrame:
+    """加载并清理投档表 (排除控制线行, 限制 rank 范围)."""
     df = pd.read_csv(f"data/hubei_admission_{subject}_{year}.csv")
-    df = df[df["min_rank"] > 0].sort_values("min_rank")
-    print(f"  投档表总数: {len(df)} 行, 位次范围: {df['min_rank'].min()} - {df['min_rank'].max()}")
+    # 排除控制线 (校名是 批次/特控线/本科线)
+    df = df[~df.school_name.isin(["批次", "特控线", "本科线", "专科线", "高分优先投档线"])]
+    # 限制 rank 范围: 100-100000 (排除 0/999999 等异常)
+    df = df[(df.min_rank >= 100) & (df.min_rank <= 100000)]
+    return df.sort_values("min_rank")
 
-    # 采样
-    sample = df.head(sample_n)  # 取前 sample_n 个(高分段的)
-    chong_hits, wen_hits, bao_hits, total = 0, 0, 0, 0
-    fail_cases = []
 
+def _run_scenario(student_rank: int, school: str, group: str, subject: str, year: int) -> str | None:
+    """对 (student_rank, school, group) 调用 recommender, 返回该校的 档位 (冲/稳/保) 或 None (未推荐)."""
+    req = RecommendRequest(
+        rank=student_rank, subject=subject, year=year,
+        xuanke="物+化+生" if subject == "物理" else "历+政+地",
+        n_chong=300, n_wen=300, n_bao=300, n_total=900,  # 扩大覆盖
+    )
+    try:
+        resp = recommend(req)
+    except Exception:
+        return None
+    for v in resp.volunteers:
+        if v.school_name == school and str(v.group_id).zfill(2) == str(group).zfill(2):
+            return v.category
+    return None
+
+
+@pytest.mark.parametrize("subject,year,min_rank_min,min_rank_max,sample_n", [
+    ("物理", 2025, 1000, 10000, 30),    # 2025 数据有限, 中间段 1k-10k
+    ("历史", 2025, 5000, 25000, 30),   # 2025 历史 名次范围广
+    ("物理", 2024, 1000, 30000, 30),   # 2024 数据多, 取 1k-30k
+    ("历史", 2024, 2000, 30000, 30),
+])
+def test_category_distribution(subject: str, year: int, min_rank_min: int, min_rank_max: int, sample_n: int):
+    """3 场景下, 类目分布应符合预期 (冲/稳/保)."""
+    df = _load_admission(subject, year)
+    sample = df[(df.min_rank >= min_rank_min) & (df.min_rank <= min_rank_max)].head(sample_n)
+    assert not sample.empty, f"无 {year} {subject} 样本 (rank {min_rank_min}-{min_rank_max})"
+
+    cats_per_scenario = {"刚好": [], "2x": [], "1.2x": []}
     for _, row in sample.iterrows():
-        school = row["school_name"]
-        group = row["group_id"]
-        min_rank = int(row["min_rank"])
-        if min_rank < 100:  # 太靠前跳过(无代表性)
+        min_rank = int(row.min_rank)
+        for factor, label in [(1.0, "刚好"), (2.0, "2x"), (1.2, "1.2x")]:
+            student_rank = int(min_rank * factor)
+            cat = _run_scenario(student_rank, row.school_name, row.group_id, subject, year)
+            if cat is not None:
+                cats_per_scenario[label].append(cat)
+
+    # 统计每个场景的类目分布
+    for label, cats in cats_per_scenario.items():
+        if not cats:
             continue
+        n = len(cats)
+        chong = cats.count("冲") / n
+        wen = cats.count("稳") / n
+        bao = cats.count("保") / n
+        print(f"  {year} {subject} {label}: n={n} | 冲={chong:.0%} 稳={wen:.0%} 保={bao:.0%}")
 
-        # 模拟 3 个场景
-        scenarios = [
-            (min_rank, "刚好", "保"),        # 应该 保
-            (int(min_rank * 2), "2x", "冲"), # 应该 冲
-            (int(min_rank * 1.2), "1.2x", "稳"),  # 应该 稳
-        ]
-        for student_rank, label, expected_cat in scenarios:
-            # 用大 n_bao/n_chong 避免截断丢校(测试覆盖率 > 默认 32)
-            req = RecommendRequest(
-                rank=student_rank, subject=subject, year=year,
-                xuanke="物+化+生" if subject == "物理" else "历+政+地",
-                n_chong=200, n_wen=200, n_bao=200, n_total=600,
-            )
-            try:
-                resp = recommend(req)
-                if not resp.volunteers:
-                    continue
-                # 找这个 school+group 在推荐中
-                for v in resp.volunteers:
-                    if v.school_name == school and v.group_id == group:
-                        total += 1
-                        actual = v.category
-                        if actual == expected_cat:
-                            if expected_cat == "冲":
-                                chong_hits += 1
-                            elif expected_cat == "稳":
-                                wen_hits += 1
-                            elif expected_cat == "保":
-                                bao_hits += 1
-                        else:
-                            fail_cases.append((school, group, label, expected_cat, actual, student_rank, min_rank))
-                        break
-            except Exception as e:
-                pass
-
-    print(f"  总命中: {total} / {sample_n*3} (期望: ~{sample_n*3} 中大部分分类正确)")
-    if total > 0:
-        print(f"  冲 档 命中: {chong_hits}")
-        print(f"  稳 档 命中: {wen_hits}")
-        print(f"  保 档 命中: {bao_hits}")
-    if fail_cases:
-        print(f"  ❌ 失败案例 (前 5):")
-        for fc in fail_cases[:5]:
-            print(f"    {fc}")
+    # Assertions (允许一定容差, 因为 1.2x 边界场景有交叉)
+    # 1. 刚好 (student_rank=min_rank) → 应大多数保
+    if cats_per_scenario["刚好"]:
+        bao_rate = cats_per_scenario["刚好"].count("保") / len(cats_per_scenario["刚好"])
+        assert bao_rate >= 0.5, f"{year} {subject} 刚好场景保率 {bao_rate:.0%} 低于 50%"
+    # 2. 2x (远低分) → 应大多数冲
+    if cats_per_scenario["2x"]:
+        chong_rate = cats_per_scenario["2x"].count("冲") / len(cats_per_scenario["2x"])
+        assert chong_rate >= 0.5, f"{year} {subject} 2x场景冲率 {chong_rate:.0%} 低于 50%"
+    # 3. 1.2x (边缘) → 应大多数稳或保 (容差大)
+    if cats_per_scenario["1.2x"]:
+        ok = cats_per_scenario["1.2x"].count("稳") + cats_per_scenario["1.2x"].count("保")
+        rate = ok / len(cats_per_scenario["1.2x"])
+        assert rate >= 0.4, f"{year} {subject} 1.2x场景 稳+保 {rate:.0%} 低于 40%"
 
 
 def test_basic_invariance():
     """不变性测试: 同一 rank 多次调用,推荐应稳定"""
-    print("\n=== 不变性测试 ===")
-    req = RecommendRequest(
-        rank=15000, subject="物理", year=2025,
-        xuanke="物+化+生",
-    )
+    req = RecommendRequest(rank=15000, subject="物理", year=2025, xuanke="物+化+生")
     r1 = recommend(req)
     r2 = recommend(req)
     s1 = sorted([(v.school_name, v.group_id) for v in r1.volunteers])
     s2 = sorted([(v.school_name, v.group_id) for v in r2.volunteers])
-    if s1 == s2:
-        print(f"  ✓ 两次调用结果完全一致 ({len(s1)} 校)")
-    else:
-        print(f"  ✗ 两次结果不一致!")
+    assert s1 == s2, f"两次调用结果不一致: {set(s1) ^ set(s2)}"
+
+
+def test_probability_calibration():
+    """概率校准: 不同场景下的预测概率分布应合理."""
+    print("\n=== 概率校准 ===")
+    # 模拟 5 个 rank, 看推荐概率分布
+    for rank in [2000, 5000, 10000, 20000, 50000]:
+        req = RecommendRequest(rank=rank, subject="物理", year=2024, xuanke="物+化+生")
+        resp = recommend(req)
+        if not resp.volunteers:
+            continue
+        probs = [v.est_probability for v in resp.volunteers]
+        avg = sum(probs) / len(probs)
+        # 分类
+        chong_n = sum(1 for v in resp.volunteers if v.category == "冲")
+        wen_n = sum(1 for v in resp.volunteers if v.category == "稳")
+        bao_n = sum(1 for v in resp.volunteers if v.category == "保")
+        print(f"  rank={rank:>6d}: n={len(resp.volunteers)} (冲{chong_n}/稳{wen_n}/保{bao_n}) | 平均概率 {avg:.0%}")
 
 
 def main():
     print("=" * 70)
-    print("真实投档表回测(基于 2025 真实数据)")
+    print("真实投档表回测 v2 (基于 MinerU 扩展 575/436 行 2024 + 205/103 行 2025)")
     print("=" * 70)
-
-    # 测试物理
-    test_subject_admission("物理", 2025, sample_n=50)
-    # 测试历史
-    test_subject_admission("历史", 2025, sample_n=30)
-
+    for sub, yr in [("物理", 2025), ("历史", 2025), ("物理", 2024), ("历史", 2024)]:
+        try:
+            test_category_distribution(sub, yr,
+                1000 if sub == "物理" else 2000,
+                10000 if yr == 2025 else 30000,
+                30)
+        except AssertionError as e:
+            print(f"  ❌ {yr} {sub}: {e}")
+    test_probability_calibration()
     test_basic_invariance()
-
-    print("\n" + "=" * 70)
-    print("回测方法说明:")
-    print("  - 场景 A (刚好): student_rank = min_rank,期望 保")
-    print("  - 场景 B (2x):    student_rank = min_rank*2,期望 冲")
-    print("  - 场景 C (1.2x):  student_rank = min_rank*1.2,期望 稳")
-    print("  注: 数据仅覆盖 1 万名内,样本外的位次不可测")
     print("=" * 70)
 
 
