@@ -148,6 +148,34 @@ def load_555edu(province: str, subject: str) -> pd.DataFrame:
     return df
 
 
+def load_eeagd(province: str, subject: str) -> pd.DataFrame:
+    """eea.gd.gov.cn 官方 投档表 (huaue 镜像, MinerU 解析) — 高优先级.
+
+    注意: eea.gd PDF 没给 选科 要求, 后续 normalize 时从 555edu 补.
+    """
+    f = DATA_DIR / f"{province}_admission_{subject}_2024_real_eeagd.csv"
+    if not f.exists():
+        return pd.DataFrame()
+    df = pd.read_csv(f)
+    df["data_source"] = "eea.gd 官方"
+    return df
+
+
+def load_jseea(province: str, subject: str) -> pd.DataFrame:
+    """jseea.cn 官方 投档线 XLS (院校专业组 + 投档最低分 + 同分排序项) — 最高优先级.
+
+    仅对 province == "jiangsu" 有效. XLS 未给 plan_count / admitted, 默认 30/0.
+    """
+    if province != "jiangsu":
+        return pd.DataFrame()
+    f = DATA_DIR / f"{province}_admission_{subject}_2024_real_jseea.csv"
+    if not f.exists():
+        return pd.DataFrame()
+    df = pd.read_csv(f)
+    df["data_source"] = "jseea 官方"
+    return df
+
+
 def load_eolcn(province: str, subject: str, local_only: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
     """eol.cn 征求志愿 抓的数据. 注意: 这是征求志愿 (二轮补录), 不是主批.
 
@@ -192,10 +220,10 @@ def normalize_555edu(df: pd.DataFrame, subject: str) -> pd.DataFrame:
     out["subject"] = subject
     out["school_name"] = df["school_name"]
     out["school_type"] = df["school_name"].apply(get_school_type)
-    # 555edu group_id 已是 string (e.g. "205", "（08）专业组"), 用 "（08）专业组" 形式更清晰
-    # eolcn 的 group_id 是 "1", "2", "3" 短数字
-    # 保留原始 group_id + group_name
-    out["group_id"] = df["group_id"].astype(str).str.zfill(2)
+    # 555edu 江苏 group_id 是 3位 (e.g. "205" / "185"), eol.cn 是 1-2位
+    # 保留原始 group_id, group_code = group_name (如果有)
+    out["group_id"] = df["group_id"].astype(str)
+    out["group_code"] = df.get("group_name", pd.Series([""] * len(df))).fillna("").astype(str)
     out["xuanke_req"] = df.get("xuanke_req", "不限").fillna("不限")
     out["xuanke_subjects"] = out["xuanke_req"].apply(lambda x: _xuanke_to_subjects(str(x), subject))
     out["plan_count"] = 30
@@ -223,6 +251,11 @@ def normalize_eolcn(df: pd.DataFrame, subject: str) -> pd.DataFrame:
     out["school_name"] = df["school_name"]
     out["school_type"] = df["school_name"].apply(get_school_type)
     out["group_id"] = df["group_id"].astype(str).str.zfill(2)
+    # group_code 优先 eol.cn 的 group_name 字段 (e.g. "（08）专业组"), 否则由 group_id 构造
+    if "group_name" in df.columns:
+        out["group_code"] = df["group_name"].fillna("").astype(str)
+    else:
+        out["group_code"] = df["group_id"].astype(str)
     out["xuanke_req"] = df["xuanke_req"].fillna("不限")
     out["xuanke_subjects"] = out["xuanke_req"].apply(lambda x: _xuanke_to_subjects(str(x), subject))
     out["plan_count"] = 30
@@ -241,6 +274,44 @@ def normalize_eolcn(df: pd.DataFrame, subject: str) -> pd.DataFrame:
     return out
 
 
+def normalize_eeagd(df: pd.DataFrame, subject: str) -> pd.DataFrame:
+    """eea.gd 官方 投档表 → 主 CSV schema.
+
+    已有完整 group_code + min_score + min_rank. 缺 xuanke_req/is_special (默认 不限/否).
+    """
+    if df.empty:
+        return df
+    out = pd.DataFrame()
+    out["year"] = 2024
+    out["subject"] = subject
+    out["school_name"] = df["school_name"]
+    out["school_type"] = df["school_name"].apply(get_school_type)
+    out["group_id"] = df["group_id"].astype(str).str.zfill(2)
+    out["group_code"] = df["group_code"].astype(str)
+    out["xuanke_req"] = df.get("xuanke_req", pd.Series(["不限"] * len(df))).fillna("不限")
+    out["xuanke_subjects"] = out["xuanke_req"].apply(lambda x: _xuanke_to_subjects(str(x), subject))
+    # plan_count 优先 eea.gd 的真实计划数
+    if "plan_count" in df.columns:
+        out["plan_count"] = df["plan_count"].fillna(30).astype(int)
+    else:
+        out["plan_count"] = 30
+    out["min_score"] = df["min_score"].astype(int)
+    out["min_rank"] = df["min_rank"].astype(int)
+    out["tuition_yuan"] = 5500
+    out["city"] = df["school_name"].apply(get_school_city)
+    out["is_special"] = df.get("is_special", pd.Series(["否"] * len(df))).fillna("否")
+    out["data_source"] = df["data_source"]
+    return out
+
+
+def normalize_jseea(df: pd.DataFrame, subject: str) -> pd.DataFrame:
+    """jseea 官方 投档线 → 主 CSV schema.
+
+    schema 与 eea.gd 完全一致 (parser 输出的列名已对齐), 直接复用 normalize_eeagd.
+    """
+    return normalize_eeagd(df, subject)
+
+
 def save_external_eolcn(province: str, subject: str, external_df: pd.DataFrame):
     """保存外省在江苏招生的征求志愿 到按 subject 拆分的独立 file."""
     if external_df.empty:
@@ -256,11 +327,15 @@ def merge_year(province: str, subject: str):
     print(f"{'='*60}")
 
     edu = load_555edu(province, subject)
+    eea = load_eeagd(province, subject)
+    jse = load_jseea(province, subject)
     eol_local, eol_external = load_eolcn(province, subject, local_only=True)
     existing = load_existing(province, subject)
 
     print(f"  555edu: {len(edu)} 行")
-    print(f"  eol.cn 征求志愿 (江苏本地): {len(eol_local)} 行")
+    print(f"  eea.gd 官方: {len(eea)} 行")
+    print(f"  jseea 官方: {len(jse)} 行")
+    print(f"  eol.cn 征求志愿 (本地): {len(eol_local)} 行")
     print(f"  eol.cn 征求志愿 (外省在江苏招生): {len(eol_external)} 行")
     print(f"  现有: {len(existing)} 行")
 
@@ -270,6 +345,10 @@ def merge_year(province: str, subject: str):
     real_dfs = []
     if not edu.empty:
         real_dfs.append(normalize_555edu(edu, subject))
+    if not eea.empty:
+        real_dfs.append(normalize_eeagd(eea, subject))
+    if not jse.empty:
+        real_dfs.append(normalize_jseea(jse, subject))
     if not eol_local.empty:
         real_dfs.append(normalize_eolcn(eol_local, subject))
     if not real_dfs:
@@ -279,10 +358,19 @@ def merge_year(province: str, subject: str):
     real = pd.concat(real_dfs, ignore_index=True)
     print(f"  真实源合并 (未去重): {len(real)} 行")
 
-    # 555edu group_id (3位, e.g. 112/442) vs eol.cn group_id (1-2位, e.g. 01) 是不同 indexing scheme
-    # 同源 555edu 内 同校多 group_id 是不同 院校专业组, 需保留
-    # 不做跨源去重 (各自 source 内已自去重)
-    print(f"  最终: {len(real)} 行 (跨源不去重, 同源各自自去重)")
+    # 跨源去重: jseea (4, 官方) > eea.gd (3) > 555edu (2) > eol.cn (1)
+    # key = (school_name, group_id) — 555edu (3位) 和 eol.cn/jseea (1-2位) 格式不冲突
+    real["_key"] = real["school_name"].astype(str) + "||" + real["group_id"].astype(str)
+    real["_priority"] = real["data_source"].map({
+        "jseea 官方": 4,
+        "eea.gd 官方": 3,
+        "555edu 逐校": 2,
+        "eol.cn 征求志愿 (江苏本地)": 1,
+    }).fillna(0)
+    real = real.sort_values("_priority", ascending=False)
+    real = real.drop_duplicates(subset=["_key"], keep="first")
+    real = real.drop(columns=["_key", "_priority"]).reset_index(drop=True)
+    print(f"  跨源去重后: {len(real)} 行")
 
     # 写盘
     target = DATA_DIR / f"{province}_admission_{subject}_2024.csv"
