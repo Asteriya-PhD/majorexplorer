@@ -1,0 +1,18 @@
+# .dockerignore — 减少 build context
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.codegraph/
+.omc/
+.DS_Store
+data/_cache/
+data/_logs/
+data/_cache/dxsbb_imgs/*.png
+data/_cache/dxsbb_imgs/*.jpg
+data/_cache/dxsbb_imgs/*.txt
+# 保留: data/_cache/dxsbb_imgs/{hist,phys}_*_2x.png (PaddleOCR 需要)
+# 实际上 .png 全 ignore — Dockerfile PaddleOCR target 自己 COPY
+tests/
+*.log
+*.tmp
