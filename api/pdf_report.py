@@ -30,6 +30,46 @@ def register_chinese_font():
 CN_FONT = register_chinese_font()
 
 
+# 省份 → 考试院/招办 名 + 域名 (避免报告里硬编码"湖北")
+PROVINCE_AUTHORITY = {
+    "hubei": {"name": "湖北省教育考试院", "domain": "hbea.edu.cn"},
+    "guangdong": {"name": "广东省教育考试院", "domain": "eea.gd.gov.cn"},
+    "jiangsu": {"name": "江苏省教育考试院", "domain": "jseea.cn"},
+    "beijing": {"name": "北京教育考试院", "domain": "bjeea.cn"},
+    "shanghai": {"name": "上海市教育考试院", "domain": "shmeea.edu.cn"},
+    "tianjin": {"name": "天津市教育招生考试院", "domain": "zhaoban.tjzhaokao.com"},
+    "zhejiang": {"name": "浙江省教育考试院", "domain": "zjzs.net"},
+    "shandong": {"name": "山东省教育招生考试院", "domain": "sdzk.cn"},
+    "hainan": {"name": "海南省考试局", "domain": "hainan.gov.cn"},
+}
+
+
+def _province_cn(province: str) -> str:
+    """拼音 → 中文名"""
+    return {
+        "hubei": "湖北", "guangdong": "广东", "jiangsu": "江苏",
+        "beijing": "北京", "shanghai": "上海", "tianjin": "天津",
+        "zhejiang": "浙江", "shandong": "山东", "hainan": "海南",
+    }.get(province, province)
+
+
+def _authority_label(province: str) -> str:
+    """获取 考试院/招办 名 + 域名. 找不到时回退通用文案."""
+    auth = PROVINCE_AUTHORITY.get(province)
+    if auth:
+        return f"{auth['name']} ({auth['domain']})"
+    return f"{_province_cn(province)}省教育考试院"
+
+
+# 直辖市 — 不带"省"字
+MUNICIPALITIES = {"beijing", "shanghai", "tianjin", "chongqing"}
+
+
+def _zhaoban_suffix(province: str) -> str:
+    """直辖市 → 市, 其它 → 省. 用于'X省招办'/'X市招办'模板."""
+    return "市招办" if province in MUNICIPALITIES else "省招办"
+
+
 def _cn_style(name="Body", size=10, bold=False, color="#222", leading=14):
     return ParagraphStyle(
         name=name,
@@ -237,10 +277,10 @@ def build_pdf_report(req, response) -> bytes:
     elements.append(Spacer(1, 0.5*cm))
     elements.append(Paragraph("📚 数据来源", h2_style))
     elements.append(Paragraph(
-        "· 一分一段表: 湖北省教育考试院 (hbea.edu.cn) / 教育在线 (eol.cn) / 高考 100 (gk100.com)",
+        f"· 一分一段表: {_authority_label(req.province)} / 教育在线 (eol.cn) / 高考 100 (gk100.com)",
         body_style))
     elements.append(Paragraph(
-        "· 投档表: 高考 100 (gk100.com) 整理 + 湖北招办公布数据",
+        f"· 投档表: 高考 100 (gk100.com) 整理 + {_province_cn(req.province)}{_zhaoban_suffix(req.province)}公布数据",
         body_style))
     elements.append(Paragraph(
         "· 算法: 位次驱动 + 等效分换算 + 高斯 CDF 录取概率估算 + 张雪峰式策略加权",
