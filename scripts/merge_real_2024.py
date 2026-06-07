@@ -84,6 +84,8 @@ CITY_BY_SCHOOL = {
 
 def get_school_type(name: str) -> str:
     """从学校名推断 985/211/普通"""
+    if not isinstance(name, str) or not name.strip():
+        return "普通"
     # 去掉括号后缀
     base = re.sub(r"[\(（][^）\)]*[\)）]", "", name).strip()
     if name in SCHOOL_TYPE:
@@ -166,6 +168,16 @@ def load_555edu(year: int, subject: str) -> pd.DataFrame:
     return df
 
 
+def load_mineru(year: int, subject: str) -> pd.DataFrame:
+    """Load MinerU Flash 模式 OCR'd 真实数据 (结构化 HTML 表格 → CSV)."""
+    f = DATA_DIR / f"hubei_admission_{subject}_{year}_real_mineru.csv"
+    if not f.exists():
+        return pd.DataFrame()
+    df = pd.read_csv(f)
+    df["data_source"] = "MinerU Flash"
+    return df
+
+
 def load_existing(year: int, subject: str) -> pd.DataFrame:
     """Load the existing file (with anchors + synthetic)"""
     f = DATA_DIR / f"hubei_admission_{subject}_{year}.csv"
@@ -243,9 +255,13 @@ def merge_year(year: int, subject: str):
     d6261 = load_dxsbb_6261(year, subject)
     print(f"  dxsbb 6261: {len(d6261)} 行")
 
-    # 2. dxsbb OCR PNG
+    # 2. dxsbb OCR PNG (Tesseract)
     docr = load_dxsbb_ocr(year, subject)
     print(f"  dxsbb OCR: {len(docr)} 行")
+
+    # 2.5. MinerU Flash (结构化 HTML, 优于 Tesseract)
+    dmineru = load_mineru(year, subject)
+    print(f"  MinerU Flash: {len(dmineru)} 行")
 
     # 3. 555edu
     edu = load_555edu(year, subject)
@@ -261,6 +277,8 @@ def merge_year(year: int, subject: str):
         all_dfs.append(normalize(d6261, subject))
     if not docr.empty:
         all_dfs.append(normalize(docr, subject))
+    if not dmineru.empty:
+        all_dfs.append(normalize(dmineru, subject))
     if not edu.empty:
         all_dfs.append(normalize(edu, subject))
 
@@ -270,7 +288,7 @@ def merge_year(year: int, subject: str):
     # Drop duplicates on (school_name, group_id) - prefer 555edu (more complete) over dxsbb
     if not real_combined.empty:
         real_combined["_priority"] = real_combined["data_source"].map({
-            "555edu 逐校": 3, "dxsbb 6261 一本": 2, "dxsbb OCR PNG": 1
+            "555edu 逐校": 4, "MinerU Flash": 3, "dxsbb 6261 一本": 2, "dxsbb OCR PNG": 1
         }).fillna(0)
         real_combined = real_combined.sort_values("_priority", ascending=False)
         real_combined = real_combined.drop_duplicates(subset=["school_name", "group_id"], keep="first")
