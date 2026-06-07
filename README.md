@@ -52,3 +52,16 @@ CSV schema 见 `data/README.md`(将在第二轮迭代时补充)。
 - [ ] LLM 解释层(给报告加可读性)
 - [ ] 体检/选科的级联过滤 UI
 - [ ] PDF 报告导出
+
+## 文档
+
+| 入口 | 文件 | 给谁看 |
+|---|---|---|
+| AI agent 入口 | [docs/AGENTS.md](docs/AGENTS.md) | AI agent (代码地图 / 命令 / DO & DON'T) |
+| 架构 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构师 / 资深 agent (系统流 + 模块 + API 表面) |
+| 进度 | [docs/PROGRESS.md](docs/PROGRESS.md) | PM / 任何角色 (状态 + 真实性矩阵 + 已知缺口) |
+| 决策 | [docs/DECISIONS.md](docs/DECISIONS.md) | 维护者 (8 个 ADR + 模板) |
+| 数据 | [docs/DATA.md](docs/DATA.md) | 数据工程师 (源 / schema / 新省 onboarding) |
+| 数据 schema | [data/README.md](data/README.md) | 任何用 CSV 的人 |
+| 抓取脚本 | [scripts/README.md](scripts/README.md) | 任何跑 fetcher 的人 |
+| 策略 | [skills/zhangxuefeng_perspective.md](skills/zhangxuefeng_perspective.md) | 想理解"张雪峰式"打分的人 |
