@@ -10,8 +10,12 @@ v5 改进:
   - rank 不用 OCR (OCR rank 经常错位到同分排序项), 用 hubei_rank_{subject}_{year}.csv 反查
   - group_id 出现 "00" 时 (OCR 漏掉首数字), 试从 6261 真实表匹配
   - 接受 OCR 漏分 (hist_3 / phys_3 ~50% 漏) 的局限, 优先保证质
+v6 改进 (2026-06-07):
+  - 校名 fuzzy 匹配: OCR 误识校名 (e.g. "大连型工大学" / "汉大学" / "峡大学")
+    通过 difflib 映射到 6261/555edu 真实名校名, 让 merge 阶段的 dedup 能合并
 """
 import re
+import difflib
 from pathlib import Path
 import pandas as pd
 
@@ -202,6 +206,74 @@ def fixup_group_id(rows: list[dict], subject: str, year: int = 2024) -> list[dic
     return rows
 
 
+def build_real_school_set(subject: str, year: int = 2024) -> set[str]:
+    """从 6261 + 555edu + existing 文件 收集所有真实校名, 用于 fuzzy 匹配."""
+    real = set()
+    for fname_tmpl in [
+        DXSBB_6261_FILE.format(subject=subject, year=year),
+        f"hubei_admission_{subject}_{year}_real_555edu.csv",
+        f"hubei_admission_{subject}_{year}.csv",  # existing 包含锚点+合成
+    ]:
+        p = DATA_DIR / fname_tmpl
+        if not p.exists():
+            continue
+        try:
+            df = pd.read_csv(p, usecols=["school_name"])
+        except (ValueError, KeyError):
+            continue
+        # 过滤：至少 4 个汉字, 排除空/纯英文
+        mask = df["school_name"].astype(str).str.match(r"^[一-龥（）()·\s]{4,30}$")
+        real.update(df.loc[mask, "school_name"].tolist())
+    return real
+
+
+def fuzzy_match_school_name(ocr_name: str, real_names: set[str]) -> tuple[str, float]:
+    """OCR 校名 → 真实校名. 3 阶段: exact / substring-shortest / difflib.
+
+    Returns:
+        (matched_name, score). matched_name == ocr_name 表示未修正.
+        score ∈ [0, 1].
+    """
+    if ocr_name in real_names:
+        return ocr_name, 1.0
+    # 阶段 2: substring (任一方向), 选最短候选 (parent > branch).
+    #   - 唯一最短: '峡大学' → '三峡大学' (4字) ✓  vs '三峡大学科技学院' (8字)
+    #   - 唯一最短: '程大学' → '武汉工程大学' (6字) ✓  vs '武汉工程大学邮电与信息工程学院' (12字)
+    #   - 唯一最短: '汉大学' (3字) → '江汉大学' (4字) + '武汉大学' (4字) → 同长并列, 跳过
+    #   - 同长并列: '南大学' → 中南/江南/湖南/西南大学 (全 4 字) → 跳过
+    sub_hits = [r for r in real_names
+                if len(r) >= 3 and len(r) != len(ocr_name) and (ocr_name in r or r in ocr_name)]
+    if sub_hits:
+        shortest_len = min(len(r) for r in sub_hits)
+        shortest = [r for r in sub_hits if len(r) == shortest_len]
+        if len(shortest) == 1:
+            return shortest[0], 0.95
+        # 同长并列 → 跳过, 避免错改
+    # 阶段 3: difflib. 阈值 0.7 处理 "大连型工大学" → "大连理工大学" (0.83)
+    if len(ocr_name) < 4:  # 短名 (e.g. "东大学") 跳过, 无可靠匹配
+        return ocr_name, 0.0
+    match = difflib.get_close_matches(ocr_name, list(real_names), n=1, cutoff=0.7)
+    if match:
+        score = difflib.SequenceMatcher(None, ocr_name, match[0]).ratio()
+        return match[0], score
+    return ocr_name, 0.0
+
+
+def fixup_school_names(rows: list[dict], subject: str, year: int = 2024) -> list[dict]:
+    """对所有行的校名做 fuzzy 匹配, 输出每行的修正."""
+    real_names = build_real_school_set(subject, year)
+    fixed = 0
+    for r in rows:
+        original = r["school_name"]
+        new_name, score = fuzzy_match_school_name(original, real_names)
+        if new_name != original:
+            r["school_name"] = new_name
+            fixed += 1
+            print(f"    {subject} {original!r:20s} → {new_name!r:20s} (score={score:.2f})")
+    print(f"  {subject} 校名修正: {fixed} 行")
+    return rows
+
+
 def main():
     summary = {}
     for subject, files in [
@@ -226,6 +298,8 @@ def main():
             all_rows.extend(rows)
         # 修 group_id="00"
         all_rows = fixup_group_id(all_rows, subject)
+        # 修校名 (OCR 误识 → 6261/555edu 真实名)
+        all_rows = fixup_school_names(all_rows, subject)
         # Dedup on (school_name, group_id)
         seen: set = set()
         deduped = []
