@@ -143,6 +143,16 @@ def load_dxsbb_6261(year: int, subject: str) -> pd.DataFrame:
     return df
 
 
+def load_dxsbb_ocr(year: int, subject: str) -> pd.DataFrame:
+    """Load dxsbb PNG OCR'd 真实数据 (本科普通批 全覆盖)"""
+    f = DATA_DIR / f"hubei_admission_{subject}_{year}_real_dxsbb_ocr.csv"
+    if not f.exists():
+        return pd.DataFrame()
+    df = pd.read_csv(f)
+    df["data_source"] = "dxsbb OCR PNG"
+    return df
+
+
 def load_555edu(year: int, subject: str) -> pd.DataFrame:
     """Load 555edu 湖北本地 真实数据 (本科批 only)"""
     f = DATA_DIR / f"hubei_admission_{subject}_{year}_real_555edu.csv"
@@ -233,11 +243,15 @@ def merge_year(year: int, subject: str):
     d6261 = load_dxsbb_6261(year, subject)
     print(f"  dxsbb 6261: {len(d6261)} 行")
 
-    # 2. 555edu
+    # 2. dxsbb OCR PNG
+    docr = load_dxsbb_ocr(year, subject)
+    print(f"  dxsbb OCR: {len(docr)} 行")
+
+    # 3. 555edu
     edu = load_555edu(year, subject)
     print(f"  555edu: {len(edu)} 行 (含高职高专)")
 
-    # 3. existing file (with anchors + synthetic)
+    # 4. existing file (with anchors + synthetic)
     existing = load_existing(year, subject)
     print(f"  现有: {len(existing)} 行 (含锚点+合成)")
 
@@ -245,6 +259,8 @@ def merge_year(year: int, subject: str):
     all_dfs = []
     if not d6261.empty:
         all_dfs.append(normalize(d6261, subject))
+    if not docr.empty:
+        all_dfs.append(normalize(docr, subject))
     if not edu.empty:
         all_dfs.append(normalize(edu, subject))
 
@@ -254,7 +270,7 @@ def merge_year(year: int, subject: str):
     # Drop duplicates on (school_name, group_id) - prefer 555edu (more complete) over dxsbb
     if not real_combined.empty:
         real_combined["_priority"] = real_combined["data_source"].map({
-            "555edu 逐校": 2, "dxsbb 6261 一本": 1
+            "555edu 逐校": 3, "dxsbb 6261 一本": 2, "dxsbb OCR PNG": 1
         }).fillna(0)
         real_combined = real_combined.sort_values("_priority", ascending=False)
         real_combined = real_combined.drop_duplicates(subset=["school_name", "group_id"], keep="first")
