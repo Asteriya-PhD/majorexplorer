@@ -121,15 +121,53 @@ brew install tesseract tesseract-lang
 
 ## 关键入口 (最常被改)
 
-| 文件 | 入口 | 改前必读 |
+下表 line number 由 codegraph 索引 (`.codegraph/codegraph.db`,gitignored) 验证 — 改代码后跑 `codegraph index` 刷新。
+
+| 文件 | 入口 | 行 | 改前必读 |
+|---|---|---:|---|
+| `core/recommender.py` | `recommend()` | L63 | `docs/DECISIONS.md` ADR-005 (sort key) |
+| `core/recommender.py` | `RecommendRequest` | L16 | 17 字段 Pydantic schema |
+| `core/recommender.py` | `_build_advice` / `_build_strategy_note` | L205 / L223 | advisory text 生成 |
+| `core/probability.py` | `estimate_admission_probability()` | L23 | ADR-004 (Gaussian CDF 公式) |
+| `core/filter.py` | `match_xuanke()` / `get_xuanke_mode()` | L60 / L27 | 3+1+2 vs 3+3 模式 |
+| `core/filter.py` | `_match_xuanke_3_plus_1_plus_2` / `_match_xuanke_3_plus_3` | L82 / L104 | 模式实现细节 |
+| `core/filter.py` | `filter_schools()` | L146 | 3 层硬过滤主入口 |
+| `core/strategy.py` | `strategy_bonus()` | L93 | 仅 advisory,不入排序 |
+| `core/equivalent.py` | `historical_min_rank()` | L42 | 3 年位次查询(被 probability 调用) |
+| `core/data_loader.py` | `load_admission_table` / `load_rank_table` | L50 / L31 | `@lru_cache(64)`,改 schema 失效 |
+| `api/main.py` | 7 endpoint (见 ARCHITECTURE.md §4) | L57~L179 | `version="0.2.0"` |
+| `data/{prov}_admission_*.csv` | 真实数据 | — | 改 schema = 改算法 |
+| `scripts/fetch_555edu_hubei.py` | 4-schema 通用解析器 | — | 555edu 改版时优先改这里 |
+
+## 用 codegraph 反查代码 (本项目已启用)
+
+`.codegraph/` 已 gitignore(索引 DB 不入库),但本地有 938KB 索引,26 文件 364 节点 584 边。
+
+```bash
+# 1 次性: 新机器上重建索引
+cd /Users/zhewenliu/Claude/gaokao-hubei-mvp
+codegraph init && codegraph index   # ~250ms,生成 .codegraph/codegraph.db
+
+# 改了 ≥5 文件后,刷一下
+codegraph index
+```
+
+**MCP 工具用法** (已在 Claude Code 配 `mcp__codegraph__*`):
+
+| 任务 | 工具 | 例子 |
 |---|---|---|
-| `core/recommender.py` | `recommend()` | `docs/DECISIONS.md` ADR-005 (sort key) |
-| `core/probability.py` | `estimate_admission_probability()` | ADR-004 (Gaussian CDF 公式) |
-| `core/filter.py` | `match_xuanke()` | 3+1+2 vs 3+3 模式 |
-| `core/strategy.py` | `strategy_bonus()` | 仅 advisory,不入排序 |
-| `api/main.py` | 7 endpoint | `version="0.2.0"` |
-| `data/{prov}_admission_*.csv` | 真实数据 | 改 schema = 改算法 |
-| `scripts/fetch_555edu_hubei.py` | 4-schema 通用解析器 | 555edu 改版时优先改这里 |
+| "X 函数怎么工作" | `codegraph_context` | `task="how does recommend sort volunteers"` |
+| "X 到 Y 的调用链" | `codegraph_trace` | `from=recommend to=load_admission_table` |
+| "X 的源码" | `codegraph_node` | `symbol=estimate_admission_probability` |
+| "X 调谁" / "谁调 X" | `codegraph_callees` / `codegraph_callers` | `symbol=match_xuanke` |
+| "改 X 会影响啥" | `codegraph_impact` | `symbol=recommend` |
+| "路由清单" | (在 codegraph_context 输出末尾) | `task="api routes"` |
+| "列文件" | `codegraph_files` | `path=core/` |
+| "状态" | `codegraph_status` | (无需参数) |
+
+**反漂移约定**:
+- 改代码后,任何 doc (含本文件) 里的行号引用以 codegraph 索引为准
+- ADR 里的 `file:line` 引用若漂移,改 ADR 并 commit (而非静默)
 
 ## 文档地图 (其他 4 份)
 

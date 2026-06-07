@@ -79,24 +79,23 @@ def match_xuanke(student_xuanke, required_subjects, mode="3+1+2"):
 
 **日期**: 2026-06-06 (Day 1)
 **状态**: ✅ 锁定
+**代码**: `core/probability.py:23 estimate_admission_probability`
 
 ### 上下文
 离散分位表 (p10/p50/p90) 需要每年投档表的详细分位,公开数据通常只给最低分/最低位次。Gaussian CDF 可以只用 1 个数 (median rank) 估连续概率。
 
 ### 决定
 ```python
-σ = max(0.25 * median_rank, 1)              # 浮动 25%
-z = (student_rank - median_rank) / σ
-P = 0.5 * (1 + erf((-z + 0.7) / √2))         # 偏 +0.7 让稳档更宽
+σ = std_rank if std_rank >= min_rank * 0.05 else min_rank * 0.25  # 浮动 25%
+z = (student_rank - min_rank) / σ                                    # ⚠️ 用 min 不是 median
+P = 0.5 * (1 + erf((-z + 0.7) / √2))                                  # 偏 +0.7 让稳档更宽
 category = "冲" if P<0.30 else "稳" if P<0.70 else "保"
 ```
 
 `+0.7` 偏置: 让学生排名略好于 median 时也归"稳"档,避免 Gaussian 太严格导致志愿太少。
 
-代码: `core/probability.py:estimate_admission_probability`
-
 ### 后果
-- ✅ 只需 median rank,数据需求低
+- ✅ 只需 min_rank,数据需求低
 - ✅ 概率连续,排序更平滑
 - ⚠️ 假设 Gaussian — 真实录取分布可能偏态 (头部厚尾)
 - ⚠️ σ=25% 是经验值,未在不同年份校准
@@ -107,12 +106,15 @@ category = "冲" if P<0.30 else "稳" if P<0.70 else "保"
 
 **日期**: 2026-06-07
 **状态**: ✅ 锁定 (重要)
+**代码**:
+- 排序 key: `core/recommender.py:147` `_sort_key = city·100k + layer·1万 + prob·10`
+- strategy 调用: `core/recommender.py:162` `_build_strategy_note()` → `core/strategy.py:93 strategy_bonus()`
 
 ### 上下文
-`core/strategy.py` 算出 `strategy_bonus(student_goal, family_bg, school_type)`(0-40 分)。理论上可加进 sort key 让"考公导向"考生优先看 985/211。
+`core/strategy.py:93` 算出 `strategy_bonus(student_goal, family_bg, school_type)`(0-40 分)。理论上可加进 sort key 让"考公导向"考生优先看 985/211。
 
 ### 决定
-**不加**。`strategy_bonus` 只用于 `VolunteerItem.strategy_note` 文字,排序仍按 `_sort_key = city·100k + layer·1万 + prob·10`。
+**不加**。`strategy_bonus` 只用于 `VolunteerItem.strategy_note` 文字(`_build_strategy_note` 在 `core/recommender.py:223` 调用),排序仍按 `_sort_key`。
 
 ### 后果
 - ✅ 985/211 主导排序,不会因 family=困难 而把 985 排到普通本科之后
