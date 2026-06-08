@@ -280,3 +280,95 @@ def estimate_admission_probability(student_rank, school_name, group_id, province
 | Docker | ❌ 无 Dockerfile |
 | 生产部署 (gunicorn/nginx) | ❌ 未配置 |
 | 定时数据更新 cron | ✅ `scripts/install_cron_6_25.sh` (6/25 高考出分日) |
+
+## 11. OCR 架构规定 (MinerU SDK 锁定) ⭐⭐⭐
+
+> **2026-06-08 架构升级**: 全部 OCR 走 MinerU SDK, 不再用 PaddleOCR 容器方案.
+> 凡是项目里需要 OCR 的地方 (PDF 投档表 / PNG 截图 / JPG 公告) 一律用 MinerU.
+
+### 11.1 选型理由
+
+| 维度 | PaddleOCR (旧) | MinerU SDK (新) |
+|---|---|---|
+| 安装 | Docker 容器 + paddlepaddle wheel | `pip install mineru` |
+| Mac arm64 + Python 3.14 | ❌ 无 wheel, 需容器 | ✅ 原生支持 |
+| Token 消耗 | - | Flash 模式免 token, VLM 模式需 |
+| 单页速度 | 30-60s (含容器启动) | 15-20s (Flash) |
+| 表格识别 | 需后处理 | `enable_table=True` 直接出 HTML |
+| 代码行数 | scripts/paddleocr_ocr.py ~50 行 | `client.flash_extract(...)` 1 行 |
+
+### 11.2 唯一 API
+
+```python
+from mineru import MinerU
+client = MinerU(token=None)             # Flash 模式免 token
+client.set_source("gaokao-hubei-mvp")   # 标识调用方
+
+# PDF (按页范围)
+r = client.flash_extract(
+    "input.pdf",
+    page_range="1-20",                  # MinerU API 限 20 页/次, 分批
+    enable_table=True,
+    timeout=600,
+)
+
+# PNG / JPG (单图)
+r = client.flash_extract(
+    "input.png",
+    is_ocr=True,                       # 关键! 否则返空
+    enable_table=True,
+    timeout=300,
+)
+
+md = r.markdown                        # 完整 HTML <table>...</table>
+# state=done, err_code, error 也可查
+```
+
+### 11.3 大 PNG 切 chunk 模板 (必做)
+
+```python
+from PIL import Image
+img = Image.open("long.png")             # e.g. 567x7922 投档表
+w, h = img.size
+chunk_h, overlap = 2000, 50
+i, start = 0, 0
+while start < h:
+    end = min(start + chunk_h, h)
+    img.crop((0, start, w, end)).save(f"part{i}.png")
+    if end >= h: break
+    start = end - overlap
+    i += 1
+# 每 part 分别 flash_extract → 合并 HTML → dedup (chunk 重叠)
+```
+
+### 11.4 适用范围
+
+| 场景 | 数据源 | 走法 |
+|---|---|---|
+| 投档表 PDF (eea.gd 等) | `huaue.com` 镜像 | `flash_extract(page_range, enable_table=True)` |
+| 投档表 PNG 截图 (gk100) | `p1.gk100.com/article/...` | 切 chunk + `flash_extract(is_ocr=True, enable_table=True)` |
+| 考试院 JPG 公告 (jseea) | `jseea.cn/webfile/upload/...jpg` | 优先 XLS, 退化 PNG 切 chunk |
+| 手写 / 复杂版式 | 任意 | MinerU VLM 模式 (需 token, 走 `MinerU.extract` 不是 `flash_extract`) |
+
+### 11.5 反模式 (禁止)
+
+- ❌ 新加 `scripts/*_ocr.py` 用 PaddleOCR / Tesseract / EasyOCR
+- ❌ Dockerfile 加 paddleocr target 或 docker-compose ocr profile
+- ❌ 把 OCR 容器化 (PaddlePaddle 在 Mac 没 wheel, 容器启动慢, 5-10x 慢于 MinerU)
+- ❌ 用 `pdfplumber` / `camelot` 解析表格 (对扫描版 PDF 失效, MinerU 内部已含这些)
+- ❌ 不切 chunk 直接对 567x7922 大 PNG OCR (返空)
+
+### 11.6 模板脚本 (直接复用)
+
+- `scripts/mineru_eeagd.py` — PDF 分批模板 (20 页/批)
+- `scripts/parse_gk100_hb_2025_phys_full.py` — PNG 切 chunk 模板 (5 chunk → 394 行)
+
+### 11.7 实测 (2026-06-08)
+
+- gk100 HB 2025 物理 PNG (567x7922, 1.2MB) 切 5 chunk → 394 行 0 错行
+- eea.gd GD 2024 PDF (29/58 页) → 4500 行 0 错行
+- 全程 ~110s, Flash 模式免 token
+
+### 11.8 升级记录
+
+- **2026-06-08**: 删 `scripts/paddleocr_ocr.py` + `scripts/parse_dxsbb_ocr.py`, 删 `Dockerfile` paddleocr target, 删 `docker-compose.yml` paddleocr service. `requirements.txt` 加 `mineru`. 锁定为项目架构级规定.

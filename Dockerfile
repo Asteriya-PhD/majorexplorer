@@ -1,15 +1,17 @@
-# Dockerfile — 高考志愿推荐 API + PaddleOCR (二选一 build target)
+# Dockerfile — 高考志愿推荐 API (单 target, OCR 走 MinerU SDK)
 #
-# Build targets:
-#   docker build --target api      -t gaokao-api .      (默认)
-#   docker build --target paddleocr -t gaokao-paddleocr .
+# Build: docker build -t gaokao-hubei-mvp:api .
+# Run:   docker run -d --rm -p 8000:8000 gaokao-hubei-mvp:api
+# 文档:  http://localhost:8000/docs
 #
-# 推荐: docker compose up (自动用 api 目标)
+# OCR: 不在容器内跑. 用 MinerU SDK (`pip install mineru`) 在本地/Mac
+# 直接调 flash_extract 解析 PDF/PNG. 见 scripts/parse_gk100_hb_2025_phys_full.py
+# 与 docs/ARCHITECTURE.md "OCR 架构规定" 节.
 
 ARG PYTHON_VERSION=3.11-slim
 
 # ─────────────────────────────────────
-# 1. Base — 共享层
+# Base — 共享层
 # ─────────────────────────────────────
 FROM python:${PYTHON_VERSION} AS base
 
@@ -20,13 +22,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# 系统依赖 (gcc 给 pandas/numpy 编译, libgomp 给 paddleocr)
+# 系统依赖 (gcc 给 pandas/numpy 编译, libgomp 不再需要 — PaddleOCR 已移除)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        gcc g++ libgomp1 libgl1 libglib2.0-0 \
+        gcc g++ \
         && rm -rf /var/lib/apt/lists/*
 
 # ─────────────────────────────────────
-# 2. API target (生产)
+# API target (生产)
 # ─────────────────────────────────────
 FROM base AS api
 
@@ -54,20 +56,3 @@ CMD ["gunicorn", "api.main:app", \
      "--worker-class", "uvicorn.workers.UvicornWorker", \
      "--access-logfile", "-", \
      "--error-logfile", "-"]
-
-# ─────────────────────────────────────
-# 3. PaddleOCR target (数据 ingest, 按需跑)
-# ─────────────────────────────────────
-FROM base AS paddleocr
-
-# PaddlePaddle + PaddleOCR (Linux 才有 arm64/x86 wheels, 解决 Mac 上无 wheel 问题)
-RUN pip install --no-cache-dir \
-        paddlepaddle==3.0.0 \
-        paddleocr==3.0.0 \
-        Pillow
-
-COPY scripts/parse_dxsbb_ocr.py ./scripts/
-COPY data/_cache/dxsbb_imgs/ ./data/_cache/dxsbb_imgs/
-
-# 默认不跑, 需 docker compose run --rm paddleocr 触发
-ENTRYPOINT ["python", "scripts/paddleocr_ocr.py"]

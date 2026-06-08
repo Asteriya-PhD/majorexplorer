@@ -1,12 +1,13 @@
-# docker-compose.yml — 高考志愿推荐 (OrbStack / Docker Desktop 通用)
+# docker-compose.yml — 高考志愿推荐 API (OrbStack / Docker Desktop 通用)
 #
 # 启动: docker compose up
 # 停止: docker compose down
 # 日志: docker compose logs -f api
-# 跑 OCR (按需): docker compose run --rm paddleocr
 #
 # OrbStack 用户: docker context use orbstack (已激活)
 # Docker Desktop: docker context use desktop-linux
+#
+# OCR: 不在容器内. 用 MinerU SDK 本地/Mac 跑 (见 docs/ARCHITECTURE.md).
 
 services:
   api:
@@ -33,17 +34,3 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-
-  paddleocr:
-    # 一次性 OCR 服务, 默认不启动. 用 docker compose run --rm paddleocr 触发
-    build:
-      context: .
-      target: paddleocr
-    image: gaokao-hubei-mvp:paddleocr
-    container_name: gaokao-paddleocr
-    profiles: ["ocr"]  # 需 docker compose --profile ocr run --rm paddleocr
-    volumes:
-      - ./data/_cache/dxsbb_imgs:/app/data/_cache/dxsbb_imgs:ro
-      - ./data/_cache/dxsbb_imgs_ocr:/app/data/_cache/dxsbb_imgs_ocr:rw
-    environment:
-      - PYTHONUNBUFFERED=1

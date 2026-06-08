@@ -9,6 +9,7 @@
 - 模式: 3+1+2(湖北/广东/江苏等 9 省)+ 3+3(京/沪/津/浙/鲁/琼)两种新高考
 - 省份: 湖北(全)/ 广东 + 江苏(锚点级)
 - 核心算法: 位次驱动 + 等效分跨年 + Gaussian CDF 估概率
+- **OCR: 走 MinerU SDK (`pip install mineru`), Flash 模式免 token**. 详见 `docs/ARCHITECTURE.md` § 11. ⭐⭐⭐架构级规定, 不要加 PaddleOCR/Tesseract/EasyOCR.
 
 ## 代码地图
 
@@ -79,8 +80,9 @@ python3 scripts/fetch_real_data.py --year 2025 --subject 物理
 python3 scripts/fetch_555edu_hubei.py  # 全 135 校, ~10-15 分钟
 python3 scripts/merge_real_2024.py     # 合并 → hubei_admission_*.csv
 
-# 装 tesseract (OCR dxsbb PNG)
-brew install tesseract tesseract-lang
+# OCR (PDF / PNG / JPG 通用, MinerU SDK, 免 token)
+pip install mineru
+python3 -c "from mineru import MinerU; c = MinerU(token=None); print(c.flash_extract('input.png', is_ocr=True, enable_table=True).markdown[:200])"
 ```
 
 ## 约定 (写代码前必读)

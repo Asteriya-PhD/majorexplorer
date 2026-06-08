@@ -28,19 +28,29 @@ curl http://localhost:8000/docs   # Swagger UI
 - 只读挂载 `data/` 目录, 写挂载 `logs/`
 - 健康检查每 30s ping `/docs`
 
-## 2. 按需跑 PaddleOCR 重 OCR (Mac 友好)
+## 2. OCR — 走 MinerU SDK (本地, 不容器化)
 
-> PaddlePaddle 在 Mac arm64 + Python 3.14 没 wheel. 容器内跑 Linux x86_64 / arm64 通杀.
+> 2026-06-08 架构升级: PaddleOCR 容器方案已废, 全部走 MinerU SDK (`pip install mineru`).
+> 免 token, Mac/Linux/Win 通用, ~20s/页. 详见 `docs/ARCHITECTURE.md` "OCR 架构规定" 节.
 
 ```bash
-# 一次性跑 (默认 profile=ocr 不启动, 需 --profile 显式)
-docker compose --profile ocr run --rm paddleocr
+# 一次性 OCR (本地 Python 调, 无需 Docker)
+python3 -c "
+from mineru import MinerU
+client = MinerU(token=None)
+client.set_source('gaokao-hubei-mvp')
+r = client.flash_extract('input.png', is_ocr=True, enable_table=True, timeout=300)
+print(r.markdown)
+"
 ```
 
-镜像内容:
-- `paddlepaddle==3.0.0` + `paddleocr==3.0.0`
-- 6 张 dxsbb 2024 PNG (hist_1/2/3 + phys_1/2/3, 2x 高清)
-- 输出 `data/_cache/dxsbb_imgs/ocr_2024_*_v4.txt` (挂回 host)
+PNG 表格场景 (e.g. gk100 1998271 物理全表):
+1. 大图 (>2000px 高) 切 chunk (PIL `Image.crop`, 重叠 50px)
+2. 每 chunk `flash_extract(is_ocr=True, enable_table=True)`
+3. 合并所有 chunk 的 HTML `<table>` → `pd.read_html` / regex
+4. 反查 min_rank via `score_to_rank` (hubei_rank_*.csv)
+
+实操脚本: `scripts/parse_gk100_hb_2025_phys_full.py` (5 chunk → 394 行 物理 投档表).
 
 ## 3. 验证
 
@@ -84,9 +94,9 @@ docker compose logs api | tail -20
 ## 5. 文件结构
 
 ```
-Dockerfile             # 多 target: base / api / paddleocr
-docker-compose.yml     # api (default) + paddleocr (profile=ocr)
+Dockerfile             # 单 target: api (OCR 走 MinerU SDK, 不容器化)
+docker-compose.yml     # api only
 .dockerignore          # 排除 caches, logs, tests
-requirements.txt       # 加了 gunicorn==23.0.0
-scripts/paddleocr_ocr.py  # PaddleOCR 主脚本 (容器内 ENTRYPOINT)
+requirements.txt       # gunicorn + mineru (OCR SDK)
+scripts/parse_gk100_hb_2025_phys_full.py  # MinerU OCR 实操模板
 ```

@@ -72,7 +72,7 @@
 | dxsbb.com/news/6261 | 一本 表 | ~140 行/省 | ⭐⭐⭐ | `fetch_dxsbb_6261.py` |
 | 今日头条/大鹏老师 文章 | 985/211 锚点 | 几十条 | ⭐⭐ | 硬编码到 `fetch_2024_2023_anchors.py` |
 | 自主招生在线 (zizzs.com) | 985 完整 (2023) | ~50 行 | ⭐⭐ | 缓存 `data/_cache/zizzs_*.html` 但未自动化抓 |
-| 大学生必备网 (dxsbb.com) | 完整 投档表 (2024) | ~280 行/省 | ⭐⭐ | `data/_cache/dxsbb_imgs/*.png` OCR (tesseract) |
+| 大学生必备网 (dxsbb.com) | 完整 投档表 (2024) | ~280 行/省 | ⭐⭐ | `data/_cache/dxsbb_imgs/*.png` MinerU Flash OCR |
 
 ## 4. 新省 onboarding checklist (4 步)
 
