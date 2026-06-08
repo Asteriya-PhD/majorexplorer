@@ -82,6 +82,13 @@ def merge_subject(subject: str) -> dict:
     print(f"  现有 (synth 锚点): {len(real_existing)} 行")
 
     gk_raw = pd.read_csv(gk_path)
+    # 物理若 _full 版存在 (OCR 全表) 优先用
+    full_path = DATA_DIR / f"hubei_admission_{subject}_2025_real_gk100_full.csv"
+    if subject == "物理" and full_path.exists():
+        full_df = pd.read_csv(full_path)
+        if len(full_df) > len(gk_raw):
+            print(f"  物理: 用 _full 版 ({len(full_df)} 行) 替换 _real_gk100 ({len(gk_raw)} 行)")
+            gk_raw = full_df
     gk_norm = _normalize_gk100(gk_raw, real_existing)
     print(f"  gk100 真实: {len(gk_norm)} 行")
 
