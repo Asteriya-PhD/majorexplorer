@@ -137,19 +137,6 @@ SCHOOL_INFO = {
 }
 
 
-def get_school_type(school: str) -> str:
-    """从静态表查学校层次"""
-    # 去掉括号后缀
-    base = re.sub(r"\([^)]*\)", "", school).strip()
-    return SCHOOL_INFO.get(school, SCHOOL_INFO.get(base, ("普通", "其他")))[0]
-
-
-def get_school_city(school: str) -> str:
-    """从静态表查城市"""
-    base = re.sub(r"\([^)]*\)", "", school).strip()
-    return SCHOOL_INFO.get(school, SCHOOL_INFO.get(base, ("普通", "其他")))[1]
-
-
 # ─────────────────────────────────────────
 # Parser: gk100.com 投档位次表
 # 格式: 学校名 | 专业组 | 2025分数 | 2025位次
