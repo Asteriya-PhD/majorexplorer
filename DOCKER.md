@@ -50,15 +50,36 @@ docker compose exec api python -c "from api.main import app; print('OK')"
 docker compose logs api | tail -20
 ```
 
+### 实测 (2026-06-08, OrbStack + daocloud mirror)
+
+| 步骤 | 结果 |
+|---|---|
+| `docker build --target api -t gaokao-hubei-mvp:api .` | ✅ 14 layers, 212MB image |
+| `docker run -d --rm -p 18000:8000 gaokao-hubei-mvp:api` | ✅ 8s 启动 |
+| `curl http://localhost:18000/docs` | ✅ 200 OK, Swagger UI |
+| `curl /api/meta` | ✅ 3 省份 × 2 科目 × 3 年 |
+| `POST /api/score-to-rank {score:600, GD 物理}` | ✅ rank=18000 (校准后) |
+| `POST /api/rank-to-score {rank:10000, GD 物理}` | ✅ score=620 |
+| `POST /api/equivalent {rank:10000, HB 物理, 2024→2025}` | ✅ {2023:624, 2024:619, 2025:612} |
+| `POST /api/recommend {rank:10000, HB 物理, 2025}` | ✅ 15 推 (含 985 西安交大 冲档) |
+| Healthcheck (`/docs` 每 30s) | ✅ healthy |
+
 ## 4. 网络注意
 
 - Docker Hub (registry-1.docker.io) 偶发 Bad Gateway, 镜像拉取失败时:
   - 换 `docker context use desktop-linux` 试 Docker Desktop
   - 或配置 Docker Hub 镜像 (`~/.docker/daemon.json`):
     ```json
-    {"registry-mirrors": ["https://mirror.ccs.tencentyun.com"]}
+    {"registry-mirrors": ["https://docker.m.daocloud.io"]}
     ```
+  - 上面是 **2026-06-08 实测可用** 的 (daocloud 返回 401 = 可达需 auth, 比 ccs.tencentyun
+    / ustc 都稳). 重启 OrbStack 后生效.
 - OrbStack 自带缓存, 第二次 build 会快很多
+- 手动预拉 base 镜像 (build 卡 metadata resolve 时): 
+  ```bash
+  docker pull docker.m.daocloud.io/library/python:3.11-slim
+  docker tag docker.m.daocloud.io/library/python:3.11-slim python:3.11-slim
+  ```
 
 ## 5. 文件结构
 
