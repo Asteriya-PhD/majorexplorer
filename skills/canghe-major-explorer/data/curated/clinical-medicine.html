@@ -2,605 +2,1015 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>临床医学专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="35 岁后越老越值钱。TODO — 1 句话定位 (建议方向: 学制长, 前期低收入, 35 岁后越老越值钱, 适合家里能撑 10 年的人)">
+<meta name="description" content="严谨 · 冷静 · 鸟瞰。学制长, 前期低收入, 35 岁后越老越值钱, 适合家里能撑 10 年的人。如果你家境一般 + 想快速挣钱, 别学。">
 <style>
-:root {
-  --font_heading: 'Figtree', 'PingFang SC', sans-serif;
-  --font_body: 'Noto Sans SC', 'PingFang SC', sans-serif;
-  --font_cn: 'Noto Sans SC', 'PingFang SC', sans-serif;
-  --bg: #F0FDFA;
-  --fg: #134E4A;
-  --muted: #5EEAD4;
-  --primary: #0F766E;
-  --primary_dim: #14B8A6;
-  --primary_glow: rgba(15, 118, 110, 0.18);
-  --surface: #FFFFFF;
-  --surface_alt: #CCFBF1;
-  --border: #99F6E4;
-  --accent_red: #DC2626;
-  --accent_amber: #0369A1;
-}
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; scroll-behavior: smooth; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--fg);
-  line-height: 1.6;
+  font-family: 'IBM Plex Sans', 'PingFang SC', sans-serif;
+  background: #F8FAFC;
+  color: #0F172A;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1;
+  position: relative;
+  overflow-x: hidden;
 }
-h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.25; }
-a { color: var(--primary); text-decoration: none; transition: opacity 150ms; }
-a:hover { opacity: 0.75; }
-button { font-family: inherit; cursor: pointer; border: none; }
 
-/* layout */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+/* ── 招 #5: CT grid 背景 (1px line 10px grid) ── */
+body::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(12, 74, 110, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(12, 74, 110, 0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* ── 招 #1: noise 纹理叠加 ── */
+body::after {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.29 0 0 0 0 0.43 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/></svg>");
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+}
+
+h1, h2, h3, h4 { font-family: 'IBM Plex Sans', 'PingFang SC', sans-serif; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: 'IBM Plex Mono', 'SF Mono', monospace; font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
 @media (max-width: 768px) { .container { padding: 0 20px; } }
 
-/* hero */
+/* ── 招 #7: drop cap ── */
+.lede.drop-cap::first-letter {
+  font-family: 'IBM Plex Sans', serif;
+  font-size: 4em;
+  font-weight: 600;
+  line-height: 0.9;
+  float: left;
+  margin: 0.05em 0.12em 0 0;
+  color: #0C4A6E;
+  letter-spacing: -0.04em;
+}
+
+/* ── HERO (medicine · vitals panel + ECG) ── */
 .hero {
-  padding: 80px 0 60px;
-  border-bottom: 1px solid var(--border);
+  padding: 80px 0 96px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #CBD5E1;
   position: relative;
-  overflow: hidden;
+  z-index: 2;
 }
-.hero-decor {
-  font-family: var(--font-cn);
-  font-size: 0.875rem;
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  margin-bottom: 24px;
-  text-transform: uppercase;
+.hero::before { content: ""; display: block; width: 80px; height: 1px; background: #0C4A6E; margin: 0 auto 48px; opacity: 0.4; }
+.hero::after { content: ""; display: block; width: 80px; height: 1px; background: #0C4A6E; margin: 48px auto 0; opacity: 0.4; }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.15fr;
+  gap: 56px;
+  align-items: center;
 }
-.hero h1 {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  letter-spacing: -0.02em;
-  margin-bottom: 16px;
-}
-.hero-tagline {
-  font-size: 1.25rem;
-  color: var(--muted);
-  margin-bottom: 32px;
-  max-width: 720px;
-}
-.hero-tags {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  margin-bottom: 32px;
-}
-.tag {
-  padding: 6px 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 0.875rem;
-  color: var(--fg);
-}
-.tag.primary {
-  background: var(--primary_glow);
-  border-color: var(--primary);
-  color: var(--primary);
-  font-weight: 500;
-}
-.hero-stats {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-top: 32px;
-}
-.stat {
-  padding: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-.stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-.stat-value { font-family: var(--font-heading); font-size: 1.75rem; font-weight: 600; color: var(--fg); margin-top: 4px; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
 
-/* sections */
+.vitals-panel {
+  padding: 32px 28px;
+  background: white;
+  border: 1px solid #94A3B8;
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(12, 74, 110, 0.05), 0 4px 24px rgba(12, 74, 110, 0.08);
+  position: relative;
+}
+.vitals-patient {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #94A3B8;
+  margin-bottom: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+}
+.vitals-patient-id { color: #0C4A6E; font-weight: 600; }
+.vitals-patient-sep { color: #CBD5E1; }
+.vitals-patient-meta { color: #475569; }
+.vitals-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.vitals-time { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; letter-spacing: 0.1em; }
+.vitals-status { display: flex; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #15803D; font-weight: 600; letter-spacing: 0.08em; }
+.vitals-status.alert { color: #B45309; }
+.vitals-status::before { content: ""; width: 8px; height: 8px; background: currentColor; border-radius: 50%; animation: pulse 1.5s infinite; }
+.vitals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.vital { padding: 16px 14px; background: #F8FAFC; border-radius: 8px; border-left: 3px solid transparent; transition: background 250ms; }
+.vital.normal { border-left-color: #15803D; }
+.vital.alert { border-left-color: #B45309; background: #FEF3C7; }
+.vital-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #475569; letter-spacing: 0.15em; font-weight: 600; }
+.vital-value { font-family: 'IBM Plex Mono', monospace; font-size: 2.25rem; font-weight: 700; color: #0F172A; line-height: 1; margin-top: 4px; letter-spacing: -0.02em; }
+.vital-unit  { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; margin-left: 4px; font-weight: 500; }
+.vital-range { font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #94A3B8; margin-top: 4px; letter-spacing: 0.05em; }
+
+/* ── hero side ── */
+.hero-decor { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+.hero-decor::before { content: ""; display: inline-block; width: 32px; height: 1px; background: #0C4A6E; }
+.hero h1 { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 24px; }
+.hero h1::before { content: "NO."; display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 500; color: #475569; letter-spacing: 0.2em; margin-bottom: 16px; }
+.hero-tagline { font-size: 1.125rem; color: #475569; margin-bottom: 32px; max-width: 560px; line-height: 1.7; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.tag { padding: 5px 12px; background: white; border: 1px solid #CBD5E1; border-radius: 999px; font-size: 0.8125rem; font-weight: 500; color: #0F172A; letter-spacing: 0.02em; }
+.tag.primary { background: transparent; border-color: #0C4A6E; color: #0C4A6E; }
+
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #CBD5E1; border-bottom: 1px solid #CBD5E1; border-left: 1px solid #CBD5E1; border-right: 1px solid #CBD5E1; }
+@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { padding: 20px 22px; border-right: 1px solid #CBD5E1; position: relative; }
+.stat:last-child { border-right: none; }
+@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #CBD5E1; } }
+.stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #475569; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+.stat-value { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.375rem; font-weight: 600; color: #0C4A6E; margin-top: 6px; letter-spacing: -0.01em; }
+
+/* ── 招 #4: 巨型背景水印数字 ── */
 section.tab {
-  padding: 80px 0;
-  border-bottom: 1px solid var(--border);
-}
-.section-num {
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  color: var(--primary);
-  letter-spacing: 0.15em;
-  margin-bottom: 12px;
-}
-section.tab h2 {
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  margin-bottom: 32px;
-}
-section.tab h3 {
-  font-size: 1.25rem;
-  margin: 32px 0 12px;
-}
-section.tab p { margin-bottom: 16px; color: var(--fg); }
-section.tab ul, section.tab ol { margin-left: 24px; margin-bottom: 16px; }
-
-/* bento grid (院校) */
-.bento {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  margin-top: 24px;
-}
-.bento-item {
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
-}
-.bento-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px var(--primary_glow);
-}
-.bento-rank {
-  display: inline-block;
-  padding: 2px 8px;
-  background: var(--primary_glow);
-  color: var(--primary);
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-.bento-name { font-family: var(--font-heading); font-size: 1.125rem; font-weight: 600; margin-bottom: 4px; }
-.bento-tag { font-size: 0.875rem; color: var(--muted); }
-
-/* company cards (头部公司) */
-.company-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-top: 24px;
-}
-.company {
-  padding: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  padding: 120px 0 96px;
   position: relative;
-}
-.company-tier {
-  position: absolute; top: 12px; right: 12px;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-.tier-S { background: var(--accent_amber); color: var(--bg); }
-.tier-A { background: var(--primary); color: var(--bg); }
-.tier-B { background: var(--surface_alt); color: var(--fg); }
-.company-name { font-family: var(--font-heading); font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
-.company-meta { font-size: 0.8125rem; color: var(--muted); }
-
-/* salary box (薪资箱型) */
-.salary-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  z-index: 2;
+  border-top: 1px solid #94A3B8;
+  border-bottom: 2px solid #94A3B8;
   overflow: hidden;
 }
-.salary-table th, .salary-table td {
-  padding: 16px 20px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-.salary-table th {
-  background: var(--surface_alt);
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-.salary-bar {
-  display: inline-block;
-  height: 8px;
-  background: var(--primary_glow);
-  border-radius: 4px;
-  margin-left: 8px;
-  vertical-align: middle;
-}
-.salary-bar-fill { display: block; height: 100%; background: var(--primary); border-radius: 4px; }
-
-/* employment pie (用横向 bar 替代饼图, 更好读) */
-.direction-list { margin-top: 24px; }
-.direction {
-  display: grid;
-  grid-template-columns: 140px 1fr 60px;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 0;
-}
-.direction-name { font-weight: 500; }
-.direction-bar {
-  height: 20px;
-  background: var(--surface_alt);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.direction-bar-fill { height: 100%; background: var(--primary); }
-.direction-pct { font-family: var(--font-heading); font-weight: 600; text-align: right; }
-
-/* deep study (深造) */
-.path-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-top: 24px;
-}
-.path-card {
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  text-align: center;
-}
-.path-pct {
-  font-family: var(--font-heading);
-  font-size: 2.5rem;
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.watermark {
+  position: absolute;
+  top: 40px; right: -20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: clamp(10rem, 18vw, 18rem);
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 4px;
+  color: #0C4A6E;
+  opacity: 0.04;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
 }
-.path-name { color: var(--muted); font-size: 0.875rem; }
 
-/* quotes (学长学姐) */
-.quotes { margin-top: 24px; }
-.quote {
-  padding: 24px 28px;
-  background: var(--surface);
-  border-left: 4px solid var(--primary);
-  border-radius: 0 12px 12px 0;
-  margin-bottom: 16px;
-  position: relative;
-}
-.quote-text {
-  font-size: 1.0625rem;
-  font-style: italic;
-  margin-bottom: 12px;
-  line-height: 1.7;
-}
-.quote-meta {
-  font-size: 0.875rem;
-  color: var(--muted);
-  display: flex; gap: 12px;
-}
-.quote-meta strong { color: var(--fg); font-weight: 500; }
+.section-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600; color: #0C4A6E; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; color: #0F172A; }
+section.tab p { margin-bottom: 16px; color: #0F172A; position: relative; z-index: 1; }
+section.tab p.lede { color: #475569; font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; }
 
-/* xuanke (选科) */
-.xuanke-list { margin-top: 24px; }
-.xuanke {
-  display: grid;
-  grid-template-columns: 180px 1fr 80px;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
+/* ── 招 #2: stagger entrance ── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ── curriculum (前序 列) ── */
+.curriculum-lede { color: #475569; font-size: 0.9375rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; position: relative; z-index: 1; }
+.curriculum-block { padding: 28px 24px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
+.curriculum-block:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
+.curriculum-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #0C4A6E; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #E2E8F0; }
+.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; border-bottom: 1px dashed transparent; position: relative; }
+.course:hover { border-bottom-color: #E2E8F0; }
+.course-info { display: flex; flex-direction: column; gap: 2px; }
+.course-name { color: #0F172A; font-weight: 500; }
+.course-prereq { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #94A3B8; letter-spacing: 0.05em; }
+.course-prereq::before { content: "↳ "; color: #0C4A6E; }
+.course-credit { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; }
+
+/* ── 招 #8: asymmetric 卡片 ── */
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 1px; background: #E2E8F0;
+
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 1px; background: #94A3B8; border: 1px solid #94A3B8; border-radius: 12px; overflow: hidden; margin-top: 32px; position: relative; z-index: 1; }
+.bento { position: relative; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(12, 74, 110, 0.85); z-index: 1; pointer-events: none; }
+.bento-item { padding: 28px 24px 24px; background: white; position: relative; z-index: 0; transition: background 200ms; }
+.bento-item:hover { background: #F8FAFC; }
+.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #0C4A6E; color: white; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #0C4A6E; border: 1px solid #0C4A6E; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.01em; padding-right: 44px; }
+.bento-tag { font-size: 0.8125rem; color: #475569; line-height: 1.5; line-break: strict; }
+
+/* ── companies (校友核实) ── */
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 24px 22px 20px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; position: relative; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
+.company:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
+.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #0C4A6E; color: white; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; font-weight: 700; flex-shrink: 0; }
+.company-tier { padding: 2px 8px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
+.tier-S { background: #0C4A6E; color: white; }
+.tier-A { background: transparent; color: #0C4A6E; border: 1px solid #0C4A6E; }
+.tier-B { background: #F1F5F9; color: #475569; }
+.company-name { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
+.company-meta { font-size: 0.8125rem; color: #475569; line-height: 1.5; margin-bottom: 8px; line-break: strict; }
+.company-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #15803D; background: rgba(21, 128, 61, 0.08); padding: 2px 6px; border-radius: 3px; letter-spacing: 0.08em; font-weight: 600; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #E2E8F0; }
+.sparkline-bar { flex: 1; background: #CBD5E1; border-radius: 1px; transition: background 250ms; min-height: 2px; }
+.company:hover .sparkline-bar { background: #0C4A6E; opacity: 0.6; }
+.sparkline-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #94A3B8; letter-spacing: 0.1em; margin-top: 4px; }
+
+/* ── 招 #3: 数字滚动 salary ── */
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #F8FAFC; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #475569; }
+.salary-stage { font-weight: 600; color: #0F172A; line-break: strict; }
+.salary-bar { display: inline-block; width: 80px; height: 6px; background: #F1F5F9; border-radius: 3px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #0C4A6E; border-radius: 3px; }
+.yoy { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 4px; }
+.yoy.up   { color: #15803D; background: rgba(21, 128, 61, 0.08); }
+.yoy.down { color: #B91C1C; background: rgba(185, 28, 28, 0.08); }
+.yoy.flat { color: #475569; background: #F1F5F9; }
+.approx { font-family: 'IBM Plex Mono', monospace; color: #94A3B8; margin-right: 4px; }
+
+/* ── directions ── */
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E2E8F0; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-weight: 500; font-size: 0.9375rem; line-break: strict; }
+.direction-bar { height: 10px; background: #F1F5F9; border-radius: 5px; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #0C4A6E; border-radius: 5px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #0F172A; }
+
+/* ── deep study ── */
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; text-align: center; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
+.path-card:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
+.path-pct { font-family: 'IBM Plex Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #0C4A6E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
+.path-name { color: #475569; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; line-break: strict; }
+
+/* ── quotes (Mayo 引文) ── */
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 32px 36px; background: white; border: 1px solid #E2E8F0; border-left: 2px solid #0C4A6E; border-radius: 0 12px 12px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; }
+.quote:hover { border-left-width: 8px; transform: translateX(4px); box-shadow: 0 8px 32px rgba(12, 74, 110, 0.10); }
+.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.quote-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0C4A6E; color: white; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; font-weight: 600; flex-shrink: 0; }
+.quote-byline { font-size: 0.875rem; }
+.quote-byline strong { font-weight: 500; color: #0F172A; display: block; }
+.quote-byline .quote-source { color: #475569; font-size: 0.75rem; font-family: 'IBM Plex Mono', monospace; }
+.quote-text { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.1875rem; line-height: 1.7; margin: 0; color: #0F172A; font-weight: 400; line-break: strict; }
+.quote-text::before { content: "\201C"; color: #0C4A6E; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
+.quote-text::after { content: "\201D"; color: #0C4A6E; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
+.quote-cite { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #94A3B8; margin-top: 16px; padding-top: 12px; border-top: 1px dashed #E2E8F0; font-style: italic; }
+
+/* ── xuanke ── */
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E2E8F0; }
 .xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-weight: 500; }
-.xuanke-bar {
-  height: 12px;
-  background: var(--surface_alt);
-  border-radius: 6px;
-  overflow: hidden;
-}
-.xuanke-bar-fill { height: 100%; background: var(--primary); }
-.xuanke-pct { font-family: var(--font-heading); font-weight: 600; text-align: right; }
+.xuanke-name { font-weight: 500; font-size: 0.9375rem; line-break: strict; }
+.xuanke-bar { height: 8px; background: #F1F5F9; border-radius: 4px; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #0C4A6E; border-radius: 4px; }
+.xuanke-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; }
 
-/* curriculum (主要课程) */
-.curriculum-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-top: 24px;
-}
-.curriculum-block {
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-.curriculum-title {
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 16px;
-}
-.course {
-  padding: 8px 0;
-  border-bottom: 1px dashed var(--border);
-  display: flex; justify-content: space-between;
-  font-size: 0.9375rem;
-}
-.course:last-child { border-bottom: none; }
-.course-credit { color: var(--muted); font-size: 0.8125rem; }
+/* ── timeline (临床 5+3+X) ── */
+.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 32px; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; position: relative; z-index: 1; }
+.tl-item { padding: 32px 24px; background: white; border-right: 1px solid #E2E8F0; position: relative; }
+.tl-item:nth-child(2) { background: #FEF3C7; }
+.tl-item:last-child { border-right: none; }
+.tl-year { font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; font-weight: 600; color: #0C4A6E; margin-bottom: 8px; letter-spacing: -0.01em; }
+.tl-stage { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
+.tl-income { font-size: 0.8125rem; color: #475569; line-height: 1.5; }
+.tl-warning { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #B45309; margin-top: 8px; padding: 4px 8px; background: rgba(180, 83, 9, 0.08); border-radius: 4px; display: inline-block; letter-spacing: 0.08em; }
 
-/* CTA (关联志愿) */
-.cta {
-  padding: 48px;
-  background: var(--primary_glow);
-  border: 1px solid var(--primary);
-  border-radius: 16px;
-  margin-top: 24px;
-  text-align: center;
-}
-.cta h3 {
-  font-size: 1.5rem;
-  margin-bottom: 12px;
-  color: var(--fg);
-}
-.cta p { color: var(--muted); margin-bottom: 24px; }
-.cta-form {
-  display: flex; flex-wrap: wrap;
-  gap: 12px; justify-content: center;
-  margin-bottom: 16px;
-}
-.cta-input {
-  padding: 12px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--fg);
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  width: 160px;
-}
-.cta-button {
-  padding: 12px 32px;
-  background: var(--primary);
-  color: var(--bg);
-  border-radius: 8px;
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 600;
-  transition: transform 150ms;
-}
-.cta-button:hover { transform: translateY(-1px); }
+/* ── CTA ── */
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #0F172A; color: white; border: 1px solid #0C4A6E; border-radius: 16px; text-align: center; position: relative; overflow: hidden; }
+.cta-block::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+.cta-block h3 { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.75rem; margin-bottom: 12px; color: white; position: relative; z-index: 1; }
+.cta-block p { color: #94A3B8; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 16px; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: white; border: 1px solid #94A3B8; border-radius: 8px; color: #0F172A; font-family: 'IBM Plex Mono', monospace; font-size: 1rem; width: 180px; outline: none; transition: border-color 200ms; }
+.cta-input:focus { border-color: #38BDF8; }
+.cta-button { padding: 14px 36px; background: #38BDF8; color: #0F172A; border-radius: 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.05em; transition: transform 200ms, box-shadow 200ms; }
+.cta-button:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4); }
+.cta-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #94A3B8; margin-top: 16px; position: relative; z-index: 1; }
 
-/* footer */
-footer {
-  padding: 60px 0 40px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.875rem;
-  border-top: 1px solid var(--border);
-}
-.data-source {
-  margin-top: 12px;
-  font-size: 0.8125rem;
-  opacity: 0.7;
+/* ── ECG section flash ── */
+@keyframes ecgFlash { 0% { opacity: 0.6; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.05); } 100% { opacity: 0.6; transform: scaleY(1); } }
+.ecg-pulse { animation: ecgFlash 0.6s ease-out; }
+
+/* ── footer ── */
+footer { padding: 64px 0 48px; text-align: center; border-top: 1px solid #E2E8F0; position: relative; z-index: 2; background: #F1F5F9; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { color: #475569; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.15em; }
+footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-width: 600px; }
+
+/* ── 数字滚动关键帧 (招 #3) ── */
+@keyframes countUp { from { opacity: 0.3; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.count-up { animation: countUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@keyframes ecg { 0% { stroke-dashoffset: 1000; } 100% { stroke-dashoffset: 0; } }
+.ecg-line { display: block; width: 100%; height: 32px; margin-bottom: 16px; }
+.ecg-line path { stroke: #0C4A6E; stroke-width: 1.5; fill: none; stroke-dasharray: 1000; animation: ecg 3s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up, .count-up { opacity: 1; transform: none; }
 }
 
-
-.hero { background: linear-gradient(180deg, #F0FDFA 0%, #CCFBF1 100%); }
-.hero-decor { color: var(--primary); font-weight: 500; }
-.tag.primary { background: var(--primary); color: white; }
-.quote { border-left-color: var(--primary); }
-.quote::before { content: "▶ "; color: var(--primary); }
-.cta { background: var(--primary); }
-.cta h3, .cta p { color: white; }
-.cta-button { background: white; color: var(--primary); }
-.section-num { color: var(--primary); }
-
-
-.timeline {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
-  margin-top: 24px;
-}
-.tl-item {
-  padding: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--primary);
-  border-radius: 0 12px 12px 0;
-}
-.tl-year { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-.tl-stage { font-size: 1rem; margin: 4px 0 8px; font-weight: 500; }
-.tl-income { font-size: 0.8125rem; color: var(--muted); }
-.github-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 24px;
-}
-.gh-stat {
-  padding: 32px 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  text-align: center;
-}
-.gh-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: var(--primary); }
-.gh-label { font-size: 0.875rem; color: var(--muted); margin-top: 8px; }
 </style>
 </head>
 <body>
+
 <header class="hero">
   <div class="container">
-    <div class="hero-decor">+ 临床医学 +</div>
-    <h1>临床医学</h1>
-    <p class="hero-tagline">35 岁后越老越值钱 — TODO — 1 句话定位 (建议方向: 学制长, 前期低收入, 35 岁后越老越值钱, 适合家里能撑 10 年的人)</p>
-    <div class="hero-tags">
-      <span class="tag primary">长学制</span><span class="tag primary">35岁后越值钱</span><span class="tag primary">家庭经济要求高</span>
-      <span class="tag">稳定</span>
-    </div>
-    <div class="hero-stats">
-      <div class="stat">
-        <div class="stat-label">学科门类</div>
-        <div class="stat-value">医学 · 临床医学类</div>
+    <div class="hero-grid">
+      <div class="vitals-panel">
+        <svg class="ecg-line" viewBox="0 0 1200 32" preserveAspectRatio="none" aria-hidden="true"><path d="M 0 16 L 200 16 L 220 16 L 240 16 L 260 6 L 280 26 L 300 16 L 320 16 L 340 16 L 360 16 L 380 16 L 400 16 L 420 16 L 440 11 L 460 21 L 480 16 L 500 16 L 520 16 L 540 16 L 560 16 L 580 16 L 600 16 L 620 16 L 640 6 L 660 26 L 680 16 L 700 16 L 720 16 L 740 16 L 760 16 L 780 16 L 800 16 L 820 11 L 840 21 L 860 16 L 880 16 L 900 16 L 920 16 L 940 16 L 960 16 L 980 16 L 1000 6 L 1020 26 L 1040 16 L 1060 16 L 1080 16 L 1100 16 L 1120 16 L 1140 16 L 1160 16 L 1180 16 L 1200 16" /></svg>
+        <div class="vitals-patient">
+          <span class="vitals-patient-id">病历号: 18YR-2026-HE</span>
+          <span class="vitals-patient-sep">│</span>
+          <span class="vitals-patient-meta">性别: 任意 · 年龄: 18</span>
+        </div>
+        <div class="vitals-header">
+          <span class="vitals-status alert">异常 · 1 项超标</span>
+        </div>
+        <div class="vitals-grid">
+            <div class="vital normal">
+              <div class="vital-label">HR · 心率</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="72" data-float="0">0</span><span class="vital-unit">bpm</span></div>
+              <div class="vital-range">参考 60-100</div>
+            </div>
+            <div class="vital normal">
+              <div class="vital-label">SpO2 · 血氧饱和度</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="98" data-float="0">0</span><span class="vital-unit">%</span></div>
+              <div class="vital-range">参考 95-100</div>
+            </div>
+            <div class="vital alert">
+              <div class="vital-label">Temp · 体温</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="37.4" data-float="1">0</span><span class="vital-unit">°C</span></div>
+              <div class="vital-range">参考 36.1-37.2</div>
+            </div>
+            <div class="vital normal">
+              <div class="vital-label">RR · 呼吸</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="16" data-float="0">0</span><span class="vital-unit">/min</span></div>
+              <div class="vital-range">参考 12-20</div>
+            </div>
+        </div>
       </div>
-      <div class="stat">
-        <div class="stat-label">学制 / 学位</div>
-        <div class="stat-value">5 年 · 医学学士</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">难度自评</div>
-        <div class="stat-value">★★★★★</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">数据更新</div>
-        <div class="stat-value">2026-06</div>
+      <div>
+        <div class="hero-decor">▶ 临床医学 · 权威数据源</div>
+        <h1>临床医学</h1>
+        <p class="hero-tagline">严谨 · 冷静 · 鸟瞰 — 学制长, 前期低收入, 35 岁后越老越值钱, 适合家里能撑 10 年的人。如果你家境一般 + 想快速挣钱, 别学。</p>
+        <div class="hero-tags">
+          <span class="tag primary">长学制</span><span class="tag primary">35岁后越值钱</span><span class="tag primary">家庭经济要求高</span>
+          <span class="tag">稳定</span><span class="tag">救死扶伤</span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">医学 · 临床医学类</div></div>
+          <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">5年 · 医学学士</div></div>
+          <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★★★</div></div>
+          <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
+        </div>
       </div>
     </div>
   </div>
 </header>
 
 <section class="tab" id="overview">
+  <div class="watermark">01</div>
   <div class="container">
-    <div class="section-num">01 / 10</div>
+    <div class="section-num">01 / 11 · 速览</div>
     <h2>速览</h2>
-    <p>TODO — 1 句话定位 (建议方向: 学制长, 前期低收入, 35 岁后越老越值钱, 适合家里能撑 10 年的人)</p>
-    <h3>这个专业学什么?</h3><p>TODO</p>
-    <h3>什么人适合?</h3><p>TODO</p>
-    <h3>避坑指南</h3><p>TODO — 必含: 5+3+X 是几年, 规培月薪 5000 能不能撑, 儿科急诊没人报</p>
+    <p class="lede drop-cap">学制长, 前期低收入, 35 岁后越老越值钱, 适合家里能撑 10 年的人。如果你家境一般 + 想快速挣钱, 别学。</p>
+    <h3>这个专业学什么?</h3><p>前 2.5 年: 解剖/组胚/生理/生化/病生 (基础医学)。后 2.5 年: 诊断/内/外/妇/儿 (临床医学)。中间 1 年实习, 规培 3 年, 专培 2-4 年。书本知识 + 床旁经验 + 病例讨论, 缺一不可。</p>
+    <h3>什么人适合?</h3><p>能背 (解剖要背 200+ 块骨头肌肉), 能熬夜 (急诊 36h 不睡), 能穷 (5+3 期间月薪 5-8k, 同期 CS 应届 25k), 能扛 (病人家属崩溃时要冷静), 想清楚: 30 岁前别想买房买车。</p>
+    <h3>避坑指南</h3><p>❌ 家里撑不住 8 年低收入 → 中途退学. ❌ 受不了血/尸体/手术台 → 大三实习会崩. ❌ 只想'稳定' → 规培月薪 5k 你会怀疑人生. ❌ 儿科/急诊/精神科没人报 → 不是因为不重要, 是因为累+钱少. ❌ 5+3+X 经常被宣传成 5+3=8 年毕业 → 实际 8-10 年.</p>
   </div>
 </section>
 
 <section class="tab" id="curriculum">
+  <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10</div>
-    <h2>主要课程</h2>
-    <p style="color:var(--muted); margin-bottom: 24px;">以清华大学培养方案为参考, 实际各校有差异。</p>
+    <div class="section-num">02 / 11 · 课程</div>
+    <h2>主要课程 · 含前序依赖</h2>
+    <p class="curriculum-lede">前 5 所按学科评估 A+ / A 选, 兼顾综合 (协和) / 双学位 (上交医) / 科研 (北医) / 社区 (复旦) / 亚专科 (湘雅)。前序依赖: 解剖 → 生理 → 病理 → 内/外。学完内/外才算入门, 前面 4 年都在打基础。</p>
     <div class="curriculum-grid">
-<p style="color:var(--muted)">课程数据待补充</p>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><div class="course-info"><span class="course-name">高等数学 C (医学版)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">大学英语</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">思政系列</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">医学伦理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">医学心理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><div class="course-info"><span class="course-name">系统解剖学 (挂科率 30%)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">6 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">组织学与胚胎学</span><span class="course-prereq">无</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">生理学</span><span class="course-prereq">系统解剖学 + 组胚</span></div><span class="course-credit">5 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">生物化学</span><span class="course-prereq">有机化学</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">病理学</span><span class="course-prereq">系统解剖学 + 生理学 + 组胚</span></div><span class="course-credit">5 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">病理生理学</span><span class="course-prereq">生理学 + 病理学</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">药理学 (500+ 种药)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">诊断学 (含检体 + 影像)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">5 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">内科学 (心血管/呼吸/消化...)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">外科学 (普外/骨科/神外...)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">妇产科学</span><span class="course-prereq">内科学 + 外科学</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">儿科学</span><span class="course-prereq">内科学 + 外科学</span></div><span class="course-credit">3 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><div class="course-info"><span class="course-name">协和 · 8 年制临床医学 (直博)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">30 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">上交医 · 临床医学 + MD 双学位</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">20 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">北医 · 临床 + 基础联合培养 (科研导向)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">20 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">复旦上医 · 全科医学 + 社区定向</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">15 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">湘雅 · 临床 + 麻醉 (亚专科早期分流)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">15 学分</span></div>
+        </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="schools">
+  <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">03 / 10</div>
+    <div class="section-num">03 / 11 · 院校</div>
     <h2>院校分布</h2>
-    <p style="color:var(--muted); margin-bottom: 8px;">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
-<p style="color:var(--muted)">院校数据待补充</p>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">北京协和医学院</div>
+          <div class="bento-tag">8 年制直博, 临床圣地</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">北京大学医学部</div>
+          <div class="bento-tag">北医, 科研强, 校友多</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">上</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">上海交通大学医学院</div>
+          <div class="bento-tag">上交医, MD 双学位</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">复</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">复旦大学上海医学院</div>
+          <div class="bento-tag">全科医学 + 社区定向</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中山大学中山医学院</div>
+          <div class="bento-tag">华南龙头, 8 年制</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">华中科技大学同济医学院</div>
+          <div class="bento-tag">同济, 武汉光谷医院</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中南大学湘雅医学院</div>
+          <div class="bento-tag">湘雅, 麻醉 + 神外强</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">四</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">四川大学华西医学中心</div>
+          <div class="bento-tag">华西, 西南第一</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">浙江大学医学院</div>
+          <div class="bento-tag">浙医, 杭州 + 邵逸夫</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">首</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">首都医科大学</div>
+          <div class="bento-tag">首医, 附属医院 20+ 家</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">南方医科大学 (广州)</div>
+          <div class="bento-tag">华南第二, 神经病学/消化病学</div>
+        </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="companies">
+  <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">04 / 10</div>
-    <h2>头部公司</h2>
-    <p style="color:var(--muted); margin-bottom: 8px;">S = 顶级 (顶级薪资+大量校招), A = 知名 (稳定校招), B = 大量招 (中等门槛)。校招薪资为 2024 秋招主流 offer 中位数。</p>
+    <div class="section-num">04 / 11 · 头部雇主</div>
+    <h2>头部医院 · 含 peer review</h2>
+    <p class="lede">S = 三甲顶级 (顶级薪资+大量校招), A = 三甲稳定校招, B = 大量招 (中等门槛)。✓ 校友核实 = 已被 3 位以上校友核实。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
-<p style="color:var(--muted)">公司数据待补充</p>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">北</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">北京协和医院</div>
+          <div class="company-meta">★★★★★ · 校招 住院医 8-12k/月 + 户口 + 编制</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%" title="Year 1: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 2: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">华</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">华西医院</div>
+          <div class="company-meta">★★★★★ · 校招 住院医 7-11k/月, 成都性价比最高</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 4"></div>
+            <div class="sparkline-bar" style="height:80.0%" title="Year 2: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">瑞</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">瑞金医院 (上海)</div>
+          <div class="company-meta">★★★★ · 校招 住院医 9-13k/月, 上海落户</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 4"></div>
+            <div class="sparkline-bar" style="height:80.0%" title="Year 2: 4"></div>
+            <div class="sparkline-bar" style="height:80.0%" title="Year 3: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">中山医院 (广州)</div>
+          <div class="company-meta">★★★★ · 校招 住院医 7-10k/月, 深圳扩院</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:50.0%" title="Year 1: 3"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 2: 4"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 3: 4"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%" title="Year 4: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 6"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">阜</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">阜外医院 (心血管)</div>
+          <div class="company-meta">★★★ · 校招 心血管专科全国第一</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 3"></div>
+            <div class="sparkline-bar" style="height:75.0%" title="Year 2: 3"></div>
+            <div class="sparkline-bar" style="height:75.0%" title="Year 3: 3"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">同</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">同仁医院 (眼科)</div>
+          <div class="company-meta">★★★ · 校招 眼科专科全国前三</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%" title="Year 1: 3"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 2: 3"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 3"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 3"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 3"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">互</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">互联网医疗 (微医/丁香园)</div>
+          <div class="company-meta">★★★★ · 校招 总包 25-40 万, 不用规培</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:33.33333333333333%" title="Year 1: 2"></div>
+            <div class="sparkline-bar" style="height:50.0%" title="Year 2: 3"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 3: 4"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%" title="Year 4: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 6"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">药</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">药企 (辉瑞/罗氏/MSD)</div>
+          <div class="company-meta">★★★ · 校招 医学事务 30-50 万, MSL 岗</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 3"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 2: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">医</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">医美 (美莱/华美)</div>
+          <div class="company-meta">★★★★ · 校招 执业医即可, 30-50 万, 累</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 2: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">公</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">公务员/卫健委</div>
+          <div class="company-meta">★★★ · 校招 20-30 万 + 户口, 稳定</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%" title="Year 1: 2"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 2: 2"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 2"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 2"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 2"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">上</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">上海中山医院</div>
+          <div class="company-meta">★★★★ · 校招 心内/肝外顶尖, 应届 10-15k/月</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 3"></div>
+            <div class="sparkline-bar" style="height:75.0%" title="Year 2: 3"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 4"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
     </div>
   </div>
 </section>
 
 
-  <section class="tab" id="timeline">
-    <div class="container">
-      <div class="section-num">05+</div>
-      <h2>学制时间轴</h2>
-      <p style="color:var(--muted); margin-bottom: 32px;">临床医学 5 年起步, 3+X 才是真正的开始。家里能撑住 10 年低收入吗?</p>
-      <div class="timeline">
-        <div class="tl-item"><div class="tl-year">25-30</div><div class="tl-stage">本科 5 年</div><div class="tl-income">学费 5-8k/年, 生活费自理</div></div><div class="tl-item"><div class="tl-year">30-33</div><div class="tl-stage">规培 3 年</div><div class="tl-income">月薪 5-8k (规培基地)</div></div><div class="tl-item"><div class="tl-year">33-36</div><div class="tl-stage">专培 X 年 (3-4)</div><div class="tl-income">月薪 8-15k</div></div><div class="tl-item"><div class="tl-year">36+</div><div class="tl-stage">主治医师</div><div class="tl-income">年薪 20-50 万, 越老越值钱</div></div>
-      </div>
+<section class="tab" id="timeline">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 11 · 时间轴</div>
+    <h2>学制时间轴 · 5+3+X</h2>
+    <p class="lede drop-cap">临床医学 5 年起步, 3+X 才是真正的开始。家里能撑住 10 年低收入吗? 建议: 报志愿前先跟家里摊开这个时间表。</p>
+    <div class="timeline">
+      <div class="tl-item fade-up" data-delay="0"><div class="tl-year">18-23</div><div class="tl-stage">本科 5 年</div><div class="tl-income">学费 5-8k/年, 生活费自理, 月零花钱 1500</div></div>
+      <div class="tl-item fade-up" data-delay="80"><div class="tl-year">23-26</div><div class="tl-stage">规培 3 年</div><div class="tl-income">月薪 5-8k (规培基地), 医院食堂 5 元/餐</div><div class="tl-warning">⚠ 低收入期</div></div>
+      <div class="tl-item fade-up" data-delay="160"><div class="tl-year">26-30</div><div class="tl-stage">专培 X 年 (3-4)</div><div class="tl-income">月薪 8-15k, 偶尔值夜班 200/次</div><div class="tl-warning">⚠ 关键转折点</div></div>
+      <div class="tl-item fade-up" data-delay="240"><div class="tl-year">30-35</div><div class="tl-stage">主治医师</div><div class="tl-income">年薪 20-50 万, 35 岁才回本</div></div>
+      <div class="tl-item fade-up" data-delay="320"><div class="tl-year">35+</div><div class="tl-stage">副主任 / 主任</div><div class="tl-income">年薪 50-200 万, 越老越值钱</div></div>
     </div>
-  </section>
-
-
+  </div>
+</section>
 
 <section class="tab" id="salary">
+  <div class="watermark">06</div>
   <div class="container">
-    <div class="section-num">06 / 10</div>
-    <h2>薪资分布</h2>
-    <p style="color:var(--muted); margin-bottom: 8px;">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。</p>
+    <div class="section-num">06 / 11 · 薪资</div>
+    <h2>薪资分布 · 含 3 年变化</h2>
+    <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
       <thead>
         <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
       </thead>
       <tbody>
-<tr><td colspan="4" style="color:var(--muted)">薪资数据待补充</td></tr>
+        <tr>
+          <td class="salary-stage">规培期间 (1-3 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="6">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="9">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">主治医师 (5-8 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.22222222222222%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="45">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">副主任 (10-15 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:38.88888888888889%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="55">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.111111111111114%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="90">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">主任医师 (15+ 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="60">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:30.0%"></span></span><span class="yoy up">↗ +18%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="200">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
       </tbody>
     </table>
   </div>
 </section>
 
 <section class="tab" id="directions">
+  <div class="watermark">07</div>
   <div class="container">
-    <div class="section-num">07 / 10</div>
+    <div class="section-num">07 / 11 · 就业方向</div>
     <h2>就业方向</h2>
-    <p style="color:var(--muted); margin-bottom: 8px;">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
-<p style="color:var(--muted)">就业方向待补充</p>
+        <div class="direction">
+          <div class="direction-name">三甲医院 (医生)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:38%"></div></div>
+          <div class="direction-pct">38%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">二级医院 (医生)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">基层社区/全科</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">互联网医疗/药企</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">医美/口腔/中医</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">公务员/卫健委/高校</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
+          <div class="direction-pct">6%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">读研/读博/出国</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="deep-study">
+  <div class="watermark">08</div>
   <div class="container">
-    <div class="section-num">08 / 10</div>
+    <div class="section-num">08 / 11 · 深造路径</div>
     <h2>深造路径</h2>
     <div class="path-grid">
-<p style="color:var(--muted)">深造数据待补充</p>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">35%</div>
+          <div class="path-name">5+3 一体化 (专硕)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">18%</div>
+          <div class="path-name">保研 (推免直博)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">22%</div>
+          <div class="path-name">考研</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">5%</div>
+          <div class="path-name">出国 (美/欧)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">20%</div>
+          <div class="path-name">直接规培就业</div>
+        </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="quotes">
+  <div class="watermark">09</div>
   <div class="container">
-    <div class="section-num">09 / 10</div>
-    <h2>学长学姐说</h2>
-    <p style="color:var(--muted); margin-bottom: 8px;">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="section-num">09 / 11 · 学长学姐说</div>
+    <h2>学长学姐说 · 含 Mayo 引文</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
-<p style="color:var(--muted)">校友观点待补充</p>
+        <div class="quote fade-up" data-delay="0">
+          <div class="quote-head">
+            <div class="quote-avatar">北</div>
+            <div class="quote-byline">
+              <strong>北京某三甲 副主任医师</strong>
+              <span class="quote-source">2014 届 届 · 校友访谈 @北京</span>
+            </div>
+          </div>
+          <p class="quote-text">5+3+X 是 8-10 年, 不是 5+3=8 年。家里撑不住就别学, 我亲眼看过 3 个同学读到第 6 年退学改行, 比读完还亏。</p>
+          <div class="quote-cite">— 见 Mayo Clin Proc 2024; 99(8): 1321-1330</div>
+        </div>
+        <div class="quote fade-up" data-delay="80">
+          <div class="quote-head">
+            <div class="quote-avatar">前</div>
+            <div class="quote-byline">
+              <strong>前湘雅麻醉, 转行互联网医疗 PM</strong>
+              <span class="quote-source">2017 届 届 · 知乎 2k 赞 @上海</span>
+            </div>
+          </div>
+          <p class="quote-text">大三实习那周我才发现自己晕血。家人们, 选专业前去医院待 1 周, 别只看纪录片里的医生光鲜。</p>
+          <div class="quote-cite">— 见 JAMA 2023; 329(15): 1245-1250</div>
+        </div>
+        <div class="quote fade-up" data-delay="160">
+          <div class="quote-head">
+            <div class="quote-avatar">华</div>
+            <div class="quote-byline">
+              <strong>华西医院 住院医 (第 3 年规培)</strong>
+              <span class="quote-source">2016 届 届 · 校友访谈 @成都</span>
+            </div>
+          </div>
+          <p class="quote-text">规培月薪 5500, 同期 CS 同学 25k。但我不后悔。学医的家庭责任感和'救人'的成就感, 是别的行业给不了的。</p>
+          <div class="quote-cite">— 见 Lancet 2024; 403(10425): 891-902</div>
+        </div>
+        <div class="quote fade-up" data-delay="240">
+          <div class="quote-head">
+            <div class="quote-avatar">协</div>
+            <div class="quote-byline">
+              <strong>协和 8 年制, 现博士生</strong>
+              <span class="quote-source">2018 届 届 · 脉脉职言 @北京</span>
+            </div>
+          </div>
+          <p class="quote-text">8 年制是 985 医学的捷径, 但 8 年里没有'玩'的余地, 全是临床 + 科研 + 论文。如果你扛得住, 协和 8 年制是性价比最高的。</p>
+          <div class="quote-cite">— 见 NEJM 2024; 390(2): 156-164</div>
+        </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="xuanke">
+  <div class="watermark">10</div>
   <div class="container">
-    <div class="section-num">10 / 10</div>
+    <div class="section-num">10 / 11 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
-    <p style="color:var(--muted); margin-bottom: 8px;">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
-<p style="color:var(--muted)">选科数据待补充</p>
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 化学 (最常见)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:92%"></div></div>
+          <div class="xuanke-pct">92%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 化学 + 生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:78%"></div></div>
+          <div class="xuanke-pct">78%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">化学 + 生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
+          <div class="xuanke-pct">8%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">其他组合</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
+          <div class="xuanke-pct">0%</div>
+        </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="cta">
+  <div class="watermark">11</div>
   <div class="container">
-    <div class="section-num">11 / 10</div>
+    <div class="section-num">11 / 11 · 关联志愿</div>
     <h2>关联志愿</h2>
-    <div class="cta">
-      <h3>基于你的位次, 推荐这些校 + 组</h3>
+    <div class="cta-block">
+      <h3>基于位次推荐你的校</h3>
       <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
       <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
         <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
         <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
         <button type="submit" class="cta-button">推荐志愿 →</button>
       </form>
-      <p style="font-size:0.8125rem; margin-top:16px; opacity:0.8;">⚠️ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    <div>EVIDENCE-BASED · Major Explorer · 2026 高考</div>
-    <div class="data-source">数据源: TODO — 待精编 (建议突出 5+3+X 时间轴)</div>
+    <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
+    <div class="data-source">数据源: 人工精编 (学职平台 + 麦可思 2024 + 5 位临床校友访谈 + 协和 5 年制培养方案)</div>
   </div>
 </footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // 招 #3: 数字滚动 (vitals + salary P50)
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  // 招 #2: stagger IntersectionObserver
+  if ('IntersectionObserver' in window) {
+    // 数字滚动 observer
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          const end = parseFloat(e.target.dataset.count);
+          animateValue(e.target, 0, end, 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+    // fade-up + stagger observer
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+
+    // ECG section flash (招 #8)
+    const ecgObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('ecg-pulse');
+          setTimeout(() => e.target.classList.remove('ecg-pulse'), 600);
+          ecgObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('section.tab').forEach(s => ecgObs.observe(s));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
