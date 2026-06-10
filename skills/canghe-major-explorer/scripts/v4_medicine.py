@@ -206,8 +206,6 @@ section.tab p.lede { color: #475569; font-size: 1.0625rem; line-height: 1.75; ma
 .course-credit { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; }
 
 /* ── 招 #8: asymmetric 卡片 ── */
-.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 1px; background: #E2E8F0;
-
 .bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 1px; background: #94A3B8; border: 1px solid #94A3B8; border-radius: 12px; overflow: hidden; margin-top: 32px; position: relative; z-index: 1; }
 .bento { position: relative; }
 .bento-item:nth-child(3) { position: relative; }
@@ -412,6 +410,23 @@ COUNT_UP_JS = """
 # ──────────────────────────────────────────────────────────
 # v4 medicine 渲染主函数
 # ──────────────────────────────────────────────────────────
+# 院校 / 公司名软换行 helper — 在「大学/学院/医学院/学部/学校/中心」后插 <wbr>
+# 防止换行点落到「大」「学」之间, 同时不改变文本
+def _dedup_by_name(items: list, key: str = "name") -> list:
+    """Drop duplicate dicts (by item[key]) while preserving order — defensive against bad data."""
+    seen, kept = set(), []
+    for it in items or []:
+        k = it.get(key) if isinstance(it, dict) else it
+        if k in seen: continue
+        seen.add(k); kept.append(it)
+    return kept
+
+_SOFT_BREAK_PAT = re.compile(r'(医学院|医学中心|大学|学院|学校|学部)(?=.)')
+def soft_break_name(name: str) -> str:
+    if not name:
+        return ""
+    return _SOFT_BREAK_PAT.sub(r'\1<wbr>', name)
+
 def get_first_char(name: str) -> str:
     if not name:
         return "?"
@@ -434,12 +449,12 @@ def render_v4_medicine(data: dict) -> str:
     updated_at = data.get("updated_at", "2026-06")
 
     curriculum = data.get("curriculum", {})
-    top_schools = data.get("top_schools", [])
+    top_schools = _dedup_by_name(data.get("top_schools", []), "name")
     top_companies = data.get("top_companies", [])
     salary = data.get("salary", {})
     directions = data.get("employment_direction", [])
     deep_study = data.get("deep_study", {})
-    quotes = data.get("alumni_quotes", [])
+    quotes = _dedup_by_name(data.get("alumni_quotes", []), "current")
     xuanke = data.get("xuanke_req_list", [])
     timeline = data.get("timeline", [])
 
@@ -497,7 +512,7 @@ def render_v4_medicine(data: dict) -> str:
         f'''        <div class="bento-item fade-up" data-delay="{(i % 4) * 80}">
           <div class="bento-monogram">{get_first_char(s.get("name", ""))}</div>
           <span class="bento-rank">{s.get("rank", "")}</span>
-          <div class="bento-name">{s.get("name", "")}</div>
+          <div class="bento-name">{soft_break_name(s.get("name", ""))}</div>
           <div class="bento-tag">{s.get("tag", "")}</div>
         </div>'''
         for i, s in enumerate(top_schools)
@@ -520,7 +535,7 @@ def render_v4_medicine(data: dict) -> str:
             <div class="company-monogram">{get_first_char(co.get("name", ""))}</div>
             <span class="company-tier tier-{co.get("tier", "B")}">{co.get("tier", "B")}</span>
           </div>
-          <div class="company-name">{co.get("name", "")}</div>
+          <div class="company-name">{soft_break_name(co.get("name", ""))}</div>
           <div class="company-meta">{co.get("headcount", "")} · 校招 {co.get("salary", "")}</div>
           <span class="company-badge">✓ 校友核实</span>
 {render_sparkline(co.get("sparkline", []))}
@@ -574,7 +589,7 @@ def render_v4_medicine(data: dict) -> str:
             <div class="quote-avatar">{get_first_char(q.get("current", "?"))}</div>
             <div class="quote-byline">
               <strong>{q.get("current", "")}</strong>
-              <span class="quote-source">{q.get("year", "")} 届 · {q.get("source", "")}</span>
+              <span class="quote-source">{q.get("year", "")} · {q.get("source", "")}</span>
             </div>
           </div>
           <p class="quote-text">{q.get("quote", "")}</p>

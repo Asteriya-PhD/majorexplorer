@@ -807,7 +807,7 @@ def render_html(data: dict, style: str) -> str:
             <div class="quote-avatar" style="background:{c.get('monogram_bg', c['accent'])}; color:{c.get('monogram_fg', c['bg'])}">{get_first_char(q.get("current", "?"))}</div>
             <div class="quote-byline">
               <strong>{q.get("current", "")}</strong>
-              <span class="quote-source">{q.get("year", "")} 届 · {q.get("source", "")}</span>
+              <span class="quote-source">{q.get("year", "")} · {q.get("source", "")}</span>
             </div>
           </div>
           <p class="quote-text">{q.get("quote", "")}</p>

@@ -43,6 +43,42 @@ footer .container { display: flex; flex-direction: column; align-items: center; 
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -175,8 +211,8 @@ section.tab:first-of-type { border-top: none; }
 .quote-byline strong { display: block; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #F8FAFC; font-size: 0.875rem; }
 .quote-byline .quote-source { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; }
 .quote-text { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; line-height: 1.7; color: #F8FAFC; font-style: normal; }
-.quote-text::before { content: "C"; color: #22C55E; }
-.quote-text::after { content: "D"; color: #22C55E; }
+.quote-text::before { content: "“"; color: #22C55E; }
+.quote-text::after { content: "”"; color: #22C55E; }
 
 .xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
 .xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #1F2937; }
@@ -279,8 +315,8 @@ footer .data-source { color: #94A3B8; }
     <h2>速览</h2>
     <p class="lede drop-cap">编程是载体, 数学是底层。CS ≠ 写代码, 是用计算思维建模现实问题。4 年后能继续学新东西, 才是真功夫。</p>
     <h3>这个专业学什么?</h3><p>前两年打数学 + 编程基础 (高等数学、数据结构、C/Python), 后两年分流到 AI / 系统 / 安全 / 图形学 等方向。算法竞赛 / 开源项目 / 实习 是 3 个最有用的课外修炼。</p>
-    <h3>什么人适合?</h3><p>数学不讨厌 (不一定要满分, 但不能高三看到概率就想跳), 喜欢拆解问题, 能耐住 4-8 小时 debug 的枯燥, 对'为什么这样设计'比'怎么用'更感兴趣。</p>
-    <h3>避坑指南</h3><p>❌ 数学不好硬学 → 大二会崩。❌ 只学课堂内容 → 校招简历空白。❌ 跟风报 AI 方向 → 实际可能做数据标注。❌ '35 岁危机'是真是假看赛道, 不看年龄。</p>
+    <h3>什么人适合?</h3><p>数学不讨厌 (不一定要满分, 但不能高三看到概率就想跳), 喜欢拆解问题, 能耐住 4-8 小时 debug 的枯燥, 对「为什么这样设计」比「怎么用」更感兴趣。</p>
+    <h3>避坑指南</h3><p>❌ 数学不好硬学 → 大二会崩。❌ 只学课堂内容 → 校招简历空白。❌ 跟风报 AI 方向 → 实际可能做数据标注。❌ 「35 岁危机」是真是假看赛道, 不看年龄。</p>
   </div>
 </section>
 
@@ -330,7 +366,7 @@ footer .data-source { color: #94A3B8; }
           <div class="bento-monogram">清</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">清华大学</div>
-          <div class="bento-tag">图灵班, AI 全国第一</div>
+          <div class="bento-tag">北京 · 图灵班, AI 全国第一</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">北</div>
@@ -342,7 +378,7 @@ footer .data-source { color: #94A3B8; }
           <div class="bento-monogram">浙</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">浙江大学</div>
-          <div class="bento-tag">工程师摇篮, 工业界认可度最高</div>
+          <div class="bento-tag">杭州 · 工程师摇篮, 工业界认可度最高</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">上</div>
@@ -360,7 +396,7 @@ footer .data-source { color: #94A3B8; }
           <div class="bento-monogram">中</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">中国科学技术大学</div>
-          <div class="bento-tag">少年班 + 出国氛围浓</div>
+          <div class="bento-tag">合肥 · 少年班 + 出国氛围浓</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">北</div>
@@ -697,7 +733,7 @@ footer .data-source { color: #94A3B8; }
             <div class="quote-avatar">字</div>
             <div class="quote-byline">
               <strong>字节跳动 后端架构师</strong>
-              <span class="quote-source">2018 届 届 · 校友访谈 @北京</span>
+              <span class="quote-source">2018 届 · 校友访谈 @北京</span>
             </div>
           </div>
           <p class="quote-text">CS 的真正功力是 4 年后还能继续学新东西, 不是你会哪门语言。GPT 出来那晚, 我 35 岁的老 leader 凌晨 3 点在重学 prompt——这才叫真功夫。</p>
@@ -707,7 +743,7 @@ footer .data-source { color: #94A3B8; }
             <div class="quote-avatar">小</div>
             <div class="quote-byline">
               <strong>小红书 算法工程师 (前 ACM 金)</strong>
-              <span class="quote-source">2019 届 届 · 知乎 8k 赞 @匿名</span>
+              <span class="quote-source">2019 届 · 知乎 8k 赞 @匿名</span>
             </div>
           </div>
           <p class="quote-text">数学不好的, 真心别硬选 AI 方向。卷不赢, 退路又窄。系统工程 / 后端 / 安全 这些硬功夫, 35 岁后更值钱的赛道。</p>
@@ -717,7 +753,7 @@ footer .data-source { color: #94A3B8; }
             <div class="quote-avatar">华</div>
             <div class="quote-byline">
               <strong>华为 2012 实验室</strong>
-              <span class="quote-source">2020 届 届 · 脉脉职言 @深圳</span>
+              <span class="quote-source">2020 届 · 脉脉职言 @深圳</span>
             </div>
           </div>
           <p class="quote-text">家境一般的话 CS 几乎是最好翻身的选择。但别只盯着大厂, 华为 / 运营商 / 银行 IT 这些 18-25 万 + 户口的岗位, 比大厂 35k 但被裁香。</p>
@@ -727,10 +763,10 @@ footer .data-source { color: #94A3B8; }
             <div class="quote-avatar">考</div>
             <div class="quote-byline">
               <strong>考研失败, 2 个月突击上岸比亚迪</strong>
-              <span class="quote-source">2021 届 届 · 小红书 @武汉</span>
+              <span class="quote-source">2021 届 · 小红书 @武汉</span>
             </div>
           </div>
-          <p class="quote-text">奉劝学弟学妹, 大三暑假实习一定要刷, 别等考研失败再找工作。CS 是为数不多'技术 > 学历'的专业, 但前提是你真的有技术。</p>
+          <p class="quote-text">奉劝学弟学妹, 大三暑假实习一定要刷, 别等考研失败再找工作。CS 是为数不多「技术 > 学历」的专业, 但前提是你真的有技术。</p>
         </div>
     </div>
   </div>

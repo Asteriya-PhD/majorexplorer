@@ -43,6 +43,42 @@ footer .container { display: flex; flex-direction: column; align-items: center; 
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -66,14 +102,14 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 .hero::before { content: ""; display: block; width: 80px; height: 1px; background: #A16207; margin: 0 auto 32px; opacity: 0.4; }
 .hero::after { content: ""; display: block; width: 80px; height: 1px; background: #A16207; margin: 32px auto 0; opacity: 0.4; }
 .docket-header { margin-bottom: 24px; }
-.docket-court { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #57534E; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+.docket-court { font-family: 'EB Garamond', serif; font-size: 0.875rem; color: #57534E; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
 .docket-title-wrap { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 16px; }
 .docket-line { flex: 0 0 80px; height: 1px; background: #D97706; opacity: 0.5; }
 .docket-title { font-family: 'EB Garamond', serif; font-size: 0.875rem; color: #57534E; letter-spacing: 0.15em; text-transform: uppercase; font-variant: small-caps; }
-.hero h1 { font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(3rem, 6vw, 5rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; color: #1C1917; margin-bottom: 24px; }
-.hero-tagline { font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.25rem; color: #57534E; margin: 0 auto 32px; max-width: 580px; line-height: 1.7; }
+.hero h1 { font-family: 'EB Garamond', serif; font-size: clamp(3rem, 6vw, 5rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; color: #1C1917; margin-bottom: 24px; }
+.hero-tagline { font-family: 'EB Garamond', serif; font-size: 1.25rem; color: #57534E; margin: 0 auto 32px; max-width: 580px; line-height: 1.7; }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; justify-content: center; }
-.tag { padding: 5px 14px; background: transparent; border: 1px solid #D6D3D1; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #1C1917; letter-spacing: 0.04em; }
+.tag { padding: 5px 14px; background: transparent; border: 1px solid #D6D3D1; font-family: 'EB Garamond', serif; font-size: 0.875rem; color: #1C1917; letter-spacing: 0.04em; }
 .tag.primary { background: rgba(120, 53, 15, 0.08); border-color: #78350F; color: #78350F; font-variant: small-caps; letter-spacing: 0.15em; font-size: 0.75rem; font-weight: 600; }
 
 .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #D6D3D1; border-bottom: 1px solid #D6D3D1; border-left: 1px solid #D6D3D1; border-right: 1px solid #D6D3D1; max-width: 800px; margin: 0 auto; }
@@ -81,11 +117,11 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 .stat { padding: 24px 20px; border-right: 1px solid #E7E5E4; }
 .stat:last-child { border-right: none; }
 @media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #E7E5E4; } }
-.stat-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.6875rem; color: #57534E; text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500; }
-.stat-value { font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.5rem; font-weight: 500; color: #1C1917; margin-top: 6px; }
+.stat-label { font-family: 'EB Garamond', serif; font-size: 0.6875rem; color: #57534E; text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500; }
+.stat-value { font-family: 'EB Garamond', serif; font-size: 1.5rem; font-weight: 500; color: #1C1917; margin-top: 6px; }
 
 .docket-stamp { position: absolute; top: 32px; right: 32px; width: 90px; height: 90px; border: 2px solid #B91C1C; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #B91C1C; font-family: 'EB Garamond', serif; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.1em; text-align: center; line-height: 1.2; transform: rotate(12deg); opacity: 0.65; text-transform: uppercase; }
-.docket-meta { display: flex; justify-content: space-between; max-width: 800px; margin: 24px auto 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #57534E; letter-spacing: 0.08em; text-transform: uppercase; }
+.docket-meta { display: flex; justify-content: space-between; max-width: 800px; margin: 24px auto 0; font-family: 'EB Garamond', serif; font-size: 0.75rem; color: #57534E; letter-spacing: 0.08em; text-transform: uppercase; }
 @media (max-width: 768px) { .docket-meta { flex-direction: column; gap: 8px; align-items: center; } }
 
 section.tab { border-top: 1px solid #A8A29E; border-bottom: 2px solid #A8A29E; }
@@ -113,98 +149,97 @@ section.tab:first-of-type { border-top: none; }
 .bento-item { padding: 32px 24px 24px; background: #FFFBEB; position: relative; transition: background 250ms; }
 .bento-item::before { content: "§"; position: absolute; top: 24px; right: 24px; color: #D97706; font-family: 'EB Garamond', serif; font-size: 1.5rem; font-weight: 500; opacity: 0.3; }
 .bento-item:hover { background: #FEF3C7; }
-.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #78350F; color: #FFFBEB; font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.0625rem; font-weight: 500; }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #78350F; color: #FFFBEB; font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 500; }
 .bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #78350F; border: 1px solid #78350F; font-family: 'EB Garamond', serif; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 12px; text-transform: uppercase; }
-.bento-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.1875rem; font-weight: 500; margin-bottom: 4px; color: #1C1917; padding-right: 80px; text-wrap: balance; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
-.bento-tag { font-family: 'EB Garamond', serif; font-size: 0.875rem; color: #57534E; line-height: 1.5; font-style: italic; }
+.bento-name { font-family: 'EB Garamond', serif; font-size: 1.1875rem; font-weight: 500; margin-bottom: 4px; color: #1C1917; padding-right: 80px; text-wrap: balance; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.bento-tag { font-family: 'EB Garamond', serif; font-size: 0.875rem; color: #57534E; line-height: 1.5; }
 
 .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .company { padding: 28px 24px 20px; background: #FFFBEB; border: 1px solid #D6D3D1; position: relative; transition: border-color 250ms, transform 250ms; }
 .company:hover { border-color: #78350F; transform: translateY(-2px); }
 .company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.company-monogram { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #78350F; color: #FFFBEB; font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.0625rem; font-weight: 500; }
+.company-monogram { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #78350F; color: #FFFBEB; font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 500; }
 .company-tier { padding: 2px 8px; border: 1px solid #78350F; color: #78350F; font-family: 'EB Garamond', serif; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 .tier-S { background: #78350F; color: #FFFBEB; }
 .tier-A { background: transparent; }
 .tier-B { background: transparent; color: #78716C; border-color: #D6D3D1; }
-.company-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.1875rem; font-weight: 500; margin-bottom: 10px; color: #1C1917; }
+.company-name { font-family: 'EB Garamond', serif; font-size: 1.1875rem; font-weight: 500; margin-bottom: 10px; color: #1C1917; }
 .company-meta { font-family: 'EB Garamond', serif; font-size: 0.8125rem; color: #57534E; line-height: 1.5; margin-bottom: 12px; }
 .sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #E7E5E4; }
 .sparkline-bar { flex: 1; background: #D6D3D1; min-height: 2px; transition: background 250ms; }
 .company:hover .sparkline-bar { background: #78350F; opacity: 0.7; }
-.sparkline-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.6875rem; color: #78716C; letter-spacing: 0.1em; margin-top: 6px; }
+.sparkline-label { font-family: 'EB Garamond', serif; font-size: 0.6875rem; color: #78716C; letter-spacing: 0.1em; margin-top: 6px; }
 
 .salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFBEB; border: 1px solid #D6D3D1; position: relative; z-index: 1; }
 .salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #E7E5E4; font-size: 0.9375rem; }
 .salary-table tr:last-child td { border-bottom: none; }
-.salary-table th { background: rgba(254, 243, 199, 0.4); font-family: 'EB Garamond', serif; font-style: italic; font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: #57534E; }
-.salary-stage { font-family: 'EB Garamond', serif; font-style: italic; font-weight: 500; color: #1C1917; font-size: 1.0625rem; }
+.salary-table th { background: rgba(254, 243, 199, 0.4); font-family: 'EB Garamond', serif; font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: #57534E; }
+.salary-stage { font-family: 'EB Garamond', serif; font-weight: 500; color: #1C1917; font-size: 1.0625rem; }
 .salary-bar { display: inline-block; width: 80px; height: 4px; background: #E7E5E4; margin-left: 12px; vertical-align: middle; overflow: hidden; }
 .salary-bar-fill { display: block; height: 100%; background: #78350F; }
-.yoy { display: inline-block; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.8125rem; font-weight: 500; margin-left: 12px; padding: 2px 8px; }
+.yoy { display: inline-block; font-family: 'EB Garamond', serif; font-size: 0.8125rem; font-weight: 500; margin-left: 12px; padding: 2px 8px; }
 .yoy.up   { color: #15803D; }
 .yoy.down { color: #B91C1C; }
 .yoy.flat { color: #78716C; }
-.approx { font-family: 'EB Garamond', serif; color: #A16207; margin-right: 4px; font-style: italic; }
+.approx { font-family: 'EB Garamond', serif; color: #A16207; margin-right: 4px; }
 
 .direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
 .direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #E7E5E4; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.0625rem; color: #1C1917; }
+.direction-name { font-family: 'EB Garamond', serif; font-size: 1.0625rem; color: #1C1917; }
 .direction-bar { height: 6px; background: #E7E5E4; overflow: hidden; }
 .direction-bar-fill { height: 100%; background: #78350F; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.direction-pct { font-family: 'EB Garamond', serif; font-style: italic; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
+.direction-pct { font-family: 'EB Garamond', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
 .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #D6D3D1; text-align: center; transition: border-color 250ms, transform 250ms; }
-.path-card:nth-child(3n) { transform: translateY(12px); }
 .path-card:hover { border-color: #78350F; transform: translateY(-2px); }
-.path-pct { font-family: 'EB Garamond', serif; font-style: italic; font-size: 2.75rem; font-weight: 500; color: #1C1917; margin-bottom: 4px; line-height: 1; }
-.path-name { font-family: 'EB Garamond', serif; font-style: italic; color: #57534E; font-size: 0.875rem; letter-spacing: 0.04em; margin-top: 8px; }
+.path-pct { font-family: 'EB Garamond', serif; font-size: 2.75rem; font-weight: 500; color: #1C1917; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: 'EB Garamond', serif; color: #57534E; font-size: 0.875rem; letter-spacing: 0.04em; margin-top: 8px; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 36px 40px 32px; background: #FFFBEB; border: 1px solid #D6D3D1; border-left: 4px double #D97706; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
 .quote:hover { border-left-width: 12px; transform: translateX(4px); box-shadow: 0 8px 24px rgba(120, 53, 15, 0.10); }
-.quote::after { content: "— see " attr(data-cite) ", supra."; display: block; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #78716C; margin-top: 16px; padding-top: 12px; border-top: 1px solid #E7E5E4; }
+.quote::after { content: "— see " attr(data-cite) ", supra."; display: block; font-family: 'EB Garamond', serif; font-size: 0.75rem; color: #78716C; margin-top: 16px; padding-top: 12px; border-top: 1px solid #E7E5E4; }
 .quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-.quote-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #78350F; color: #FFFBEB; font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.125rem; font-weight: 500; }
-.quote-byline strong { display: block; font-family: 'EB Garamond', serif; font-weight: 500; color: #1C1917; font-size: 1.0625rem; font-style: italic; }
+.quote-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #78350F; color: #FFFBEB; font-family: 'EB Garamond', serif; font-size: 1.125rem; font-weight: 500; }
+.quote-byline strong { display: block; font-family: 'EB Garamond', serif; font-weight: 500; color: #1C1917; font-size: 1.0625rem; }
 .quote-byline .quote-source { font-family: 'EB Garamond', serif; color: #78716C; font-size: 0.75rem; letter-spacing: 0.05em; }
-.quote-text { font-family: 'EB Garamond', serif; font-size: 1.375rem; line-height: 1.7; font-style: italic; color: #1C1917; }
-.quote-text::before { content: "C"; color: #D97706; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
-.quote-text::after { content: "D"; color: #D97706; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
+.quote-text { font-family: 'EB Garamond', serif; font-size: 1.375rem; line-height: 1.7; color: #1C1917; }
+.quote-text::before { content: "“"; color: #D97706; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
+.quote-text::after { content: "”"; color: #D97706; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
 
 .xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
 .xuanke { display: grid; grid-template-columns: 220px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #E7E5E4; }
 .xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.0625rem; color: #1C1917; }
+.xuanke-name { font-family: 'EB Garamond', serif; font-size: 1.0625rem; color: #1C1917; }
 .xuanke-bar { height: 6px; background: #E7E5E4; overflow: hidden; }
 .xuanke-bar-fill { height: 100%; background: #78350F; }
-.xuanke-pct { font-family: 'EB Garamond', serif; font-style: italic; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
+.xuanke-pct { font-family: 'EB Garamond', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.curriculum-lede { font-family: 'EB Garamond', serif; font-style: italic; color: #57534E; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-lede { font-family: 'EB Garamond', serif; color: #57534E; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
 .curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 32px 28px; background: #FFFBEB; border: 1px solid #D6D3D1; transition: border-color 250ms, transform 250ms; }
 .curriculum-block:hover { border-color: #78350F; transform: translateY(-2px); }
 .curriculum-title { font-family: 'EB Garamond', serif; font-variant: small-caps; font-size: 0.875rem; color: #78350F; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #D6D3D1; font-weight: 600; letter-spacing: 0.12em; }
 .course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; }
 .course-name { font-family: 'EB Garamond', serif; color: #1C1917; }
-.course-credit { font-family: 'EB Garamond', serif; font-style: italic; color: #78716C; font-size: 0.8125rem; margin-left: 8px; }
+.course-credit { font-family: 'EB Garamond', serif; color: #78716C; font-size: 0.8125rem; margin-left: 8px; }
 
 .cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFBEB; border: 2px solid #1C1917; text-align: center; position: relative; }
 .cta-block::before { content: ""; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 1px solid #A16207; pointer-events: none; }
-.cta-block h3 { font-family: 'EB Garamond', serif; font-style: italic; font-size: 2rem; font-weight: 500; margin-bottom: 16px; color: #1C1917; }
-.cta-block p { font-family: 'EB Garamond', serif; font-style: italic; color: #57534E; margin: 0 auto 32px; max-width: 560px; font-size: 1.0625rem; }
+.cta-block h3 { font-family: 'EB Garamond', serif; font-size: 2rem; font-weight: 500; margin-bottom: 16px; color: #1C1917; }
+.cta-block p { font-family: 'EB Garamond', serif; color: #57534E; margin: 0 auto 32px; max-width: 560px; font-size: 1.0625rem; }
 .cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 .cta-input { padding: 14px 18px; background: #FFFFFF; border: 1px solid #D6D3D1; color: #1C1917; font-family: 'EB Garamond', serif; font-size: 1rem; width: 180px; outline: none; }
 .cta-input:focus { border-color: #78350F; }
-.cta-button { padding: 14px 40px; background: #1C1917; color: #FFFBEB; font-family: 'EB Garamond', serif; font-style: italic; font-size: 1rem; font-weight: 500; letter-spacing: 0.06em; transition: background 200ms; }
+.cta-button { padding: 14px 40px; background: #1C1917; color: #FFFBEB; font-family: 'EB Garamond', serif; font-size: 1rem; font-weight: 500; letter-spacing: 0.06em; transition: background 200ms; }
 .cta-button:hover { background: #78350F; }
-.cta-note { font-family: 'EB Garamond', serif; font-style: italic; color: #78716C; font-size: 0.75rem; margin-top: 20px; }
+.cta-note { font-family: 'EB Garamond', serif; color: #78716C; font-size: 0.75rem; margin-top: 20px; }
 
 .watermark { color: #78350F; opacity: 0.04; }
-.section-num { font-family: 'EB Garamond', serif; font-style: italic; color: #78350F; }
-section.tab h2 { font-family: 'EB Garamond', serif; font-style: italic; }
+.section-num { font-family: 'EB Garamond', serif; color: #78350F; }
+section.tab h2 { font-family: 'EB Garamond', serif; }
 section.tab p { color: #1C1917; }
 section.tab p.lede { color: #57534E; }
 section.tab h3 { color: #1C1917; }
@@ -212,7 +247,7 @@ footer { background: rgba(254, 243, 199, 0.3); border-top: 1px solid #D6D3D1; }
 footer .label { color: #1C1917; font-variant: small-caps; }
 footer .data-source { color: #78716C; }
 
-.drop-cap::first-letter { font-family: 'EB Garamond', serif; font-size: 4.5em; font-weight: 500; font-style: italic; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #78350F; }
+.drop-cap::first-letter { font-family: 'EB Garamond', serif; font-size: 4.5em; font-weight: 500; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #78350F; }
 
 .redacted-block { display: inline-block; background: #1C1917; color: #1C1917; padding: 2px 8px; user-select: none; border-radius: 1px; margin: 0 2px; }
 .redacted-block::before { content: "█████████"; }
@@ -254,7 +289,7 @@ footer .data-source { color: #78716C; }
     <p class="lede drop-cap">法学不是背法条, 是逻辑 + 表达 + 立场。顶级律所起薪和中石油一样高, 但 80% 法学毕业生去的是考公 / 中小所 / 法务。法考 A 证是入场券, 不是金钥匙。</p>
     <h3>这个专业学什么?</h3><p>前 2 年: 法理学 + 宪法 + 民法总则 + 刑法总则 + 中国法制史 (基础法学)。后 2 年: 民法分编 / 刑法分编 / 行政法 / 民诉 / 刑诉 / 商法 / 知识产权 / 国际法 (实务法学)。法考 18 门, 客观题 + 主观题, 一次性通过率 15-20%。</p>
     <h3>什么人适合?</h3><p>能说 (庭审辩论要口才) + 能写 (法律文书是文字活) + 能扛 (诉讼律师加班常态) + 不怕背 (法条 + 判例要积累) + 想清楚是去律所 / 法院 / 公务员 / 法务 哪条路。</p>
-    <h3>避坑指南</h3><p>❌ '法学 = 律师 = 高薪' → 80% 法学毕业月薪 5-8k. ❌ 选'法学'以为能考公务员很吃香 → 法学是考公最卷专业, 三不限岗位 1000:1. ❌ 二本法学 = 难就业, 律所实习要 211/985 法本. ❌ 以为法考过了就有工作 → A 证通过率 30%, 持证不等于 offer. ❌ 律所工种分诉讼/非诉/合规, 5 年后收入差距 5x. ❌ '红圈所'听上去高大上, 但工时 996 + 加班到凌晨是常态.</p>
+    <h3>避坑指南</h3><p>❌ 「法学 = 律师 = 高薪」 → 80% 法学毕业月薪 5-8k. ❌ 选「法学」以为能考公务员很吃香 → 法学是考公最卷专业, 三不限岗位 1000:1. ❌ 二本法学 = 难就业, 律所实习要 211/985 法本. ❌ 以为法考过了就有工作 → A 证通过率 30%, 持证不等于 offer. ❌ 律所工种分诉讼/非诉/合规, 5 年后收入差距 5x. ❌ 「红圈所」听上去高大上, 但工时 996 + 加班到凌晨是常态.</p>
   </div>
 </section>
 
@@ -263,7 +298,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">02 / 10 · 课程</div>
     <h2>主要课程</h2>
-    <p class="curriculum-lede">前 5 所按法学 A+ 学科评估 + 红圈所 target 选. 法考客观题 9 月, 主观题 10 月, 应届生 9 月一次过 30%. 实习从大二暑假开始, 律所/法院/检察院/公司法务 都可. 法学是'学历 + 法考 + 实习' 三件套, 缺一不可.</p>
+    <p class="curriculum-lede">前 5 所按法学 A+ 学科评估 + 红圈所 target 选. 法考客观题 9 月, 主观题 10 月, 应届生 9 月一次过 30%. 实习从大二暑假开始, 律所/法院/检察院/公司法务 都可. 法学是「学历 + 法考 + 实习」 三件套, 缺一不可.</p>
     <div class="curriculum-grid">
         <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
           <div class="course"><span class="course-name">法理学</span><span class="course-credit">4 学分</span></div>
@@ -305,68 +340,62 @@ footer .data-source { color: #78716C; }
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">北</div>
           <span class="bento-rank">A+</span>
-          <div class="bento-name">北京大学法学院</div>
+          <div class="bento-name">北京大学<wbr>法学院</div>
           <div class="bento-tag">国内第一, 学术 + 涉外</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">清</div>
           <span class="bento-rank">A+</span>
-          <div class="bento-name">清华大学法学院</div>
-          <div class="bento-tag">民商法 + 涉外法治双优</div>
+          <div class="bento-name">清华大学<wbr>法学院</div>
+          <div class="bento-tag">北京 · 民商法 + 涉外法治双优</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">中</div>
           <span class="bento-rank">A+</span>
-          <div class="bento-name">中国人民大学法学院</div>
-          <div class="bento-tag">法学黄埔, 宪法 + 行政法</div>
+          <div class="bento-name">中国人民大学<wbr>法学院</div>
+          <div class="bento-tag">北京 · 法学黄埔, 宪法 + 行政法</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">中</div>
           <span class="bento-rank">A+</span>
-          <div class="bento-name">中国政法大学 (CUPL)</div>
-          <div class="bento-tag">法学专门院校, 实务第一</div>
+          <div class="bento-name">中国政法大学<wbr> (CUPL)</div>
+          <div class="bento-tag">北京 · 法学专门院校, 实务第一</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">复</div>
           <span class="bento-rank">A</span>
-          <div class="bento-name">复旦大学法学院</div>
+          <div class="bento-name">复旦大学<wbr>法学院</div>
           <div class="bento-tag">上海滩法学龙头, 国经</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">武</div>
           <span class="bento-rank">A</span>
-          <div class="bento-name">武汉大学法学院</div>
+          <div class="bento-name">武汉大学<wbr>法学院</div>
           <div class="bento-tag">珞珈法学, 国际法 + 知识产权</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">南</div>
           <span class="bento-rank">A</span>
-          <div class="bento-name">南京大学法学院</div>
+          <div class="bento-name">南京大学<wbr>法学院</div>
           <div class="bento-tag">经济法 + 中德合作</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">中</div>
           <span class="bento-rank">A-</span>
-          <div class="bento-name">中山大学法学院</div>
-          <div class="bento-tag">华南法学龙头</div>
+          <div class="bento-name">中山大学<wbr>法学院</div>
+          <div class="bento-tag">广州 · 华南法学龙头</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">吉</div>
           <span class="bento-rank">A</span>
-          <div class="bento-name">吉林大学法学院</div>
-          <div class="bento-tag">北方法学重镇, 法学理论</div>
+          <div class="bento-name">吉林大学<wbr>法学院</div>
+          <div class="bento-tag">长春 · 北方法学重镇, 法学理论</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">上</div>
           <span class="bento-rank">A-</span>
-          <div class="bento-name">上海交通大学凯原法学院</div>
+          <div class="bento-name">上海交通大学<wbr>凯原法学院</div>
           <div class="bento-tag">新贵, 涉外仲裁 + 知产</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">中</div>
-          <span class="bento-rank">A+</span>
-          <div class="bento-name">中国政法大学 (CUPL)</div>
-          <div class="bento-tag">法学专门院校, 实务第一</div>
         </div>
     </div>
   </div>
@@ -687,7 +716,7 @@ footer .data-source { color: #78716C; }
             <div class="quote-avatar">金</div>
             <div class="quote-byline">
               <strong>金杜律所 合伙人</strong>
-              <span class="quote-source">2014 届 届 · 校友访谈 @北京</span>
+              <span class="quote-source">2014 届 · 校友访谈 @北京</span>
             </div>
           </div>
           <p class="quote-text">法学 5 年后分化极大: 红圈所授薪 100 万, 中小所 12 万, 法务总监 80 万, 法官 15 万。5 年前的选择比 5 年后的努力重要。家里没资源, 中小所 + 跳公司法务总监是更现实路径。</p>
@@ -697,7 +726,7 @@ footer .data-source { color: #78716C; }
             <div class="quote-avatar">最</div>
             <div class="quote-byline">
               <strong>最高法 法官助理</strong>
-              <span class="quote-source">2016 届 届 · 校友访谈 @北京</span>
+              <span class="quote-source">2016 届 · 校友访谈 @北京</span>
             </div>
           </div>
           <p class="quote-text">公务员 + 法官是法学最被低估的路径。年薪 12 万, 但 5 年后员额法官 25 万 + 北京户口 + 子女教育 + 医疗全包, 综合待遇超 80% 律师。但 30 岁前月薪 8k 别抱怨, 5 年才有起色。</p>
@@ -707,7 +736,7 @@ footer .data-source { color: #78716C; }
             <div class="quote-avatar">前</div>
             <div class="quote-byline">
               <strong>前红圈所律师, 转字节跳动法务</strong>
-              <span class="quote-source">2017 届 届 · 脉脉职言 @上海</span>
+              <span class="quote-source">2017 届 · 脉脉职言 @上海</span>
             </div>
           </div>
           <p class="quote-text">红圈所工时 996, 月薪 30k, 但你 28 岁就脱发。跳大厂法务年薪 60-80 万, 工时 965, 还能兼顾家庭。律所不是终局, 跳甲方是 80% 律师的最佳出路。</p>
@@ -717,7 +746,7 @@ footer .data-source { color: #78716C; }
             <div class="quote-avatar">中</div>
             <div class="quote-byline">
               <strong>中国政法大学 副教授</strong>
-              <span class="quote-source">2015 届 届 · 校友访谈 @北京</span>
+              <span class="quote-source">2015 届 · 校友访谈 @北京</span>
             </div>
           </div>
           <p class="quote-text">法学读博 5 年, 应届进高校年薪 18 万, 副教授 25-35 万。比律师低, 但寒暑假 + 不用案源焦虑 + 35 岁后不愁。如果真心喜欢学术 + 不着急挣钱, 法学读博性价比最高的路径之一。</p>
