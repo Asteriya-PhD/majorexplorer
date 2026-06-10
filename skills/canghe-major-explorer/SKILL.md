@@ -187,29 +187,39 @@ python3 skills/canghe-major-explorer/scripts/generate_dashboard.py \
 
 ---
 
-## 5 套设计风格
+## 10 套设计风格
 
 ```
 STYLES = {
-  "cs":        "Dark + JetBrains Mono + 终端 Bento + #22C55E 跑码绿",
-  "finance":   "Cream + Bodoni Moda/Jost + 黑金 Liquid Glass + #A16207 金",
-  "medicine":  "Light teal + IBM Plex Sans + 临床极简 + #0C4A6E 青",
-  "law":       "Sepia + EB Garamond/Lato + 瑞士网格 + #78350F 琥珀",
-  "education": "Warm cream + Playfair/Inter + 暖橙学术 + #9A3412 砖 + #F59E0B 银杏",
+  "cs":         "Dark + JetBrains Mono + 终端 Bento + #22C55E 跑码绿",                    # 11
+  "tech":       "Dark purple/cyan + Inter + Aurora glow + #A78BFA",                       # 1
+  "finance":    "Cream + Bodoni Moda/Jost + 烫金 editorial + #A16207",                    # 5
+  "medicine":   "Light teal + IBM Plex Sans + 手术仪表 + ECG + #0C4A6E",                  # 6
+  "law":        "Sepia + EB Garamond/Lato + 羊皮卷宗 + #78350F 琥珀",                      # 1
+  "education":  "Warm cream + Playfair/Inter + 暖橙学术 + #9A3412 砖 + #F59E0B 银杏",   # 6
+  "sci":        "米色学术 (Nature 风) + Lora/EB Garamond + 期刊刊头 + 公式 + #C73E1D 红",  # 4
+  "eng":        "浅米工程 (CAD 蓝图) + Inter Condensed + 图纸标题栏 + 零件清单表",        # 8
+  "tech_qoder":  "鼠尾草绿 + 米白 + EB Garamond + 罗盘/折纸鹤/纸飞机/沙漏",                # 4
+  "tech_workbuddy": "暖白 + 深青 + 阳光橘 + 协作卡片",                                     # 4
 }
 ```
 
-### 风格-学科映射表
+> ⚠ `tech_qoder` / `tech_workbuddy` 是 CLI 内部 key (manifest 已规范化为 `qoder` / `workbuddy`)
+
+### 风格-学科映射表 (10 主题)
 
 | 学科/气质 | style | 理由 |
 |---|---|---|
-| 理工 / 编程 / 数据 / AI | `cs` | 黑客终端 + 绿色代码 |
+| 编程 / CS / 数据 / AI / 智能 | `cs` 或 `tech` | 终端黑客 (cs) / 暗紫青绿 (tech) |
 | 金融 / 商科 / 经济 / 管理 | `finance` | 烫金 editorial |
-| 法学 / 政治 / 哲学 / 社会学 | `law` | 羊皮卷宗 |
-| 师范 / 教育 / 心理 / 语言 | `education` | 暖橙学术 + 书本 |
-| 医学 / 药学 / 护理 / 公卫 | `medicine` | 手术仪表 + ECG |
-| 文学 / 艺术 / 设计 | `education`-like | 暖色优雅 |
-| 工程 / 建筑 / 机械 | `cs`-like | 技术感 |
+| 法学 / 政治 | `law` | 羊皮卷宗 |
+| 师范 / 教育 / 心理 / 应心 / 文学 | `education` | 暖橙学术 + 书本 |
+| 医学 / 药学 / 护理 / 公卫 / 麻醉 | `medicine` | 手术仪表 + ECG |
+| **数学 / 物理 / 化学 / 大气 / 生物** | **`sci`** ⭐新 | **米色学术 + 公式 + 元素周期表课程** |
+| **机械 / 材料 / 化工 / 微电子 / 集成电路 / 车辆 / 航天 / 食品** | **`eng`** ⭐新 | **浅米工程 + 蓝图 + 零件清单表** |
+| **冷门文科 (汉语言/历史/哲学/考古)** | **`qoder`** | 鼠尾草绿 + 米白 + 文人气 |
+| **商业文员 (财管/行管/信管/图书馆)** | **`workbuddy`** | 暖白深青 + 协作卡片 |
+| 文学 / 艺术 / 设计 | `education` | 暖色优雅 |
 
 ---
 
