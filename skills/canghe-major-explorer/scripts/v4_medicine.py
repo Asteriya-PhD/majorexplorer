@@ -26,7 +26,8 @@ import re
 from pathlib import Path
 
 # ── 字体: 换 Inter → IBM Plex Sans + Mono ──
-FONT_URL = "@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');"
+# 国内部署: 已将 Google Fonts 替换为 fonts.loli.net 镜像 (国内可访问)
+FONT_URL = "@import url('https://fonts.loli.net/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');"
 
 # ── 8 招 + Mayo 专属 CSS ──
 V4_BASE_CSS = """

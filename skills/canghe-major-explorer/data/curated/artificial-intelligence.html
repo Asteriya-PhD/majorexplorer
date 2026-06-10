@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人工智能专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="人工智能 = 机器学习 + 深度学习 + 计算机视觉 + 自然语言处理 + 大模型的交叉学科。2025 年应届生平均年薪 28.7 万领跑全行业, 但算法岗已严重饱和, 非名校博士进大厂核心岗越来越难">
+<style>
+@import url('https://fonts.loli.net/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; transition: opacity 200ms; }
+a:hover { opacity: 0.65; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
+
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+body { background: #0B1120; color: #F8FAFC; font-family: 'JetBrains Mono', 'PingFang SC', monospace; }
+/* 招 #5: 1px dot grid */
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(circle at 1px 1px, #1F2937 1px, transparent 0); background-size: 24px 24px; }
+/* 招 #1: noise + 招 #5 强化: CRT scanlines */
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background:
+    repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.025) 0px, rgba(34, 197, 94, 0.025) 1px, transparent 1px, transparent 3px),
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.77 0 0 0 0 0.37 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  opacity: 0.5;
+}
+/* 招 #6: 终端光标 */
+body { cursor: text; }
+
+
+.hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #1F2937; position: relative; z-index: 2; overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
+.terminal-panel { padding: 28px 24px; background: rgba(17, 24, 39, 0.6); border: 1px solid #22C55E; border-radius: 4px; box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.15), 0 0 40px rgba(34, 197, 94, 0.1), inset 0 0 60px rgba(34, 197, 94, 0.03); position: relative; }
+.terminal-panel::before { content: "╔═══════════════════════════════════════════════════════════╗"; position: absolute; top: -14px; left: 0; right: 0; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1; white-space: pre; opacity: 0.4; }
+.terminal-panel::after { content: "╚═══════════════════════════════════════════════════════════╝"; position: absolute; bottom: -14px; left: 0; right: 0; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1; white-space: pre; opacity: 0.4; }
+.terminal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #1F2937; }
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot.r { background: #EF4444; }
+.terminal-dot.y { background: #F59E0B; }
+.terminal-dot.g { background: #22C55E; }
+.terminal-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; margin-left: 8px; letter-spacing: 0.05em; }
+.terminal-status { margin-left: auto; display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #22C55E; letter-spacing: 0.08em; }
+.terminal-status::before { content: ""; width: 6px; height: 6px; background: #22C55E; border-radius: 50%; animation: pulse 1.2s infinite; }
+.terminal-body { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; line-height: 1.7; color: #94A3B8; }
+.terminal-line { margin-bottom: 6px; }
+.terminal-prompt { color: #22C55E; }
+.terminal-cmd { color: #F8FAFC; }
+.terminal-comment { color: #475569; }
+.terminal-output { color: #94A3B8; }
+.terminal-ascii { white-space: pre; color: #4ADE80; opacity: 1.0; line-height: 1.2; font-size: 0.75rem; margin: 12px 0; font-weight: 500; text-shadow: 0 0 6px rgba(34, 197, 94, 0.4); }
+
+.hero-side { display: flex; flex-direction: column; }
+.hero-decor { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #22C55E; letter-spacing: 0.15em; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+.hero-decor::before { content: "$ "; }
+.hero-decor::after { content: " █"; animation: pulse 1.2s infinite; }
+.hero h1 { font-family: 'JetBrains Mono', monospace; font-size: clamp(2.75rem, 5.5vw, 4.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: #F8FAFC; margin-bottom: 24px; min-height: 1.2em; }
+.hero h1 .typed-cursor { color: #22C55E; animation: pulse 1s infinite; }
+.hero h1 .typed::after { content: "_"; color: #22C55E; animation: pulse 1s infinite; }
+.hero-tagline { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; color: #94A3B8; margin-bottom: 32px; line-height: 1.7; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.tag { padding: 5px 12px; background: rgba(34, 197, 94, 0.05); border: 1px solid #1F2937; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #F8FAFC; letter-spacing: 0.05em; }
+.tag.primary { background: rgba(34, 197, 94, 0.1); border-color: #22C55E; color: #22C55E; }
+
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #1F2937; border-bottom: 1px solid #1F2937; border-left: 1px solid #1F2937; border-right: 1px solid #1F2937; }
+@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { padding: 20px 22px; border-right: 1px solid #1F2937; position: relative; }
+.stat:last-child { border-right: none; }
+@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #1F2937; } }
+.stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.15em; }
+.stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 600; color: #22C55E; margin-top: 6px; letter-spacing: -0.01em; }
+
+section.tab { border-top: 1px solid #475569; border-bottom: 2px solid #475569; }
+section.tab:first-of-type { border-top: none; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: #1F2937; border: 1px solid #1F2937; border-radius: 4px; overflow: hidden; margin-top: 32px; position: relative; z-index: 1; }
+.bento { position: relative; }
+
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(34, 197, 94, 0.85); z-index: 1; pointer-events: none; }
+.bento-item { padding: 28px 24px 24px; background: rgba(11, 17, 32, 0.6); position: relative; z-index: 0; transition: background 200ms; }
+.bento-item:hover { background: rgba(17, 24, 39, 0.8); }
+.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 0.9375rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #22C55E; border: 1px solid #22C55E; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; color: #F8FAFC; padding-right: 44px; text-wrap: balance; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.7em; }
+.bento-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; line-height: 1.5; }
+
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 24px 22px 20px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #22C55E; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
+.tier-S { background: #22C55E; color: #0B1120; }
+.tier-A { background: transparent; color: #22C55E; border: 1px solid #22C55E; }
+.tier-B { background: rgba(34, 197, 94, 0.1); color: #94A3B8; }
+.company-name { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; color: #F8FAFC; }
+.company-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; line-height: 1.5; margin-bottom: 12px; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #1F2937; }
+.sparkline-bar { flex: 1; background: #1F2937; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #22C55E; opacity: 0.6; }
+.sparkline-label { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #475569; letter-spacing: 0.1em; margin-top: 4px; }
+
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #1F2937; font-size: 0.875rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: rgba(17, 24, 39, 0.6); font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #94A3B8; }
+.salary-stage { font-weight: 600; color: #F8FAFC; }
+.salary-bar { display: inline-block; width: 80px; height: 6px; background: #1F2937; border-radius: 1px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #22C55E; }
+.yoy { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 2px; }
+.yoy.up   { color: #22C55E; background: rgba(34, 197, 94, 0.1); }
+.yoy.down { color: #EF4444; background: rgba(239, 68, 68, 0.1); }
+.yoy.flat { color: #94A3B8; background: rgba(31, 41, 55, 0.5); }
+.approx { font-family: 'JetBrains Mono', monospace; color: #475569; margin-right: 4px; }
+
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #1F2937; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.875rem; color: #F8FAFC; }
+.direction-bar { height: 10px; background: #1F2937; border-radius: 1px; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #22C55E; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #F8FAFC; }
+
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #22C55E; transform: translateY(-2px); }
+.path-pct { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #22C55E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
+.path-name { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; letter-spacing: 0.08em; margin-top: 8px; text-transform: uppercase; }
+
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-left: 2px solid #22C55E; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 6px; transform: translateX(4px); }
+.quote::before { content: "// "; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #F8FAFC; font-size: 0.875rem; }
+.quote-byline .quote-source { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; }
+.quote-text { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; line-height: 1.7; color: #F8FAFC; font-style: normal; }
+.quote-text::before { content: "“"; color: #22C55E; }
+.quote-text::after { content: "”"; color: #22C55E; }
+
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #1F2937; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.875rem; color: #F8FAFC; }
+.xuanke-bar { height: 8px; background: #1F2937; border-radius: 1px; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #22C55E; }
+.xuanke-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #22C55E; }
+
+.curriculum-lede { color: #94A3B8; font-size: 0.875rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 28px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; transition: border-color 250ms, transform 250ms; }
+.curriculum-block:hover { border-color: #22C55E; transform: translateY(-2px); }
+.curriculum-title { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #22C55E; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #1F2937; }
+.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.875rem; border-bottom: 1px dashed transparent; }
+.course:hover { border-bottom-color: #1F2937; }
+.course-name { color: #F8FAFC; }
+.course-credit { color: #94A3B8; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; margin-left: 8px; }
+
+.cta-block { margin-top: 32px; padding: 64px 48px; background: rgba(11, 17, 32, 0.8); border: 1px solid #22C55E; border-radius: 4px; text-align: center; position: relative; overflow: hidden; }
+.cta-block::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.05) 0px, transparent 1px); background-size: 100% 3px; pointer-events: none; }
+.cta-block h3 { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; margin-bottom: 12px; color: #F8FAFC; position: relative; z-index: 1; }
+.cta-block p { color: #94A3B8; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #0B1120; border: 1px solid #1F2937; border-radius: 2px; color: #F8FAFC; font-family: 'JetBrains Mono', monospace; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #22C55E; }
+.cta-button { padding: 14px 36px; background: #22C55E; color: #0B1120; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.9375rem; font-weight: 700; }
+.cta-note { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #475569; margin-top: 16px; position: relative; z-index: 1; }
+
+.watermark { color: #22C55E; opacity: 0.04; }
+.section-num { color: #22C55E; }
+section.tab h2 { color: #F8FAFC; }
+section.tab p { color: #F8FAFC; }
+section.tab p.lede { color: #94A3B8; line-break: strict; }
+section.tab h3 { color: #F8FAFC; }
+footer { background: rgba(11, 17, 32, 0.6); border-top: 1px solid #1F2937; }
+footer .label { color: #22C55E; }
+footer .data-source { color: #94A3B8; }
+
+.drop-cap::first-letter { font-family: 'JetBrains Mono', monospace; font-size: 4em; font-weight: 700; line-height: 0.9; float: left; margin: 0.05em 0.12em 0 0; color: #22C55E; }
+
+.lede { color: #94A3B8; line-break: strict; }
+
+.terminal-prompt, .hero-decor { color: #22C55E; }
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="terminal-panel">
+        <div class="terminal-header">
+          <span class="terminal-dot r"></span>
+          <span class="terminal-dot y"></span>
+          <span class="terminal-dot g"></span>
+          <span class="terminal-title">~/major/computer-science.md</span>
+          <span class="terminal-status">在线</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">cat /major/artificial-intelligence.md</span></div>
+          <pre class="terminal-ascii">   _____                  _       ____                       _
+  / ____|                | |     / ____|                     | |
+ | |     _ __ ___  _ __ | | __ | (___  _ __   ___ _ __   ___| |__
+ | |    | '__/ _ \| '_ \| |/ /  \___ \| '_ \ / _ \ '_ \ / __| '_ \
+ | |____| | | (_) | | | |   <   ____) | |_) |  __/ | | | (__| | | |
+  \_____|_|  \___/|_| |_|_|\_\ |_____/| .__/ \___|_| |_|\___|_| |_|
+                                       |_|
+</pre>
+          <div class="terminal-line"><span class="terminal-comment"># 人工智能 = 机器学习 + 深度学习 + 计算机视觉 + 自然语言处理 + 大模型的交叉学科。2025 年应届生平均年薪 28.7 万领跑全行业, 但算法岗已严重饱和, 非名校博士进大厂核心岗越来越难。适合数学天赋强、能卷论文、能调 BUG</span></div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">echo "高薪 · 4 年制 · 工学学士"</span></div>
+          <div class="terminal-line terminal-output">高薪 · 4 年 · 工学学士 · 按 Tab 浏览</div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">_</span><span class="typed-cursor">█</span></div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="hero-decor">cat /major/artificial-intelligence.md</div>
+        <h1>人工智能<span class="typed">_</span></h1>
+        <p class="hero-tagline">// 人工智能 = 机器学习 + 深度学习 + 计算机视觉 + 自然语言处理 + 大模型的交叉学科。2025 年应届生平均年薪 28.7 万领跑全行业, 但算法岗已严重饱和, 非名校博士进大厂核心岗越来越难</p>
+        <div class="hero-tags">
+          <span class="tag primary">[高薪]</span><span class="tag primary">[前沿]</span><span class="tag primary">[数学要求极高]</span>
+          <span class="tag">博士红利</span><span class="tag">算法岗饱和</span><span class="tag">算力瓶颈</span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-label">类型</div><div class="stat-value">工学 · 电子信息类</div></div>
+          <div class="stat"><div class="stat-label">学制</div><div class="stat-value">4Y · 工学学士</div></div>
+          <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★★★★</div></div>
+          <div class="stat"><div class="stat-label">更新</div><div class="stat-value">2026-06</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap">人工智能 = 机器学习 + 深度学习 + 计算机视觉 + 自然语言处理 + 大模型的交叉学科。2025 年应届生平均年薪 28.7 万领跑全行业, 但算法岗已严重饱和, 非名校博士进大厂核心岗越来越难。适合数学天赋强、能卷论文、能调 BUG 到凌晨的人。</p>
+    <h3>这个专业学什么?</h3><p>前 2 年打数学和编程底子: 高等数学 (微积分 / 线性代数 / 概率论与数理统计) 占据最多学分, 外加离散数学、最优化方法、程序设计 (C + Python)、数据结构与算法。数学课占比远超普通计算机专业, 线性代数和概率论是机器学习的地基, 学不透后面寸步难行。
+
+大三进入专业核心: 机器学习 (统计方法 + SVM + 树模型)、深度学习 (CNN/RNN/Transformer)、计算机视觉 (图像分类 + 目标检测 + 分割)、自然语言处理 (BERT/GPT 系列)、强化学习、大模型原理与微调。大部分学校大四安排 AI 系统设计、AI 芯片原理或产业实训。一句话: 数学推导占 40%, 代码实现占 30%, 调参炼丹占 30%。</p>
+    <h3>什么人适合?</h3><p>数学底子一定要好 — 线性代数、概率论、微积分这三门课拿不到 85+ 分会学得很痛苦。适合喜欢「为什么」多过「怎么做」的人: 调参背后是数学推导、损失函数背后是凸优化理论。如果只想写业务代码, 普通软件工程或计算机科学更友好。
+
+AI 行业极度看学历: 头部大厂算法岗 90% 要求硕士起步, 核心研究岗偏爱 985 博士 + 顶会论文。本科毕业直接做算法越来越难, 更多的是 AI 应用开发、数据分析、AI 产品经理等「泛 AI」岗位。有读博打算、能坐冷板凳啃论文的人在这个专业上限最高。</p>
+    <h3>避坑指南</h3><p>❌ 「AI 毕业年薪百万」 → 只有头部大厂算法 Offer 才接近百万, 且 90% 是硕博。本科普通院校 AI 毕业生月薪 8k-15k 是常态。❌ 「学了 AI 就能做 ChatGPT」 → 大模型训练是千卡集群 + 亿元预算的事, 普通人学的只是调 API 和微调小模型。真正做大模型的岗位全国不超过 2000 个。❌ 「数学差一点也能学 AI」 → 别信。Transformer 论文里全是矩阵求导 + 注意力机制的数学证明, 线性代数挂科的人大三会被劝退。❌ 「培训班 6 个月转行 AI 月薪 3 万」 → 收割焦虑的营销话术。真能转行成功的多是原本就有 985 理工科硕士背景的人。❌ 「算法岗永远缺人」 → 低端算法岗 (调参侠) 2024 年起已严重过剩, 缺的是能发顶会论文 + 能落地的高端人才。❌ 「AI 专业比计算机好就业」 → 恰恰相反, AI 就业面比 CS 窄。CS 能做的开发岗 AI 也能做, 但 CS 做不了的算法岗 AI 也未必能进。</p>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
+    <p class="curriculum-lede">全国 4 年制通用框架。AI 专业数学课占比约为普通 CS 的 1.5 倍。大三进入核心课后, 自学和读论文能力决定上限 — 课堂教的是 2 年前的技术, 最新的大模型论文要靠自己追。建议大二起参加 Kaggle / 天池竞赛积累实战经验。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">高等数学 A (微积分 + 线性代数 + 概率统计)</span><span class="course-credit">14 学分</span></div>
+          <div class="course"><span class="course-name">大学物理 (力学 + 电磁学)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">离散数学 (数理逻辑 + 图论 + 代数结构)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">程序设计基础 (C 语言)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">Python 编程与数据处理</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">数据结构与算法分析</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">思想政治类 + 大学英语 + 体育</span><span class="course-credit">12 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><span class="course-name">人工智能导论</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">机器学习 (统计方法 + SVM + 集成学习)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">深度学习 (CNN/RNN/Transformer)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">计算机视觉 (图像处理 + 目标检测)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">自然语言处理 (词向量 + BERT + 大模型)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">最优化理论与方法</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">强化学习与决策系统</span><span class="course-credit">3 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><span class="course-name">南大 · 统计机器学习与模式识别 (周志华团队方向)</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">清华 · 大规模语言模型与生成式 AI</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">上交 · 自动驾驶感知系统与 SLAM</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">中科大 · 智能语音与语音信号处理</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">西电 · 智能信息处理与遥感图像理解</span><span class="course-credit">5 学分</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">清</div>
+          <span class="bento-rank">S</span>
+          <div class="bento-name">清华大学</div>
+          <div class="bento-tag">北京 · 计算机全国第一, 张钹院士领衔, AI 研究院与产业深度融合</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">S</span>
+          <div class="bento-name">南京大学</div>
+          <div class="bento-tag">南京 · 周志华教授坐镇, CSRankings 2026 AI 学科全球第一</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">S</span>
+          <div class="bento-name">中国科学技术大学</div>
+          <div class="bento-tag">合肥 · 科大讯飞同源, 培养大量 AI 创业者和技术领袖</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">上</div>
+          <span class="bento-rank">S</span>
+          <div class="bento-name">上海交通大学</div>
+          <div class="bento-tag">上海 · 新设 AI 学院, 自动驾驶与 NLP 方向极强</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">S</span>
+          <div class="bento-name">浙江大学</div>
+          <div class="bento-tag">杭州 · CAD&CG 国家重点实验室, AI 全栈研究实力雄厚</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">西</div>
+          <span class="bento-rank">S</span>
+          <div class="bento-name">西安电子科技大学</div>
+          <div class="bento-tag">西安 · 智能感知与图像理解教育部重点实验室, CNUR S 级</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">东</div>
+          <span class="bento-rank">S</span>
+          <div class="bento-name">东南大学</div>
+          <div class="bento-tag">南京 · 人工智能学科近年黑马, 双一流建设重点方向</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">北京大学</div>
+          <div class="bento-tag">北京 · AI 基础理论强, 数学底蕴深厚, 前沿交叉学科优势</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">华中科技大学</div>
+          <div class="bento-tag">武汉 · 白翔团队机器视觉全国领先, 智能计算方向强</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">西</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">西安交通大学</div>
+          <div class="bento-tag">西安 · 郑南宁院士人机交互方向, 智能网络与视觉计算见长</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">字</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">字节跳动</div>
+          <div class="company-meta">★★★★★ · 校招 算法岗 40-80 万/年, 大模型方向溢价最高</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">百</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">百度</div>
+          <div class="company-meta">★★★★★ · 校招 AI 全栈 (文心大模型), 算法 35-70 万/年</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">腾</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">腾讯</div>
+          <div class="company-meta">★★★★ · 校招 AI Lab + 混元大模型, 50-100 万/年, 福利最好</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">阿</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">阿里巴巴</div>
+          <div class="company-meta">★★★★ · 校招 达摩院 + 通义大模型, 算法 35-80 万/年</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">华</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">华为 (2012 实验室)</div>
+          <div class="company-meta">★★★★ · 校招 盘古大模型 + AI 芯片, 40-90 万/年 + 股票</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">科</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">科大讯飞</div>
+          <div class="company-meta">★★★★ · 校招 语音 AI 龙头, 算法 25-50 万/年, 合肥性价比高</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">D</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">DeepSeek</div>
+          <div class="company-meta">★★★ · 校招 大模型新锐, 薪资对标一线大厂, 期权潜力大</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:40.0%"></div>
+            <div class="sparkline-bar" style="height:40.0%"></div>
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">商</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">商汤科技</div>
+          <div class="company-meta">★★★ · 校招 计算机视觉领军, 算法 30-60 万/年, 学术氛围浓</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="salary">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">应届 (0-2 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +15%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.22222222222222%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="45">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">中级 (3-5 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:41.17647058823529%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="55">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.70588235294117%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="85">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">资深 (6-10 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="65">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.625%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="160">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">高管 / 科学家 (10+ 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="120">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:34.285714285714285%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="200">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="350">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+        <div class="direction">
+          <div class="direction-name">算法工程师 (机器学习 / 深度学习)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
+          <div class="direction-pct">25%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">数据分析师 / 数据科学家</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">AI 应用开发工程师</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          <div class="direction-pct">15%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">AI 产品经理</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">AI 研究员 (学术 / 工业实验室)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">智能硬件 / 机器人 / 自动驾驶</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">读研 / 读博深造</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">38%</div>
+          <div class="path-name">考研 (985/211 AI 或 CS 硕士)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">15%</div>
+          <div class="path-name">保研直博 (AI 方向)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">10%</div>
+          <div class="path-name">出国留学 (AI 强校)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">32%</div>
+          <div class="path-name">直接就业 (算法 / 开发 / 产品)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">5%</div>
+          <div class="path-name">创业 / 自由职业 / AI 自媒体</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">字</div>
+            <div class="quote-byline">
+              <strong>字节跳动 算法工程师</strong>
+              <span class="quote-source">2020 届 · 知乎 @2025</span>
+            </div>
+          </div>
+          <p class="quote-text">985 硕士毕业进字节做推荐算法, 第一年总包 45 万确实香。但代价是研究生三年几乎没放过周末, 刷 LeetCode 500 题 + 发了一篇 B 会论文才拿到面试资格。组里今年新来的实习生已经是清华博士了, 越来越卷。</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某 211 本科 → 数据分析师</strong>
+              <span class="quote-source">2019 届 · 知乎 @2024</span>
+            </div>
+          </div>
+          <p class="quote-text">本科 AI 专业毕业, 发现算法岗投 100 份简历一个面试都没有。后来降维做数据分析, 月薪 13k。班上 30 个人, 真正做算法的就 2 个 (都读了研)。其他同学分布在开发、测试、产品、运营岗位。AI 专业名头好听, 但本科出来很尴尬。</p>
+        </div>
+        <div class="quote fade-up" data-delay="160" >
+          <div class="quote-head">
+            <div class="quote-avatar">中</div>
+            <div class="quote-byline">
+              <strong>中科院自动化所 博士在读</strong>
+              <span class="quote-source">2021 届 · 校友访谈 @北京</span>
+            </div>
+          </div>
+          <p class="quote-text">从大三进实验室跟师兄做强化学习, 到直博发了几篇顶会, 最大感受就是 AI 领域的正反馈很强 — 模型训出好结果那一刻是真的爽。但大部分人熬不过调参的枯燥期, 实验室每年都有转硕士走人的。想走学术路线的话, 选对导师比选对学校更重要。</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">大</div>
+            <div class="quote-byline">
+              <strong>大厂算法 → AI 创业公司技术合伙人</strong>
+              <span class="quote-source">2018 届 · 知乎 @2025</span>
+            </div>
+          </div>
+          <p class="quote-text">在百度做了 4 年 NLP, 年薪涨到 70 万时发现自己只是大模型流水线上的螺丝钉。出来创业做 AI 法律助手, 才发现技术只占 30%, 产品和商业化才是真正卡脖子的地方。学 AI 的人容易陷入技术崇拜, 建议在校期间多去实习, 理解真实世界的问题。</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 化学</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:98%"></div></div>
+          <div class="xuanke-pct">98%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">仅物理</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:2%"></div></div>
+          <div class="xuanke-pct">2%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="cta">
+  <div class="watermark">10</div>
+  <div class="container">
+    <div class="section-num">10 / 10 · 关联志愿</div>
+    <h2>关联志愿</h2>
+    <div class="cta-block">
+      <h3>基于你的位次, 推荐这些校 + 组</h3>
+      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
+      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
+        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
+        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
+        <button type="submit" class="cta-button">推荐志愿 →</button>
+      </form>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
+    <div class="data-source">数据源: 5 路 web search 实录 (培养方案 PDF 2023-2025 + 脉脉/猎聘/智联 2025 薪资报告 + CNUR/软科 2025-2026 排行榜 + 新高考选科数据 2026 + 知乎/学长学姐自述 2022-2025)</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

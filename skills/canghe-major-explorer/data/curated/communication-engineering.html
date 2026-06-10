@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>通信工程专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="通信工程是 5G/6G 技术落地的核心引擎，也是物联网、卫星互联网、自动驾驶的基石学科。兼具理论深度与工程实用性，以数学和物理为根基，横跨电子、计算机、信息三大领域。毕业生 70% 进入运营商、设备商">
+<style>
+@import url('https://fonts.loli.net/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; transition: opacity 200ms; }
+a:hover { opacity: 0.65; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
+
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+body { background: #0B1120; color: #F8FAFC; font-family: 'JetBrains Mono', 'PingFang SC', monospace; }
+/* 招 #5: 1px dot grid */
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(circle at 1px 1px, #1F2937 1px, transparent 0); background-size: 24px 24px; }
+/* 招 #1: noise + 招 #5 强化: CRT scanlines */
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background:
+    repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.025) 0px, rgba(34, 197, 94, 0.025) 1px, transparent 1px, transparent 3px),
+    url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.77 0 0 0 0 0.37 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  opacity: 0.5;
+}
+/* 招 #6: 终端光标 */
+body { cursor: text; }
+
+
+.hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #1F2937; position: relative; z-index: 2; overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
+.terminal-panel { padding: 28px 24px; background: rgba(17, 24, 39, 0.6); border: 1px solid #22C55E; border-radius: 4px; box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.15), 0 0 40px rgba(34, 197, 94, 0.1), inset 0 0 60px rgba(34, 197, 94, 0.03); position: relative; }
+.terminal-panel::before { content: "╔═══════════════════════════════════════════════════════════╗"; position: absolute; top: -14px; left: 0; right: 0; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1; white-space: pre; opacity: 0.4; }
+.terminal-panel::after { content: "╚═══════════════════════════════════════════════════════════╝"; position: absolute; bottom: -14px; left: 0; right: 0; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1; white-space: pre; opacity: 0.4; }
+.terminal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #1F2937; }
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot.r { background: #EF4444; }
+.terminal-dot.y { background: #F59E0B; }
+.terminal-dot.g { background: #22C55E; }
+.terminal-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; margin-left: 8px; letter-spacing: 0.05em; }
+.terminal-status { margin-left: auto; display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #22C55E; letter-spacing: 0.08em; }
+.terminal-status::before { content: ""; width: 6px; height: 6px; background: #22C55E; border-radius: 50%; animation: pulse 1.2s infinite; }
+.terminal-body { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; line-height: 1.7; color: #94A3B8; }
+.terminal-line { margin-bottom: 6px; }
+.terminal-prompt { color: #22C55E; }
+.terminal-cmd { color: #F8FAFC; }
+.terminal-comment { color: #475569; }
+.terminal-output { color: #94A3B8; }
+.terminal-ascii { white-space: pre; color: #4ADE80; opacity: 1.0; line-height: 1.2; font-size: 0.75rem; margin: 12px 0; font-weight: 500; text-shadow: 0 0 6px rgba(34, 197, 94, 0.4); }
+
+.hero-side { display: flex; flex-direction: column; }
+.hero-decor { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #22C55E; letter-spacing: 0.15em; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+.hero-decor::before { content: "$ "; }
+.hero-decor::after { content: " █"; animation: pulse 1.2s infinite; }
+.hero h1 { font-family: 'JetBrains Mono', monospace; font-size: clamp(2.75rem, 5.5vw, 4.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: #F8FAFC; margin-bottom: 24px; min-height: 1.2em; }
+.hero h1 .typed-cursor { color: #22C55E; animation: pulse 1s infinite; }
+.hero h1 .typed::after { content: "_"; color: #22C55E; animation: pulse 1s infinite; }
+.hero-tagline { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; color: #94A3B8; margin-bottom: 32px; line-height: 1.7; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.tag { padding: 5px 12px; background: rgba(34, 197, 94, 0.05); border: 1px solid #1F2937; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #F8FAFC; letter-spacing: 0.05em; }
+.tag.primary { background: rgba(34, 197, 94, 0.1); border-color: #22C55E; color: #22C55E; }
+
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #1F2937; border-bottom: 1px solid #1F2937; border-left: 1px solid #1F2937; border-right: 1px solid #1F2937; }
+@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { padding: 20px 22px; border-right: 1px solid #1F2937; position: relative; }
+.stat:last-child { border-right: none; }
+@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #1F2937; } }
+.stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.15em; }
+.stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 600; color: #22C55E; margin-top: 6px; letter-spacing: -0.01em; }
+
+section.tab { border-top: 1px solid #475569; border-bottom: 2px solid #475569; }
+section.tab:first-of-type { border-top: none; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: #1F2937; border: 1px solid #1F2937; border-radius: 4px; overflow: hidden; margin-top: 32px; position: relative; z-index: 1; }
+.bento { position: relative; }
+
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(34, 197, 94, 0.85); z-index: 1; pointer-events: none; }
+.bento-item { padding: 28px 24px 24px; background: rgba(11, 17, 32, 0.6); position: relative; z-index: 0; transition: background 200ms; }
+.bento-item:hover { background: rgba(17, 24, 39, 0.8); }
+.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 0.9375rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #22C55E; border: 1px solid #22C55E; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; color: #F8FAFC; padding-right: 44px; text-wrap: balance; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.7em; }
+.bento-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; line-height: 1.5; }
+
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 24px 22px 20px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #22C55E; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
+.tier-S { background: #22C55E; color: #0B1120; }
+.tier-A { background: transparent; color: #22C55E; border: 1px solid #22C55E; }
+.tier-B { background: rgba(34, 197, 94, 0.1); color: #94A3B8; }
+.company-name { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; color: #F8FAFC; }
+.company-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; line-height: 1.5; margin-bottom: 12px; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #1F2937; }
+.sparkline-bar { flex: 1; background: #1F2937; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #22C55E; opacity: 0.6; }
+.sparkline-label { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #475569; letter-spacing: 0.1em; margin-top: 4px; }
+
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #1F2937; font-size: 0.875rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: rgba(17, 24, 39, 0.6); font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #94A3B8; }
+.salary-stage { font-weight: 600; color: #F8FAFC; }
+.salary-bar { display: inline-block; width: 80px; height: 6px; background: #1F2937; border-radius: 1px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #22C55E; }
+.yoy { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 2px; }
+.yoy.up   { color: #22C55E; background: rgba(34, 197, 94, 0.1); }
+.yoy.down { color: #EF4444; background: rgba(239, 68, 68, 0.1); }
+.yoy.flat { color: #94A3B8; background: rgba(31, 41, 55, 0.5); }
+.approx { font-family: 'JetBrains Mono', monospace; color: #475569; margin-right: 4px; }
+
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #1F2937; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.875rem; color: #F8FAFC; }
+.direction-bar { height: 10px; background: #1F2937; border-radius: 1px; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #22C55E; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #F8FAFC; }
+
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #22C55E; transform: translateY(-2px); }
+.path-pct { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #22C55E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
+.path-name { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; letter-spacing: 0.08em; margin-top: 8px; text-transform: uppercase; }
+
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-left: 2px solid #22C55E; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 6px; transform: translateX(4px); }
+.quote::before { content: "// "; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #F8FAFC; font-size: 0.875rem; }
+.quote-byline .quote-source { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; }
+.quote-text { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; line-height: 1.7; color: #F8FAFC; font-style: normal; }
+.quote-text::before { content: "“"; color: #22C55E; }
+.quote-text::after { content: "”"; color: #22C55E; }
+
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #1F2937; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.875rem; color: #F8FAFC; }
+.xuanke-bar { height: 8px; background: #1F2937; border-radius: 1px; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #22C55E; }
+.xuanke-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #22C55E; }
+
+.curriculum-lede { color: #94A3B8; font-size: 0.875rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 28px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; transition: border-color 250ms, transform 250ms; }
+.curriculum-block:hover { border-color: #22C55E; transform: translateY(-2px); }
+.curriculum-title { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #22C55E; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #1F2937; }
+.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.875rem; border-bottom: 1px dashed transparent; }
+.course:hover { border-bottom-color: #1F2937; }
+.course-name { color: #F8FAFC; }
+.course-credit { color: #94A3B8; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; margin-left: 8px; }
+
+.cta-block { margin-top: 32px; padding: 64px 48px; background: rgba(11, 17, 32, 0.8); border: 1px solid #22C55E; border-radius: 4px; text-align: center; position: relative; overflow: hidden; }
+.cta-block::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.05) 0px, transparent 1px); background-size: 100% 3px; pointer-events: none; }
+.cta-block h3 { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; margin-bottom: 12px; color: #F8FAFC; position: relative; z-index: 1; }
+.cta-block p { color: #94A3B8; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #0B1120; border: 1px solid #1F2937; border-radius: 2px; color: #F8FAFC; font-family: 'JetBrains Mono', monospace; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #22C55E; }
+.cta-button { padding: 14px 36px; background: #22C55E; color: #0B1120; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.9375rem; font-weight: 700; }
+.cta-note { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #475569; margin-top: 16px; position: relative; z-index: 1; }
+
+.watermark { color: #22C55E; opacity: 0.04; }
+.section-num { color: #22C55E; }
+section.tab h2 { color: #F8FAFC; }
+section.tab p { color: #F8FAFC; }
+section.tab p.lede { color: #94A3B8; line-break: strict; }
+section.tab h3 { color: #F8FAFC; }
+footer { background: rgba(11, 17, 32, 0.6); border-top: 1px solid #1F2937; }
+footer .label { color: #22C55E; }
+footer .data-source { color: #94A3B8; }
+
+.drop-cap::first-letter { font-family: 'JetBrains Mono', monospace; font-size: 4em; font-weight: 700; line-height: 0.9; float: left; margin: 0.05em 0.12em 0 0; color: #22C55E; }
+
+.lede { color: #94A3B8; line-break: strict; }
+
+.terminal-prompt, .hero-decor { color: #22C55E; }
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="terminal-panel">
+        <div class="terminal-header">
+          <span class="terminal-dot r"></span>
+          <span class="terminal-dot y"></span>
+          <span class="terminal-dot g"></span>
+          <span class="terminal-title">~/major/computer-science.md</span>
+          <span class="terminal-status">在线</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">cat /major/communication-engineering.md</span></div>
+          <pre class="terminal-ascii">   _____                  _       ____                       _
+  / ____|                | |     / ____|                     | |
+ | |     _ __ ___  _ __ | | __ | (___  _ __   ___ _ __   ___| |__
+ | |    | '__/ _ \| '_ \| |/ /  \___ \| '_ \ / _ \ '_ \ / __| '_ \
+ | |____| | | (_) | | | |   <   ____) | |_) |  __/ | | | (__| | | |
+  \_____|_|  \___/|_| |_|_|\_\ |_____/| .__/ \___|_| |_|\___|_| |_|
+                                       |_|
+</pre>
+          <div class="terminal-line"><span class="terminal-comment"># 通信工程是 5G/6G 技术落地的核心引擎，也是物联网、卫星互联网、自动驾驶的基石学科。兼具理论深度与工程实用性，以数学和物理为根基，横跨电子、计算机、信息三大领域。毕业生 70% 进入运营商、设备商和央企科研院所，职业稳定性在工科中名列前</span></div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">echo "5G6G 双风口 · 4 年制 · 工学学士"</span></div>
+          <div class="terminal-line terminal-output">5G6G 双风口 · 4 年 · 工学学士 · 按 Tab 浏览</div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">_</span><span class="typed-cursor">█</span></div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="hero-decor">cat /major/communication-engineering.md</div>
+        <h1>通信工程<span class="typed">_</span></h1>
+        <p class="hero-tagline">// 通信工程是 5G/6G 技术落地的核心引擎，也是物联网、卫星互联网、自动驾驶的基石学科。兼具理论深度与工程实用性，以数学和物理为根基，横跨电子、计算机、信息三大领域。毕业生 70% 进入运营商、设备商</p>
+        <div class="hero-tags">
+          <span class="tag primary">[5G6G 双风口]</span><span class="tag primary">[信号处理]</span><span class="tag primary">[华为中兴]</span>
+          <span class="tag">物联网</span><span class="tag">数学要求高</span><span class="tag">稳定就业</span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-label">类型</div><div class="stat-value">工学 · 电子信息类</div></div>
+          <div class="stat"><div class="stat-label">学制</div><div class="stat-value">4Y · 工学学士</div></div>
+          <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★★★☆</div></div>
+          <div class="stat"><div class="stat-label">更新</div><div class="stat-value">2026-06</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap">通信工程是 5G/6G 技术落地的核心引擎，也是物联网、卫星互联网、自动驾驶的基石学科。兼具理论深度与工程实用性，以数学和物理为根基，横跨电子、计算机、信息三大领域。毕业生 70% 进入运营商、设备商和央企科研院所，职业稳定性在工科中名列前茅。</p>
+    <h3>这个专业学什么?</h3><p>前 2 年集中打数理和电子基础: 高等数学 / 线性代数 / 概率论与数理统计 / 复变函数与积分变换 / 大学物理 / C 语言程序设计 / 电路分析 / 模拟电子技术 / 数字电子技术。这一阶段的目标是帮你在数学和电路层面「通」而不是「背」，因为后续所有专业课都建立在这些基础之上。
+
+大三开始深入学习通信核心理论: 信号与系统 / 数字信号处理 / 通信原理 / 电磁场与电磁波 / 高频电子线路 / 信息论与编码 / 现代交换技术 / 移动通信。这些课程从时域到频域，从有线到无线，覆盖了信息传输的全链路。大四通常有通信系统综合设计、生产实习、毕业设计等实践环节。
+
+本质上，通信工程教的是「如何把信息从 A 点可靠高效地传到 B 点」—— 看似简单的一句话背后，涉及调制解调、信道编码、多址接入、天线设计、网络协议等层层技术栈。数理功底不够的人会觉得「每门课都是天书」，但一旦跨过门槛，你会发现这套体系极其自洽。</p>
+    <h3>什么人适合?</h3><p>适合数学和物理基础扎实的人 —— 通信工程对复变函数、电磁场、概率统计的依赖度远高于普通工科专业。如果你高中时物理的电磁学部分学得比较轻松、不排斥数学公式推导，这门课学起来会相对顺畅。动手能力也重要: 示波器、频谱仪、通信仿真软件 (MATLAB/Simulink) 是日常工具。
+
+性格上，通信工程既需要理论上的钻研精神（理解信源编码/信道容量的数学推导），也需要工程上的落地能力（调通一个射频链路远比纸上谈兵困难）。如果对「信息是怎么在空中跑」有天然好奇心，愿意同时啃数学推导和动手调参，这个专业会带来很强的正反馈。不太适合对纯软件感兴趣的人 —— 通信硬件的学习曲线非常陡峭。</p>
+    <h3>避坑指南</h3><p>❌ 「通信工程 = 修手机装宽带」 → 实际工作涉及 5G 基站的协议栈开发、射频前端设计、通信算法仿真、卫星系统架构，远非终端运维能概括。❌ 「学通信毕业都能进华为拿高薪」 → 华为等头部设备商研发岗校招极度压缩，通常只去顶尖 985/211 和几所行业强校（如北邮、成电、西电），普通院校毕业生更多进入运营商或通信服务商，起薪差距可达 3-5 倍。❌ 「通信是夕阳产业」 → 恰恰相反，5G 规模化、6G 预研 (2025-2028)、卫星互联网 (星链/千帆星座)、车联网 V2X 正在创造新一轮需求，只是岗位从「硬件集成」转向「算法+协议+软件」。❌ 「数学不好也能学」 → 信号处理吃复变函数，电磁场吃偏微分方程，信息论吃概率论，通信原理吃随机过程。数学是通信工程的「母语」，过不了线代和概率关，核心课会非常痛苦。❌ 「通工和计算机差不多」 → 两者差异很大: 通工偏硬（信号+电磁场+射频），CS 偏软（算法+系统+AI）。通工转 CS 相对容易，反之困难。❌ 「女生不适合学通信」 → 通工行业性别比例确实失衡（约 7:3），但女性在通信算法、标准化(3GPP)、项目管理等领域表现优异，各大运营商和设备商近年主动提升女性工程师比例。</p>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
+    <p class="curriculum-lede">全国 4 年制通用框架。通工和电子/信息类专业前 2 年课程高度重叠，大三才显著分化。数学是最大筛选器 —— 线性代数和概率论不过关的人会在通信原理和信号处理课上「听天书」。MATLAB/Python 仿真能力贯穿全课程，纯手算的时代已经过去了。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">高等数学 A (线性代数 + 概率统计)</span><span class="course-credit">14 学分</span></div>
+          <div class="course"><span class="course-name">复变函数与积分变换</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">大学物理 (含电磁学实验)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">C 语言程序设计</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">大学英语</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">思想政治理论 (马原/毛概/思修/史纲)</span><span class="course-credit">12 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><span class="course-name">电路分析基础</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">模拟电子技术</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">数字电子技术</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">信号与系统 (时域/频域/S 变换/Z 变换)</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">数字信号处理 (FFT/滤波器设计)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">通信原理 (信源/信道编码/调制解调)</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">电磁场与电磁波 (麦克斯韦方程组/天线)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">高频电子线路 (射频电路/振荡/混频)</span><span class="course-credit">3 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><span class="course-name">北京邮电大学 · 5G/6G 移动通信 + 软件无线电 (SDR 方向)</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">电子科技大学 · 微波与天线设计 + 射频 IC 设计 (射频硬件方向)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">西安电子科技大学 · 雷达信号处理 + 通信对抗 (军工通信方向)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">东南大学 · 毫米波通信 + 移动通信网络优化 (无线网络方向)</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">哈尔滨工业大学 · 卫星通信 + 深空通信 (航天通信方向)</span><span class="course-credit">5 学分</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">北京邮电大学</div>
+          <div class="bento-tag">北京 · 通信行业黄埔军校，5G/6G 标准核心力量</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">电</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">电子科技大学</div>
+          <div class="bento-tag">成都 · 微波射频 + 通信系统，电子信息领域翘楚</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">西</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">西安电子科技大学</div>
+          <div class="bento-tag">西安 · 雷达信号处理 + 通信抗干扰，军工底蕴深厚</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">清</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">清华大学</div>
+          <div class="bento-tag">北京 · 电子工程综合实力顶尖，基础研究领先</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">北京理工大学</div>
+          <div class="bento-tag">北京 · 国防通信 + 雷达技术，A+ 新晋选手</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">上</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">上海交通大学</div>
+          <div class="bento-tag">上海 · 无线通信 + 信号处理，科研产出密集</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">东</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">东南大学</div>
+          <div class="bento-tag">南京 · 毫米波通信 + 移动通信国家重点实验室</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">北京航空航天大学</div>
+          <div class="bento-tag">北京 · 空天通信 + 卫星导航，航空航天特色鲜明</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">南京邮电大学</div>
+          <div class="bento-tag">南京 · 双非黑马，华为校招目标院校，长三角就业强势</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">华中科技大学</div>
+          <div class="bento-tag">武汉 · 光通信 + 电信网络，武汉光谷核心校友力量</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">华</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">华为</div>
+          <div class="company-meta">★★★★★ · 校招 研发岗 35-80 万/年 + 股票分红，2012 实验室顶级</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">中兴通讯</div>
+          <div class="company-meta">★★★★ · 校招 算法/协议栈 25-50 万/年，国企背景稳定性强</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">中国移动 (研究院/设计院)</div>
+          <div class="company-meta">★★★★★ · 校招 总包 18-30 万/年，隐性福利占比 30%+</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">中国电信 (天翼云/研究院)</div>
+          <div class="company-meta">★★★★ · 校招 总包 15-28 万/年，云网融合新方向</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">中国联通 (网络研究院)</div>
+          <div class="company-meta">★★★★ · 校招 总包 15-25 万/年，混改后活力提升</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">爱</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">爱立信 (中国)</div>
+          <div class="company-meta">★★★ · 校招 20-35 万/年，外企时薪高/WLB 好</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">烽</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">烽火通信</div>
+          <div class="company-meta">★★★ · 校招 光通信研发 15-28 万/年，武汉光谷核心</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">中国电子科技集团 (各研究所)</div>
+          <div class="company-meta">★★★ · 校招 20-35 万/年 + 事业编，军工通信稳定天花板</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="salary">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">应届/初级工程师 (0-2 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">中级工程师 (3-5 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:51.42857142857142%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">资深/架构师 (6-10 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="30">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="45">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.28571428571429%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="70">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">技术专家/高管 (10+ 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="50">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="80">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.333333333333336%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="150">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+        <div class="direction">
+          <div class="direction-name">通信设备制造商 (华为/中兴/烽火)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:28%"></div></div>
+          <div class="direction-pct">28%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">电信运营商 (移动/电信/联通)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
+          <div class="direction-pct">22%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">互联网/IT 企业 (BAT/字节/美团)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          <div class="direction-pct">15%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">央企科研院所/军工 (中国电科/航天科技)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">通信服务/设计/监理公司</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">读研/读博深造</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">考公/事业单位/其他</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:3%"></div></div>
+          <div class="direction-pct">3%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">28%</div>
+          <div class="path-name">保研/考研 (通信与信息系统/信号处理)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">8%</div>
+          <div class="path-name">出国 (美/欧/新加坡 通信/EE)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">55%</div>
+          <div class="path-name">直接就业 (华为/运营商/设备商/研究所)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">7%</div>
+          <div class="path-name">跨专业考研 (CS/金融科技/量化)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">2%</div>
+          <div class="path-name">创业/自由职业/转行</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">华</div>
+            <div class="quote-byline">
+              <strong>华为 5G 基站协议栈开发工程师</strong>
+              <span class="quote-source">2019 届 · 校友访谈 @深圳</span>
+            </div>
+          </div>
+          <p class="quote-text">本科在成电学通工的时候，觉得信号与系统和通信原理简直不是人学的 — 数学推导堆满黑板。但工作后发现，工作中遇到的 3GPP 协议远比书上复杂十倍。好在数理基础打得好，看协议规范才不至于完全懵。华为加班确实多，但年终奖也确实香。</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">中</div>
+            <div class="quote-byline">
+              <strong>中国移动省公司 网络规划工程师</strong>
+              <span class="quote-source">2020 届 · 知乎 @2025</span>
+            </div>
+          </div>
+          <p class="quote-text">班上 30 个人，去运营商的大概占了 1/3。运营商薪资比不上华为，但胜在稳定、福利齐全、几乎不裁员。我现在日常工作就是做 5G 基站的覆盖规划和容量评估，技术深度一般，但需要懂业务场景。通工学到的东西用到的不超过 40%，很多都是入职后重新学的。</p>
+        </div>
+        <div class="quote fade-up" data-delay="160" >
+          <div class="quote-head">
+            <div class="quote-avatar">东</div>
+            <div class="quote-byline">
+              <strong>东南大学 通信博士在读</strong>
+              <span class="quote-source">2018 届 · 校友访谈 @南京</span>
+            </div>
+          </div>
+          <p class="quote-text">本科毕业后在通信设计院干了 2 年，每天画通信线路图、做预算，感觉自己在做民工活。果断辞职回学校读硕士，然后转博做毫米波通信。说实话本科通工和硕士/博士做的东西完全不是一个层次 — 本科是消化已有知识，博士是拓展人类知识边界。想走科研路线的话，建议尽早进实验室跟项目。</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">上</div>
+            <div class="quote-byline">
+              <strong>上海 互联网公司 后端开发</strong>
+              <span class="quote-source">2021 届 · 知乎 @2026</span>
+            </div>
+          </div>
+          <p class="quote-text">学通工 4 年，毕业发现自己的编程能力在互联网大厂面前基本等于零。自学了半年 Java 才找到后端开发的工作。通工教会我的不是具体的通信知识，而是一种「系统思维」 — 无论是通信系统还是分布式系统，本质上都是模块化、协议化、分层解耦。这层理解让我的架构能力比纯 CS 出身的同事有优势。</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 化学</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:96%"></div></div>
+          <div class="xuanke-pct">96%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 化学 + 生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:3%"></div></div>
+          <div class="xuanke-pct">3%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">仅物理 (部分院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:1%"></div></div>
+          <div class="xuanke-pct">1%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="cta">
+  <div class="watermark">10</div>
+  <div class="container">
+    <div class="section-num">10 / 10 · 关联志愿</div>
+    <h2>关联志愿</h2>
+    <div class="cta-block">
+      <h3>基于你的位次, 推荐这些校 + 组</h3>
+      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
+      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
+        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
+        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
+        <button type="submit" class="cta-button">推荐志愿 →</button>
+      </form>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
+    <div class="data-source">数据源: web search 实录 (软科 2025 排名 + 教育部第四/五轮学科评估 + 职友集/猎聘/BOSS 直聘薪酬报告 + 知乎/百家号从业者分享 + 高考 100 选科统计)</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
