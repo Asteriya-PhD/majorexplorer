@@ -170,19 +170,28 @@ footer .label { color: #FAFAFA; font-family: 'Cormorant Garamond', serif; }
 footer .data-source { color: #999; }
 .drop-cap::first-letter { font-family: 'Cormorant Garamond', serif; color: #DC2626; }
 
+/* ── Hero 主内容区 (arts 居中布局, 暗色画室) ── */
+.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
+.hero-chapter { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.4em; color: #F59E0B; margin-bottom: 14px; text-transform: uppercase; }
+.hero-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.02em; color: #FAFAFA; margin: 0 0 6px; }
+.title-cn { display: block; font-family: 'Noto Serif SC', serif; font-weight: 900; color: #FAFAFA; }
+.title-en-small { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 0.55em; color: #D9CFB9; letter-spacing: 0.05em; margin-bottom: 4px; }
+.title-en { display: block; font-family: 'Archivo', sans-serif; font-size: 0.7rem; color: #D9CFB9; letter-spacing: 0.4em; margin-top: 12px; text-transform: uppercase; font-weight: 600; }
+.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #D9CFB9; max-width: 720px; margin: 16px auto 0; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 880px; padding: 20px 0; border-top: 1px solid rgba(217,207,185,0.3); border-bottom: 1px solid rgba(217,207,185,0.3); }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
+.hu-tag { font-family: 'Archivo', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; padding: 4px 12px; border: 1px solid #D9CFB9; color: #FAFAFA; border-radius: 0; text-transform: uppercase; font-weight: 500; }
+
 </style>
 </head>
 <body>
 
 <header class="hero" style="background: linear-gradient(180deg, #14110D 0%, #2A2520 100%);">
+  <!-- 装饰层 (暗色画室 + 4 角 + 顶部 2 tag) -->
   <div class="studio-floor"></div>
-  <div class="studio-lamp">
-    <div class="lamp-rod"></div>
-    <div class="lamp-arm"></div>
-    <div class="lamp-head"></div>
-    <div class="lamp-bulb"></div>
-    <div class="lamp-cone"></div>
-  </div>
+  <div class="studio-light"></div>
+  <div class="art-tag art-tag-1">Studio of Making</div>
+  <div class="art-tag art-tag-2">Atelier · 第 042 号</div>
   <div class="tubes-stage">
     <div class="paint-tube tube-1"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Jaune</div></div><div class="paint-tube-crimp"></div></div>
     <div class="paint-tube tube-2"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Rouge</div></div><div class="paint-tube-crimp"></div></div>
@@ -198,58 +207,30 @@ footer .data-source { color: #999; }
       <div class="palette-dab" style="left: 48px; top: 36px; background: #4A5D3A;"></div>
     </div>
   </div>
-  <div class="room-corner">
-    <span class="art-tag">Studio of Making</span>
-    <span class="art-tag" style="transform: rotate(1deg);">Atelier · 第 042 号</span>
+  <div class="studio-lamp">
+    <div class="lamp-rod"></div>
+    <div class="lamp-arm"></div>
+    <div class="lamp-head"></div>
+    <div class="lamp-bulb"></div>
+    <div class="lamp-cone"></div>
   </div>
-  <div class="gallery-frame"></div>
-  <div class="container" style="padding-top: 80px; padding-bottom: 120px;">
-    <div class="easel-stage">
-      <div class="easel-leg-back"></div>
-      <div class="easel-leg-left"></div>
-      <div class="easel-leg-right"></div>
-      <div class="easel-top"></div>
-      <div class="easel-crossbar"></div>
-      <div class="easel-shelf"></div>
-      <div class="canvas-wrap">
-        <div class="canvas-frame">
-          <div class="canvas-inner">
-            <svg class="painting-svg" viewBox="0 0 476 576" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" y="0" width="476" height="320" fill="#1E40AF" opacity="0.92"/>
-              <path d="M 0 100 Q 120 60 240 110 T 476 90 L 476 220 Q 360 260 200 200 T 0 240 Z" fill="#DC2626" opacity="0.95"/>
-              <circle cx="340" cy="150" r="58" fill="#F59E0B"/>
-              <path d="M 60 60 Q 200 30 320 80" stroke="#E76F51" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.85"/>
-              <line x1="0" y1="280" x2="476" y2="180" stroke="#1A1A1A" stroke-width="14" stroke-linecap="square"/>
-              <rect x="0" y="320" width="476" height="256" fill="#F5F0E8"/>
-              <rect x="40" y="380" width="120" height="120" fill="#1A1A1A"/>
-              <rect x="200" y="420" width="80" height="80" fill="#003049"/>
-              <circle cx="380" cy="450" r="44" fill="#FAFAFA" stroke="#1A1A1A" stroke-width="2"/>
-              <circle cx="100" cy="500" r="14" fill="#1E40AF"/>
-              <circle cx="160" cy="540" r="10" fill="#DC2626"/>
-              <circle cx="280" cy="520" r="18" fill="#F59E0B"/>
-              <circle cx="430" cy="500" r="12" fill="#E76F51"/>
-              <path d="M 240 320 L 244 380 L 236 440 L 242 500 L 238 560" stroke="#1E40AF" stroke-width="3" fill="none" opacity="0.6" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-      </div>
+  <!-- 主内容 (居中, viewport 1440×900 可见) -->
+  <div class="hero-content">
+    <div class="hero-chapter">速览 · 第一章</div>
+    <h1 class="hero-title">
+      <span class="title-en-small">Studio of</span>
+      <span class="title-cn">视觉传达设计</span>
+      <span class="title-en">CRAFTING · MAKING · ATELIER</span>
+    </h1>
+    <p class="hero-tagline">视觉传达设计是「让信息更美更有效」 — 品牌设计 + 字体设计 + 包装设计 + 海报设计 + 书籍设计 + UI/UX + 数字媒体设计 + 影视动画包装, 是「平面 + 数字 + 商业」交叉。本科起薪 7-12 万, 头部互联网 (字节/腾讯/阿里/小米) UX 岗校招 18-30 万, 4A 广告/品牌咨询/出版</p>
+    <div class="hu-stats-grid">
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">学科</span><span class="hu-stat-value" style="color: #FAFAFA;">艺术学 · 设计学类</span></div>
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">学制</span><span class="hu-stat-value" style="color: #FAFAFA;">4 年 · 艺术学学士</span></div>
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">难度</span><span class="hu-stat-value" style="color: #FAFAFA;">★★★★☆</span></div>
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">更新</span><span class="hu-stat-value" style="color: #FAFAFA;">2026-06</span></div>
     </div>
-    <div style="position: relative; z-index: 6; max-width: 800px; margin: 60px auto 0; color: #FAFAFA; text-align: center;">
-      <div class="chapter-mark" style="color: #F59E0B; letter-spacing: 0.4em;">STUDIO OF MAKING · NO. 042</div>
-      <h1 class="hero-title" style="color: #FAFAFA; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700;">
-        <span class="title-cn" style="font-family: 'Noto Serif SC', serif;">视觉传达设计</span>
-        <span class="title-en" style="color: #D9CFB9; font-style: italic; font-weight: 400;">视觉传达设计 & Atelier</span>
-      </h1>
-      <p style="font-family: 'Noto Serif SC', serif; color: #D9CFB9; max-width: 720px; margin: 12px auto; line-height: 1.7;">视觉传达设计是「让信息更美更有效」 — 品牌设计 + 字体设计 + 包装设计 + 海报设计 + 书籍设计 + UI/UX + 数字媒体设计 + 影视动画包装, 是「平面 + 数字 + 商业」交叉。本科起薪 7-12 万, 头部互联网 (字节/腾讯/阿里/小米) UX 岗校招 18-30 万, 4A 广告/品牌咨询/出版</p>
-      <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 16px 0;">
-        <span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">品牌设计</span><span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">UI/UX</span><span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">央美国美</span><span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">互联网友好</span>
-      </div>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px;">
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学科</span><span class="hu-stat-value" style="color: #FAFAFA;">艺术学 · 设计学类</span></div>
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学制</span><span class="hu-stat-value" style="color: #FAFAFA;">4Y · 艺术学学士</span></div>
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">难度</span><span class="hu-stat-value" style="color: #FAFAFA;">★★★★☆</span></div>
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">更新</span><span class="hu-stat-value" style="color: #FAFAFA;">2026-06</span></div>
-      </div>
+    <div class="hero-tags">
+      <span class="hu-tag">品牌设计</span><span class="hu-tag">UI/UX</span><span class="hu-tag">央美国美</span><span class="hu-tag">互联网友好</span><span class="hu-tag">字节腾讯</span>
     </div>
   </div>
 </header>

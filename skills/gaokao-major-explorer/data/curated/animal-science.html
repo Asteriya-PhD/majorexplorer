@@ -282,102 +282,86 @@ footer .label { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
 footer .data-source { color: #6B8E23; }
 .drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B8902A; }
 
+/* ── Hero 主内容区 (agri 居中布局, 装饰作 frame) ── */
+.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
+.hero-chapter { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.3em; color: #6B8E23; margin-bottom: 14px; text-transform: uppercase; }
+.hero-title { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: clamp(3rem, 7vw, 5rem); line-height: 1; letter-spacing: -0.01em; color: #2E5A2E; margin: 0 0 10px; }
+.title-cn { display: block; }
+.title-en { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 1.5rem; color: #6B8E23; margin-top: 12px; letter-spacing: 0.04em; }
+.ampersand { color: #E6B422; font-style: italic; }
+.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #4A5A3A; max-width: 720px; margin: 18px auto 0; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 880px; padding: 20px 0; border-top: 1px solid rgba(107,142,35,0.4); border-bottom: 1px solid rgba(107,142,35,0.4); }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
+.hu-tag { font-family: 'Noto Serif SC', serif; font-size: 0.8rem; padding: 4px 12px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6); }
+
 </style>
 </head>
 <body>
 
 <header class="hero">
+  <!-- 装饰层 (absolute, 不影响内容布局) -->
   <div class="desk"></div>
   <div class="sunbeam"></div>
   <div class="corner-mark cm-tl"></div>
   <div class="corner-mark cm-tr"></div>
   <div class="corner-mark cm-bl"></div>
   <div class="corner-mark cm-br"></div>
-  <div class="top-mark">高考选专业 · 精品卷 第五册</div>
+  <div class="top-mark">高考选专业 · 精品卷 第五册 · 華北農學會藏版</div>
   <div class="wheat">
-    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 28 200 Q 29 130 28 60" stroke="#C8A26E" stroke-width="1.2" fill="none"/>
-      <g fill="#E6B422" stroke="#B8902A" stroke-width="0.4">
-        <ellipse cx="22" cy="80" rx="4" ry="9" transform="rotate(-15 22 80)"/>
-        <ellipse cx="34" cy="95" rx="4" ry="9" transform="rotate(15 34 95)"/>
-        <ellipse cx="21" cy="115" rx="4.5" ry="10" transform="rotate(-15 21 115)"/>
-        <ellipse cx="35" cy="130" rx="4.5" ry="10" transform="rotate(15 35 130)"/>
-        <ellipse cx="20" cy="150" rx="5" ry="11" transform="rotate(-15 20 150)"/>
-        <ellipse cx="36" cy="165" rx="5" ry="11" transform="rotate(15 36 165)"/>
+    <svg viewBox="0 0 50 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 25 160 Q 26 110 25 60" stroke="#C8A26E" stroke-width="1" fill="none"/>
+      <g fill="#E6B422" stroke="#B8902A" stroke-width="0.3">
+        <ellipse cx="20" cy="75" rx="3.5" ry="8" transform="rotate(-15 20 75)"/>
+        <ellipse cx="30" cy="88" rx="3.5" ry="8" transform="rotate(15 30 88)"/>
+        <ellipse cx="19" cy="105" rx="4" ry="9" transform="rotate(-15 19 105)"/>
+        <ellipse cx="31" cy="118" rx="4" ry="9" transform="rotate(15 31 118)"/>
+        <ellipse cx="18" cy="135" rx="4.5" ry="10" transform="rotate(-15 18 135)"/>
       </g>
-      <g stroke="#B8902A" stroke-width="0.5" fill="none" opacity="0.8">
-        <line x1="28" y1="60" x2="20" y2="20"/><line x1="28" y1="60" x2="28" y2="12"/>
-        <line x1="28" y1="60" x2="36" y2="20"/><line x1="28" y1="60" x2="24" y2="25"/>
-        <line x1="28" y1="60" x2="32" y2="25"/>
+      <g stroke="#B8902A" stroke-width="0.4" fill="none" opacity="0.8">
+        <line x1="25" y1="60" x2="20" y2="22"/><line x1="25" y1="60" x2="25" y2="14"/>
+        <line x1="25" y1="60" x2="30" y2="22"/><line x1="25" y1="60" x2="22" y2="28"/>
+        <line x1="25" y1="60" x2="28" y2="28"/>
       </g>
     </svg>
   </div>
   <div class="leaf-vein">
-    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 28 10 L 28 190" stroke="#6B8E23" stroke-width="0.8" fill="none" opacity="0.6"/>
-      <g stroke="#9CB87A" stroke-width="0.5" fill="none" opacity="0.6">
-        <path d="M 28 30 Q 18 35 10 45"/><path d="M 28 30 Q 38 35 46 45"/>
-        <path d="M 28 60 Q 16 70 8 80"/><path d="M 28 60 Q 40 70 48 80"/>
-        <path d="M 28 90 Q 14 100 6 115"/><path d="M 28 90 Q 42 100 50 115"/>
-        <path d="M 28 120 Q 16 130 10 145"/><path d="M 28 120 Q 40 130 46 145"/>
-        <path d="M 28 150 Q 18 160 12 175"/><path d="M 28 150 Q 38 160 44 175"/>
+    <svg viewBox="0 0 50 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 25 10 L 25 150" stroke="#6B8E23" stroke-width="0.7" fill="none" opacity="0.6"/>
+      <g stroke="#9CB87A" stroke-width="0.4" fill="none" opacity="0.6">
+        <path d="M 25 28 Q 16 32 10 40"/><path d="M 25 28 Q 34 32 40 40"/>
+        <path d="M 25 55 Q 14 62 8 75"/><path d="M 25 55 Q 36 62 42 75"/>
+        <path d="M 25 85 Q 14 95 8 110"/><path d="M 25 85 Q 36 95 42 110"/>
+        <path d="M 25 115 Q 16 125 12 140"/><path d="M 25 115 Q 34 125 38 140"/>
       </g>
     </svg>
   </div>
   <div class="chloro-panel">
     <div class="cp-title">光合色素</div>
-    <div class="chloro-line"><span class="num">i</span><span class="ch">叶绿素 a</span><span class="note">蓝绿</span></div>
-    <div class="chloro-line"><span class="num">ii</span><span class="ch">叶绿素 b</span><span class="note">黄绿</span></div>
-    <div class="chloro-line"><span class="num">iii</span><span class="ch">胡萝卜素</span><span class="note">橙</span></div>
-    <div class="chloro-line"><span class="num">iv</span><span class="ch">叶黄素</span><span class="note">黄</span></div>
-    <div class="chloro-line"><span class="num">v</span><span class="ch">花青素</span><span class="note">红紫</span></div>
+    <div class="chloro-line"><span class="ch">叶绿素 a</span><span class="note">蓝绿</span></div>
+    <div class="chloro-line"><span class="ch">叶绿素 b</span><span class="note">黄绿</span></div>
+    <div class="chloro-line"><span class="ch">胡萝卜素</span><span class="note">橙</span></div>
+    <div class="chloro-line"><span class="ch">叶黄素</span><span class="note">黄</span></div>
+    <div class="chloro-line"><span class="ch">花青素</span><span class="note">红紫</span></div>
   </div>
+  <!-- 朱砂方印 -->
+  <div class="hu-stat-seal"><span class="seal">农</span></div>
   <div class="bookmark"></div>
-  <div class="container" style="padding-top: 80px; padding-bottom: 80px;">
-    <div class="herbarium-stage">
-      <div class="press-cover">
-        <div class="specimen-page page-left">
-          <div class="page-content">
-            <div class="chapter-mark">农学 · 动物生产类 · 第一章</div>
-            <h1 class="hero-title">
-              <span class="title-cn">动物科学</span>
-              <span class="title-en">动物科学 <span class="ampersand">&amp;</span> Botany</span>
-            </h1>
-            <div class="lat-name">— Agriculture · 林奈式分类</div>
-            <div class="pull-quote">14 亿人吃上放心肉, 是动科人的长期主义</div>
-            <div class="attribution">—— 饲料配方 + 分子育种 + 智慧牧场</div>
-            <div class="hu-stat-seal">
-              <span class="seal">动</span>
-              <span class="seal seal-vertical">第一册</span>
-            </div>
-          </div>
-        </div>
-        <div class="specimen-page page-right">
-          <div class="page-content">
-            <div class="chapter-mark">速览 · 校勘记</div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">学科</span>
-              <span class="hu-stat-value">农学 · 动物生产类</span>
-            </div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">学制</span>
-              <span class="hu-stat-value">4 年 · 农学学士</span>
-            </div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">难度</span>
-              <span class="hu-stat-value">★★★☆☆</span>
-            </div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">更新</span>
-              <span class="hu-stat-value">2026-06</span>
-            </div>
-            <p style="margin-top: 18px; font-family: 'Cormorant Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 0.92rem; line-height: 1.7;">动物科学是「让 14 亿人吃上放心肉」 — 动物遗传育种 + 动物营养与饲料 + 动物繁殖 + 动物生产管理 + 草业科学, 跟「兽医」(动物医学) 是完全不同专业, 动科偏「养殖 + 饲料 + 育种」, 兽医偏「临床 + 疾病防治」。本科起薪 5-8 万, 流向饲料/养殖/育种企业 (新希望/海大/温氏/牧原/大北农</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">
-              <span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">温氏/新希望</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">动科 vs 兽医</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">饲料配方</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">养殖巨头</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">读研划算</span>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- 主内容 (居中, viewport 1440×900 可见) -->
+  <div class="hero-content">
+    <div class="hero-chapter">农学 · 动物生产类 · 第一章</div>
+    <h1 class="hero-title">
+      <span class="title-cn">动物科学</span>
+      <span class="title-en">Agri-Botany <span class="ampersand">&amp;</span> 林奈式分类</span>
+    </h1>
+    <p class="hero-tagline">动物科学是「让 14 亿人吃上放心肉」 — 动物遗传育种 + 动物营养与饲料 + 动物繁殖 + 动物生产管理 + 草业科学, 跟「兽医」(动物医学) 是完全不同专业, 动科偏「养殖 + 饲料 + 育种」, 兽医偏「临床 + 疾病防治」。本科起薪 5-8 万, 流向饲料/养殖/育种企业 (新希望/海大/温氏/牧原/大北农</p>
+    <div class="hu-stats-grid">
+      <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">农学 · 动物生产类</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">4 年 · 农学学士</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">难度</span><span class="hu-stat-value">★★★☆☆</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">更新</span><span class="hu-stat-value">2026-06</span></div>
+    </div>
+    <div class="hero-tags">
+      <span class="hu-tag">温氏/新希望</span><span class="hu-tag">动科 vs 兽医</span><span class="hu-tag">饲料配方</span><span class="hu-tag">养殖巨头</span><span class="hu-tag">读研划算</span><span class="hu-tag">稳定长线</span>
     </div>
   </div>
 </header>

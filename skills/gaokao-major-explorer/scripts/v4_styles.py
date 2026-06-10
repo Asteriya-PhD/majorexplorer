@@ -1533,6 +1533,18 @@ footer { background: #F0F5E2; border-top: 1px solid #B8CC98; }
 footer .label { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
 footer .data-source { color: #6B8E23; }
 .drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B8902A; }
+
+/* ── Hero 主内容区 (agri 居中布局, 装饰作 frame) ── */
+.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
+.hero-chapter { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.3em; color: #6B8E23; margin-bottom: 14px; text-transform: uppercase; }
+.hero-title { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: clamp(3rem, 7vw, 5rem); line-height: 1; letter-spacing: -0.01em; color: #2E5A2E; margin: 0 0 10px; }
+.title-cn { display: block; }
+.title-en { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 1.5rem; color: #6B8E23; margin-top: 12px; letter-spacing: 0.04em; }
+.ampersand { color: #E6B422; font-style: italic; }
+.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #4A5A3A; max-width: 720px; margin: 18px auto 0; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 880px; padding: 20px 0; border-top: 1px solid rgba(107,142,35,0.4); border-bottom: 1px solid rgba(107,142,35,0.4); }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
+.hu-tag { font-family: 'Noto Serif SC', serif; font-size: 0.8rem; padding: 4px 12px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6); }
 """
 
 # ──────────────────────────────────────────────────────────
@@ -1613,6 +1625,18 @@ footer { background: #1A1A1A; color: #FAFAFA; border-top: 1px solid #3A3A3A; }
 footer .label { color: #FAFAFA; font-family: 'Cormorant Garamond', serif; }
 footer .data-source { color: #999; }
 .drop-cap::first-letter { font-family: 'Cormorant Garamond', serif; color: #DC2626; }
+
+/* ── Hero 主内容区 (arts 居中布局, 暗色画室) ── */
+.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
+.hero-chapter { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.4em; color: #F59E0B; margin-bottom: 14px; text-transform: uppercase; }
+.hero-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.02em; color: #FAFAFA; margin: 0 0 6px; }
+.title-cn { display: block; font-family: 'Noto Serif SC', serif; font-weight: 900; color: #FAFAFA; }
+.title-en-small { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 0.55em; color: #D9CFB9; letter-spacing: 0.05em; margin-bottom: 4px; }
+.title-en { display: block; font-family: 'Archivo', sans-serif; font-size: 0.7rem; color: #D9CFB9; letter-spacing: 0.4em; margin-top: 12px; text-transform: uppercase; font-weight: 600; }
+.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #D9CFB9; max-width: 720px; margin: 16px auto 0; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 880px; padding: 20px 0; border-top: 1px solid rgba(217,207,185,0.3); border-bottom: 1px solid rgba(217,207,185,0.3); }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
+.hu-tag { font-family: 'Archivo', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; padding: 4px 12px; border: 1px solid #D9CFB9; color: #FAFAFA; border-radius: 0; text-transform: uppercase; font-weight: 500; }
 """
 
 def render_v4(data: dict, style: str) -> str:
@@ -2061,115 +2085,84 @@ def render_v4(data: dict, style: str) -> str:
   </div>
 </header>'''
     elif style == "agri":
-        # 林奈式植物图鉴 + 标本夹 + 朱砂印
+        # 林奈式植物图鉴 + 标本夹作 frame + 内容居中
         hero_html = f'''
 <header class="hero">
+  <!-- 装饰层 (absolute, 不影响内容布局) -->
   <div class="desk"></div>
   <div class="sunbeam"></div>
   <div class="corner-mark cm-tl"></div>
   <div class="corner-mark cm-tr"></div>
   <div class="corner-mark cm-bl"></div>
   <div class="corner-mark cm-br"></div>
-  <div class="top-mark">高考选专业 · 精品卷 第五册</div>
+  <div class="top-mark">高考选专业 · 精品卷 第五册 · 華北農學會藏版</div>
   <div class="wheat">
-    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 28 200 Q 29 130 28 60" stroke="#C8A26E" stroke-width="1.2" fill="none"/>
-      <g fill="#E6B422" stroke="#B8902A" stroke-width="0.4">
-        <ellipse cx="22" cy="80" rx="4" ry="9" transform="rotate(-15 22 80)"/>
-        <ellipse cx="34" cy="95" rx="4" ry="9" transform="rotate(15 34 95)"/>
-        <ellipse cx="21" cy="115" rx="4.5" ry="10" transform="rotate(-15 21 115)"/>
-        <ellipse cx="35" cy="130" rx="4.5" ry="10" transform="rotate(15 35 130)"/>
-        <ellipse cx="20" cy="150" rx="5" ry="11" transform="rotate(-15 20 150)"/>
-        <ellipse cx="36" cy="165" rx="5" ry="11" transform="rotate(15 36 165)"/>
+    <svg viewBox="0 0 50 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 25 160 Q 26 110 25 60" stroke="#C8A26E" stroke-width="1" fill="none"/>
+      <g fill="#E6B422" stroke="#B8902A" stroke-width="0.3">
+        <ellipse cx="20" cy="75" rx="3.5" ry="8" transform="rotate(-15 20 75)"/>
+        <ellipse cx="30" cy="88" rx="3.5" ry="8" transform="rotate(15 30 88)"/>
+        <ellipse cx="19" cy="105" rx="4" ry="9" transform="rotate(-15 19 105)"/>
+        <ellipse cx="31" cy="118" rx="4" ry="9" transform="rotate(15 31 118)"/>
+        <ellipse cx="18" cy="135" rx="4.5" ry="10" transform="rotate(-15 18 135)"/>
       </g>
-      <g stroke="#B8902A" stroke-width="0.5" fill="none" opacity="0.8">
-        <line x1="28" y1="60" x2="20" y2="20"/><line x1="28" y1="60" x2="28" y2="12"/>
-        <line x1="28" y1="60" x2="36" y2="20"/><line x1="28" y1="60" x2="24" y2="25"/>
-        <line x1="28" y1="60" x2="32" y2="25"/>
+      <g stroke="#B8902A" stroke-width="0.4" fill="none" opacity="0.8">
+        <line x1="25" y1="60" x2="20" y2="22"/><line x1="25" y1="60" x2="25" y2="14"/>
+        <line x1="25" y1="60" x2="30" y2="22"/><line x1="25" y1="60" x2="22" y2="28"/>
+        <line x1="25" y1="60" x2="28" y2="28"/>
       </g>
     </svg>
   </div>
   <div class="leaf-vein">
-    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 28 10 L 28 190" stroke="#6B8E23" stroke-width="0.8" fill="none" opacity="0.6"/>
-      <g stroke="#9CB87A" stroke-width="0.5" fill="none" opacity="0.6">
-        <path d="M 28 30 Q 18 35 10 45"/><path d="M 28 30 Q 38 35 46 45"/>
-        <path d="M 28 60 Q 16 70 8 80"/><path d="M 28 60 Q 40 70 48 80"/>
-        <path d="M 28 90 Q 14 100 6 115"/><path d="M 28 90 Q 42 100 50 115"/>
-        <path d="M 28 120 Q 16 130 10 145"/><path d="M 28 120 Q 40 130 46 145"/>
-        <path d="M 28 150 Q 18 160 12 175"/><path d="M 28 150 Q 38 160 44 175"/>
+    <svg viewBox="0 0 50 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 25 10 L 25 150" stroke="#6B8E23" stroke-width="0.7" fill="none" opacity="0.6"/>
+      <g stroke="#9CB87A" stroke-width="0.4" fill="none" opacity="0.6">
+        <path d="M 25 28 Q 16 32 10 40"/><path d="M 25 28 Q 34 32 40 40"/>
+        <path d="M 25 55 Q 14 62 8 75"/><path d="M 25 55 Q 36 62 42 75"/>
+        <path d="M 25 85 Q 14 95 8 110"/><path d="M 25 85 Q 36 95 42 110"/>
+        <path d="M 25 115 Q 16 125 12 140"/><path d="M 25 115 Q 34 125 38 140"/>
       </g>
     </svg>
   </div>
   <div class="chloro-panel">
     <div class="cp-title">光合色素</div>
-    <div class="chloro-line"><span class="num">i</span><span class="ch">叶绿素 a</span><span class="note">蓝绿</span></div>
-    <div class="chloro-line"><span class="num">ii</span><span class="ch">叶绿素 b</span><span class="note">黄绿</span></div>
-    <div class="chloro-line"><span class="num">iii</span><span class="ch">胡萝卜素</span><span class="note">橙</span></div>
-    <div class="chloro-line"><span class="num">iv</span><span class="ch">叶黄素</span><span class="note">黄</span></div>
-    <div class="chloro-line"><span class="num">v</span><span class="ch">花青素</span><span class="note">红紫</span></div>
+    <div class="chloro-line"><span class="ch">叶绿素 a</span><span class="note">蓝绿</span></div>
+    <div class="chloro-line"><span class="ch">叶绿素 b</span><span class="note">黄绿</span></div>
+    <div class="chloro-line"><span class="ch">胡萝卜素</span><span class="note">橙</span></div>
+    <div class="chloro-line"><span class="ch">叶黄素</span><span class="note">黄</span></div>
+    <div class="chloro-line"><span class="ch">花青素</span><span class="note">红紫</span></div>
   </div>
+  <!-- 朱砂方印 -->
+  <div class="hu-stat-seal"><span class="seal">农</span></div>
   <div class="bookmark"></div>
-  <div class="container" style="padding-top: 80px; padding-bottom: 80px;">
-    <div class="herbarium-stage">
-      <div class="press-cover">
-        <div class="specimen-page page-left">
-          <div class="page-content">
-            <div class="chapter-mark">{category} · 第一章</div>
-            <h1 class="hero-title">
-              <span class="title-cn">{title}</span>
-              <span class="title-en">{data.get("title_en", title)} <span class="ampersand">&amp;</span> Botany</span>
-            </h1>
-            <div class="lat-name">— {data.get("latin_name", "Agriculture · 林奈式分类")}</div>
-            <div class="pull-quote">{hero_quote}</div>
-            <div class="attribution">{hero_quote_sig}</div>
-            <div class="hu-stat-seal">
-              <span class="seal">{title[0]}</span>
-              <span class="seal seal-vertical">第一册</span>
-            </div>
-          </div>
-        </div>
-        <div class="specimen-page page-right">
-          <div class="page-content">
-            <div class="chapter-mark">速览 · 校勘记</div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">学科</span>
-              <span class="hu-stat-value">{category}</span>
-            </div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">学制</span>
-              <span class="hu-stat-value">{duration} 年 · {degree}</span>
-            </div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">难度</span>
-              <span class="hu-stat-value">{difficulty}</span>
-            </div>
-            <div class="hu-stat">
-              <span class="hu-stat-label">更新</span>
-              <span class="hu-stat-value">{updated_at}</span>
-            </div>
-            <p style="margin-top: 18px; font-family: 'Cormorant Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 0.92rem; line-height: 1.7;">{summary[:160]}</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">
-              {"".join(f'<span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">{t}</span>' for t in tags[:5])}
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- 主内容 (居中, viewport 1440×900 可见) -->
+  <div class="hero-content">
+    <div class="hero-chapter">{category} · 第一章</div>
+    <h1 class="hero-title">
+      <span class="title-cn">{title}</span>
+      <span class="title-en">Agri-Botany <span class="ampersand">&amp;</span> 林奈式分类</span>
+    </h1>
+    <p class="hero-tagline">{summary[:160]}</p>
+    <div class="hu-stats-grid">
+      <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">{category}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">{duration} 年 · {degree}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">难度</span><span class="hu-stat-value">{difficulty}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">更新</span><span class="hu-stat-value">{updated_at}</span></div>
+    </div>
+    <div class="hero-tags">
+      {"".join(f'<span class="hu-tag">{t}</span>' for t in tags[:6])}
     </div>
   </div>
 </header>'''
     elif style == "arts":
-        # 画室工作台 + 画架 + 颜料管 + 调色板
+        # 画室工作台 + 颜料作 frame + 内容居中
         hero_html = f'''
 <header class="hero" style="background: linear-gradient(180deg, #14110D 0%, #2A2520 100%);">
+  <!-- 装饰层 (暗色画室 + 4 角 + 顶部 2 tag) -->
   <div class="studio-floor"></div>
-  <div class="studio-lamp">
-    <div class="lamp-rod"></div>
-    <div class="lamp-arm"></div>
-    <div class="lamp-head"></div>
-    <div class="lamp-bulb"></div>
-    <div class="lamp-cone"></div>
-  </div>
+  <div class="studio-light"></div>
+  <div class="art-tag art-tag-1">Studio of Making</div>
+  <div class="art-tag art-tag-2">Atelier · 第 042 号</div>
   <div class="tubes-stage">
     <div class="paint-tube tube-1"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Jaune</div></div><div class="paint-tube-crimp"></div></div>
     <div class="paint-tube tube-2"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Rouge</div></div><div class="paint-tube-crimp"></div></div>
@@ -2185,58 +2178,30 @@ def render_v4(data: dict, style: str) -> str:
       <div class="palette-dab" style="left: 48px; top: 36px; background: #4A5D3A;"></div>
     </div>
   </div>
-  <div class="room-corner">
-    <span class="art-tag">Studio of Making</span>
-    <span class="art-tag" style="transform: rotate(1deg);">Atelier · 第 042 号</span>
+  <div class="studio-lamp">
+    <div class="lamp-rod"></div>
+    <div class="lamp-arm"></div>
+    <div class="lamp-head"></div>
+    <div class="lamp-bulb"></div>
+    <div class="lamp-cone"></div>
   </div>
-  <div class="gallery-frame"></div>
-  <div class="container" style="padding-top: 80px; padding-bottom: 120px;">
-    <div class="easel-stage">
-      <div class="easel-leg-back"></div>
-      <div class="easel-leg-left"></div>
-      <div class="easel-leg-right"></div>
-      <div class="easel-top"></div>
-      <div class="easel-crossbar"></div>
-      <div class="easel-shelf"></div>
-      <div class="canvas-wrap">
-        <div class="canvas-frame">
-          <div class="canvas-inner">
-            <svg class="painting-svg" viewBox="0 0 476 576" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" y="0" width="476" height="320" fill="#1E40AF" opacity="0.92"/>
-              <path d="M 0 100 Q 120 60 240 110 T 476 90 L 476 220 Q 360 260 200 200 T 0 240 Z" fill="#DC2626" opacity="0.95"/>
-              <circle cx="340" cy="150" r="58" fill="#F59E0B"/>
-              <path d="M 60 60 Q 200 30 320 80" stroke="#E76F51" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.85"/>
-              <line x1="0" y1="280" x2="476" y2="180" stroke="#1A1A1A" stroke-width="14" stroke-linecap="square"/>
-              <rect x="0" y="320" width="476" height="256" fill="#F5F0E8"/>
-              <rect x="40" y="380" width="120" height="120" fill="#1A1A1A"/>
-              <rect x="200" y="420" width="80" height="80" fill="#003049"/>
-              <circle cx="380" cy="450" r="44" fill="#FAFAFA" stroke="#1A1A1A" stroke-width="2"/>
-              <circle cx="100" cy="500" r="14" fill="#1E40AF"/>
-              <circle cx="160" cy="540" r="10" fill="#DC2626"/>
-              <circle cx="280" cy="520" r="18" fill="#F59E0B"/>
-              <circle cx="430" cy="500" r="12" fill="#E76F51"/>
-              <path d="M 240 320 L 244 380 L 236 440 L 242 500 L 238 560" stroke="#1E40AF" stroke-width="3" fill="none" opacity="0.6" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-      </div>
+  <!-- 主内容 (居中, viewport 1440×900 可见) -->
+  <div class="hero-content">
+    <div class="hero-chapter">速览 · 第一章</div>
+    <h1 class="hero-title">
+      <span class="title-en-small">Studio of</span>
+      <span class="title-cn">{title}</span>
+      <span class="title-en">CRAFTING · MAKING · ATELIER</span>
+    </h1>
+    <p class="hero-tagline">{summary[:160]}</p>
+    <div class="hu-stats-grid">
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">学科</span><span class="hu-stat-value" style="color: #FAFAFA;">{category}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">学制</span><span class="hu-stat-value" style="color: #FAFAFA;">{duration} 年 · {degree}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">难度</span><span class="hu-stat-value" style="color: #FAFAFA;">{difficulty}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">更新</span><span class="hu-stat-value" style="color: #FAFAFA;">{updated_at}</span></div>
     </div>
-    <div style="position: relative; z-index: 6; max-width: 800px; margin: 60px auto 0; color: #FAFAFA; text-align: center;">
-      <div class="chapter-mark" style="color: #F59E0B; letter-spacing: 0.4em;">STUDIO OF MAKING · NO. 042</div>
-      <h1 class="hero-title" style="color: #FAFAFA; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700;">
-        <span class="title-cn" style="font-family: 'Noto Serif SC', serif;">{title}</span>
-        <span class="title-en" style="color: #D9CFB9; font-style: italic; font-weight: 400;">{data.get("title_en", title)} & Atelier</span>
-      </h1>
-      <p style="font-family: 'Noto Serif SC', serif; color: #D9CFB9; max-width: 720px; margin: 12px auto; line-height: 1.7;">{summary[:160]}</p>
-      <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 16px 0;">
-        {"".join(f'<span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">{t}</span>' for t in tags[:4])}
-      </div>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px;">
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学科</span><span class="hu-stat-value" style="color: #FAFAFA;">{category}</span></div>
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学制</span><span class="hu-stat-value" style="color: #FAFAFA;">{duration}Y · {degree}</span></div>
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">难度</span><span class="hu-stat-value" style="color: #FAFAFA;">{difficulty}</span></div>
-        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">更新</span><span class="hu-stat-value" style="color: #FAFAFA;">{updated_at}</span></div>
-      </div>
+    <div class="hero-tags">
+      {"".join(f'<span class="hu-tag">{t}</span>' for t in tags[:5])}
     </div>
   </div>
 </header>'''
