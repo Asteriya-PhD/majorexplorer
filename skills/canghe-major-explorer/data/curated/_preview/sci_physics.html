@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理学 · sci 主题样张 | Major Explorer</title>
+<style>
+@import url('https://fonts.loli.net/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  --bg: #EDE3CC;         /* 米色主调 — 麦色 (slightly stronger cream) */
+  --paper: #F6EFD9;      /* 浅米卡片 — 比 bg 亮一档 (subtle layering) */
+  --paper-deep: #E5D8B5; /* 深米 — 强调块 */
+  --fg: #1F1B12;         /* 学术墨 */
+  --muted: #786A4F;      /* 暖棕灰 */
+  --rule: #C73E1D;       /* Nature 学术红 */
+  --rule-dim: rgba(199, 62, 29, 0.30);
+  --accent: #2D5F4E;     /* 实验绿 */
+  --highlight: #E5C07B;  /* 草稿黄 */
+  --border: rgba(31, 27, 18, 0.18);
+  --border-strong: rgba(31, 27, 18, 0.45);
+  --font-display: 'EB Garamond', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-body: 'Lora', 'Source Han Serif SC', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-num: 'Crimson Pro', 'EB Garamond', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  position: relative; overflow-x: hidden;
+}
+/* 招 #1: paper noise 纹理 — 暖色颗粒 */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.20 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+}
+/* 招 #5: 期刊边距留白 — 顶/底各 1 道红/灰横纹 */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(199, 62, 29, 0.04) 0%, transparent 6%),
+    linear-gradient(0deg, rgba(26, 31, 46, 0.03) 0%, transparent 30%);
+}
+
+.container { max-width: 920px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+/* ─────── 期刊刊头 ─────── */
+.journal-mast {
+  padding: 16px 40px;
+  border-bottom: 3px double var(--rule);
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--muted);
+  position: relative; z-index: 2;
+}
+.journal-mast .vol { color: var(--rule); }
+
+/* ─────── HERO ─────── */
+.hero { padding: 80px 0 72px; position: relative; z-index: 2; }
+.eyebrow {
+  display: flex; align-items: center; gap: 16px;
+  font-family: var(--font-mono); font-size: 0.75rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule);
+  margin-bottom: 24px;
+}
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--rule-dim); }
+.eyebrow .section-no { font-family: var(--font-num); font-weight: 600; font-size: 0.9375rem; letter-spacing: 0.05em; color: var(--fg); }
+
+h1 {
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 1.05; letter-spacing: -0.02em;
+  color: var(--fg); margin-bottom: 28px;
+}
+h1 .small-caps { font-variant: small-caps; font-size: 0.6em; letter-spacing: 0.05em; color: var(--rule); }
+
+.tagline {
+  font-family: var(--font-body); font-style: italic;
+  font-size: 1.25rem; color: var(--muted);
+  max-width: 680px; margin-bottom: 40px; line-height: 1.7;
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 48px; }
+.tag {
+  padding: 4px 14px; border: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 0.75rem;
+  letter-spacing: 0.05em; color: var(--fg);
+}
+.tag.primary { border-color: var(--rule); color: var(--rule); background: var(--paper); }
+
+/* ─────── 摘要框 (abstract) ─────── */
+.abstract {
+  border-left: 3px solid var(--rule);
+  padding: 20px 24px; margin: 0 0 48px;
+  background: var(--paper);
+  position: relative;
+}
+.abstract-label {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--rule); margin-bottom: 8px;
+}
+.abstract p { font-size: 0.9375rem; color: var(--fg); line-height: 1.75; margin: 0; }
+.abstract .cite { display: block; margin-top: 12px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+
+/* ─────── 数据条 (像期刊 article info) ─────── */
+.article-meta {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin: 32px 0 0;
+}
+.meta-cell { padding: 18px 20px; border-right: 1px solid var(--border); }
+.meta-cell:last-child { border-right: none; }
+.meta-key { font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.meta-val { font-family: var(--font-num); font-size: 1.5rem; font-weight: 500; color: var(--fg); }
+.meta-val .unit { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); margin-left: 4px; }
+
+/* ─────── section 共用 ─────── */
+section.chapter { padding: 96px 0 80px; border-top: 1px solid var(--border); position: relative; z-index: 2; }
+.chapter-head { display: flex; align-items: baseline; gap: 24px; margin-bottom: 32px; }
+.chapter-roman {
+  font-family: var(--font-display); font-size: 3rem; font-weight: 500;
+  color: var(--rule); line-height: 1; font-style: italic;
+}
+.chapter-title { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 500; color: var(--fg); flex: 1; }
+.chapter-marker { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+
+/* ─────── 公式 (formula box) ─────── */
+.formula {
+  font-family: var(--font-num); font-size: 1.875rem; font-style: italic;
+  text-align: center; padding: 32px 0; margin: 24px 0;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  color: var(--fg); letter-spacing: 0.05em;
+}
+.formula .num-eq { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--rule); font-style: normal; text-align: right; padding-right: 32px; margin-top: 8px; }
+
+/* ─────── 课程网格 (元素周期表风格) ─────── */
+.course-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 4px; margin: 24px 0 0;
+}
+.course-cell {
+  padding: 14px 12px; border: 1px solid var(--border);
+  text-align: center; background: var(--paper);
+  position: relative; transition: all 200ms;
+}
+.course-cell:hover { border-color: var(--rule); background: var(--paper-deep); transform: translateY(-2px); }
+.course-cell .symbol {
+  font-family: var(--font-mono); font-size: 0.625rem; color: var(--rule);
+  letter-spacing: 0.1em; position: absolute; top: 6px; left: 8px;
+}
+.course-cell .name { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); font-weight: 500; margin: 6px 0 4px; }
+.course-cell .credit { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--muted); }
+
+/* ─────── 引用块 (blockquote) ─────── */
+blockquote {
+  margin: 32px 0; padding: 20px 28px 20px 36px;
+  border-left: 3px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--font-body); font-style: italic;
+  font-size: 1.0625rem; color: var(--fg);
+  position: relative;
+}
+blockquote::before {
+  content: "“"; position: absolute; left: 12px; top: 8px;
+  font-family: var(--font-display); font-size: 2.5rem; color: var(--rule);
+  line-height: 1;
+}
+blockquote cite { display: block; margin-top: 12px; font-family: var(--font-mono); font-size: 0.75rem; font-style: normal; color: var(--muted); }
+
+/* ─────── CTA ─────── */
+.cta {
+  margin: 0 auto; max-width: 720px; padding: 48px 40px;
+  border: 1px solid var(--rule);
+  text-align: center; background: var(--paper);
+  position: relative;
+}
+.cta::before {
+  content: ""; position: absolute; inset: 6px;
+  border: 1px solid var(--rule-dim); pointer-events: none;
+}
+.cta h3 { font-family: var(--font-display); font-size: 1.75rem; font-weight: 500; color: var(--fg); margin-bottom: 8px; }
+.cta .lede { font-family: var(--font-body); font-style: italic; color: var(--muted); margin-bottom: 28px; }
+.cta-button {
+  display: inline-block; padding: 14px 40px; background: var(--rule); color: var(--paper);
+  font-family: var(--font-mono); font-size: 0.875rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+footer { padding: 56px 0 40px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.6; max-width: 600px; margin: 8px auto 0; }
+
+/* drop cap */
+.drop-cap::first-letter {
+  font-family: var(--font-display); font-size: 4.5em; font-weight: 500;
+  float: left; line-height: 0.85; margin: 0.08em 0.12em 0 0; color: var(--rule);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<div class="journal-mast">
+  <span><span class="vol">VOL. 50 · NO. 03</span> · Major Explorer</span>
+  <span>物理学专刊 · 2026 SPRING</span>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">
+      <span class="section-no">§ 01</span>
+      <span>PHYSICS · 基础学科</span>
+    </div>
+    <h1>
+      <span class="small-caps">Physica</span><br>
+      物理学
+    </h1>
+    <p class="tagline drop-cap">
+      从亚原子到宇宙学, 物理学是所有工程学科的根。物理系毕业不只做物理 — 训练出的建模能力是量化 / 半导体 / AI 芯片 / 金融工程的硬通货。
+    </p>
+
+    <div class="tags">
+      <span class="tag primary">理学学士</span>
+      <span class="tag">4 年学制</span>
+      <span class="tag">深造率 72%</span>
+      <span class="tag">数学要求极高</span>
+      <span class="tag">Q1 学科评估 · 6 校</span>
+    </div>
+
+    <div class="abstract">
+      <div class="abstract-label">ABSTRACT · 速览</div>
+      <p>物理学研究物质、能量、时空的本质规律。毕业生可进入半导体、新能源、AI 算法、量化金融、教育科研等方向。本科阶段核心是数学 (四大力学) + 实验能力 + 编程建模, 是转入工程/AI 的最佳跳板之一。</p>
+      <span class="cite">→ 学科代码 070201 · 授予 理学学士学位 · 4 年</span>
+    </div>
+
+    <div class="article-meta">
+      <div class="meta-cell">
+        <div class="meta-key">DURATION</div>
+        <div class="meta-val">4<span class="unit">年</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-key">DEGREE</div>
+        <div class="meta-val">理学<span class="unit">学士</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-key">DEEP STUDY</div>
+        <div class="meta-val">72<span class="unit">%</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-key">Q1 RANK</div>
+        <div class="meta-val">6<span class="unit">校</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- II 课程 -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-head">
+      <span class="chapter-roman">II</span>
+      <h2 class="chapter-title">四大力学 · 必修核心</h2>
+      <span class="chapter-marker">CORE CURRICULUM</span>
+    </div>
+
+    <p style="font-size: 1.0625rem; color: var(--muted); max-width: 680px; margin-bottom: 8px;">
+      物理系本科的"硬骨架"。前两年打数学基础, 大二下起进入四大力学。每一门都是一面墙, 但你翻过去, 工程学科 90% 都不再是问题。
+    </p>
+
+    <div class="formula">
+      F = ma &nbsp;·&nbsp; ∇·E = ρ/ε₀ &nbsp;·&nbsp; iℏ ∂<sub>t</sub>|ψ⟩ = Ĥ|ψ⟩ &nbsp;·&nbsp; S = k<sub>B</sub> ln Ω
+      <span class="num-eq">// eq. (1) — the four pillars</span>
+    </div>
+
+    <div class="course-grid">
+      <div class="course-cell">
+        <span class="symbol">MECH</span>
+        <div class="name">理论力学</div>
+        <div class="credit">4 学分</div>
+      </div>
+      <div class="course-cell">
+        <span class="symbol">E&amp;M</span>
+        <div class="name">电动力学</div>
+        <div class="credit">4 学分</div>
+      </div>
+      <div class="course-cell">
+        <span class="symbol">QM</span>
+        <div class="name">量子力学</div>
+        <div class="credit">5 学分</div>
+      </div>
+      <div class="course-cell">
+        <span class="symbol">STAT</span>
+        <div class="name">热力学与统计</div>
+        <div class="credit">4 学分</div>
+      </div>
+      <div class="course-cell">
+        <span class="symbol">MATH</span>
+        <div class="name">数学物理方法</div>
+        <div class="credit">5 学分</div>
+      </div>
+      <div class="course-cell">
+        <span class="symbol">LAB</span>
+        <div class="name">近代物理实验</div>
+        <div class="credit">3 学分</div>
+      </div>
+    </div>
+
+    <blockquote style="margin-top: 40px;">
+      四大力学 + 数学物理方法是物理系的"内功", 啃下来转任何工科都如履平地 — 这是物理系毕业生最强护城河。
+      <cite>— 王老师 · 北大物理学院 · 教龄 17 年</cite>
+    </blockquote>
+  </div>
+</section>
+
+<!-- III 出口 -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-head">
+      <span class="chapter-roman">III</span>
+      <h2 class="chapter-title">毕业去向</h2>
+      <span class="chapter-marker">CAREER PATHS</span>
+    </div>
+
+    <div class="article-meta" style="grid-template-columns: repeat(3, 1fr); margin: 24px 0;">
+      <div class="meta-cell">
+        <div class="meta-key">DEEP STUDY</div>
+        <div class="meta-val">72<span class="unit">%</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-key">SEMI / TECH</div>
+        <div class="meta-val">14<span class="unit">%</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-key">QUANT / FIN</div>
+        <div class="meta-val">6<span class="unit">%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="chapter">
+  <div class="container">
+    <div class="cta">
+      <h3>想知道你能上哪所?</h3>
+      <p class="lede">输入分数 / 选科 → 1 分钟看你的物理学位次</p>
+      <a href="#" class="cta-button">开始测位次 →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="label">END OF ARTICLE · PHYSICS № 03</div>
+    <p class="data-source">数据来源: 教育部学科评估 + 麦可思 2024 + 校友访谈 (N=6)</p>
+  </div>
+</footer>
+
+</body>
+</html>

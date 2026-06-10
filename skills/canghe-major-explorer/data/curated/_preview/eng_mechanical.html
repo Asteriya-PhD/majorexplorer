@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机械工程 · eng 主题样张 | Major Explorer</title>
+<style>
+@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --blueprint: #1B3A5C;       /* 蓝图深蓝 */
+  --blueprint-deep: #0F2640;
+  --paper: #F5F2EA;            /* 工程手册米白 */
+  --fg: #1A1F2E;
+  --muted: #5C6373;
+  --rule: rgba(27, 58, 92, 0.4);
+  --rule-strong: rgba(27, 58, 92, 0.7);
+  --orange: #FF6B35;           /* 安全橙 */
+  --orange-glow: rgba(255, 107, 53, 0.15);
+  --steel: #2C2C2C;            /* 钢灰 */
+  --eng-green: #5B8E7D;        /* 工程绿 */
+  --grid: rgba(27, 58, 92, 0.08);
+  --font-display: 'Inter', 'PingFang SC', sans-serif;
+  --font-body: 'Source Sans 3', 'PingFang SC', sans-serif;
+  --font-mono: 'Roboto Mono', 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--paper); color: var(--fg);
+  font-family: var(--font-body); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  position: relative; overflow-x: hidden;
+}
+/* 招 #1: noise 纹理 */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.22 0 0 0 0 0.36 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  opacity: 0.04;
+}
+/* 招 #5: 蓝图网格底层 */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  /* 中央更密的次网格 */
+  background-position: 0 0, 16px 16px;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    linear-gradient(rgba(27, 58, 92, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 58, 92, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px, 64px 64px, 16px 16px, 16px 16px;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+/* ─────── 顶栏 (像图纸标题栏 title block) ─────── */
+.titlebar {
+  border-bottom: 2px solid var(--blueprint);
+  display: grid; grid-template-columns: auto 1fr auto;
+  align-items: center; padding: 12px 24px;
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--blueprint);
+  position: relative; z-index: 2;
+}
+.titlebar .doc-no { border-right: 1px solid var(--rule-strong); padding-right: 16px; }
+.titlebar .title-cell { text-align: center; font-weight: 600; padding: 0 16px; }
+.titlebar .scale { border-left: 1px solid var(--rule-strong); padding-left: 16px; }
+.titlebar .scale::before { content: "SCALE 1:1 · "; color: var(--orange); }
+
+/* ─────── HERO ─────── */
+.hero { padding: 80px 0 96px; position: relative; z-index: 2; border-bottom: 2px solid var(--blueprint); }
+
+.hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: start; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+/* 左:零件图风格的"专业信息卡" */
+.spec-card {
+  background: #FFFFFF; border: 1px solid var(--rule-strong);
+  padding: 28px; position: relative;
+  box-shadow: 4px 4px 0 var(--blueprint);
+}
+.spec-card::before {
+  content: ""; position: absolute; top: 0; left: 0;
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, transparent 50%, var(--orange) 50%);
+}
+.spec-card::after {
+  content: "A"; position: absolute; top: 8px; left: 8px;
+  font-family: var(--font-display); font-weight: 800; font-size: 0.875rem;
+  color: #FFFFFF; letter-spacing: 0;
+}
+.spec-label {
+  font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--blueprint); margin-bottom: 12px;
+}
+.spec-card h1 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em;
+  color: var(--fg); margin-bottom: 8px;
+}
+.spec-card .code {
+  font-family: var(--font-mono); font-size: 0.875rem; color: var(--orange);
+  margin-bottom: 20px; font-weight: 500;
+}
+.spec-card .lede {
+  font-family: var(--font-body); font-size: 1.0625rem; color: var(--muted);
+  line-height: 1.65; margin-bottom: 20px;
+}
+
+.spec-table {
+  width: 100%; border-collapse: collapse; font-size: 0.8125rem;
+  margin-top: 20px; border-top: 1px solid var(--rule);
+}
+.spec-table tr { border-bottom: 1px solid var(--rule); }
+.spec-table td { padding: 8px 0; font-family: var(--font-mono); }
+.spec-table td:first-child { color: var(--muted); width: 40%; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.6875rem; }
+.spec-table td:last-child { color: var(--fg); font-weight: 600; text-align: right; }
+.spec-table td .unit { color: var(--muted); font-weight: 400; margin-left: 4px; }
+
+/* 右:datasheet 卡片 */
+.datasheet {
+  background: var(--blueprint); color: #FFFFFF; padding: 24px;
+  position: relative;
+}
+.datasheet::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: repeating-linear-gradient(90deg, var(--orange) 0 8px, transparent 8px 16px);
+}
+.datasheet .dlabel {
+  font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--orange); margin-bottom: 16px;
+}
+.datasheet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.dv {
+  padding: 14px 0; border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+.dv:nth-child(-n+2) { border-top: none; }
+.dv .k { font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); margin-bottom: 4px; }
+.dv .v { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: #FFFFFF; }
+.dv .v .u { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 400; color: rgba(255, 255, 255, 0.6); margin-left: 4px; }
+
+/* ─────── chapter ─────── */
+section.chapter { padding: 96px 0 80px; position: relative; z-index: 2; border-top: 1px solid var(--rule); }
+.chapter-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 2px solid var(--blueprint); }
+.chapter-id { font-family: var(--font-mono); font-size: 0.75rem; color: var(--orange); font-weight: 600; letter-spacing: 0.1em; }
+.chapter-head h2 { font-family: var(--font-display); font-size: clamp(1.625rem, 3vw, 2.25rem); font-weight: 800; color: var(--fg); flex: 1; }
+.chapter-tag { font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding: 4px 10px; border: 1px solid var(--rule-strong); }
+
+/* ─────── 工程规格表 (datasheet 课程) ─────── */
+.part-list { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.875rem; background: #FFFFFF; border: 1px solid var(--rule-strong); }
+.part-list thead th {
+  background: var(--blueprint); color: #FFFFFF;
+  font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.15em;
+  text-transform: uppercase; padding: 12px 16px; text-align: left;
+  font-weight: 500;
+}
+.part-list tbody td { padding: 14px 16px; border-bottom: 1px solid var(--rule); font-family: var(--font-body); }
+.part-list tbody tr:last-child td { border-bottom: none; }
+.part-list tbody tr:hover { background: rgba(255, 107, 53, 0.04); }
+.part-list .part-no { font-family: var(--font-mono); font-size: 0.75rem; color: var(--orange); font-weight: 600; }
+.part-list .part-name { font-weight: 600; color: var(--fg); }
+.part-list .spec { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+.part-list .credit { font-family: var(--font-mono); font-size: 0.75rem; color: var(--blueprint); font-weight: 600; text-align: right; }
+
+/* ─────── CTA ─────── */
+.cta {
+  background: var(--blueprint); color: #FFFFFF;
+  padding: 56px 48px; text-align: center;
+  border-top: 4px solid var(--orange);
+  position: relative;
+}
+.cta::before {
+  content: ""; position: absolute; inset: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2); pointer-events: none;
+}
+.cta h3 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 12px; position: relative; }
+.cta p { color: rgba(255, 255, 255, 0.7); max-width: 480px; margin: 0 auto 28px; font-size: 1.0625rem; position: relative; }
+.cta-button {
+  display: inline-block; padding: 16px 44px; background: var(--orange); color: #FFFFFF;
+  font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  position: relative;
+}
+.cta-button::before {
+  content: "▶"; margin-right: 8px;
+}
+
+footer { padding: 56px 0 40px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blueprint); }
+footer .data-source { font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
+
+/* drop cap */
+.drop-cap::first-letter {
+  font-family: var(--font-display); font-size: 4em; font-weight: 800;
+  float: left; line-height: 0.85; margin: 0.05em 0.12em 0 0; color: var(--orange);
+}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <span class="doc-no">DWG-ME-2026-003</span>
+  <span class="title-cell">机械工程 · 课程总览</span>
+  <span class="scale">A4 · LANDSCAPE</span>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <!-- 左:主信息卡 (像零件图标题栏) -->
+      <div class="spec-card">
+        <div class="spec-label">PART 01 · MAJOR CARD</div>
+        <h1>机械工程</h1>
+        <div class="code">M.E. / 080201 / 工学学士 / 4 年</div>
+        <p class="lede drop-cap">
+          中国第一大工科专业, 一切制造业的"母机"专业。从汽车到机器人、从航空航天到医疗器械, 都需要机械工程师。万金油,但越老越吃香 — 经验 = 真正的竞争力。
+        </p>
+
+        <table class="spec-table">
+          <tr><td>Duration</td><td>4 <span class="unit">年</span></td></tr>
+          <tr><td>Degree</td><td>工学 <span class="unit">学士</span></td></tr>
+          <tr><td>Code</td><td>080201</span></td></tr>
+          <tr><td>Category</td><td>机械类</td></tr>
+          <tr><td>Math Req.</td><td>★★★★☆</td></tr>
+        </table>
+      </div>
+
+      <!-- 右:深蓝 datasheet -->
+      <div class="datasheet">
+        <div class="dlabel">▶ KEY METRICS · 关键指标</div>
+        <div class="datasheet-grid">
+          <div class="dv">
+            <div class="k">GRADUATES / YR</div>
+            <div class="v">~28<span class="u">万</span></div>
+          </div>
+          <div class="dv">
+            <div class="k">DEEP STUDY</div>
+            <div class="v">38<span class="u">%</span></div>
+          </div>
+          <div class="dv">
+            <div class="k">AVG START</div>
+            <div class="v">9.2<span class="u">k/月</span></div>
+          </div>
+          <div class="dv">
+            <div class="k">5YR SALARY</div>
+            <div class="v">15.6<span class="u">k/月</span></div>
+          </div>
+          <div class="dv">
+            <div class="k">UNIV RANK-A+</div>
+            <div class="v">12<span class="u">校</span></div>
+          </div>
+          <div class="dv">
+            <div class="k">EMPLOY RATE</div>
+            <div class="v">94<span class="u">%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- COURSE -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-head">
+      <span class="chapter-id">PART 02</span>
+      <h2>主要课程 · 制造基础</h2>
+      <span class="chapter-tag">CORE / 32 CREDITS</span>
+    </div>
+
+    <table class="part-list">
+      <thead>
+        <tr>
+          <th style="width: 12%;">PART NO.</th>
+          <th style="width: 38%;">课程名</th>
+          <th style="width: 30%;">工艺 / 工具</th>
+          <th style="width: 20%; text-align: right;">学分</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="part-no">M-101</td>
+          <td class="part-name">理论力学</td>
+          <td class="spec">静力学 · 运动学 · 动力学</td>
+          <td class="credit">4.0</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-102</td>
+          <td class="part-name">材料力学</td>
+          <td class="spec">拉伸 · 弯曲 · 扭转 / 应力分析</td>
+          <td class="credit">4.0</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-201</td>
+          <td class="part-name">机械原理</td>
+          <td class="spec">连杆 · 凸轮 · 齿轮系</td>
+          <td class="credit">3.5</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-202</td>
+          <td class="part-name">机械设计</td>
+          <td class="spec">公差配合 · 轴承 · 联轴器</td>
+          <td class="credit">4.0</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-301</td>
+          <td class="part-name">制造技术基础</td>
+          <td class="spec">铸造 · 焊接 · 切削 / 3 工艺</td>
+          <td class="credit">3.0</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-302</td>
+          <td class="part-name">数控机床与编程</td>
+          <td class="spec">G-code · Mastercam / 5 轴加工</td>
+          <td class="credit">3.0</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-401</td>
+          <td class="part-name">液压与气压传动</td>
+          <td class="spec">Festo 元件 · 回路设计</td>
+          <td class="credit">2.5</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-501</td>
+          <td class="part-name">机械 CAD/CAE</td>
+          <td class="spec">SolidWorks · ANSYS · Abaqus</td>
+          <td class="credit">4.0</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-601</td>
+          <td class="part-name">机器人学基础</td>
+          <td class="spec">D-H 参数 · 轨迹规划</td>
+          <td class="credit">3.0</td>
+        </tr>
+        <tr>
+          <td class="part-no">M-701</td>
+          <td class="part-name">毕业设计</td>
+          <td class="spec">真题真做 · 16 周</td>
+          <td class="credit">12.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="chapter" style="border-top: 0; padding: 0;">
+  <div class="cta">
+    <h3>看你的分数能上哪所机械强校</h3>
+    <p>输入分数 / 选科 → 1 分钟看你的机械工程位次</p>
+    <a href="#" class="cta-button">START 测位次</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="label">DWG-ME-2026-003 · END OF SHEET</div>
+    <p class="data-source">数据来源: 教育部学科评估 + 麦可思 2024 + 校友访谈 (N=8)</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+<title>信息管理与信息系统专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="信息管理与信息系统(信管)是横跨管理学、计算机、经济学的交叉专业，培养「懂业务的技术人 + 懂技术的业务人」。数字化转型大背景下,信管毕业生在 ERP 顾问、商业分析(BA)、产品经理、银行科技岗、互">
+<style>
+@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; transition: opacity 200ms; }
+a:hover { opacity: 0.65; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
+
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+body { background: #FAFAF6; color: #1A3D47; font-family: 'Inter', 'PingFang SC', sans-serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 900px 600px at 20% 0%, rgba(44, 95, 111, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 700px 500px at 90% 100%, rgba(240, 168, 104, 0.06) 0%, transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.37 0 0 0 0 0.43 0 0 0 0.3 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.04; }
+
+
+.hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #C5D4D7; position: relative; z-index: 2; overflow: hidden; }
+.wb-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 8px; background: #FAFAF6; border: 1px solid #C5D4D7; box-shadow: 0 1px 0 #E8F0F1, 0 8px 24px rgba(44, 95, 111, 0.08); overflow: hidden; }
+.wb-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: linear-gradient(135deg, rgba(240, 168, 104, 0.08) 0%, transparent 50%), radial-gradient(ellipse 300px 200px at 80% 20%, rgba(240, 168, 104, 0.15) 0%, transparent 70%); }
+.wb-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.15; background: linear-gradient(90deg, #2C5F6F 0%, #2C5F6F 100%) right top / 60px 60px no-repeat, linear-gradient(135deg, #F0A868 0%, #F0A868 100%) right bottom / 40px 40px no-repeat, linear-gradient(0deg, #8FB8C2 0%, #8FB8C2 100%) left bottom / 30px 30px no-repeat; }
+.wb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 900px) { .wb-grid { grid-template-columns: 1fr; gap: 32px; } }
+.wb-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
+.wb-meta-label { font-family: 'Inter', sans-serif; font-size: 0.6875rem; font-weight: 600; color: #F0A868; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 16px; }
+.wb-meta-value { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; color: #1A3D47; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 8px; }
+.wb-meta-sub { font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #5A7A82; letter-spacing: 0.02em; }
+.wb-meta-divider { width: 40px; height: 3px; background: #2C5F6F; margin: 14px auto; border-radius: 2px; }
+/* ── AI/Agent 抽象小元素 (4 角) ── 不碰任何公司 logo, 全是泛 AI 意象 */
+.wb-widget { position: absolute; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 4px; background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(44, 95, 111, 0.30); border-radius: 8px; }
+.wb-widget svg { display: block; }
+.wb-widget svg { display: block; }
+.wb-widget.pos-1 { top: 8%; left: 6%; transform: rotate(-4deg); }
+.wb-widget.pos-2 { top: 14%; right: 8%; transform: rotate(5deg); }
+.wb-widget.pos-3 { bottom: 12%; left: 18%; transform: rotate(3deg); }
+.wb-widget.pos-4 { bottom: 10%; right: 6%; transform: rotate(-2deg); }
+.hero-side { display: flex; flex-direction: column; }
+.hero-decor { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; color: #2C5F6F; letter-spacing: 0.2em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; text-transform: uppercase; }
+.hero-decor::before { content: ""; display: inline-block; width: 32px; height: 2px; background: #F0A868; border-radius: 1px; }
+.hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.75rem, 5.5vw, 4.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; color: #1A3D47; margin-bottom: 24px; }
+.hero h1::after { content: ""; display: block; width: 48px; height: 3px; background: #F0A868; border-radius: 2px; margin-top: 16px; }
+.hero-tagline { font-family: 'Inter', sans-serif; font-size: 1.0625rem; color: #5A7A82; margin-bottom: 32px; line-height: 1.7; max-width: 600px; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.tag { padding: 6px 14px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #1A3D47; font-weight: 500; letter-spacing: 0.01em; }
+.tag.primary { background: #2C5F6F; border-color: #2C5F6F; color: #FAFAF6; }
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #C5D4D7; border-bottom: 1px solid #C5D4D7; border-left: 1px solid #C5D4D7; border-right: 1px solid #C5D4D7; border-radius: 8px; overflow: hidden; }
+@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { padding: 20px 22px; border-right: 1px solid #C5D4D7; position: relative; background: #FFFFFF; }
+.stat:last-child { border-right: none; }
+@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #C5D4D7; } }
+.stat-label { font-family: 'Inter', sans-serif; font-size: 0.6875rem; color: #5A7A82; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+.stat-value { font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 700; color: #1A3D47; margin-top: 6px; letter-spacing: -0.01em; }
+section.tab { border-top: 1px solid #C5D4D7; border-bottom: 1px solid #C5D4D7; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; position: relative; transition: border-color 250ms, transform 250ms, box-shadow 250ms; box-shadow: 0 1px 0 rgba(44, 95, 111, 0.04); }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #F0A868; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #2C5F6F; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 95, 111, 0.08); }
+.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #2C5F6F; color: #FAFAF6; font-family: 'Inter', sans-serif; font-size: 0.9375rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #2C5F6F; border: 1px solid #2C5F6F; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 12px; }
+.bento-name { font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; color: #1A3D47; padding-right: 44px; text-wrap: balance; line-height: 1.35; }
+.bento-tag { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #5A7A82; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 24px 22px 20px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; position: relative; transition: border-color 250ms, transform 250ms, box-shadow 250ms; box-shadow: 0 1px 0 rgba(44, 95, 111, 0.04); }
+.company:hover { border-color: #2C5F6F; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 95, 111, 0.08); }
+.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #2C5F6F; color: #FAFAF6; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
+.tier-S { background: #2C5F6F; color: #FAFAF6; }
+.tier-A { background: transparent; color: #2C5F6F; border: 1px solid #2C5F6F; }
+.tier-B { background: #E8F0F1; color: #5A7A82; }
+.company-name { font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; color: #1A3D47; }
+.company-meta { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #5A7A82; line-height: 1.5; margin-bottom: 8px; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #E8F0F1; }
+.sparkline-bar { flex: 1; background: #C5D4D7; min-height: 2px; border-radius: 1px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #F0A868; opacity: 0.8; }
+.sparkline-label { font-family: 'Inter', sans-serif; font-size: 0.625rem; color: #8FB8C2; letter-spacing: 0.1em; margin-top: 4px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #E8F0F1; font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #FAFAF6; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #5A7A82; }
+.salary-stage { font-weight: 600; color: #1A3D47; }
+.salary-bar { display: inline-block; width: 80px; height: 6px; background: #E8F0F1; border-radius: 3px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #2C5F6F; border-radius: 3px; }
+.yoy { display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 4px; }
+.yoy.up   { color: #2C5F6F; background: #E8F0F1; }
+.yoy.down { color: #B85C3F; background: #FBEEE8; }
+.yoy.flat { color: #5A7A82; background: #F5F5F5; }
+.approx { font-family: 'Inter', sans-serif; color: #5A7A82; margin-right: 4px; }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E8F0F1; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.9375rem; color: #1A3D47; }
+.direction-bar { height: 8px; background: #E8F0F1; border-radius: 4px; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #2C5F6F; border-radius: 4px; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'Inter', sans-serif; font-weight: 700; text-align: right; font-size: 0.9375rem; color: #1A3D47; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #2C5F6F; transform: translateY(-2px); }
+.path-pct { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; color: #2C5F6F; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
+.path-name { font-family: 'Inter', sans-serif; color: #5A7A82; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-left: 3px solid #2C5F6F; border-radius: 0 8px 8px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 8px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #2C5F6F; color: #FAFAF6; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'Inter', sans-serif; font-weight: 600; color: #1A3D47; font-size: 0.875rem; }
+.quote-byline .quote-source { font-family: 'Inter', sans-serif; color: #5A7A82; font-size: 0.75rem; }
+.quote-text { font-family: 'Inter', sans-serif; font-size: 1.0625rem; line-height: 1.7; color: #1A3D47; }
+.quote-text::before { content: "\201C"; color: #F0A868; }
+.quote-text::after { content: "\201D"; color: #F0A868; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E8F0F1; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.9375rem; color: #1A3D47; }
+.xuanke-bar { height: 8px; background: #E8F0F1; border-radius: 4px; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #2C5F6F; border-radius: 4px; }
+.xuanke-pct { font-family: 'Inter', sans-serif; font-weight: 700; text-align: right; font-size: 0.9375rem; color: #2C5F6F; }
+.curriculum-lede { color: #5A7A82; font-size: 0.9375rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 28px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; transition: border-color 250ms, transform 250ms; }
+.curriculum-block:hover { border-color: #2C5F6F; transform: translateY(-2px); }
+.curriculum-title { font-family: 'Inter', sans-serif; font-size: 0.6875rem; color: #2C5F6F; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #E8F0F1; }
+.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; }
+.course-name { color: #1A3D47; font-weight: 500; }
+.course-credit { color: #5A7A82; font-family: 'Inter', sans-serif; font-size: 0.75rem; margin-left: 8px; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #2C5F6F; border-radius: 12px; text-align: center; position: relative; }
+.cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.75rem; margin-bottom: 12px; color: #1A3D47; position: relative; z-index: 1; }
+.cta-block p { color: #5A7A82; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 6px; color: #1A3D47; font-family: 'Inter', sans-serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #2C5F6F; }
+.cta-button { padding: 14px 36px; background: #2C5F6F; color: #FAFAF6; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.9375rem; font-weight: 600; transition: background 200ms; }
+.cta-button:hover { background: #1A3D47; }
+.cta-note { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8FB8C2; margin-top: 16px; position: relative; z-index: 1; }
+.watermark { color: #2C5F6F; opacity: 0.04; }
+.section-num { color: #F0A868; font-family: 'Inter', sans-serif; }
+section.tab h2 { font-family: 'Inter', sans-serif; color: #1A3D47; }
+section.tab p { color: #1A3D47; }
+section.tab p.lede { color: #5A7A82; }
+section.tab h3 { color: #1A3D47; font-family: 'Inter', sans-serif; }
+footer { background: #FAFAF6; border-top: 1px solid #C5D4D7; }
+footer .label { color: #2C5F6F; font-family: 'Inter', sans-serif; }
+footer .data-source { color: #5A7A82; }
+.drop-cap::first-letter { font-family: 'Inter', sans-serif; font-size: 4em; font-weight: 700; line-height: 0.9; float: left; margin: 0.05em 0.12em 0 0; color: #2C5F6F; }
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="wb-grid">
+      <div class="wb-panel">
+        <!-- TL: 罗盘 + 北极星 (指引 / 方向) — 错落, -4° -->
+        <div class="wb-widget pos-1">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <circle cx="13" cy="13" r="10.5" stroke="#2C5F6F" stroke-width="1.4" fill="none"/>
+            <circle cx="13" cy="13" r="7" stroke="#2C5F6F" stroke-width="0.6" opacity="0.4" fill="none"/>
+            <line x1="13" y1="2.5" x2="13" y2="23.5" stroke="#5A7A82" stroke-width="0.5" opacity="0.4"/>
+            <line x1="2.5" y1="13" x2="23.5" y2="13" stroke="#5A7A82" stroke-width="0.5" opacity="0.4"/>
+            <polygon points="13,3 11,15 13,12 15,15" fill="#F0A868"/>
+            <polygon points="13,23 11,11 13,14 15,11" fill="#2C5F6F" opacity="0.4"/>
+            <polygon points="3,13 15,11 12,13 15,15" fill="#2C5F6F" opacity="0.4"/>
+            <polygon points="23,13 11,15 14,13 11,11" fill="#2C5F6F" opacity="0.4"/>
+            <polygon points="13,5 11.8,13 13,11 14.2,13" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <!-- TR: 折纸鹤 (知识折叠 / 转化) — 偏内, +5° -->
+        <div class="wb-widget pos-2">
+          <svg width="32" height="22" viewBox="0 0 32 22" fill="none">
+            <path d="M2 14 L 16 2 L 30 14 L 16 10 Z" fill="#2C5F6F" opacity="0.85"/>
+            <path d="M2 14 L 16 10 L 30 14 L 16 20 Z" fill="#5A7A82" opacity="0.6"/>
+            <line x1="2" y1="14" x2="30" y2="14" stroke="#FAFAF6" stroke-width="0.8"/>
+            <line x1="16" y1="2" x2="16" y2="20" stroke="#FAFAF6" stroke-width="0.8"/>
+            <line x1="16" y1="2" x2="6" y2="10" stroke="#2C5F6F" stroke-width="0.6" opacity="0.5"/>
+            <line x1="16" y1="2" x2="26" y2="10" stroke="#2C5F6F" stroke-width="0.6" opacity="0.5"/>
+            <circle cx="16" cy="14" r="1.4" fill="#F0A868"/>
+          </svg>
+        </div>
+        <!-- BL: 纸飞机 + 虚线轨迹 (agent 派发任务) — 中下, +3° -->
+        <div class="wb-widget pos-3">
+          <svg width="30" height="20" viewBox="0 0 30 20" fill="none">
+            <line x1="1" y1="18" x2="9" y2="14" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.7"/>
+            <line x1="3" y1="12" x2="11" y2="9" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.5"/>
+            <line x1="6" y1="6" x2="13" y2="4" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.4"/>
+            <path d="M14 2 L 28 6 L 14 10 L 17 6 Z" fill="#2C5F6F"/>
+            <path d="M14 2 L 17 6 L 14 10 Z" fill="#5A7A82" opacity="0.6"/>
+            <path d="M14 10 L 20 14 L 16 12 Z" fill="#F0A868" opacity="0.7"/>
+          </svg>
+        </div>
+        <!-- BR: 沙漏 (内含 0/1 颗粒, 时间 + 数据流) — 偏外, -2° -->
+        <div class="wb-widget pos-4">
+          <svg width="20" height="26" viewBox="0 0 20 26" fill="none">
+            <line x1="3" y1="2" x2="17" y2="2" stroke="#2C5F6F" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="3" y1="24" x2="17" y2="24" stroke="#2C5F6F" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M5 4 L 15 4 L 15 9 C 15 12 10 13 10 13 C 10 13 5 14 5 17 L 5 22 L 15 22 L 15 17 C 15 14 10 13 10 13 C 10 13 5 12 5 9 Z" fill="#FAFAF6" stroke="#2C5F6F" stroke-width="1.1"/>
+            <text x="8.5" y="9.5" font-family="monospace" font-size="3.5" fill="#2C5F6F" font-weight="700">1</text>
+            <text x="8.5" y="20" font-family="monospace" font-size="3.5" fill="#2C5F6F" font-weight="700">0</text>
+            <text x="7" y="19.5" font-family="monospace" font-size="3.5" fill="#2C5F6F" font-weight="700">1</text>
+            <circle cx="10" cy="13" r="0.8" fill="#F0A868"/>
+          </svg>
+        </div>
+        <div class="wb-meta">
+          <div class="wb-meta-label">Major Explorer · 2026</div>
+          <div class="wb-meta-value">信息管理与信息系统</div>
+          <div class="wb-meta-divider"></div>
+          <div class="wb-meta-sub">管理学学士 · 4Y</div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="hero-decor">信息管理与信息系统 · 探索指南</div>
+        <h1>信息管理与信息系统</h1>
+        <p class="hero-tagline">信息管理与信息系统(信管)是横跨管理学、计算机、经济学的交叉专业，培养「懂业务的技术人 + 懂技术的业务人」。数字化转型大背景下,信管毕业生在 ERP 顾问、商业分析(BA)、产品经理、银行科技岗、互联网数据岗的招聘需求近 5 年保持 15</p>
+        <div class="hero-tags">
+          <span class="tag primary">半文员半技术</span><span class="tag primary">ERP/BA 数字化</span><span class="tag primary">管信交叉</span>
+          <span class="tag">读研友好</span><span class="tag">万金油风险</span><span class="tag">考公岗位多</span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-label">学科</div><div class="stat-value">管理学 · 工商管理类/图书情报与档案管理类</div></div>
+          <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4Y · 管理学学士</div></div>
+          <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★★☆☆</div></div>
+          <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap">信息管理与信息系统(信管)是横跨管理学、计算机、经济学的交叉专业，培养「懂业务的技术人 + 懂技术的业务人」。数字化转型大背景下,信管毕业生在 ERP 顾问、商业分析(BA)、产品经理、银行科技岗、互联网数据岗的招聘需求近 5 年保持 15%+ 增长;但作为典型的「杂学」专业,「样样学、样样不精」的劝退声音从未停止——上限可达字节/华为 30 万+ 起点,下限可能落到小公司行政岗月薪 5k。</p>
+    <h3>这个专业学什么?</h3><p>前两年打底,管理+技术双线并进:高等数学(微积分/线性代数/概率论)、管理学原理、微观经济学、宏观经济学、会计学原理、统计学、计算机导论、Python/C/Java 编程基础。大学英语、经济法。信管的课程表一半像工商管理,一半像计算机,这是这个专业最大的特征也是最大的坑——你不深挖任何一门,都只能算「入门」。
+
+大三进入信管核心课:管理信息系统(MIS)、数据结构与算法、数据库原理与应用(SQL Server/MySQL)、信息系统分析与设计、ERP 原理与实践(SAP/用友/金蝶)、数据挖掘与机器学习入门、管理统计学、信息系统项目管理。这个阶段决定了你毕业时到底偏向「管理端」还是「技术端」——分流做得好,等于给自己装了两条退路。
+
+大四按方向分流:商业分析(BA)、ERP 实施顾问、产品经理助理、数据治理、数字化转型咨询。同时完成毕业实习和毕业论文(信管毕设往往是给某企业做一套信息系统原型或数据分析报告)。多数头部院校要求实习不少于 3 个月,优秀学生能进字节、华为、招行数字化岗实习转正。</p>
+    <h3>什么人适合?</h3><p>「信管」适合对商业和技术都有兴趣、不愿意只做单一技能、愿意持续学习的「T 型人才」。这个专业不培养纯码农也不培养纯管理者,培养的是「能把业务需求翻译成技术方案」的人。如果你喜欢跟人沟通又不想放弃技术,如果你的兴趣在「为什么做」而不是「怎么做」,信管是天然的选择。
+
+不适合以下几种人:期待课堂就教你写代码到能进大厂的人(信管的技术课深度远不如软工/计科);希望专业课直接教你「如何当 CIO」的人(管理是结果不是课程);只想拿学位不打算自学的人(信管「杂」的特点决定了你必须自己挑方向深挖);以及完全抗拒数学/统计/编程的人——这三条一条都躲不掉。</p>
+    <h3>避坑指南</h3><p>❌ 「信管 = 学 IT 的管理」 → 错。信管是「管理学」门类下,学位是管理学学士。课程技术深度不如软工/计科,管理深度不如工商管理。定位错位是最大的坑,大一大二不规划,大三大四才发现「既不够技术也不够管理」。
+❌ 「什么都会 = 什么都能干」 → 错。HR 招信管生会问「你会写 SQL 吗?会做需求分析吗?会画原型图吗?」如果三连答「会一点」,不如一个「精通 Python」的计算机科班生或者「精通财务」的财会生。信管是「敲门砖」,不是「金钥匙」。
+❌ 「信管对口岗位多,不怕失业」 → 半对。数字化转型确实在招人,但 70% 岗位要求「计算机/软工/数据科学」专业优先。信管生要靠实习经历、证书(PMP/CDA/SAP)、项目作品集来抢赛道。
+❌ 「不读研找不到好工作」 → 因人而异。985 院校信管本科 + 三段大厂实习,直接就业没问题;普通院校信管想进大厂数字化岗/数据岗,大概率要读研或跨考。
+❌ 「考公岗位多」 → 是真的。信管属于「工商管理类」+「图书情报与档案管理类」,可报岗位涵盖工商、统计、档案、信息中心、税务局,选择面宽。但 2024 年起国考岗位对「工商管理类」要求收紧,「图书情报与档案管理类」反而是更稳的口子。</p>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
+    <p class="curriculum-lede">全国 4 年制通用框架,总学分 150-175。信管有两个不同的学科评估口径:管理科学与工程(工科口径)与图书情报与档案管理(管理学口径),前者更偏技术(数据/信息系统),后者更偏信息资源(情报/档案/政务)。同一所学校可能两个学院都开信管,选校务必看学院归属。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">高等数学 (微积分 + 线性代数 + 概率论)</span><span class="course-credit">12 学分</span></div>
+          <div class="course"><span class="course-name">管理学原理</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">微观经济学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">宏观经济学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">会计学原理</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">统计学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">大学英语</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">计算机导论 / Python 编程</span><span class="course-credit">3 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><span class="course-name">管理信息系统 (MIS)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">数据结构与算法</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">数据库原理与应用 (SQL)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">信息系统分析与设计</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">ERP 原理与实践 (SAP/用友)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">数据挖掘与机器学习</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">管理统计学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">信息系统项目管理</span><span class="course-credit">2 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><span class="course-name">清华大学 · 数据治理与数字化转型 (经管学院)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">中国人民大学 · 信息系统与数据库 (信息学院)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">武汉大学 · 信息资源管理 + 政务大数据 (国学院交叉)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">天津大学 · ERP 沙盘 + 工业信息系统 (管理学部)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">南京大学 · 信息分析与情报学 (信息管理学院)</span><span class="course-credit">3 学分</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">清</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">清华大学</div>
+          <div class="bento-tag">北京 · 经管学院信管,数字化转型研究顶配</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">中国人民大学</div>
+          <div class="bento-tag">北京 · 信息学院,信息系统与数据分析并重</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">同</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">同济大学</div>
+          <div class="bento-tag">上海 · 工业工程 + 信管交叉,工程管理见长</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">浙江大学</div>
+          <div class="bento-tag">杭州 · 管理学院信管,数字商业领先</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">武</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">武汉大学</div>
+          <div class="bento-tag">武汉 · 信息管理学院,情报学 + 政务数据全国第一</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">南京大学</div>
+          <div class="bento-tag">南京 · 信息管理学院,信息分析与情报学重镇</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">天</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">天津大学</div>
+          <div class="bento-tag">天津 · 管理学部,ERP + 工业信息系统</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">哈</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">哈尔滨工业大学</div>
+          <div class="bento-tag">哈尔滨 · 管理学院,工科底子信管</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中山大学</div>
+          <div class="bento-tag">广州 · 资讯管理学院,粤港澳数字化人才库</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">华中科技大学</div>
+          <div class="bento-tag">武汉 · 管理学院,信息 + 制造复合</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">复</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">复旦大学</div>
+          <div class="bento-tag">上海 · 大数据学院交叉,金融科技方向</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">北京航空航天大学</div>
+          <div class="bento-tag">北京 · 经管学院,工业信管与项目管理</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">华</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">华为</div>
+          <div class="company-meta">★★★★★ · 校招 数字化/IT 咨询管培 18-30 万/年,海外补贴翻倍</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">字</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">字节跳动</div>
+          <div class="company-meta">★★★★ · 校招 产品经理/数据分析师 25-40 万/年 + 期权,信管友好岗</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">招</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">招商银行</div>
+          <div class="company-meta">★★★★ · 校招 FinTech 管培/科技岗 18-28 万/年,银行科技黄埔</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">阿</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">阿里巴巴</div>
+          <div class="company-meta">★★★★ · 校招 商业分析师(BI) 22-35 万/年,数据中台方向</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">腾</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">腾讯</div>
+          <div class="company-meta">★★★★ · 校招 产品/数据分析岗 22-35 万/年,CSIG 数字化方向</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">S</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">SAP/用友/金蝶</div>
+          <div class="company-meta">★★★ · 校招 ERP 实施顾问 12-22 万/年,出差补贴另算</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">德</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">德勤/安永/普华永道</div>
+          <div class="company-meta">★★★★ · 校招 IT 审计/技术风险咨询 12-18 万/年,四大保底赛道</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">中国工商银行</div>
+          <div class="company-meta">★★★★ · 校招 科技菁英计划 15-22 万/年,数据中心方向</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">美</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">美团/京东</div>
+          <div class="company-meta">★★★ · 校招 商业分析/产品助理 18-28 万/年,本地生活数字化</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">国</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">国家税务总局/档案局</div>
+          <div class="company-meta">★★ · 校招 公务员 8-15 万/年,信管可报岗位多且稳定</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="salary">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">应届 (0-2 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">中级 (3-5 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="15">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.5%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">资深 (6-10 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="28">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.333333333333336%"></span></span><span class="yoy up">↗ +9%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="45">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="75">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">高管/总监 (10+ 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="55">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:34.375%"></span></span><span class="yoy up">↗ +11%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="90">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:56.25%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="160">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+        <div class="direction">
+          <div class="direction-name">互联网/科技:产品经理、商业分析师(BA)、数据分析师</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:28%"></div></div>
+          <div class="direction-pct">28%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">ERP/咨询:实施顾问、IT 咨询、四大会计 IT 审计</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">银行/金融科技:招行/工行科技岗、券商 FinTech、互联网金融</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:16%"></div></div>
+          <div class="direction-pct">16%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">甲方信息化:企业 CIO 助理、信息中心、数字化转型岗</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:14%"></div></div>
+          <div class="direction-pct">14%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">读研/出国(管科/情报/数据科学)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">公务员/事业单位(档案/税务/信息中心)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">跨行业:供应链/营销/项目管理</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:4%"></div></div>
+          <div class="direction-pct">4%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">30%</div>
+          <div class="path-name">国内考研 (管理科学与工程/情报学/图情)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">15%</div>
+          <div class="path-name">跨专业考研 (计算机/数据科学/金融)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">10%</div>
+          <div class="path-name">出国深造 (MIS/BA/Data Science 硕士)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">40%</div>
+          <div class="path-name">直接就业 (数字化方向为主)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">5%</div>
+          <div class="path-name">创业/自由职业 (数字化咨询)</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">字</div>
+            <div class="quote-byline">
+              <strong>字节跳动 · 商业分析师</strong>
+              <span class="quote-source">2024 届 · 小红书 @2024</span>
+            </div>
+          </div>
+          <p class="quote-text">信管不是天坑也不是金矿,关键看大三大四怎么打。我大三自学 SQL、Python、Tableau,大四去滴滴实习 6 个月,秋招拿到字节 BA offer 起薪 32 万。身边没规划的同班同学去了小公司做行政 5k。建议:信管生必须有一技之长,要么技术要么业务。</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">招</div>
+            <div class="quote-byline">
+              <strong>招行 FinTech 管培生</strong>
+              <span class="quote-source">2023 届 · 知乎 @2023</span>
+            </div>
+          </div>
+          <p class="quote-text">武大信管毕业,班里 60 人大概 30% 读研(本院/跨考计算机/出国),50% 直接就业,15% 考公。我和 3 个同学去了招行/工行科技岗,起薪 18-22 万;5 个同学去了华为/SAP 做 ERP 实施,起薪 12-15 万但出差多。信管就业真不差,但前提是学校得在 211 以上。</p>
+        </div>
+        <div class="quote fade-up" data-delay="160" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某制造业 · 信息化专员</strong>
+              <span class="quote-source">2022 届 · 知乎 @2024 (劝退帖)</span>
+            </div>
+          </div>
+          <p class="quote-text">普通一本信管毕业,投了 200 份简历,最后去了一家制造业做「信息化专员」,月薪 5500。HR 反馈最多的一句话是「你既不如计算机科班能写代码,也不如会计科班能看懂账」。信管学得太杂,四年下来 SQL 写过、ERP 玩过、Python 跑过、数据结构学过——但没一样能拿出来打。真心建议选这个专业之前想清楚。</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">人</div>
+            <div class="quote-byline">
+              <strong>人大信管硕 · 读博中</strong>
+              <span class="quote-source">2021 届 · 校友访谈 @北京</span>
+            </div>
+          </div>
+          <p class="quote-text">信管想往上走,读研几乎是标配。我本科南大信管,班里 70% 同学选择读研,去向包括管科、情报学、数据科学、跨考计算机。本科直接就业的不到 30%,大部分去了 ERP 实施、企业 IT 部门,起薪 10-12 万。读研之后去互联网/金融的占比明显高,中信证券、华泰这些机构的数字化部门很认信管硕。</p>
+        </div>
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">S</div>
+            <div class="quote-byline">
+              <strong>SAP 实施顾问 · 自由顾问</strong>
+              <span class="quote-source">2020 届 · 校友访谈 @上海</span>
+            </div>
+          </div>
+          <p class="quote-text">信管最对口的赛道其实是 ERP 实施顾问——技术门槛不高(会用 SAP/用友),但要求懂业务流程(财务/供应链/HR),信管学的「杂」反而成了优势。我做了 5 年顾问,现在自己出来接项目,一年 60-80 万。但出差多、压力大、不稳定,不适合想躺平的人。</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">不限科目 (历史或物理均可)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
+          <div class="xuanke-pct">60%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">物理必选</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:28%"></div></div>
+          <div class="xuanke-pct">28%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 化学/生物 (双选)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:7%"></div></div>
+          <div class="xuanke-pct">7%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">其他组合 (含地理/政治)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
+          <div class="xuanke-pct">5%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="cta">
+  <div class="watermark">10</div>
+  <div class="container">
+    <div class="section-num">10 / 10 · 关联志愿</div>
+    <h2>关联志愿</h2>
+    <div class="cta-block">
+      <h3>基于你的位次, 推荐这些校 + 组</h3>
+      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
+      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
+        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
+        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
+        <button type="submit" class="cta-button">推荐志愿 →</button>
+      </form>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
+    <div class="data-source">数据源: 综合教育部第四轮学科评估(管理科学与工程/图书情报与档案管理)、软科 2025 中国最好学科排名、麦可思《2024 年中国大学生就业报告》、各校培养方案(清华/人大/武大/南大/天津大学等)、职友集信管岗位薪资样本(12 万+ 份)、知乎/小红书/小红信管校友分享、阳光高考 2024 选科要求等公开信息。</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+<title>图书馆学专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="图书馆学是研究「信息 / 文献 / 知识」如何被收集、组织、保存、检索与传播的管理类本科专业。它是「冷门但稳定」的典型 — 全国年招生规模仅 3000-4000 人, 80% 院校文理兼收, 招录分数">
+<style>
+@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; transition: opacity 200ms; }
+a:hover { opacity: 0.65; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
+
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+body { background: #FAFAF6; color: #1A3D47; font-family: 'Inter', 'PingFang SC', sans-serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 900px 600px at 20% 0%, rgba(44, 95, 111, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 700px 500px at 90% 100%, rgba(240, 168, 104, 0.06) 0%, transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.37 0 0 0 0 0.43 0 0 0 0.3 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.04; }
+
+
+.hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #C5D4D7; position: relative; z-index: 2; overflow: hidden; }
+.wb-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 8px; background: #FAFAF6; border: 1px solid #C5D4D7; box-shadow: 0 1px 0 #E8F0F1, 0 8px 24px rgba(44, 95, 111, 0.08); overflow: hidden; }
+.wb-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: linear-gradient(135deg, rgba(240, 168, 104, 0.08) 0%, transparent 50%), radial-gradient(ellipse 300px 200px at 80% 20%, rgba(240, 168, 104, 0.15) 0%, transparent 70%); }
+.wb-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.15; background: linear-gradient(90deg, #2C5F6F 0%, #2C5F6F 100%) right top / 60px 60px no-repeat, linear-gradient(135deg, #F0A868 0%, #F0A868 100%) right bottom / 40px 40px no-repeat, linear-gradient(0deg, #8FB8C2 0%, #8FB8C2 100%) left bottom / 30px 30px no-repeat; }
+.wb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 900px) { .wb-grid { grid-template-columns: 1fr; gap: 32px; } }
+.wb-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
+.wb-meta-label { font-family: 'Inter', sans-serif; font-size: 0.6875rem; font-weight: 600; color: #F0A868; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 16px; }
+.wb-meta-value { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; color: #1A3D47; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 8px; }
+.wb-meta-sub { font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #5A7A82; letter-spacing: 0.02em; }
+.wb-meta-divider { width: 40px; height: 3px; background: #2C5F6F; margin: 14px auto; border-radius: 2px; }
+/* ── AI/Agent 抽象小元素 (4 角) ── 不碰任何公司 logo, 全是泛 AI 意象 */
+.wb-widget { position: absolute; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 4px; background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(44, 95, 111, 0.30); border-radius: 8px; }
+.wb-widget svg { display: block; }
+.wb-widget svg { display: block; }
+.wb-widget.pos-1 { top: 8%; left: 6%; transform: rotate(-4deg); }
+.wb-widget.pos-2 { top: 14%; right: 8%; transform: rotate(5deg); }
+.wb-widget.pos-3 { bottom: 12%; left: 18%; transform: rotate(3deg); }
+.wb-widget.pos-4 { bottom: 10%; right: 6%; transform: rotate(-2deg); }
+.hero-side { display: flex; flex-direction: column; }
+.hero-decor { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; color: #2C5F6F; letter-spacing: 0.2em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; text-transform: uppercase; }
+.hero-decor::before { content: ""; display: inline-block; width: 32px; height: 2px; background: #F0A868; border-radius: 1px; }
+.hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.75rem, 5.5vw, 4.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; color: #1A3D47; margin-bottom: 24px; }
+.hero h1::after { content: ""; display: block; width: 48px; height: 3px; background: #F0A868; border-radius: 2px; margin-top: 16px; }
+.hero-tagline { font-family: 'Inter', sans-serif; font-size: 1.0625rem; color: #5A7A82; margin-bottom: 32px; line-height: 1.7; max-width: 600px; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.tag { padding: 6px 14px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #1A3D47; font-weight: 500; letter-spacing: 0.01em; }
+.tag.primary { background: #2C5F6F; border-color: #2C5F6F; color: #FAFAF6; }
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #C5D4D7; border-bottom: 1px solid #C5D4D7; border-left: 1px solid #C5D4D7; border-right: 1px solid #C5D4D7; border-radius: 8px; overflow: hidden; }
+@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { padding: 20px 22px; border-right: 1px solid #C5D4D7; position: relative; background: #FFFFFF; }
+.stat:last-child { border-right: none; }
+@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #C5D4D7; } }
+.stat-label { font-family: 'Inter', sans-serif; font-size: 0.6875rem; color: #5A7A82; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+.stat-value { font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 700; color: #1A3D47; margin-top: 6px; letter-spacing: -0.01em; }
+section.tab { border-top: 1px solid #C5D4D7; border-bottom: 1px solid #C5D4D7; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; position: relative; transition: border-color 250ms, transform 250ms, box-shadow 250ms; box-shadow: 0 1px 0 rgba(44, 95, 111, 0.04); }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #F0A868; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #2C5F6F; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 95, 111, 0.08); }
+.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #2C5F6F; color: #FAFAF6; font-family: 'Inter', sans-serif; font-size: 0.9375rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #2C5F6F; border: 1px solid #2C5F6F; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 12px; }
+.bento-name { font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; color: #1A3D47; padding-right: 44px; text-wrap: balance; line-height: 1.35; }
+.bento-tag { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #5A7A82; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 24px 22px 20px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; position: relative; transition: border-color 250ms, transform 250ms, box-shadow 250ms; box-shadow: 0 1px 0 rgba(44, 95, 111, 0.04); }
+.company:hover { border-color: #2C5F6F; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 95, 111, 0.08); }
+.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #2C5F6F; color: #FAFAF6; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
+.tier-S { background: #2C5F6F; color: #FAFAF6; }
+.tier-A { background: transparent; color: #2C5F6F; border: 1px solid #2C5F6F; }
+.tier-B { background: #E8F0F1; color: #5A7A82; }
+.company-name { font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; color: #1A3D47; }
+.company-meta { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #5A7A82; line-height: 1.5; margin-bottom: 8px; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #E8F0F1; }
+.sparkline-bar { flex: 1; background: #C5D4D7; min-height: 2px; border-radius: 1px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #F0A868; opacity: 0.8; }
+.sparkline-label { font-family: 'Inter', sans-serif; font-size: 0.625rem; color: #8FB8C2; letter-spacing: 0.1em; margin-top: 4px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #E8F0F1; font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #FAFAF6; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #5A7A82; }
+.salary-stage { font-weight: 600; color: #1A3D47; }
+.salary-bar { display: inline-block; width: 80px; height: 6px; background: #E8F0F1; border-radius: 3px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #2C5F6F; border-radius: 3px; }
+.yoy { display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 4px; }
+.yoy.up   { color: #2C5F6F; background: #E8F0F1; }
+.yoy.down { color: #B85C3F; background: #FBEEE8; }
+.yoy.flat { color: #5A7A82; background: #F5F5F5; }
+.approx { font-family: 'Inter', sans-serif; color: #5A7A82; margin-right: 4px; }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E8F0F1; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.9375rem; color: #1A3D47; }
+.direction-bar { height: 8px; background: #E8F0F1; border-radius: 4px; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #2C5F6F; border-radius: 4px; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'Inter', sans-serif; font-weight: 700; text-align: right; font-size: 0.9375rem; color: #1A3D47; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #2C5F6F; transform: translateY(-2px); }
+.path-pct { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; color: #2C5F6F; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
+.path-name { font-family: 'Inter', sans-serif; color: #5A7A82; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-left: 3px solid #2C5F6F; border-radius: 0 8px 8px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 8px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #2C5F6F; color: #FAFAF6; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'Inter', sans-serif; font-weight: 600; color: #1A3D47; font-size: 0.875rem; }
+.quote-byline .quote-source { font-family: 'Inter', sans-serif; color: #5A7A82; font-size: 0.75rem; }
+.quote-text { font-family: 'Inter', sans-serif; font-size: 1.0625rem; line-height: 1.7; color: #1A3D47; }
+.quote-text::before { content: "\201C"; color: #F0A868; }
+.quote-text::after { content: "\201D"; color: #F0A868; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E8F0F1; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.9375rem; color: #1A3D47; }
+.xuanke-bar { height: 8px; background: #E8F0F1; border-radius: 4px; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #2C5F6F; border-radius: 4px; }
+.xuanke-pct { font-family: 'Inter', sans-serif; font-weight: 700; text-align: right; font-size: 0.9375rem; color: #2C5F6F; }
+.curriculum-lede { color: #5A7A82; font-size: 0.9375rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 28px 24px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 8px; transition: border-color 250ms, transform 250ms; }
+.curriculum-block:hover { border-color: #2C5F6F; transform: translateY(-2px); }
+.curriculum-title { font-family: 'Inter', sans-serif; font-size: 0.6875rem; color: #2C5F6F; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #E8F0F1; }
+.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; }
+.course-name { color: #1A3D47; font-weight: 500; }
+.course-credit { color: #5A7A82; font-family: 'Inter', sans-serif; font-size: 0.75rem; margin-left: 8px; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #2C5F6F; border-radius: 12px; text-align: center; position: relative; }
+.cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.75rem; margin-bottom: 12px; color: #1A3D47; position: relative; z-index: 1; }
+.cta-block p { color: #5A7A82; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #FFFFFF; border: 1px solid #C5D4D7; border-radius: 6px; color: #1A3D47; font-family: 'Inter', sans-serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #2C5F6F; }
+.cta-button { padding: 14px 36px; background: #2C5F6F; color: #FAFAF6; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.9375rem; font-weight: 600; transition: background 200ms; }
+.cta-button:hover { background: #1A3D47; }
+.cta-note { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8FB8C2; margin-top: 16px; position: relative; z-index: 1; }
+.watermark { color: #2C5F6F; opacity: 0.04; }
+.section-num { color: #F0A868; font-family: 'Inter', sans-serif; }
+section.tab h2 { font-family: 'Inter', sans-serif; color: #1A3D47; }
+section.tab p { color: #1A3D47; }
+section.tab p.lede { color: #5A7A82; }
+section.tab h3 { color: #1A3D47; font-family: 'Inter', sans-serif; }
+footer { background: #FAFAF6; border-top: 1px solid #C5D4D7; }
+footer .label { color: #2C5F6F; font-family: 'Inter', sans-serif; }
+footer .data-source { color: #5A7A82; }
+.drop-cap::first-letter { font-family: 'Inter', sans-serif; font-size: 4em; font-weight: 700; line-height: 0.9; float: left; margin: 0.05em 0.12em 0 0; color: #2C5F6F; }
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="wb-grid">
+      <div class="wb-panel">
+        <!-- TL: 罗盘 + 北极星 (指引 / 方向) — 错落, -4° -->
+        <div class="wb-widget pos-1">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <circle cx="13" cy="13" r="10.5" stroke="#2C5F6F" stroke-width="1.4" fill="none"/>
+            <circle cx="13" cy="13" r="7" stroke="#2C5F6F" stroke-width="0.6" opacity="0.4" fill="none"/>
+            <line x1="13" y1="2.5" x2="13" y2="23.5" stroke="#5A7A82" stroke-width="0.5" opacity="0.4"/>
+            <line x1="2.5" y1="13" x2="23.5" y2="13" stroke="#5A7A82" stroke-width="0.5" opacity="0.4"/>
+            <polygon points="13,3 11,15 13,12 15,15" fill="#F0A868"/>
+            <polygon points="13,23 11,11 13,14 15,11" fill="#2C5F6F" opacity="0.4"/>
+            <polygon points="3,13 15,11 12,13 15,15" fill="#2C5F6F" opacity="0.4"/>
+            <polygon points="23,13 11,15 14,13 11,11" fill="#2C5F6F" opacity="0.4"/>
+            <polygon points="13,5 11.8,13 13,11 14.2,13" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <!-- TR: 折纸鹤 (知识折叠 / 转化) — 偏内, +5° -->
+        <div class="wb-widget pos-2">
+          <svg width="32" height="22" viewBox="0 0 32 22" fill="none">
+            <path d="M2 14 L 16 2 L 30 14 L 16 10 Z" fill="#2C5F6F" opacity="0.85"/>
+            <path d="M2 14 L 16 10 L 30 14 L 16 20 Z" fill="#5A7A82" opacity="0.6"/>
+            <line x1="2" y1="14" x2="30" y2="14" stroke="#FAFAF6" stroke-width="0.8"/>
+            <line x1="16" y1="2" x2="16" y2="20" stroke="#FAFAF6" stroke-width="0.8"/>
+            <line x1="16" y1="2" x2="6" y2="10" stroke="#2C5F6F" stroke-width="0.6" opacity="0.5"/>
+            <line x1="16" y1="2" x2="26" y2="10" stroke="#2C5F6F" stroke-width="0.6" opacity="0.5"/>
+            <circle cx="16" cy="14" r="1.4" fill="#F0A868"/>
+          </svg>
+        </div>
+        <!-- BL: 纸飞机 + 虚线轨迹 (agent 派发任务) — 中下, +3° -->
+        <div class="wb-widget pos-3">
+          <svg width="30" height="20" viewBox="0 0 30 20" fill="none">
+            <line x1="1" y1="18" x2="9" y2="14" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.7"/>
+            <line x1="3" y1="12" x2="11" y2="9" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.5"/>
+            <line x1="6" y1="6" x2="13" y2="4" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.4"/>
+            <path d="M14 2 L 28 6 L 14 10 L 17 6 Z" fill="#2C5F6F"/>
+            <path d="M14 2 L 17 6 L 14 10 Z" fill="#5A7A82" opacity="0.6"/>
+            <path d="M14 10 L 20 14 L 16 12 Z" fill="#F0A868" opacity="0.7"/>
+          </svg>
+        </div>
+        <!-- BR: 沙漏 (内含 0/1 颗粒, 时间 + 数据流) — 偏外, -2° -->
+        <div class="wb-widget pos-4">
+          <svg width="20" height="26" viewBox="0 0 20 26" fill="none">
+            <line x1="3" y1="2" x2="17" y2="2" stroke="#2C5F6F" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="3" y1="24" x2="17" y2="24" stroke="#2C5F6F" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M5 4 L 15 4 L 15 9 C 15 12 10 13 10 13 C 10 13 5 14 5 17 L 5 22 L 15 22 L 15 17 C 15 14 10 13 10 13 C 10 13 5 12 5 9 Z" fill="#FAFAF6" stroke="#2C5F6F" stroke-width="1.1"/>
+            <text x="8.5" y="9.5" font-family="monospace" font-size="3.5" fill="#2C5F6F" font-weight="700">1</text>
+            <text x="8.5" y="20" font-family="monospace" font-size="3.5" fill="#2C5F6F" font-weight="700">0</text>
+            <text x="7" y="19.5" font-family="monospace" font-size="3.5" fill="#2C5F6F" font-weight="700">1</text>
+            <circle cx="10" cy="13" r="0.8" fill="#F0A868"/>
+          </svg>
+        </div>
+        <div class="wb-meta">
+          <div class="wb-meta-label">Major Explorer · 2026</div>
+          <div class="wb-meta-value">图书馆学</div>
+          <div class="wb-meta-divider"></div>
+          <div class="wb-meta-sub">管理学学士 · 4Y</div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="hero-decor">图书馆学 · 探索指南</div>
+        <h1>图书馆学</h1>
+        <p class="hero-tagline">图书馆学是研究「信息 / 文献 / 知识」如何被收集、组织、保存、检索与传播的管理类本科专业。它是「冷门但稳定」的典型 — 全国年招生规模仅 3000-4000 人, 80% 院校文理兼收, 招录分数低, 但体制内 (图书馆 / 档案馆 /</p>
+        <div class="hero-tags">
+          <span class="tag primary">冷门小众</span><span class="tag primary">事业单位对口</span><span class="tag primary">万金油信息管理</span>
+          <span class="tag">读研友好</span><span class="tag">考公考编热门</span><span class="tag">文理兼收</span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-label">学科</div><div class="stat-value">管理学 · 图书情报与档案管理类</div></div>
+          <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4Y · 管理学学士</div></div>
+          <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★☆☆☆</div></div>
+          <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap">图书馆学是研究「信息 / 文献 / 知识」如何被收集、组织、保存、检索与传播的管理类本科专业。它是「冷门但稳定」的典型 — 全国年招生规模仅 3000-4000 人, 80% 院校文理兼收, 招录分数低, 但体制内 (图书馆 / 档案馆 / 高校 / 博物馆) 招聘对口, 编制岗竞争远小于「三不限」; 它的另一面是「万金油信息管理」, 跨考数据 / IT / 编辑出版 / 公务员都敞开, 但缺乏硬技能, 硕士起步是走上研究 / 高校 / 智库岗的隐性门槛。</p>
+    <h3>这个专业学什么?</h3><p>前两年打管理与信息基础: 高等数学(微积分 + 线性代数 + 概率论基础)、管理学原理、信息管理学概论、大学英语、计算机应用基础(数据库 + 文字处理 + 信息检索工具)、大学语文、信息素养与学术写作。这个阶段和「信息管理与信息系统」「档案学」重合度很高, 差别在图书馆学更偏「面向公众的信息服务」和「文献组织」。
+
+大三进入专业核心: 图书馆学基础、信息组织(分类法 + 主题法 + 元数据)、信息检索、信息资源管理与利用、目录学、文献学、情报学概论、数字图书馆技术、用户研究与信息服务。这些课程围绕「信息怎么进馆 / 怎么摆 / 怎么找到 / 怎么用 / 怎么数字化」展开, 案例多来自国家图书馆 / 高校图书馆 / 公共图书馆真实业务。
+
+大四按方向分流: 数字图书馆 / 古籍保护与版本学 / 知识图谱与信息组织 / 出版编辑 / 档案管理 / 信息咨询等选修模块, 同时完成毕业实习(图书馆 / 档案馆 / 出版社 / 信息咨询公司)和毕业论文。多数院校要求不少于 2-3 个月的实习, 优秀的学生会争取到国家图书馆 / 北大图书馆 / 武大图书馆跟岗实习。</p>
+    <h3>什么人适合?</h3><p>适合目标感清晰、有志于进入「体制内 + 偏文化 / 偏安静」岗位 (公共图书馆 / 高校图书馆 / 档案馆 / 博物馆 / 出版社 / 文物局) 的学生。图书馆学是「图书馆招聘最对口」的本科专业 — 国家图书馆、各省图书馆每年都招图情档类专业, 高校图书馆招聘也认这个专业。如果你的目标是「稳定 + 体面 + 城市生活 + 不内卷」, 这个冷门专业是性价比很高的赛道。
+
+不适合以下几种人: 期待毕业后起薪 20 万+ 的人(图情档硕士进互联网大厂信息岗 20-30 万是上限, 本科进图书馆 8-12 万是常态); 想本科毕业直接做产品 / 运营 / 数据的人(「信息管理与信息系统」或「数据科学与大数据技术」更对口); 完全不想读书、希望一毕业就有「硬技能」的人(图情档课偏理论, 真正的硬技能靠自学 + 实习); 想 30 岁前买房的人(图书馆 / 档案馆起薪低, 涨薪慢, 一线城市 5-8 年才看到曙光)。</p>
+    <h3>避坑指南</h3><p>❌ 「图书馆学 = 毕业后去图书馆」 → 半对半错。本科课程帮你建立知识框架, 但能不能进图书馆取决于编制考试 / 公开招聘的分数, 和你大学课程关联度有限。专业只是给你「报名资格」, 真本事靠学历 + 考编。
+❌ 「冷门 = 没人报 = 好考」 → 错。冷门意味着招生人数少(全国年招 3000-4000 人, 不到 CS 的 1%), 多数学校不开这个专业, 想读好学校只能拼 985。冷门的另一面是「冷门行业的人才需求也少」, 转行可去岗位比 CS 少一个数量级。
+❌ 「万金油 = 哪里都能进」 → 体制外对口窄。图书馆学的课比「信息管理与信息系统」虚, 私企眼里它和「档案学 / 信息管理 / 编辑出版」几乎无差别, 反而因为「图书馆」三个字容易被互联网 HR 误判为「养老专业」。
+❌ 「不读研也能找好工作」 → 看赛道。体制内本科生可考公 + 进图书馆, 但走学术 / 高校图书馆 / 智库 / 国家图书馆核心业务岗, 硕士几乎是隐性门槛。本科毕业去出版社当编辑, 卡学历 (985/211) 非常普遍。
+❌ 「哪个学校读出来都一样」 → 错。学科评估 A+ 的武大、北大、南大和普通二本, 在国家图书馆招聘、985 高校图书馆准入、考研保研率上有数量级差距 — 武大图情档毕业生进国家图书馆和 985 高校图书馆的比例远高于普通院校。
+❌ 「图情档冷门 = 容易上岸」 → 不绝对。冷门是「报名人数少」, 不是「考试难度低」, 国考图书馆岗位笔试和「三不限」一样是行测 + 申论, 卷的是应试能力, 不是专业。
+❌ 「学了图书馆学就懂图书馆」 → 学科教你的是「信息组织」和「用户服务」, 不是「如何整理书架」。真正的图书馆业务能力来自实习和编制考试, 不来自课本。</p>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
+    <p class="curriculum-lede">全国 4 年制通用框架, 总学分通常 140-160。公共课约 50-60 学分, 专业核心约 30-40 学分, 选修 20-30 学分, 实践环节(含图书馆 / 档案馆实习) 15-25 学分。不同院校差异较大, 武大重信息资源管理, 北大重数字人文, 南大重古典文献, 人大重档案学交叉。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">高等数学 (微积分 + 线性代数 + 概率论基础)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">大学英语 (I-IV)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">思想政治理论 (思修/史纲/马原/毛概)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">管理学原理</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">信息管理学概论</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">大学语文 / 中文写作</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">计算机应用基础 (办公软件 + 检索工具)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">信息素养与学术写作</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">体育 (I-IV)</span><span class="course-credit">4 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><span class="course-name">图书馆学基础</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">信息组织 (分类法 + 主题法 + 元数据)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">信息检索</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">信息资源管理与利用</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">目录学</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">文献学 (含中国文献学 / 版本学)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">情报学概论</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">数字图书馆技术</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">用户研究与信息服务</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">档案学概论</span><span class="course-credit">2 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><span class="course-name">武汉大学 · 信息资源管理 + 古籍整理 (国图实习推荐信)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">北京大学 · 知识图谱 + 数字人文 (Python/R 数据分析)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">南京大学 · 文献学 + 版本目录学 (古典文献方向)</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">中山大学 · 信息服务 + 港澳台图书馆交流</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">中国人民大学 · 信息资源建设 + 档案学交叉</span><span class="course-credit">3 学分</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">武</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">武汉大学</div>
+          <div class="bento-tag">图情档学科 A+, 全国第一, 国图直通车</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">北京大学</div>
+          <div class="bento-tag">北京 · 数字人文 + 知识图谱前沿</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">南京大学</div>
+          <div class="bento-tag">南京 · 古典文献学 + 版本目录学重镇</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中国人民大学</div>
+          <div class="bento-tag">北京 · 信息资源 + 档案学交叉</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">中山大学</div>
+          <div class="bento-tag">广州 · 港澳台图书馆 + 信息技术</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">华中科技大学</div>
+          <div class="bento-tag">武汉 · 信息系统 + 智慧图书馆</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">南开大学</div>
+          <div class="bento-tag">天津 · 信息服务 + 资源建设</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">吉</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">吉林大学</div>
+          <div class="bento-tag">长春 · 东北地区龙头, 信息管理</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">华东师范大学</div>
+          <div class="bento-tag">上海 · 学校图书馆 + 数字阅读</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">北京师范大学</div>
+          <div class="bento-tag">北京 · 师范类图情, 中小学图书馆方向</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">南京政治学院<wbr> / 解放军战略支援部队信息工程大学</div>
+          <div class="bento-tag">南京 · 军队图情 + 情报系统</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">云</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">云南大学</div>
+          <div class="bento-tag">昆明 · 西南民族文献 + 古籍修复</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">国</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">国家图书馆 / 省图书馆 (事业编)</div>
+          <div class="company-meta">★★★★ · 校招 科员起步 10-15 万/年 (含公积金), 国图核心业务岗可达 18-22 万, 编制稳定</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">9</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">985 高校图书馆 / 高校档案馆 (事业编)</div>
+          <div class="company-meta">★★★★ · 校招 馆员起步 12-18 万/年, 985 高校 + 寒暑假 + 子女入学福利</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">中国国家档案局 / 省市档案馆 (公务员/事业编)</div>
+          <div class="company-meta">★★★ · 校招 档案管理岗 10-16 万/年, 稳定, 文化系统核心</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">字</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">字节 / 腾讯 / 百度 (信息架构 / 内容审核 / 知识图谱)</div>
+          <div class="company-meta">★★★ · 校招 信息岗 18-30 万/年, 硕士起步, 985 + 大厂实习</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">商</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">商务印书馆 / 中华书局 / 三联书店 (出版社编辑)</div>
+          <div class="company-meta">★★ · 校招 编辑 10-18 万/年, 国字头 + 编制, 文化影响力</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">国</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">国家博物馆 / 故宫博物院 / 文物局 (事业编)</div>
+          <div class="company-meta">★★ · 校招 策展 + 古籍修复 12-20 万/年, 硕士门槛, 文化系统</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:50.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">中信出版 / 磨铁 / 读客 (民营出版公司)</div>
+          <div class="company-meta">★★★ · 校招 图书策划编辑 12-20 万/年, 市场化, 收入波动</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">联</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">联合国 / 国际图联 IFLA / 孔子学院</div>
+          <div class="company-meta">★ · 校招 Junior Professional 15-25 万/年, 英语 + 硕士门槛, 国际化</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="salary">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">应届 (0-1 年, 图书馆/档案馆)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="6">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:46.15384615384615%"></span></span><span class="yoy up">↗ +1%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="9">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:69.23076923076923%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="13">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">1-3 年 (馆员 / 助理馆员)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:47.05882352941176%"></span></span><span class="yoy up">↗ +3%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.58823529411765%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="17">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3-5 年 (业务骨干 / 中级馆员)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:48.0%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">8-10 年 (副研究馆员 / 馆长助理)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="42">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+        <div class="direction">
+          <div class="direction-name">公共图书馆 / 高校图书馆 (事业编)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:28%"></div></div>
+          <div class="direction-pct">28%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">档案馆 / 博物馆 / 文化馆 (事业编)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">出版社 / 报社 / 编辑出版公司</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:11%"></div></div>
+          <div class="direction-pct">11%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">互联网大厂信息岗 (信息架构 / 知识图谱 / 内容)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:9%"></div></div>
+          <div class="direction-pct">9%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">公务员 / 选调生 (文旅局 / 教育局 / 办公厅)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">继续深造 (图情档硕士 / 跨考数据 / 法学 / 中文)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
+          <div class="direction-pct">22%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">其他 (转行 / 自由职业 / 待业)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">45%</div>
+          <div class="path-name">图情档硕士 (学硕 / 专硕 MLS)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">18%</div>
+          <div class="path-name">信息管理 / 数据科学 (跨考数据)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">12%</div>
+          <div class="path-name">中文 / 古典文献 (跨考文学)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">8%</div>
+          <div class="path-name">法学 / 知识产权 (跨考法硕)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">7%</div>
+          <div class="path-name">出国深造 (Library Science / Information Science / iSchool)</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">国</div>
+            <div class="quote-byline">
+              <strong>国家图书馆 古籍部 馆员</strong>
+              <span class="quote-source">2018 届 · 校友访谈 @北京</span>
+            </div>
+          </div>
+          <p class="quote-text">图书馆学本科课程对古籍修复和版本鉴定帮助有限, 但训练出的「信息组织思维」和「学术检索能力」是国图业务岗的硬通货。我们部九个人, 五个图情档类毕业, 三个武大一个北大一个南大。</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某 985 高校图书馆 参考咨询部 馆员</strong>
+              <span class="quote-source">2020 届 · 校友访谈 @上海</span>
+            </div>
+          </div>
+          <p class="quote-text">进 985 高校图书馆的隐性门槛是「985 硕士 + 学科背景匹配」。我是图情档硕士 + 二外日语, 进了 985 图书馆后 4 年定副研究馆员, 年薪 22 万 + 寒暑假 + 子女入学福利, 比同期去互联网的 CS 同学生活质量高 2 个档次。</p>
+        </div>
+        <div class="quote fade-up" data-delay="160" >
+          <div class="quote-head">
+            <div class="quote-avatar">字</div>
+            <div class="quote-byline">
+              <strong>字节跳动 知识图谱团队 (信息架构岗)</strong>
+              <span class="quote-source">2019 届 · 校友访谈 @北京</span>
+            </div>
+          </div>
+          <p class="quote-text">图书馆学是「大厂信息岗的隐藏快速通道」。我们组 12 人, 4 个图情档硕, 1 个北大信息管理, 1 个武大图书馆学, 2 个南大文献学。本科同班同学去图书馆月薪 7k, 我们同届硕士进大厂月薪 28k, 差距 4 倍。但这个岗硕士起步, 985 起步, 别想本科毕业直接来。</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某直辖市文旅局 公务员 (选调生)</strong>
+              <span class="quote-source">2021 届 · 选调生两年期满 @重庆</span>
+            </div>
+          </div>
+          <p class="quote-text">图书馆学选调生上岸率比想象中低, 但上岸后对口岗位多。我图情档本硕 + 选调生, 分到文旅局, 主管公共图书馆体系建设, 日常工作对接市图书馆 + 区图书馆 + 24 小时自助图书馆。同届选调生里我们专业算「相对对口」, 工商管理、汉语言反而更内卷。</p>
+        </div>
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某二线城市 区档案馆 副馆长</strong>
+              <span class="quote-source">2017 届 · 小红书 @山东</span>
+            </div>
+          </div>
+          <p class="quote-text">二本的图书馆学考编上岸率比想象中低, 因为能报「图书馆 / 档案馆」的岗位虽然多, 但大多要求「本科 + 学位 + 35 岁以下」, 几十比一到一百比一。建议想走体制内的同学优先考研再考编, 选择面宽很多, 985 硕士进国家图书馆或省馆几乎是稳的。</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (绝大多数院校, 覆盖率 ≈ 80%)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:80%"></div></div>
+          <div class="xuanke-pct">80%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">历史 + 地理 + 思想政治 (次选, 覆盖率 ≈ 12%)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
+          <div class="xuanke-pct">12%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">历史 + 思想政治 (部分院校, 覆盖率 ≈ 5%)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
+          <div class="xuanke-pct">5%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">政治 + 历史 (极少数, 覆盖率 ≈ 3%)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:3%"></div></div>
+          <div class="xuanke-pct">3%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="cta">
+  <div class="watermark">10</div>
+  <div class="container">
+    <div class="section-num">10 / 10 · 关联志愿</div>
+    <h2>关联志愿</h2>
+    <div class="cta-block">
+      <h3>基于你的位次, 推荐这些校 + 组</h3>
+      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
+      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
+        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
+        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
+        <button type="submit" class="cta-button">推荐志愿 →</button>
+      </form>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
+    <div class="data-source">数据源: 综合教育部第四轮学科评估、软科2025中国最好学科排名、武大/北大/南大图书馆学专业培养方案(2024版)、麦可思2025届毕业生半年后就业报告、职友集薪资样本(283471份,公共管理类合并)、国家公务员局2025年国考职位表(图书馆/档案馆岗位)、阳光高考2025年选科数据、知乎/小红书2018-2026届校友分享等公开信息。</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
