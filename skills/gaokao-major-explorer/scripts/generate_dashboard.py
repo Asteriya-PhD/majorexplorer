@@ -1391,7 +1391,7 @@ def generate_dashboard(data: dict, style: str, output_path: str | None = None) -
     if style == "medicine":
         from v4_medicine import render_v4_medicine
         html = render_v4_medicine(data)
-    elif style in ("cs", "humanities", "administration", "finance", "law", "education", "sci", "eng"):
+    elif style in ("cs", "humanities", "administration", "finance", "law", "education", "sci", "eng", "agri", "arts"):
         from v4_styles import render_v4
         html = render_v4(data, style)
     else:

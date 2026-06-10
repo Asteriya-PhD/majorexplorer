@@ -3,397 +3,411 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 <title>园艺专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="嫩芽白 + 橄榄叶绿 + 林奈式植物图鉴。园艺是「种瓜得瓜, 种豆得豆」 — 果树 (苹果/柑橘/桃) + 蔬菜 (番茄/黄瓜) + 花卉 (玫瑰/百合) + 茶学 + 观赏园艺, 偏「精细化农业」, ">
+<meta name="description" content="园艺是「种瓜得瓜, 种豆得豆」 — 果树 (苹果/柑橘/桃) + 蔬菜 (番茄/黄瓜) + 花卉 (玫瑰/百合) + 茶学 + 观赏园艺, 偏「精细化农业」, 比农学更接近终端市场。本科起薪 5-7 ">
 <style>
-:root {
-  --font-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
-  --font-body: 'Cormorant Garamond', 'Noto Serif SC', 'PingFang SC', serif;
-  --font-cn: 'Noto Serif SC', 'ZCOOL XiaoWei', 'PingFang SC', serif;
-  --font-num: 'Cormorant Garamond', 'Noto Serif SC', serif;
-  --bg: #F5F9EC;
-  --fg: #2E5A2E;
-  --muted: #A0824D;
-  --primary: #6B8E23;
-  --primary_dim: #2E5A2E;
-  --primary_glow: rgba(107, 142, 35, 0.15);
-  --surface: #F5F9EC;
-  --surface_alt: #E8EFDC;
-  --border: #C5D9A8;
-  --border_strong: #6B8E23;
-  --accent: #E6B422;
-  --accent_glow: rgba(230, 180, 34, 0.20);
-  --shadow: 0 1px 0 rgba(107, 142, 35, 0.06), 0 4px 12px rgba(46, 90, 46, 0.10);
-  --shadow_hover: 0 1px 0 rgba(107, 142, 35, 0.12), 0 8px 24px rgba(46, 90, 46, 0.18);
-}
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700;900&family=ZCOOL+XiaoWei&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--fg);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'kern' 1, 'liga' 1;
-}
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
 img, svg { max-width: 100%; display: block; }
 button { font: inherit; cursor: pointer; border: none; background: none; }
 a { color: inherit; text-decoration: none; transition: opacity 200ms; }
 a:hover { opacity: 0.65; }
-
-.display { font-size: clamp(3.25rem, 7vw, 5.5rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; }
-.h1      { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
-.h2      { font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
-.h3      { font-size: 1.25rem; font-weight: 600; line-height: 1.4; }
-.body    { font-size: 1rem; line-height: 1.65; }
-.body-sm { font-size: 0.9375rem; line-height: 1.6; }
-.caption { font-size: 0.8125rem; line-height: 1.5; }
-.label   { font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; }
-h1, h2, h3, h4 { font-family: var(--font-heading); }
-
-.num, .num * { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; font-family: var(--font-num); }
-
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
 @media (max-width: 768px) { .container { padding: 0 20px; } }
 
-/* ── v2 hero (CS/finance/education) ── */
-.hero { padding: 128px 0 96px; position: relative; border-bottom: 1px solid var(--border); overflow: hidden; }
-.hero.center { text-align: center; }
-.hero.left   { text-align: left; }
-.hero-decor {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--muted);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 32px;
-  display: flex; align-items: center; gap: 8px;
-}
-.hero.center .hero-decor { justify-content: center; }
-.hero-decor::before { content: ""; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: 0.4; }
-.hero h1.display { margin-bottom: 24px; }
-.hero-tagline { font-size: 1.125rem; color: var(--muted); margin-bottom: 40px; max-width: 640px; line-height: 1.7; }
-.hero.center .hero-tagline { margin-left: auto; margin-right: auto; }
-.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
-.hero.center .hero-tags { justify-content: center; }
-.tag {
-  padding: 5px 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--fg);
-  letter-spacing: 0.02em;
-}
-.tag.primary { background: transparent; border-color: var(--accent); color: var(--accent); }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
 
-.hero-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.hero.center .hero-stats { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
-@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
-.stat { padding: 24px 28px; border-right: 1px solid var(--border); position: relative; }
-.stat:last-child { border-right: none; }
-@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--border); } }
-.stat-label { font-size: 0.6875rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.stat-value { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 600; color: var(--fg); margin-top: 6px; letter-spacing: -0.01em; }
-
-/* ── v3 hero: vitals (medicine) ── */
-.hero.vitals { padding: 96px 0 80px; }
-.hero.vitals .container {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 64px;
-  align-items: center;
-}
-@media (max-width: 900px) { .hero.vitals .container { grid-template-columns: 1fr; gap: 32px; } }
-.vitals-panel {
-  padding: 32px 28px;
-  background: var(--surface);
-  border: 1px solid var(--border_strong);
-  border-radius: 16px;
-  box-shadow: 0 4px 32px rgba(12, 74, 110, 0.10);
-  position: relative;
-}
-.vitals-panel::before {
-  content: "VITAL SIGNS · PATIENT-MONITOR";
-  position: absolute; top: -10px; left: 16px;
-  background: var(--bg);
-  padding: 0 8px;
-  font-family: var(--font-num);
-  font-size: 0.625rem;
-  color: var(--accent);
-  letter-spacing: 0.15em;
-  font-weight: 600;
-}
-.vitals-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.vitals-time { font-family: var(--font-num); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; }
-.vitals-status { display: flex; align-items: center; gap: 6px; font-family: var(--font-num); font-size: 0.75rem; color: var(--accent); font-weight: 600; letter-spacing: 0.08em; }
-.vitals-status::before { content: ""; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 1.5s infinite; }
-.vitals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.vital {
-  padding: 16px 14px;
-  background: var(--surface_alt);
-  border-radius: 10px;
-  position: relative;
-}
-.vital-label { font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted); letter-spacing: 0.15em; font-weight: 600; }
-.vital-value { font-family: var(--font-num); font-size: 2.25rem; font-weight: 700; color: var(--fg); line-height: 1; margin-top: 4px; letter-spacing: -0.02em; }
-.vital-unit  { font-family: var(--font-num); font-size: 0.75rem; color: var(--muted); margin-left: 4px; font-weight: 500; }
-.vital-range { font-family: var(--font-num); font-size: 0.625rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.05em; }
-.vital.heart .vital-value { color: var(--accent_red); }
-.vital-body .vital-content { display: flex; align-items: baseline; }
-.hero-vitals-side { display: flex; flex-direction: column; }
-
-/* ── v3 hero: docket (law) ── */
-.hero.docket { padding: 80px 0 64px; }
-.docket-header {
-  text-align: center;
-  margin-bottom: 48px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--border);
-}
-.docket-court {
-  font-family: var(--font-num);
-  font-size: 0.75rem;
-  color: var(--muted);
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-.docket-title-wrap { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 16px; }
-.docket-line { flex: 0 0 80px; height: 1px; background: var(--accent); opacity: 0.4; }
-.docket-title { font-family: var(--font-heading); font-size: 0.875rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-.hero.docket h1.display { text-align: center; font-style: italic; }
-.docket-meta {
-  display: flex; justify-content: space-between;
-  margin-top: 32px;
-  font-family: var(--font-num);
-  font-size: 0.6875rem;
-  color: var(--muted);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-@media (max-width: 768px) { .docket-meta { flex-direction: column; gap: 8px; align-items: center; } }
-.docket-stamp {
-  position: absolute; top: 32px; right: 32px;
-  width: 80px; height: 80px;
-  border: 2px solid var(--accent_red);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--accent_red);
-  font-family: var(--font-num);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-align: center;
-  line-height: 1.2;
-  transform: rotate(12deg);
-  opacity: 0.7;
-  text-transform: uppercase;
-}
-
-/* ── sections ── */
-section.tab { padding: 96px 0; border-bottom: 1px solid var(--border); opacity: 0; transform: translateY(20px); transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1), transform 800ms cubic-bezier(0.16, 1, 0.3, 1); }
-section.tab.visible { opacity: 1; transform: translateY(0); }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
-.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 500; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 16px; text-transform: uppercase; }
-section.tab h2.h2 { margin-bottom: 24px; }
-section.tab h3.h3 { margin: 40px 0 12px; }
-section.tab p { margin-bottom: 16px; color: var(--fg); }
-section.tab p.lede { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 720px; margin-bottom: 32px; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-/* ── bento grid (院校) ── */
-.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; margin-top: 32px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-.bento-item { padding: 28px 24px 24px; background: var(--surface); position: relative; transition: background 200ms ease-out; }
-.bento-item:hover { background: var(--surface_alt); }
-.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
-.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
-.bento-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.01em; padding-right: 44px; }
-.bento-tag { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
-/* ── company cards (头部公司) ── */
-.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 32px; }
-.company { padding: 24px 22px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; position: relative; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
-.company:hover { box-shadow: var(--shadow_hover); transform: translateY(-2px); border-color: var(--border_strong); }
-.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.company-monogram { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 1.125rem; font-weight: 700; flex-shrink: 0; }
-.company-tier { padding: 2px 8px; border-radius: 4px; font-family: var(--font-num); font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
-.tier-S { background: var(--accent); color: var(--bg); }
-.tier-A { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-.tier-B { background: var(--surface_alt); color: var(--muted); }
-.company-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
-.company-meta { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-.sparkline-bar { flex: 1; background: var(--border); border-radius: 1px; transition: background 250ms; min-height: 2px; }
-.company:hover .sparkline-bar { background: var(--accent); opacity: 0.6; }
-.sparkline-label { font-family: var(--font-num); font-size: 0.625rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; }
-
-/* ── salary table ── */
-.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9375rem; }
-.salary-table tr:last-child td { border-bottom: none; }
-.salary-table th { background: var(--surface_alt); font-family: var(--font-body); font-weight: 500; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
-.salary-table td { font-family: var(--font-num); }
-.salary-stage { font-weight: 600; color: var(--fg); }
-.salary-bar { display: inline-block; width: 80px; height: 6px; background: var(--surface_alt); border-radius: 3px; margin-left: 8px; vertical-align: middle; position: relative; overflow: hidden; }
-.salary-bar-fill { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
-.yoy { display: inline-block; font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 4px; }
-.yoy.up   { color: #15803D; background: rgba(21, 128, 61, 0.08); }
-.yoy.down { color: #B91C1C; background: rgba(185, 28, 28, 0.08); }
-.yoy.flat { color: var(--muted); background: var(--surface_alt); }
-.approx { font-family: var(--font-num); color: var(--muted); margin-right: 4px; }
-
-/* ── direction bars ── */
-.direction-list { margin-top: 32px; max-width: 720px; }
-.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-.direction:last-child { border-bottom: none; }
-.direction-name { font-weight: 500; font-size: 0.9375rem; }
-.direction-bar { height: 10px; background: var(--surface_alt); border-radius: 5px; overflow: hidden; position: relative; }
-.direction-bar-fill { height: 100%; background: var(--accent); border-radius: 5px; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); }
-.direction-pct { font-family: var(--font-num); font-weight: 600; text-align: right; font-size: 0.9375rem; color: var(--fg); }
-
-/* ── deep study cards ── */
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; }
-.path-card { padding: 32px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; text-align: center; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
-.path-card:hover { box-shadow: var(--shadow_hover); transform: translateY(-2px); border-color: var(--border_strong); }
-.path-pct { font-family: var(--font-num); font-size: 2.5rem; font-weight: 600; color: var(--accent); margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
-.path-name { color: var(--muted); font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; }
-
-/* ── quotes (with avatar) ── */
-.quotes { margin-top: 32px; }
-.quote { padding: 28px 32px 24px; background: var(--surface); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 0 12px 12px 0; margin-bottom: 16px; position: relative; transition: border-left-width 200ms, background 200ms, transform 200ms; }
-.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.quote-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 1rem; font-weight: 600; flex-shrink: 0; }
-.quote-byline { font-size: 0.875rem; }
-.quote-byline strong { font-weight: 500; color: var(--fg); display: block; }
-.quote-byline .quote-source { color: var(--muted); font-size: 0.75rem; font-family: var(--font-num); }
-.quote-text { font-family: var(--font-heading); font-size: 1.1875rem; line-height: 1.7; font-style: italic; margin: 0; color: var(--fg); font-weight: 400; }
-.quote-text::before { content: "\201C"; color: var(--accent); font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
-.quote-text::after { content: "\201D"; color: var(--accent); font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
-
-/* ── xuanke ── */
-.xuanke-list { margin-top: 32px; max-width: 720px; }
-.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-.xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-weight: 500; font-size: 0.9375rem; }
-.xuanke-bar { height: 8px; background: var(--surface_alt); border-radius: 4px; overflow: hidden; }
-.xuanke-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; }
-.xuanke-pct { font-family: var(--font-num); font-weight: 600; text-align: right; font-size: 0.9375rem; }
-
-/* ── curriculum ── */
-.curriculum-lede { color: var(--muted); font-size: 0.9375rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 32px; }
-.curriculum-block { padding: 28px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
-.curriculum-title { font-family: var(--font-body); font-size: 0.6875rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; border-bottom: 1px dashed transparent; transition: border-color 200ms; position: relative; }
-.course:hover { border-bottom-color: var(--border); }
-.course-name { color: var(--fg); }
-.course-credit { color: var(--muted); font-family: var(--font-num); font-size: 0.75rem; margin-left: 8px; }
-
-/* ── timeline ── */
-.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 32px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.tl-item { padding: 32px 24px; background: var(--surface); border-right: 1px solid var(--border); position: relative; }
-.tl-item:last-child { border-right: none; }
-.tl-year { font-family: var(--font-num); font-size: 1.5rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; letter-spacing: -0.01em; }
-.tl-stage { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
-.tl-income { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
-
-/* ── cta ── */
-.cta-block { margin-top: 32px; padding: 56px 48px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-align: center; }
-.cta-block h3.h3 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 12px; color: var(--fg); }
-.cta-block p { color: var(--muted); margin-bottom: 28px; max-width: 560px; margin-left: auto; margin-right: auto; }
-.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 16px; }
-.cta-input { padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--fg); font-family: var(--font-num); font-size: 1rem; width: 180px; outline: none; transition: border-color 200ms; }
-.cta-input:focus { border-color: var(--accent); }
-.cta-input::placeholder { color: var(--muted); }
-.cta-button { padding: 14px 36px; background: var(--accent); color: var(--bg); border-radius: 8px; font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600; letter-spacing: 0.02em; transition: transform 200ms, box-shadow 200ms; }
-.cta-button:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--accent_glow, var(--primary_glow)); }
-.cta-note { font-size: 0.75rem; color: var(--muted); margin-top: 16px; }
-
-footer { padding: 64px 0 48px; text-align: center; border-top: 1px solid var(--border); }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-footer .label { color: var(--muted); }
-footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max-width: 600px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 
-/* ── ECG (medicine) ── */
-.ecg-line { display: block; width: 100%; height: 40px; margin: 0; }
-.ecg-line path { stroke: var(--primary); stroke-width: 1.5; fill: none; stroke-dasharray: 1000; animation: ecg 3s linear infinite; }
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
 
-/* ── canvas trail (medicine) ── */
-.scalpel-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
 
-/* ── animations ── */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes ecg { 0% { stroke-dashoffset: 1000; } 100% { stroke-dashoffset: 0; } }
-@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-@keyframes flowerFloat {
-  0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-  20%  { opacity: 1; }
-  100% { transform: translate(20px, -60px) rotate(180deg); opacity: 0; }
-}
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  section.tab { opacity: 1; transform: none; }
+  .fade-up { opacity: 1; transform: none; }
 }
 
 
+body { background: linear-gradient(165deg, #F5F9EC 0%, #E8EFDC 45%, #F5F9EC 100%); color: #2E5A2E; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 700px 400px at 18% 25%, rgba(230, 180, 34, 0.08), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 82% 75%, rgba(107, 142, 35, 0.12), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.52 0 0 0 0 0.28 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.30; mix-blend-mode: multiply; }
+
+
+/* 招 #6 字体 */
+.hero, .hero * { --font-heading: 'Noto Serif SC', 'Cormorant Garamond', serif; --font-num: 'Cormorant Garamond', serif; }
+section.tab h1, section.tab h2, section.tab h3, section.tab h4 { font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; }
+.num, .num * { font-family: 'Cormorant Garamond', 'Source Han Serif SC', serif; font-variant-numeric: oldstyle-nums; font-feature-settings: 'onum' 1; }
+
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #B8CC98; position: relative; z-index: 2; overflow: hidden; min-height: 720px; }
+.hero .container { position: relative; z-index: 3; }
+
+/* ── 木桌 (含线纹) ── */
+.desk {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(107,142,35,0.0) 0px, rgba(107,142,35,0.0) 120px,
+      rgba(107,142,35,0.08) 121px, rgba(107,142,35,0.0) 122px,
+      rgba(107,142,35,0.0) 260px, rgba(107,142,35,0.10) 261px, rgba(107,142,35,0.0) 262px),
+    linear-gradient(180deg, #F0F5E2 0%, #E0E8C8 100%);
+}
+.sunbeam {
+  position: absolute; top: -180px; left: 30%;
+  transform: rotate(20deg);
+  width: 700px; height: 1100px;
+  background: linear-gradient(180deg, rgba(255,250,200,0.25) 0%, rgba(255,250,200,0.10) 30%, transparent 70%);
+  z-index: 2; pointer-events: none; filter: blur(20px);
+}
+
+/* ── 角标 ── */
+.corner-mark { position: absolute; width: 22px; height: 22px; z-index: 4; }
+.corner-mark::before, .corner-mark::after { content: ""; position: absolute; background: #2E5A2E; }
+.corner-mark::before { width: 22px; height: 1.5px; }
+.corner-mark::after { width: 1.5px; height: 22px; }
+.cm-tl { top: 24px; left: 24px; }
+.cm-tr { top: 24px; right: 24px; }
+.cm-tr::before { right: 0; }
+.cm-tr::after { right: 0; }
+.cm-bl { bottom: 24px; left: 24px; }
+.cm-bl::before { bottom: 0; }
+.cm-bl::after { bottom: 0; }
+.cm-br { bottom: 24px; right: 24px; }
+.cm-br::before { right: 0; bottom: 0; }
+.cm-br::after { right: 0; bottom: 0; }
+
+/* ── 顶部题首 ── */
+.top-mark {
+  position: absolute; top: 36px; left: 50%; transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #6B8E23; z-index: 4; white-space: nowrap;
+}
+.top-mark::before, .top-mark::after { content: "·"; margin: 0 12px; color: #B8CC98; }
+
+/* ── 标本夹 ── */
+.herbarium-stage {
+  position: relative;
+  margin: 0 auto;
+  max-width: 1080px;
+  padding: 22px 12px;
+  z-index: 5;
+}
+.press-cover {
+  position: relative;
+  background: linear-gradient(135deg, #A8C088 0%, #B8CC98 25%, #98B078 50%, #A8C088 75%, #88A868 100%);
+  border-radius: 3px;
+  padding: 22px 12px;
+  box-shadow:
+    inset 0 0 50px rgba(46,90,46,0.20),
+    inset 0 0 0 1.5px rgba(230,180,34,0.30),
+    0 24px 48px rgba(46,90,46,0.30);
+}
+.press-cover::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='l'><feTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23l)'/></svg>");
+  opacity: 0.30; mix-blend-mode: overlay; border-radius: 3px; pointer-events: none;
+}
+.press-cover::after {
+  content: ""; position: absolute; inset: 18px;
+  background:
+    radial-gradient(circle 3.5px at 0% 0%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 100% 0%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 0% 100%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 100% 100%, var(--paper) 100%, transparent);
+  pointer-events: none;
+}
+
+.specimen-page {
+  position: relative;
+  min-height: 540px;
+  background: linear-gradient(180deg, #F5F9EC 0%, #E8EFDC 50%, #F5F9EC 100%);
+  box-shadow: inset 0 0 60px rgba(107,142,35,0.10), inset 0 0 0 1px rgba(107,142,35,0.20);
+  overflow: hidden;
+  padding: 48px 56px;
+}
+.specimen-page::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  opacity: 0.4; mix-blend-mode: multiply; pointer-events: none;
+}
+.page-left { border-radius: 2px 10px 10px 2px; box-shadow: inset -10px 0 18px -6px rgba(60,80,40,0.22); }
+.page-right { border-radius: 10px 2px 2px 10px; box-shadow: inset 10px 0 18px -6px rgba(60,80,40,0.22); }
+.page-content { position: relative; z-index: 2; }
+.chapter-mark {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
+  font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #6B8E23; margin-bottom: 16px;
+}
+.chapter-mark::before { content: "§ "; color: #B8902A; }
+
+.hero-title {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; font-weight: 900;
+  font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.05; letter-spacing: -0.02em;
+  color: #2E5A2E; margin: 8px 0 12px;
+}
+.title-cn { display: block; }
+.title-en {
+  display: block; font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-weight: 500; font-size: 0.55em; color: #6B8E23; margin-top: 6px; letter-spacing: 0.04em;
+}
+.ampersand { font-style: italic; color: #B8902A; font-weight: 400; padding: 0 0.05em; }
+.lat-name { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.95rem; }
+.pull-quote {
+  font-family: 'Noto Serif SC', serif; font-weight: 500;
+  font-size: 0.92rem; line-height: 1.7; color: #2E5A2E;
+  border-left: 2px solid #B8902A; padding: 4px 0 4px 14px; margin: 18px 0 6px;
+}
+.attribution { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.78rem; color: #6B8E23; }
+
+/* ── 朱砂印 ── */
+.seal {
+  display: inline-block; background: #B83A2A; color: #FFE8B0;
+  font-family: 'Noto Serif SC', serif; font-weight: 900;
+  font-size: 0.7rem; line-height: 1; letter-spacing: 0.1em;
+  padding: 4px 6px; margin: 4px;
+  border: 1.5px solid #B83A2A; border-radius: 2px;
+  box-shadow: 0 0 0 1px #FFE8B0 inset, 1px 1px 0 rgba(0,0,0,0.10);
+  transform: rotate(-3deg);
+}
+.seal-vertical { writing-mode: vertical-rl; padding: 6px 4px; }
+.hu-stat-seal { display: flex; gap: 4px; margin-top: 14px; }
+
+/* ── 校勘式 stat (右页) ── */
+.hu-stat {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 8px 0; border-bottom: 1px dashed rgba(107,142,35,0.25);
+  font-family: 'Noto Serif SC', serif;
+}
+.hu-stat:last-child { border-bottom: none; }
+.hu-stat-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8rem; color: #6B8E23; min-width: 60px; letter-spacing: 0.05em; }
+.hu-stat-value { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: #2E5A2E; }
+
+/* ── 书签 ── */
+.bookmark {
+  position: absolute; top: 0; right: 56px;
+  width: 28px; height: 96px; background: #B8902A;
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.15);
+  z-index: 6;
+}
+.bookmark::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 16px; background: linear-gradient(135deg, transparent 50%, #B8902A 50%) 0 0/14px 16px no-repeat, linear-gradient(225deg, transparent 50%, #B8902A 50%) 14px 0/14px 16px no-repeat; }
+
+/* ── 装饰: 麦穗 + 叶脉 + 光合色素 ── */
+.wheat { position: absolute; top: 60px; left: 12px; width: 56px; height: 200px; opacity: 0.85; z-index: 3; }
+.leaf-vein { position: absolute; bottom: 60px; left: 12px; width: 56px; height: 200px; opacity: 0.7; z-index: 3; }
+.chloro-panel {
+  position: absolute; right: 12px; top: 60px;
+  width: 200px; padding: 14px 16px;
+  background: rgba(245,249,236,0.85);
+  border: 1px solid rgba(107,142,35,0.25);
+  border-radius: 2px;
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  z-index: 3;
+}
+.cp-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 0.85rem; color: #2E5A2E; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid #B8CC98; padding-bottom: 6px; margin-bottom: 8px; }
+.chloro-line { display: grid; grid-template-columns: 24px 1fr auto; gap: 6px; font-size: 0.78rem; padding: 3px 0; color: #2E5A2E; align-items: baseline; }
+.chloro-line .num { font-style: italic; color: #B8902A; }
+.chloro-line .ch { font-family: 'Noto Serif SC', serif; }
+.chloro-line .note { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.7rem; }
+
+/* 招 #7 数字滚动/招 #4 巨型水印 */
+section.tab h2 { color: #2E5A2E; }
+section.tab h3 { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
+section.tab p.lede { color: #4A5A3A; }
+.watermark { font-family: 'Cormorant Garamond', serif; color: #B8CC98; }
+footer { background: #F0F5E2; border-top: 1px solid #B8CC98; }
+footer .label { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
+footer .data-source { color: #6B8E23; }
+.drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B8902A; }
 
 </style>
 </head>
 <body>
 
-<header class="hero center">
-  
-  <div class="container">
-    <div class="hero-decor">「园艺」 · 華北農學會藏版</div>
-    <h1 class="display">园艺</h1>
-    <p class="hero-tagline">嫩芽白 + 橄榄叶绿 + 林奈式植物图鉴 — 园艺是「种瓜得瓜, 种豆得豆」 — 果树 (苹果/柑橘/桃) + 蔬菜 (番茄/黄瓜) + 花卉 (玫瑰/百合) + 茶学 + 观赏园艺, 偏「精细化农业」, 比农学更接近终端市场。本科起薪 5-7 </p>
-    <div class="hero-tags">
-      <span class="tag primary">果树蔬菜花卉</span><span class="tag primary">学农不种地</span><span class="tag primary">庭院经济</span>
-      <span class="tag">读研加分</span><span class="tag">考公可选</span><span class="tag">甜蜜专业</span>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">农学 · 园艺类</div></div>
-      <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value num">4年 · 农学学士</div></div>
-      <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★☆☆</div></div>
-      <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value num">2026-06</div></div>
+<header class="hero">
+  <div class="desk"></div>
+  <div class="sunbeam"></div>
+  <div class="corner-mark cm-tl"></div>
+  <div class="corner-mark cm-tr"></div>
+  <div class="corner-mark cm-bl"></div>
+  <div class="corner-mark cm-br"></div>
+  <div class="top-mark">高考选专业 · 精品卷 第五册</div>
+  <div class="wheat">
+    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 28 200 Q 29 130 28 60" stroke="#C8A26E" stroke-width="1.2" fill="none"/>
+      <g fill="#E6B422" stroke="#B8902A" stroke-width="0.4">
+        <ellipse cx="22" cy="80" rx="4" ry="9" transform="rotate(-15 22 80)"/>
+        <ellipse cx="34" cy="95" rx="4" ry="9" transform="rotate(15 34 95)"/>
+        <ellipse cx="21" cy="115" rx="4.5" ry="10" transform="rotate(-15 21 115)"/>
+        <ellipse cx="35" cy="130" rx="4.5" ry="10" transform="rotate(15 35 130)"/>
+        <ellipse cx="20" cy="150" rx="5" ry="11" transform="rotate(-15 20 150)"/>
+        <ellipse cx="36" cy="165" rx="5" ry="11" transform="rotate(15 36 165)"/>
+      </g>
+      <g stroke="#B8902A" stroke-width="0.5" fill="none" opacity="0.8">
+        <line x1="28" y1="60" x2="20" y2="20"/><line x1="28" y1="60" x2="28" y2="12"/>
+        <line x1="28" y1="60" x2="36" y2="20"/><line x1="28" y1="60" x2="24" y2="25"/>
+        <line x1="28" y1="60" x2="32" y2="25"/>
+      </g>
+    </svg>
+  </div>
+  <div class="leaf-vein">
+    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 28 10 L 28 190" stroke="#6B8E23" stroke-width="0.8" fill="none" opacity="0.6"/>
+      <g stroke="#9CB87A" stroke-width="0.5" fill="none" opacity="0.6">
+        <path d="M 28 30 Q 18 35 10 45"/><path d="M 28 30 Q 38 35 46 45"/>
+        <path d="M 28 60 Q 16 70 8 80"/><path d="M 28 60 Q 40 70 48 80"/>
+        <path d="M 28 90 Q 14 100 6 115"/><path d="M 28 90 Q 42 100 50 115"/>
+        <path d="M 28 120 Q 16 130 10 145"/><path d="M 28 120 Q 40 130 46 145"/>
+        <path d="M 28 150 Q 18 160 12 175"/><path d="M 28 150 Q 38 160 44 175"/>
+      </g>
+    </svg>
+  </div>
+  <div class="chloro-panel">
+    <div class="cp-title">光合色素</div>
+    <div class="chloro-line"><span class="num">i</span><span class="ch">叶绿素 a</span><span class="note">蓝绿</span></div>
+    <div class="chloro-line"><span class="num">ii</span><span class="ch">叶绿素 b</span><span class="note">黄绿</span></div>
+    <div class="chloro-line"><span class="num">iii</span><span class="ch">胡萝卜素</span><span class="note">橙</span></div>
+    <div class="chloro-line"><span class="num">iv</span><span class="ch">叶黄素</span><span class="note">黄</span></div>
+    <div class="chloro-line"><span class="num">v</span><span class="ch">花青素</span><span class="note">红紫</span></div>
+  </div>
+  <div class="bookmark"></div>
+  <div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+    <div class="herbarium-stage">
+      <div class="press-cover">
+        <div class="specimen-page page-left">
+          <div class="page-content">
+            <div class="chapter-mark">农学 · 园艺类 · 第一章</div>
+            <h1 class="hero-title">
+              <span class="title-cn">园艺</span>
+              <span class="title-en">园艺 <span class="ampersand">&amp;</span> Botany</span>
+            </h1>
+            <div class="lat-name">— Agriculture · 林奈式分类</div>
+            <div class="pull-quote">一花一世界, 一树一菩提</div>
+            <div class="attribution">—— 园艺是科学, 也是美学</div>
+            <div class="hu-stat-seal">
+              <span class="seal">园</span>
+              <span class="seal seal-vertical">第一册</span>
+            </div>
+          </div>
+        </div>
+        <div class="specimen-page page-right">
+          <div class="page-content">
+            <div class="chapter-mark">速览 · 校勘记</div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">学科</span>
+              <span class="hu-stat-value">农学 · 园艺类</span>
+            </div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">学制</span>
+              <span class="hu-stat-value">4 年 · 农学学士</span>
+            </div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">难度</span>
+              <span class="hu-stat-value">★★★☆☆</span>
+            </div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">更新</span>
+              <span class="hu-stat-value">2026-06</span>
+            </div>
+            <p style="margin-top: 18px; font-family: 'Cormorant Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 0.92rem; line-height: 1.7;">园艺是「种瓜得瓜, 种豆得豆」 — 果树 (苹果/柑橘/桃) + 蔬菜 (番茄/黄瓜) + 花卉 (玫瑰/百合) + 茶学 + 观赏园艺, 偏「精细化农业」, 比农学更接近终端市场。本科起薪 5-7 万, 流向科研院所/种业/花卉企业/园艺师/家庭农场; 想做「休闲农业」「花园设计」, 跨专业学设计更香。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">
+              <span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">果树蔬菜花卉</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">学农不种地</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">庭院经济</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">读研加分</span><span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">考公可选</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
 <section class="tab" id="overview">
+  <div class="watermark">01</div>
   <div class="container">
-    <div class="section-num">01 / 10 · OVERVIEW</div>
-    <h2 class="h2">速览</h2>
-    <p class="lede">园艺是「种瓜得瓜, 种豆得豆」 — 果树 (苹果/柑橘/桃) + 蔬菜 (番茄/黄瓜) + 花卉 (玫瑰/百合) + 茶学 + 观赏园艺, 偏「精细化农业」, 比农学更接近终端市场。本科起薪 5-7 万, 流向科研院所/种业/花卉企业/园艺师/家庭农场; 想做「休闲农业」「花园设计」, 跨专业学设计更香。</p>
-    <h3 class="h3">这个专业学什么?</h3><p>前 2 年基础: 植物学 + 植物生理学 + 生物化学 + 遗传学 + 土壤学 + 园艺植物保护学 — 跟农学 70% 重合, 但更偏「经济作物」。
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap">园艺是「种瓜得瓜, 种豆得豆」 — 果树 (苹果/柑橘/桃) + 蔬菜 (番茄/黄瓜) + 花卉 (玫瑰/百合) + 茶学 + 观赏园艺, 偏「精细化农业」, 比农学更接近终端市场。本科起薪 5-7 万, 流向科研院所/种业/花卉企业/园艺师/家庭农场; 想做「休闲农业」「花园设计」, 跨专业学设计更香。</p>
+    <h3>这个专业学什么?</h3><p>前 2 年基础: 植物学 + 植物生理学 + 生物化学 + 遗传学 + 土壤学 + 园艺植物保护学 — 跟农学 70% 重合, 但更偏「经济作物」。
 
 大三大四分流到 5 大方向: (1) 果树学 (苹果、柑橘、葡萄、桃、梨, 分子育种 + 设施栽培); (2) 蔬菜学 (茄果类/瓜类/叶菜, 设施蔬菜 + 无土栽培); (3) 花卉学 (鲜切花 + 盆栽 + 观赏苗木, 切花玫瑰/百合/康乃馨); (4) 茶学 (茶树栽培 + 制茶工艺 + 茶文化, 浙江大学茶学全国第一); (5) 观赏园艺与园林植物 (跟园林专业交叉)。
 
 技能树三条: (1) 园艺植物栽培管理 (修剪/嫁接/水肥一体化); (2) 设施园艺 (温室 / 无土栽培 / 植物工厂 / 智慧农业); (3) 园艺产品采后处理与营销 (果蔬采后生理 + 冷链物流 + 品牌打造)。园艺的核心是「在有限的土地上, 用科学 + 美学创造最大经济价值」 — 比农学更精致, 适合对「看着东西长出来」有热情的人。</p>
-    <h3 class="h3">什么人适合?</h3><p>适合对「种出一棵完美的苹果树」「让玫瑰一年开 3 次」「把家里的阳台变成花园」有持续兴趣, 且能接受前 5 年在地里/温室/果园工作的人。园艺的就业比农学略好: 因为果蔬花卉的「市场属性」强, 直接对接消费者/餐饮/花卉市场, 创业门槛更低。
+    <h3>什么人适合?</h3><p>适合对「种出一棵完美的苹果树」「让玫瑰一年开 3 次」「把家里的阳台变成花园」有持续兴趣, 且能接受前 5 年在地里/温室/果园工作的人。园艺的就业比农学略好: 因为果蔬花卉的「市场属性」强, 直接对接消费者/餐饮/花卉市场, 创业门槛更低。
 
 不适合: 把园艺等同于「插花 / 花园设计」的人 (这只是观赏园艺的一个出口, 主体是果树蔬菜的分子育种 + 设施栽培); 不能接受下地/出差的人 (果园在山东/陕西/海南, 茶园在浙江/云南, 花卉大棚在云南/广东); 想本科毕业就高薪的人 (2024 届园艺本科半年后月收入约 5400 元); 期待「对口大厂」的人 (头部公司是隆平高科/登海/京鹏园艺/虹越花卉, 不是字节腾讯)。适合的人是: 喜欢「把科学 + 美学」结合, 愿意在地里/果园/温室积累 3-5 年经验, 之后做技术管理/科研/创业的人。</p>
-    <h3 class="h3">避坑指南</h3><p>❌ 「园艺就是插花 + 花园设计」→ 错。插花是观赏园艺里的一个小方向, 园艺主体是果树 / 蔬菜 / 花卉 / 茶树的科学化栽培。园艺本科生 60% 课程在实验室 + 田间, 不是花店。❌ 「园艺比农学更轻松, 不用下大田」→ 半对。果树 / 茶树确实不如玉米 / 小麦那么粗犷, 但设施蔬菜、花卉的劳动密集度极高 (温室 30 度高温 + 弯腰工作 8 小时是常态)。❌ 「园艺就业广, 万金油」→ 部分对。园艺的 5 大出口: 果树/蔬菜/花卉企业 (35%, 隆平 / 京鹏 / 虹越 / 缤纷园艺 / 鑫荣懋)、农业农村局公务员 (15%, 园艺专业岗位少)、科研院所/高校 (20%, 硕士起步)、自主创业 (家庭农场 / 园艺师 / 花园设计 / 茶叶品牌, 15%)、跨专业出口 (景观设计 / 食品 / 电商 / 智慧农业, 15%)。❌ 「学园艺必须考研才有出路」→ 严重高估。本科直接就业率约 70%, 但「进科研院所 / 高校 / 隆平高科研发岗」必须硕士。❌ 「茶学毕业只能去茶馆」→ 错。浙江大学茶学全国第一, 毕业生进的是中茶/八马/天福/竹叶青, 以及茶叶深加工/茶饮品牌 (喜茶/茶颜悦色等新茶饮的研发岗)。❌ 「园艺不读研, 30 岁就定型」→ 不准确。园艺的优势是「经验值钱」 — 一个熟练的果树修剪师 / 嫁接师 / 茶园管理师, 10 年经验在市场上值 30-50 万年薪, 不比硕士差。</p>
+    <h3>避坑指南</h3><p>❌ 「园艺就是插花 + 花园设计」→ 错。插花是观赏园艺里的一个小方向, 园艺主体是果树 / 蔬菜 / 花卉 / 茶树的科学化栽培。园艺本科生 60% 课程在实验室 + 田间, 不是花店。❌ 「园艺比农学更轻松, 不用下大田」→ 半对。果树 / 茶树确实不如玉米 / 小麦那么粗犷, 但设施蔬菜、花卉的劳动密集度极高 (温室 30 度高温 + 弯腰工作 8 小时是常态)。❌ 「园艺就业广, 万金油」→ 部分对。园艺的 5 大出口: 果树/蔬菜/花卉企业 (35%, 隆平 / 京鹏 / 虹越 / 缤纷园艺 / 鑫荣懋)、农业农村局公务员 (15%, 园艺专业岗位少)、科研院所/高校 (20%, 硕士起步)、自主创业 (家庭农场 / 园艺师 / 花园设计 / 茶叶品牌, 15%)、跨专业出口 (景观设计 / 食品 / 电商 / 智慧农业, 15%)。❌ 「学园艺必须考研才有出路」→ 严重高估。本科直接就业率约 70%, 但「进科研院所 / 高校 / 隆平高科研发岗」必须硕士。❌ 「茶学毕业只能去茶馆」→ 错。浙江大学茶学全国第一, 毕业生进的是中茶/八马/天福/竹叶青, 以及茶叶深加工/茶饮品牌 (喜茶/茶颜悦色等新茶饮的研发岗)。❌ 「园艺不读研, 30 岁就定型」→ 不准确。园艺的优势是「经验值钱」 — 一个熟练的果树修剪师 / 嫁接师 / 茶园管理师, 10 年经验在市场上值 30-50 万年薪, 不比硕士差。</p>
   </div>
 </section>
 
 <section class="tab" id="curriculum">
+  <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · CURRICULUM</div>
-    <h2 class="h2">主要课程</h2>
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
     <p class="curriculum-lede">全国 4 年制通用框架, 跟农学 70% 重合, 但「经济作物」方向更精细。前 2 年植物学 + 生理学, 大三分果树/蔬菜/花卉/茶学/观赏园艺。</p>
     <div class="curriculum-grid">
-        <div class="curriculum-block"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
           <div class="course"><span class="course-name">大学英语 (I-IV)</span><span class="course-credit">8 学分</span></div>
           <div class="course"><span class="course-name">思想政治理论 (思修/史纲/马原/毛概/习思想)</span><span class="course-credit">5 学分</span></div>
           <div class="course"><span class="course-name">体育 (I-IV)</span><span class="course-credit">4 学分</span></div>
@@ -404,7 +418,7 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           <div class="course"><span class="course-name">计算机基础 (R/DPS 数据分析)</span><span class="course-credit">3 学分</span></div>
           <div class="course"><span class="course-name">形势与政策 + 创业基础</span><span class="course-credit">2 学分</span></div>
         </div>
-        <div class="curriculum-block"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
           <div class="course"><span class="course-name">植物学 (Botany)</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">植物生理学 (Plant Physiology)</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">生物化学 (Biochemistry)</span><span class="course-credit">4 学分</span></div>
@@ -416,7 +430,7 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           <div class="course"><span class="course-name">设施园艺学 (温室 / 无土栽培 / 植物工厂)</span><span class="course-credit">3 学分</span></div>
           <div class="course"><span class="course-name">园艺产品采后生理与贮藏加工</span><span class="course-credit">3 学分</span></div>
         </div>
-        <div class="curriculum-block"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
           <div class="course"><span class="course-name">华中农业大学 · 果树学 (柑橘/桃/猕猴桃分子育种)</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">南京农业大学 · 蔬菜学 (设施蔬菜 + 分子育种, 全国第一)</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">中国农业大学 · 观赏园艺与园林植物 (北京花卉产业基地)</span><span class="course-credit">4 学分</span></div>
@@ -428,67 +442,68 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="schools">
+  <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">03 / 10 · SCHOOLS</div>
-    <h2 class="h2">院校分布</h2>
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">南</div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">南</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">南京农业大学</div>
           <div class="bento-tag">南京 · 蔬菜学全国第一, 设施园艺 + 分子育种重镇</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">华</div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">华中农业大学</div>
           <div class="bento-tag">武汉 · 果树学 + 蔬菜学双 A+, 长江流域园艺第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">浙</div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">浙</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">浙江大学</div>
           <div class="bento-tag">杭州 · 茶学全国第一, 985, 茶饮研发 + 茶文化输出</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">中</div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">中</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">中国农业大学</div>
           <div class="bento-tag">北京 · 观赏园艺 + 设施园艺, 985</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">西</div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">西</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">西北农林科技大学</div>
           <div class="bento-tag">陕西杨凌 · 985, 果树学 (苹果/葡萄/猕猴桃)</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">华</div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">华南农业大学</div>
           <div class="bento-tag">广州 · 热带亚热带果树 + 花卉, 岭南园艺第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">山</div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">山</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">山东农业大学</div>
           <div class="bento-tag">泰安 · 果树学 (苹果/桃) + 蔬菜, 黄河流域园艺重镇</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">湖</div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">湖</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">湖南农业大学</div>
           <div class="bento-tag">长沙 · 柑橘 + 茶叶, 湖南园艺第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">安</div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">安</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">安徽农业大学</div>
           <div class="bento-tag">合肥 · 茶学 + 果树, 安徽茶产业重镇</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#2E5A2E; color:#F5F9EC">四</div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">四</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">四川农业大学</div>
           <div class="bento-tag">雅安 · 茶学 + 果树, 西南园艺第一</div>
@@ -498,136 +513,137 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="companies">
+  <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">04 / 10 · EMPLOYERS</div>
-    <h2 class="h2">头部公司</h2>
-    <p class="lede">S = 顶级 (顶级薪资+大量校招), A = 知名 (稳定校招), B = 大量招 (中等门槛)。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
-        <div class="company">
+        <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">隆</div>
+            <div class="company-monogram">隆</div>
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">隆平高科 (袁隆平农业高科技)</div>
           <div class="company-meta">★★ · 校招 研发 12-22 万, 杂交水稻 + 玉米 + 蔬菜种业, 湖南长沙</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 2: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">京</div>
+            <div class="company-monogram">京</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">京鹏园艺 (设施农业头部)</div>
           <div class="company-meta">★★ · 校招 设施工程师 12-20 万, 温室设计 + 智慧农业, 北京</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 1: 2"></div>
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 2: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 3"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">虹</div>
+            <div class="company-monogram">虹</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">虹越花卉 (花卉种业龙头)</div>
           <div class="company-meta">★★ · 校招 研发 + 销售 10-16 万, 浙江海宁, 长三角花卉龙头</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 1: 2"></div>
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 2: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 3"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">中</div>
+            <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">中茶公司 (中国茶叶)</div>
           <div class="company-meta">★★ · 校招 茶师 10-18 万 + 央企稳定, 中茶/八马/天福, 茶学对口</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 1: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 2: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 3"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">喜</div>
+            <div class="company-monogram">喜</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">喜茶 / 茶颜悦色 / 霸王茶姬 (新茶饮)</div>
           <div class="company-meta">★★★ · 校招 研发 15-25 万, 新茶饮爆发, 茶学/食品/园艺背景对口</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 4"></div>
-            <div class="sparkline-bar" style="height:80.0%" title="Year 2: 4"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 5"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">缤</div>
+            <div class="company-monogram">缤</div>
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">缤纷园艺 (花卉种苗 + 切花)</div>
           <div class="company-meta">★★ · 校招 技术员 8-12 万, 广东/海南, 出口花卉</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 1: 2"></div>
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 2: 2"></div>
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 3: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 3"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">地</div>
+            <div class="company-monogram">地</div>
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">地方农业农村局 / 园艺站</div>
           <div class="company-meta">★★ · 校招 事业编 8-12 万, 县级, 适合追求稳定的园艺生</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%" title="Year 1: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 2: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 2"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram" style="background:#2E5A2E; color:#F5F9EC">家</div>
+            <div class="company-monogram">家</div>
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">家庭农场 / 园艺师 / 花园设计 (自主创业)</div>
           <div class="company-meta">★ · 校招 年收入 10-50 万不等, 高端花园设计可达 30-50 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:33.33333333333333%" title="Year 1: 1"></div>
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 2: 2"></div>
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 3: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 3"></div>
+            <div class="sparkline-bar" style="height:33.33333333333333%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
@@ -635,15 +651,12 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
   </div>
 </section>
 
-
-
-
-
 <section class="tab" id="salary">
+  <div class="watermark">05</div>
   <div class="container">
-    <div class="section-num">05 / 10 · SALARY</div>
-    <h2 class="h2">薪资分布</h2>
-    <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。</p>
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
       <thead>
         <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
@@ -651,27 +664,27 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
       <tbody>
         <tr>
           <td class="salary-stage">应届 (0-2 年)</td>
-          <td class="num"><span class="approx">≈</span>P25 4.5 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +1%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 6 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 9 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="4.5">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +1%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="6">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="9">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3-5 年</td>
-          <td class="num"><span class="approx">≈</span>P25 8 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 12 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 18 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">5-10 年</td>
-          <td class="num"><span class="approx">≈</span>P25 13 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.625%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 22 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.75%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 32 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="13">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.625%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.75%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="32">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">10 年+ (科研/管理/创业)</td>
-          <td class="num"><span class="approx">≈</span>P25 20 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 35 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.333333333333336%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 60 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.333333333333336%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -679,72 +692,74 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="directions">
+  <div class="watermark">06</div>
   <div class="container">
-    <div class="section-num">06 / 10 · DIRECTIONS</div>
-    <h2 class="h2">就业方向</h2>
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
           <div class="direction-name">果树/蔬菜/花卉/茶业企业 (研发/技术/销售)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:28%"></div></div>
-          <div class="direction-pct num">28%</div>
+          <div class="direction-pct">28%</div>
         </div>
         <div class="direction">
           <div class="direction-name">农业农村局/园艺站公务员 + 事业编</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
-          <div class="direction-pct num">18%</div>
+          <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
           <div class="direction-name">科研院所/高校 (园艺学/植物保护/生物学)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
-          <div class="direction-pct num">18%</div>
+          <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
           <div class="direction-name">自主创业 (家庭农场/园艺师/花园设计/茶饮品牌)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct num">12%</div>
+          <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
           <div class="direction-name">继续读研/读博 (园艺学/果树学/蔬菜学/茶学)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:16%"></div></div>
-          <div class="direction-pct num">16%</div>
+          <div class="direction-pct">16%</div>
         </div>
         <div class="direction">
           <div class="direction-name">跨专业出口 (景观设计/食品/电商/智慧农业)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct num">8%</div>
+          <div class="direction-pct">8%</div>
         </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="deep-study">
+  <div class="watermark">07</div>
   <div class="container">
-    <div class="section-num">07 / 10 · DEEP-STUDY</div>
-    <h2 class="h2">深造路径</h2>
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
     <div class="path-grid">
-        <div class="path-card">
-          <div class="path-pct num">40%</div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">40%</div>
           <div class="path-name">考研 (园艺学/果树学/蔬菜学/茶学)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">30%</div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">30%</div>
           <div class="path-name">直接就业 (园艺企业/县乡农技推广/自主创业)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">14%</div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">14%</div>
           <div class="path-name">保研 (985 园艺方向直博/硕博连读)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">8%</div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">8%</div>
           <div class="path-name">跨专业考研 (风景园林/食品科学/生物/植物保护)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">5%</div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">5%</div>
           <div class="path-name">出国留学 (荷兰瓦赫宁根/日本千叶/康奈尔 园艺全球顶尖)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">3%</div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">3%</div>
           <div class="path-name">考公务员/选调生</div>
         </div>
     </div>
@@ -752,14 +767,15 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="quotes">
+  <div class="watermark">08</div>
   <div class="container">
-    <div class="section-num">08 / 10 · VOICES</div>
-    <h2 class="h2">学长学姐说</h2>
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
-        <div class="quote">
+        <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#2E5A2E; color:#F5F9EC">浙</div>
+            <div class="quote-avatar">浙</div>
             <div class="quote-byline">
               <strong>浙江大学 茶学硕士</strong>
               <span class="quote-source">2024 届 · 知乎 @2025</span>
@@ -767,9 +783,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科浙大茶学, 大二开始做茶叶内含物分析, 真正爱上茶学。茶学不只是「茶馆里卖茶」, 茶多酚 / 茶氨酸 / 咖啡碱 的提取纯化是新茶饮研发的核心 (喜茶/茶颜悦色/霸王茶姬都在抢人)。第一年 6.5 万, 5 年后研发岗能到 25-35 万, 茶饮赛道还在爆发期, 真心推荐。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#2E5A2E; color:#F5F9EC">京</div>
+            <div class="quote-avatar">京</div>
             <div class="quote-byline">
               <strong>京鹏园艺 设施工程师 (山东寿光)</strong>
               <span class="quote-source">2019 届 · 校友访谈 @山东寿光</span>
@@ -777,9 +793,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科山东农大园艺, 毕业进京鹏做温室设计。年薪 18 万, 1/3 时间在办公室画图, 2/3 在山东/河北/辽宁的蔬菜大棚做技术指导。园艺不是「种地的农民」, 现代设施园艺是「植物工厂 + 物联网 + 水肥一体化」, 跟工业自动化很像。喜欢动手 + 喜欢植物 + 不想纯坐办公室, 园艺是好选择。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#2E5A2E; color:#F5F9EC">某</div>
+            <div class="quote-avatar">某</div>
             <div class="quote-byline">
               <strong>某省农业农村厅 园艺处 公务员</strong>
               <span class="quote-source">2016 届 · 校友访谈 @南京</span>
@@ -787,9 +803,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科华中农大园艺, 大四选调上岸江苏某省厅园艺处。从基层县乡干起, 现在第 8 年, 正科级。年薪 18 万 + 公积金。园艺公务员岗位比农学少 (很多招「农学大类」), 但 985 园艺在江苏 / 浙江 / 山东的乡村振兴系统很受欢迎, 因为果树 / 茶 / 蔬菜 是当地支柱产业。农口选调, 性价比高, 稳定。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="240" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#2E5A2E; color:#F5F9EC">虹</div>
+            <div class="quote-avatar">虹</div>
             <div class="quote-byline">
               <strong>虹越花卉 销售经理 (改行)</strong>
               <span class="quote-source">2018 届 · 校友访谈 @浙江海宁</span>
@@ -797,9 +813,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科南京农大园艺, 毕业没考研, 进了虹越做花卉销售。第一年年薪 8 万, 现在 6 年经验 25 万。园艺本科做销售是真对口 — 懂花 + 会种 + 能讲, 比纯营销背景强太多。花卉赛道在「家庭园艺 + 城市绿化 + 节庆礼品」3 个方向都在增长, 真心推荐想「稳定 + 不卷 + 看得到东西」的人来。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#2E5A2E; color:#F5F9EC">喜</div>
+            <div class="quote-avatar">喜</div>
             <div class="quote-byline">
               <strong>喜茶 茶叶研发 (深圳)</strong>
               <span class="quote-source">2020 届 · 知乎 @2025</span>
@@ -812,77 +828,104 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="xuanke">
+  <div class="watermark">09</div>
   <div class="container">
-    <div class="section-num">09 / 10 · SUBJECTS</div>
-    <h2 class="h2">选科要求 (新高考 3+1+2)</h2>
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
           <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:75%"></div></div>
-          <div class="xuanke-pct num">75%</div>
+          <div class="xuanke-pct">75%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">物理 + 生物 (再选化学或不限)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:14%"></div></div>
-          <div class="xuanke-pct num">14%</div>
+          <div class="xuanke-pct">14%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">化学 + 生物 (再选物理或不限)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
-          <div class="xuanke-pct num">8%</div>
+          <div class="xuanke-pct">8%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">不限选科 (极少数综合评价)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:3%"></div></div>
-          <div class="xuanke-pct num">3%</div>
+          <div class="xuanke-pct">3%</div>
         </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="cta">
+  <div class="watermark">10</div>
   <div class="container">
-    <div class="section-num">10 / 10 · NEXT</div>
-    <h2 class="h2">关联志愿</h2>
+    <div class="section-num">10 / 10 · 关联志愿</div>
+    <h2>关联志愿</h2>
     <div class="cta-block">
-      <h3 class="h3">基于你的位次, 推荐这些校 + 组</h3>
+      <h3>基于你的位次, 推荐这些校 + 组</h3>
       <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
       <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
         <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
         <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
         <button type="submit" class="cta-button">推荐志愿 →</button>
       </form>
-      <p class="cta-note">⚠️ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    <div class="label">AGRI-BOTANY · Major Explorer · 2026 高考</div>
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 5 路 web search 实录 (华中农业大学/南京农业大学/中国农业大学 园艺专业培养方案 + 教育部第四轮园艺学学科评估 + 麦可思 2024 园艺就业报告 + 知乎/小红书 2018-2026 园艺校友实录)</div>
   </div>
 </footer>
 
 
-
-
 <script>
 (function() {
-  if (!('IntersectionObserver' in window)) {
-    document.querySelectorAll('section.tab').forEach(s => s.classList.add('visible'));
-    return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
     });
-  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
-  document.querySelectorAll('section.tab').forEach(s => obs.observe(s));
+  }
 })();
 </script>
 

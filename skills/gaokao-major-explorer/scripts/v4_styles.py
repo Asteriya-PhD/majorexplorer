@@ -31,6 +31,8 @@ FONT_URLS = {
   "administration": "@import url('https://fonts.loli.net/css2?family=IBM+Plex+Serif:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap');",
   "sci": "@import url('https://fonts.loli.net/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');",
   "eng": "@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');",
+  "agri": "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700;900&family=ZCOOL+XiaoWei&display=swap');",
+  "arts": "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');",
 }
 
 
@@ -294,6 +296,26 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
   background-size: 64px 64px, 64px 64px;
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.22 0 0 0 0 0.36 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.04; }
+"""
+    if style == "agri":
+        return """
+body { background: linear-gradient(165deg, #F5F9EC 0%, #E8EFDC 45%, #F5F9EC 100%); color: #2E5A2E; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 700px 400px at 18% 25%, rgba(230, 180, 34, 0.08), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 82% 75%, rgba(107, 142, 35, 0.12), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.52 0 0 0 0 0.28 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.30; mix-blend-mode: multiply; }
+"""
+    if style == "arts":
+        return """
+body { background: #14110D; color: #FAFAFA; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 70% 25%, rgba(255, 232, 176, 0.10), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 15% 75%, rgba(220, 38, 38, 0.06), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.18 0 0 0 0 0.15 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.35; }
 """
     return ""
 
@@ -1321,6 +1343,278 @@ footer .data-source { color: #5A6A7A; }
 .drop-cap::first-letter { font-family: 'Noto Serif SC', serif; font-size: 4em; font-weight: 900; line-height: 0.9; float: left; margin: 0.05em 0.12em 0 0; color: #C0392B; }
 """
 
+# ──────────────────────────────────────────────────────────
+# AGRI (农林) — 林奈式植物图鉴 + 标本夹 + 朱砂印
+# ──────────────────────────────────────────────────────────
+AGRI_CSS = """
+/* 招 #6 字体 */
+.hero, .hero * { --font-heading: 'Noto Serif SC', 'Cormorant Garamond', serif; --font-num: 'Cormorant Garamond', serif; }
+section.tab h1, section.tab h2, section.tab h3, section.tab h4 { font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; }
+.num, .num * { font-family: 'Cormorant Garamond', 'Source Han Serif SC', serif; font-variant-numeric: oldstyle-nums; font-feature-settings: 'onum' 1; }
+
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #B8CC98; position: relative; z-index: 2; overflow: hidden; min-height: 720px; }
+.hero .container { position: relative; z-index: 3; }
+
+/* ── 木桌 (含线纹) ── */
+.desk {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(107,142,35,0.0) 0px, rgba(107,142,35,0.0) 120px,
+      rgba(107,142,35,0.08) 121px, rgba(107,142,35,0.0) 122px,
+      rgba(107,142,35,0.0) 260px, rgba(107,142,35,0.10) 261px, rgba(107,142,35,0.0) 262px),
+    linear-gradient(180deg, #F0F5E2 0%, #E0E8C8 100%);
+}
+.sunbeam {
+  position: absolute; top: -180px; left: 30%;
+  transform: rotate(20deg);
+  width: 700px; height: 1100px;
+  background: linear-gradient(180deg, rgba(255,250,200,0.25) 0%, rgba(255,250,200,0.10) 30%, transparent 70%);
+  z-index: 2; pointer-events: none; filter: blur(20px);
+}
+
+/* ── 角标 ── */
+.corner-mark { position: absolute; width: 22px; height: 22px; z-index: 4; }
+.corner-mark::before, .corner-mark::after { content: ""; position: absolute; background: #2E5A2E; }
+.corner-mark::before { width: 22px; height: 1.5px; }
+.corner-mark::after { width: 1.5px; height: 22px; }
+.cm-tl { top: 24px; left: 24px; }
+.cm-tr { top: 24px; right: 24px; }
+.cm-tr::before { right: 0; }
+.cm-tr::after { right: 0; }
+.cm-bl { bottom: 24px; left: 24px; }
+.cm-bl::before { bottom: 0; }
+.cm-bl::after { bottom: 0; }
+.cm-br { bottom: 24px; right: 24px; }
+.cm-br::before { right: 0; bottom: 0; }
+.cm-br::after { right: 0; bottom: 0; }
+
+/* ── 顶部题首 ── */
+.top-mark {
+  position: absolute; top: 36px; left: 50%; transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #6B8E23; z-index: 4; white-space: nowrap;
+}
+.top-mark::before, .top-mark::after { content: "·"; margin: 0 12px; color: #B8CC98; }
+
+/* ── 标本夹 ── */
+.herbarium-stage {
+  position: relative;
+  margin: 0 auto;
+  max-width: 1080px;
+  padding: 22px 12px;
+  z-index: 5;
+}
+.press-cover {
+  position: relative;
+  background: linear-gradient(135deg, #A8C088 0%, #B8CC98 25%, #98B078 50%, #A8C088 75%, #88A868 100%);
+  border-radius: 3px;
+  padding: 22px 12px;
+  box-shadow:
+    inset 0 0 50px rgba(46,90,46,0.20),
+    inset 0 0 0 1.5px rgba(230,180,34,0.30),
+    0 24px 48px rgba(46,90,46,0.30);
+}
+.press-cover::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='l'><feTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23l)'/></svg>");
+  opacity: 0.30; mix-blend-mode: overlay; border-radius: 3px; pointer-events: none;
+}
+.press-cover::after {
+  content: ""; position: absolute; inset: 18px;
+  background:
+    radial-gradient(circle 3.5px at 0% 0%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 100% 0%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 0% 100%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 100% 100%, var(--paper) 100%, transparent);
+  pointer-events: none;
+}
+
+.specimen-page {
+  position: relative;
+  min-height: 540px;
+  background: linear-gradient(180deg, #F5F9EC 0%, #E8EFDC 50%, #F5F9EC 100%);
+  box-shadow: inset 0 0 60px rgba(107,142,35,0.10), inset 0 0 0 1px rgba(107,142,35,0.20);
+  overflow: hidden;
+  padding: 48px 56px;
+}
+.specimen-page::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  opacity: 0.4; mix-blend-mode: multiply; pointer-events: none;
+}
+.page-left { border-radius: 2px 10px 10px 2px; box-shadow: inset -10px 0 18px -6px rgba(60,80,40,0.22); }
+.page-right { border-radius: 10px 2px 2px 10px; box-shadow: inset 10px 0 18px -6px rgba(60,80,40,0.22); }
+.page-content { position: relative; z-index: 2; }
+.chapter-mark {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
+  font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #6B8E23; margin-bottom: 16px;
+}
+.chapter-mark::before { content: "§ "; color: #B8902A; }
+
+.hero-title {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; font-weight: 900;
+  font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.05; letter-spacing: -0.02em;
+  color: #2E5A2E; margin: 8px 0 12px;
+}
+.title-cn { display: block; }
+.title-en {
+  display: block; font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-weight: 500; font-size: 0.55em; color: #6B8E23; margin-top: 6px; letter-spacing: 0.04em;
+}
+.ampersand { font-style: italic; color: #B8902A; font-weight: 400; padding: 0 0.05em; }
+.lat-name { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.95rem; }
+.pull-quote {
+  font-family: 'Noto Serif SC', serif; font-weight: 500;
+  font-size: 0.92rem; line-height: 1.7; color: #2E5A2E;
+  border-left: 2px solid #B8902A; padding: 4px 0 4px 14px; margin: 18px 0 6px;
+}
+.attribution { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.78rem; color: #6B8E23; }
+
+/* ── 朱砂印 ── */
+.seal {
+  display: inline-block; background: #B83A2A; color: #FFE8B0;
+  font-family: 'Noto Serif SC', serif; font-weight: 900;
+  font-size: 0.7rem; line-height: 1; letter-spacing: 0.1em;
+  padding: 4px 6px; margin: 4px;
+  border: 1.5px solid #B83A2A; border-radius: 2px;
+  box-shadow: 0 0 0 1px #FFE8B0 inset, 1px 1px 0 rgba(0,0,0,0.10);
+  transform: rotate(-3deg);
+}
+.seal-vertical { writing-mode: vertical-rl; padding: 6px 4px; }
+.hu-stat-seal { display: flex; gap: 4px; margin-top: 14px; }
+
+/* ── 校勘式 stat (右页) ── */
+.hu-stat {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 8px 0; border-bottom: 1px dashed rgba(107,142,35,0.25);
+  font-family: 'Noto Serif SC', serif;
+}
+.hu-stat:last-child { border-bottom: none; }
+.hu-stat-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8rem; color: #6B8E23; min-width: 60px; letter-spacing: 0.05em; }
+.hu-stat-value { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: #2E5A2E; }
+
+/* ── 书签 ── */
+.bookmark {
+  position: absolute; top: 0; right: 56px;
+  width: 28px; height: 96px; background: #B8902A;
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.15);
+  z-index: 6;
+}
+.bookmark::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 16px; background: linear-gradient(135deg, transparent 50%, #B8902A 50%) 0 0/14px 16px no-repeat, linear-gradient(225deg, transparent 50%, #B8902A 50%) 14px 0/14px 16px no-repeat; }
+
+/* ── 装饰: 麦穗 + 叶脉 + 光合色素 ── */
+.wheat { position: absolute; top: 60px; left: 12px; width: 56px; height: 200px; opacity: 0.85; z-index: 3; }
+.leaf-vein { position: absolute; bottom: 60px; left: 12px; width: 56px; height: 200px; opacity: 0.7; z-index: 3; }
+.chloro-panel {
+  position: absolute; right: 12px; top: 60px;
+  width: 200px; padding: 14px 16px;
+  background: rgba(245,249,236,0.85);
+  border: 1px solid rgba(107,142,35,0.25);
+  border-radius: 2px;
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  z-index: 3;
+}
+.cp-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 0.85rem; color: #2E5A2E; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid #B8CC98; padding-bottom: 6px; margin-bottom: 8px; }
+.chloro-line { display: grid; grid-template-columns: 24px 1fr auto; gap: 6px; font-size: 0.78rem; padding: 3px 0; color: #2E5A2E; align-items: baseline; }
+.chloro-line .num { font-style: italic; color: #B8902A; }
+.chloro-line .ch { font-family: 'Noto Serif SC', serif; }
+.chloro-line .note { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.7rem; }
+
+/* 招 #7 数字滚动/招 #4 巨型水印 */
+section.tab h2 { color: #2E5A2E; }
+section.tab h3 { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
+section.tab p.lede { color: #4A5A3A; }
+.watermark { font-family: 'Cormorant Garamond', serif; color: #B8CC98; }
+footer { background: #F0F5E2; border-top: 1px solid #B8CC98; }
+footer .label { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
+footer .data-source { color: #6B8E23; }
+.drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B8902A; }
+"""
+
+# ──────────────────────────────────────────────────────────
+# ARTS (美术) — 画室工作台 + 画架 + 颜料管 + 调色板
+# ──────────────────────────────────────────────────────────
+ARTS_CSS = """
+/* 招 #6 字体 */
+.hero, .hero * { --font-heading: 'Cormorant Garamond', 'Noto Serif SC', serif; --font-num: 'Archivo', 'Cormorant Garamond', serif; }
+section.tab h1, section.tab h2, section.tab h3, section.tab h4 { font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; }
+.num, .num * { font-family: 'Archivo', 'Cormorant Garamond', serif; font-variant-numeric: lining-nums; }
+
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #1A1A1A; position: relative; z-index: 2; overflow: hidden; min-height: 720px; color: #1A1A1A; }
+.hero .container { position: relative; z-index: 3; }
+
+/* ── 工作室木地板 ── */
+.studio-floor {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 240px; z-index: 1;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.55) 100%),
+    repeating-linear-gradient(90deg, #1F1812 0px, #1A140F 40px, #221B14 41px, #1A140F 100px, #1C1610 101px, #1F1812 180px);
+}
+.studio-floor::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0, transparent 60px, rgba(0,0,0,0.3) 60px, rgba(0,0,0,0.3) 61px); opacity: 0.55; }
+
+/* ── 工作灯 ── */
+.studio-lamp { position: absolute; top: -40px; right: 60px; z-index: 4; }
+.studio-lamp .lamp-rod { width: 6px; height: 180px; background: linear-gradient(90deg, #1A1A1A, #0F0F0F); margin: 0 auto; }
+.studio-lamp .lamp-arm { width: 6px; height: 60px; background: #1A1A1A; margin: 0 auto; transform: rotate(-25deg); transform-origin: top center; }
+.studio-lamp .lamp-head { width: 70px; height: 50px; background: linear-gradient(180deg, #DC2626 0%, #991B1B 100%); border-radius: 0 0 35px 35px; margin-left: -32px; box-shadow: inset 0 -8px 14px rgba(0,0,0,0.4); }
+.studio-lamp .lamp-bulb { width: 36px; height: 20px; background: #FFE8B0; margin: 0 auto; margin-top: -10px; border-radius: 0 0 18px 18px; box-shadow: 0 0 24px rgba(255,232,176,0.7); }
+.studio-lamp .lamp-cone { width: 220px; height: 320px; margin: 6px auto 0 -110px; background: linear-gradient(180deg, rgba(255,232,176,0.30) 0%, rgba(255,232,176,0.10) 50%, transparent 100%); clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%); pointer-events: none; }
+
+/* ── 画架 + 画布 ── */
+.easel-stage { position: relative; margin: 60px auto 0; max-width: 760px; height: 580px; z-index: 5; }
+.easel-leg-back { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 14px; height: 580px; background: linear-gradient(90deg, #2A1A0A 0%, #0F0804 100%); border-radius: 2px; z-index: 0; }
+.easel-leg-left { position: absolute; left: 90px; top: 100px; width: 14px; height: 480px; background: linear-gradient(90deg, #3A2A1A 0%, #1F140A 50%, #0F0804 100%); transform: rotate(-8deg); transform-origin: top center; border-radius: 2px; box-shadow: 0 8px 20px rgba(0,0,0,0.45); z-index: 2; }
+.easel-leg-right { position: absolute; right: 90px; top: 100px; width: 14px; height: 480px; background: linear-gradient(90deg, #3A2A1A 0%, #1F140A 50%, #0F0804 100%); transform: rotate(8deg); transform-origin: top center; border-radius: 2px; box-shadow: 0 8px 20px rgba(0,0,0,0.45); z-index: 2; }
+.easel-top { position: absolute; left: 50%; top: 30px; transform: translateX(-50%); width: 440px; height: 16px; background: linear-gradient(180deg, #3A2A1A 0%, #1F140A 50%, #0A0502 100%); border-radius: 2px; z-index: 3; }
+.easel-crossbar { position: absolute; left: 50%; top: 420px; transform: translateX(-50%); width: 540px; height: 10px; background: linear-gradient(180deg, #3A2A1A 0%, #1F140A 50%, #0A0502 100%); border-radius: 2px; z-index: 5; }
+.easel-shelf { position: absolute; left: 50%; top: 442px; transform: translateX(-50%); width: 380px; height: 8px; background: linear-gradient(180deg, #2A1A0A 0%, #0F0804 100%); border-radius: 2px; z-index: 5; }
+
+.canvas-wrap { position: absolute; left: 50%; top: 50px; transform: translateX(-50%); width: 460px; z-index: 4; }
+.canvas-frame { padding: 14px; background: linear-gradient(180deg, #3A2A1A 0%, #1A1108 100%); box-shadow: 0 16px 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05); }
+.canvas-inner { background: #F5F0E8; position: relative; aspect-ratio: 476/576; overflow: hidden; }
+.painting-svg { width: 100%; height: 100%; display: block; }
+
+/* ── 颜料管 ── */
+.tubes-stage { position: absolute; right: 12px; bottom: 100px; z-index: 3; display: flex; gap: 6px; }
+.paint-tube { position: relative; width: 28px; height: 110px; }
+.paint-tube-cap { width: 14px; height: 18px; margin: 0 auto; background: linear-gradient(180deg, #2A2A2A 0%, #0F0F0F 100%); border-radius: 2px 2px 0 0; }
+.paint-tube-body { width: 28px; height: 76px; background: var(--pt-color, #FAFAFA); position: relative; }
+.paint-tube-label { position: absolute; left: 4px; right: 4px; top: 50%; transform: translateY(-50%); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.7rem; color: #FAFAFA; text-align: center; text-shadow: 0 1px 1px rgba(0,0,0,0.4); }
+.paint-tube-crimp { width: 28px; height: 16px; background: linear-gradient(180deg, var(--pt-color, #FAFAFA) 0%, rgba(0,0,0,0.2) 100%); border-radius: 0 0 4px 4px; clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%); }
+.tube-1 { --pt-color: #F59E0B; transform: rotate(-6deg); }
+.tube-2 { --pt-color: #DC2626; transform: rotate(2deg); }
+.tube-3 { --pt-color: #1E40AF; transform: rotate(-3deg); }
+.tube-4 { --pt-color: #FAFAFA; transform: rotate(5deg;); }
+
+/* ── 调色板 ── */
+.palette-stage { position: absolute; left: 12px; bottom: 80px; z-index: 3; }
+.palette-thumbhole { width: 90px; height: 64px; background: linear-gradient(180deg, #EBE3D4 0%, #D9CFB9 100%); border-radius: 0 0 90px 90px; position: relative; box-shadow: 0 6px 18px rgba(0,0,0,0.30), inset 0 0 0 1px rgba(0,0,0,0.06); }
+.palette-thumbhole::after { content: ""; position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: 18px; height: 14px; background: #1A1A1A; border-radius: 50%; }
+.palette-dab { position: absolute; width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+/* ── 钉子便签 ── */
+.room-corner { position: absolute; top: 80px; left: 12px; z-index: 3; }
+.art-tag { display: block; background: #FAFAFA; padding: 6px 10px; margin-bottom: 8px; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-style: italic; font-size: 0.78rem; color: #1A1A1A; box-shadow: 0 2px 4px rgba(0,0,0,0.18); transform: rotate(-2deg); position: relative; }
+.art-tag::before { content: "●"; position: absolute; left: 50%; top: -4px; transform: translateX(-50%); color: #B83A2A; font-size: 0.6rem; }
+.gallery-frame { position: absolute; top: 200px; right: 12px; width: 80px; height: 100px; background: linear-gradient(180deg, #3A2A1A 0%, #1A1108 100%); padding: 6px; z-index: 3; box-shadow: 0 6px 16px rgba(0,0,0,0.4); }
+.gallery-frame::after { content: ""; display: block; width: 100%; height: 100%; background: linear-gradient(135deg, #DC2626 0%, #F59E0B 50%, #1E40AF 100%); opacity: 0.85; }
+
+section.tab h2 { color: #1A1A1A; }
+section.tab h3 { color: #1A1A1A; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; }
+section.tab p.lede { color: #3A3A3A; }
+.watermark { font-family: 'Cormorant Garamond', serif; color: #D9CFB9; }
+footer { background: #1A1A1A; color: #FAFAFA; border-top: 1px solid #3A3A3A; }
+footer .label { color: #FAFAFA; font-family: 'Cormorant Garamond', serif; }
+footer .data-source { color: #999; }
+.drop-cap::first-letter { font-family: 'Cormorant Garamond', serif; color: #DC2626; }
+"""
+
 def render_v4(data: dict, style: str) -> str:
     """通用 8 套极致渲染 (cs/eng/medicine/law/education/sci/humanities/administration)"""
     if style == "cs":
@@ -1338,6 +1632,10 @@ def render_v4(data: dict, style: str) -> str:
     elif style in ("sci", "eng"):
         # sci/eng 复用 education 框架 (共享 layout) + 自定义 body bg + hero
         css_extra = EDUCATION_CSS
+    elif style == "agri":
+        css_extra = AGRI_CSS
+    elif style == "arts":
+        css_extra = ARTS_CSS
     else:
         raise ValueError(f"Unknown v4 style: {style}")
 
@@ -1759,6 +2057,186 @@ def render_v4(data: dict, style: str) -> str:
       <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">{duration}Y · {degree}</div></div>
       <div class="stat"><div class="stat-label">难度</div><div class="stat-value">{difficulty}</div></div>
       <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">{updated_at}</div></div>
+    </div>
+  </div>
+</header>'''
+    elif style == "agri":
+        # 林奈式植物图鉴 + 标本夹 + 朱砂印
+        hero_html = f'''
+<header class="hero">
+  <div class="desk"></div>
+  <div class="sunbeam"></div>
+  <div class="corner-mark cm-tl"></div>
+  <div class="corner-mark cm-tr"></div>
+  <div class="corner-mark cm-bl"></div>
+  <div class="corner-mark cm-br"></div>
+  <div class="top-mark">高考选专业 · 精品卷 第五册</div>
+  <div class="wheat">
+    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 28 200 Q 29 130 28 60" stroke="#C8A26E" stroke-width="1.2" fill="none"/>
+      <g fill="#E6B422" stroke="#B8902A" stroke-width="0.4">
+        <ellipse cx="22" cy="80" rx="4" ry="9" transform="rotate(-15 22 80)"/>
+        <ellipse cx="34" cy="95" rx="4" ry="9" transform="rotate(15 34 95)"/>
+        <ellipse cx="21" cy="115" rx="4.5" ry="10" transform="rotate(-15 21 115)"/>
+        <ellipse cx="35" cy="130" rx="4.5" ry="10" transform="rotate(15 35 130)"/>
+        <ellipse cx="20" cy="150" rx="5" ry="11" transform="rotate(-15 20 150)"/>
+        <ellipse cx="36" cy="165" rx="5" ry="11" transform="rotate(15 36 165)"/>
+      </g>
+      <g stroke="#B8902A" stroke-width="0.5" fill="none" opacity="0.8">
+        <line x1="28" y1="60" x2="20" y2="20"/><line x1="28" y1="60" x2="28" y2="12"/>
+        <line x1="28" y1="60" x2="36" y2="20"/><line x1="28" y1="60" x2="24" y2="25"/>
+        <line x1="28" y1="60" x2="32" y2="25"/>
+      </g>
+    </svg>
+  </div>
+  <div class="leaf-vein">
+    <svg viewBox="0 0 56 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 28 10 L 28 190" stroke="#6B8E23" stroke-width="0.8" fill="none" opacity="0.6"/>
+      <g stroke="#9CB87A" stroke-width="0.5" fill="none" opacity="0.6">
+        <path d="M 28 30 Q 18 35 10 45"/><path d="M 28 30 Q 38 35 46 45"/>
+        <path d="M 28 60 Q 16 70 8 80"/><path d="M 28 60 Q 40 70 48 80"/>
+        <path d="M 28 90 Q 14 100 6 115"/><path d="M 28 90 Q 42 100 50 115"/>
+        <path d="M 28 120 Q 16 130 10 145"/><path d="M 28 120 Q 40 130 46 145"/>
+        <path d="M 28 150 Q 18 160 12 175"/><path d="M 28 150 Q 38 160 44 175"/>
+      </g>
+    </svg>
+  </div>
+  <div class="chloro-panel">
+    <div class="cp-title">光合色素</div>
+    <div class="chloro-line"><span class="num">i</span><span class="ch">叶绿素 a</span><span class="note">蓝绿</span></div>
+    <div class="chloro-line"><span class="num">ii</span><span class="ch">叶绿素 b</span><span class="note">黄绿</span></div>
+    <div class="chloro-line"><span class="num">iii</span><span class="ch">胡萝卜素</span><span class="note">橙</span></div>
+    <div class="chloro-line"><span class="num">iv</span><span class="ch">叶黄素</span><span class="note">黄</span></div>
+    <div class="chloro-line"><span class="num">v</span><span class="ch">花青素</span><span class="note">红紫</span></div>
+  </div>
+  <div class="bookmark"></div>
+  <div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+    <div class="herbarium-stage">
+      <div class="press-cover">
+        <div class="specimen-page page-left">
+          <div class="page-content">
+            <div class="chapter-mark">{category} · 第一章</div>
+            <h1 class="hero-title">
+              <span class="title-cn">{title}</span>
+              <span class="title-en">{data.get("title_en", title)} <span class="ampersand">&amp;</span> Botany</span>
+            </h1>
+            <div class="lat-name">— {data.get("latin_name", "Agriculture · 林奈式分类")}</div>
+            <div class="pull-quote">{hero_quote}</div>
+            <div class="attribution">{hero_quote_sig}</div>
+            <div class="hu-stat-seal">
+              <span class="seal">{title[0]}</span>
+              <span class="seal seal-vertical">第一册</span>
+            </div>
+          </div>
+        </div>
+        <div class="specimen-page page-right">
+          <div class="page-content">
+            <div class="chapter-mark">速览 · 校勘记</div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">学科</span>
+              <span class="hu-stat-value">{category}</span>
+            </div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">学制</span>
+              <span class="hu-stat-value">{duration} 年 · {degree}</span>
+            </div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">难度</span>
+              <span class="hu-stat-value">{difficulty}</span>
+            </div>
+            <div class="hu-stat">
+              <span class="hu-stat-label">更新</span>
+              <span class="hu-stat-value">{updated_at}</span>
+            </div>
+            <p style="margin-top: 18px; font-family: 'Cormorant Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 0.92rem; line-height: 1.7;">{summary[:160]}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">
+              {"".join(f'<span style="font-family: Noto Serif SC, serif; font-size: 0.78rem; padding: 3px 9px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6);">{t}</span>' for t in tags[:5])}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>'''
+    elif style == "arts":
+        # 画室工作台 + 画架 + 颜料管 + 调色板
+        hero_html = f'''
+<header class="hero" style="background: linear-gradient(180deg, #14110D 0%, #2A2520 100%);">
+  <div class="studio-floor"></div>
+  <div class="studio-lamp">
+    <div class="lamp-rod"></div>
+    <div class="lamp-arm"></div>
+    <div class="lamp-head"></div>
+    <div class="lamp-bulb"></div>
+    <div class="lamp-cone"></div>
+  </div>
+  <div class="tubes-stage">
+    <div class="paint-tube tube-1"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Jaune</div></div><div class="paint-tube-crimp"></div></div>
+    <div class="paint-tube tube-2"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Rouge</div></div><div class="paint-tube-crimp"></div></div>
+    <div class="paint-tube tube-3"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Bleu</div></div><div class="paint-tube-crimp"></div></div>
+    <div class="paint-tube tube-4"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Blanc</div></div><div class="paint-tube-crimp"></div></div>
+  </div>
+  <div class="palette-stage">
+    <div class="palette-thumbhole">
+      <div class="palette-dab" style="left: 14px; top: 12px; background: #DC2626;"></div>
+      <div class="palette-dab" style="left: 36px; top: 8px; background: #F59E0B;"></div>
+      <div class="palette-dab" style="left: 60px; top: 14px; background: #1E40AF;"></div>
+      <div class="palette-dab" style="left: 22px; top: 32px; background: #6B3410;"></div>
+      <div class="palette-dab" style="left: 48px; top: 36px; background: #4A5D3A;"></div>
+    </div>
+  </div>
+  <div class="room-corner">
+    <span class="art-tag">Studio of Making</span>
+    <span class="art-tag" style="transform: rotate(1deg);">Atelier · 第 042 号</span>
+  </div>
+  <div class="gallery-frame"></div>
+  <div class="container" style="padding-top: 80px; padding-bottom: 120px;">
+    <div class="easel-stage">
+      <div class="easel-leg-back"></div>
+      <div class="easel-leg-left"></div>
+      <div class="easel-leg-right"></div>
+      <div class="easel-top"></div>
+      <div class="easel-crossbar"></div>
+      <div class="easel-shelf"></div>
+      <div class="canvas-wrap">
+        <div class="canvas-frame">
+          <div class="canvas-inner">
+            <svg class="painting-svg" viewBox="0 0 476 576" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="476" height="320" fill="#1E40AF" opacity="0.92"/>
+              <path d="M 0 100 Q 120 60 240 110 T 476 90 L 476 220 Q 360 260 200 200 T 0 240 Z" fill="#DC2626" opacity="0.95"/>
+              <circle cx="340" cy="150" r="58" fill="#F59E0B"/>
+              <path d="M 60 60 Q 200 30 320 80" stroke="#E76F51" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.85"/>
+              <line x1="0" y1="280" x2="476" y2="180" stroke="#1A1A1A" stroke-width="14" stroke-linecap="square"/>
+              <rect x="0" y="320" width="476" height="256" fill="#F5F0E8"/>
+              <rect x="40" y="380" width="120" height="120" fill="#1A1A1A"/>
+              <rect x="200" y="420" width="80" height="80" fill="#003049"/>
+              <circle cx="380" cy="450" r="44" fill="#FAFAFA" stroke="#1A1A1A" stroke-width="2"/>
+              <circle cx="100" cy="500" r="14" fill="#1E40AF"/>
+              <circle cx="160" cy="540" r="10" fill="#DC2626"/>
+              <circle cx="280" cy="520" r="18" fill="#F59E0B"/>
+              <circle cx="430" cy="500" r="12" fill="#E76F51"/>
+              <path d="M 240 320 L 244 380 L 236 440 L 242 500 L 238 560" stroke="#1E40AF" stroke-width="3" fill="none" opacity="0.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="position: relative; z-index: 6; max-width: 800px; margin: 60px auto 0; color: #FAFAFA; text-align: center;">
+      <div class="chapter-mark" style="color: #F59E0B; letter-spacing: 0.4em;">STUDIO OF MAKING · NO. 042</div>
+      <h1 class="hero-title" style="color: #FAFAFA; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700;">
+        <span class="title-cn" style="font-family: 'Noto Serif SC', serif;">{title}</span>
+        <span class="title-en" style="color: #D9CFB9; font-style: italic; font-weight: 400;">{data.get("title_en", title)} & Atelier</span>
+      </h1>
+      <p style="font-family: 'Noto Serif SC', serif; color: #D9CFB9; max-width: 720px; margin: 12px auto; line-height: 1.7;">{summary[:160]}</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 16px 0;">
+        {"".join(f'<span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">{t}</span>' for t in tags[:4])}
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px;">
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学科</span><span class="hu-stat-value" style="color: #FAFAFA;">{category}</span></div>
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学制</span><span class="hu-stat-value" style="color: #FAFAFA;">{duration}Y · {degree}</span></div>
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">难度</span><span class="hu-stat-value" style="color: #FAFAFA;">{difficulty}</span></div>
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">更新</span><span class="hu-stat-value" style="color: #FAFAFA;">{updated_at}</span></div>
+      </div>
     </div>
   </div>
 </header>'''

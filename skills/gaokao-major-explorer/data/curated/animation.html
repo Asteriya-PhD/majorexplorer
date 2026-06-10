@@ -3,397 +3,283 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 <title>动画专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="炭黑 + 米白画布 + 调色板 + 包豪斯抽象画。动画是「让画动起来讲故事」 — 二维动画 (传统手绘) + 三维动画 (CG/电脑) + 定格动画 (黏土/偶/实拍合成) + 实验动画 + 影视特效 + 游戏">
+<meta name="description" content="动画是「让画动起来讲故事」 — 二维动画 (传统手绘) + 三维动画 (CG/电脑) + 定格动画 (黏土/偶/实拍合成) + 实验动画 + 影视特效 + 游戏动画, 是「美术 + 影视 + 故事 +">
 <style>
-:root {
-  --font-heading: 'Cormorant Garamond', 'Noto Serif SC', serif;
-  --font-body: 'Noto Serif SC', 'Archivo', 'PingFang SC', sans-serif;
-  --font-cn: 'Noto Serif SC', 'Songti SC', 'PingFang SC', serif;
-  --font-num: 'Cormorant Garamond', 'Noto Serif SC', serif;
-  --bg: #F5F0E8;
-  --fg: #1A1A1A;
-  --muted: #6B6B6B;
-  --primary: #1A1A1A;
-  --primary_dim: #0A0A0A;
-  --primary_glow: rgba(26, 26, 26, 0.10);
-  --surface: #FAFAFA;
-  --surface_alt: #EBE3D4;
-  --border: #1A1A1A;
-  --border_strong: #000000;
-  --accent: #DC2626;
-  --accent_glow: rgba(220, 38, 38, 0.20);
-  --shadow: 0 1px 0 rgba(0, 0, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.40);
-  --shadow_hover: 0 1px 0 rgba(0, 0, 0, 0.15), 0 12px 40px rgba(220, 38, 38, 0.20);
-}
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--fg);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'kern' 1, 'liga' 1;
-}
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
 img, svg { max-width: 100%; display: block; }
 button { font: inherit; cursor: pointer; border: none; background: none; }
 a { color: inherit; text-decoration: none; transition: opacity 200ms; }
 a:hover { opacity: 0.65; }
-
-.display { font-size: clamp(3.25rem, 7vw, 5.5rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; }
-.h1      { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
-.h2      { font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
-.h3      { font-size: 1.25rem; font-weight: 600; line-height: 1.4; }
-.body    { font-size: 1rem; line-height: 1.65; }
-.body-sm { font-size: 0.9375rem; line-height: 1.6; }
-.caption { font-size: 0.8125rem; line-height: 1.5; }
-.label   { font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; }
-h1, h2, h3, h4 { font-family: var(--font-heading); }
-
-.num, .num * { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; font-family: var(--font-num); }
-
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
 @media (max-width: 768px) { .container { padding: 0 20px; } }
 
-/* ── v2 hero (CS/finance/education) ── */
-.hero { padding: 128px 0 96px; position: relative; border-bottom: 1px solid var(--border); overflow: hidden; }
-.hero.center { text-align: center; }
-.hero.left   { text-align: left; }
-.hero-decor {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--muted);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 32px;
-  display: flex; align-items: center; gap: 8px;
-}
-.hero.center .hero-decor { justify-content: center; }
-.hero-decor::before { content: ""; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: 0.4; }
-.hero h1.display { margin-bottom: 24px; }
-.hero-tagline { font-size: 1.125rem; color: var(--muted); margin-bottom: 40px; max-width: 640px; line-height: 1.7; }
-.hero.center .hero-tagline { margin-left: auto; margin-right: auto; }
-.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
-.hero.center .hero-tags { justify-content: center; }
-.tag {
-  padding: 5px 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--fg);
-  letter-spacing: 0.02em;
-}
-.tag.primary { background: transparent; border-color: var(--accent); color: var(--accent); }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
 
-.hero-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.hero.center .hero-stats { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
-@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
-.stat { padding: 24px 28px; border-right: 1px solid var(--border); position: relative; }
-.stat:last-child { border-right: none; }
-@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--border); } }
-.stat-label { font-size: 0.6875rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.stat-value { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 600; color: var(--fg); margin-top: 6px; letter-spacing: -0.01em; }
-
-/* ── v3 hero: vitals (medicine) ── */
-.hero.vitals { padding: 96px 0 80px; }
-.hero.vitals .container {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 64px;
-  align-items: center;
-}
-@media (max-width: 900px) { .hero.vitals .container { grid-template-columns: 1fr; gap: 32px; } }
-.vitals-panel {
-  padding: 32px 28px;
-  background: var(--surface);
-  border: 1px solid var(--border_strong);
-  border-radius: 16px;
-  box-shadow: 0 4px 32px rgba(12, 74, 110, 0.10);
-  position: relative;
-}
-.vitals-panel::before {
-  content: "VITAL SIGNS · PATIENT-MONITOR";
-  position: absolute; top: -10px; left: 16px;
-  background: var(--bg);
-  padding: 0 8px;
-  font-family: var(--font-num);
-  font-size: 0.625rem;
-  color: var(--accent);
-  letter-spacing: 0.15em;
-  font-weight: 600;
-}
-.vitals-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.vitals-time { font-family: var(--font-num); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; }
-.vitals-status { display: flex; align-items: center; gap: 6px; font-family: var(--font-num); font-size: 0.75rem; color: var(--accent); font-weight: 600; letter-spacing: 0.08em; }
-.vitals-status::before { content: ""; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 1.5s infinite; }
-.vitals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.vital {
-  padding: 16px 14px;
-  background: var(--surface_alt);
-  border-radius: 10px;
-  position: relative;
-}
-.vital-label { font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted); letter-spacing: 0.15em; font-weight: 600; }
-.vital-value { font-family: var(--font-num); font-size: 2.25rem; font-weight: 700; color: var(--fg); line-height: 1; margin-top: 4px; letter-spacing: -0.02em; }
-.vital-unit  { font-family: var(--font-num); font-size: 0.75rem; color: var(--muted); margin-left: 4px; font-weight: 500; }
-.vital-range { font-family: var(--font-num); font-size: 0.625rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.05em; }
-.vital.heart .vital-value { color: var(--accent_red); }
-.vital-body .vital-content { display: flex; align-items: baseline; }
-.hero-vitals-side { display: flex; flex-direction: column; }
-
-/* ── v3 hero: docket (law) ── */
-.hero.docket { padding: 80px 0 64px; }
-.docket-header {
-  text-align: center;
-  margin-bottom: 48px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--border);
-}
-.docket-court {
-  font-family: var(--font-num);
-  font-size: 0.75rem;
-  color: var(--muted);
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-.docket-title-wrap { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 16px; }
-.docket-line { flex: 0 0 80px; height: 1px; background: var(--accent); opacity: 0.4; }
-.docket-title { font-family: var(--font-heading); font-size: 0.875rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-.hero.docket h1.display { text-align: center; font-style: italic; }
-.docket-meta {
-  display: flex; justify-content: space-between;
-  margin-top: 32px;
-  font-family: var(--font-num);
-  font-size: 0.6875rem;
-  color: var(--muted);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-@media (max-width: 768px) { .docket-meta { flex-direction: column; gap: 8px; align-items: center; } }
-.docket-stamp {
-  position: absolute; top: 32px; right: 32px;
-  width: 80px; height: 80px;
-  border: 2px solid var(--accent_red);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--accent_red);
-  font-family: var(--font-num);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-align: center;
-  line-height: 1.2;
-  transform: rotate(12deg);
-  opacity: 0.7;
-  text-transform: uppercase;
-}
-
-/* ── sections ── */
-section.tab { padding: 96px 0; border-bottom: 1px solid var(--border); opacity: 0; transform: translateY(20px); transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1), transform 800ms cubic-bezier(0.16, 1, 0.3, 1); }
-section.tab.visible { opacity: 1; transform: translateY(0); }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
-.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 500; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 16px; text-transform: uppercase; }
-section.tab h2.h2 { margin-bottom: 24px; }
-section.tab h3.h3 { margin: 40px 0 12px; }
-section.tab p { margin-bottom: 16px; color: var(--fg); }
-section.tab p.lede { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 720px; margin-bottom: 32px; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-/* ── bento grid (院校) ── */
-.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; margin-top: 32px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-.bento-item { padding: 28px 24px 24px; background: var(--surface); position: relative; transition: background 200ms ease-out; }
-.bento-item:hover { background: var(--surface_alt); }
-.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
-.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
-.bento-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.01em; padding-right: 44px; }
-.bento-tag { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
-/* ── company cards (头部公司) ── */
-.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 32px; }
-.company { padding: 24px 22px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; position: relative; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
-.company:hover { box-shadow: var(--shadow_hover); transform: translateY(-2px); border-color: var(--border_strong); }
-.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.company-monogram { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 1.125rem; font-weight: 700; flex-shrink: 0; }
-.company-tier { padding: 2px 8px; border-radius: 4px; font-family: var(--font-num); font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
-.tier-S { background: var(--accent); color: var(--bg); }
-.tier-A { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-.tier-B { background: var(--surface_alt); color: var(--muted); }
-.company-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
-.company-meta { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-.sparkline-bar { flex: 1; background: var(--border); border-radius: 1px; transition: background 250ms; min-height: 2px; }
-.company:hover .sparkline-bar { background: var(--accent); opacity: 0.6; }
-.sparkline-label { font-family: var(--font-num); font-size: 0.625rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; }
-
-/* ── salary table ── */
-.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9375rem; }
-.salary-table tr:last-child td { border-bottom: none; }
-.salary-table th { background: var(--surface_alt); font-family: var(--font-body); font-weight: 500; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
-.salary-table td { font-family: var(--font-num); }
-.salary-stage { font-weight: 600; color: var(--fg); }
-.salary-bar { display: inline-block; width: 80px; height: 6px; background: var(--surface_alt); border-radius: 3px; margin-left: 8px; vertical-align: middle; position: relative; overflow: hidden; }
-.salary-bar-fill { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
-.yoy { display: inline-block; font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 4px; }
-.yoy.up   { color: #15803D; background: rgba(21, 128, 61, 0.08); }
-.yoy.down { color: #B91C1C; background: rgba(185, 28, 28, 0.08); }
-.yoy.flat { color: var(--muted); background: var(--surface_alt); }
-.approx { font-family: var(--font-num); color: var(--muted); margin-right: 4px; }
-
-/* ── direction bars ── */
-.direction-list { margin-top: 32px; max-width: 720px; }
-.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-.direction:last-child { border-bottom: none; }
-.direction-name { font-weight: 500; font-size: 0.9375rem; }
-.direction-bar { height: 10px; background: var(--surface_alt); border-radius: 5px; overflow: hidden; position: relative; }
-.direction-bar-fill { height: 100%; background: var(--accent); border-radius: 5px; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); }
-.direction-pct { font-family: var(--font-num); font-weight: 600; text-align: right; font-size: 0.9375rem; color: var(--fg); }
-
-/* ── deep study cards ── */
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; }
-.path-card { padding: 32px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; text-align: center; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
-.path-card:hover { box-shadow: var(--shadow_hover); transform: translateY(-2px); border-color: var(--border_strong); }
-.path-pct { font-family: var(--font-num); font-size: 2.5rem; font-weight: 600; color: var(--accent); margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
-.path-name { color: var(--muted); font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; }
-
-/* ── quotes (with avatar) ── */
-.quotes { margin-top: 32px; }
-.quote { padding: 28px 32px 24px; background: var(--surface); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 0 12px 12px 0; margin-bottom: 16px; position: relative; transition: border-left-width 200ms, background 200ms, transform 200ms; }
-.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.quote-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 1rem; font-weight: 600; flex-shrink: 0; }
-.quote-byline { font-size: 0.875rem; }
-.quote-byline strong { font-weight: 500; color: var(--fg); display: block; }
-.quote-byline .quote-source { color: var(--muted); font-size: 0.75rem; font-family: var(--font-num); }
-.quote-text { font-family: var(--font-heading); font-size: 1.1875rem; line-height: 1.7; font-style: italic; margin: 0; color: var(--fg); font-weight: 400; }
-.quote-text::before { content: "\201C"; color: var(--accent); font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
-.quote-text::after { content: "\201D"; color: var(--accent); font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
-
-/* ── xuanke ── */
-.xuanke-list { margin-top: 32px; max-width: 720px; }
-.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-.xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-weight: 500; font-size: 0.9375rem; }
-.xuanke-bar { height: 8px; background: var(--surface_alt); border-radius: 4px; overflow: hidden; }
-.xuanke-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; }
-.xuanke-pct { font-family: var(--font-num); font-weight: 600; text-align: right; font-size: 0.9375rem; }
-
-/* ── curriculum ── */
-.curriculum-lede { color: var(--muted); font-size: 0.9375rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 32px; }
-.curriculum-block { padding: 28px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
-.curriculum-title { font-family: var(--font-body); font-size: 0.6875rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; border-bottom: 1px dashed transparent; transition: border-color 200ms; position: relative; }
-.course:hover { border-bottom-color: var(--border); }
-.course-name { color: var(--fg); }
-.course-credit { color: var(--muted); font-family: var(--font-num); font-size: 0.75rem; margin-left: 8px; }
-
-/* ── timeline ── */
-.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 32px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.tl-item { padding: 32px 24px; background: var(--surface); border-right: 1px solid var(--border); position: relative; }
-.tl-item:last-child { border-right: none; }
-.tl-year { font-family: var(--font-num); font-size: 1.5rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; letter-spacing: -0.01em; }
-.tl-stage { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
-.tl-income { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
-
-/* ── cta ── */
-.cta-block { margin-top: 32px; padding: 56px 48px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-align: center; }
-.cta-block h3.h3 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 12px; color: var(--fg); }
-.cta-block p { color: var(--muted); margin-bottom: 28px; max-width: 560px; margin-left: auto; margin-right: auto; }
-.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 16px; }
-.cta-input { padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--fg); font-family: var(--font-num); font-size: 1rem; width: 180px; outline: none; transition: border-color 200ms; }
-.cta-input:focus { border-color: var(--accent); }
-.cta-input::placeholder { color: var(--muted); }
-.cta-button { padding: 14px 36px; background: var(--accent); color: var(--bg); border-radius: 8px; font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600; letter-spacing: 0.02em; transition: transform 200ms, box-shadow 200ms; }
-.cta-button:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--accent_glow, var(--primary_glow)); }
-.cta-note { font-size: 0.75rem; color: var(--muted); margin-top: 16px; }
-
-footer { padding: 64px 0 48px; text-align: center; border-top: 1px solid var(--border); }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-footer .label { color: var(--muted); }
-footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max-width: 600px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 
-/* ── ECG (medicine) ── */
-.ecg-line { display: block; width: 100%; height: 40px; margin: 0; }
-.ecg-line path { stroke: var(--primary); stroke-width: 1.5; fill: none; stroke-dasharray: 1000; animation: ecg 3s linear infinite; }
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
 
-/* ── canvas trail (medicine) ── */
-.scalpel-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
 
-/* ── animations ── */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes ecg { 0% { stroke-dashoffset: 1000; } 100% { stroke-dashoffset: 0; } }
-@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-@keyframes flowerFloat {
-  0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-  20%  { opacity: 1; }
-  100% { transform: translate(20px, -60px) rotate(180deg); opacity: 0; }
-}
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  section.tab { opacity: 1; transform: none; }
+  .fade-up { opacity: 1; transform: none; }
 }
 
 
+body { background: #14110D; color: #FAFAFA; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 70% 25%, rgba(255, 232, 176, 0.10), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 15% 75%, rgba(220, 38, 38, 0.06), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.18 0 0 0 0 0.15 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.35; }
+
+
+/* 招 #6 字体 */
+.hero, .hero * { --font-heading: 'Cormorant Garamond', 'Noto Serif SC', serif; --font-num: 'Archivo', 'Cormorant Garamond', serif; }
+section.tab h1, section.tab h2, section.tab h3, section.tab h4 { font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; }
+.num, .num * { font-family: 'Archivo', 'Cormorant Garamond', serif; font-variant-numeric: lining-nums; }
+
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #1A1A1A; position: relative; z-index: 2; overflow: hidden; min-height: 720px; color: #1A1A1A; }
+.hero .container { position: relative; z-index: 3; }
+
+/* ── 工作室木地板 ── */
+.studio-floor {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 240px; z-index: 1;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.55) 100%),
+    repeating-linear-gradient(90deg, #1F1812 0px, #1A140F 40px, #221B14 41px, #1A140F 100px, #1C1610 101px, #1F1812 180px);
+}
+.studio-floor::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0, transparent 60px, rgba(0,0,0,0.3) 60px, rgba(0,0,0,0.3) 61px); opacity: 0.55; }
+
+/* ── 工作灯 ── */
+.studio-lamp { position: absolute; top: -40px; right: 60px; z-index: 4; }
+.studio-lamp .lamp-rod { width: 6px; height: 180px; background: linear-gradient(90deg, #1A1A1A, #0F0F0F); margin: 0 auto; }
+.studio-lamp .lamp-arm { width: 6px; height: 60px; background: #1A1A1A; margin: 0 auto; transform: rotate(-25deg); transform-origin: top center; }
+.studio-lamp .lamp-head { width: 70px; height: 50px; background: linear-gradient(180deg, #DC2626 0%, #991B1B 100%); border-radius: 0 0 35px 35px; margin-left: -32px; box-shadow: inset 0 -8px 14px rgba(0,0,0,0.4); }
+.studio-lamp .lamp-bulb { width: 36px; height: 20px; background: #FFE8B0; margin: 0 auto; margin-top: -10px; border-radius: 0 0 18px 18px; box-shadow: 0 0 24px rgba(255,232,176,0.7); }
+.studio-lamp .lamp-cone { width: 220px; height: 320px; margin: 6px auto 0 -110px; background: linear-gradient(180deg, rgba(255,232,176,0.30) 0%, rgba(255,232,176,0.10) 50%, transparent 100%); clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%); pointer-events: none; }
+
+/* ── 画架 + 画布 ── */
+.easel-stage { position: relative; margin: 60px auto 0; max-width: 760px; height: 580px; z-index: 5; }
+.easel-leg-back { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 14px; height: 580px; background: linear-gradient(90deg, #2A1A0A 0%, #0F0804 100%); border-radius: 2px; z-index: 0; }
+.easel-leg-left { position: absolute; left: 90px; top: 100px; width: 14px; height: 480px; background: linear-gradient(90deg, #3A2A1A 0%, #1F140A 50%, #0F0804 100%); transform: rotate(-8deg); transform-origin: top center; border-radius: 2px; box-shadow: 0 8px 20px rgba(0,0,0,0.45); z-index: 2; }
+.easel-leg-right { position: absolute; right: 90px; top: 100px; width: 14px; height: 480px; background: linear-gradient(90deg, #3A2A1A 0%, #1F140A 50%, #0F0804 100%); transform: rotate(8deg); transform-origin: top center; border-radius: 2px; box-shadow: 0 8px 20px rgba(0,0,0,0.45); z-index: 2; }
+.easel-top { position: absolute; left: 50%; top: 30px; transform: translateX(-50%); width: 440px; height: 16px; background: linear-gradient(180deg, #3A2A1A 0%, #1F140A 50%, #0A0502 100%); border-radius: 2px; z-index: 3; }
+.easel-crossbar { position: absolute; left: 50%; top: 420px; transform: translateX(-50%); width: 540px; height: 10px; background: linear-gradient(180deg, #3A2A1A 0%, #1F140A 50%, #0A0502 100%); border-radius: 2px; z-index: 5; }
+.easel-shelf { position: absolute; left: 50%; top: 442px; transform: translateX(-50%); width: 380px; height: 8px; background: linear-gradient(180deg, #2A1A0A 0%, #0F0804 100%); border-radius: 2px; z-index: 5; }
+
+.canvas-wrap { position: absolute; left: 50%; top: 50px; transform: translateX(-50%); width: 460px; z-index: 4; }
+.canvas-frame { padding: 14px; background: linear-gradient(180deg, #3A2A1A 0%, #1A1108 100%); box-shadow: 0 16px 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05); }
+.canvas-inner { background: #F5F0E8; position: relative; aspect-ratio: 476/576; overflow: hidden; }
+.painting-svg { width: 100%; height: 100%; display: block; }
+
+/* ── 颜料管 ── */
+.tubes-stage { position: absolute; right: 12px; bottom: 100px; z-index: 3; display: flex; gap: 6px; }
+.paint-tube { position: relative; width: 28px; height: 110px; }
+.paint-tube-cap { width: 14px; height: 18px; margin: 0 auto; background: linear-gradient(180deg, #2A2A2A 0%, #0F0F0F 100%); border-radius: 2px 2px 0 0; }
+.paint-tube-body { width: 28px; height: 76px; background: var(--pt-color, #FAFAFA); position: relative; }
+.paint-tube-label { position: absolute; left: 4px; right: 4px; top: 50%; transform: translateY(-50%); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.7rem; color: #FAFAFA; text-align: center; text-shadow: 0 1px 1px rgba(0,0,0,0.4); }
+.paint-tube-crimp { width: 28px; height: 16px; background: linear-gradient(180deg, var(--pt-color, #FAFAFA) 0%, rgba(0,0,0,0.2) 100%); border-radius: 0 0 4px 4px; clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%); }
+.tube-1 { --pt-color: #F59E0B; transform: rotate(-6deg); }
+.tube-2 { --pt-color: #DC2626; transform: rotate(2deg); }
+.tube-3 { --pt-color: #1E40AF; transform: rotate(-3deg); }
+.tube-4 { --pt-color: #FAFAFA; transform: rotate(5deg;); }
+
+/* ── 调色板 ── */
+.palette-stage { position: absolute; left: 12px; bottom: 80px; z-index: 3; }
+.palette-thumbhole { width: 90px; height: 64px; background: linear-gradient(180deg, #EBE3D4 0%, #D9CFB9 100%); border-radius: 0 0 90px 90px; position: relative; box-shadow: 0 6px 18px rgba(0,0,0,0.30), inset 0 0 0 1px rgba(0,0,0,0.06); }
+.palette-thumbhole::after { content: ""; position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: 18px; height: 14px; background: #1A1A1A; border-radius: 50%; }
+.palette-dab { position: absolute; width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+/* ── 钉子便签 ── */
+.room-corner { position: absolute; top: 80px; left: 12px; z-index: 3; }
+.art-tag { display: block; background: #FAFAFA; padding: 6px 10px; margin-bottom: 8px; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-style: italic; font-size: 0.78rem; color: #1A1A1A; box-shadow: 0 2px 4px rgba(0,0,0,0.18); transform: rotate(-2deg); position: relative; }
+.art-tag::before { content: "●"; position: absolute; left: 50%; top: -4px; transform: translateX(-50%); color: #B83A2A; font-size: 0.6rem; }
+.gallery-frame { position: absolute; top: 200px; right: 12px; width: 80px; height: 100px; background: linear-gradient(180deg, #3A2A1A 0%, #1A1108 100%); padding: 6px; z-index: 3; box-shadow: 0 6px 16px rgba(0,0,0,0.4); }
+.gallery-frame::after { content: ""; display: block; width: 100%; height: 100%; background: linear-gradient(135deg, #DC2626 0%, #F59E0B 50%, #1E40AF 100%); opacity: 0.85; }
+
+section.tab h2 { color: #1A1A1A; }
+section.tab h3 { color: #1A1A1A; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; }
+section.tab p.lede { color: #3A3A3A; }
+.watermark { font-family: 'Cormorant Garamond', serif; color: #D9CFB9; }
+footer { background: #1A1A1A; color: #FAFAFA; border-top: 1px solid #3A3A3A; }
+footer .label { color: #FAFAFA; font-family: 'Cormorant Garamond', serif; }
+footer .data-source { color: #999; }
+.drop-cap::first-letter { font-family: 'Cormorant Garamond', serif; color: #DC2626; }
 
 </style>
 </head>
 <body>
 
-<header class="hero left">
-  
-  <div class="container">
-    <div class="hero-decor">「动画」 · No. 042</div>
-    <h1 class="display">动画</h1>
-    <p class="hero-tagline">炭黑 + 米白画布 + 调色板 + 包豪斯抽象画 — 动画是「让画动起来讲故事」 — 二维动画 (传统手绘) + 三维动画 (CG/电脑) + 定格动画 (黏土/偶/实拍合成) + 实验动画 + 影视特效 + 游戏动画, 是「美术 + 影视 + 故事 +</p>
-    <div class="hero-tags">
-      <span class="tag primary">二维 + 三维 + 定格</span><span class="tag primary">追光原力</span><span class="tag primary">哪吒白蛇</span>
-      <span class="tag">校招 12-25 万</span><span class="tag">影视风口</span><span class="tag">国漫崛起</span>
+<header class="hero" style="background: linear-gradient(180deg, #14110D 0%, #2A2520 100%);">
+  <div class="studio-floor"></div>
+  <div class="studio-lamp">
+    <div class="lamp-rod"></div>
+    <div class="lamp-arm"></div>
+    <div class="lamp-head"></div>
+    <div class="lamp-bulb"></div>
+    <div class="lamp-cone"></div>
+  </div>
+  <div class="tubes-stage">
+    <div class="paint-tube tube-1"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Jaune</div></div><div class="paint-tube-crimp"></div></div>
+    <div class="paint-tube tube-2"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Rouge</div></div><div class="paint-tube-crimp"></div></div>
+    <div class="paint-tube tube-3"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Bleu</div></div><div class="paint-tube-crimp"></div></div>
+    <div class="paint-tube tube-4"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Blanc</div></div><div class="paint-tube-crimp"></div></div>
+  </div>
+  <div class="palette-stage">
+    <div class="palette-thumbhole">
+      <div class="palette-dab" style="left: 14px; top: 12px; background: #DC2626;"></div>
+      <div class="palette-dab" style="left: 36px; top: 8px; background: #F59E0B;"></div>
+      <div class="palette-dab" style="left: 60px; top: 14px; background: #1E40AF;"></div>
+      <div class="palette-dab" style="left: 22px; top: 32px; background: #6B3410;"></div>
+      <div class="palette-dab" style="left: 48px; top: 36px; background: #4A5D3A;"></div>
     </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">艺术学 · 戏剧与影视学类</div></div>
-      <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value num">4年 · 艺术学学士</div></div>
-      <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★★☆</div></div>
-      <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value num">2026-06</div></div>
+  </div>
+  <div class="room-corner">
+    <span class="art-tag">Studio of Making</span>
+    <span class="art-tag" style="transform: rotate(1deg);">Atelier · 第 042 号</span>
+  </div>
+  <div class="gallery-frame"></div>
+  <div class="container" style="padding-top: 80px; padding-bottom: 120px;">
+    <div class="easel-stage">
+      <div class="easel-leg-back"></div>
+      <div class="easel-leg-left"></div>
+      <div class="easel-leg-right"></div>
+      <div class="easel-top"></div>
+      <div class="easel-crossbar"></div>
+      <div class="easel-shelf"></div>
+      <div class="canvas-wrap">
+        <div class="canvas-frame">
+          <div class="canvas-inner">
+            <svg class="painting-svg" viewBox="0 0 476 576" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="476" height="320" fill="#1E40AF" opacity="0.92"/>
+              <path d="M 0 100 Q 120 60 240 110 T 476 90 L 476 220 Q 360 260 200 200 T 0 240 Z" fill="#DC2626" opacity="0.95"/>
+              <circle cx="340" cy="150" r="58" fill="#F59E0B"/>
+              <path d="M 60 60 Q 200 30 320 80" stroke="#E76F51" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.85"/>
+              <line x1="0" y1="280" x2="476" y2="180" stroke="#1A1A1A" stroke-width="14" stroke-linecap="square"/>
+              <rect x="0" y="320" width="476" height="256" fill="#F5F0E8"/>
+              <rect x="40" y="380" width="120" height="120" fill="#1A1A1A"/>
+              <rect x="200" y="420" width="80" height="80" fill="#003049"/>
+              <circle cx="380" cy="450" r="44" fill="#FAFAFA" stroke="#1A1A1A" stroke-width="2"/>
+              <circle cx="100" cy="500" r="14" fill="#1E40AF"/>
+              <circle cx="160" cy="540" r="10" fill="#DC2626"/>
+              <circle cx="280" cy="520" r="18" fill="#F59E0B"/>
+              <circle cx="430" cy="500" r="12" fill="#E76F51"/>
+              <path d="M 240 320 L 244 380 L 236 440 L 242 500 L 238 560" stroke="#1E40AF" stroke-width="3" fill="none" opacity="0.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="position: relative; z-index: 6; max-width: 800px; margin: 60px auto 0; color: #FAFAFA; text-align: center;">
+      <div class="chapter-mark" style="color: #F59E0B; letter-spacing: 0.4em;">STUDIO OF MAKING · NO. 042</div>
+      <h1 class="hero-title" style="color: #FAFAFA; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700;">
+        <span class="title-cn" style="font-family: 'Noto Serif SC', serif;">动画</span>
+        <span class="title-en" style="color: #D9CFB9; font-style: italic; font-weight: 400;">动画 & Atelier</span>
+      </h1>
+      <p style="font-family: 'Noto Serif SC', serif; color: #D9CFB9; max-width: 720px; margin: 12px auto; line-height: 1.7;">动画是「让画动起来讲故事」 — 二维动画 (传统手绘) + 三维动画 (CG/电脑) + 定格动画 (黏土/偶/实拍合成) + 实验动画 + 影视特效 + 游戏动画, 是「美术 + 影视 + 故事 + 技术」的交叉。本科起薪 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 校招 15-25 万, 头部游戏 (</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 16px 0;">
+        <span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">二维 + 三维 + 定格</span><span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">追光原力</span><span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">哪吒白蛇</span><span style="font-family: Archivo, sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 10px; border: 1px solid #D9CFB9; color: #FAFAFA;">校招 12-25 万</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px;">
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学科</span><span class="hu-stat-value" style="color: #FAFAFA;">艺术学 · 戏剧与影视学类</span></div>
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">学制</span><span class="hu-stat-value" style="color: #FAFAFA;">4Y · 艺术学学士</span></div>
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">难度</span><span class="hu-stat-value" style="color: #FAFAFA;">★★★★☆</span></div>
+        <div class="hu-stat" style="border-bottom-color: rgba(217,207,185,0.3);"><span class="hu-stat-label" style="color: #F59E0B; min-width: 50px;">更新</span><span class="hu-stat-value" style="color: #FAFAFA;">2026-06</span></div>
+      </div>
     </div>
   </div>
 </header>
 
 <section class="tab" id="overview">
+  <div class="watermark">01</div>
   <div class="container">
-    <div class="section-num">01 / 10 · OVERVIEW</div>
-    <h2 class="h2">速览</h2>
-    <p class="lede">动画是「让画动起来讲故事」 — 二维动画 (传统手绘) + 三维动画 (CG/电脑) + 定格动画 (黏土/偶/实拍合成) + 实验动画 + 影视特效 + 游戏动画, 是「美术 + 影视 + 故事 + 技术」的交叉。本科起薪 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 校招 15-25 万, 头部游戏 (米哈游/腾讯天美) 动画师校招 18-30 万, 是「国漫崛起 + 影视风口 + AI 时代」风口专业。</p>
-    <h3 class="h3">这个专业学什么?</h3><p>前 2 年基础: 美术基础 (素描/色彩/速写, 绘画功底是核心) + 动画概论 + 中外动画史 + 动漫造型基础 (角色/场景) + 动漫运动规律 + 分镜脚本 + 数字图像处理 (PS/AI) + 摄影摄像 + 数字绘画 + 软件基础 (Animate CC/TVPaint/Clip Studio Paint) — 美术功底 + 动画规律 + 故事能力 + 软件工具的四脚架。
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap">动画是「让画动起来讲故事」 — 二维动画 (传统手绘) + 三维动画 (CG/电脑) + 定格动画 (黏土/偶/实拍合成) + 实验动画 + 影视特效 + 游戏动画, 是「美术 + 影视 + 故事 + 技术」的交叉。本科起薪 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 校招 15-25 万, 头部游戏 (米哈游/腾讯天美) 动画师校招 18-30 万, 是「国漫崛起 + 影视风口 + AI 时代」风口专业。</p>
+    <h3>这个专业学什么?</h3><p>前 2 年基础: 美术基础 (素描/色彩/速写, 绘画功底是核心) + 动画概论 + 中外动画史 + 动漫造型基础 (角色/场景) + 动漫运动规律 + 分镜脚本 + 数字图像处理 (PS/AI) + 摄影摄像 + 数字绘画 + 软件基础 (Animate CC/TVPaint/Clip Studio Paint) — 美术功底 + 动画规律 + 故事能力 + 软件工具的四脚架。
 
 大三大四分流到 4 大方向: (1) 二维动画 (传统手绘 + 数字二维, 跟《罗小黑战记》/《大鱼海棠》/日本 TV 动画风格强相关); (2) 三维动画 (CG/电脑, 角色/场景/绑定/动画/渲染, 跟追光/原力/Base Media/迪士尼/皮克斯强相关); (3) 定格动画 (黏土/偶/实拍合成, 跟阿德曼《小羊肖恩》/中国偶动画强相关); (4) 实验动画 + 影视特效 (实验短片/独立动画 + VFX, 跟双年展/独立影展/特效公司强相关)。
 
 技能树四条: (1) 二维软件 (Animate CC/TVPaint/Clip Studio Paint, 传统动画师核心); (2) 三维软件 (Maya/Blender/C4D/ZBrush/Substance, 三维动画师核心); (3) 动画规律 (12 原则 + 力学 + 表情 + 口型 + 表演, 动画师核心硬技能); (4) AI 动画工具 (Stable Diffusion/Runway/Sora/Kling, 2024 年起 985 动画学生必会)。动画的核心是「用画面讲故事」, 是「离影视 + 故事最近的纯艺 + 设计交叉」专业, 国漫崛起 (哪吒之魔童降世 50 亿+ / 长安三万里 18 亿+ / 白蛇系列 / 哪吒 2 突破 100 亿) 政策风口专业。</p>
-    <h3 class="h3">什么人适合?</h3><p>适合对「让一个角色活过来」「让一段画动起来讲故事」「让一部国漫感动千万观众」有持续热情, 且能接受前期熬夜画稿/做项目 + 中期技术快速迭代 + 后期持续学习新工具的人。动画的优势是「国漫崛起 + 影视风口 + 商业化好 + AI 时代」四栖: 它的就业比纯艺好太多, 起薪 6-12 万, 头部动画公司 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深动画师/导演/创意总监 30-60 万, 10 年后能到 50-100 万。
+    <h3>什么人适合?</h3><p>适合对「让一个角色活过来」「让一段画动起来讲故事」「让一部国漫感动千万观众」有持续热情, 且能接受前期熬夜画稿/做项目 + 中期技术快速迭代 + 后期持续学习新工具的人。动画的优势是「国漫崛起 + 影视风口 + 商业化好 + AI 时代」四栖: 它的就业比纯艺好太多, 起薪 6-12 万, 头部动画公司 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深动画师/导演/创意总监 30-60 万, 10 年后能到 50-100 万。
 
 不适合: 把动画等同于「学画画」的人 (这是「美术 + 故事 + 技术」, 主体是「让画动起来讲故事」); 不能接受熬夜做项目的人 (动画/影视/游戏「9105/9106」是常态, 项目节点连续 1-3 个月高强度); 数学/物理/编程极差但想做三维动画的人 (三维涉及绑定/特效/物理, 编程思维不能缺); 期待「对口考公岗位多」的人 (动画公务员岗位少, 主要靠企业/工作室/自由职业); 期待「学完就能找到对口工作」的人 (动画技术迭代极快, 1-2 年不学就跟不上)。适合的人是: 喜欢美学 + 故事 + 影视 + 技术 + 角色表演交叉, 愿意前 5 年在动画/影视/游戏公司做动画师, 之后做动画导演/创意总监/独立动画人/创业的人。</p>
-    <h3 class="h3">避坑指南</h3><p>❌ 「动画就是学画画, 工资低」→ 严重低估。动画校招 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万。动画是「艺术类里起薪高 + 国漫崛起风口」的专业之一。❌ 「动画毕业 = 流水线画师」→ 错。动画的核心是「画面 + 故事 + 表演」, 头部 5% 动画师做的是「动画导演 + 创意总监 + 独立动画人」, 不是「流水线画师」。AI 时代 (2024 起), 只会画画的画师正在被淘汰, 「懂故事 + 懂表演 + 懂技术」的全能动画师反而更值钱。❌ 「动画和数媒/视传/影视一个专业」→ 严重错。动画 (偏二维/三维/定格 + 故事 + 表演, 影视/动画/游戏公司出口) 跟数字媒体艺术 (偏影视 + 游戏 + 交互 + 装置 + VR/AR, 影视/游戏/科技公司出口)、视传 (偏品牌 + UX/UI, 互联网/广告出口)、影视摄影与制作 (偏影视摄影/导演, 影视公司出口) 是不同专业, 选错后悔 4 年。❌ 「动画进大厂容易, 应届 30 万+」→ 部分对。北电/中传/国美/央美/清美 等头部 5 院校, 校招进追光/原力/光线彩条屋 15-25 万, 校招进米哈游/腾讯天美动画师 18-30 万, 是真实的; 但普通院校动画校招进小公司起薪 5-7 万, 差距 2-3 倍。❌ 「动画不需要编程」→ 严重错。2024 年起 985 动画学生必会: (1) 至少 1-2 个三维软件 (Maya/Blender/C4D); (2) 至少 1-2 个绑定/特效工具 (Houdini/Nuke); (3) AI 动画工具 (Stable Diffusion/Runway/Sora/Kling); (4) 至少 1-2 个编程/Python 入门 (动画绑定/工具脚本)。不会三维的动画毕业生, 5 年后会被淘汰。❌ 「AI 时代动画师要被淘汰」→ 严重错。AI (Stable Diffusion/Runway/Sora) 2024 起爆发, 是动画师的新工具集, 不是威胁。AI 不会取代「懂故事 + 懂表演 + 懂技术」的全能动画师, 反而让头部动画师效率提升 5-10 倍, 动画的「故事 + 表演 + 美术」复合门槛是护城河。❌ 「国漫崛起, 学动画就能出名成家」→ 严重幻想。哪吒之魔童降世导演饺子是华西医科大学毕业转行, 长安三万里导演谢君伟、邹靖是北电/中传动画专业, 国漫崛起需要 8-12 年积累, 不是「学 4 年动画就能出爆款」。动画的「国漫崛起」是行业风口, 不是「个人出名成家」的捷径。</p>
+    <h3>避坑指南</h3><p>❌ 「动画就是学画画, 工资低」→ 严重低估。动画校招 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万。动画是「艺术类里起薪高 + 国漫崛起风口」的专业之一。❌ 「动画毕业 = 流水线画师」→ 错。动画的核心是「画面 + 故事 + 表演」, 头部 5% 动画师做的是「动画导演 + 创意总监 + 独立动画人」, 不是「流水线画师」。AI 时代 (2024 起), 只会画画的画师正在被淘汰, 「懂故事 + 懂表演 + 懂技术」的全能动画师反而更值钱。❌ 「动画和数媒/视传/影视一个专业」→ 严重错。动画 (偏二维/三维/定格 + 故事 + 表演, 影视/动画/游戏公司出口) 跟数字媒体艺术 (偏影视 + 游戏 + 交互 + 装置 + VR/AR, 影视/游戏/科技公司出口)、视传 (偏品牌 + UX/UI, 互联网/广告出口)、影视摄影与制作 (偏影视摄影/导演, 影视公司出口) 是不同专业, 选错后悔 4 年。❌ 「动画进大厂容易, 应届 30 万+」→ 部分对。北电/中传/国美/央美/清美 等头部 5 院校, 校招进追光/原力/光线彩条屋 15-25 万, 校招进米哈游/腾讯天美动画师 18-30 万, 是真实的; 但普通院校动画校招进小公司起薪 5-7 万, 差距 2-3 倍。❌ 「动画不需要编程」→ 严重错。2024 年起 985 动画学生必会: (1) 至少 1-2 个三维软件 (Maya/Blender/C4D); (2) 至少 1-2 个绑定/特效工具 (Houdini/Nuke); (3) AI 动画工具 (Stable Diffusion/Runway/Sora/Kling); (4) 至少 1-2 个编程/Python 入门 (动画绑定/工具脚本)。不会三维的动画毕业生, 5 年后会被淘汰。❌ 「AI 时代动画师要被淘汰」→ 严重错。AI (Stable Diffusion/Runway/Sora) 2024 起爆发, 是动画师的新工具集, 不是威胁。AI 不会取代「懂故事 + 懂表演 + 懂技术」的全能动画师, 反而让头部动画师效率提升 5-10 倍, 动画的「故事 + 表演 + 美术」复合门槛是护城河。❌ 「国漫崛起, 学动画就能出名成家」→ 严重幻想。哪吒之魔童降世导演饺子是华西医科大学毕业转行, 长安三万里导演谢君伟、邹靖是北电/中传动画专业, 国漫崛起需要 8-12 年积累, 不是「学 4 年动画就能出爆款」。动画的「国漫崛起」是行业风口, 不是「个人出名成家」的捷径。</p>
   </div>
 </section>
 
 <section class="tab" id="curriculum">
+  <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · CURRICULUM</div>
-    <h2 class="h2">主要课程</h2>
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
     <p class="curriculum-lede">全国 4 年制通用框架, 「美术 + 故事 + 动画规律 + 技术」四脚架。北电/中传/国美/央美/清美 是头部, 普通院校的动画就业差距 2-3 倍。前 2 年美术 + 动画规律 + 软件, 大三分二维/三维/定格/实验 4 大方向, 大三大四 studio 制 + 真实项目制。</p>
     <div class="curriculum-grid">
-        <div class="curriculum-block"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
           <div class="course"><span class="course-name">大学英语 (I-IV, 学术英语为主)</span><span class="course-credit">8 学分</span></div>
           <div class="course"><span class="course-name">思想政治理论 (思修/史纲/马原/毛概/习思想)</span><span class="course-credit">5 学分</span></div>
           <div class="course"><span class="course-name">体育 (I-IV)</span><span class="course-credit">4 学分</span></div>
@@ -403,7 +289,7 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           <div class="course"><span class="course-name">美术基础 (素描 + 色彩 + 速写 + 数字绘画)</span><span class="course-credit">8 学分</span></div>
           <div class="course"><span class="course-name">形势与政策 + 创业基础</span><span class="course-credit">2 学分</span></div>
         </div>
-        <div class="curriculum-block"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
           <div class="course"><span class="course-name">动漫造型基础 (角色 + 场景)</span><span class="course-credit">5 学分</span></div>
           <div class="course"><span class="course-name">动漫运动规律 (12 原则 + 力学 + 表情 + 口型)</span><span class="course-credit">5 学分</span></div>
           <div class="course"><span class="course-name">中外动画史 (Chinese & Western Animation History)</span><span class="course-credit">3 学分</span></div>
@@ -418,7 +304,7 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           <div class="course"><span class="course-name">动画表演 (Acting for Animation)</span><span class="course-credit">2 学分</span></div>
           <div class="course"><span class="course-name">AI 动画工具 (Stable Diffusion/Runway/Sora/Kling)</span><span class="course-credit">2 学分</span></div>
         </div>
-        <div class="curriculum-block"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
           <div class="course"><span class="course-name">北京电影学院 · 动画学院 (国内动画院校第一, 二维 + 三维 + 实验动画, 北京)</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">中国传媒大学 · 动画与数字艺术学院 (中传动画 + 游戏美术, 211, 北京)</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">中国美术学院 · 动画与游戏学院 (国美动画 + 实验动画 + 独立动画, 杭州)</span><span class="course-credit">4 学分</span></div>
@@ -430,81 +316,82 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="schools">
+  <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">03 / 10 · SCHOOLS</div>
-    <h2 class="h2">院校分布</h2>
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">北</div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">北</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">北京电影学院</div>
           <div class="bento-tag">北京 · 动画学院国内第一, 二维 + 三维 + 实验动画, 影视院校塔尖</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">中</div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">中</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">中国传媒大学</div>
           <div class="bento-tag">北京 · 211, 动画与数字艺术学院, 动画 + 游戏美术国内最强</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">中</div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">中</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">中国美术学院</div>
           <div class="bento-tag">杭州 · 动画与游戏学院, 国美动画 + 实验动画 + 独立动画</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">中</div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">中</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">中央美术学院</div>
           <div class="bento-tag">北京 · 城市设计学院, 央美动画 + 实验动画, 教育部直属</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">清</div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">清</div>
           <span class="bento-rank">A</span>
-          <div class="bento-name">清华大学美术学院</div>
+          <div class="bento-name">清华大学<wbr>美术学院</div>
           <div class="bento-tag">北京 · 985, 信息艺术设计系, 动画 + 数字媒体 + AI 艺术</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">广</div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">广</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">广州美术学院</div>
           <div class="bento-tag">广州 · 动画 + 数字媒体, 华南动画第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">南</div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">南</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">南京艺术学院</div>
           <div class="bento-tag">南京 · 动画 + 数字艺术, 综合艺术院校第一梯队</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">吉</div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">吉</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">吉林动画学院</div>
           <div class="bento-tag">长春 · 民办动画强校, 跟长影合作, 东北动画第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">四</div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">四</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">四川美术学院</div>
           <div class="bento-tag">重庆 · 动画 + 互动设计, 西南动画第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">西</div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">西</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">西安美术学院</div>
           <div class="bento-tag">西安 · 动画 + 数字艺术, 西部动画第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">湖</div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">湖</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">湖北美术学院</div>
           <div class="bento-tag">武汉 · 动画 + 数字艺术, 中部动画第一</div>
         </div>
-        <div class="bento-item">
-          <div class="bento-monogram" style="background:#1A1A1A; color:#FAFAFA">上</div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">上</div>
           <span class="bento-rank">B+</span>
-          <div class="bento-name">上海大学上海美术学院</div>
+          <div class="bento-name">上海大学<wbr>上海美术学院</div>
           <div class="bento-tag">上海 · 211, 动画 + 数字媒体, 上海动画第一</div>
         </div>
     </div>
@@ -512,136 +399,137 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="companies">
+  <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">04 / 10 · EMPLOYERS</div>
-    <h2 class="h2">头部公司</h2>
-    <p class="lede">S = 顶级 (顶级薪资+大量校招), A = 知名 (稳定校招), B = 大量招 (中等门槛)。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
-        <div class="company">
+        <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">追</div>
+            <div class="company-monogram">追</div>
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">追光动画 (Light Chaser Animation)</div>
           <div class="company-meta">★★★ · 校招 校招 20-35 万, 资深 50-100 万, 北京, 白蛇/长安三万里/新神榜/哪吒 2</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 4"></div>
-            <div class="sparkline-bar" style="height:80.0%" title="Year 2: 4"></div>
-            <div class="sparkline-bar" style="height:80.0%" title="Year 3: 4"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">原</div>
+            <div class="company-monogram">原</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">原力动画 (Original Force)</div>
           <div class="company-meta">★★★ · 校招 校招 15-25 万, 资深 40-80 万, 南京/上海, 哪吒/捉妖记</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 2: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 4"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 4"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">光</div>
+            <div class="company-monogram">光</div>
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">光线彩条屋 (Enlight Pictures)</div>
           <div class="company-meta">★★★ · 校招 校招 18-30 万, 资深 50-100 万, 北京, 哪吒/大鱼海棠/姜子牙</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:60.0%" title="Year 1: 3"></div>
-            <div class="sparkline-bar" style="height:80.0%" title="Year 2: 4"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 5"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">若</div>
+            <div class="company-monogram">若</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">若森数字 (Ruosen Digital)</div>
           <div class="company-meta">★★ · 校招 校招 15-25 万, 资深 30-60 万, 北京/上海, 侠岚/不良人</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 2: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">中</div>
+            <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">中影动画 (China Film Animation)</div>
           <div class="company-meta">★★ · 校招 校招 15-22 万, 资深 30-60 万, 北京, 国漫国家队</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 1: 2"></div>
-            <div class="sparkline-bar" style="height:66.66666666666666%" title="Year 2: 2"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 3"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">米</div>
+            <div class="company-monogram">米</div>
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">米哈游/腾讯天美/网易雷火 (游戏动画师)</div>
           <div class="company-meta">★★★★ · 校招 校招 25-40 万, 资深 50-100 万, 上海/深圳, 游戏动画师赛道</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 4"></div>
-            <div class="sparkline-bar" style="height:80.0%" title="Year 2: 4"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 3: 5"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 5"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 5"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">B</div>
+            <div class="company-monogram">B</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">Base Media / 东方梦工厂 / 迪士尼 (国际)</div>
           <div class="company-meta">★★ · 校招 校招 18-30 万, 资深 40-80 万, 上海/北京, 985 起 + 英文流利</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 2: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 4: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
-        <div class="company">
+        <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram" style="background:#1A1A1A; color:#FAFAFA">B</div>
+            <div class="company-monogram">B</div>
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">B站/腾讯视频/爱奇艺 (动画部门/国创)</div>
           <div class="company-meta">★★ · 校招 制片/动画师 15-25 万, 资深 30-60 万, 北京/上海, 国创扶持政策</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:50.0%" title="Year 1: 2"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 2: 3"></div>
-            <div class="sparkline-bar" style="height:75.0%" title="Year 3: 3"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 4"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 4"></div>
+            <div class="sparkline-bar" style="height:50.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
@@ -649,15 +537,12 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
   </div>
 </section>
 
-
-
-
-
 <section class="tab" id="salary">
+  <div class="watermark">05</div>
   <div class="container">
-    <div class="section-num">05 / 10 · SALARY</div>
-    <h2 class="h2">薪资分布</h2>
-    <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。</p>
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
       <thead>
         <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
@@ -665,27 +550,27 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
       <tbody>
         <tr>
           <td class="salary-stage">应届 (0-2 年)</td>
-          <td class="num"><span class="approx">≈</span>P25 5 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +3%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 8 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 14 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="5">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +3%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="14">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3-5 年</td>
-          <td class="num"><span class="approx">≈</span>P25 12 万<span class="salary-bar"><span class="salary-bar-fill" style="width:34.285714285714285%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 22 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 35 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:34.285714285714285%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">5-10 年</td>
-          <td class="num"><span class="approx">≈</span>P25 22 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.84615384615385%"></span></span><span class="yoy up">↗ +7%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 40 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.53846153846154%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 65 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.84615384615385%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.53846153846154%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="65">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">10 年+ (动画导演/创意总监/独立动画人/合伙人)</td>
-          <td class="num"><span class="approx">≈</span>P25 40 万<span class="salary-bar"><span class="salary-bar-fill" style="width:20.0%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span>P50 85 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.5%"></span></span></td>
-          <td class="num"><span class="approx">≈</span>P75 200 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:20.0%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="85">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.5%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="200">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -693,82 +578,84 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="directions">
+  <div class="watermark">06</div>
   <div class="container">
-    <div class="section-num">06 / 10 · DIRECTIONS</div>
-    <h2 class="h2">就业方向</h2>
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
           <div class="direction-name">动画公司 (追光/原力/光线彩条屋, 二维/三维动画师 + 绑定 + 特效)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:28%"></div></div>
-          <div class="direction-pct num">28%</div>
+          <div class="direction-pct">28%</div>
         </div>
         <div class="direction">
           <div class="direction-name">游戏公司 (米哈游/腾讯天美/网易雷火, 游戏动画师 + 特效)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
-          <div class="direction-pct num">22%</div>
+          <div class="direction-pct">22%</div>
         </div>
         <div class="direction">
           <div class="direction-name">影视特效公司 (Base Media/东方梦工厂, 影视特效 + 动捕 + 合成)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct num">12%</div>
+          <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
           <div class="direction-name">互联网/广告公司 (MG 动画/品牌动画/动态海报)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct num">10%</div>
+          <div class="direction-pct">10%</div>
         </div>
         <div class="direction">
           <div class="direction-name">国创/独立动画 (B站/腾讯视频国创 + 独立工作室)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct num">8%</div>
+          <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
           <div class="direction-name">高校/培训机构 (动画教师 + 培训师)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
-          <div class="direction-pct num">5%</div>
+          <div class="direction-pct">5%</div>
         </div>
         <div class="direction">
           <div class="direction-name">继续读研/读博 (动画/电影学/数字媒体/美术学)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct num">8%</div>
+          <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
           <div class="direction-name">自由动画人/独立工作室/创业</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:7%"></div></div>
-          <div class="direction-pct num">7%</div>
+          <div class="direction-pct">7%</div>
         </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="deep-study">
+  <div class="watermark">07</div>
   <div class="container">
-    <div class="section-num">07 / 10 · DEEP-STUDY</div>
-    <h2 class="h2">深造路径</h2>
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
     <div class="path-grid">
-        <div class="path-card">
-          <div class="path-pct num">30%</div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">30%</div>
           <div class="path-name">考研 (动画/电影学/数字媒体/美术学)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">52%</div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">52%</div>
           <div class="path-name">直接就业 (动画/游戏/影视/广告/国创/独立动画)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">8%</div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">8%</div>
           <div class="path-name">保研 (北电/中传/国美/央美/清美直博/硕博连读)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">4%</div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">4%</div>
           <div class="path-name">跨专业考研 (电影学/数字媒体/新传/计算机 HCI)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">5%</div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">5%</div>
           <div class="path-name">出国留学 (CalArts/RISD/RCA/CSM/Sheridan/法国高布兰 动画全球顶尖)</div>
         </div>
-        <div class="path-card">
-          <div class="path-pct num">1%</div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">1%</div>
           <div class="path-name">考公务员/选调生</div>
         </div>
     </div>
@@ -776,14 +663,15 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="quotes">
+  <div class="watermark">08</div>
   <div class="container">
-    <div class="section-num">08 / 10 · VOICES</div>
-    <h2 class="h2">学长学姐说</h2>
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
-        <div class="quote">
+        <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#1A1A1A; color:#FAFAFA">中</div>
+            <div class="quote-avatar">中</div>
             <div class="quote-byline">
               <strong>中国传媒大学 动画硕士</strong>
               <span class="quote-source">2024 届 · 知乎 @2025</span>
@@ -791,9 +679,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科北电动画, 大二确定考研中传动画。说实话, 动画是「国漫崛起 + 影视风口 + AI 时代」风口专业。校招 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万。AI 工具 (Stable Diffusion/Runway/Sora/Kling) 是新基础设施, 2024 年起 985 动画学生必会, 不会的 5 年后会被淘汰。真心喜欢美学 + 故事 + 角色表演 + 影视就来, 怕熬夜 + 怕编程慎选。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#1A1A1A; color:#FAFAFA">追</div>
+            <div class="quote-avatar">追</div>
             <div class="quote-byline">
               <strong>追光动画 三维动画师 (北京)</strong>
               <span class="quote-source">2019 届 · 校友访谈 @北京</span>
@@ -801,9 +689,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科北电动画, 毕业进追光做三维动画师 (角色方向)。年薪 32 万 + 项目奖金, 在北京。第一年 9105 节奏, 加班多但成长快, 看到自己的动画在《长安三万里》里被千万人看到是真的「作品感」。追光是「国内动画电影第一梯队」, 白蛇/长安三万里/新神榜爆款, 985 起 + 作品集 + 热爱动画。真心推荐: 动画校招进追光/原力/光线彩条屋是「艺术类里起薪高 + 路径清晰」性价比之王。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#1A1A1A; color:#FAFAFA">米</div>
+            <div class="quote-avatar">米</div>
             <div class="quote-byline">
               <strong>米哈游 游戏动画师 (上海)</strong>
               <span class="quote-source">2016 届 · 校友访谈 @上海</span>
@@ -811,9 +699,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科中传动画, 毕业进米哈游做游戏动画师 (角色 + 怪物)。年薪 45 万 + 项目奖金, 在上海。米哈游是「游戏行业第一梯队」, 原神/崩坏/绝区零爆款, 985 起 + 作品集 + 热爱游戏。动画的「故事 + 表演 + 节奏」训练让我们比一般游戏美术更擅长「让角色活过来」, 动画背景在游戏动画师赛道是真对口。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="240" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#1A1A1A; color:#FAFAFA">光</div>
+            <div class="quote-avatar">光</div>
             <div class="quote-byline">
               <strong>光线彩条屋 动画导演 (北京)</strong>
               <span class="quote-source">2018 届 · 校友访谈 @北京</span>
@@ -821,9 +709,9 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
           </div>
           <p class="quote-text">本科国美动画 (实验动画方向), 毕业进光线做动画师, 现在 6 年经验 50 万 + 动画导演岗位。光线是「国漫国家队」, 哪吒/大鱼海棠/姜子牙爆款, 985 起 + 作品集 + 热爱国漫。2024 年起 AI 工具 (Runway/Sora/Kling) 改变了动画制作流程, 但「懂故事 + 懂表演 + 懂导演意图」的全能动画师依然稀缺, 动画的复合背景是护城河。</p>
         </div>
-        <div class="quote">
+        <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar" style="background:#1A1A1A; color:#FAFAFA">独</div>
+            <div class="quote-avatar">独</div>
             <div class="quote-byline">
               <strong>独立动画人 + B站国创作者 (上海)</strong>
               <span class="quote-source">2020 届 · 知乎 @2025</span>
@@ -836,77 +724,104 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
 </section>
 
 <section class="tab" id="xuanke">
+  <div class="watermark">09</div>
   <div class="container">
-    <div class="section-num">09 / 10 · SUBJECTS</div>
-    <h2 class="h2">选科要求 (新高考 3+1+2)</h2>
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
           <div class="xuanke-name">不限选科 (艺术类多数院校, 文化课 + 艺术专业课双过线)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
-          <div class="xuanke-pct num">60%</div>
+          <div class="xuanke-pct">60%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">物理 + 地理 (再选不限, 综合性大学艺术类)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
-          <div class="xuanke-pct num">20%</div>
+          <div class="xuanke-pct">20%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">历史 + 地理/政治 (再选不限)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
-          <div class="xuanke-pct num">12%</div>
+          <div class="xuanke-pct">12%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">其他组合 (化学/生物等, 极少)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
-          <div class="xuanke-pct num">8%</div>
+          <div class="xuanke-pct">8%</div>
         </div>
     </div>
   </div>
 </section>
 
 <section class="tab" id="cta">
+  <div class="watermark">10</div>
   <div class="container">
-    <div class="section-num">10 / 10 · NEXT</div>
-    <h2 class="h2">关联志愿</h2>
+    <div class="section-num">10 / 10 · 关联志愿</div>
+    <h2>关联志愿</h2>
     <div class="cta-block">
-      <h3 class="h3">基于你的位次, 推荐这些校 + 组</h3>
+      <h3>基于你的位次, 推荐这些校 + 组</h3>
       <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
       <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
         <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
         <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
         <button type="submit" class="cta-button">推荐志愿 →</button>
       </form>
-      <p class="cta-note">⚠️ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    <div class="label">STUDIO OF MAKING · Major Explorer · 2026 高考</div>
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 4 路 web search 实录 (北京电影学院动画学院/中国传媒大学动画与数字艺术学院/中国美术学院动画与游戏学院/中央美术学院城市设计学院动画 2024 培养方案 + 教育部第四/五轮戏剧与影视学学科评估 + 麦可思 2024 动画就业报告 + 追光动画/原力动画/若森数字/中影动画/光线彩条屋 2024-2025 校招采样 + 知乎/小红书 2018-2026 动画校友实录)</div>
   </div>
 </footer>
 
 
-
-
 <script>
 (function() {
-  if (!('IntersectionObserver' in window)) {
-    document.querySelectorAll('section.tab').forEach(s => s.classList.add('visible'));
-    return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
     });
-  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
-  document.querySelectorAll('section.tab').forEach(s => obs.observe(s));
+  }
 })();
 </script>
 
