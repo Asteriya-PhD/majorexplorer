@@ -36,7 +36,7 @@ python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py \
   --output skills/gaokao-major-explorer/data/curated/education.html
 ```
 
-可选 `--style`: `cs` | `finance` | `medicine` | `law` | `education`
+可选 `--style`: `cs` | `eng` | `finance` | `medicine` | `law` | `education` | `sci` | `humanities` | `administration`
 
 ---
 
@@ -51,7 +51,7 @@ python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py \
   "slug": "string*",            // URL slug, e.g. "psychology"
   "title": "string*",           // 专业全称, e.g. "心理学"
   "category": "string*",        // 学科门类 · 专业类, e.g. "理学 · 心理学类"
-  "style": "string*",           // cs|finance|medicine|law|education
+  "style": "string*",           // cs|eng|finance|medicine|law|education|sci|humanities|administration
   "degree": "string*",          // 学位, e.g. "理学学士"
   "duration_years": 4,          // 学制年数
   "tags": ["string", ...],      // 4-6 个标签, 第一个是 primary
@@ -187,39 +187,35 @@ python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py \
 
 ---
 
-## 10 套设计风格
+## 8 套设计风格
 
 ```
 STYLES = {
-  "cs":         "Dark + JetBrains Mono + 终端 Bento + #22C55E 跑码绿",                    # 11
-  "tech":       "Dark purple/cyan + Inter + Aurora glow + #A78BFA",                       # 1
-  "finance":    "Cream + Bodoni Moda/Jost + 烫金 editorial + #A16207",                    # 5
-  "medicine":   "Light teal + IBM Plex Sans + 手术仪表 + ECG + #0C4A6E",                  # 6
-  "law":        "Sepia + EB Garamond/Lato + 羊皮卷宗 + #78350F 琥珀",                      # 1
-  "education":  "Warm cream + Playfair/Inter + 暖橙学术 + #9A3412 砖 + #F59E0B 银杏",   # 6
-  "sci":        "米色学术 (Nature 风) + Lora/EB Garamond + 期刊刊头 + 公式 + #C73E1D 红",  # 4
-  "eng":        "浅米工程 (CAD 蓝图) + Inter Condensed + 图纸标题栏 + 零件清单表",        # 8
-  "tech_ruyao":  "鼠尾草绿 + 米白 + EB Garamond + 罗盘/折纸鹤/纸飞机/沙漏",                # 4
-  "tech_qinghua": "暖白 + 深青 + 阳光橘 + 协作卡片",                                     # 4
+  "cs":             "Dark + JetBrains Mono + 终端 Bento + #22C55E 跑码绿",                    # 11 (含智能科技)
+  "eng":            "浅米工程 (CAD 蓝图) + Inter Condensed + 图纸标题栏 + 零件清单表",       # 10 (含工业设计/土木)
+  "medicine":       "Light teal + IBM Plex Sans + 手术仪表 + ECG + #0C4A6E",                  # 6
+  "education":      "Warm cream + Playfair/Inter + 暖橙学术 + #9A3412 砖 + #F59E0B 银杏",   # 5
+  "finance":        "Cream + Bodoni Moda/Jost + 烫金 editorial + #A16207",                   # 5
+  "sci":            "米色学术 (Nature 风) + Lora/EB Garamond + 期刊刊头 + 公式 + #C73E1D 红",# 4
+  "humanities":     "深棕墨 + 米白宣纸 + 古籍线装 (翻开的善本 + 朱砂引首章 + 校勘式 stats)", # 4
+  "administration": "政府蓝 + 米白 + 国发文件 + 红头印章 (公文体 + 案卷目录卡 + 骑缝章)",  # 4
+  "law":            "Sepia + EB Garamond/Lato + 羊皮卷宗 + #78350F 琥珀",                      # 1
 }
 ```
 
-> ⚠ `tech_ruyao` / `tech_qinghua` 是 CLI 内部 key (manifest 已规范化为 `ruyao` / `qinghua`)
-
-### 风格-学科映射表 (10 主题)
+### 风格-学科映射表 (8 主题)
 
 | 学科/气质 | style | 理由 |
 |---|---|---|
-| 编程 / CS / 数据 / AI / 智能 | `cs` 或 `tech` | 终端黑客 (cs) / 暗紫青绿 (tech) |
-| 金融 / 商科 / 经济 / 管理 | `finance` | 烫金 editorial |
+| 编程 / CS / 数据 / AI / 智能 | `cs` | 终端黑客 |
+| 金融 / 商科 / 经济 / 管理 (会计/工商/国贸) | `finance` | 烫金 editorial |
 | 法学 / 政治 | `law` | 羊皮卷宗 |
-| 师范 / 教育 / 心理 / 应心 / 文学 | `education` | 暖橙学术 + 书本 |
-| 医学 / 药学 / 护理 / 公卫 / 麻醉 | `medicine` | 手术仪表 + ECG |
-| **数学 / 物理 / 化学 / 大气 / 生物** | **`sci`** ⭐新 | **米色学术 + 公式 + 元素周期表课程** |
-| **机械 / 材料 / 化工 / 微电子 / 集成电路 / 车辆 / 航天 / 食品** | **`eng`** ⭐新 | **浅米工程 + 蓝图 + 零件清单表** |
-| **冷门文科 (汉语言/历史/哲学/考古)** | **`ruyao`** | 鼠尾草绿 + 米白 + 文人气 |
-| **商业文员 (财管/行管/信管/图书馆)** | **`qinghua`** | 暖白深青 + 协作卡片 |
-| 文学 / 艺术 / 设计 | `education` | 暖色优雅 |
+| 师范 / 教育 / 心理 / 应心 / 文学 / 英语 / 新闻 | `education` | 暖橙学术 + 书本 |
+| 医学 / 药学 / 护理 / 公卫 / 麻醉 / 口腔 / 中医 | `medicine` | 手术仪表 + ECG |
+| **数学 / 物理 / 化学 / 大气 / 生物** | **`sci`** | **米色学术 + 公式 + 元素周期表课程** |
+| **机械 / 材料 / 化工 / 微电子 / 集成电路 / 车辆 / 航天 / 食品 / 土木 / 工业设计** | **`eng`** | **浅米工程 + 蓝图 + 零件清单表** |
+| **冷门文科 (汉语言/历史/哲学/考古)** | **`humanities`** | **深棕墨 + 米白宣纸 + 古籍线装 (翻开的善本 + 朱砂引首章 + 校勘式 stats + 壹貳參肆目录)** |
+| **商业文员 (财管/行管/信管/图书馆)** | **`administration`** | **政府蓝 + 米白 + 国发文件 + 红头印章 (公文体 + 案卷目录卡 + 骑缝章)** |
 
 ---
 
@@ -343,7 +339,7 @@ references/
 ```
 generate_dashboard.py
   ├─ style == "medicine"  → v4_medicine.render_v4_medicine(data)
-  └─ style in [cs, finance, law, education] → v4_styles.render_v4(data, style)
+  └─ style in [cs, eng, finance, law, education, sci, humanities, administration] → v4_styles.render_v4(data, style)
 ```
 
 ---
