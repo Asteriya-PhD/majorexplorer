@@ -2,7 +2,165 @@
 
 > 时间戳: 2026-06-10 (最后更新) · 上一版 2026-06-07
 
-## 0. 2026-06-10 里程碑 — gaokao-major-explorer 50 精品专业完整矩阵 ✅
+## 0. 2026-06-10 里程碑 B — 8 主题清理 + 2 套新 hero ✅
+
+**Commits**: `e5b0aab` rebrand → `af725bf` 8 主题清理 → `80cfc8b` polish (3 commit, 2026-06-10 下午)
+
+### 战报
+
+| 指标 | 6/10 上午 | 6/10 下午 | 变化 |
+|---|---|---|---|
+| 主题数 | 10 | **8** | -2 (-20%) |
+| 学科色主题 | 5 (cs/eng/medicine/education/finance) | 5 + 1 tech | 智 / 工业设计 / 土木 归位 |
+| 人文类主题 | 0 (塞在 tech_ruyao) | 1 (**humanities**) | 新名, 视觉用"古籍线装书" |
+| 行政类主题 | 0 (塞在 tech_qinghua) | 1 (**administration**) | 新名, 视觉用"国发公文" |
+| 文化色硬塞 | tech_ruyao (4) + tech_qinghua (4) = 8 个孤儿 | 0 | 全部按学科色归类 |
+| 空主题 | tech_ink (0 专业) | 0 | 删 |
+
+### 8 主题最终分布 (50 套)
+
+```
+cs              × 11  (含 智能  ← tech)
+eng             × 10  (含 工业设计 工业设计 ← education, 土木 ← cs)
+medicine        ×  6
+education       ×  5  (工业设计 离)
+finance         ×  5
+sci             ×  4
+humanities      ×  4  (哲学/考古/汉语言/历史) — 古籍线装书视觉
+administration  ×  4  (财务/信管/图书馆/行政) — 国发公文视觉
+law             ×  1
+                ────
+                50 ✓
+```
+
+### 2 套新 hero 设计 (用户已批准)
+
+**humanities (古典人文)**:
+- 视觉锚: 翻开的线装书 (深棕墨 #1F140A + 茶染宣纸 #F2E8D5 + 皮革棕 #8B5A2B + 朱砂 #9A2A2A)
+- 主标题: 思源宋体"历史学" + Cormorant Garamond 英文
+- 装饰: 9 孔装订 + 朱砂引首章 + 思源宋体"史"水印 + 校勘式 stats + 壹/貳/參/肆 目录 + 金箔飘落 + 古碑拓片 + 异体字校勘 + 岳麓书院藏版底署
+- 字体: Noto Serif SC + Ma Shan Zheng + ZCOOL XiaoWei + Long Cang
+- 4 成员: 哲学 / 考古学 / 汉语言文学 / 历史学
+
+**administration (行政事务)**:
+- 视觉锚: 国发公文 (政府蓝 #1E3A5F + 米白 #FAFAF6 + 政府红 #C0392B + 金 #D4AF37)
+- 主标题: Noto Serif SC"财务管理" + 4 标签 chips (商业文员 / CPA / 万金油 / 稳定 / 中年门槛 / 偏会计)
+- 装饰: 国发红头 + 中华人民共和国教育部 + 国徽圆章 (textPath 弧形"教育部·高等教育研究司") + 4 案卷卡 stats + "已归档·内部资料" 骑缝章 (polish 后 10px→16px, 更印章化)
+- 字体: IBM Plex Serif / IBM Plex Mono / Noto Serif SC
+- 4 成员: 财务管理 / 信息管理与信息系统 / 图书馆学 / 行政管理
+
+### 关键决策
+
+1. **逆向思维** — 之前: 主题(色) → 找匹配的学科 (硬塞). 之后: 看 51 套哪些不适合归类 → 给"孤儿"专门设计学科色. 这是用户拍板的方向.
+2. **English 命名** — `grrw` / `xzzw` 拼音不符合其他主题风格, 改 `humanities` / `administration`. 跟 cs/eng/sci/finance/medicine/law/education 统一.
+3. **保留 tech** — 用户决定 tech 保留作为"未来感 AI"分支 (智能科技 + 1 个扩展空间).
+4. **.tmp-hero/ 入 .gitignore** — 设计样本/Playwright 截图不纳入仓库.
+
+### 技术改动 (3 commit 累计)
+
+- v4_styles.py: 删 TECH_INK_CSS / TECH_RUYAO_CSS / TECH_QINGHUA_CSS (~560 行) + 加 HUMANITIES_CSS (~250 行) + ADMINISTRATION_CSS (~250 行) + 6 处 .path-grid 改 repeat(3, 1fr) + .path-name 移出 nowrap + .gov-seal-strip 印章化
+- generate_dashboard.py: STYLE_TOKENS + FONT_URLS 改 + dispatch tuple
+- SKILL.md: 10 套 → 8 套风格映射
+- manifest.json: 9 styles_used + 50 majors style 字段
+- 11+38 = 49 HTML 重渲染 (manifest.json 保留)
+
+### 已知小问题
+
+- `v4_styles.py:1538` `\|` SyntaxWarning (历史遗留, 不影响输出, 单字符修)
+- humanities/administration 简化版 hero (引擎 200-400 行) 视觉比 sample (1000+ 行) 略简化, 但核心视觉锚抓到了, 用户已批准
+
+---
+
+## 0.5. 下一阶段目标 — major-explorer (2026-06-10+)
+
+按 ROI 排序, 用户拍板后逐个开.
+
+### ⭐⭐⭐⭐ A. 未覆盖专业审计 + 下一批主题设计 (0.5 天)
+
+**为什么**: 今天的工作找到了"先看 50 套哪些不适合归类, 再给孤儿设计主题"的逆向方法. 把这个流程批量化, 找下一批 2-3 个孤儿主题 + 10-20 个新专业, 一次 ship.
+
+**预期**:
+- 审计未覆盖的 700+ 高考专业, 找 2-3 个"大但低频"或"独立类目":
+  - **美术** (10+ 子专业, 走艺考路径, 视觉可走"画室/画布/调色盘" 美学)
+  - **医学技术** (检验/影像/康复/口腔医学技术, 跟 medicine 主题区分)
+  - **农林** (林学/园艺/动物科学, 视觉可走"自然/田野/植物图鉴" 美学)
+  - **新闻传播子类** (广告/编辑出版/网络与新媒体, 跟现 education 里的 journalism 区分)
+  - **音乐/体育** (走特长生路径, 视觉锚 "五线谱/跑道/球场")
+- 选 1-2 个审计出的新主题, 走今天同样流程: Awwwards sample → 用户挑 → 整合 v4_styles.py
+- 同时新增 10-20 个精品专业 HTML
+
+**产出**:
+- v4_styles.py: 1-2 个新 CSS + hero 函数
+- 10-20 个新 JSON + HTML
+- 1 个新 commit
+
+---
+
+### ⭐⭐⭐ B. 长尾 700 专业 web search 自动化 (1-2 天)
+
+**为什么**: 当前 50 套是手工精编, 7-8 分钟/套. 剩下 700+ 长尾用同样手工流程太慢. 模板化 + web search 自动化是规模化的必要步骤.
+
+**预期**:
+- 1 套共享模板 (data_source 字段标 "自动生成" 区分精品 vs 实时)
+- web search 5 query 并行 (5 路 Agent/WebSearch) → 整合 → 模板渲染
+- 跟 50 套精品用同一 render_v4() 引擎
+- 长尾页 SEO 收录 (用 sitemap 推)
+
+**产出**:
+- 长尾渲染脚本 (新)
+- 700+ HTML 自动生成
+
+---
+
+### ⭐⭐ C. 首页/SEO 整合 (0.5-1 天)
+
+**为什么**: 50 个精品 HTML 是散点, 缺一个总入口 (gaokao 主页) + sitemap + meta tags. 现在搜索引擎收录不上.
+
+**预期**:
+- 主页 1 个 HTML: 50 个精品按主题分组 + 链接
+- sitemap.xml 自动生成 (50 + 后续长尾)
+- 每个 HTML 加 og:image / twitter:card / description meta
+- robots.txt 引导爬虫
+
+**产出**:
+- index.html (新)
+- sitemap.xml + robots.txt (新)
+- 所有 HTML + meta tags (批改)
+
+---
+
+### ⭐⭐ D. 关联志愿引擎接入 (1 天)
+
+**为什么**: 每个专业的 "如何填报" CTA 现在是静态文字, 接 core/recommender.py 后, 用户填分数+选科 → 返回真实学校池 → CTA 跳转志愿推荐.
+
+**预期**:
+- 选科+分数表单 UI (前端)
+- 调 recommender API (后端已有)
+- 渲染返回的学校列表 (新增 section "适合你的学校")
+- 用现湖北/广东/江苏 真实投档表 (从 2024/2025 抓的数据)
+
+**产出**:
+- HTML 端新增 "志愿推荐" section + 表单
+- API 端点 (可能已有, 接通)
+- 1 个新 commit
+
+---
+
+### ⭐ E. .tmp-hero/ 清理 + 杂项 (10 分钟)
+
+**为什么**: 11 个 sample HTML (5 个旧 tech_*/3 个新 design sample/2 个 verify) + 10+ PNG/MD 仍在磁盘, 已 gitignore 但占用空间.
+
+**预期**:
+- `rm -rf .tmp-hero/` (纯临时, 已 gitignore)
+- v4_styles.py:1538 `\|` SyntaxWarning 修 (单字符 r-string)
+- PROGRESS.md 时间戳更新
+
+**产出**:
+- 1 个微 commit (cleanup + 文档)
+
+---
+
+## 0. 2026-06-10 里程碑 A — gaokao-major-explorer 50 精品专业完整矩阵 ✅
 
 **Commit**: `48c491b feat(skill): gaokao-major-explorer 50 精品专业完整矩阵` (+39,636 / -1,671 lines · 91 files)
 
