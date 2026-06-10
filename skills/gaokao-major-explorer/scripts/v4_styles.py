@@ -1525,7 +1525,7 @@ section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif 
 .chloro-line .note { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.7rem; }
 
 /* 招 #7 数字滚动/招 #4 巨型水印 */
-section.tab h2 { color: #2E5A2E; }
+section.tab h2 { color: #2E5A2E; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
 section.tab h3 { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
 section.tab p.lede { color: #4A5A3A; }
 .watermark { font-family: 'Cormorant Garamond', serif; color: #B8CC98; }
@@ -1558,6 +1558,10 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .xuanke-name { color: #2E5A2E; }
 .xuanke-pct { color: #2E5A2E; }
 .course { color: #2E5A2E; border-bottom: 1px dashed rgba(107, 142, 35, 0.2); }
+.curriculum-block { padding: 22px 26px; background: rgba(245, 249, 236, 0.55); border: 1px solid #B8CC98; border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
+.curriculum-block:last-child { margin-bottom: 0; }
+.curriculum-block:hover { border-color: #6B8E23; }
+.curriculum-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 0.8rem; color: #6B8E23; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(107,142,35,0.25); }
 .course-name { color: #2E5A2E; }
 .course-credit { color: #6B8E23; }
 .bento-tag { color: #6B8E23; }
@@ -1652,7 +1656,7 @@ section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif 
 .gallery-frame { position: absolute; top: 200px; right: 12px; width: 80px; height: 100px; background: linear-gradient(180deg, #3A2A1A 0%, #1A1108 100%); padding: 6px; z-index: 3; box-shadow: 0 6px 16px rgba(0,0,0,0.4); }
 .gallery-frame::after { content: ""; display: block; width: 100%; height: 100%; background: linear-gradient(135deg, #DC2626 0%, #F59E0B 50%, #1E40AF 100%); opacity: 0.85; }
 
-section.tab h2 { color: #1A1A1A; }
+section.tab h2 { color: #1A1A1A; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
 section.tab h3 { color: #1A1A1A; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; }
 section.tab p.lede { color: #3A3A3A; }
 .watermark { font-family: 'Cormorant Garamond', serif; color: #D9CFB9; }
@@ -1664,7 +1668,7 @@ footer .data-source { color: #999; }
 /* ── Arts 暗色 body section 配色覆盖 (BASE_CSS 默认浅色, 改深底浅字) ── */
 body { color: #FAFAFA; }
 section.tab { border-top: 1px solid #3A3A3A; background: transparent; }
-section.tab h2 { color: #FAFAFA; }
+section.tab h2 { color: #FAFAFA; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
 section.tab h3 { color: #FAFAFA; }
 section.tab p { color: #D9CFB9; }
 section.tab p.lede { color: #D9CFB9; }
@@ -1707,7 +1711,7 @@ section.tab p.lede { color: #D9CFB9; }
 .xuanke-pct { color: #F59E0B; }
 .curriculum-block { background: #2A2520; border: 1px solid #3A3A3A; }
 .curriculum-block:hover { border-color: #DC2626; }
-.curriculum-title { color: #F59E0B; border-bottom: 1px solid #3A3A3A; }
+.curriculum-title { color: #F59E0B; border-bottom: 1px solid rgba(250, 250, 250, 0.15); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding-bottom: 10px; margin-bottom: 14px; }
 .course { color: #FAFAFA; border-bottom: 1px dashed rgba(250, 250, 250, 0.1); }
 .course-name { color: #FAFAFA; }
 .course-credit { color: #999; }
