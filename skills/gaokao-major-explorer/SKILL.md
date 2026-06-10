@@ -1,9 +1,9 @@
 ---
-name: canghe-major-explorer
+name: gaokao-major-explorer
 description: Generates major-explorer dashboards for high-school students choosing a college major. Two modes — (1) curated: 50 hand-crafted dashboards for popular majors (CS, finance, medicine, law, education...) used as SEO magnets on homepage; (2) long-tail: real-time web search → template render for the other ~700 majors. Use when user says "XX 专业怎么样", "学 XX 有前途吗", "CS/金融/医学/法学/师范 专业介绍", "专业就业", "专业薪资", "专业课程", "帮我做个XX专业的分析", "写个XX专业的介绍页面".
 ---
 
-# canghe-major-explorer
+# gaokao-major-explorer
 
 高考专业方向调研 skill — 让考生/家长通过精品 HTML 专题页**自己**找到感兴趣的专业方向。
 
@@ -30,10 +30,10 @@ description: Generates major-explorer dashboards for high-school students choosi
 ## Quick Start — 一条命令出 HTML
 
 ```bash
-python3 skills/canghe-major-explorer/scripts/generate_dashboard.py \
-  --data skills/canghe-major-explorer/data/curated/education.json \
+python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py \
+  --data skills/gaokao-major-explorer/data/curated/education.json \
   --style education \
-  --output skills/canghe-major-explorer/data/curated/education.html
+  --output skills/gaokao-major-explorer/data/curated/education.html
 ```
 
 可选 `--style`: `cs` | `finance` | `medicine` | `law` | `education`
@@ -199,12 +199,12 @@ STYLES = {
   "education":  "Warm cream + Playfair/Inter + 暖橙学术 + #9A3412 砖 + #F59E0B 银杏",   # 6
   "sci":        "米色学术 (Nature 风) + Lora/EB Garamond + 期刊刊头 + 公式 + #C73E1D 红",  # 4
   "eng":        "浅米工程 (CAD 蓝图) + Inter Condensed + 图纸标题栏 + 零件清单表",        # 8
-  "tech_qoder":  "鼠尾草绿 + 米白 + EB Garamond + 罗盘/折纸鹤/纸飞机/沙漏",                # 4
-  "tech_workbuddy": "暖白 + 深青 + 阳光橘 + 协作卡片",                                     # 4
+  "tech_ruyao":  "鼠尾草绿 + 米白 + EB Garamond + 罗盘/折纸鹤/纸飞机/沙漏",                # 4
+  "tech_qinghua": "暖白 + 深青 + 阳光橘 + 协作卡片",                                     # 4
 }
 ```
 
-> ⚠ `tech_qoder` / `tech_workbuddy` 是 CLI 内部 key (manifest 已规范化为 `qoder` / `workbuddy`)
+> ⚠ `tech_ruyao` / `tech_qinghua` 是 CLI 内部 key (manifest 已规范化为 `ruyao` / `qinghua`)
 
 ### 风格-学科映射表 (10 主题)
 
@@ -217,8 +217,8 @@ STYLES = {
 | 医学 / 药学 / 护理 / 公卫 / 麻醉 | `medicine` | 手术仪表 + ECG |
 | **数学 / 物理 / 化学 / 大气 / 生物** | **`sci`** ⭐新 | **米色学术 + 公式 + 元素周期表课程** |
 | **机械 / 材料 / 化工 / 微电子 / 集成电路 / 车辆 / 航天 / 食品** | **`eng`** ⭐新 | **浅米工程 + 蓝图 + 零件清单表** |
-| **冷门文科 (汉语言/历史/哲学/考古)** | **`qoder`** | 鼠尾草绿 + 米白 + 文人气 |
-| **商业文员 (财管/行管/信管/图书馆)** | **`workbuddy`** | 暖白深青 + 协作卡片 |
+| **冷门文科 (汉语言/历史/哲学/考古)** | **`ruyao`** | 鼠尾草绿 + 米白 + 文人气 |
+| **商业文员 (财管/行管/信管/图书馆)** | **`qinghua`** | 暖白深青 + 协作卡片 |
 | 文学 / 艺术 / 设计 | `education` | 暖色优雅 |
 
 ---
@@ -367,7 +367,6 @@ generate_dashboard.py
 | `core/recommender.py` | Tab "关联志愿" 调它, 输入 (rank, score, school_pool) |
 | `data/{province}_admission_*.csv` | 院校 + 关联志愿 校池来源 |
 | `data/{province}_rank_*.csv` | 位次锚点 |
-| `skills/canghe-tianyancha` | 同 pattern: data → template → HTML |
 
 ---
 

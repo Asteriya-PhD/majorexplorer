@@ -28,9 +28,9 @@ FONT_URLS = {
   "finance":   "@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');",
   "law":       "@import url('https://fonts.loli.net/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lato:wght@300;400;700&family=Cormorant+Unicase:wght@400;500;600;700&family=Caveat:wght@400;500;600&display=swap');",
   "education": "@import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');",
-  "tech_kiro":      "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');",
-  "tech_qoder":     "@import url('https://fonts.loli.net/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap');",
-  "tech_workbuddy": "@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');",
+  "tech_ink":      "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');",
+  "tech_ruyao":     "@import url('https://fonts.loli.net/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap');",
+  "tech_qinghua": "@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');",
   "sci": "@import url('https://fonts.loli.net/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');",
   "eng": "@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');",
 }
@@ -223,7 +223,7 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.65 0 0 0 0 0.55 0 0 0 0 0.98 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.04; }
 """
-    if style == "tech_kiro":
+    if style == "tech_ink":
         return """
 body { background: #14102A; color: #FAEFD8; font-family: 'Inter', 'PingFang SC', sans-serif; }
 /* 招 #5: 深空 + 紫色 radial glow */
@@ -235,7 +235,7 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.91 0 0 0 0 0.77 0 0 0 0 0.28 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.04; }
 """
-    if style == "tech_qoder":
+    if style == "tech_ruyao":
         return """
 body { background: #F7F5EF; color: #2C2C24; font-family: 'Inter', 'PingFang SC', sans-serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -245,7 +245,7 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.48 0 0 0 0 0.35 0 0 0 0.3 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.06; mix-blend-mode: multiply; }
 """
-    if style == "tech_workbuddy":
+    if style == "tech_qinghua":
         return """
 body { background: #FAFAF6; color: #1A3D47; font-family: 'Inter', 'PingFang SC', sans-serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -1241,13 +1241,13 @@ footer .data-source { color: #94A3B8; }
 # 4 套共用的渲染逻辑 (招 #2/3/4/8 都内置)
 # ──────────────────────────────────────────────────────────
 
-TECH_KIRO_CSS = """
+TECH_INK_CSS = """
 .hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #443657; position: relative; z-index: 2; overflow: hidden; }
-.kiro-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 16px; background: linear-gradient(180deg, #14102A 0%, #1F1A2E 50%, #14102A 100%); border: 1px solid #6B4F8C; box-shadow: inset 0 0 80px rgba(232, 197, 71, 0.08), 0 8px 32px rgba(0, 0, 0, 0.5); overflow: hidden; }
-.kiro-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(1px 1px at 20% 30%, #E8C547 100%, transparent), radial-gradient(1.5px 1.5px at 40% 70%, #FFFFFF 100%, transparent), radial-gradient(1px 1px at 60% 20%, #C9A3D8 100%, transparent), radial-gradient(1.5px 1.5px at 80% 50%, #E8C547 100%, transparent), radial-gradient(1px 1px at 15% 80%, #FFFFFF 100%, transparent), radial-gradient(2px 2px at 90% 15%, #E8C547 100%, transparent), radial-gradient(1px 1px at 50% 50%, #C9A3D8 100%, transparent), radial-gradient(1px 1px at 30% 15%, #FFFFFF 100%, transparent), radial-gradient(1.5px 1.5px at 70% 85%, #E8C547 100%, transparent), radial-gradient(1px 1px at 5% 50%, #C9A3D8 100%, transparent), radial-gradient(1px 1px at 95% 90%, #FFFFFF 100%, transparent); opacity: 0.7; }
-.kiro-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle 180px at 50% 50%, rgba(232, 197, 71, 0.12) 0%, transparent 70%); }
+.ink-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 16px; background: linear-gradient(180deg, #14102A 0%, #1F1A2E 50%, #14102A 100%); border: 1px solid #6B4F8C; box-shadow: inset 0 0 80px rgba(232, 197, 71, 0.08), 0 8px 32px rgba(0, 0, 0, 0.5); overflow: hidden; }
+.ink-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(1px 1px at 20% 30%, #E8C547 100%, transparent), radial-gradient(1.5px 1.5px at 40% 70%, #FFFFFF 100%, transparent), radial-gradient(1px 1px at 60% 20%, #C9A3D8 100%, transparent), radial-gradient(1.5px 1.5px at 80% 50%, #E8C547 100%, transparent), radial-gradient(1px 1px at 15% 80%, #FFFFFF 100%, transparent), radial-gradient(2px 2px at 90% 15%, #E8C547 100%, transparent), radial-gradient(1px 1px at 50% 50%, #C9A3D8 100%, transparent), radial-gradient(1px 1px at 30% 15%, #FFFFFF 100%, transparent), radial-gradient(1.5px 1.5px at 70% 85%, #E8C547 100%, transparent), radial-gradient(1px 1px at 5% 50%, #C9A3D8 100%, transparent), radial-gradient(1px 1px at 95% 90%, #FFFFFF 100%, transparent); opacity: 0.7; }
+.ink-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle 180px at 50% 50%, rgba(232, 197, 71, 0.12) 0%, transparent 70%); }
 /* ── AI 数据流背景图 (6 节点: USER / GATEWAY / LLM / AGENT / MEMORY / TOOL / OUTPUT) ── */
-.kiro-dataflow { position: absolute; z-index: 2; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 20px; }
+.ink-dataflow { position: absolute; z-index: 2; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 20px; }
 .df-svg { width: 100%; max-width: 420px; height: auto; opacity: 0.85; }
 .flow-line { stroke-width: 1; fill: none; stroke-dasharray: 3 6; animation: dfFlow 4s linear infinite; opacity: 0.7; }
 .flow-line.gold { stroke: url(#dfGold); }
@@ -1263,13 +1263,13 @@ TECH_KIRO_CSS = """
 .df-cap-label { font-family: 'Inter', sans-serif; font-size: 0.5625rem; color: #E8C547; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; }
 .df-cap-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #FAEFD8; font-weight: 500; letter-spacing: 0.02em; }
 .df-cap-sub { font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; color: #D8C9B5; letter-spacing: 0.08em; font-style: italic; }
-.kiro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-@media (max-width: 900px) { .kiro-grid { grid-template-columns: 1fr; gap: 32px; } }
-.kiro-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
-.kiro-meta-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.75rem; color: #E8C547; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
-.kiro-meta-value { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 500; color: #FAEFD8; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 8px; }
-.kiro-meta-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.875rem; color: #E8C547; letter-spacing: 0.05em; }
-.kiro-meta-divider { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, #E8C547, transparent); margin: 16px auto; }
+.ink-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 900px) { .ink-grid { grid-template-columns: 1fr; gap: 32px; } }
+.ink-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
+.ink-meta-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.75rem; color: #E8C547; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+.ink-meta-value { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 500; color: #FAEFD8; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 8px; }
+.ink-meta-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.875rem; color: #E8C547; letter-spacing: 0.05em; }
+.ink-meta-divider { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, #E8C547, transparent); margin: 16px auto; }
 .hero-side { display: flex; flex-direction: column; }
 .hero-decor { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.9375rem; color: #C9A3D8; letter-spacing: 0.08em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
 .hero-decor::before { content: "\\2726"; color: #E8C547; }
@@ -1386,26 +1386,26 @@ footer .data-source { color: #B5A4C2; }
 .drop-cap::first-letter { font-family: 'Cormorant Garamond', serif; font-size: 4.5em; font-weight: 500; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #E8C547; }
 """
 
-TECH_QODER_CSS = """
+TECH_RUYAO_CSS = """
 .hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #C5B89A; position: relative; z-index: 2; overflow: hidden; }
-.qoder-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 12px; background: #F7F5EF; border: 1px solid #C5B89A; box-shadow: 0 2px 0 #E8DFC8, 0 8px 24px rgba(92, 124, 90, 0.10); overflow: hidden; }
-.qoder-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(ellipse 60px 30px at 15% 20%, rgba(92, 124, 90, 0.20) 0%, transparent 70%), radial-gradient(ellipse 80px 40px at 85% 75%, rgba(194, 139, 91, 0.18) 0%, transparent 70%), radial-gradient(ellipse 50px 25px at 75% 25%, rgba(139, 157, 127, 0.15) 0%, transparent 70%); }
-.qoder-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 400px 300px at 100% 100%, rgba(194, 139, 91, 0.10) 0%, transparent 60%); }
-.qoder-widget { position: absolute; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 4px; background: rgba(247, 245, 239, 0.85); border: 1px solid rgba(92, 124, 90, 0.30); border-radius: 8px; }
-.qoder-widget svg { display: block; }
-.qoder-widget.pos-1 { top: 8%; left: 6%; transform: rotate(-4deg); }
-.qoder-widget.pos-2 { top: 14%; right: 8%; transform: rotate(5deg); }
-.qoder-widget.pos-3 { bottom: 12%; left: 18%; transform: rotate(3deg); }
-.qoder-widget.pos-4 { bottom: 10%; right: 6%; transform: rotate(-2deg); }
-.qoder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-@media (max-width: 900px) { .qoder-grid { grid-template-columns: 1fr; gap: 32px; } }
-.qoder-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
-.qoder-meta-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #5C7C5A; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
-.qoder-meta-value { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 600; color: #2C2C24; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 8px; }
-.qoder-meta-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.9375rem; color: #6B5D3F; letter-spacing: 0.05em; }
-.qoder-meta-divider { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 16px 0; }
-.qoder-meta-divider span { width: 24px; height: 1px; background: #C28B5B; }
-.qoder-meta-divider em { color: #5C7C5A; font-style: normal; }
+.ruyao-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 12px; background: #F7F5EF; border: 1px solid #C5B89A; box-shadow: 0 2px 0 #E8DFC8, 0 8px 24px rgba(92, 124, 90, 0.10); overflow: hidden; }
+.ruyao-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(ellipse 60px 30px at 15% 20%, rgba(92, 124, 90, 0.20) 0%, transparent 70%), radial-gradient(ellipse 80px 40px at 85% 75%, rgba(194, 139, 91, 0.18) 0%, transparent 70%), radial-gradient(ellipse 50px 25px at 75% 25%, rgba(139, 157, 127, 0.15) 0%, transparent 70%); }
+.ruyao-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 400px 300px at 100% 100%, rgba(194, 139, 91, 0.10) 0%, transparent 60%); }
+.ruyao-widget { position: absolute; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 4px; background: rgba(247, 245, 239, 0.85); border: 1px solid rgba(92, 124, 90, 0.30); border-radius: 8px; }
+.ruyao-widget svg { display: block; }
+.ruyao-widget.pos-1 { top: 8%; left: 6%; transform: rotate(-4deg); }
+.ruyao-widget.pos-2 { top: 14%; right: 8%; transform: rotate(5deg); }
+.ruyao-widget.pos-3 { bottom: 12%; left: 18%; transform: rotate(3deg); }
+.ruyao-widget.pos-4 { bottom: 10%; right: 6%; transform: rotate(-2deg); }
+.ruyao-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 900px) { .ruyao-grid { grid-template-columns: 1fr; gap: 32px; } }
+.ruyao-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
+.ruyao-meta-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #5C7C5A; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
+.ruyao-meta-value { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 600; color: #2C2C24; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 8px; }
+.ruyao-meta-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.9375rem; color: #6B5D3F; letter-spacing: 0.05em; }
+.ruyao-meta-divider { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 16px 0; }
+.ruyao-meta-divider span { width: 24px; height: 1px; background: #C28B5B; }
+.ruyao-meta-divider em { color: #5C7C5A; font-style: normal; }
 .hero-side { display: flex; flex-direction: column; }
 .hero-decor { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.9375rem; color: #5C7C5A; letter-spacing: 0.08em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
 .hero-decor::before { content: ""; display: inline-block; width: 32px; height: 1px; background: #5C7C5A; opacity: 0.5; }
@@ -1522,26 +1522,26 @@ footer .data-source { color: #6B5D3F; }
 .drop-cap::first-letter { font-family: 'EB Garamond', serif; font-size: 4.5em; font-weight: 600; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #5C7C5A; }
 """
 
-TECH_WORKBUDDY_CSS = """
+TECH_QINGHUA_CSS = """
 .hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #C5D4D7; position: relative; z-index: 2; overflow: hidden; }
-.wb-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 8px; background: #FAFAF6; border: 1px solid #C5D4D7; box-shadow: 0 1px 0 #E8F0F1, 0 8px 24px rgba(44, 95, 111, 0.08); overflow: hidden; }
-.wb-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: linear-gradient(135deg, rgba(240, 168, 104, 0.08) 0%, transparent 50%), radial-gradient(ellipse 300px 200px at 80% 20%, rgba(240, 168, 104, 0.15) 0%, transparent 70%); }
-.wb-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.15; background: linear-gradient(90deg, #2C5F6F 0%, #2C5F6F 100%) right top / 60px 60px no-repeat, linear-gradient(135deg, #F0A868 0%, #F0A868 100%) right bottom / 40px 40px no-repeat, linear-gradient(0deg, #8FB8C2 0%, #8FB8C2 100%) left bottom / 30px 30px no-repeat; }
-.wb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-@media (max-width: 900px) { .wb-grid { grid-template-columns: 1fr; gap: 32px; } }
-.wb-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
-.wb-meta-label { font-family: 'Inter', sans-serif; font-size: 0.6875rem; font-weight: 600; color: #F0A868; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 16px; }
-.wb-meta-value { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; color: #1A3D47; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 8px; }
-.wb-meta-sub { font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #5A7A82; letter-spacing: 0.02em; }
-.wb-meta-divider { width: 40px; height: 3px; background: #2C5F6F; margin: 14px auto; border-radius: 2px; }
+.qh-panel { position: relative; aspect-ratio: 1.1 / 1; max-height: 480px; padding: 32px 28px; border-radius: 8px; background: #FAFAF6; border: 1px solid #C5D4D7; box-shadow: 0 1px 0 #E8F0F1, 0 8px 24px rgba(44, 95, 111, 0.08); overflow: hidden; }
+.qh-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: linear-gradient(135deg, rgba(240, 168, 104, 0.08) 0%, transparent 50%), radial-gradient(ellipse 300px 200px at 80% 20%, rgba(240, 168, 104, 0.15) 0%, transparent 70%); }
+.qh-panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.15; background: linear-gradient(90deg, #2C5F6F 0%, #2C5F6F 100%) right top / 60px 60px no-repeat, linear-gradient(135deg, #F0A868 0%, #F0A868 100%) right bottom / 40px 40px no-repeat, linear-gradient(0deg, #8FB8C2 0%, #8FB8C2 100%) left bottom / 30px 30px no-repeat; }
+.qh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+@media (max-width: 900px) { .qh-grid { grid-template-columns: 1fr; gap: 32px; } }
+.qh-meta { position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 75%; }
+.qh-meta-label { font-family: 'Inter', sans-serif; font-size: 0.6875rem; font-weight: 600; color: #F0A868; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 16px; }
+.qh-meta-value { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; color: #1A3D47; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 8px; }
+.qh-meta-sub { font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #5A7A82; letter-spacing: 0.02em; }
+.qh-meta-divider { width: 40px; height: 3px; background: #2C5F6F; margin: 14px auto; border-radius: 2px; }
 /* ── AI/Agent 抽象小元素 (4 角) ── 不碰任何公司 logo, 全是泛 AI 意象 */
-.wb-widget { position: absolute; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 4px; background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(44, 95, 111, 0.30); border-radius: 8px; }
-.wb-widget svg { display: block; }
-.wb-widget svg { display: block; }
-.wb-widget.pos-1 { top: 8%; left: 6%; transform: rotate(-4deg); }
-.wb-widget.pos-2 { top: 14%; right: 8%; transform: rotate(5deg); }
-.wb-widget.pos-3 { bottom: 12%; left: 18%; transform: rotate(3deg); }
-.wb-widget.pos-4 { bottom: 10%; right: 6%; transform: rotate(-2deg); }
+.qh-widget { position: absolute; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 4px; background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(44, 95, 111, 0.30); border-radius: 8px; }
+.qh-widget svg { display: block; }
+.qh-widget svg { display: block; }
+.qh-widget.pos-1 { top: 8%; left: 6%; transform: rotate(-4deg); }
+.qh-widget.pos-2 { top: 14%; right: 8%; transform: rotate(5deg); }
+.qh-widget.pos-3 { bottom: 12%; left: 18%; transform: rotate(3deg); }
+.qh-widget.pos-4 { bottom: 10%; right: 6%; transform: rotate(-2deg); }
 .hero-side { display: flex; flex-direction: column; }
 .hero-decor { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; color: #2C5F6F; letter-spacing: 0.2em; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; text-transform: uppercase; }
 .hero-decor::before { content: ""; display: inline-block; width: 32px; height: 2px; background: #F0A868; border-radius: 1px; }
@@ -1663,12 +1663,12 @@ def render_v4(data: dict, style: str) -> str:
         css_extra = CS_CSS
     elif style == "tech":
         css_extra = TECH_CSS
-    elif style == "tech_kiro":
-        css_extra = TECH_KIRO_CSS
-    elif style == "tech_qoder":
-        css_extra = TECH_QODER_CSS
-    elif style == "tech_workbuddy":
-        css_extra = TECH_WORKBUDDY_CSS
+    elif style == "tech_ink":
+        css_extra = TECH_INK_CSS
+    elif style == "tech_ruyao":
+        css_extra = TECH_RUYAO_CSS
+    elif style == "tech_qinghua":
+        css_extra = TECH_QINGHUA_CSS
     elif style == "finance":
         css_extra = FINANCE_CSS
     elif style == "law":
@@ -1960,14 +1960,14 @@ def render_v4(data: dict, style: str) -> str:
     </div>
   </div>
 </header>'''
-    elif style == "tech_kiro":
+    elif style == "tech_ink":
         # 暖暗紫 + 暖金 + 星空
         hero_html = f'''
 <header class="hero">
   <div class="container">
-    <div class="kiro-grid">
-      <div class="kiro-panel">
-        <div class="kiro-dataflow">
+    <div class="ink-grid">
+      <div class="ink-panel">
+        <div class="ink-dataflow">
           <svg class="df-svg" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg" fill="none">
             <defs>
               <linearGradient id="dfGold" x1="0" y1="0" x2="1" y2="0">
@@ -2066,15 +2066,15 @@ def render_v4(data: dict, style: str) -> str:
     </div>
   </div>
 </header>'''
-    elif style == "tech_qoder":
+    elif style == "tech_ruyao":
         # 鼠尾草绿 + 米白 + 自然
         hero_html = f'''
 <header class="hero">
   <div class="container">
-    <div class="qoder-grid">
-      <div class="qoder-panel">
+    <div class="ruyao-grid">
+      <div class="ruyao-panel">
         <!-- TL: 罗盘 + 北极星 — 错落, -4° -->
-        <div class="qoder-widget pos-1">
+        <div class="ruyao-widget pos-1">
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
             <circle cx="13" cy="13" r="10.5" stroke="#5C7C5A" stroke-width="1.4" fill="none"/>
             <circle cx="13" cy="13" r="7" stroke="#5C7C5A" stroke-width="0.6" opacity="0.4" fill="none"/>
@@ -2088,7 +2088,7 @@ def render_v4(data: dict, style: str) -> str:
           </svg>
         </div>
         <!-- TR: 折纸鹤 — +5° -->
-        <div class="qoder-widget pos-2">
+        <div class="ruyao-widget pos-2">
           <svg width="32" height="22" viewBox="0 0 32 22" fill="none">
             <path d="M2 14 L 16 2 L 30 14 L 16 10 Z" fill="#5C7C5A" opacity="0.85"/>
             <path d="M2 14 L 16 10 L 30 14 L 16 20 Z" fill="#8B9D7F" opacity="0.6"/>
@@ -2100,7 +2100,7 @@ def render_v4(data: dict, style: str) -> str:
           </svg>
         </div>
         <!-- BL: 纸飞机 + 轨迹 — +3° -->
-        <div class="qoder-widget pos-3">
+        <div class="ruyao-widget pos-3">
           <svg width="30" height="20" viewBox="0 0 30 20" fill="none">
             <line x1="1" y1="18" x2="9" y2="14" stroke="#8B9D7F" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.7"/>
             <line x1="3" y1="12" x2="11" y2="9" stroke="#8B9D7F" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.5"/>
@@ -2111,7 +2111,7 @@ def render_v4(data: dict, style: str) -> str:
           </svg>
         </div>
         <!-- BR: 沙漏 (0/1 颗粒) — -2° -->
-        <div class="qoder-widget pos-4">
+        <div class="ruyao-widget pos-4">
           <svg width="20" height="26" viewBox="0 0 20 26" fill="none">
             <line x1="3" y1="2" x2="17" y2="2" stroke="#5C7C5A" stroke-width="1.4" stroke-linecap="round"/>
             <line x1="3" y1="24" x2="17" y2="24" stroke="#5C7C5A" stroke-width="1.4" stroke-linecap="round"/>
@@ -2122,11 +2122,11 @@ def render_v4(data: dict, style: str) -> str:
             <circle cx="10" cy="13" r="0.8" fill="#C28B5B"/>
           </svg>
         </div>
-        <div class="qoder-meta">
-          <div class="qoder-meta-label">· Major Explorer · 2026 ·</div>
-          <div class="qoder-meta-value">{title}</div>
-          <div class="qoder-meta-divider"><span></span><em>❀</em><span></span></div>
-          <div class="qoder-meta-sub">{degree} · {duration}Y</div>
+        <div class="ruyao-meta">
+          <div class="ruyao-meta-label">· Major Explorer · 2026 ·</div>
+          <div class="ruyao-meta-value">{title}</div>
+          <div class="ruyao-meta-divider"><span></span><em>❀</em><span></span></div>
+          <div class="ruyao-meta-sub">{degree} · {duration}Y</div>
         </div>
       </div>
       <div class="hero-side">
@@ -2147,15 +2147,15 @@ def render_v4(data: dict, style: str) -> str:
     </div>
   </div>
 </header>'''
-    elif style == "tech_workbuddy":
+    elif style == "tech_qinghua":
         # 暖白 + 深青 + 阳光橘
         hero_html = f'''
 <header class="hero">
   <div class="container">
-    <div class="wb-grid">
-      <div class="wb-panel">
+    <div class="qh-grid">
+      <div class="qh-panel">
         <!-- TL: 罗盘 + 北极星 (指引 / 方向) — 错落, -4° -->
-        <div class="wb-widget pos-1">
+        <div class="qh-widget pos-1">
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
             <circle cx="13" cy="13" r="10.5" stroke="#2C5F6F" stroke-width="1.4" fill="none"/>
             <circle cx="13" cy="13" r="7" stroke="#2C5F6F" stroke-width="0.6" opacity="0.4" fill="none"/>
@@ -2169,7 +2169,7 @@ def render_v4(data: dict, style: str) -> str:
           </svg>
         </div>
         <!-- TR: 折纸鹤 (知识折叠 / 转化) — 偏内, +5° -->
-        <div class="wb-widget pos-2">
+        <div class="qh-widget pos-2">
           <svg width="32" height="22" viewBox="0 0 32 22" fill="none">
             <path d="M2 14 L 16 2 L 30 14 L 16 10 Z" fill="#2C5F6F" opacity="0.85"/>
             <path d="M2 14 L 16 10 L 30 14 L 16 20 Z" fill="#5A7A82" opacity="0.6"/>
@@ -2181,7 +2181,7 @@ def render_v4(data: dict, style: str) -> str:
           </svg>
         </div>
         <!-- BL: 纸飞机 + 虚线轨迹 (agent 派发任务) — 中下, +3° -->
-        <div class="wb-widget pos-3">
+        <div class="qh-widget pos-3">
           <svg width="30" height="20" viewBox="0 0 30 20" fill="none">
             <line x1="1" y1="18" x2="9" y2="14" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.7"/>
             <line x1="3" y1="12" x2="11" y2="9" stroke="#5A7A82" stroke-width="0.7" stroke-dasharray="1.5 1.5" opacity="0.5"/>
@@ -2192,7 +2192,7 @@ def render_v4(data: dict, style: str) -> str:
           </svg>
         </div>
         <!-- BR: 沙漏 (内含 0/1 颗粒, 时间 + 数据流) — 偏外, -2° -->
-        <div class="wb-widget pos-4">
+        <div class="qh-widget pos-4">
           <svg width="20" height="26" viewBox="0 0 20 26" fill="none">
             <line x1="3" y1="2" x2="17" y2="2" stroke="#2C5F6F" stroke-width="1.4" stroke-linecap="round"/>
             <line x1="3" y1="24" x2="17" y2="24" stroke="#2C5F6F" stroke-width="1.4" stroke-linecap="round"/>
@@ -2203,11 +2203,11 @@ def render_v4(data: dict, style: str) -> str:
             <circle cx="10" cy="13" r="0.8" fill="#F0A868"/>
           </svg>
         </div>
-        <div class="wb-meta">
-          <div class="wb-meta-label">Major Explorer · 2026</div>
-          <div class="wb-meta-value">{title}</div>
-          <div class="wb-meta-divider"></div>
-          <div class="wb-meta-sub">{degree} · {duration}Y</div>
+        <div class="qh-meta">
+          <div class="qh-meta-label">Major Explorer · 2026</div>
+          <div class="qh-meta-value">{title}</div>
+          <div class="qh-meta-divider"></div>
+          <div class="qh-meta-sub">{degree} · {duration}Y</div>
         </div>
       </div>
       <div class="hero-side">

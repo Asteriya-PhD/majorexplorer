@@ -83,7 +83,7 @@ STYLE_TOKENS = {
     "hero_layout": "v2",
     "mouse_cursor": "default",
   },
-  "tech_kiro": {
+  "tech_ink": {
     "name": "Tech Kiro · 暖暗紫金",
     "fonts": {
       "heading": "'Cormorant Garamond', 'Source Han Serif SC', 'Songti SC', serif",
@@ -117,7 +117,7 @@ STYLE_TOKENS = {
     "hero_layout": "v2",
     "mouse_cursor": "default",
   },
-  "tech_qoder": {
+  "tech_ruyao": {
     "name": "Tech Qoder · 鼠尾草绿",
     "fonts": {
       "heading": "'EB Garamond', 'Source Han Serif SC', 'Songti SC', serif",
@@ -151,7 +151,7 @@ STYLE_TOKENS = {
     "hero_layout": "v2",
     "mouse_cursor": "default",
   },
-  "tech_workbuddy": {
+  "tech_qinghua": {
     "name": "Tech WorkBuddy · 暖白青绿",
     "fonts": {
       "heading": "'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif",
@@ -1389,7 +1389,7 @@ def generate_dashboard(data: dict, style: str, output_path: str | None = None) -
     if style == "medicine":
         from v4_medicine import render_v4_medicine
         html = render_v4_medicine(data)
-    elif style in ("cs", "tech", "tech_kiro", "tech_qoder", "tech_workbuddy", "finance", "law", "education", "sci", "eng"):
+    elif style in ("cs", "tech", "tech_ink", "tech_ruyao", "tech_qinghua", "finance", "law", "education", "sci", "eng"):
         from v4_styles import render_v4
         html = render_v4(data, style)
     else:

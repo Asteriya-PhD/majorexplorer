@@ -2,9 +2,9 @@
 
 > 时间戳: 2026-06-10 (最后更新) · 上一版 2026-06-07
 
-## 0. 2026-06-10 里程碑 — canghe-major-explorer 50 精品专业完整矩阵 ✅
+## 0. 2026-06-10 里程碑 — gaokao-major-explorer 50 精品专业完整矩阵 ✅
 
-**Commit**: `48c491b feat(skill): canghe-major-explorer 50 精品专业完整矩阵` (+39,636 / -1,671 lines · 91 files)
+**Commit**: `48c491b feat(skill): gaokao-major-explorer 50 精品专业完整矩阵` (+39,636 / -1,671 lines · 91 files)
 
 ### 关键战报
 
@@ -39,8 +39,8 @@ medicine     ×  6  ▇▇▇▇▇▇        手术仪表
 education    ×  6  ▇▇▇▇▇▇        暖橙学术
 finance      ×  5  ▇▇▇▇▇          烫金
 sci          ×  4  ▇▇▇▇            米色学术 (新)
-qoder        ×  4  ▇▇▇▇            鼠尾草 (新)
-workbuddy    ×  4  ▇▇▇▇            暖白深青 (新)
+ruyao       ×  4  ▇▇▇▇            鼠尾草 (新)
+qinghua     ×  4  ▇▇▇▇            暖白深青 (新)
 tech         ×  1  ▇                暗紫青绿
 law          ×  1  ▇                羊皮卷宗
 ```
@@ -56,7 +56,7 @@ law          ×  1  ▇                羊皮卷宗
 
 - A. 跑 50 个视觉批量截图 (Awwwards-grade 提交用)
 - B. 长尾模式模板化 (700 个其他专业 web search 自动化)
-- C. 首页/SEO 整合 (50 个链接入 canghe 主页)
+- C. 首页/SEO 整合 (50 个链接入 gaokao 主页)
 - D. 关联志愿引擎接入 (core/recommender.py → cta 真实位次)
 - E. 主题继续细化 (医学技术/农林/艺术 等细分)
 
