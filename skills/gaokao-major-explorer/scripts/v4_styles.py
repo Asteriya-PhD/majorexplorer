@@ -33,6 +33,8 @@ FONT_URLS = {
   "eng": "@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');",
   "agri": "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700;900&family=ZCOOL+XiaoWei&display=swap');",
   "arts": "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');",
+  "gongan":  "@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');",
+  "business":"@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap');",
 }
 
 
@@ -316,6 +318,26 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
     radial-gradient(ellipse 600px 400px at 15% 75%, rgba(220, 38, 38, 0.06), transparent 60%);
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.18 0 0 0 0 0.15 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.35; }
+"""
+    if style == "gongan":
+        return """
+body { background: #0A1420; color: #FAFAF6; font-family: 'Noto Serif SC', 'Cinzel', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 20% 15%, rgba(212, 175, 55, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 85% 80%, rgba(127, 29, 29, 0.10), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.83 0 0 0 0 0.69 0 0 0 0 0.22 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.5; mix-blend-mode: overlay; }
+"""
+    if style == "business":
+        return """
+body { background: #FAFAF6; color: #1A1A1A; font-family: 'Inter', 'Noto Serif SC', sans-serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 80% 20%, rgba(199, 123, 92, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 15% 80%, rgba(62, 42, 31, 0.08), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0 0.22 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.30; }
 """
     return ""
 
@@ -1662,253 +1684,493 @@ section.tab { border-top: 1px solid #C5D9A8; }
 """
 
 # ──────────────────────────────────────────────────────────
-# ARTS (美术) — 画室工作台 + 画架 + 颜料管 + 调色板
+# ARTS (美术) — 美术馆白盒 + 画框 + 展签 + 朱砂印章 + 金属铭牌
+# 配色: 珍珠白 #F8F6F2 底, 朱砂红 #B83A2A 印章, 暖金 #B8902A 铭牌
+# 字体: Noto Serif SC (中文) + EB Garamond (英文展签/拉丁) + Cormorant (衬线小字)
 # ──────────────────────────────────────────────────────────
 ARTS_CSS = """
-/* 招 #6 字体 */
-.hero, .hero * { --font-heading: 'Cormorant Garamond', 'Noto Serif SC', serif; --font-num: 'Archivo', 'Cormorant Garamond', serif; }
+/* === 美术馆白盒 (白墙 + 灯光锥 + 大理石地面) === */
+.museum-wall { position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 248, 220, 0.30) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 50% 100%, rgba(184, 144, 42, 0.08) 0%, transparent 60%),
+              linear-gradient(180deg, #F8F6F2 0%, #FBF9F4 50%, #F2EFE8 100%);
+}
+.museum-wall::before { content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  opacity: 0.6; mix-blend-mode: multiply; pointer-events: none;
+}
+.museum-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 80px; z-index: 1;
+  background: linear-gradient(180deg, transparent 0%, rgba(184, 144, 42, 0.05) 50%, rgba(184, 144, 42, 0.12) 100%),
+              repeating-linear-gradient(90deg, #F0EDE5 0px, #EBE7DE 30px, #F0EDE5 60px, #EDE8DF 90px);
+}
+.museum-floor::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184, 144, 42, 0.4) 20%, rgba(184, 144, 42, 0.4) 80%, transparent);
+}
+.museum-light { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 600px; height: 200px; z-index: 2; pointer-events: none;
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(255, 248, 220, 0.5) 0%, transparent 70%);
+}
+
+/* === 美术馆 logo === */
+.museum-logo { position: absolute; top: 28px; left: 50%; transform: translateX(-50%); z-index: 5; text-align: center; pointer-events: none; }
+.museum-logo-text { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.4em; color: #1A1A1A; text-transform: uppercase; border-bottom: 1px solid #1A1A1A; padding-bottom: 4px; }
+.museum-logo-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.7rem; color: #6B5D43; letter-spacing: 0.1em; margin-top: 4px; }
+
+/* === 朱砂印章 === */
+.cinnabar-seal { position: absolute; top: 90px; right: 80px; z-index: 6; width: 70px; height: 70px; background: #B83A2A;
+  display: flex; align-items: center; justify-content: center; font-family: 'Noto Serif SC', serif; font-weight: 900; color: #FFE8B0; font-size: 0.78rem; line-height: 1.1; text-align: center;
+  box-shadow: 0 2px 8px rgba(184, 58, 42, 0.3), inset 0 0 0 2px #FFE8B0, inset 0 0 0 3px #B83A2A; transform: rotate(-6deg); }
+.cinnabar-seal::before { content: ""; position: absolute; inset: 4px; border: 1px solid #FFE8B0; opacity: 0.5; }
+
+/* === 金属铭牌 === */
+.brass-plate { position: absolute; top: 88px; left: 80px; z-index: 6; padding: 8px 18px;
+  background: linear-gradient(135deg, #C8A26E 0%, #B8902A 50%, #8B6914 100%); border: 1px solid #6B5D43;
+  font-family: 'EB Garamond', serif; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: #2A1A0A;
+  box-shadow: 0 2px 6px rgba(107, 93, 67, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+
+/* === 装饰色卡 === */
+.color-swatches { position: absolute; left: 24px; bottom: 32px; z-index: 5; display: flex; gap: 4px; }
+.color-swatch { width: 28px; height: 42px; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(0,0,0,0.06); }
+.swatch-1 { background: linear-gradient(180deg, #F59E0B, #B45309); }
+.swatch-2 { background: linear-gradient(180deg, #DC2626, #7F1D1D); }
+.swatch-3 { background: linear-gradient(180deg, #1E40AF, #1E3A8A); }
+.swatch-4 { background: linear-gradient(180deg, #4A5D3A, #2A3A1A); }
+.swatch-5 { background: linear-gradient(180deg, #6B3410, #4A2A0A); }
+.color-swatch-label { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.55rem; color: #6B5D43; white-space: nowrap; }
+
+/* === 画框 (双线 + 暖金内沿) === */
+.gallery-frame-wrap { position: relative; margin: 80px auto 0; max-width: 880px; z-index: 4; padding: 18px; background: #F8F6F2;
+  box-shadow: 0 0 0 1px #1A1A1A, 0 0 0 5px #F8F6F2, 0 0 0 6px #1A1A1A, 0 24px 48px rgba(0, 0, 0, 0.10), inset 0 0 0 1px #B8902A; }
+.gallery-frame-wrap::before, .gallery-frame-wrap::after { content: ""; position: absolute; width: 24px; height: 24px; border: 1.5px solid #B8902A; pointer-events: none; }
+.gallery-frame-wrap::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.gallery-frame-wrap::after { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+.frame-corner-bl, .frame-corner-br { position: absolute; width: 24px; height: 24px; border: 1.5px solid #B8902A; pointer-events: none; }
+.frame-corner-bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+.frame-corner-br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+.gallery-frame-inner { background: #FFFFFF; padding: 60px 56px 40px; position: relative; }
+
+/* === 展签 (bottom gallery label) === */
+.gallery-label { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 6; padding: 12px 28px; background: #FFFFFF; border: 1px solid #1A1A1A; box-shadow: 0 4px 12px rgba(0,0,0,0.12); text-align: center; min-width: 320px; }
+.gallery-label::before { content: ""; position: absolute; top: -1px; left: 16px; right: 16px; height: 1px; background: linear-gradient(90deg, transparent, #B8902A 20%, #B8902A 80%, transparent); }
+.label-eyebrow { font-family: 'EB Garamond', serif; font-weight: 600; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: #B8902A; }
+.label-title { font-family: 'Noto Serif SC', serif; font-size: 0.95rem; font-weight: 700; color: #1A1A1A; margin-top: 4px; }
+.label-meta { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.7rem; color: #6B5D43; margin-top: 4px; letter-spacing: 0.05em; }
+
+/* === Hero 白盒主内容 === */
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #B8902A; position: relative; z-index: 2; overflow: hidden; min-height: 720px; color: #1A1A1A; }
+.hero, .hero * { --font-heading: 'Noto Serif SC', 'EB Garamond', serif; --font-num: 'EB Garamond', serif; }
+.hero .container { position: relative; z-index: 3; }
 section.tab h1, section.tab h2, section.tab h3, section.tab h4 { font-family: var(--font-heading); }
 section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; }
-.num, .num * { font-family: 'Archivo', 'Cormorant Garamond', serif; font-variant-numeric: lining-nums; }
+.num, .num * { font-family: 'EB Garamond', serif; font-variant-numeric: lining-nums; }
 
-.hero { padding: 0; background: transparent; border-bottom: 1px solid #1A1A1A; position: relative; z-index: 2; overflow: hidden; min-height: 720px; color: #1A1A1A; }
-.hero .container { position: relative; z-index: 3; }
+.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
+.hero-chapter { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.4em; color: #B8902A; margin-bottom: 14px; text-transform: uppercase; display: inline-block; padding-bottom: 4px; border-bottom: 1px solid #B8902A; }
+.hero-title { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.02em; color: #1A1A1A; margin: 0 0 6px; }
+.title-cn { display: block; }
+.title-en-small { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-weight: 400; font-size: 0.45em; color: #6B5D43; letter-spacing: 0.25em; margin-bottom: 8px; text-transform: uppercase; }
+.title-en { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B5D43; letter-spacing: 0.3em; margin-top: 14px; text-transform: uppercase; }
+.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #4A5A3A; max-width: 720px; margin: 20px auto 0; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 720px; padding: 18px 0; border-top: 1px solid rgba(184, 144, 42, 0.3); border-bottom: 1px solid rgba(184, 144, 42, 0.3); }
+.hu-stat { text-align: center; padding: 4px 0; position: relative; }
+.hu-stat:not(:last-child)::after { content: ""; position: absolute; right: -9px; top: 20%; bottom: 20%; width: 1px; background: rgba(184, 144, 42, 0.2); }
+.hu-stat-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #B8902A; margin-bottom: 6px; }
+.hu-stat-value { font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 700; color: #1A1A1A; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 24px; }
+.hu-tag { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.78rem; letter-spacing: 0.05em; padding: 4px 14px; border: 1px solid #1A1A1A; color: #1A1A1A; background: rgba(248, 246, 242, 0.6); }
 
-/* ── 工作室木地板 ── */
-.studio-floor {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  height: 240px; z-index: 1;
-  background:
-    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.55) 100%),
-    repeating-linear-gradient(90deg, #1F1812 0px, #1A140F 40px, #221B14 41px, #1A140F 100px, #1C1610 101px, #1F1812 180px);
-}
-.studio-floor::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0, transparent 60px, rgba(0,0,0,0.3) 60px, rgba(0,0,0,0.3) 61px); opacity: 0.55; }
-
-/* ── 工作灯 ── */
-.studio-lamp { position: absolute; top: -40px; right: 60px; z-index: 4; }
-.studio-lamp .lamp-rod { width: 6px; height: 180px; background: linear-gradient(90deg, #1A1A1A, #0F0F0F); margin: 0 auto; }
-.studio-lamp .lamp-arm { width: 6px; height: 60px; background: #1A1A1A; margin: 0 auto; transform: rotate(-25deg); transform-origin: top center; }
-.studio-lamp .lamp-head { width: 70px; height: 50px; background: linear-gradient(180deg, #DC2626 0%, #991B1B 100%); border-radius: 0 0 35px 35px; margin-left: -32px; box-shadow: inset 0 -8px 14px rgba(0,0,0,0.4); }
-.studio-lamp .lamp-bulb { width: 36px; height: 20px; background: #FFE8B0; margin: 0 auto; margin-top: -10px; border-radius: 0 0 18px 18px; box-shadow: 0 0 24px rgba(255,232,176,0.7); }
-.studio-lamp .lamp-cone { width: 220px; height: 320px; margin: 6px auto 0 -110px; background: linear-gradient(180deg, rgba(255,232,176,0.30) 0%, rgba(255,232,176,0.10) 50%, transparent 100%); clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%); pointer-events: none; }
-
-/* ── 画架 + 画布 ── */
-.easel-stage { position: relative; margin: 60px auto 0; max-width: 760px; height: 580px; z-index: 5; }
-.easel-leg-back { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 14px; height: 580px; background: linear-gradient(90deg, #2A1A0A 0%, #0F0804 100%); border-radius: 2px; z-index: 0; }
-.easel-leg-left { position: absolute; left: 90px; top: 100px; width: 14px; height: 480px; background: linear-gradient(90deg, #3A2A1A 0%, #1F140A 50%, #0F0804 100%); transform: rotate(-8deg); transform-origin: top center; border-radius: 2px; box-shadow: 0 8px 20px rgba(0,0,0,0.45); z-index: 2; }
-.easel-leg-right { position: absolute; right: 90px; top: 100px; width: 14px; height: 480px; background: linear-gradient(90deg, #3A2A1A 0%, #1F140A 50%, #0F0804 100%); transform: rotate(8deg); transform-origin: top center; border-radius: 2px; box-shadow: 0 8px 20px rgba(0,0,0,0.45); z-index: 2; }
-.easel-top { position: absolute; left: 50%; top: 30px; transform: translateX(-50%); width: 440px; height: 16px; background: linear-gradient(180deg, #3A2A1A 0%, #1F140A 50%, #0A0502 100%); border-radius: 2px; z-index: 3; }
-.easel-crossbar { position: absolute; left: 50%; top: 420px; transform: translateX(-50%); width: 540px; height: 10px; background: linear-gradient(180deg, #3A2A1A 0%, #1F140A 50%, #0A0502 100%); border-radius: 2px; z-index: 5; }
-.easel-shelf { position: absolute; left: 50%; top: 442px; transform: translateX(-50%); width: 380px; height: 8px; background: linear-gradient(180deg, #2A1A0A 0%, #0F0804 100%); border-radius: 2px; z-index: 5; }
-
-.canvas-wrap { position: absolute; left: 50%; top: 50px; transform: translateX(-50%); width: 460px; z-index: 4; }
-.canvas-frame { padding: 14px; background: linear-gradient(180deg, #3A2A1A 0%, #1A1108 100%); box-shadow: 0 16px 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05); }
-.canvas-inner { background: #F5F0E8; position: relative; aspect-ratio: 476/576; overflow: hidden; }
-.painting-svg { width: 100%; height: 100%; display: block; }
-
-/* ── 颜料管 ── */
-.tubes-stage { position: absolute; right: 12px; bottom: 100px; z-index: 3; display: flex; gap: 6px; }
-.paint-tube { position: relative; width: 28px; height: 110px; }
-.paint-tube-cap { width: 14px; height: 18px; margin: 0 auto; background: linear-gradient(180deg, #2A2A2A 0%, #0F0F0F 100%); border-radius: 2px 2px 0 0; }
-.paint-tube-body { width: 28px; height: 76px; background: var(--pt-color, #FAFAFA); position: relative; }
-.paint-tube-label { position: absolute; left: 4px; right: 4px; top: 50%; transform: translateY(-50%); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.7rem; color: #FAFAFA; text-align: center; text-shadow: 0 1px 1px rgba(0,0,0,0.4); }
-.paint-tube-crimp { width: 28px; height: 16px; background: linear-gradient(180deg, var(--pt-color, #FAFAFA) 0%, rgba(0,0,0,0.2) 100%); border-radius: 0 0 4px 4px; clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%); }
-.tube-1 { --pt-color: #F59E0B; transform: rotate(-6deg); }
-.tube-2 { --pt-color: #DC2626; transform: rotate(2deg); }
-.tube-3 { --pt-color: #1E40AF; transform: rotate(-3deg); }
-.tube-4 { --pt-color: #FAFAFA; transform: rotate(5deg;); }
-
-/* ── 调色板 ── */
-.palette-stage { position: absolute; left: 12px; bottom: 80px; z-index: 3; }
-.palette-thumbhole { width: 90px; height: 64px; background: linear-gradient(180deg, #EBE3D4 0%, #D9CFB9 100%); border-radius: 0 0 90px 90px; position: relative; box-shadow: 0 6px 18px rgba(0,0,0,0.30), inset 0 0 0 1px rgba(0,0,0,0.06); }
-.palette-thumbhole::after { content: ""; position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: 18px; height: 14px; background: #1A1A1A; border-radius: 50%; }
-.palette-dab { position: absolute; width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-
-/* ── 钉子便签 ── */
-.room-corner { position: absolute; top: 80px; left: 12px; z-index: 3; }
-.art-tag { display: block; background: #FAFAFA; padding: 6px 10px; margin-bottom: 8px; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-style: italic; font-size: 0.78rem; color: #1A1A1A; box-shadow: 0 2px 4px rgba(0,0,0,0.18); transform: rotate(-2deg); position: relative; }
-.art-tag::before { content: "●"; position: absolute; left: 50%; top: -4px; transform: translateX(-50%); color: #B83A2A; font-size: 0.6rem; }
-.gallery-frame { position: absolute; top: 200px; right: 12px; width: 80px; height: 100px; background: linear-gradient(180deg, #3A2A1A 0%, #1A1108 100%); padding: 6px; z-index: 3; box-shadow: 0 6px 16px rgba(0,0,0,0.4); }
-.gallery-frame::after { content: ""; display: block; width: 100%; height: 100%; background: linear-gradient(135deg, #DC2626 0%, #F59E0B 50%, #1E40AF 100%); opacity: 0.85; }
-
-section.tab h2 { color: #1A1A1A; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
-section.tab h3 { color: #1A1A1A; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; }
-section.tab p.lede { color: #3A3A3A; }
-.watermark { font-family: 'Cormorant Garamond', serif; color: #D9CFB9; }
-footer { background: #1A1A1A; color: #FAFAFA; border-top: 1px solid #3A3A3A; }
-footer .label { color: #FAFAFA; font-family: 'Cormorant Garamond', serif; }
+/* === Body section 配色 (白盒浅色) === */
+section.tab { border-top: 1px solid #D6D2C5; }
+section.tab h2 { color: #1A1A1A; font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: clamp(1.375rem, 2.2vw, 1.625rem); }
+section.tab h3 { color: #1A1A1A; font-family: 'Noto Serif SC', serif; }
+section.tab p { color: #2A2520; }
+section.tab p.lede { color: #4A5A3A; }
+.watermark { font-family: 'EB Garamond', serif; color: #D6D2C5; }
+footer { background: #2A2520; color: #FAFAF6; border-top: 1px solid #B8902A; }
+footer .label { color: #FAFAF6; font-family: 'EB Garamond', serif; }
 footer .data-source { color: #999; }
-.drop-cap::first-letter { font-family: 'Cormorant Garamond', serif; color: #DC2626; }
+.drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B83A2A; font-weight: 900; }
 
-/* === Arts 速览 v2 深色适配 (避免白卡片在暗背景上刺眼) === */
-.ovv-card { background: rgba(42, 37, 32, 0.55); border-color: #3A3A3A; }
-.ovv-card-title { color: #FAFAFA; }
-.ovv-card-tag { color: #999; }
-.ovv-foundations-label, .ovv-dir-name, .ovv-skill { color: #FAFAFA; }
-.ovv-dir { background: rgba(250, 250, 250, 0.04); border-color: #3A3A3A; }
-.ovv-dir:hover { background: rgba(220, 38, 38, 0.06); }
-.ovv-dir-desc { color: #D9CFB9; }
-.ovv-skill { background: rgba(0, 0, 0, 0.3); }
-.ovv-bonus { color: #FAFAFA; background: rgba(184, 144, 42, 0.08); }
-.ovv-pit { background: rgba(185, 28, 28, 0.06); border-color: #3A3A3A; }
-.ovv-pit-reality { color: #D9CFB9; }
-.ovv-fit-col { background: rgba(250, 250, 250, 0.04); border-color: #3A3A3A; }
-.ovv-fit-col.is-yes { background: rgba(46, 125, 50, 0.06); }
-.ovv-fit-col.is-no { background: rgba(185, 28, 28, 0.06); }
-.ovv-fit-list li { color: #FAFAFA; border-color: #3A3A3A; }
-.ovv-card-head { border-color: #3A3A3A; }
-
-/* === Arts 速览 误区 奇数条 fix: 最后一条跨整行 === */
+/* === 速览 v2 (白盒 default) === */
+.ovv-card { background: #FFFFFF; border: 1px solid #E5E5E0; }
+.ovv-card-title { color: #1A1A1A; }
+.ovv-card-tag { color: #6B5D43; }
+.ovv-foundations-label, .ovv-dir-name, .ovv-skill { color: #1A1A1A; }
+.ovv-dir { background: #FBF9F4; border-color: #D6D2C5; }
+.ovv-dir:hover { border-color: #B83A2A; background: #FAFAF6; }
+.ovv-dir-desc { color: #4A5A3A; }
+.ovv-skill { background: #FBF9F4; color: #1A1A1A; border-color: #1A1A1A; }
+.ovv-bonus { color: #2A2520; background: rgba(184, 144, 42, 0.06); border-left: 3px solid #B8902A; }
+.ovv-pit { background: #FBF9F4; border-color: #D6D2C5; border-left: 3px solid #B83A2A; }
+.ovv-pit-reality { color: #2A2520; }
+.ovv-fit-col { background: #FBF9F4; border-color: #D6D2C5; }
+.ovv-fit-col.is-yes { background: rgba(46, 125, 50, 0.05); border-color: #2E7D32; }
+.ovv-fit-col.is-no { background: rgba(185, 28, 28, 0.05); border-color: #B83A2A; }
+.ovv-fit-list li { color: #1A1A1A; border-color: #D6D2C5; }
+.ovv-card-head { border-color: #D6D2C5; }
 .ovv-pits .ovv-pit:last-child:nth-child(odd) { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
 
-/* ── Arts body section 框架 (暗色画室 + 暖橙点缀) ── */
+/* === 院校 === */
 .bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.bento-item { padding: 28px 24px 24px; position: relative; transition: background 250ms; }
-.bento-item::before { content: "✦"; position: absolute; top: 20px; right: 20px; color: #F59E0B; font-size: 0.875rem; opacity: 0.4; }
-.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #DC2626; z-index: 1; pointer-events: none; }
-.bento-item:hover { background: rgba(220, 38, 38, 0.04); }
-.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #FAFAFA; color: #1A1A1A; font-family: 'Cormorant Garamond', serif; font-size: 1.0625rem; font-weight: 700; }
-.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #FAFAFA; border: 1px solid #FAFAFA; border-radius: 0; font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
-.bento-name { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
-.bento-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8125rem; line-height: 1.5; }
+.bento-item { padding: 28px 24px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; position: relative; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.bento-item::before { content: "✦"; position: absolute; top: 20px; right: 20px; color: #B8902A; font-size: 0.875rem; opacity: 0.5; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #B83A2A; }
+.bento-item:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1A1A1A; color: #FAFAF6; font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #B83A2A; border: 1px solid #B83A2A; border-radius: 0; font-family: 'EB Garamond', serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.8125rem; color: #6B5D43; line-height: 1.5; }
+
+/* === 公司 === */
 .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.company { padding: 28px 24px 22px; transition: background 250ms, border-color 250ms; }
-.company:hover { background: rgba(220, 38, 38, 0.04); border-color: #DC2626 !important; }
+.company { padding: 28px 24px 22px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.company:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #FAFAFA; color: #1A1A1A; font-family: 'Cormorant Garamond', serif; font-size: 1.0625rem; font-weight: 700; }
-.company-tier { padding: 2px 8px; border: 1px solid #FAFAFA; color: #FAFAFA; font-family: 'Cormorant Garamond', serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
-.tier-S { background: #FAFAFA; color: #1A1A1A; border-color: #FAFAFA; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1A1A1A; color: #FAFAF6; font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #B8902A; color: #B8902A; font-family: 'EB Garamond', serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #B8902A; color: #FFFFFF; border-color: #B8902A; }
 .tier-A { background: transparent; }
-.tier-B { background: transparent; color: #999; border-color: #3A3A3A; }
-.company-name { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #FAFAFA; }
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #3A3A3A; }
-.sparkline-bar { flex: 1; background: #3A3A3A; min-height: 2px; transition: background 250ms; }
-.company:hover .sparkline-bar { background: #DC2626; opacity: 0.7; }
-.sparkline-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.6875rem; color: #999; letter-spacing: 0.05em; margin-top: 6px; }
-.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; overflow: hidden; position: relative; z-index: 1; }
-.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #3A3A3A; font-size: 0.9375rem; }
+.tier-B { background: transparent; color: #6B5D43; border-color: #D6D2C5; }
+.company-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #1A1A1A; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #D6D2C5; }
+.sparkline-bar { flex: 1; background: #D6D2C5; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #B8902A; }
+.sparkline-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.6875rem; color: #6B5D43; letter-spacing: 0.05em; margin-top: 6px; }
+
+/* === 薪资表 === */
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #D6D2C5; font-size: 0.9375rem; }
 .salary-table tr:last-child td { border-bottom: none; }
-.salary-table th { background: #14110D; font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #F59E0B; }
+.salary-table th { background: #F8F6F2; font-family: 'EB Garamond', serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #B8902A; }
+.salary-stage { font-family: 'Noto Serif SC', serif; font-weight: 700; color: #1A1A1A; font-size: 1.0625rem; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(184, 144, 42, 0.12); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #B8902A; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.yoy { display: inline-block; font-family: 'EB Garamond', serif; font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #2E7D32; background: rgba(46, 125, 50, 0.08); }
+.yoy.down { color: #B83A2A; background: rgba(184, 58, 42, 0.08); }
+.yoy.flat { color: #6B5D43; background: rgba(107, 93, 67, 0.06); }
+
+/* === 就业方向 === */
 .direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #3A3A3A; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #D6D2C5; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 600; color: #FAFAFA; }
-.direction-bar { height: 8px; background: rgba(250, 250, 250, 0.08); overflow: hidden; border-radius: 2px; }
-.direction-bar-fill { height: 100%; background: #DC2626; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
-.direction-pct { font-family: 'Cormorant Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #F59E0B; }
+.direction-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 600; color: #1A1A1A; }
+.direction-bar { height: 8px; background: rgba(184, 144, 42, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #B8902A; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
+
+/* === 深造路径 === */
 .path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.path-card { padding: 32px 24px; text-align: center; transition: border-color 250ms, transform 250ms; }
-.path-card:hover { border-color: #DC2626 !important; transform: translateY(-2px); }
-.path-pct { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #FAFAFA; margin-bottom: 4px; line-height: 1; }
-.path-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.875rem; margin-top: 8px; }
+.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; text-align: center; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.path-card:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
+.path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #6B5D43; margin-top: 8px; }
+
+/* === 学长学姐说 === */
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
-.quote { padding: 28px 32px 24px; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-left: 4px solid #B83A2A; border-radius: 0 3px 3px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
 .quote:hover { border-left-width: 12px; transform: translateX(4px); }
 .quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #FAFAFA; color: #1A1A1A; font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 700; }
-.quote-byline strong { display: block; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700; color: #FAFAFA; font-size: 0.9375rem; }
-.quote-byline .quote-source { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.75rem; }
-.quote-text { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #FAFAFA; }
-.quote-text::before { content: "「"; color: #DC2626; }
-.quote-text::after { content: "」"; color: #DC2626; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1A1A1A; color: #FAFAF6; font-family: 'EB Garamond', serif; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'Noto Serif SC', serif; font-weight: 700; color: #1A1A1A; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B5D43; }
+.quote-text { font-family: 'Noto Serif SC', serif; font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #1A1A1A; }
+.quote-text::before { content: "「"; color: #B83A2A; }
+.quote-text::after { content: "」"; color: #B83A2A; }
+
+/* === 选科 === */
 .xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #3A3A3A; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #D6D2C5; }
 .xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.0625rem; color: #FAFAFA; }
-.xuanke-bar { height: 6px; background: #3A3A3A; overflow: hidden; }
-.xuanke-bar-fill { height: 100%; background: #DC2626; }
-.xuanke-pct { font-family: 'Cormorant Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #F59E0B; }
-.curriculum-lede { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #D9CFB9; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.xuanke-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #1A1A1A; }
+.xuanke-bar { height: 6px; background: #D6D2C5; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #B8902A; }
+.xuanke-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
+
+/* === 课程 === */
+.curriculum-lede { font-family: 'EB Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
 .curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.cta-block { margin-top: 32px; padding: 64px 48px; background: #2A2520; border: 1px solid #DC2626; text-align: center; position: relative; }
-.cta-block::before { content: "✦  ✦  ✦"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #1A1A1A; padding: 0 16px; color: #F59E0B; font-size: 0.875rem; letter-spacing: 0.5em; }
-.cta-block h3 { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.75rem; margin-bottom: 12px; color: #FAFAFA; position: relative; z-index: 1; font-weight: 700; }
-.cta-block p { color: #D9CFB9; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.curriculum-block { padding: 32px 28px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.curriculum-block:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
+.curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; color: #1A1A1A; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #D6D2C5; font-weight: 700; }
+.course { color: #1A1A1A; border-bottom: 1px dashed #D6D2C5; padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(184, 144, 42, 0.05); padding-left: 8px; }
+.course-name { color: #1A1A1A; }
+.course-credit { color: #B8902A; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
+
+/* === CTA === */
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #1A1A1A; text-align: center; position: relative; }
+.cta-block::before { content: "MAJOR · MUSEUM · 2026"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #F8F6F2; padding: 0 16px; color: #B8902A; font-family: 'EB Garamond', serif; font-size: 0.7rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: 'Noto Serif SC', serif; font-size: 1.75rem; margin-bottom: 12px; color: #1A1A1A; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: #4A5A3A; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
 .cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
-.cta-input { padding: 14px 18px; background: #1A1A1A; border: 1px solid #3A3A3A; color: #FAFAFA; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1rem; width: 180px; outline: none; }
-.cta-input:focus { border-color: #DC2626; }
-.cta-button { padding: 14px 36px; background: #DC2626; color: #FAFAFA; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
-.cta-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.75rem; color: #999; margin-top: 16px; position: relative; z-index: 1; }
-.tag { display: inline-block; padding: 4px 12px; border: 1px solid #FAFAFA; color: #FAFAFA; font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; letter-spacing: 0.05em; }
-.tag.primary { background: #DC2626; border-color: #DC2626; color: #FAFAFA; }
+.cta-input { padding: 14px 18px; background: #F8F6F2; border: 1px solid #D6D2C5; color: #1A1A1A; font-family: 'Noto Serif SC', serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #B83A2A; }
+.cta-button { padding: 14px 36px; background: #1A1A1A; color: #FAFAF6; font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-button:hover { background: #B83A2A; }
+.cta-note { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B5D43; margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #1A1A1A; color: #1A1A1A; font-family: 'EB Garamond', serif; font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #1A1A1A; color: #FAFAF6; }
 
-/* ── Arts 暗色 body section 配色覆盖 (BASE_CSS 默认浅色, 改深底浅字) ── */
-body { color: #FAFAFA; }
-section.tab { border-top: 1px solid #3A3A3A; background: transparent; }
-section.tab h2 { color: #FAFAFA; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
-section.tab h3 { color: #FAFAFA; }
-section.tab p { color: #D9CFB9; }
-section.tab p.lede { color: #D9CFB9; }
-.section-num { color: #F59E0B; }
-.watermark { color: #F59E0B; opacity: 0.06; }
-.bento-item { background: #2A2520; border: 1px solid #3A3A3A; }
-.bento-item:hover { border-color: #DC2626; }
-.bento-monogram { background: #FAFAFA; color: #1A1A1A; }
-.bento-rank { color: #FAFAFA; border: 1px solid #FAFAFA; }
-.bento-name { color: #FAFAFA; }
-.bento-tag { color: #999; }
-.company { background: #2A2520; border: 1px solid #3A3A3A; }
-.company:hover { border-color: #DC2626; }
-.company-monogram { background: #FAFAFA; color: #1A1A1A; }
-.company-tier { border: 1px solid #FAFAFA; color: #FAFAFA; }
-.tier-S { background: #FAFAFA; color: #1A1A1A; }
-.salary-table { background: #2A2520; border: 1px solid #3A3A3A; color: #FAFAFA; }
-.salary-table th { background: #14110D; color: #F59E0B; }
-.salary-stage { color: #FAFAFA; }
-.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(250, 250, 250, 0.1); margin-left: 12px; vertical-align: middle; overflow: hidden; }
-.salary-bar-fill { display: block; height: 100%; background: #DC2626; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.salary-bar { background: rgba(250, 250, 250, 0.1); }
-.salary-bar-fill { background: #DC2626; }
-.yoy.up { color: #F59E0B; }
-.yoy.down { color: #FAFAFA; }
-.yoy { display: inline-block; font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
-.yoy.flat { color: #999; background: rgba(250, 250, 250, 0.05); }
-.direction-bar { background: rgba(250, 250, 250, 0.08); }
-.direction-bar-fill { background: #DC2626; }
-.direction-name { color: #FAFAFA; }
-.direction-pct { color: #F59E0B; }
-.path-card { background: #2A2520; border: 1px solid #3A3A3A; }
-.path-card:hover { border-color: #DC2626; }
-.path-pct { color: #F59E0B; }
-.path-name { color: #FAFAFA; }
-.quote { background: #2A2520; border: 1px solid #3A3A3A; border-left: 4px solid #DC2626; }
-.quote-byline strong { color: #FAFAFA; }
-.quote-source { color: #999; }
-.quote-text { color: #D9CFB9; }
-.quote-text::before, .quote-text::after { color: #DC2626; }
-.xuanke-bar { background: rgba(250, 250, 250, 0.08); }
-.xuanke-bar-fill { background: #DC2626; }
-.xuanke-name { color: #FAFAFA; }
-.xuanke-pct { color: #F59E0B; }
-.curriculum-block { padding: 32px 28px; background: #2A2520; border: 1px solid #3A3A3A; transition: border-color 250ms, transform 250ms; }
-.curriculum-block:hover { border-color: #DC2626; }
-.curriculum-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.1875rem; color: #FAFAFA; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #3A3A3A; font-weight: 700; }
-.course { color: #FAFAFA; border-bottom: 1px dashed rgba(250, 250, 250, 0.1); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
-.course:hover { background: rgba(220, 38, 38, 0.04); padding-left: 8px; }
-.course-name { color: #FAFAFA; }
-.course-credit { color: #F59E0B; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
-.cta-block { background: #2A2520; border: 1px solid #DC2626; }
-.cta-block::before { color: #F59E0B; }
-.cta-block h3 { color: #FAFAFA; }
-.cta-block p { color: #D9CFB9; }
-.cta-input { background: #1A1A1A; border: 1px solid #3A3A3A; color: #FAFAFA; }
-.cta-button { background: #DC2626; color: #FAFAFA; }
-.cta-button:hover { background: #FAFAFA; color: #DC2626; }
-.cta-note { color: #999; }
-.cta-block .tag { border: 1px solid #FAFAFA; color: #FAFAFA; }
-.cta-block .tag.primary { background: #DC2626; border-color: #DC2626; color: #FAFAFA; }
+/* === 响应式 === */
+@media (max-width: 1023px) {
+  .gallery-frame-wrap { max-width: 92%; margin: 60px auto 0; }
+  .gallery-frame-inner { padding: 40px 32px 32px; }
+  .cinnabar-seal { right: 40px; top: 70px; width: 56px; height: 56px; font-size: 0.65rem; }
+  .brass-plate { left: 40px; top: 68px; padding: 6px 14px; font-size: 0.6rem; }
+  .color-swatches { left: 16px; bottom: 16px; }
+  .gallery-label { bottom: 8px; min-width: 260px; padding: 8px 18px; }
+  .museum-logo-text { font-size: 0.8rem; }
+  .museum-logo-sub { font-size: 0.6rem; }
+}
+@media (max-width: 767px) {
+  .gallery-frame-wrap { padding: 12px; }
+  .gallery-frame-inner { padding: 30px 20px 24px; }
+  .cinnabar-seal, .brass-plate { display: none; }
+  .color-swatches { display: none; }
+  .gallery-label { position: static; transform: none; margin: 24px auto 0; max-width: 90%; }
+  .museum-logo { top: 16px; }
+  .museum-logo-text { font-size: 0.7rem; letter-spacing: 0.25em; }
+  .museum-logo-sub { font-size: 0.55rem; }
+"""
 
-/* ── Hero 主内容区 (arts 居中布局, 暗色画室) ── */
-.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
-.hero-chapter { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.4em; color: #F59E0B; margin-bottom: 14px; text-transform: uppercase; }
-.hero-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-weight: 700; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.02em; color: #FAFAFA; margin: 0 0 6px; }
-.title-cn { display: block; font-family: 'Noto Serif SC', serif; font-weight: 900; color: #FAFAFA; }
-.title-en-small { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 0.55em; color: #D9CFB9; letter-spacing: 0.05em; margin-bottom: 4px; }
-.title-en { display: block; font-family: 'Archivo', sans-serif; font-size: 0.7rem; color: #D9CFB9; letter-spacing: 0.4em; margin-top: 12px; text-transform: uppercase; font-weight: 600; }
-.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #D9CFB9; max-width: 720px; margin: 16px auto 0; }
-.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 880px; padding: 20px 0; border-top: 1px solid rgba(217,207,185,0.3); border-bottom: 1px solid rgba(217,207,185,0.3); }
-.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
-.hu-tag { font-family: 'Archivo', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; padding: 4px 12px; border: 1px solid #D9CFB9; color: #FAFAFA; border-radius: 0; text-transform: uppercase; font-weight: 500; }
+
+# ──────────────────────────────────────────────────────────
+# GONGAN_CSS · 公安学类 (国际司法范式: 盾+十字剑+橄榄枝, 警蓝+国徽金+朱红)
+# ──────────────────────────────────────────────────────────
+GONGAN_CSS = """
+:root {
+  /* 主题色 */
+  --gg-red: #B91C1C;        --gg-red-dk: #7F1D1D;    --gg-red-soft: #DC2626;
+  --gg-blue: #1E3A5F;       --gg-blue-dk: #0F1F33;   --gg-blue-2: #2A4A75;
+  --gg-gold: #D4AF37;       --gg-gold-dk: #B8902A;   --gg-gold-soft: #E5C158;
+  --gg-silver: #94A3B8;     --gg-silver-soft: #CBD5E1;
+  --gg-paper: #FAFAF6;      --gg-ink: #1A0A0A;
+  --gg-glow: rgba(212, 175, 55, 0.35);
+  /* 字体 (修复 v4_styles 未注入 base CSS 的问题) */
+  --font-heading: "Cinzel", "Noto Serif SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Songti SC", serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "Oswald", "JetBrains Mono", monospace;
+}
+@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
+/* ── Hero 主体 ── */
+.gg-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
+  background: radial-gradient(ellipse 30% 35% at 50% 22%, rgba(212,175,55,0.18) 0%, transparent 60%),
+              radial-gradient(ellipse 30% 50% at 88% 70%, rgba(148,163,184,0.12) 0%, transparent 60%),
+              linear-gradient(155deg, #0F1F33 0%, #1E3A5F 35%, #3A1424 70%, #0F1F33 100%);
+  border-bottom: 1px solid #1F1408; color: var(--gg-paper);
+  font-family: var(--font-body); }
+.gg-bg-noise { position: absolute; inset: 0; opacity: 0.5; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.83 0 0 0 0 0.69 0 0 0 0 0.22 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+.gg-gold-band { position: absolute; top: 0; left: 0; right: 0; height: 56px; z-index: 4; pointer-events: none;
+  background: linear-gradient(180deg, #D4AF37 0%, #B8902A 50%, #8B6F1F 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 96% 78%, 100% 88%, 100% 100%, 0 100%, 0 88%, 4% 78%, 0 70%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
+/* ── 主徽 (盾+十字剑+橄榄枝) ── */
+.gg-main-emblem { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 320px; height: 320px; z-index: 2; opacity: 0.18; pointer-events: none; filter: drop-shadow(0 0 60px var(--gg-glow)); animation: ggGlow 6s ease-in-out infinite; }
+.gg-main-emblem svg { width: 100%; height: 100%; }
+@keyframes ggGlow { 0%,100% { opacity: 0.18; } 50% { opacity: 0.28; } }
+/* ── 6 大专业 hu-tag (顶部装饰) ── */
+.gg-hu-tags { position: relative; z-index: 10; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; max-width: 1100px; margin: 0 auto 32px; padding: 0 24px; }
+.gg-hu-tag { padding: 7px 16px 7px 14px; background: rgba(15,31,51,0.78); border: 1px solid var(--gg-gold);
+  font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--gg-gold-soft);
+  letter-spacing: 0.12em; clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+.gg-hu-tag::before { content: "▪"; color: var(--gg-red-soft); margin-right: 6px; font-size: 10px; }
+/* ── 标题区 ── */
+.gg-title-zone { position: relative; z-index: 10; text-align: center; max-width: 1100px; margin: 0 auto 36px; padding: 0 24px; }
+.gg-discipline { font-family: var(--font-heading); font-size: 11px; font-weight: 600; letter-spacing: 0.55em; color: var(--gg-gold); margin-bottom: 12px; text-transform: uppercase; }
+.gg-hero-title { font-family: var(--font-body); font-weight: 900; font-size: clamp(2.5rem, 5.5vw, 4.25rem); line-height: 1; color: var(--gg-paper); letter-spacing: 0.08em;
+  text-shadow: 0 0 30px rgba(212,175,55,0.4), 0 4px 14px rgba(0,0,0,0.7); margin: 0 0 8px; }
+.gg-hero-title .accent { color: var(--gg-gold); }
+.gg-title-en { font-family: var(--font-heading); font-weight: 500; font-size: clamp(15px, 1.4vw, 20px); color: var(--gg-gold-soft); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px; }
+.gg-subtitle { margin-top: 18px; display: inline-block; padding: 8px 22px; background: rgba(15,31,51,0.6); border-left: 3px solid var(--gg-red); border-right: 3px solid var(--gg-red);
+  font-family: var(--font-body); font-size: 14px; color: rgba(250,250,246,0.85); letter-spacing: 0.18em; }
+/* ── 4 stats 关键数据 ── */
+.gg-stats-row { position: relative; z-index: 10; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1100px; margin: 0 auto 40px; padding: 0 24px; }
+.gg-stat { position: relative; padding: 18px 22px 16px; background: linear-gradient(180deg, rgba(15,31,51,0.85) 0%, rgba(30,58,95,0.65) 100%);
+  border-top: 2px solid var(--gg-gold); border-bottom: 1px solid rgba(212,175,55,0.4); text-align: center; }
+.gg-stat + .gg-stat { border-left: 1px solid rgba(212,175,55,0.2); }
+.gg-stat-label { font-family: var(--font-heading); font-size: 10px; font-weight: 600; letter-spacing: 0.35em; color: var(--gg-gold-soft); text-transform: uppercase; margin-bottom: 4px; }
+.gg-stat-label-cn { font-family: var(--font-body); font-size: 11px; color: rgba(250,250,246,0.55); letter-spacing: 0.25em; margin-bottom: 8px; }
+.gg-stat-value { font-family: var(--font-num); font-weight: 700; font-size: clamp(28px, 3vw, 40px); line-height: 1; color: var(--gg-paper); letter-spacing: 0.02em; }
+.gg-stat-value .unit { font-size: 14px; font-weight: 500; color: var(--gg-gold-soft); margin-left: 4px; letter-spacing: 0.1em; }
+.gg-stat.featured { background: linear-gradient(180deg, rgba(127,29,29,0.8) 0%, rgba(185,28,28,0.55) 100%); }
+/* ── 引言 ── */
+.gg-quote { position: relative; z-index: 10; text-align: center; margin: 0 auto; max-width: 900px; padding: 0 24px; }
+.gg-quote-text { font-family: var(--font-body); font-weight: 700; font-size: clamp(15px, 1.5vw, 22px); color: var(--gg-gold-soft); letter-spacing: 0.4em;
+  text-shadow: 0 0 24px var(--gg-glow), 0 2px 8px rgba(0,0,0,0.6); margin-bottom: 10px; }
+.gg-quote-text .sep { color: var(--gg-red-soft); margin: 0 10px; font-weight: 400; }
+.gg-quote-sig { font-family: var(--font-heading); font-style: italic; font-size: 11px; letter-spacing: 0.4em; color: rgba(250,250,246,0.55); text-transform: uppercase; }
+.gg-quote-sig::before, .gg-quote-sig::after { content: "——"; margin: 0 12px; color: var(--gg-gold); }
+/* ── 4 角金线角标 (装饰) ── */
+.gg-corner-mark { position: absolute; width: 26px; height: 26px; border: 1px solid var(--gg-gold); z-index: 50; opacity: 0.55; }
+.gg-corner-mark::before { content: ""; position: absolute; inset: 4px; border: 1px solid var(--gg-gold); }
+.gg-cm-tl { top: 70px; left: 24px; border-right: none; border-bottom: none; }
+.gg-cm-tr { top: 70px; right: 24px; border-left: none; border-bottom: none; }
+.gg-cm-bl { bottom: 24px; left: 24px; border-right: none; border-top: none; }
+.gg-cm-br { bottom: 24px; right: 24px; border-left: none; border-top: none; }
+/* ── Section tab 主题色 (下方内容区) ── */
+body.gg-body { background: #0A1420; color: var(--gg-paper); font-family: var(--font-body); }
+.gg-hero h1, .gg-hero h2, .gg-hero h3 { font-family: var(--font-heading); }
+.gg-hero .num, .gg-hero .num * { font-family: var(--font-num); }
+.gg-hero + section.tab, .gg-hero ~ section.tab { background: #0A1420; color: var(--gg-paper); border-top: 1px solid #1F1408; }
+.gg-hero + section.tab h2, .gg-hero + section.tab h3,
+.gg-hero ~ section.tab h2, .gg-hero ~ section.tab h3 { color: var(--gg-paper); }
+.gg-hero + section.tab p, .gg-hero + section.tab .lede,
+.gg-hero ~ section.tab p, .gg-hero ~ section.tab .lede { color: rgba(250,250,246,0.78); }
+.gg-hero + section.tab .bento-card, .gg-hero + section.tab .company-card, .gg-hero + section.tab .curriculum-block,
+.gg-hero ~ section.tab .bento-card, .gg-hero ~ section.tab .company-card, .gg-hero ~ section.tab .curriculum-block { background: rgba(15,31,51,0.55); border: 1px solid rgba(212,175,55,0.25); color: var(--gg-paper); }
+.gg-hero + section.tab .bento-card:hover, .gg-hero + section.tab .company-card:hover, .gg-hero + section.tab .curriculum-block:hover,
+.gg-hero ~ section.tab .bento-card:hover, .gg-hero ~ section.tab .company-card:hover, .gg-hero ~ section.tab .curriculum-block:hover { border-color: var(--gg-gold); }
+.gg-hero + section.tab .quote, .gg-hero ~ section.tab .quote { background: rgba(15,31,51,0.55); border: 1px solid rgba(212,175,55,0.25); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .quote-text, .gg-hero ~ section.tab .quote-text { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .course-name, .gg-hero ~ section.tab .course-name { color: var(--gg-paper); }
+.gg-hero + section.tab .course-credit, .gg-hero ~ section.tab .course-credit { color: var(--gg-gold); }
+.gg-hero ~ footer { color: rgba(250,250,246,0.5); }
+/* ── 响应式 ── */
+@media (max-width: 1280px) {
+  .gg-hero { min-height: 660px; padding: 80px 0 90px; }
+  .gg-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .gg-main-emblem { width: 240px; height: 240px; }
+  .gg-hu-tag { font-size: 11px; padding: 6px 14px 6px 12px; }
+}
+@media (max-width: 768px) {
+  .gg-hero { min-height: auto; padding: 72px 0 60px; }
+  .gg-stats-row { grid-template-columns: 1fr 1fr; }
+  .gg-main-emblem { width: 180px; height: 180px; opacity: 0.12; }
+  .gg-hero-title { font-size: clamp(1.875rem, 8vw, 2.5rem); }
+  .gg-quote-text { letter-spacing: 0.25em; }
+  .gg-corner-mark { width: 20px; height: 20px; }
+  .gg-cm-tl, .gg-cm-tr { top: 64px; }
+}
+"""
+
+
+# ──────────────────────────────────────────────────────────
+# BUSINESS · 工商管理 (椭圆董事局 + 玫瑰金 + 胡桃木 + 屏幕深蓝)
+# ──────────────────────────────────────────────────────────
+BUSINESS_CSS = """
+:root {
+  /* 主题色 */
+  --biz-walnut-dk: #3E2A1F;  --biz-walnut-soft: #6B4A3A; --biz-walnut-xd: #1F1208;
+  --biz-rose-gold: #C77B5C;   --biz-rose-gold-dk: #9C4A35; --biz-rose-gold-soft: #DDA28A;
+  --biz-screen-blue: #0B1120; --biz-screen-blue-2: #1E293B;
+  --biz-ivory: #F5F0E5;       --biz-bg: #FAFAF6;
+  --biz-leather: #1A1A1A;     --biz-burgundy: #6B1F2A; --biz-steel: #5C6770;
+  --biz-pos: #22C55E;         --biz-neg: #DC2626; --biz-warn: #F59E0B;
+  /* 字体 (修复 v4_styles 未注入 base CSS 的问题) */
+  --font-heading: "Bodoni Moda", "Noto Serif SC", serif;
+  --font-body:    "Inter", "Noto Serif SC", "PingFang SC", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", monospace;
+}
+@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap');
+/* ── Hero 主体 ── */
+.biz-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(199,123,92,0.10) 0%, transparent 60%),
+              linear-gradient(180deg, #FAFAF6 0%, #F5F0E5 50%, #EFE7D5 100%);
+  color: var(--biz-leather); font-family: var(--font-body); border-bottom: 1px solid #E5DCC8; }
+.biz-marble { position: absolute; inset: 0; z-index: 1; opacity: 0.4; pointer-events: none;
+  background-image: linear-gradient(rgba(62,42,31,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(62,42,31,0.03) 1px, transparent 1px);
+  background-size: 32px 32px; }
+.biz-ceiling-light { position: absolute; top: 0; left: 0; right: 0; height: 300px; z-index: 2; pointer-events: none;
+  background: radial-gradient(ellipse 800px 200px at 50% 0%, rgba(255,235,200,0.4) 0%, transparent 70%); }
+.biz-grain { position: absolute; inset: 0; z-index: 1; opacity: 0.18; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); mix-blend-mode: multiply; }
+/* ── 3 屏数据墙 (顶部装饰背景) ── */
+.biz-data-wall { position: absolute; top: 120px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; z-index: 3; padding: 0 60px; opacity: 0.95; }
+.biz-screen { width: 320px; height: 200px; border: 1.5px solid var(--biz-walnut-dk); box-shadow: 0 12px 24px rgba(0,0,0,0.35); background: var(--biz-ivory); }
+.biz-screen--finance { background: var(--biz-screen-blue); color: var(--biz-ivory); }
+.biz-screen--map { background: var(--biz-ivory); color: var(--biz-leather); }
+.biz-screen--kpi { background: linear-gradient(180deg, var(--biz-screen-blue) 0%, #0F172A 100%); color: var(--biz-ivory); }
+.biz-screen svg { width: 100%; height: 100%; display: block; }
+/* ── 椭圆董事桌 (中央) ── */
+.biz-conf-table { position: relative; z-index: 10; width: 720px; height: 220px; margin: 28px auto 0; pointer-events: none; }
+.biz-conf-table svg { width: 100%; height: 100%; display: block; }
+/* ── 8 椅环 (环绕椭圆桌) ── */
+.biz-chair-ring { position: relative; z-index: 9; width: 100%; max-width: 1080px; height: 100px; margin: -40px auto 0; pointer-events: none; }
+.biz-chair { position: absolute; width: 50px; height: 58px; }
+.biz-chair svg { width: 100%; height: 100%; }
+/* ── 8 个座位名牌 ── */
+.biz-nameplate-ring { position: relative; z-index: 10; display: flex; justify-content: center; gap: 8px; flex-wrap: nowrap; max-width: 1100px; margin: 0 auto 24px; padding: 0 24px; }
+.biz-nameplate { display: inline-block; }
+.biz-np-card { display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; background: linear-gradient(180deg, #FAFAF6 0%, #E8E2D4 100%); border: 1px solid var(--biz-rose-gold); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+.biz-np-avatar { width: 22px; height: 22px; background: var(--biz-leather); border: 1px solid var(--biz-rose-gold); border-radius: 50%; position: relative; flex-shrink: 0; }
+.biz-np-avatar::before { content: ""; position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: var(--biz-rose-gold); border-radius: 50%; }
+.biz-np-avatar::after { content: ""; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 14px; height: 8px; background: var(--biz-rose-gold); border-radius: 4px 4px 0 0; }
+.biz-np-role { font-family: "Bebas Neue", sans-serif; font-size: 14px; color: var(--biz-leather); letter-spacing: 0.06em; }
+.biz-np-cn { font-size: 9px; color: var(--biz-walnut-dk); letter-spacing: 0.15em; }
+/* ── 6 hu-tag 专业列表 ── */
+.biz-hu-tag-row { position: relative; z-index: 10; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto 32px; padding: 0 24px; }
+.biz-hu-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px; background: rgba(255,255,255,0.7); border-left: 3px solid var(--biz-rose-gold);
+  font-family: var(--font-body); font-size: 12px; color: var(--biz-walnut-dk); letter-spacing: 0.1em; }
+.biz-hu-tag-num { font-family: "Bebas Neue", sans-serif; font-size: 13px; color: var(--biz-rose-gold); }
+.biz-hu-tag-en { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 9px; color: var(--biz-rose-gold-dk); letter-spacing: 0.2em; }
+/* ── 标题区 ── */
+.biz-title-zone { position: relative; z-index: 10; text-align: center; max-width: 1100px; margin: 0 auto 28px; padding: 0 24px; }
+.biz-top-tag { display: inline-flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.biz-top-tag-text { font-family: "Bebas Neue", sans-serif; font-size: 12px; letter-spacing: 0.3em; color: var(--biz-walnut-dk); }
+.biz-top-tag-num { font-family: "Bodoni Moda", serif; font-weight: 700; font-size: 18px; color: var(--biz-rose-gold); }
+.biz-discipline { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 11px; letter-spacing: 0.5em; color: var(--biz-rose-gold); margin-bottom: 6px; text-transform: uppercase; }
+.biz-discipline-cn { font-family: var(--font-body); font-size: 12px; color: var(--biz-walnut-dk); letter-spacing: 0.4em; margin-bottom: 18px; }
+.biz-title-main { font-family: var(--font-heading); font-weight: 700; font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.05; color: var(--biz-leather); letter-spacing: -0.01em; margin: 0 0 4px; }
+.biz-title-main-cn { font-family: var(--font-body); font-weight: 600; font-size: 20px; color: var(--biz-walnut-dk); letter-spacing: 0.18em; margin: 0 0 14px; }
+.biz-title-cn-accent { color: var(--biz-rose-gold); position: relative; }
+.biz-title-cn-accent::after { content: ""; display: block; height: 2px; background: linear-gradient(90deg, var(--biz-rose-gold), var(--biz-rose-gold-dk)); margin-top: 6px; width: 80px; margin-left: auto; margin-right: auto; }
+.biz-subtitle { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 11px; color: var(--biz-rose-gold-dk); letter-spacing: 0.35em; text-transform: uppercase; }
+.biz-subtitle-line { width: 80px; height: 1px; background: var(--biz-rose-gold); margin: 14px auto 16px; }
+.biz-lede { font-family: var(--font-body); font-size: 15px; line-height: 1.8; color: var(--biz-walnut-dk); max-width: 720px; margin: 0 auto 18px; }
+.biz-lede em { font-style: normal; color: var(--biz-leather); border-bottom: 1.5px solid var(--biz-rose-gold); padding-bottom: 1px; font-weight: 600; }
+.biz-hero-quote { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 16px; color: var(--biz-walnut-dk); border-left: 2px solid var(--biz-rose-gold); padding: 8px 0 8px 16px; max-width: 640px; margin: 0 auto; }
+.biz-hero-quote-sig { display: block; font-family: "Bebas Neue", sans-serif; font-style: normal; font-size: 11px; color: var(--biz-rose-gold); margin-top: 6px; letter-spacing: 0.25em; }
+/* ── 4 stats 底部条 ── */
+.biz-stats-strip { position: relative; z-index: 10; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1100px; margin: 32px auto 0; padding: 0 24px; }
+.biz-stat-block { padding: 18px 22px 16px; background: var(--biz-leather); border: 1px solid var(--biz-rose-gold); text-align: center; }
+.biz-stat-block + .biz-stat-block { border-left: none; }
+.biz-stat-label { font-family: "Bebas Neue", sans-serif; font-size: 11px; letter-spacing: 0.25em; color: var(--biz-rose-gold); margin-bottom: 6px; text-transform: uppercase; }
+.biz-stat-num { font-family: var(--font-heading); font-weight: 700; font-size: clamp(28px, 3vw, 36px); line-height: 1; color: var(--biz-rose-gold); }
+.biz-stat-num-sub { font-size: 13px; font-weight: 500; color: var(--biz-rose-gold-soft); margin-left: 2px; }
+.biz-stat-label-cn { font-family: var(--font-body); font-size: 10px; color: rgba(245,240,229,0.55); margin-top: 6px; letter-spacing: 0.15em; }
+/* ── Section tab 主题色 (下方内容区) ── */
+body.biz-body { background: var(--biz-bg); color: var(--biz-leather); font-family: var(--font-body); }
+.biz-hero h1, .biz-hero h2, .biz-hero h3 { font-family: var(--font-heading); }
+.biz-hero .num, .biz-hero .num * { font-family: var(--font-num); }
+.biz-hero + section.tab, .biz-hero ~ section.tab { background: var(--biz-bg); color: var(--biz-leather); border-top: 1px solid #E5DCC8; }
+.biz-hero + section.tab h2, .biz-hero + section.tab h3,
+.biz-hero ~ section.tab h2, .biz-hero ~ section.tab h3 { color: var(--biz-leather); }
+.biz-hero + section.tab p, .biz-hero + section.tab .lede,
+.biz-hero ~ section.tab p, .biz-hero ~ section.tab .lede { color: var(--biz-walnut-dk); }
+.biz-hero + section.tab .bento-card, .biz-hero + section.tab .company-card, .biz-hero + section.tab .curriculum-block,
+.biz-hero ~ section.tab .bento-card, .biz-hero ~ section.tab .company-card, .biz-hero ~ section.tab .curriculum-block { background: #FFFFFF; border: 1px solid #E5DCC8; color: var(--biz-leather); }
+.biz-hero + section.tab .bento-card:hover, .biz-hero + section.tab .company-card:hover, .biz-hero + section.tab .curriculum-block:hover,
+.biz-hero ~ section.tab .bento-card:hover, .biz-hero ~ section.tab .company-card:hover, .biz-hero ~ section.tab .curriculum-block:hover { border-color: var(--biz-rose-gold); }
+.biz-hero + section.tab .quote, .biz-hero ~ section.tab .quote { background: #FFFFFF; border: 1px solid #E5DCC8; border-left: 4px solid var(--biz-rose-gold); }
+.biz-hero + section.tab .quote-text, .biz-hero ~ section.tab .quote-text { color: var(--biz-walnut-dk); }
+.biz-hero + section.tab .course-name, .biz-hero ~ section.tab .course-name { color: var(--biz-leather); }
+.biz-hero + section.tab .course-credit, .biz-hero ~ section.tab .course-credit { color: var(--biz-rose-gold); }
+.biz-hero + section.tab .path-card, .biz-hero ~ section.tab .path-card { background: #FFFFFF; border: 1px solid #E5DCC8; }
+.biz-hero + section.tab .path-card:hover, .biz-hero ~ section.tab .path-card:hover { border-color: var(--biz-rose-gold); }
+.biz-hero + section.tab .cta-block, .biz-hero ~ section.tab .cta-block { background: var(--biz-leather); color: #FAFAF6; border: 1px solid var(--biz-rose-gold); }
+.biz-hero + section.tab .cta-block h3, .biz-hero + section.tab .cta-block p,
+.biz-hero ~ section.tab .cta-block h3, .biz-hero ~ section.tab .cta-block p { color: #FAFAF6; }
+.biz-hero ~ footer { color: var(--biz-walnut-dk); }
+/* ── 响应式 ── */
+@media (max-width: 1280px) {
+  .biz-hero { min-height: 660px; padding: 80px 0 90px; }
+  .biz-data-wall { padding: 0 24px; gap: 10px; }
+  .biz-screen { width: 280px; height: 170px; }
+  .biz-conf-table { width: 580px; height: 180px; }
+  .biz-stats-strip { grid-template-columns: repeat(2, 1fr); }
+  .biz-stat-block + .biz-stat-block { border-left: 1px solid var(--biz-rose-gold); border-top: none; }
+}
+@media (max-width: 768px) {
+  .biz-hero { min-height: auto; padding: 72px 0 60px; }
+  .biz-data-wall { display: none; }
+  .biz-conf-table { width: 360px; height: 130px; }
+  .biz-stats-strip { grid-template-columns: 1fr 1fr; }
+  .biz-nameplate-ring { flex-wrap: wrap; }
+  .biz-title-main { font-size: clamp(1.875rem, 7vw, 2.5rem); }
+}
 """
 
 
@@ -2039,6 +2301,10 @@ def render_v4(data: dict, style: str) -> str:
         css_extra = AGRI_CSS
     elif style == "arts":
         css_extra = ARTS_CSS
+    elif style == "gongan":
+        css_extra = GONGAN_CSS
+    elif style == "business":
+        css_extra = BUSINESS_CSS
     else:
         raise ValueError(f"Unknown v4 style: {style}")
 
@@ -2534,50 +2800,407 @@ def render_v4(data: dict, style: str) -> str:
   </div>
 </header>'''
     elif style == "arts":
-        # 画室工作台 + 颜料作 frame + 内容居中
+        # 美术馆白盒 + 画框 + 展签 + 朱红印章 + 金属铭牌
         hero_html = f'''
-<header class="hero" style="background: linear-gradient(180deg, #14110D 0%, #2A2520 100%);">
-  <!-- 装饰层 (暗色画室 + 4 角 + 顶部 2 tag) -->
-  <div class="studio-floor"></div>
-  <div class="studio-light"></div>
-  <div class="art-tag art-tag-1">Studio of Making</div>
-  <div class="art-tag art-tag-2">Atelier · 第 042 号</div>
-  <div class="tubes-stage">
-    <div class="paint-tube tube-1"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Jaune</div></div><div class="paint-tube-crimp"></div></div>
-    <div class="paint-tube tube-2"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Rouge</div></div><div class="paint-tube-crimp"></div></div>
-    <div class="paint-tube tube-3"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Bleu</div></div><div class="paint-tube-crimp"></div></div>
-    <div class="paint-tube tube-4"><div class="paint-tube-cap"></div><div class="paint-tube-body"><div class="paint-tube-label">Blanc</div></div><div class="paint-tube-crimp"></div></div>
+<header class="hero">
+  <div class="museum-wall"></div>
+  <div class="museum-floor"></div>
+  <div class="museum-light"></div>
+  <!-- 顶部 美术馆 logo -->
+  <div class="museum-logo">
+    <div class="museum-logo-text">MUSEUM OF MAJOR</div>
+    <div class="museum-logo-sub">Major Explorer Collection · Est. 2026</div>
   </div>
-  <div class="palette-stage">
-    <div class="palette-thumbhole">
-      <div class="palette-dab" style="left: 14px; top: 12px; background: #DC2626;"></div>
-      <div class="palette-dab" style="left: 36px; top: 8px; background: #F59E0B;"></div>
-      <div class="palette-dab" style="left: 60px; top: 14px; background: #1E40AF;"></div>
-      <div class="palette-dab" style="left: 22px; top: 32px; background: #6B3410;"></div>
-      <div class="palette-dab" style="left: 48px; top: 36px; background: #4A5D3A;"></div>
+  <!-- 朱红印章 (右) -->
+  <div class="cinnabar-seal">MAJOR<br/>EXPLORER</div>
+  <!-- 金属铭牌 (左) -->
+  <div class="brass-plate">Section I · Studies</div>
+  <!-- 装饰色卡 (左下, 替代颜料管) -->
+  <div class="color-swatches">
+    <div class="color-swatch swatch-1"><span class="color-swatch-label">黄</span></div>
+    <div class="color-swatch swatch-2"><span class="color-swatch-label">朱</span></div>
+    <div class="color-swatch swatch-3"><span class="color-swatch-label">青</span></div>
+    <div class="color-swatch swatch-4"><span class="color-swatch-label">墨</span></div>
+    <div class="color-swatch swatch-5"><span class="color-swatch-label">赭</span></div>
+  </div>
+  <!-- 画框 + 主内容 -->
+  <div class="gallery-frame-wrap">
+    <div class="frame-corner-bl"></div>
+    <div class="frame-corner-br"></div>
+    <div class="gallery-frame-inner">
+      <div class="hero-content">
+        <div class="hero-chapter">Museum of Studies</div>
+        <h1 class="hero-title">
+          <span class="title-en-small">Museum of</span>
+          <span class="title-cn">{title}</span>
+          <span class="title-en">HISTORY · THEORY · CURATORSHIP</span>
+        </h1>
+        <p class="hero-tagline">{summary[:160]}</p>
+        <div class="hu-stats-grid">
+          <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">{category}</span></div>
+          <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">{duration} 年 · {degree}</span></div>
+          <div class="hu-stat"><span class="hu-stat-label">难度</span><span class="hu-stat-value">{difficulty}</span></div>
+          <div class="hu-stat"><span class="hu-stat-label">更新</span><span class="hu-stat-value">{updated_at}</span></div>
+        </div>
+        <div class="hero-tags">
+          {"".join(f'<span class="hu-tag">{t}</span>' for t in tags[:5])}
+        </div>
+      </div>
     </div>
   </div>
-  <div class="studio-lamp">
-    <div class="lamp-rod"></div>
-    <div class="lamp-arm"></div>
-    <div class="lamp-head"></div>
-    <div class="lamp-bulb"></div>
-    <div class="lamp-cone"></div>
+  <!-- 展签 (底部) -->
+  <div class="gallery-label">
+    <div class="label-eyebrow">Collection · F.001</div>
+    <div class="label-title">{title}</div>
+    <div class="label-meta">Major Explorer Editorial · 2026 春季</div>
   </div>
-  <!-- 主内容 (居中, viewport 1440×900 可见) -->
-  <div class="hero-content">
-    <div class="hero-chapter">速览 · 第一章</div>
-    <h1 class="hero-title">
-      <span class="title-en-small">Studio of</span>
-      <span class="title-cn">{title}</span>
-      <span class="title-en">CRAFTING · MAKING · ATELIER</span>
-    </h1>
+</header>'''
+    elif style == "gongan":
+        # 公安学类 · 国际司法范式: 盾+十字剑+橄榄枝, 警蓝+国徽金+朱红
+        # 6 核心元素: 金线带 / 主徽 / hu-tag / 标题+stats / 引言 / 角标
+        hero_html = f'''
+<header class="hero gg-hero">
+  <div class="gg-bg-noise"></div>
+  <div class="gg-gold-band"></div>
+  <!-- 中央主徽: 盾+十字剑+橄榄枝 (背景氛围, 半透明) -->
+  <div class="gg-main-emblem" aria-hidden="true">
+    <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ggGoldG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#E5C158"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#B8902A"/>
+        </linearGradient>
+        <linearGradient id="ggShieldG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1E3A5F"/><stop offset="100%" stop-color="#0F1F33"/>
+        </linearGradient>
+      </defs>
+      <path d="M 120 24 L 200 44 L 200 120 Q 200 168 120 210 Q 40 168 40 120 L 40 44 Z" fill="url(#ggShieldG)" stroke="url(#ggGoldG)" stroke-width="2.5"/>
+      <circle cx="120" cy="64" r="10" fill="none" stroke="url(#ggGoldG)" stroke-width="1.5"/>
+      <circle cx="120" cy="64" r="5" fill="url(#ggGoldG)"/>
+      <g fill="url(#ggGoldG)">
+        <rect x="117" y="74" width="6" height="14"/>
+        <rect x="98" y="88" width="44" height="5"/>
+        <rect x="96" y="86" width="4" height="9"/>
+        <rect x="140" y="86" width="4" height="9"/>
+        <polygon points="116,93 124,93 122,170 118,170"/>
+        <polygon points="118,170 122,170 120,182"/>
+      </g>
+      <g stroke="url(#ggGoldG)" stroke-width="0.8" fill="url(#ggGoldG)">
+        <path d="M 60 130 Q 80 154 110 170" fill="none"/>
+        <ellipse cx="68" cy="138" rx="2.5" ry="5" transform="rotate(-30 68 138)"/>
+        <ellipse cx="78" cy="146" rx="2.5" ry="5" transform="rotate(-20 78 146)"/>
+        <ellipse cx="88" cy="156" rx="2.5" ry="5" transform="rotate(-10 88 156)"/>
+        <ellipse cx="98" cy="164" rx="2.5" ry="5" transform="rotate(-5 98 164)"/>
+        <ellipse cx="64" cy="148" rx="2.5" ry="5" transform="rotate(30 64 148)"/>
+        <ellipse cx="74" cy="158" rx="2.5" ry="5" transform="rotate(20 74 158)"/>
+      </g>
+      <g stroke="url(#ggGoldG)" stroke-width="0.8" fill="url(#ggGoldG)">
+        <path d="M 180 130 Q 160 154 130 170" fill="none"/>
+        <ellipse cx="172" cy="138" rx="2.5" ry="5" transform="rotate(30 172 138)"/>
+        <ellipse cx="162" cy="146" rx="2.5" ry="5" transform="rotate(20 162 146)"/>
+        <ellipse cx="152" cy="156" rx="2.5" ry="5" transform="rotate(10 152 156)"/>
+        <ellipse cx="142" cy="164" rx="2.5" ry="5" transform="rotate(5 142 164)"/>
+        <ellipse cx="176" cy="148" rx="2.5" ry="5" transform="rotate(-30 176 148)"/>
+        <ellipse cx="166" cy="158" rx="2.5" ry="5" transform="rotate(-20 166 158)"/>
+      </g>
+    </svg>
+  </div>
+  <!-- 4 角金线角标 -->
+  <div class="gg-corner-mark gg-cm-tl"></div>
+  <div class="gg-corner-mark gg-cm-tr"></div>
+  <div class="gg-corner-mark gg-cm-bl"></div>
+  <div class="gg-corner-mark gg-cm-br"></div>
+  <!-- 6 大专业 hu-tag -->
+  <div class="gg-hu-tags">
+    <div class="gg-hu-tag">公 安 学</div>
+    <div class="gg-hu-tag">治 安 学</div>
+    <div class="gg-hu-tag">侦 查 学</div>
+    <div class="gg-hu-tag">刑事科学技术</div>
+    <div class="gg-hu-tag">禁 毒 学</div>
+    <div class="gg-hu-tag">公安管理学</div>
+  </div>
+  <!-- 标题区 -->
+  <div class="gg-title-zone">
+    <div class="gg-discipline">PUBLIC SECURITY &amp; LAW STUDIES · 030600</div>
+    <h1 class="gg-hero-title">公 安 <span class="accent">学</span> 类</h1>
+    <div class="gg-title-en">Public Security &amp; Law Studies</div>
+    <div class="gg-subtitle">从 部 委 直 属 高 校 到 省 属 警 院 — 公 正 的 守 护 者 通 道</div>
+  </div>
+  <!-- 4 stats -->
+  <div class="gg-stats-row">
+    <div class="gg-stat featured">
+      <div class="gg-stat-label">Police Acad.</div>
+      <div class="gg-stat-label-cn">公 安 院 校</div>
+      <div class="gg-stat-value">No.52<span class="unit">所</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Enrollment</div>
+      <div class="gg-stat-label-cn">年 招 生 规 模</div>
+      <div class="gg-stat-value">6.8<span class="unit">万</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Posts</div>
+      <div class="gg-stat-label-cn">警 种 岗 位</div>
+      <div class="gg-stat-value">200<span class="unit">+</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Employment</div>
+      <div class="gg-stat-label-cn">入 警 率</div>
+      <div class="gg-stat-value">98.2<span class="unit">%</span></div>
+    </div>
+  </div>
+  <!-- 引言 -->
+  <div class="gg-quote">
+    <div class="gg-quote-text">对 党 忠 诚<span class="sep">·</span>服 务 人 民<span class="sep">·</span>执 法 公 正<span class="sep">·</span>纪 律 严 明</div>
+    <div class="gg-quote-sig">入 警 誓 词 · OATH OF OFFICE</div>
+  </div>
+</header>'''
+    elif style == "business":
+        # 工商管理 · 椭圆董事局 + 玫瑰金 + 胡桃木 + 屏幕深蓝
+        hero_html = f'''
+<header class="hero biz-hero">
+  <div class="biz-marble"></div>
+  <div class="biz-ceiling-light"></div>
+  <div class="biz-grain"></div>
+  <!-- 顶部 3 屏数据墙 (财务/地图/KPI) -->
+  <div class="biz-data-wall">
+    <div class="biz-screen biz-screen--finance">
+      <svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="14" y="20" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">Q1-Q4 · REVENUE (¥B)</text>
+        <text x="366" y="20" text-anchor="end" font-family="Bebas Neue" font-size="9" fill="var(--biz-rose-gold)" letter-spacing="1.5">FY 2025</text>
+        <line x1="14" y1="26" x2="366" y2="26" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
+        <rect x="60" y="120" width="34" height="86" fill="var(--biz-pos)" opacity="0.85"/>
+        <rect x="100" y="100" width="34" height="106" fill="var(--biz-pos)" opacity="0.85"/>
+        <rect x="140" y="78"  width="34" height="128" fill="var(--biz-pos)" opacity="0.95"/>
+        <rect x="180" y="58"  width="34" height="148" fill="var(--biz-pos)"/>
+        <polyline points="77,124 117,108 157,82 197,60" stroke="var(--biz-warn)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <g fill="var(--biz-warn)">
+          <circle cx="77" cy="124" r="3"/><circle cx="117" cy="108" r="3"/><circle cx="157" cy="82" r="3"/><circle cx="197" cy="60" r="3"/>
+        </g>
+        <g font-family="Inter" font-size="7" font-weight="600" fill="var(--biz-steel)" letter-spacing="1">
+          <text x="77" y="222" text-anchor="middle">Q1</text><text x="117" y="222" text-anchor="middle">Q2</text>
+          <text x="157" y="222" text-anchor="middle">Q3</text><text x="197" y="222" text-anchor="middle">Q4</text>
+        </g>
+        <rect x="240" y="50" width="120" height="50" fill="var(--biz-screen-blue-2)" stroke="var(--biz-pos)" stroke-width="0.5" opacity="0.8"/>
+        <text x="248" y="68" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">NET PROFIT</text>
+        <text x="248" y="88" font-family="Bebas Neue" font-size="22" fill="var(--biz-pos)" letter-spacing="1">¥48.2B</text>
+        <text x="350" y="88" text-anchor="end" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-pos)">+12.4%</text>
+        <rect x="240" y="110" width="120" height="50" fill="var(--biz-screen-blue-2)" stroke="var(--biz-warn)" stroke-width="0.5" opacity="0.8"/>
+        <text x="248" y="128" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">MARGIN</text>
+        <text x="248" y="148" font-family="Bebas Neue" font-size="22" fill="var(--biz-warn)" letter-spacing="1">22.8%</text>
+        <text x="350" y="148" text-anchor="end" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-warn)">+1.6pp</text>
+      </svg>
+    </div>
+    <div class="biz-screen biz-screen--map">
+      <svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="14" y="20" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-rose-gold)" letter-spacing="2">STRATEGIC MAP · CHINA</text>
+        <text x="366" y="20" text-anchor="end" font-family="Bebas Neue" font-size="9" fill="var(--biz-leather)" letter-spacing="1.5">Q4 PLAN</text>
+        <line x1="14" y1="26" x2="366" y2="26" stroke="var(--biz-rose-gold)" stroke-width="0.5" opacity="0.5"/>
+        <path d="M 70 100 L 90 90 L 110 95 L 130 85 L 155 90 L 175 100 L 200 95 L 225 110 L 250 105 L 280 115 L 305 130 L 320 145 L 315 165 L 290 180 L 260 185 L 235 175 L 210 180 L 185 170 L 160 175 L 140 165 L 120 160 L 100 145 L 80 130 Z" fill="none" stroke="var(--biz-walnut-dk)" stroke-width="1.2" stroke-dasharray="3,2" opacity="0.7"/>
+        <g transform="translate(195, 105)"><circle r="6" fill="var(--biz-neg)" opacity="0.3"/><circle r="3" fill="var(--biz-neg)"/><text y="-10" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">BJ</text></g>
+        <g transform="translate(265, 145)"><circle r="6" fill="var(--biz-neg)" opacity="0.3"/><circle r="3" fill="var(--biz-neg)"/><text y="-10" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">SH</text></g>
+        <g transform="translate(225, 175)"><circle r="6" fill="var(--biz-neg)" opacity="0.3"/><circle r="3" fill="var(--biz-neg)"/><text y="14" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">SZ</text></g>
+        <g transform="translate(140, 155)"><circle r="5" fill="var(--biz-screen-blue)" opacity="0.3"/><circle r="2.5" fill="var(--biz-screen-blue)"/><text y="-8" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">CD</text></g>
+        <g stroke="var(--biz-neg)" stroke-width="1.5" fill="none" stroke-dasharray="4,3">
+          <path d="M 195 105 Q 220 100 265 145"/>
+          <path d="M 265 145 Q 245 165 225 175"/>
+          <path d="M 195 105 Q 175 130 140 155"/>
+        </g>
+      </svg>
+    </div>
+    <div class="biz-screen biz-screen--kpi">
+      <svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="14" y="20" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">LIVE KPI · DASHBOARD</text>
+        <text x="366" y="20" text-anchor="end" font-family="Bebas Neue" font-size="9" fill="var(--biz-warn)" letter-spacing="1.5">14:32:08</text>
+        <line x1="14" y1="26" x2="366" y2="26" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
+        <g transform="translate(20, 50)">
+          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
+          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">ARR</text>
+          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-pos)" letter-spacing="1">¥2.4B</text>
+          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▲ 18.2%</text>
+        </g>
+        <g transform="translate(110, 50)">
+          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-warn)" stroke-width="0.5"/>
+          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">NPS</text>
+          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-warn)" letter-spacing="1">72</text>
+          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▲ 4</text>
+        </g>
+        <g transform="translate(200, 50)">
+          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-neg)" stroke-width="0.5"/>
+          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CHURN</text>
+          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-neg)" letter-spacing="1">2.1%</text>
+          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▼ 0.3pp</text>
+        </g>
+        <g transform="translate(290, 50)">
+          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
+          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CAC</text>
+          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-pos)" letter-spacing="1">¥820</text>
+          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▼ 12%</text>
+        </g>
+        <g transform="translate(70, 165)">
+          <circle r="38" fill="none" stroke="var(--biz-walnut-xd)" stroke-width="8"/>
+          <circle r="38" fill="none" stroke="var(--biz-pos)" stroke-width="8" stroke-dasharray="180 60" transform="rotate(-90)" stroke-linecap="round"/>
+          <text y="-2" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-pos)" letter-spacing="1">75%</text>
+          <text y="14" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">RETENTION</text>
+        </g>
+        <g transform="translate(160, 135)">
+          <text y="0" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">REVENUE · LAST 24H</text>
+          <polyline points="0,55 20,50 40,42 60,48 80,38 100,32 120,28 140,35 160,25 180,18 200,22" stroke="var(--biz-warn)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <!-- 椭圆董事桌 (中央) -->
+  <div class="biz-conf-table">
+    <svg viewBox="0 0 1080 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bizTopG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--biz-walnut-soft)"/><stop offset="0.4" stop-color="var(--biz-walnut-dk)"/><stop offset="1" stop-color="var(--biz-walnut-xd)"/></linearGradient>
+        <linearGradient id="bizSideG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--biz-walnut-xd)"/><stop offset="1" stop-color="#1A0F08"/></linearGradient>
+        <linearGradient id="bizRimG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--biz-rose-gold)" stop-opacity="0.4"/><stop offset="0.5" stop-color="var(--biz-rose-gold)" stop-opacity="0.85"/><stop offset="1" stop-color="var(--biz-rose-gold)" stop-opacity="0.4"/></linearGradient>
+      </defs>
+      <ellipse cx="540" cy="200" rx="520" ry="110" fill="url(#bizSideG)"/>
+      <ellipse cx="540" cy="170" rx="520" ry="100" fill="url(#bizTopG)"/>
+      <g fill="none" stroke="#1A0F08" stroke-width="0.4" opacity="0.4">
+        <ellipse cx="540" cy="170" rx="490" ry="92"/><ellipse cx="540" cy="170" rx="450" ry="80"/>
+        <ellipse cx="540" cy="170" rx="400" ry="68"/>
+      </g>
+      <ellipse cx="540" cy="170" rx="520" ry="100" fill="none" stroke="url(#bizRimG)" stroke-width="1.5"/>
+      <ellipse cx="540" cy="135" rx="450" ry="40" fill="rgba(255,255,255,0.05)"/>
+    </svg>
+  </div>
+  <!-- 3D 沙盘 (右上) -->
+  <div class="biz-sand-table">
+    <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="120" cy="110" rx="110" ry="35" fill="#1A0F08" stroke="var(--biz-rose-gold)" stroke-width="0.6"/>
+      <ellipse cx="120" cy="105" rx="105" ry="32" fill="var(--biz-ivory)" stroke="var(--biz-walnut-soft)" stroke-width="0.4"/>
+      <g transform="translate(40, 70)">
+        <rect x="0" y="-22" width="14" height="22" fill="var(--biz-walnut-dk)" stroke="var(--biz-rose-gold)" stroke-width="0.4"/>
+        <g fill="var(--biz-warn)" opacity="0.8"><rect x="2" y="-18" width="2" height="1.5"/><rect x="6" y="-18" width="2" height="1.5"/><rect x="10" y="-18" width="2" height="1.5"/></g>
+        <text x="7" y="10" text-anchor="middle" font-family="Inter" font-size="4" font-weight="700" fill="var(--biz-walnut-dk)">OFFICE</text>
+      </g>
+      <g transform="translate(110, 85)">
+        <rect x="0" y="-15" width="18" height="15" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.4"/>
+        <g fill="var(--biz-pos)" opacity="0.9"><rect x="2" y="-12" width="14" height="1"/><rect x="2" y="-9" width="14" height="1"/><rect x="2" y="-6" width="14" height="1"/></g>
+        <text x="9" y="7" text-anchor="middle" font-family="Inter" font-size="4" font-weight="700" fill="var(--biz-walnut-dk)">DATA</text>
+      </g>
+      <g transform="translate(160, 95)">
+        <rect x="0" y="-10" width="26" height="10" fill="var(--biz-walnut-dk)" stroke="var(--biz-rose-gold)" stroke-width="0.4"/>
+        <rect x="2" y="-14" width="6" height="4" fill="var(--biz-neg)" stroke="var(--biz-rose-gold)" stroke-width="0.2"/>
+        <rect x="9" y="-14" width="6" height="4" fill="var(--biz-screen-blue)" stroke="var(--biz-rose-gold)" stroke-width="0.2"/>
+        <rect x="16" y="-14" width="6" height="4" fill="var(--biz-warn)" stroke="var(--biz-rose-gold)" stroke-width="0.2"/>
+        <text x="13" y="7" text-anchor="middle" font-family="Inter" font-size="4" font-weight="700" fill="var(--biz-walnut-dk)">PORT</text>
+      </g>
+    </svg>
+  </div>
+  <!-- 8 把高管椅 (环桌, 简化) -->
+  <div class="biz-chair-ring">
+    <div class="biz-chair" style="left:50%;top:8%;transform:translateX(-50%);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+    <div class="biz-chair" style="left:25%;top:14%;transform:translateX(-50%) rotate(-6deg);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+    <div class="biz-chair" style="left:75%;top:14%;transform:translateX(-50%) rotate(6deg);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+    <div class="biz-chair" style="left:10%;top:35%;transform:translateX(-50%) rotate(-15deg);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+    <div class="biz-chair" style="left:90%;top:35%;transform:translateX(-50%) rotate(15deg);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+    <div class="biz-chair" style="left:25%;top:82%;transform:translateX(-50%) rotate(-6deg);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+    <div class="biz-chair" style="left:50%;top:88%;transform:translateX(-50%);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+    <div class="biz-chair" style="left:75%;top:82%;transform:translateX(-50%) rotate(6deg);">
+      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+    </div>
+  </div>
+  <!-- 8 个座位名牌 (CEO/COO/CFO/CMO/CTO/CSO/CHRO/CDO) -->
+  <div class="biz-nameplate-ring">
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CEO</div><div class="biz-np-cn">首席执行</div></div></div></div>
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">COO</div><div class="biz-np-cn">首席运营</div></div></div></div>
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CFO</div><div class="biz-np-cn">首席财务</div></div></div></div>
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CMO</div><div class="biz-np-cn">首席营销</div></div></div></div>
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CTO</div><div class="biz-np-cn">首席技术</div></div></div></div>
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CSO</div><div class="biz-np-cn">首席战略</div></div></div></div>
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CHRO</div><div class="biz-np-cn">首席人力</div></div></div></div>
+    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CDO</div><div class="biz-np-cn">首席数据</div></div></div></div>
+  </div>
+  <!-- 中央标题区 -->
+  <div class="biz-title-zone">
+    <div class="biz-top-tag">
+      <span class="biz-top-tag-text">Boardroom No.</span>
+      <span class="biz-top-tag-num">02 · 24</span>
+    </div>
+    <div class="biz-discipline">BUSINESS ADMIN · 120200</div>
+    <div class="biz-discipline-cn">工 商 管 理 · 战 略 · 决 策 · 组 织</div>
+    <h1 class="biz-title-main">Strategic<br/>Management</h1>
+    <h2 class="biz-title-main-cn"><span class="biz-title-cn-accent">战略管理</span> · 决策科学</h2>
+    <div class="biz-subtitle">FROM BCG MATRIX TO BLUE OCEAN — EXEC MIND & DECISION SCIENCE</div>
+    <div class="biz-subtitle-line"></div>
+    <p class="biz-lede">
+      商业不是「赚钱」— 是<em>战略 + 组织 + 运营 + 财务</em>的系统决策。毕业生 90 万/年, 但能进 MBB 咨询 / 500 强管培 / 战略投资部的不到 5%。「<em>看得远 + 算得清 + 拍得准</em>」的高管预备役才值钱。
+    </p>
+    <div class="biz-hero-quote">
+      "If you don't know where you're going, you might not get there."
+      <span class="biz-hero-quote-sig">— Yogi Berra</span>
+    </div>
+  </div>
+  <!-- 6 hu-tag 专业列表 -->
+  <div class="biz-hu-tag-row">
+    <div class="biz-hu-tag"><span class="biz-hu-tag-num">01</span><span>战略管理</span><span class="biz-hu-tag-en">Strategy</span></div>
+    <div class="biz-hu-tag"><span class="biz-hu-tag-num">02</span><span>组织行为</span><span class="biz-hu-tag-en">OB</span></div>
+    <div class="biz-hu-tag"><span class="biz-hu-tag-num">03</span><span>人力资源</span><span class="biz-hu-tag-en">HRM</span></div>
+    <div class="biz-hu-tag"><span class="biz-hu-tag-num">04</span><span>运营管理</span><span class="biz-hu-tag-en">OPS</span></div>
+    <div class="biz-hu-tag"><span class="biz-hu-tag-num">05</span><span>供应链</span><span class="biz-hu-tag-en">SCM</span></div>
+    <div class="biz-hu-tag"><span class="biz-hu-tag-num">06</span><span>国际商务</span><span class="biz-hu-tag-en">IB</span></div>
+  </div>
+  <!-- 4 stats 底部条 -->
+  <div class="biz-stats-strip">
+    <div class="biz-stat-block">
+      <div class="biz-stat-label">Strategy Tools</div>
+      <div class="biz-stat-num">42<span class="biz-stat-num-sub">+</span></div>
+      <div class="biz-stat-label-cn">主流战略工具 (BCG / Porter / 蓝海)</div>
+    </div>
+    <div class="biz-stat-block">
+      <div class="biz-stat-label">Consulting</div>
+      <div class="biz-stat-num">3<span class="biz-stat-num-sub">Tier-1</span></div>
+      <div class="biz-stat-label-cn">MBB · 麦肯锡 / BCG / 贝恩</div>
+    </div>
+    <div class="biz-stat-block">
+      <div class="biz-stat-label">F500 Employers</div>
+      <div class="biz-stat-num">128<span class="biz-stat-num-sub">家</span></div>
+      <div class="biz-stat-label-cn">财富 500 强中国总部招聘</div>
+    </div>
+    <div class="biz-stat-block">
+      <div class="biz-stat-label">Avg. Promotion</div>
+      <div class="biz-stat-num">4.2<span class="biz-stat-num-sub">年</span></div>
+      <div class="biz-stat-label-cn">管培生 → 中层管理 平均年限</div>
+    </div>
+  </div>
+  <!-- 角落印章 + footer -->
+  <div class="biz-stamp-bottom">STRATEGIC <span>·</span> MANAGEMENT <span>·</span> HERO 2026</div>
+  <div class="biz-stamp-corner">
+    <div class="biz-stamp-cn">高 管 战 略 会 议 室</div>
+    <div class="biz-stamp-en">Boardroom · Strategic Management</div>
+  </div>
+  <div class="biz-footer-strip">
+    <div>REPORT ID · BUS-2026-02 <span class="dot"></span> DATED · 2026.06.10 <span class="dot"></span> SOURCE · TOP MBA CASE STUDIES</div>
+    <div>STRATEGIC MANAGEMENT <span class="dot"></span> HERO 2026</div>
+  </div>
+  <!-- 动态变量注入 (隐藏) -->
+  <div class="hero-content" style="display:none;">
+    <div class="hero-chapter">{category} · 第一章</div>
+    <h1 class="hero-title"><span class="title-cn">{title}</span></h1>
     <p class="hero-tagline">{summary[:160]}</p>
     <div class="hu-stats-grid">
-      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">学科</span><span class="hu-stat-value" style="color: #FAFAFA;">{category}</span></div>
-      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">学制</span><span class="hu-stat-value" style="color: #FAFAFA;">{duration} 年 · {degree}</span></div>
-      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">难度</span><span class="hu-stat-value" style="color: #FAFAFA;">{difficulty}</span></div>
-      <div class="hu-stat"><span class="hu-stat-label" style="color: #F59E0B;">更新</span><span class="hu-stat-value" style="color: #FAFAFA;">{updated_at}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">{category}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">{duration} 年 · {degree}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">难度</span><span class="hu-stat-value">{difficulty}</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">更新</span><span class="hu-stat-value">{updated_at}</span></div>
     </div>
     <div class="hero-tags">
       {"".join(f'<span class="hu-tag">{t}</span>' for t in tags[:5])}
