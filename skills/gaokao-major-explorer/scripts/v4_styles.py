@@ -1631,13 +1631,14 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .xuanke-bar-fill { background: #6B8E23; }
 .xuanke-name { color: #2E5A2E; }
 .xuanke-pct { color: #2E5A2E; }
-.course { color: #2E5A2E; border-bottom: 1px dashed rgba(107, 142, 35, 0.2); }
+.course { color: #2E5A2E; border-bottom: 1px dashed rgba(107, 142, 35, 0.2); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(107, 142, 35, 0.04); padding-left: 8px; }
+.course-name { color: #2E5A2E; }
+.course-credit { color: #6B8E23; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
 .curriculum-block { padding: 22px 26px; background: rgba(245, 249, 236, 0.55); border: 1px solid #B8CC98; border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
 .curriculum-block:last-child { margin-bottom: 0; }
 .curriculum-block:hover { border-color: #6B8E23; }
 .curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #2E5A2E; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(107,142,35,0.3); font-weight: 700; }
-.course-name { color: #2E5A2E; }
-.course-credit { color: #6B8E23; }
 .bento-tag { color: #6B8E23; }
 .bento-rank { color: #6B8E23; border: 1px solid #6B8E23; }
 .bento-name { color: #2E5A2E; }
@@ -1861,9 +1862,10 @@ section.tab p.lede { color: #D9CFB9; }
 .curriculum-block { background: #2A2520; border: 1px solid #3A3A3A; }
 .curriculum-block:hover { border-color: #DC2626; }
 .curriculum-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.1875rem; color: #FAFAFA; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #3A3A3A; font-weight: 700; }
-.course { color: #FAFAFA; border-bottom: 1px dashed rgba(250, 250, 250, 0.1); }
+.course { color: #FAFAFA; border-bottom: 1px dashed rgba(250, 250, 250, 0.1); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(220, 38, 38, 0.04); padding-left: 8px; }
 .course-name { color: #FAFAFA; }
-.course-credit { color: #999; }
+.course-credit { color: #F59E0B; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
 .cta-block { background: #2A2520; border: 1px solid #DC2626; }
 .cta-block::before { color: #F59E0B; }
 .cta-block h3 { color: #FAFAFA; }
