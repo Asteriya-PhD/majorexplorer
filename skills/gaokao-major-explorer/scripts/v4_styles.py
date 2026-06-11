@@ -1859,7 +1859,7 @@ section.tab p.lede { color: #D9CFB9; }
 .xuanke-bar-fill { background: #DC2626; }
 .xuanke-name { color: #FAFAFA; }
 .xuanke-pct { color: #F59E0B; }
-.curriculum-block { background: #2A2520; border: 1px solid #3A3A3A; }
+.curriculum-block { padding: 32px 28px; background: #2A2520; border: 1px solid #3A3A3A; transition: border-color 250ms, transform 250ms; }
 .curriculum-block:hover { border-color: #DC2626; }
 .curriculum-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.1875rem; color: #FAFAFA; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #3A3A3A; font-weight: 700; }
 .course { color: #FAFAFA; border-bottom: 1px dashed rgba(250, 250, 250, 0.1); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
