@@ -38,8 +38,11 @@ REPS = {
 
 # device name → playwright device key
 DEVICES = {
-    "iphone13": "iPhone 13",
-    "ipad":    "iPad (gen 7)",
+    "iphone13":     "iPhone 13",
+    "iphone_se":    "iPhone SE",
+    "pixel5":       "Pixel 5",
+    "ipad":         "iPad (gen 7)",
+    "ipad_landscape": "iPad (gen 7) landscape",
 }
 
 

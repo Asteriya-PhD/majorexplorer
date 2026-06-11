@@ -721,6 +721,9 @@ def render_v4_medicine(data: dict) -> str:
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
 <title>{title}专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="严谨 · 冷静 · 鸟瞰。{summary[:80]}">
 <style>

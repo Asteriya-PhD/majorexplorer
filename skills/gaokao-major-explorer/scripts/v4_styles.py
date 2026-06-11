@@ -2047,7 +2047,6 @@ GONGAN_CSS = """
   --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
   --font-num:     "Oswald", "JetBrains Mono", monospace;
 }
-@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
 /* ── Hero 主体 ── */
 .gg-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
   background: radial-gradient(ellipse 30% 35% at 50% 22%, rgba(212,175,55,0.18) 0%, transparent 60%),
@@ -2424,7 +2423,7 @@ BUSINESS_CSS = """
   --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
   --font-num:     "JetBrains Mono", "Bebas Neue", monospace;
 }
-@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap');
+/* BUSINESS font: preconnect 在 head, @import 在 FONT_URLS['business'] (此处冗余已移除) */
 /* ── Hero 主体 ── */
 .biz-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
   background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(199,123,92,0.10) 0%, transparent 60%),
@@ -3519,6 +3518,9 @@ def render_v4(data: dict, style: str) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
 <!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 <title>{title}专业介绍 2026 高考 | Major Explorer</title>
