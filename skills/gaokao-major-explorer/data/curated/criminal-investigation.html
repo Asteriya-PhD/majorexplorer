@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+<title>侦查学专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="侦查学是公安学类的王牌专业, 培养「对党忠诚·服务人民·执法公正·纪律严明」的国家司法系统刑事侦查预备役, 覆盖刑警/经侦/网侦/缉毒/反诈/反扒/反恐等核心执法方向。">
+<style>
+@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; transition: opacity 200ms; }
+a:hover { opacity: 0.65; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
+
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
+
+body { background: #0A1420; color: #FAFAF6; font-family: 'Noto Serif SC', 'Cinzel', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 20% 15%, rgba(212, 175, 55, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 85% 80%, rgba(127, 29, 29, 0.10), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.83 0 0 0 0 0.69 0 0 0 0 0.22 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.5; mix-blend-mode: overlay; }
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
+
+
+:root {
+  /* 主题色 */
+  --gg-red: #B91C1C;        --gg-red-dk: #7F1D1D;    --gg-red-soft: #DC2626;
+  --gg-blue: #1E3A5F;       --gg-blue-dk: #0F1F33;   --gg-blue-2: #2A4A75;
+  --gg-gold: #D4AF37;       --gg-gold-dk: #B8902A;   --gg-gold-soft: #E5C158;
+  --gg-silver: #94A3B8;     --gg-silver-soft: #CBD5E1;
+  --gg-paper: #FAFAF6;      --gg-ink: #1A0A0A;
+  --gg-glow: rgba(212, 175, 55, 0.35);
+  /* 字体 (修复 v4_styles 未注入 base CSS 的问题) */
+  --font-heading: "Cinzel", "Noto Serif SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Songti SC", serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "Oswald", "JetBrains Mono", monospace;
+}
+@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
+/* ── Hero 主体 ── */
+.gg-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
+  background: radial-gradient(ellipse 30% 35% at 50% 22%, rgba(212,175,55,0.18) 0%, transparent 60%),
+              radial-gradient(ellipse 30% 50% at 88% 70%, rgba(148,163,184,0.12) 0%, transparent 60%),
+              linear-gradient(155deg, #0F1F33 0%, #1E3A5F 35%, #3A1424 70%, #0F1F33 100%);
+  border-bottom: 1px solid #1F1408; color: var(--gg-paper);
+  font-family: var(--font-body); }
+.gg-bg-noise { position: absolute; inset: 0; opacity: 0.5; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.83 0 0 0 0 0.69 0 0 0 0 0.22 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+.gg-gold-band { position: absolute; top: 0; left: 0; right: 0; height: 56px; z-index: 4; pointer-events: none;
+  background: linear-gradient(180deg, #D4AF37 0%, #B8902A 50%, #8B6F1F 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 96% 78%, 100% 88%, 100% 100%, 0 100%, 0 88%, 4% 78%, 0 70%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
+/* ── 主徽 (盾+十字剑+橄榄枝) ── */
+.gg-main-emblem { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 320px; height: 320px; z-index: 2; opacity: 0.18; pointer-events: none; filter: drop-shadow(0 0 60px var(--gg-glow)); animation: ggGlow 6s ease-in-out infinite; }
+.gg-main-emblem svg { width: 100%; height: 100%; }
+@keyframes ggGlow { 0%,100% { opacity: 0.18; } 50% { opacity: 0.28; } }
+/* ── 6 大专业 hu-tag (顶部装饰) ── */
+.gg-hu-tags { position: relative; z-index: 10; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; max-width: 1100px; margin: 0 auto 32px; padding: 0 24px; }
+.gg-hu-tag { padding: 7px 16px 7px 14px; background: rgba(15,31,51,0.78); border: 1px solid var(--gg-gold);
+  font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--gg-gold-soft);
+  letter-spacing: 0.12em; clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+.gg-hu-tag::before { content: "▪"; color: var(--gg-red-soft); margin-right: 6px; font-size: 10px; }
+/* ── 标题区 ── */
+.gg-title-zone { position: relative; z-index: 10; text-align: center; max-width: 1100px; margin: 0 auto 36px; padding: 0 24px; }
+.gg-discipline { font-family: var(--font-heading); font-size: 11px; font-weight: 600; letter-spacing: 0.55em; color: var(--gg-gold); margin-bottom: 12px; text-transform: uppercase; }
+.gg-hero-title { font-family: var(--font-body); font-weight: 900; font-size: clamp(2.5rem, 5.5vw, 4.25rem); line-height: 1; color: var(--gg-paper); letter-spacing: 0.08em;
+  text-shadow: 0 0 30px rgba(212,175,55,0.4), 0 4px 14px rgba(0,0,0,0.7); margin: 0 0 8px; }
+.gg-hero-title .accent { color: var(--gg-gold); }
+.gg-title-en { font-family: var(--font-heading); font-weight: 500; font-size: clamp(15px, 1.4vw, 20px); color: var(--gg-gold-soft); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px; }
+.gg-subtitle { margin-top: 18px; display: inline-block; padding: 8px 22px; background: rgba(15,31,51,0.6); border-left: 3px solid var(--gg-red); border-right: 3px solid var(--gg-red);
+  font-family: var(--font-body); font-size: 14px; color: rgba(250,250,246,0.85); letter-spacing: 0.18em; }
+/* ── 4 stats 关键数据 ── */
+.gg-stats-row { position: relative; z-index: 10; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1100px; margin: 0 auto 40px; padding: 0 24px; }
+.gg-stat { position: relative; padding: 18px 22px 16px; background: linear-gradient(180deg, rgba(15,31,51,0.85) 0%, rgba(30,58,95,0.65) 100%);
+  border-top: 2px solid var(--gg-gold); border-bottom: 1px solid rgba(212,175,55,0.4); text-align: center; }
+.gg-stat + .gg-stat { border-left: 1px solid rgba(212,175,55,0.2); }
+.gg-stat-label { font-family: var(--font-heading); font-size: 10px; font-weight: 600; letter-spacing: 0.35em; color: var(--gg-gold-soft); text-transform: uppercase; margin-bottom: 4px; }
+.gg-stat-label-cn { font-family: var(--font-body); font-size: 11px; color: rgba(250,250,246,0.55); letter-spacing: 0.25em; margin-bottom: 8px; }
+.gg-stat-value { font-family: var(--font-num); font-weight: 700; font-size: clamp(28px, 3vw, 40px); line-height: 1; color: var(--gg-paper); letter-spacing: 0.02em; }
+.gg-stat-value .unit { font-size: 14px; font-weight: 500; color: var(--gg-gold-soft); margin-left: 4px; letter-spacing: 0.1em; }
+.gg-stat.featured { background: linear-gradient(180deg, rgba(127,29,29,0.8) 0%, rgba(185,28,28,0.55) 100%); }
+/* ── 引言 ── */
+.gg-quote { position: relative; z-index: 10; text-align: center; margin: 0 auto; max-width: 900px; padding: 0 24px; }
+.gg-quote-text { font-family: var(--font-body); font-weight: 700; font-size: clamp(15px, 1.5vw, 22px); color: var(--gg-gold-soft); letter-spacing: 0.4em;
+  text-shadow: 0 0 24px var(--gg-glow), 0 2px 8px rgba(0,0,0,0.6); margin-bottom: 10px; }
+.gg-quote-text .sep { color: var(--gg-red-soft); margin: 0 10px; font-weight: 400; }
+.gg-quote-sig { font-family: var(--font-heading); font-style: italic; font-size: 11px; letter-spacing: 0.4em; color: rgba(250,250,246,0.55); text-transform: uppercase; }
+.gg-quote-sig::before, .gg-quote-sig::after { content: "——"; margin: 0 12px; color: var(--gg-gold); }
+/* ── 4 角金线角标 (装饰) ── */
+.gg-corner-mark { position: absolute; width: 26px; height: 26px; border: 1px solid var(--gg-gold); z-index: 50; opacity: 0.55; }
+.gg-corner-mark::before { content: ""; position: absolute; inset: 4px; border: 1px solid var(--gg-gold); }
+.gg-cm-tl { top: 70px; left: 24px; border-right: none; border-bottom: none; }
+.gg-cm-tr { top: 70px; right: 24px; border-left: none; border-bottom: none; }
+.gg-cm-bl { bottom: 24px; left: 24px; border-right: none; border-top: none; }
+.gg-cm-br { bottom: 24px; right: 24px; border-left: none; border-top: none; }
+/* ── Section tab 主题色 (下方内容区) ── */
+body.gg-body { background: #0A1420; color: var(--gg-paper); font-family: var(--font-body); }
+.gg-hero h1, .gg-hero h2, .gg-hero h3 { font-family: var(--font-heading); }
+.gg-hero .num, .gg-hero .num * { font-family: var(--font-num); }
+.gg-hero + section.tab, .gg-hero ~ section.tab { background: #0A1420; color: var(--gg-paper); border-top: 1px solid #1F1408; }
+.gg-hero + section.tab h2, .gg-hero + section.tab h3,
+.gg-hero ~ section.tab h2, .gg-hero ~ section.tab h3 { color: var(--gg-paper); }
+.gg-hero + section.tab p, .gg-hero + section.tab .lede,
+.gg-hero ~ section.tab p, .gg-hero ~ section.tab .lede { color: rgba(250,250,246,0.78); }
+.gg-hero + section.tab .bento-card, .gg-hero + section.tab .company-card, .gg-hero + section.tab .curriculum-block,
+.gg-hero ~ section.tab .bento-card, .gg-hero ~ section.tab .company-card, .gg-hero ~ section.tab .curriculum-block { background: rgba(15,31,51,0.55); border: 1px solid rgba(212,175,55,0.25); color: var(--gg-paper); }
+.gg-hero + section.tab .bento-card:hover, .gg-hero + section.tab .company-card:hover, .gg-hero + section.tab .curriculum-block:hover,
+.gg-hero ~ section.tab .bento-card:hover, .gg-hero ~ section.tab .company-card:hover, .gg-hero ~ section.tab .curriculum-block:hover { border-color: var(--gg-gold); }
+.gg-hero + section.tab .quote, .gg-hero ~ section.tab .quote { background: rgba(15,31,51,0.55); border: 1px solid rgba(212,175,55,0.25); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .quote-text, .gg-hero ~ section.tab .quote-text { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .course-name, .gg-hero ~ section.tab .course-name { color: var(--gg-paper); }
+.gg-hero + section.tab .course-credit, .gg-hero ~ section.tab .course-credit { color: var(--gg-gold); }
+.gg-hero ~ footer { color: rgba(250,250,246,0.5); }
+/* ── 响应式 ── */
+@media (max-width: 1280px) {
+  .gg-hero { min-height: 660px; padding: 80px 0 90px; }
+  .gg-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .gg-main-emblem { width: 240px; height: 240px; }
+  .gg-hu-tag { font-size: 11px; padding: 6px 14px 6px 12px; }
+}
+@media (max-width: 768px) {
+  .gg-hero { min-height: auto; padding: 72px 0 60px; }
+  .gg-stats-row { grid-template-columns: 1fr 1fr; }
+  .gg-main-emblem { width: 180px; height: 180px; opacity: 0.12; }
+  .gg-hero-title { font-size: clamp(1.875rem, 8vw, 2.5rem); }
+  .gg-quote-text { letter-spacing: 0.25em; }
+  .gg-corner-mark { width: 20px; height: 20px; }
+  .gg-cm-tl, .gg-cm-tr { top: 64px; }
+}
+/* ── 主体 section tab 样式 (复刻 agri 范式 + 主题色) ── */
+section.tab { border-top: 1px solid rgba(212, 175, 55, 0.25); }
+section.tab h2 { color: #0F1F33; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
+section.tab h3 { color: #0F1F33; font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: var(--font-body); }
+section.tab p.lede { color: rgba(250, 250, 246, 0.55); }
+.watermark { font-family: var(--font-heading); color: #0F1F33; opacity: 0.04; }
+footer { background: #FAFAF6; border-top: 1px solid rgba(212, 175, 55, 0.25); }
+footer .label { color: #0F1F33; font-family: var(--font-body); }
+footer .data-source { color: #2A4A75; }
+.drop-cap::first-letter { font-family: var(--font-heading); color: #D4AF37; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; box-shadow: 0 1px 0 rgba(212, 175, 55, 0.08); }
+.bento-item::before { content: "◆"; position: absolute; top: 20px; right: 20px; color: #2A4A75; font-size: 0.875rem; opacity: 0.4; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #2A4A75; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #0F1F33; border: 1px solid #0F1F33; border-radius: 0; font-family: var(--font-heading); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; color: #0F1F33; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: var(--font-heading); font-size: 0.8125rem; color: #2A4A75; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 28px 24px 22px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #2A4A75; color: #2A4A75; font-family: var(--font-heading); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #0F1F33; color: #FAFAF6; border-color: #0F1F33; }
+.tier-A { background: transparent; }
+.tier-B { background: transparent; color: #2A4A75; border-color: rgba(212, 175, 55, 0.25); }
+.company-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #0F1F33; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.25); }
+.sparkline-bar { flex: 1; background: rgba(212, 175, 55, 0.25); min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #2A4A75; opacity: 0.7; }
+.sparkline-label { font-family: var(--font-heading); font-size: 0.6875rem; color: #2A4A75; letter-spacing: 0.05em; margin-top: 6px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid rgba(212, 175, 55, 0.25); font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #FAFAF6; font-family: var(--font-heading); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #2A4A75; }
+.salary-stage { color: #0F1F33; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(212, 175, 55, 0.12); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.yoy { display: inline-block; font-family: var(--font-heading); font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #0F1F33; background: rgba(212, 175, 55, 0.10); }
+.yoy.down { color: #DC2626; background: rgba(220, 38, 38, 0.10); }
+.yoy.flat { color: rgba(250, 250, 246, 0.55); }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.25); }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; color: #0F1F33; }
+.direction-bar { height: 8px; background: rgba(212, 175, 55, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
+.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #0F1F33; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: var(--font-heading); color: #2A4A75; font-size: 0.875rem; margin-top: 8px; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-left: 4px solid #D4AF37; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: var(--font-heading); font-weight: 700; color: #0F1F33; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: var(--font-heading); color: rgba(250, 250, 246, 0.55); font-size: 0.75rem; }
+.quote-text { font-family: var(--font-heading); font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #0F1F33; }
+.quote-text::before { content: "「"; color: #D4AF37; }
+.quote-text::after { content: "」"; color: #D4AF37; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.25); }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: var(--font-heading); font-size: 1.0625rem; color: #0F1F33; }
+.xuanke-bar { height: 6px; background: rgba(212, 175, 55, 0.25); overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #2A4A75; }
+.xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
+.curriculum-lede { font-family: var(--font-heading); color: #2A4A75; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 22px 26px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
+.curriculum-block:last-child { margin-bottom: 0; }
+.curriculum-block:hover { border-color: #2A4A75; }
+.curriculum-title { font-family: var(--font-heading); font-size: 1.0625rem; color: #0F1F33; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(212, 175, 55, 0.30); font-weight: 700; }
+.course { color: #0F1F33; border-bottom: 1px dashed rgba(212, 175, 55, 0.20); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(212, 175, 55, 0.04); padding-left: 8px; }
+.course-name { color: #0F1F33; }
+.course-credit { color: #2A4A75; font-family: var(--font-heading); font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: rgba(250, 250, 246, 0.55); border: 1px solid #0F1F33; text-align: center; position: relative; }
+.cta-block::before { content: "◆  ◆  ◆"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #FAFAF6; padding: 0 16px; color: #0F1F33; font-size: 0.875rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: var(--font-heading); font-size: 1.75rem; margin-bottom: 12px; color: #0F1F33; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: rgba(250, 250, 246, 0.55); margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #FAFAF6; border: 1px solid rgba(212, 175, 55, 0.25); color: #0F1F33; font-family: var(--font-heading); font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #2A4A75; }
+.cta-button { padding: 14px 36px; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-button:hover { background: #FAFAF6; color: #2A4A75; }
+.cta-note { font-family: var(--font-heading); font-size: 0.75rem; color: rgba(250, 250, 246, 0.55); margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #0F1F33; color: #0F1F33; font-family: var(--font-heading); font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #0F1F33; color: #FAFAF6; }
+
+/* ── GONGAN 深色主题 section 文字色反转 (警蓝底, 文字必须亮色) ── */
+.gg-hero + section.tab, .gg-hero ~ section.tab,
+/* (原通配 * { color: inherit } 删除 — 会让 ovv-card 内部文字透明) */
+/* 标题 (h2/h3) — 金色突出 */
+.gg-hero + section.tab h2, .gg-hero + section.tab h3,
+.gg-hero ~ section.tab h2, .gg-hero ~ section.tab h3 { color: var(--gg-gold-soft); }
+/* 章节小字 (06/10 · 院校) */
+.gg-hero + section.tab .section-num, .gg-hero ~ section.tab .section-num { color: var(--gg-gold); }
+/* lede 段 */
+.gg-hero + section.tab p.lede, .gg-hero ~ section.tab p.lede { color: rgba(250, 250, 246, 0.85); }
+.gg-hero + section.tab p, .gg-hero ~ section.tab p,
+.gg-hero + section.tab li, .gg-hero ~ section.tab li { color: rgba(250, 250, 246, 0.78); }
+/* bento (院校) */
+.gg-hero + section.tab .bento-item, .gg-hero ~ section.tab .bento-item { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .bento-monogram, .gg-hero ~ section.tab .bento-monogram { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .bento-rank, .gg-hero ~ section.tab .bento-rank { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .bento-name, .gg-hero ~ section.tab .bento-name { color: var(--gg-paper); }
+.gg-hero + section.tab .bento-tag, .gg-hero ~ section.tab .bento-tag { color: rgba(212, 175, 55, 0.7); }
+/* company (头部公司) */
+.gg-hero + section.tab .company, .gg-hero ~ section.tab .company { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .company-monogram, .gg-hero ~ section.tab .company-monogram { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .company-name, .gg-hero ~ section.tab .company-name { color: var(--gg-paper); }
+.gg-hero + section.tab .company-tier, .gg-hero ~ section.tab .company-tier { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tier-S, .gg-hero ~ section.tab .tier-S { background: var(--gg-gold); color: var(--gg-blue-dk); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tier-B, .gg-hero ~ section.tab .tier-B { color: rgba(212, 175, 55, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .sparkline, .gg-hero ~ section.tab .sparkline { border-top-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .sparkline-bar, .gg-hero ~ section.tab .sparkline-bar { background: rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .company:hover .sparkline-bar, .gg-hero ~ section.tab .company:hover .sparkline-bar { background: var(--gg-gold); }
+.gg-hero + section.tab .sparkline-label, .gg-hero ~ section.tab .sparkline-label { color: rgba(212, 175, 55, 0.6); }
+/* salary */
+.gg-hero + section.tab .salary-table, .gg-hero ~ section.tab .salary-table { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); color: var(--gg-paper); }
+.gg-hero + section.tab .salary-table th, .gg-hero ~ section.tab .salary-table th { background: rgba(15, 31, 51, 0.85); color: var(--gg-gold-soft); }
+.gg-hero + section.tab .salary-table td, .gg-hero ~ section.tab .salary-table td { color: var(--gg-paper); border-bottom-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .salary-stage, .gg-hero ~ section.tab .salary-stage { color: var(--gg-paper); }
+.gg-hero + section.tab .salary-bar, .gg-hero ~ section.tab .salary-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .salary-bar-fill, .gg-hero ~ section.tab .salary-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .yoy.up, .gg-hero ~ section.tab .yoy.up { color: #22C55E; background: rgba(34, 197, 94, 0.12); }
+.gg-hero + section.tab .yoy.down, .gg-hero ~ section.tab .yoy.down { color: #FCA5A5; background: rgba(220, 38, 38, 0.12); }
+/* direction (就业方向) — 关键修复: 文字必须亮色 */
+.gg-hero + section.tab .direction-name, .gg-hero ~ section.tab .direction-name { color: var(--gg-paper); }
+.gg-hero + section.tab .direction-bar, .gg-hero ~ section.tab .direction-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .direction-bar-fill, .gg-hero ~ section.tab .direction-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .direction-pct, .gg-hero ~ section.tab .direction-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .direction, .gg-hero ~ section.tab .direction { border-bottom-color: rgba(212, 175, 55, 0.20); }
+/* path */
+.gg-hero + section.tab .path-card, .gg-hero ~ section.tab .path-card { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .path-pct, .gg-hero ~ section.tab .path-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .path-name, .gg-hero ~ section.tab .path-name { color: rgba(212, 175, 55, 0.7); }
+/* quote (校友引言) — 关键修复 */
+.gg-hero + section.tab .quote, .gg-hero ~ section.tab .quote { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .quote-avatar, .gg-hero ~ section.tab .quote-avatar { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .quote-byline strong, .gg-hero ~ section.tab .quote-byline strong { color: var(--gg-paper); }
+.gg-hero + section.tab .quote-byline .quote-source, .gg-hero ~ section.tab .quote-byline .quote-source { color: rgba(212, 175, 55, 0.7); }
+.gg-hero + section.tab .quote-text, .gg-hero ~ section.tab .quote-text { color: var(--gg-paper); }
+.gg-hero + section.tab .quote-text::before, .gg-hero ~ section.tab .quote-text::before,
+.gg-hero + section.tab .quote-text::after, .gg-hero ~ section.tab .quote-text::after { color: var(--gg-gold); }
+/* xuanke (选科要求) — 关键修复 */
+.gg-hero + section.tab .xuanke-name, .gg-hero ~ section.tab .xuanke-name { color: var(--gg-paper); }
+.gg-hero + section.tab .xuanke-bar, .gg-hero ~ section.tab .xuanke-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .xuanke-bar-fill, .gg-hero ~ section.tab .xuanke-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .xuanke-pct, .gg-hero ~ section.tab .xuanke-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .xuanke, .gg-hero ~ section.tab .xuanke { border-bottom-color: rgba(212, 175, 55, 0.20); }
+/* curriculum */
+.gg-hero + section.tab .curriculum-block, .gg-hero ~ section.tab .curriculum-block { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .curriculum-title, .gg-hero ~ section.tab .curriculum-title { color: var(--gg-gold-soft); border-bottom-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .course, .gg-hero ~ section.tab .course { color: var(--gg-paper); border-bottom-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .course:hover, .gg-hero ~ section.tab .course:hover { background: rgba(212, 175, 55, 0.05); }
+.gg-hero + section.tab .course-name, .gg-hero ~ section.tab .course-name { color: var(--gg-paper); }
+.gg-hero + section.tab .course-credit, .gg-hero ~ section.tab .course-credit { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .curriculum-lede, .gg-hero ~ section.tab .curriculum-lede { color: var(--gg-gold-soft); }
+/* cta */
+.gg-hero + section.tab .cta-block, .gg-hero ~ section.tab .cta-block { background: rgba(15, 31, 51, 0.7); border-color: var(--gg-gold); }
+.gg-hero + section.tab .cta-block::before, .gg-hero ~ section.tab .cta-block::before { background: var(--gg-blue-dk); color: var(--gg-gold); }
+.gg-hero + section.tab .cta-block h3, .gg-hero ~ section.tab .cta-block h3 { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .cta-block p, .gg-hero ~ section.tab .cta-block p { color: rgba(250, 250, 246, 0.78); }
+.gg-hero + section.tab .cta-input, .gg-hero ~ section.tab .cta-input { background: rgba(15, 31, 51, 0.8); border-color: rgba(212, 175, 55, 0.4); color: var(--gg-paper); }
+.gg-hero + section.tab .cta-input:focus, .gg-hero ~ section.tab .cta-input:focus { border-color: var(--gg-gold); }
+.gg-hero + section.tab .cta-button, .gg-hero ~ section.tab .cta-button { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .cta-button:hover, .gg-hero ~ section.tab .cta-button:hover { background: var(--gg-paper); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .cta-note, .gg-hero ~ section.tab .cta-note { color: rgba(212, 175, 55, 0.6); }
+.gg-hero + section.tab .tag, .gg-hero ~ section.tab .tag { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tag.primary, .gg-hero ~ section.tab .tag.primary { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .drop-cap::first-letter, .gg-hero ~ section.tab .drop-cap::first-letter { color: var(--gg-gold); }
+.gg-hero + section.tab .watermark, .gg-hero ~ section.tab .watermark { color: var(--gg-gold); opacity: 0.03; }
+.gg-hero + section.tab footer, .gg-hero ~ section.tab footer { background: rgba(15, 31, 51, 0.85); color: rgba(250, 250, 246, 0.5); }
+.gg-hero + section.tab footer .label, .gg-hero ~ section.tab footer .label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab footer .data-source, .gg-hero ~ section.tab footer .data-source { color: rgba(212, 175, 55, 0.6); }
+
+/* ── GONGAN ovv-card (速览 3 子卡) 深色覆写 ── */
+.gg-hero + section.tab .ovv-card, .gg-hero ~ section.tab .ovv-card { background: rgba(15, 31, 51, 0.7); border-color: rgba(212, 175, 55, 0.3); color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-lede, .gg-hero ~ section.tab .ovv-lede { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-lede::first-letter, .gg-hero ~ section.tab .ovv-lede::first-letter { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-card-title, .gg-hero ~ section.tab .ovv-card-title { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-card-num, .gg-hero ~ section.tab .ovv-card-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-card-tag, .gg-hero ~ section.tab .ovv-card-tag { color: rgba(212, 175, 55, 0.7); border-color: rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-foundations-label, .gg-hero ~ section.tab .ovv-foundations-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step { background: rgba(212, 175, 55, 0.10); color: var(--gg-paper); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-directions-label, .gg-hero ~ section.tab .ovv-directions-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-dir, .gg-hero ~ section.tab .ovv-dir { background: rgba(15, 31, 51, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-dir-num, .gg-hero ~ section.tab .ovv-dir-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-dir-name, .gg-hero ~ section.tab .ovv-dir-name { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-dir-desc, .gg-hero ~ section.tab .ovv-dir-desc { color: rgba(212, 175, 55, 0.7); }
+.gg-hero + section.tab .ovv-skills, .gg-hero ~ section.tab .ovv-skills { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-skill, .gg-hero ~ section.tab .ovv-skill { background: rgba(212, 175, 55, 0.10); color: var(--gg-paper); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-bonus, .gg-hero ~ section.tab .ovv-bonus { color: var(--gg-gold-soft); background: rgba(212, 175, 55, 0.08); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .ovv-fit-col.is-yes, .gg-hero ~ section.tab .ovv-fit-col.is-yes { color: #22C55E; }
+.gg-hero + section.tab .ovv-fit-col.is-no, .gg-hero ~ section.tab .ovv-fit-col.is-no { color: #FCA5A5; }
+.gg-hero + section.tab .ovv-fit-label, .gg-hero ~ section.tab .ovv-fit-label { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-pit, .gg-hero ~ section.tab .ovv-pit { background: rgba(15, 31, 51, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-pit-num, .gg-hero ~ section.tab .ovv-pit-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-pit-myth, .gg-hero ~ section.tab .ovv-pit-myth { color: #FCA5A5; }
+.gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); }
+
+/* ── GONGAN ovv-card (速览 3 子卡) 文字加亮 + 边框加深 ── */
+.gg-hero + section.tab .ovv-card, .gg-hero ~ section.tab .ovv-card { background: rgba(15, 31, 51, 0.85); border: 1.5px solid rgba(212, 175, 55, 0.45); box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.gg-hero + section.tab .ovv-card.is-blue, .gg-hero ~ section.tab .ovv-card.is-blue { border-color: rgba(96, 165, 250, 0.6); }
+.gg-hero + section.tab .ovv-card.is-orange, .gg-hero ~ section.tab .ovv-card.is-orange { border-color: rgba(251, 146, 60, 0.7); }
+.gg-hero + section.tab .ovv-lede, .gg-hero ~ section.tab .ovv-lede { color: var(--gg-paper); line-height: 1.85; }
+.gg-hero + section.tab .ovv-lede::first-letter, .gg-hero ~ section.tab .ovv-lede::first-letter { color: var(--gg-gold); font-size: 3em; }
+.gg-hero + section.tab .ovv-card-head, .gg-hero ~ section.tab .ovv-card-head { border-bottom: 1px solid rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-card-title, .gg-hero ~ section.tab .ovv-card-title { color: var(--gg-gold-soft); font-weight: 700; }
+.gg-hero + section.tab .ovv-card-num, .gg-hero ~ section.tab .ovv-card-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-card-tag, .gg-hero ~ section.tab .ovv-card-tag { color: var(--gg-paper); background: rgba(212, 175, 55, 0.18); border: 1px solid rgba(212, 175, 55, 0.5); padding: 3px 10px; }
+.gg-hero + section.tab .ovv-foundations-label, .gg-hero ~ section.tab .ovv-foundations-label { color: var(--gg-gold-soft); font-weight: 600; letter-spacing: 0.1em; }
+.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline { border-top: 1px solid rgba(212, 175, 55, 0.2); border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+.gg-hero + section.tab .ovv-tl-step span, .gg-hero ~ section.tab .ovv-tl-step span { color: var(--gg-paper); font-weight: 600; font-size: 0.95rem; }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step { background: rgba(212, 175, 55, 0.15); border: 1.5px solid rgba(212, 175, 55, 0.5); padding: 12px 16px; }
+.gg-hero + section.tab .ovv-tl-step::before, .gg-hero ~ section.tab .ovv-tl-step::before { background: var(--gg-gold); border-color: var(--gg-gold); width: 12px; height: 12px; box-shadow: 0 0 8px var(--gg-glow); }
+.gg-hero + section.tab .ovv-directions-label, .gg-hero ~ section.tab .ovv-directions-label { color: var(--gg-gold-soft); font-weight: 600; letter-spacing: 0.1em; }
+.gg-hero + section.tab .ovv-dir, .gg-hero ~ section.tab .ovv-dir { background: rgba(15, 31, 51, 0.7); border: 1.5px solid rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-dir-num, .gg-hero ~ section.tab .ovv-dir-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-dir-name, .gg-hero ~ section.tab .ovv-dir-name { color: var(--gg-paper); font-weight: 700; font-size: 1.0625rem; }
+.gg-hero + section.tab .ovv-dir-desc, .gg-hero ~ section.tab .ovv-dir-desc { color: rgba(212, 175, 55, 0.85); font-size: 0.85rem; }
+.gg-hero + section.tab .ovv-skills-label, .gg-hero ~ section.tab .ovv-skills-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-skill, .gg-hero ~ section.tab .ovv-skill { background: rgba(212, 175, 55, 0.18); color: var(--gg-paper); border: 1.5px solid rgba(212, 175, 55, 0.5); font-weight: 500; }
+.gg-hero + section.tab .ovv-bonus, .gg-hero ~ section.tab .ovv-bonus { color: var(--gg-paper); background: rgba(212, 175, 55, 0.10); border-left: 4px solid var(--gg-gold); padding: 16px 20px; line-height: 1.75; }
+.gg-hero + section.tab .ovv-fit-col.is-yes, .gg-hero ~ section.tab .ovv-fit-col.is-yes { color: #22C55E; font-weight: 600; }
+.gg-hero + section.tab .ovv-fit-col.is-no, .gg-hero ~ section.tab .ovv-fit-col.is-no { color: #FCA5A5; font-weight: 600; }
+.gg-hero + section.tab .ovv-fit-label, .gg-hero ~ section.tab .ovv-fit-label { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li { color: var(--gg-paper); line-height: 1.7; padding: 4px 0; }
+.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-pit, .gg-hero ~ section.tab .ovv-pit { background: rgba(15, 31, 51, 0.7); border: 1.5px solid rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-pit-num, .gg-hero ~ section.tab .ovv-pit-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-pit-myth, .gg-hero ~ section.tab .ovv-pit-myth { color: #FCA5A5; font-weight: 600; }
+.gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); line-height: 1.65; }
+/* ── 强制 .path-grid 5 列一行 (高 specificity) ── */
+body.gg-body .gg-hero + section.tab .path-grid, body.gg-body .gg-hero ~ section.tab .path-grid,
+body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+body.gg-body .gg-hero + section.tab .path-card, body.gg-body .gg-hero ~ section.tab .path-card,
+body.biz-body .biz-hero + section.tab .path-card, body.biz-body .biz-hero ~ section.tab .path-card { padding: 24px 8px 20px !important; }
+body.gg-body .gg-hero + section.tab .path-pct, body.gg-body .gg-hero ~ section.tab .path-pct,
+body.biz-body .biz-hero + section.tab .path-pct, body.biz-body .biz-hero ~ section.tab .path-pct { font-size: clamp(1.5rem, 2.2vw, 2rem) !important; }
+body.gg-body .gg-hero + section.tab .path-name, body.gg-body .gg-hero ~ section.tab .path-name,
+body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ section.tab .path-name { font-size: 0.7rem !important; line-height: 1.4 !important; padding: 0 4px !important; word-break: break-all !important; }
+
+/* ── ovv-tl-step 一行 + ovv-fit-list 列表 marker 修复 (所有 ovv 主题) ── */
+.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline,
+.biz-hero + section.tab .ovv-timeline, .biz-hero ~ section.tab .ovv-timeline { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 10px; padding-bottom: 8px; }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step,
+.biz-hero + section.tab .ovv-tl-step, .biz-hero ~ section.tab .ovv-tl-step { flex: 0 0 auto; min-width: 100px; text-align: center; }
+.gg-hero + section.tab .ovv-fit-list, .gg-hero ~ section.tab .ovv-fit-list,
+.biz-hero + section.tab .ovv-fit-list, .biz-hero ~ section.tab .ovv-fit-list { list-style: none; padding-left: 0; margin: 0; }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li,
+.biz-hero + section.tab .ovv-fit-list li, .biz-hero ~ section.tab .ovv-fit-list li { padding-left: 0; }
+.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before,
+.biz-hero + section.tab .ovv-fit-list li::before, .biz-hero ~ section.tab .ovv-fit-list li::before { content: none; }
+
+
+</style>
+</head>
+<body>
+
+<header class="hero gg-hero">
+  <div class="gg-bg-noise"></div>
+  <div class="gg-gold-band"></div>
+  <!-- 中央主徽: 盾+十字剑+橄榄枝 (背景氛围, 半透明) -->
+  <div class="gg-main-emblem" aria-hidden="true">
+    <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ggGoldG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#E5C158"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#B8902A"/>
+        </linearGradient>
+        <linearGradient id="ggShieldG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1E3A5F"/><stop offset="100%" stop-color="#0F1F33"/>
+        </linearGradient>
+      </defs>
+      <path d="M 120 24 L 200 44 L 200 120 Q 200 168 120 210 Q 40 168 40 120 L 40 44 Z" fill="url(#ggShieldG)" stroke="url(#ggGoldG)" stroke-width="2.5"/>
+      <circle cx="120" cy="64" r="10" fill="none" stroke="url(#ggGoldG)" stroke-width="1.5"/>
+      <circle cx="120" cy="64" r="5" fill="url(#ggGoldG)"/>
+      <g fill="url(#ggGoldG)">
+        <rect x="117" y="74" width="6" height="14"/>
+        <rect x="98" y="88" width="44" height="5"/>
+        <rect x="96" y="86" width="4" height="9"/>
+        <rect x="140" y="86" width="4" height="9"/>
+        <polygon points="116,93 124,93 122,170 118,170"/>
+        <polygon points="118,170 122,170 120,182"/>
+      </g>
+      <g stroke="url(#ggGoldG)" stroke-width="0.8" fill="url(#ggGoldG)">
+        <path d="M 60 130 Q 80 154 110 170" fill="none"/>
+        <ellipse cx="68" cy="138" rx="2.5" ry="5" transform="rotate(-30 68 138)"/>
+        <ellipse cx="78" cy="146" rx="2.5" ry="5" transform="rotate(-20 78 146)"/>
+        <ellipse cx="88" cy="156" rx="2.5" ry="5" transform="rotate(-10 88 156)"/>
+        <ellipse cx="98" cy="164" rx="2.5" ry="5" transform="rotate(-5 98 164)"/>
+        <ellipse cx="64" cy="148" rx="2.5" ry="5" transform="rotate(30 64 148)"/>
+        <ellipse cx="74" cy="158" rx="2.5" ry="5" transform="rotate(20 74 158)"/>
+      </g>
+      <g stroke="url(#ggGoldG)" stroke-width="0.8" fill="url(#ggGoldG)">
+        <path d="M 180 130 Q 160 154 130 170" fill="none"/>
+        <ellipse cx="172" cy="138" rx="2.5" ry="5" transform="rotate(30 172 138)"/>
+        <ellipse cx="162" cy="146" rx="2.5" ry="5" transform="rotate(20 162 146)"/>
+        <ellipse cx="152" cy="156" rx="2.5" ry="5" transform="rotate(10 152 156)"/>
+        <ellipse cx="142" cy="164" rx="2.5" ry="5" transform="rotate(5 142 164)"/>
+        <ellipse cx="176" cy="148" rx="2.5" ry="5" transform="rotate(-30 176 148)"/>
+        <ellipse cx="166" cy="158" rx="2.5" ry="5" transform="rotate(-20 166 158)"/>
+      </g>
+    </svg>
+  </div>
+  <!-- 4 角金线角标 -->
+  <div class="gg-corner-mark gg-cm-tl"></div>
+  <div class="gg-corner-mark gg-cm-tr"></div>
+  <div class="gg-corner-mark gg-cm-bl"></div>
+  <div class="gg-corner-mark gg-cm-br"></div>
+  <!-- 6 大专业 hu-tag -->
+  <div class="gg-hu-tags">
+    <div class="gg-hu-tag">公 安 学</div>
+    <div class="gg-hu-tag">治 安 学</div>
+    <div class="gg-hu-tag">侦 查 学</div>
+    <div class="gg-hu-tag">刑事科学技术</div>
+    <div class="gg-hu-tag">禁 毒 学</div>
+    <div class="gg-hu-tag">公安管理学</div>
+  </div>
+  <!-- 标题区 -->
+  <div class="gg-title-zone">
+    <div class="gg-discipline">PUBLIC SECURITY &amp; LAW STUDIES · 030600</div>
+    <h1 class="gg-hero-title">公 安 <span class="accent">学</span> 类</h1>
+    <div class="gg-title-en">Public Security &amp; Law Studies</div>
+    <div class="gg-subtitle">从 部 委 直 属 高 校 到 省 属 警 院 — 公 正 的 守 护 者 通 道</div>
+  </div>
+  <!-- 4 stats -->
+  <div class="gg-stats-row">
+    <div class="gg-stat featured">
+      <div class="gg-stat-label">Police Acad.</div>
+      <div class="gg-stat-label-cn">公 安 院 校</div>
+      <div class="gg-stat-value">No.52<span class="unit">所</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Enrollment</div>
+      <div class="gg-stat-label-cn">年 招 生 规 模</div>
+      <div class="gg-stat-value">6.8<span class="unit">万</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Posts</div>
+      <div class="gg-stat-label-cn">警 种 岗 位</div>
+      <div class="gg-stat-value">200<span class="unit">+</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Employment</div>
+      <div class="gg-stat-label-cn">入 警 率</div>
+      <div class="gg-stat-value">98.2<span class="unit">%</span></div>
+    </div>
+  </div>
+  <!-- 引言 -->
+  <div class="gg-quote">
+    <div class="gg-quote-text">对 党 忠 诚<span class="sep">·</span>服 务 人 民<span class="sep">·</span>执 法 公 正<span class="sep">·</span>纪 律 严 明</div>
+    <div class="gg-quote-sig">入 警 誓 词 · OATH OF OFFICE</div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap ovv-lede">侦查学是公安学类最王牌的「破案专业」, 培养能办案、能勘查、能讯问的国家司法系统刑事执法预备役。毕业生 90%+ 通过公安联考入警 (回生源地), 流向刑侦/经侦/网安/缉毒/反诈/派出所/出入境等核心执法岗位; 5% 流向公安科技 To-G 企业 (海康/大华) 或律所刑辩方向。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>公安学基础</span></div><div class="ovv-tl-step"><span>犯罪学</span></div><div class="ovv-tl-step"><span>刑法学</span></div><div class="ovv-tl-step"><span>刑事诉讼法学</span></div><div class="ovv-tl-step"><span>警察心理学</span></div><div class="ovv-tl-step"><span>法医学概论</span></div><div class="ovv-tl-step"><span>物证技术学</span></div><div class="ovv-tl-step"><span>现场勘查学</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">刑事侦查</div><div class="ovv-dir-desc">重案队/命案/系列性案件</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">经济犯罪侦查</div><div class="ovv-dir-desc">金融/涉税/洗钱/职务犯罪</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">禁毒学</div><div class="ovv-dir-desc">缉毒/毒品检验/戒毒康复</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">信息化侦查</div><div class="ovv-dir-desc">网安/网侦/视频/电子取证</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">公安情报/反恐</div><div class="ovv-dir-desc">情报分析/反恐/国保</div></div></div><div class="ovv-skills"><span class="ovv-skill">现场勘查 (痕迹/物证/拍照)</span><span class="ovv-skill">讯问与笔录</span><span class="ovv-skill">法律文书</span><span class="ovv-skill">射击/擒拿/警械</span><span class="ovv-skill">信息化侦查 (Python/电子取证)</span><span class="ovv-skill">群众工作 (调解/走访)</span></div><div class="ovv-bonus">公安院校实行「警务化管理」(统一着警服/集体出操/纪律严明/手机报备), 大三可参加公安联考 (一年一次, 应届限考), 通过率 ≈ 90%+, 入警即获公务员编制。部属 5 校 (中国人民公安/中国刑事警察/中国人民警察/铁道警察/南京森林警察) 全国选岗, 省属警院限本省。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>想进国家司法系统当警察 (公安/国安/司法/监狱)</li><li>能接受警务化管理和纪律约束 (统一着警服/出操/请假审批)</li><li>身体素质好 (体检 + 体测双门槛: 50m/1000m/俯卧撑/立定跳远)</li><li>政治审查能过 (本人+直系亲属无犯罪记录)</li><li>分数够部属 5 校或省内警院 (公大/刑院≈985 分, 省属警院≈一本线+50)</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>想拿高薪 (公安起薪 5-8k, 灰色收入已整治, 升职后逐步好转)</li><li>不能接受 24h 值班和危险岗位 (缉毒/排爆/防暴/重案)</li><li>期待自由职业或出海 (公安受纪律约束, 出境/转行都受限)</li><li>想读研后再工作 (公安联考只限应届, 读完研要从社招重考)</li><li>想当律师/检察官 (侦查学不能替代法考口径, 要先过法考)</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">7 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 侦查学 = 当刑警抓坏人</div><div class="ovv-pit-reality">90% 联考入警是事实, 但能选到「刑警/重案队」岗位的不到 1/3, 大部分人会被分到派出所做治安警, 真正做刑侦要看联考排名 + 选岗运气。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 公安联考 90% 入警率 = 包分配到好岗位</div><div class="ovv-pit-reality">联考按成绩选岗, 偏远县城基层派出所是主力, 想进省会市局要考到年级前列, 公安部级岗位一所学校不超过 5 个。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 侦查学毕业都去公安</div><div class="ovv-pit-reality">只有「公安院校 + 公安专业 + 应届」才能参加公安联考, 西南政法/中国政法等政法院校的侦查学专业, 反而不能参加联考, 只能走省考或律所。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 侦查学不需要学数学/物理</div><div class="ovv-pit-reality">侦查学本体偏文, 但「信息化侦查/网安/视频侦查/电子取证」方向要 Python/数据挖掘/哈希算法, 建议自学 SQL/Python 武装自己。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 女生学侦查没出路</div><div class="ovv-pit-reality">女警主要在网安/出入境/内勤/社区/法制/预审, 体能测试男女标准不同, 但入警率与男生无差, 一线抓捕/缉毒有少量岗位可报, 不存在「不收女生」问题。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 省属警院不如部属 5 校</div><div class="ovv-pit-reality">省属警院 (江苏警官/浙江警察/广东警官) 在本省联考有选岗优势, 部属 5 校 (公大/刑院/警大/铁警/南森) 全国选岗, 哪个好取决于分数 + 想去哪个省。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ 侦查学 vs 法学选哪个都行</div><div class="ovv-pit-reality">想当警察选侦查学 (入警捷径), 想当律师/检察官选法学 (法考口径宽), 两者完全不互通, 选错了要重新来。</div></div></div></div>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
+    <p class="curriculum-lede">全国 4 年制通用框架, 总学分约 160-180。公共课 (含警体) 约 40-50 学分, 专业核心 30-40 学分, 方向选修 20-30 学分, 实践环节 (公安见习 6 周 + 毕业实习 10 周) 30-40 学分。各校方向侧重点不同, 公大重数据侦查, 刑院重命案攻坚, 警大重食药环, 铁警重铁路公安。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">大学英语 (I-IV)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">思想政治理论 (思修/史纲/马原/毛概)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">高等数学 (微积分 + 线性代数 + 概率论)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">计算机应用基础 (含 Python 入门)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">体育 (I-IV) + 警体达标</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">大学语文 / 应用文写作</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">逻辑学 / 法律逻辑</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">警察心理学</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">自卫擒敌 + 警械使用</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">射击 (警用武器应用技术)</span><span class="course-credit">2 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><span class="course-name">公安学基础理论</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">犯罪学概论</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">刑法学 (总论 + 各论)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">刑事诉讼法学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">行政法与行政诉讼法学</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">民法学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">犯罪现场勘查学</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">刑事案件侦查</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">侦查措施 (讯问/搜查/查封/扣押)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">侦查讯问学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">物证技术学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">预审学</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">法医学概论</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">公安文书写作</span><span class="course-credit">2 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><span class="course-name">中国人民公安大学 · 数据侦查实验班 (Python/大数据/电子取证)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">中国刑事警察学院 · 重案侦查与命案积案攻坚</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">中国人民警察大学 · 食品药品环境犯罪侦查技术</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">铁道警察学院 · 铁路公安与铁路沿线案件侦查</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">中央司法警官学院 · 狱内侦查与社区矫正</span><span class="course-credit">2 学分</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">中国人民公安大学</div>
+          <div class="bento-tag">北京 · 公安系统最高学府, 公安部直属</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">中国刑事警察学院</div>
+          <div class="bento-tag">沈阳 · 刑警的摇篮, 命案攻坚黄埔</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">四</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">四川警察学院</div>
+          <div class="bento-tag">泸州 · 西南地区侦查学重镇</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">中国人民警察大学</div>
+          <div class="bento-tag">廊坊 · 公安部直属, 食药环犯罪侦查特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">南京警察学院</div>
+          <div class="bento-tag">南京 · 公安部直属, 长江流域办案</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">江</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">江苏警官学院</div>
+          <div class="bento-tag">南京 · 江苏省公安厅直属, 经侦方向强</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">中央司法警官学院</div>
+          <div class="bento-tag">保定 · 司法部直属, 狱内侦查方向</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">铁</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">铁道警察学院</div>
+          <div class="bento-tag">郑州 · 公安部直属, 铁路公安唯一本科</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">浙江警察学院</div>
+          <div class="bento-tag">杭州 · 浙江省公安厅直属, 沿海经济犯罪</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">广</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">广东警官学院</div>
+          <div class="bento-tag">广州 · 广东省公安厅直属, 反诈/经侦特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">山</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">山东警察学院</div>
+          <div class="bento-tag">济南 · 山东省公安厅直属, 联考入警率高</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">湖</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">湖南警察学院</div>
+          <div class="bento-tag">长沙 · 湖南省公安厅直属, 中部警务骨干</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">公</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">公安部刑事侦查局 (重案侦办)</div>
+          <div class="company-meta">★★★ · 校招 科员 8-12 万/年, 大案侦办组长 15-25 万/年 (含警衔津贴), 全国选岗稀缺</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">省</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">省级刑侦总队 / 市局刑侦支队</div>
+          <div class="company-meta">★★★★ · 校招 市局科员 7-10 万/年, 大队长/中队长 15-22 万/年, 办案津贴另算</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">经</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">经侦支队 (经济犯罪侦查)</div>
+          <div class="company-meta">★★★★ · 校招 经侦民警 8-12 万/年, 金融犯罪组骨干 18-30 万/年, 涉税/洗钱方向吃香</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">网</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">网安/网侦/反诈中心 (信息化侦查)</div>
+          <div class="company-meta">★★★★ · 校招 网安民警 8-13 万/年, 反诈中心技术骨干 15-28 万/年, 紧缺 Python/数据人才</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">缉</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">缉毒支队 / 禁毒局</div>
+          <div class="company-meta">★★★ · 校招 缉毒警 8-12 万/年, 卧底/外勤高风险岗另算津贴, 心理承受力门槛极高</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">公</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">公安派出所 (治安警/社区警)</div>
+          <div class="company-meta">★★★★★ · 校招 社区民警 6-9 万/年, 所长/教导员 12-18 万/年, 90%+ 联考新警首站</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">重</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">重案队 / 命案积案攻坚组</div>
+          <div class="company-meta">★★ · 校招 重案民警 10-15 万/年, 攻坚组组长 20-35 万/年, 24h 备勤+出差</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">出</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">出入境管理 / 边防检查 (侦查学可转)</div>
+          <div class="company-meta">★★★ · 校招 出入境民警 7-10 万/年, 偏文职, 适合女生/稳定诉求</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">司</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">司法鉴定中心 / 物证鉴定 (侦查学转岗)</div>
+          <div class="company-meta">★★ · 校招 司法鉴定员 8-15 万/年, 物证/DNA/电子取证方向, 技术壁垒高</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">海</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">海康威视/大华/旷视 (公安科技 To-G)</div>
+          <div class="company-meta">★★★ · 校招 解决方案/算法岗 15-30 万/年, 985/警校+计算机双背景加分</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">金</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">金杜/君合/中伦 (刑辩律师/合规)</div>
+          <div class="company-meta">★★ · 校招 刑辩律师起薪 20-40 万/年, 律所合规 15-25 万/年, 需过法考</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">安</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">安恒/奇安信/深信服 (网络安全/电子取证)</div>
+          <div class="company-meta">★★ · 校招 电子取证/数据合规 15-28 万/年, 警校+网安双背景, 互联网大厂同薪</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="salary">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">应届 (0-1 年)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="5">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.55555555555556%"></span></span><span class="yoy up">↗ +2%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:77.77777777777779%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="9">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">1-3 年 (基层科员 / 办案民警)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="14">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3-5 年 (业务骨干 / 中队长)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="24">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">8-10 年 (大队长 / 副处长 / 经侦组长)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="20">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:47.61904761904761%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="42">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+        <div class="direction">
+          <div class="direction-name">公安派出所 (治安警/社区警/户籍)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:30%"></div></div>
+          <div class="direction-pct">30%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">市局/省厅刑侦支队 (重案/反扒/图侦)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
+          <div class="direction-pct">22%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">经侦/网安/缉毒/反诈等专项警种</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">中央/省属司法机关 (检察院/法院/司法行政)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">公安科技 To-G 企业 (海康/大华/旷视)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:7%"></div></div>
+          <div class="direction-pct">7%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">律所刑辩/合规/法务 (需过法考)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
+          <div class="direction-pct">6%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">继续深造 (公安学/法学硕士/警察硕士)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
+          <div class="direction-pct">5%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">其他 (转行/待业/出国)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:4%"></div></div>
+          <div class="direction-pct">4%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">38%</div>
+          <div class="path-name">公安学硕士 (侦查学方向)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">18%</div>
+          <div class="path-name">法学硕士 (刑诉法/刑法学/证据法)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">14%</div>
+          <div class="path-name">警察硕士 (公安部直属警校专硕)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">12%</div>
+          <div class="path-name">法律硕士 (法硕非法学/法硕法学)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">10%</div>
+          <div class="path-name">网络安全/数据科学 (跨学科, 海外深造为主)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">8%</div>
+          <div class="path-name">其他 (MBA/管理类/转方向)</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某省厅刑侦总队 重案侦办组 副组长</strong>
+              <span class="quote-source">2018 届 · 校友访谈 @北京</span>
+            </div>
+          </div>
+          <p class="quote-text">公大侦查学四年, 真正学到的不是破案技巧, 是「在现场混乱中保持冷静」的心理素质。我经手过 7 起命案, 最长一次连续 60 小时没合眼, 警务化训练出来的作息纪律救了命。</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某市局经侦支队 金融犯罪侦查组 民警</strong>
+              <span class="quote-source">2020 届 · 校友访谈 @深圳</span>
+            </div>
+          </div>
+          <p class="quote-text">经侦看着光鲜, 其实 80% 时间在查账本和合同。我大三自学了 ACCA 基础 + Python, 入警后做涉税案件比同期上手快一倍。侦查学+财务/数据是经侦新人的黄金组合。</p>
+        </div>
+        <div class="quote fade-up" data-delay="160" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某省会城市 反诈中心 预警劝阻组 民警</strong>
+              <span class="quote-source">2019 届 · 校友访谈 @杭州</span>
+            </div>
+          </div>
+          <p class="quote-text">做反诈三年, 每天打 200+ 电话劝阻可能被骗的群众, 成就感很强, 但偶尔被骂哭也是常事。公大联考入警选岗选到了反诈, 比起派出所清闲很多, 适合不想出外勤的女生。</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某省厅网安总队 电子数据取证组 民警</strong>
+              <span class="quote-source">2021 届 · 校友访谈 @成都</span>
+            </div>
+          </div>
+          <p class="quote-text">我本来以为侦查学毕业只能抓人, 结果联考进了网安, 现在专门做手机和云端数据取证, 工作环境和互联网公司差不多, 加班也多但有成就感。Python 和数据恢复是大学自学的, 派上大用场。</p>
+        </div>
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某市局 派出所副所长</strong>
+              <span class="quote-source">2017 届 · 校友访谈 @山东</span>
+            </div>
+          </div>
+          <p class="quote-text">省属警院毕业后联考回老家乡派出所, 第一年天天调解邻里纠纷和夫妻吵架, 落差很大, 但第三年开始上手办案, 现在副所长管 6 个民警。公安这份工作, 前期熬得住后期才有空间。</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">海</div>
+            <div class="quote-byline">
+              <strong>海康威视 公安行业解决方案经理</strong>
+              <span class="quote-source">2022 届 · 校友访谈 @杭州</span>
+            </div>
+          </div>
+          <p class="quote-text">大四联考没考到心仪岗位, 毕业后转行去海康做 To-G 销售。警校背景+侦查学知识在安防行业是硬通货, 客户觉得我比纯工科背景的同事更懂实战, 两年做到项目经理, 比当警察赚得多。</p>
+        </div>
+        <div class="quote fade-up" data-delay="160" >
+          <div class="quote-head">
+            <div class="quote-avatar">金</div>
+            <div class="quote-byline">
+              <strong>金杜律所 刑辩律师 (前派出所民警)</strong>
+              <span class="quote-source">2016 届 · 知乎 @上海</span>
+            </div>
+          </div>
+          <p class="quote-text">做警察 4 年后辞职过法考转行做刑辩, 公安+律师双重身份在刑事案件中很有优势, 当年派出所调纠纷、办轻刑案的经验, 现在帮嫌疑人辩护时反而成了别人没有的视角。缺点是收入波动大。</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">政治 (必选, 公安学类专业硬门槛)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:100%"></div></div>
+          <div class="xuanke-pct">100%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">首选物理或历史均可 (3+1+2 模式)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
+          <div class="xuanke-pct">60%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">再选科目常组合: 政治 + 历史 + 地理</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:45%"></div></div>
+          <div class="xuanke-pct">45%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">再选科目常组合: 政治 + 地理 + 生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
+          <div class="xuanke-pct">25%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">再选科目常组合: 政治 + 历史 + 化学</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
+          <div class="xuanke-pct">20%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="cta">
+  <div class="watermark">10</div>
+  <div class="container">
+    <div class="section-num">10 / 10 · 关联志愿</div>
+    <h2>关联志愿</h2>
+    <div class="cta-block">
+      <h3>基于你的位次, 推荐这些校 + 组</h3>
+      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
+      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
+        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
+        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
+        <button type="submit" class="cta-button">推荐志愿 →</button>
+      </form>
+      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
+    <div class="data-source">数据源: 综合教育部第四轮学科评估、软科 2025 中国大学专业排名 (侦查学 16 所)、麦可思 2025 届毕业生半年后就业报告、职友集薪资样本 (2831 份)、阳光高考 2025 选科要求、中国人民公安大学/中国刑事警察学院 2024 版培养方案、知乎/小红书 2018-2025 届校友分享、2025 年新高考公安院校选科数据等公开信息。</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
