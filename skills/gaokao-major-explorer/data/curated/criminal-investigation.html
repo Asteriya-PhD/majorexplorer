@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
 <!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 <title>侦查学专业介绍 2026 高考 | Major Explorer</title>
@@ -373,7 +376,6 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
   --font-num:     "Oswald", "JetBrains Mono", monospace;
 }
-@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
 /* ── Hero 主体 ── */
 .gg-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
   background: radial-gradient(ellipse 30% 35% at 50% 22%, rgba(212,175,55,0.18) 0%, transparent 60%),
@@ -731,14 +733,6 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 
 
 </style>
-
-  <!-- BEGIN_SEO_CANONICAL --><link rel="canonical" href="https://[PLACEHOLDER_DOMAIN]/skills/gaokao-major-explorer/data/curated/criminal-investigation.html">
-  <!-- BEGIN_SEO_OG --><meta property="og:image" content="https://[PLACEHOLDER_DOMAIN]/assets/og-default.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="article"><meta property="og:site_name" content="Major Explorer">
-  <!-- BEGIN_SEO_JSONLD -->
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Course", "name": "侦查学", "description": "侦查学是公安学类的王牌专业, 培养「对党忠诚·服务人民·执法公正·纪律严明」的国家司法系统刑事侦查预备役, 覆盖刑警/经侦/网侦/缉毒/反诈/反扒/反恐等核心执法方向。", "provider": {"@type": "Organization", "name": "Major Explorer", "sameAs": "https://[PLACEHOLDER_DOMAIN]"}, "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "in-person", "duration": "P4Y", "inLanguage": "zh-CN"}, "educationalCredentialAwarded": "法学学士", "inLanguage": "zh-CN"}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://[PLACEHOLDER_DOMAIN]/"}, {"@type": "ListItem", "position": 2, "name": "专业库", "item": "https://[PLACEHOLDER_DOMAIN]/skills/gaokao-major-explorer/data/curated/"}, {"@type": "ListItem", "position": 3, "name": "侦查学", "item": "https://[PLACEHOLDER_DOMAIN]/skills/gaokao-major-explorer/data/curated/criminal-investigation.html"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "「侦查学 = 当刑警抓坏人」 → 90% 公安联考入警是事实, 但能选到「刑警/重案队」岗位的不到 1/3, 大部分人会被分到派出所做治安警, 真正做刑侦要看联考排名 + 选岗运气, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「公安联考 90% 入警率 = 包分配到好岗位」 → 错。联考按成绩选岗, 笔试 + 面试 + 体测 + 政审 + 体检全过才能入警, 偏远县城基层派出所是「包分配」的主力, 想进省会市局要考到年级前列, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「侦查学毕业都去公安」 → 错。只有「公安院校 + 公安专业 + 应届」才能参加公安联考, 西南政法/中国政法等政法院校的侦查学专业毕业生, 反而不能参加联考, 只能走公务员省考或律所, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「侦查学不需要学数学/物理」 → 半对。侦查学本体偏文, 但「信息化侦查/网安/视频侦查/电子取证」方向需要 Python/数据挖掘, 「刑事科学技术/法医/痕迹」方向要物理化学生物 (但那是另一个专业), 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「女生学侦查没出路」 → 错。女警主要在网安/出入境/内勤/社区/法制/预审, 体能测试男女标准不同, 但入警率和男生没差别, 一线抓捕/缉毒/排爆有少量岗位可报, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「省属警校不如部属 5 校」 → 分数决定。省属警院 (江苏警官/浙江警察/广东警官) 在本省联考有优势, 部属 5 校 (中国人民公安/中国刑事警察/中国人民警察/铁道警察/南京森林警察) 全国选岗, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}]}</script>
-  <!-- END_SEO_JSONLD -->
 </head>
 <body>
 

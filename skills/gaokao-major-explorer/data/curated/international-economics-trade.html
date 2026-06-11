@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
 <!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 <title>国际经济与贸易专业介绍 2026 高考 | Major Explorer</title>
@@ -373,7 +376,7 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
   --font-num:     "JetBrains Mono", "Bebas Neue", monospace;
 }
-@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap');
+/* BUSINESS font: preconnect 在 head, @import 在 FONT_URLS['business'] (此处冗余已移除) */
 /* ── Hero 主体 ── */
 .biz-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
   background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(199,123,92,0.10) 0%, transparent 60%),
@@ -574,14 +577,6 @@ footer .data-source { color: #5C6770; }
 
 
 </style>
-
-  <!-- BEGIN_SEO_CANONICAL --><link rel="canonical" href="https://[PLACEHOLDER_DOMAIN]/skills/gaokao-major-explorer/data/curated/international-economics-trade.html">
-  <!-- BEGIN_SEO_OG --><meta property="og:image" content="https://[PLACEHOLDER_DOMAIN]/assets/og-default.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="article"><meta property="og:site_name" content="Major Explorer">
-  <!-- BEGIN_SEO_JSONLD -->
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Course", "name": "国际经济与贸易", "description": "国贸不是「学外贸」那么简单 — 是经济学 + 国际商法 + 跨境实操三位一体的交叉学科。风口在跨境电商 + 涉外合规 + 区域国别研究, 传统外贸业务员岗位大幅萎缩。英语不是「加分项」是「生死线」, 哑巴英语基本告别高薪岗。", "provider": {"@type": "Organization", "name": "Major Explorer", "sameAs": "https://[PLACEHOLDER_DOMAIN]"}, "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "in-person", "duration": "P4Y", "inLanguage": "zh-CN"}, "educationalCredentialAwarded": "经济学学士", "inLanguage": "zh-CN"}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://[PLACEHOLDER_DOMAIN]/"}, {"@type": "ListItem", "position": 2, "name": "专业库", "item": "https://[PLACEHOLDER_DOMAIN]/skills/gaokao-major-explorer/data/curated/"}, {"@type": "ListItem", "position": 3, "name": "国际经济与贸易", "item": "https://[PLACEHOLDER_DOMAIN]/skills/gaokao-major-explorer/data/curated/international-economics-trade.html"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "「国贸 = 高薪外向型」 → 80% 毕业生月薪 6, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "10k, 真正高薪的跨境电商运营 / 涉外合规 / 投行国际部不到 15%。"}}, {"@type": "Question", "name": "「英语好就能做国贸」 → 英语只是门票, 业务能力 (找客户 / 谈价格 / 处理索赔) 才是分水岭, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「传统外贸还是铁饭碗」 → 2015 年后外贸业务员岗位萎缩 40%, 现在是跨境电商 + 独立站 + 短视频出海的时代, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「毕业就进商务部 / WTO」 → 国考岗位极少, 外交部小语种优先, 国贸基本走三不限卷王局, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「国贸万金油哪里都能去」 → 恰恰是哪里都不专。HR 招「国贸」岗少, 招「跨境电商运营」「海外销售」「外贸单证」多, 名字相近不是同一份工作, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}, {"@type": "Question", "name": "「广交会人脉 = 真功夫」 → 90% 广交会名片回家后没下文, 真功夫在校招 + 实习 + 跨境实操账号, 是真的吗?", "acceptedAnswer": {"@type": "Answer", "text": "这是常见误解, 实际请以高校官方培养方案和行业报告为准。"}}]}</script>
-  <!-- END_SEO_JSONLD -->
 </head>
 <body>
 
