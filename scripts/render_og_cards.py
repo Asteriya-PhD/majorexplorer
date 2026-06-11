@@ -432,7 +432,7 @@ SUBTITLES = {
 
 # 主题专属 section ornament (lede 与 chips 间的分隔点缀)
 SECTION_ORNAMENTS = {
-    "medicine":  ("Rx · 速览 v2", "▶"),
+    "medicine":  ("Rx · 主要课程", "▶"),
     "finance":   ("Editorial Brief", "§"),
     "law":       ("Exhibit A · 专业全貌", "❦"),
     "gongan":    ("六维档案 · DOSSIER", "❖"),
@@ -471,8 +471,12 @@ def fmt_category(category: str) -> str:
 
 
 def trunc(s: str, n: int) -> str:
+    """截断到 n 字符: 句号/逗号处优先, 不加省略号 (避免 '万+...' 这种半截词)"""
     s = s.strip()
-    return s if len(s) <= n else s[:n-1].rstrip("，,。.;；:：") + "…"
+    if len(s) <= n:
+        return s
+    truncated = s[:n].rstrip("，,。.;；:： ")
+    return truncated
 
 
 def render_card(style: str, slug: str) -> str:
@@ -488,7 +492,7 @@ def render_card(style: str, slug: str) -> str:
     title = data["title"]
     category = data.get("category", "")
     lede = v2.get("lede") or data.get("summary", "")
-    lede = trunc(lede, 95)
+    lede = trunc(lede, 180)  # 增大上限, 让 lede 完整显示 (不切词)
     duration = data.get("duration_years", 4)
     degree = data.get("degree", "")
     difficulty = data.get("difficulty", "")
@@ -539,7 +543,7 @@ def render_card(style: str, slug: str) -> str:
     quote_html = f'<div class="quote">{quote_text}</div>' if quote_text else ""
 
     # 主题专属 section ornament (lede 与 chips 间)
-    orn_label, orn_glyph = SECTION_ORNAMENTS.get(style, ("速览 v2", "·"))
+    orn_label, orn_glyph = SECTION_ORNAMENTS.get(style, ("主要课程", "·"))
     divider_html = f'<div class="section-divider"><div class="rule"></div><span class="orn">{orn_glyph}</span><span>{orn_label}</span><span class="orn">{orn_glyph}</span><div class="rule"></div></div>'
 
     # medicine 主题: ECG 流式分隔线 (插在 subtitle 与 lede 之间)
@@ -582,7 +586,6 @@ def render_card(style: str, slug: str) -> str:
   </div>
   <div class="footer">
     <span>major-explorer · {slug}</span>
-    <span>3:4 竖屏 · 1080 × 1440</span>
   </div>
 </div>
 </body></html>"""
