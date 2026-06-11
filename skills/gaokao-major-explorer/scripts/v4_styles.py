@@ -1729,18 +1729,18 @@ ARTS_CSS = """
   box-shadow: 0 2px 6px rgba(107, 93, 67, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
 
 /* === 装饰色卡 === */
-.color-swatches { position: absolute; left: 24px; top: 200px; z-index: 5; display: flex; flex-direction: column; gap: 6px; padding: 14px 12px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-.color-swatch { width: 56px; height: 16px; position: relative; display: flex; align-items: center; justify-content: center; font-family: 'EB Garamond', serif; font-size: 0.6rem; color: #FFFFFF; font-weight: 700; letter-spacing: 0.1em; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
-.swatch-1 { background: linear-gradient(90deg, #C8A26E 0%, #B8902A 50%, #8B6914 100%); color: #2A1A0A; }
-.swatch-2 { background: linear-gradient(90deg, #DC2626, #7F1D1D); }
-.swatch-3 { background: linear-gradient(90deg, #1E40AF, #1E3A8A); }
-.swatch-4 { background: linear-gradient(90deg, #4A5D3A, #2A3A1A); }
-.swatch-5 { background: linear-gradient(90deg, #6B3410, #4A2A0A); }
-.color-swatch::before { content: "■"; margin-right: 4px; opacity: 0.6; }
+.color-swatches { position: absolute; left: 36px; top: 220px; z-index: 5; width: 96px; height: 168px; padding: 12px 8px; background: linear-gradient(180deg, #FFFFFF 0%, #F5F0E5 100%); border: 1.5px solid #B8902A; border-radius: 2px; box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 0 0 1px #FFFFFF; z-index: 5; }
+.color-swatches::before { content: "PALETTE"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #B8902A; color: #FFFFFF; font-family: 'EB Garamond', serif; font-size: 0.5rem; letter-spacing: 0.3em; padding: 2px 8px; font-weight: 700; }
+.color-swatch { position: absolute; left: 50%; display: block; height: 12px; border-radius: 2px 8px 2px 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 -1px 0 rgba(0,0,0,0.15); }
+.swatch-1 { top: 28px; width: 78px; transform: translateX(-50%) rotate(-4deg); background: linear-gradient(90deg, #C8A26E 0%, #B8902A 50%, #8B6914 100%); }
+.swatch-2 { top: 48px; width: 64px; transform: translateX(-50%) rotate(7deg); background: linear-gradient(90deg, #DC2626 0%, #991B1B 100%); }
+.swatch-3 { top: 68px; width: 82px; transform: translateX(-50%) rotate(-2deg); background: linear-gradient(90deg, #1E40AF 0%, #1E3A8A 100%); }
+.swatch-4 { top: 88px; width: 70px; transform: translateX(-50%) rotate(5deg); background: linear-gradient(90deg, #4A5D3A 0%, #2A3A1A 100%); }
+.swatch-5 { top: 108px; width: 60px; transform: translateX(-50%) rotate(-3deg); background: linear-gradient(90deg, #6B3410 0%, #4A2A0A 100%); }
 .color-swatch-label { display: none; }
 
 /* === 画框 (双线 + 暖金内沿) === */
-.gallery-frame-wrap { position: relative; margin: 80px auto 0; max-width: 880px; z-index: 4; padding: 18px; background: #F8F6F2;
+.gallery-frame-wrap { position: relative; margin: 60px 24px 0; z-index: 4; padding: 18px; background: #F8F6F2;
   box-shadow: 0 0 0 1px #1A1A1A, 0 0 0 5px #F8F6F2, 0 0 0 6px #1A1A1A, 0 24px 48px rgba(0, 0, 0, 0.10), inset 0 0 0 1px #B8902A; }
 .gallery-frame-wrap::before, .gallery-frame-wrap::after { content: ""; position: absolute; width: 24px; height: 24px; border: 1.5px solid #B8902A; pointer-events: none; }
 .gallery-frame-wrap::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
@@ -1748,7 +1748,7 @@ ARTS_CSS = """
 .frame-corner-bl, .frame-corner-br { position: absolute; width: 24px; height: 24px; border: 1.5px solid #B8902A; pointer-events: none; }
 .frame-corner-bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
 .frame-corner-br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-.gallery-frame-inner { background: #FFFFFF; padding: 60px 56px 40px; position: relative; }
+.gallery-frame-inner { background: #FFFFFF; padding: 40px 36px 28px; position: relative; }
 
 /* === 展签 (bottom gallery label) === */
 .gallery-label { position: relative; margin: 32px auto 0; z-index: 6; padding: 12px 28px; background: #FFFFFF; border: 1px solid #1A1A1A; box-shadow: 0 4px 12px rgba(0,0,0,0.12); text-align: center; max-width: 720px; }
@@ -1772,11 +1772,11 @@ section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif 
 .title-en-small { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-weight: 400; font-size: 0.45em; color: #6B5D43; letter-spacing: 0.25em; margin-bottom: 8px; text-transform: uppercase; }
 .title-en { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B5D43; letter-spacing: 0.3em; margin-top: 14px; text-transform: uppercase; }
 .hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #4A5A3A; max-width: 720px; margin: 20px auto 0; }
-.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 720px; padding: 18px 0; border-top: 1px solid rgba(184, 144, 42, 0.3); border-bottom: 1px solid rgba(184, 144, 42, 0.3); }
-.hu-stat { text-align: center; padding: 4px 0; position: relative; }
-.hu-stat:not(:last-child)::after { content: ""; position: absolute; right: -9px; top: 20%; bottom: 20%; width: 1px; background: rgba(184, 144, 42, 0.2); }
-.hu-stat-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #B8902A; margin-bottom: 6px; }
-.hu-stat-value { font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 700; color: #1A1A1A; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px auto 0; max-width: 100%; padding: 16px 0; border-top: 1px solid rgba(184, 144, 42, 0.3); border-bottom: 1px solid rgba(184, 144, 42, 0.3); }
+.hu-stat { text-align: center; padding: 6px 4px; position: relative; }
+.hu-stat:not(:last-child)::after { content: ""; position: absolute; right: -6px; top: 22%; bottom: 22%; width: 1px; background: rgba(184, 144, 42, 0.2); }
+.hu-stat-label { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; color: #B8902A; margin-bottom: 6px; }
+.hu-stat-value { font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; color: #1A1A1A; line-height: 1.3; }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 24px; }
 .hu-tag { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.78rem; letter-spacing: 0.05em; padding: 4px 14px; border: 1px solid #1A1A1A; color: #1A1A1A; background: rgba(248, 246, 242, 0.6); }
 
@@ -2087,21 +2087,8 @@ BUSINESS_CSS = """
 .biz-screen--kpi { background: linear-gradient(180deg, var(--biz-screen-blue) 0%, #0F172A 100%); color: var(--biz-ivory); }
 .biz-screen svg { width: 100%; height: 100%; display: block; }
 /* ── 椭圆董事桌 (中央) ── */
-.biz-conf-table { position: relative; z-index: 10; width: 720px; height: 220px; margin: 28px auto 0; pointer-events: none; }
-.biz-conf-table svg { width: 100%; height: 100%; display: block; }
 /* ── 8 椅环 (环绕椭圆桌) ── */
-.biz-chair-ring { position: relative; z-index: 9; width: 100%; max-width: 1080px; height: 100px; margin: -40px auto 0; pointer-events: none; }
-.biz-chair { position: absolute; width: 50px; height: 58px; }
-.biz-chair svg { width: 100%; height: 100%; }
 /* ── 8 个座位名牌 ── */
-.biz-nameplate-ring { position: relative; z-index: 10; display: flex; justify-content: center; gap: 8px; flex-wrap: nowrap; max-width: 1100px; margin: 0 auto 24px; padding: 0 24px; }
-.biz-nameplate { display: inline-block; }
-.biz-np-card { display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; background: linear-gradient(180deg, #FAFAF6 0%, #E8E2D4 100%); border: 1px solid var(--biz-rose-gold); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-.biz-np-avatar { width: 22px; height: 22px; background: var(--biz-leather); border: 1px solid var(--biz-rose-gold); border-radius: 50%; position: relative; flex-shrink: 0; }
-.biz-np-avatar::before { content: ""; position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: var(--biz-rose-gold); border-radius: 50%; }
-.biz-np-avatar::after { content: ""; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 14px; height: 8px; background: var(--biz-rose-gold); border-radius: 4px 4px 0 0; }
-.biz-np-role { font-family: "Bebas Neue", sans-serif; font-size: 14px; color: var(--biz-leather); letter-spacing: 0.06em; }
-.biz-np-cn { font-size: 9px; color: var(--biz-walnut-dk); letter-spacing: 0.15em; }
 /* ── 6 hu-tag 专业列表 ── */
 .biz-hu-tag-row { position: relative; z-index: 10; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto 32px; padding: 0 24px; }
 .biz-hu-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px; background: rgba(255,255,255,0.7); border-left: 3px solid var(--biz-rose-gold);
@@ -2161,18 +2148,70 @@ body.biz-body { background: var(--biz-bg); color: var(--biz-leather); font-famil
   .biz-hero { min-height: 660px; padding: 80px 0 90px; }
   .biz-data-wall { padding: 0 24px; gap: 10px; }
   .biz-screen { width: 280px; height: 170px; }
-  .biz-conf-table { width: 580px; height: 180px; }
   .biz-stats-strip { grid-template-columns: repeat(2, 1fr); }
   .biz-stat-block + .biz-stat-block { border-left: 1px solid var(--biz-rose-gold); border-top: none; }
 }
 @media (max-width: 768px) {
   .biz-hero { min-height: auto; padding: 72px 0 60px; }
   .biz-data-wall { display: none; }
-  .biz-conf-table { width: 360px; height: 130px; }
   .biz-stats-strip { grid-template-columns: 1fr 1fr; }
-  .biz-nameplate-ring { flex-wrap: wrap; }
   .biz-title-main { font-size: clamp(1.875rem, 7vw, 2.5rem); }
 }
+"""
+
+
+BASE_V4_CSS = """
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
 """
 
 
@@ -3057,63 +3096,7 @@ def render_v4(data: dict, style: str) -> str:
       </svg>
     </div>
   </div>
-  <!-- 椭圆董事桌 (中央) -->
-  <div class="biz-conf-table">
-    <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="bizTopG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--biz-walnut-soft)"/><stop offset="0.4" stop-color="var(--biz-walnut-dk)"/><stop offset="1" stop-color="var(--biz-walnut-xd)"/></linearGradient>
-        <linearGradient id="bizSideG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--biz-walnut-xd)"/><stop offset="1" stop-color="#1A0F08"/></linearGradient>
-        <linearGradient id="bizRimG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--biz-rose-gold)" stop-opacity="0.4"/><stop offset="0.5" stop-color="var(--biz-rose-gold)" stop-opacity="0.85"/><stop offset="1" stop-color="var(--biz-rose-gold)" stop-opacity="0.4"/></linearGradient>
-      </defs>
-      <ellipse cx="360" cy="140" rx="350" ry="72" fill="url(#bizSideG)"/>
-      <ellipse cx="360" cy="118" rx="350" ry="65" fill="url(#bizTopG)"/>
-      <g fill="none" stroke="#1A0F08" stroke-width="0.4" opacity="0.4">
-        <ellipse cx="360" cy="118" rx="328" ry="58"/><ellipse cx="360" cy="118" rx="296" ry="50"/>
-        <ellipse cx="360" cy="118" rx="260" ry="42"/>
-      </g>
-      <ellipse cx="360" cy="118" rx="350" ry="65" fill="none" stroke="url(#bizRimG)" stroke-width="1.4"/>
-      <ellipse cx="360" cy="92" rx="296" ry="26" fill="rgba(255,255,255,0.05)"/>
-    </svg>
-  </div>
-  <!-- 8 把高管椅 (环桌, 简化) -->
-  <div class="biz-chair-ring">
-    <div class="biz-chair" style="left:50%;top:8%;transform:translateX(-50%);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-    <div class="biz-chair" style="left:25%;top:14%;transform:translateX(-50%) rotate(-6deg);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-    <div class="biz-chair" style="left:75%;top:14%;transform:translateX(-50%) rotate(6deg);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-    <div class="biz-chair" style="left:10%;top:35%;transform:translateX(-50%) rotate(-15deg);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-    <div class="biz-chair" style="left:90%;top:35%;transform:translateX(-50%) rotate(15deg);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-    <div class="biz-chair" style="left:25%;top:82%;transform:translateX(-50%) rotate(-6deg);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-    <div class="biz-chair" style="left:50%;top:88%;transform:translateX(-50%);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-    <div class="biz-chair" style="left:75%;top:82%;transform:translateX(-50%) rotate(6deg);">
-      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
-    </div>
-  </div>
-  <!-- 8 个座位名牌 (CEO/COO/CFO/CMO/CTO/CSO/CHRO/CDO) -->
-  <div class="biz-nameplate-ring">
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CEO</div><div class="biz-np-cn">首席执行</div></div></div></div>
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">COO</div><div class="biz-np-cn">首席运营</div></div></div></div>
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CFO</div><div class="biz-np-cn">首席财务</div></div></div></div>
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CMO</div><div class="biz-np-cn">首席营销</div></div></div></div>
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CTO</div><div class="biz-np-cn">首席技术</div></div></div></div>
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CSO</div><div class="biz-np-cn">首席战略</div></div></div></div>
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CHRO</div><div class="biz-np-cn">首席人力</div></div></div></div>
-    <div class="biz-nameplate"><div class="biz-np-card"><div class="biz-np-avatar"></div><div><div class="biz-np-role">CDO</div><div class="biz-np-cn">首席数据</div></div></div></div>
-  </div>
-  <!-- 中央标题区 -->
+
   <div class="biz-title-zone">
     <div class="biz-top-tag">
       <span class="biz-top-tag-text">Boardroom No.</span>
@@ -3181,6 +3164,7 @@ def render_v4(data: dict, style: str) -> str:
 <style>
 {FONT_URLS[style]}
 {get_base_css()}
+{BASE_V4_CSS}
 {body_bg}
 {OVERVIEW_V2_CSS}
 {css_extra}
