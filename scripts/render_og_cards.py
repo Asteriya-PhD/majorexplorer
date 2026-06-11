@@ -431,12 +431,18 @@ SUBTITLES = {
 }
 
 # 主题专属 section ornament (lede 与 chips 间的分隔点缀)
+# 风格统一: [English term] · [中文小字] + 装饰 glyph (两侧横线) — 仿法律版 Exhibit A
 SECTION_ORNAMENTS = {
-    "medicine":  ("Rx · 主要课程", "▶"),
-    "finance":   ("Editorial Brief", "§"),
-    "law":       ("Exhibit A · 专业全貌", "❦"),
-    "gongan":    ("六维档案 · DOSSIER", "❖"),
-    "education": ("Lesson · 课程图", "❀"),
+    "medicine":  ("Rx · 主要课程",          "▶"),
+    "finance":   ("Annual Report · 主要课程", "§"),
+    "law":       ("Exhibit A · 专业全貌",    "❦"),
+    "gongan":    ("六维档案 · DOSSIER",     "❖"),
+    "education": ("Lesson · 课程图",         "❀"),
+    "cs":        ("kernel.md · 主要课程",    ">"),
+    "eng":       ("DWG-001 · 主要课程",     "▣"),
+    "arts":      ("Gallery F.001 · 主要课程", "◆"),
+    "business":  ("Board Minutes · 主要课程", "§"),
+    "sci":       ("Vol.50 · 主要课程",       "¶"),
 }
 
 
