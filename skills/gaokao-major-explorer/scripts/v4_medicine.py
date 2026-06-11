@@ -336,6 +336,36 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .fade-up, .count-up { opacity: 1; transform: none; }
 }
+
+/* ============================================================
+   Universal mobile patches — medicine theme (≤480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .container { padding: 0 14px !important; }
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+  .ecg-line { opacity: 0.3 !important; }
+  /* medicine vital cards 2x2 已存在, 但 cells padding 偏大 — 收紧 */
+  .vital { padding: 14px 12px !important; }
+  .vital-value { font-size: 1.5rem !important; }
+}
 """
 
 

@@ -803,6 +803,49 @@ footer .data-source { font-size: 0.75rem; color: var(--muted); opacity: 0.7; max
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   section.tab { opacity: 1; transform: none; }
 }
+
+/* ============================================================
+   Universal mobile patches — apply across all 13 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧到 14px, 给内容多 12px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 内容 overflow 是各主题通病 — 强制 min-width:0 + 缩 padding/字号 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: clamp 在窄屏不够窄 — 强压到 2-2.4rem 范围 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 风格不能太大, WCAG 24x24 minimum) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩, 防止溢出 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 隐藏在 mobile 不必要的装饰 (cs ECG 线, hero 横向 svg) — 各主题保留 opt-in */
+  .ecg-line { opacity: 0.3 !important; }
+}
 """
 
 STYLE_OVERRIDES = {

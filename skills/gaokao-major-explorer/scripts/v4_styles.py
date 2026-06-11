@@ -117,6 +117,49 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .fade-up { opacity: 1; transform: none; }
 }
+
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
 """
 
 
@@ -503,6 +546,13 @@ footer .data-source { color: #94A3B8; }
 .lede { color: #94A3B8; line-break: strict; }
 
 .terminal-prompt, .hero-decor { color: #22C55E; }
+
+/* ── CS mobile patch (≤480px) — hide 终端 ASCII 3D 大字, 因为下方有干净标题重复显示 ── */
+@media (max-width: 480px) {
+  .terminal-panel { display: none !important; }
+  .hero-grid { display: block !important; }
+  .hero { padding-top: 40px !important; padding-bottom: 32px !important; }
+}
 """
 
 
@@ -1084,6 +1134,25 @@ footer .label { color: #9A3412; }
 footer .data-source { color: #78716C; }
 
 .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 4.5em; font-weight: 500; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #9A3412; }
+
+/* ── eng (工程图纸) mobile patch — 顶部 DWG 三列 docket 在 390px 严重拥挤 ──
+   inline style 用 grid-template-columns: auto 1fr auto; 通过属性选择器降到单列堆叠 */
+@media (max-width: 480px) {
+  header.hero > div[style*="grid-template-columns: auto 1fr auto"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+  }
+  header.hero > div[style*="grid-template-columns: auto 1fr auto"] > span {
+    border: none !important;
+    padding: 0 !important;
+    font-size: 0.65rem !important;
+    text-align: left !important;
+  }
+  /* sci 同主题 docket meta (顶部 4-cell 杂志页眉) — 在 480px 已经堆叠为 2-row, 字体保持 */
+}
 """
 
 
@@ -1233,6 +1302,18 @@ footer { background: #F2E8D5; border-top: 1px solid #C5B89A; }
 footer .label { color: #1F140A; font-family: 'Noto Serif SC', serif; }
 footer .data-source { color: #6B5D3F; }
 .drop-cap::first-letter { font-family: 'Noto Serif SC', serif; font-size: 4.5em; font-weight: 900; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #9A2A2A; }
+
+/* ── humanities (线装书) mobile patch — book-shell 1fr-36px-1fr + rotate 在 390px 严重溢出 ──
+   策略: 关闭翻开效果, 单页显示, 隐藏 spine + left page, 取消 rotate */
+@media (max-width: 480px) {
+  .book-shell { grid-template-columns: 1fr !important; transform: none !important; }
+  .book-page { aspect-ratio: auto !important; padding: 28px 22px !important; }
+  .book-page.left { display: none !important; }
+  .book-spine { display: none !important; }
+  .book-page.right { border-radius: 4px !important; }
+  /* 大背景 01 数字 与 01/10·速览 label 重叠 — 弱化背景数字 */
+  .book-page-num { opacity: 0.15 !important; font-size: 6rem !important; }
+}
 """
 
 ADMINISTRATION_CSS = """
@@ -1682,6 +1763,18 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 880px; padding: 20px 0; border-top: 1px solid rgba(107,142,35,0.4); border-bottom: 1px solid rgba(107,142,35,0.4); }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
 .hu-tag { font-family: 'Noto Serif SC', serif; font-size: 0.8rem; padding: 4px 12px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6); }
+
+/* ── agri (林奈植物图鉴) mobile patch — chloro-panel/wheat/top-mark 重叠 园艺 大字 ──
+   策略: 隐藏装饰元素, 让 hero 主体 (标题+stats+tags) 干净显示 */
+@media (max-width: 480px) {
+  .chloro-panel { display: none !important; }
+  .wheat { display: none !important; }
+  .top-mark { font-size: 0.55rem !important; padding: 4px 8px !important; }
+  .corner-mark { width: 14px !important; height: 14px !important; }
+  .hu-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 14px 0 !important; }
+  /* 标题区上下间距收紧 */
+  .title-en { font-size: 1.1rem !important; margin-top: 6px !important; }
+}
 """
 
 # ──────────────────────────────────────────────────────────
