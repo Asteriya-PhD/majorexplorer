@@ -1,8 +1,9 @@
 """
-render_og_cards.py v3 — 1080×1440 (3:4) 竖屏分享卡, 5 个热门专业.
+render_og_cards.py v3.1 — 1080×1440 (3:4) 竖屏分享卡, 10 个热门专业 (5→10 扩充).
 
-变化 (v2 → v3):
-- 5 个热门: 临床医学/金融学/法学/公安学类/应用心理学
+变化 (v3 → v3.1):
+- 10 个热门: 临床医学/金融学/法学/公安学类/应用心理学 (原 5)
+            + 计算机科学/工业设计/数字媒体艺术/工商管理/化学 (新增 5)
 - 内容密度: lede + 5 基础课 chip + 3 方向 chip + 4 技能 chip + 1 亮点引文
 - 每主题 hero 招牌元素直接搬:
   - medicine: 右上 vital sign cell (HR 72bpm 异常黄高亮 + ECG SVG 装饰)
@@ -10,10 +11,16 @@ render_og_cards.py v3 — 1080×1440 (3:4) 竖屏分享卡, 5 个热门专业.
   - law: 右上 红圆 已立案 章 + 顶部 docket court header
   - gongan: 中央 P 警徽 (六边形 + Cinzel P) + 顶底烫金线
   - education: 暖橙底 + Playfair italic + 漂浮 ❀ 装饰
+  - cs: 终端面板 + ASCII art + 打字机光标
+  - eng: 工程图纸标题栏 (DWG-XXX) + datasheet spec card
+  - arts: 美术馆 logo + 画框 + 朱红印章 + 金属铭牌
+  - business: 椭圆董事局 + 玫瑰金 + 胡桃木
+  - sci: 学术期刊刊头 (VOL.50 NO.03) + 双线分割 + 衬线 italic
 
 用法:
-    python3 scripts/render_og_cards.py                                # 5 热门
+    python3 scripts/render_og_cards.py                                # 10 热门
     python3 scripts/render_og_cards.py finance                        # 单个
+    python3 scripts/render_og_cards.py --all                          # 全部 13
 """
 from __future__ import annotations
 import sys
@@ -29,13 +36,18 @@ OUT.mkdir(parents=True, exist_ok=True)
 sys.path.insert(0, str(ROOT / "skills/gaokao-major-explorer/scripts"))
 from generate_dashboard import STYLE_TOKENS  # noqa: E402
 
-# 5 热门 (配色全不撞)
+# 10 热门 (配色全不撞) — 5→10 扩充
 DEFAULT_REPS = {
     "medicine":  "clinical-medicine",   # 浅蓝 + 白 + ECG
     "finance":   "finance",              # 暖米 + 烫金 + Bodoni
     "law":       "law",                  # 米黄 + 棕红 + letterhead
     "gongan":    "public-security-demo", # 深蓝 + 烫金
     "education": "applied-psychology",   # 暖橙 + Playfair (心理学是 education 主题)
+    "cs":        "computer-science",     # 终端深绿 + CRT 扫描线 + ASCII art
+    "eng":       "industrial-design",    # 工程蓝 + 图纸 + datasheet
+    "arts":      "digital-media-arts",   # 美术馆白盒 + 画框 + 朱红印章
+    "business":  "business-administration-demo",  # 椭圆董事局 + 玫瑰金 + 胡桃木
+    "sci":       "chemistry",            # 学术期刊 + 衬线 italic + 双线分割
 }
 
 ALL_REPS = {
