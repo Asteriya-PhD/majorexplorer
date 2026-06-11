@@ -2045,6 +2045,271 @@ body.gg-body { background: #0A1420; color: var(--gg-paper); font-family: var(--f
   .gg-corner-mark { width: 20px; height: 20px; }
   .gg-cm-tl, .gg-cm-tr { top: 64px; }
 }
+/* ── 主体 section tab 样式 (复刻 agri 范式 + 主题色) ── */
+section.tab { border-top: 1px solid rgba(212, 175, 55, 0.25); }
+section.tab h2 { color: #0F1F33; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
+section.tab h3 { color: #0F1F33; font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: var(--font-body); }
+section.tab p.lede { color: rgba(250, 250, 246, 0.55); }
+.watermark { font-family: var(--font-heading); color: #0F1F33; opacity: 0.04; }
+footer { background: #FAFAF6; border-top: 1px solid rgba(212, 175, 55, 0.25); }
+footer .label { color: #0F1F33; font-family: var(--font-body); }
+footer .data-source { color: #2A4A75; }
+.drop-cap::first-letter { font-family: var(--font-heading); color: #D4AF37; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; box-shadow: 0 1px 0 rgba(212, 175, 55, 0.08); }
+.bento-item::before { content: "◆"; position: absolute; top: 20px; right: 20px; color: #2A4A75; font-size: 0.875rem; opacity: 0.4; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #2A4A75; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #0F1F33; border: 1px solid #0F1F33; border-radius: 0; font-family: var(--font-heading); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; color: #0F1F33; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: var(--font-heading); font-size: 0.8125rem; color: #2A4A75; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 28px 24px 22px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #2A4A75; color: #2A4A75; font-family: var(--font-heading); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #0F1F33; color: #FAFAF6; border-color: #0F1F33; }
+.tier-A { background: transparent; }
+.tier-B { background: transparent; color: #2A4A75; border-color: rgba(212, 175, 55, 0.25); }
+.company-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #0F1F33; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.25); }
+.sparkline-bar { flex: 1; background: rgba(212, 175, 55, 0.25); min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #2A4A75; opacity: 0.7; }
+.sparkline-label { font-family: var(--font-heading); font-size: 0.6875rem; color: #2A4A75; letter-spacing: 0.05em; margin-top: 6px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid rgba(212, 175, 55, 0.25); font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #FAFAF6; font-family: var(--font-heading); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #2A4A75; }
+.salary-stage { color: #0F1F33; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(212, 175, 55, 0.12); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.yoy { display: inline-block; font-family: var(--font-heading); font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #0F1F33; background: rgba(212, 175, 55, 0.10); }
+.yoy.down { color: #DC2626; background: rgba(220, 38, 38, 0.10); }
+.yoy.flat { color: rgba(250, 250, 246, 0.55); }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.25); }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; color: #0F1F33; }
+.direction-bar { height: 8px; background: rgba(212, 175, 55, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
+.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #0F1F33; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: var(--font-heading); color: #2A4A75; font-size: 0.875rem; margin-top: 8px; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-left: 4px solid #D4AF37; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: var(--font-heading); font-weight: 700; color: #0F1F33; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: var(--font-heading); color: rgba(250, 250, 246, 0.55); font-size: 0.75rem; }
+.quote-text { font-family: var(--font-heading); font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #0F1F33; }
+.quote-text::before { content: "「"; color: #D4AF37; }
+.quote-text::after { content: "」"; color: #D4AF37; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.25); }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: var(--font-heading); font-size: 1.0625rem; color: #0F1F33; }
+.xuanke-bar { height: 6px; background: rgba(212, 175, 55, 0.25); overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #2A4A75; }
+.xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
+.curriculum-lede { font-family: var(--font-heading); color: #2A4A75; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 22px 26px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
+.curriculum-block:last-child { margin-bottom: 0; }
+.curriculum-block:hover { border-color: #2A4A75; }
+.curriculum-title { font-family: var(--font-heading); font-size: 1.0625rem; color: #0F1F33; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(212, 175, 55, 0.30); font-weight: 700; }
+.course { color: #0F1F33; border-bottom: 1px dashed rgba(212, 175, 55, 0.20); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(212, 175, 55, 0.04); padding-left: 8px; }
+.course-name { color: #0F1F33; }
+.course-credit { color: #2A4A75; font-family: var(--font-heading); font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: rgba(250, 250, 246, 0.55); border: 1px solid #0F1F33; text-align: center; position: relative; }
+.cta-block::before { content: "◆  ◆  ◆"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #FAFAF6; padding: 0 16px; color: #0F1F33; font-size: 0.875rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: var(--font-heading); font-size: 1.75rem; margin-bottom: 12px; color: #0F1F33; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: rgba(250, 250, 246, 0.55); margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #FAFAF6; border: 1px solid rgba(212, 175, 55, 0.25); color: #0F1F33; font-family: var(--font-heading); font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #2A4A75; }
+.cta-button { padding: 14px 36px; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-button:hover { background: #FAFAF6; color: #2A4A75; }
+.cta-note { font-family: var(--font-heading); font-size: 0.75rem; color: rgba(250, 250, 246, 0.55); margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #0F1F33; color: #0F1F33; font-family: var(--font-heading); font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #0F1F33; color: #FAFAF6; }
+
+/* ── GONGAN 深色主题 section 文字色反转 (警蓝底, 文字必须亮色) ── */
+.gg-hero + section.tab, .gg-hero ~ section.tab,
+/* (原通配 * { color: inherit } 删除 — 会让 ovv-card 内部文字透明) */
+/* 标题 (h2/h3) — 金色突出 */
+.gg-hero + section.tab h2, .gg-hero + section.tab h3,
+.gg-hero ~ section.tab h2, .gg-hero ~ section.tab h3 { color: var(--gg-gold-soft); }
+/* 章节小字 (06/10 · 院校) */
+.gg-hero + section.tab .section-num, .gg-hero ~ section.tab .section-num { color: var(--gg-gold); }
+/* lede 段 */
+.gg-hero + section.tab p.lede, .gg-hero ~ section.tab p.lede { color: rgba(250, 250, 246, 0.85); }
+.gg-hero + section.tab p, .gg-hero ~ section.tab p,
+.gg-hero + section.tab li, .gg-hero ~ section.tab li { color: rgba(250, 250, 246, 0.78); }
+/* bento (院校) */
+.gg-hero + section.tab .bento-item, .gg-hero ~ section.tab .bento-item { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .bento-monogram, .gg-hero ~ section.tab .bento-monogram { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .bento-rank, .gg-hero ~ section.tab .bento-rank { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .bento-name, .gg-hero ~ section.tab .bento-name { color: var(--gg-paper); }
+.gg-hero + section.tab .bento-tag, .gg-hero ~ section.tab .bento-tag { color: rgba(212, 175, 55, 0.7); }
+/* company (头部公司) */
+.gg-hero + section.tab .company, .gg-hero ~ section.tab .company { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .company-monogram, .gg-hero ~ section.tab .company-monogram { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .company-name, .gg-hero ~ section.tab .company-name { color: var(--gg-paper); }
+.gg-hero + section.tab .company-tier, .gg-hero ~ section.tab .company-tier { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tier-S, .gg-hero ~ section.tab .tier-S { background: var(--gg-gold); color: var(--gg-blue-dk); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tier-B, .gg-hero ~ section.tab .tier-B { color: rgba(212, 175, 55, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .sparkline, .gg-hero ~ section.tab .sparkline { border-top-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .sparkline-bar, .gg-hero ~ section.tab .sparkline-bar { background: rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .company:hover .sparkline-bar, .gg-hero ~ section.tab .company:hover .sparkline-bar { background: var(--gg-gold); }
+.gg-hero + section.tab .sparkline-label, .gg-hero ~ section.tab .sparkline-label { color: rgba(212, 175, 55, 0.6); }
+/* salary */
+.gg-hero + section.tab .salary-table, .gg-hero ~ section.tab .salary-table { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); color: var(--gg-paper); }
+.gg-hero + section.tab .salary-table th, .gg-hero ~ section.tab .salary-table th { background: rgba(15, 31, 51, 0.85); color: var(--gg-gold-soft); }
+.gg-hero + section.tab .salary-table td, .gg-hero ~ section.tab .salary-table td { color: var(--gg-paper); border-bottom-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .salary-stage, .gg-hero ~ section.tab .salary-stage { color: var(--gg-paper); }
+.gg-hero + section.tab .salary-bar, .gg-hero ~ section.tab .salary-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .salary-bar-fill, .gg-hero ~ section.tab .salary-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .yoy.up, .gg-hero ~ section.tab .yoy.up { color: #22C55E; background: rgba(34, 197, 94, 0.12); }
+.gg-hero + section.tab .yoy.down, .gg-hero ~ section.tab .yoy.down { color: #FCA5A5; background: rgba(220, 38, 38, 0.12); }
+/* direction (就业方向) — 关键修复: 文字必须亮色 */
+.gg-hero + section.tab .direction-name, .gg-hero ~ section.tab .direction-name { color: var(--gg-paper); }
+.gg-hero + section.tab .direction-bar, .gg-hero ~ section.tab .direction-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .direction-bar-fill, .gg-hero ~ section.tab .direction-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .direction-pct, .gg-hero ~ section.tab .direction-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .direction, .gg-hero ~ section.tab .direction { border-bottom-color: rgba(212, 175, 55, 0.20); }
+/* path */
+.gg-hero + section.tab .path-card, .gg-hero ~ section.tab .path-card { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .path-pct, .gg-hero ~ section.tab .path-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .path-name, .gg-hero ~ section.tab .path-name { color: rgba(212, 175, 55, 0.7); }
+/* quote (校友引言) — 关键修复 */
+.gg-hero + section.tab .quote, .gg-hero ~ section.tab .quote { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .quote-avatar, .gg-hero ~ section.tab .quote-avatar { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .quote-byline strong, .gg-hero ~ section.tab .quote-byline strong { color: var(--gg-paper); }
+.gg-hero + section.tab .quote-byline .quote-source, .gg-hero ~ section.tab .quote-byline .quote-source { color: rgba(212, 175, 55, 0.7); }
+.gg-hero + section.tab .quote-text, .gg-hero ~ section.tab .quote-text { color: var(--gg-paper); }
+.gg-hero + section.tab .quote-text::before, .gg-hero ~ section.tab .quote-text::before,
+.gg-hero + section.tab .quote-text::after, .gg-hero ~ section.tab .quote-text::after { color: var(--gg-gold); }
+/* xuanke (选科要求) — 关键修复 */
+.gg-hero + section.tab .xuanke-name, .gg-hero ~ section.tab .xuanke-name { color: var(--gg-paper); }
+.gg-hero + section.tab .xuanke-bar, .gg-hero ~ section.tab .xuanke-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .xuanke-bar-fill, .gg-hero ~ section.tab .xuanke-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .xuanke-pct, .gg-hero ~ section.tab .xuanke-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .xuanke, .gg-hero ~ section.tab .xuanke { border-bottom-color: rgba(212, 175, 55, 0.20); }
+/* curriculum */
+.gg-hero + section.tab .curriculum-block, .gg-hero ~ section.tab .curriculum-block { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .curriculum-title, .gg-hero ~ section.tab .curriculum-title { color: var(--gg-gold-soft); border-bottom-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .course, .gg-hero ~ section.tab .course { color: var(--gg-paper); border-bottom-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .course:hover, .gg-hero ~ section.tab .course:hover { background: rgba(212, 175, 55, 0.05); }
+.gg-hero + section.tab .course-name, .gg-hero ~ section.tab .course-name { color: var(--gg-paper); }
+.gg-hero + section.tab .course-credit, .gg-hero ~ section.tab .course-credit { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .curriculum-lede, .gg-hero ~ section.tab .curriculum-lede { color: var(--gg-gold-soft); }
+/* cta */
+.gg-hero + section.tab .cta-block, .gg-hero ~ section.tab .cta-block { background: rgba(15, 31, 51, 0.7); border-color: var(--gg-gold); }
+.gg-hero + section.tab .cta-block::before, .gg-hero ~ section.tab .cta-block::before { background: var(--gg-blue-dk); color: var(--gg-gold); }
+.gg-hero + section.tab .cta-block h3, .gg-hero ~ section.tab .cta-block h3 { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .cta-block p, .gg-hero ~ section.tab .cta-block p { color: rgba(250, 250, 246, 0.78); }
+.gg-hero + section.tab .cta-input, .gg-hero ~ section.tab .cta-input { background: rgba(15, 31, 51, 0.8); border-color: rgba(212, 175, 55, 0.4); color: var(--gg-paper); }
+.gg-hero + section.tab .cta-input:focus, .gg-hero ~ section.tab .cta-input:focus { border-color: var(--gg-gold); }
+.gg-hero + section.tab .cta-button, .gg-hero ~ section.tab .cta-button { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .cta-button:hover, .gg-hero ~ section.tab .cta-button:hover { background: var(--gg-paper); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .cta-note, .gg-hero ~ section.tab .cta-note { color: rgba(212, 175, 55, 0.6); }
+.gg-hero + section.tab .tag, .gg-hero ~ section.tab .tag { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tag.primary, .gg-hero ~ section.tab .tag.primary { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .drop-cap::first-letter, .gg-hero ~ section.tab .drop-cap::first-letter { color: var(--gg-gold); }
+.gg-hero + section.tab .watermark, .gg-hero ~ section.tab .watermark { color: var(--gg-gold); opacity: 0.03; }
+.gg-hero + section.tab footer, .gg-hero ~ section.tab footer { background: rgba(15, 31, 51, 0.85); color: rgba(250, 250, 246, 0.5); }
+.gg-hero + section.tab footer .label, .gg-hero ~ section.tab footer .label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab footer .data-source, .gg-hero ~ section.tab footer .data-source { color: rgba(212, 175, 55, 0.6); }
+
+/* ── GONGAN ovv-card (速览 3 子卡) 深色覆写 ── */
+.gg-hero + section.tab .ovv-card, .gg-hero ~ section.tab .ovv-card { background: rgba(15, 31, 51, 0.7); border-color: rgba(212, 175, 55, 0.3); color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-lede, .gg-hero ~ section.tab .ovv-lede { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-lede::first-letter, .gg-hero ~ section.tab .ovv-lede::first-letter { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-card-title, .gg-hero ~ section.tab .ovv-card-title { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-card-num, .gg-hero ~ section.tab .ovv-card-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-card-tag, .gg-hero ~ section.tab .ovv-card-tag { color: rgba(212, 175, 55, 0.7); border-color: rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-foundations-label, .gg-hero ~ section.tab .ovv-foundations-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step { background: rgba(212, 175, 55, 0.10); color: var(--gg-paper); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-directions-label, .gg-hero ~ section.tab .ovv-directions-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-dir, .gg-hero ~ section.tab .ovv-dir { background: rgba(15, 31, 51, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-dir-num, .gg-hero ~ section.tab .ovv-dir-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-dir-name, .gg-hero ~ section.tab .ovv-dir-name { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-dir-desc, .gg-hero ~ section.tab .ovv-dir-desc { color: rgba(212, 175, 55, 0.7); }
+.gg-hero + section.tab .ovv-skills, .gg-hero ~ section.tab .ovv-skills { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-skill, .gg-hero ~ section.tab .ovv-skill { background: rgba(212, 175, 55, 0.10); color: var(--gg-paper); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-bonus, .gg-hero ~ section.tab .ovv-bonus { color: var(--gg-gold-soft); background: rgba(212, 175, 55, 0.08); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .ovv-fit-col.is-yes, .gg-hero ~ section.tab .ovv-fit-col.is-yes { color: #22C55E; }
+.gg-hero + section.tab .ovv-fit-col.is-no, .gg-hero ~ section.tab .ovv-fit-col.is-no { color: #FCA5A5; }
+.gg-hero + section.tab .ovv-fit-label, .gg-hero ~ section.tab .ovv-fit-label { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-pit, .gg-hero ~ section.tab .ovv-pit { background: rgba(15, 31, 51, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-pit-num, .gg-hero ~ section.tab .ovv-pit-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-pit-myth, .gg-hero ~ section.tab .ovv-pit-myth { color: #FCA5A5; }
+.gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); }
+
+/* ── GONGAN ovv-card (速览 3 子卡) 文字加亮 + 边框加深 ── */
+.gg-hero + section.tab .ovv-card, .gg-hero ~ section.tab .ovv-card { background: rgba(15, 31, 51, 0.85); border: 1.5px solid rgba(212, 175, 55, 0.45); box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.gg-hero + section.tab .ovv-card.is-blue, .gg-hero ~ section.tab .ovv-card.is-blue { border-color: rgba(96, 165, 250, 0.6); }
+.gg-hero + section.tab .ovv-card.is-orange, .gg-hero ~ section.tab .ovv-card.is-orange { border-color: rgba(251, 146, 60, 0.7); }
+.gg-hero + section.tab .ovv-lede, .gg-hero ~ section.tab .ovv-lede { color: var(--gg-paper); line-height: 1.85; }
+.gg-hero + section.tab .ovv-lede::first-letter, .gg-hero ~ section.tab .ovv-lede::first-letter { color: var(--gg-gold); font-size: 3em; }
+.gg-hero + section.tab .ovv-card-head, .gg-hero ~ section.tab .ovv-card-head { border-bottom: 1px solid rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-card-title, .gg-hero ~ section.tab .ovv-card-title { color: var(--gg-gold-soft); font-weight: 700; }
+.gg-hero + section.tab .ovv-card-num, .gg-hero ~ section.tab .ovv-card-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-card-tag, .gg-hero ~ section.tab .ovv-card-tag { color: var(--gg-paper); background: rgba(212, 175, 55, 0.18); border: 1px solid rgba(212, 175, 55, 0.5); padding: 3px 10px; }
+.gg-hero + section.tab .ovv-foundations-label, .gg-hero ~ section.tab .ovv-foundations-label { color: var(--gg-gold-soft); font-weight: 600; letter-spacing: 0.1em; }
+.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline { border-top: 1px solid rgba(212, 175, 55, 0.2); border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+.gg-hero + section.tab .ovv-tl-step span, .gg-hero ~ section.tab .ovv-tl-step span { color: var(--gg-paper); font-weight: 600; font-size: 0.95rem; }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step { background: rgba(212, 175, 55, 0.15); border: 1.5px solid rgba(212, 175, 55, 0.5); padding: 12px 16px; }
+.gg-hero + section.tab .ovv-tl-step::before, .gg-hero ~ section.tab .ovv-tl-step::before { background: var(--gg-gold); border-color: var(--gg-gold); width: 12px; height: 12px; box-shadow: 0 0 8px var(--gg-glow); }
+.gg-hero + section.tab .ovv-directions-label, .gg-hero ~ section.tab .ovv-directions-label { color: var(--gg-gold-soft); font-weight: 600; letter-spacing: 0.1em; }
+.gg-hero + section.tab .ovv-dir, .gg-hero ~ section.tab .ovv-dir { background: rgba(15, 31, 51, 0.7); border: 1.5px solid rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-dir-num, .gg-hero ~ section.tab .ovv-dir-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-dir-name, .gg-hero ~ section.tab .ovv-dir-name { color: var(--gg-paper); font-weight: 700; font-size: 1.0625rem; }
+.gg-hero + section.tab .ovv-dir-desc, .gg-hero ~ section.tab .ovv-dir-desc { color: rgba(212, 175, 55, 0.85); font-size: 0.85rem; }
+.gg-hero + section.tab .ovv-skills-label, .gg-hero ~ section.tab .ovv-skills-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-skill, .gg-hero ~ section.tab .ovv-skill { background: rgba(212, 175, 55, 0.18); color: var(--gg-paper); border: 1.5px solid rgba(212, 175, 55, 0.5); font-weight: 500; }
+.gg-hero + section.tab .ovv-bonus, .gg-hero ~ section.tab .ovv-bonus { color: var(--gg-paper); background: rgba(212, 175, 55, 0.10); border-left: 4px solid var(--gg-gold); padding: 16px 20px; line-height: 1.75; }
+.gg-hero + section.tab .ovv-fit-col.is-yes, .gg-hero ~ section.tab .ovv-fit-col.is-yes { color: #22C55E; font-weight: 600; }
+.gg-hero + section.tab .ovv-fit-col.is-no, .gg-hero ~ section.tab .ovv-fit-col.is-no { color: #FCA5A5; font-weight: 600; }
+.gg-hero + section.tab .ovv-fit-label, .gg-hero ~ section.tab .ovv-fit-label { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li { color: var(--gg-paper); line-height: 1.7; padding: 4px 0; }
+.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-pit, .gg-hero ~ section.tab .ovv-pit { background: rgba(15, 31, 51, 0.7); border: 1.5px solid rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-pit-num, .gg-hero ~ section.tab .ovv-pit-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-pit-myth, .gg-hero ~ section.tab .ovv-pit-myth { color: #FCA5A5; font-weight: 600; }
+.gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); line-height: 1.65; }
+/* ── 强制 .path-grid 5 列一行 (高 specificity) ── */
+body.gg-body .gg-hero + section.tab .path-grid, body.gg-body .gg-hero ~ section.tab .path-grid,
+body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+body.gg-body .gg-hero + section.tab .path-card, body.gg-body .gg-hero ~ section.tab .path-card,
+body.biz-body .biz-hero + section.tab .path-card, body.biz-body .biz-hero ~ section.tab .path-card { padding: 24px 8px 20px !important; }
+body.gg-body .gg-hero + section.tab .path-pct, body.gg-body .gg-hero ~ section.tab .path-pct,
+body.biz-body .biz-hero + section.tab .path-pct, body.biz-body .biz-hero ~ section.tab .path-pct { font-size: clamp(1.5rem, 2.2vw, 2rem) !important; }
+body.gg-body .gg-hero + section.tab .path-name, body.gg-body .gg-hero ~ section.tab .path-name,
+body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ section.tab .path-name { font-size: 0.7rem !important; line-height: 1.4 !important; padding: 0 4px !important; word-break: break-all !important; }
+
+/* ── ovv-tl-step 一行 + ovv-fit-list 列表 marker 修复 (所有 ovv 主题) ── */
+.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline,
+.biz-hero + section.tab .ovv-timeline, .biz-hero ~ section.tab .ovv-timeline { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 10px; padding-bottom: 8px; }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step,
+.biz-hero + section.tab .ovv-tl-step, .biz-hero ~ section.tab .ovv-tl-step { flex: 0 0 auto; min-width: 100px; text-align: center; }
+.gg-hero + section.tab .ovv-fit-list, .gg-hero ~ section.tab .ovv-fit-list,
+.biz-hero + section.tab .ovv-fit-list, .biz-hero ~ section.tab .ovv-fit-list { list-style: none; padding-left: 0; margin: 0; }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li,
+.biz-hero + section.tab .ovv-fit-list li, .biz-hero ~ section.tab .ovv-fit-list li { padding-left: 0; }
+.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before,
+.biz-hero + section.tab .ovv-fit-list li::before, .biz-hero ~ section.tab .ovv-fit-list li::before { content: none; }
+
 """
 
 
@@ -2080,12 +2345,6 @@ BUSINESS_CSS = """
 .biz-grain { position: absolute; inset: 0; z-index: 1; opacity: 0.18; pointer-events: none;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); mix-blend-mode: multiply; }
 /* ── 3 屏数据墙 (顶部装饰背景) ── */
-.biz-data-wall { position: absolute; top: 120px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; z-index: 3; padding: 0 60px; opacity: 0.95; }
-.biz-screen { width: 320px; height: 200px; border: 1.5px solid var(--biz-walnut-dk); box-shadow: 0 12px 24px rgba(0,0,0,0.35); background: var(--biz-ivory); }
-.biz-screen--finance { background: var(--biz-screen-blue); color: var(--biz-ivory); }
-.biz-screen--map { background: var(--biz-ivory); color: var(--biz-leather); }
-.biz-screen--kpi { background: linear-gradient(180deg, var(--biz-screen-blue) 0%, #0F172A 100%); color: var(--biz-ivory); }
-.biz-screen svg { width: 100%; height: 100%; display: block; }
 /* ── 椭圆董事桌 (中央) ── */
 /* ── 8 椅环 (环绕椭圆桌) ── */
 /* ── 8 个座位名牌 ── */
@@ -2146,17 +2405,131 @@ body.biz-body { background: var(--biz-bg); color: var(--biz-leather); font-famil
 /* ── 响应式 ── */
 @media (max-width: 1280px) {
   .biz-hero { min-height: 660px; padding: 80px 0 90px; }
-  .biz-data-wall { padding: 0 24px; gap: 10px; }
-  .biz-screen { width: 280px; height: 170px; }
   .biz-stats-strip { grid-template-columns: repeat(2, 1fr); }
   .biz-stat-block + .biz-stat-block { border-left: 1px solid var(--biz-rose-gold); border-top: none; }
 }
 @media (max-width: 768px) {
   .biz-hero { min-height: auto; padding: 72px 0 60px; }
-  .biz-data-wall { display: none; }
   .biz-stats-strip { grid-template-columns: 1fr 1fr; }
   .biz-title-main { font-size: clamp(1.875rem, 7vw, 2.5rem); }
 }
+/* ── 主体 section tab 样式 (复刻 agri 范式 + 主题色) ── */
+section.tab { border-top: 1px solid #E5DCC8; }
+section.tab h2 { color: #3E2A1F; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
+section.tab h3 { color: #3E2A1F; font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: var(--font-body); }
+section.tab p.lede { color: #5C6770; }
+.watermark { font-family: var(--font-heading); color: #3E2A1F; opacity: 0.04; }
+footer { background: #F5F0E5; border-top: 1px solid #E5DCC8; }
+footer .label { color: #3E2A1F; font-family: var(--font-body); }
+footer .data-source { color: #5C6770; }
+.drop-cap::first-letter { font-family: var(--font-heading); color: #C77B5C; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; box-shadow: 0 1px 0 rgba(199, 123, 92, 0.06); }
+.bento-item::before { content: "◆"; position: absolute; top: 20px; right: 20px; color: #5C6770; font-size: 0.875rem; opacity: 0.4; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #5C6770; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #5C6770; transform: translateY(-2px); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #3E2A1F; border: 1px solid #3E2A1F; border-radius: 0; font-family: var(--font-heading); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; color: #3E2A1F; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: var(--font-heading); font-size: 0.8125rem; color: #5C6770; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 28px 24px 22px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #5C6770; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #5C6770; color: #5C6770; font-family: var(--font-heading); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #3E2A1F; color: #F5F0E5; border-color: #3E2A1F; }
+.tier-A { background: transparent; }
+.tier-B { background: transparent; color: #5C6770; border-color: #E5DCC8; }
+.company-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #3E2A1F; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #E5DCC8; }
+.sparkline-bar { flex: 1; background: #E5DCC8; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #5C6770; opacity: 0.7; }
+.sparkline-label { font-family: var(--font-heading); font-size: 0.6875rem; color: #5C6770; letter-spacing: 0.05em; margin-top: 6px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #E5DCC8; font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #F5F0E5; font-family: var(--font-heading); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #5C6770; }
+.salary-stage { color: #3E2A1F; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(199, 123, 92, 0.12); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #5C6770; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.yoy { display: inline-block; font-family: var(--font-heading); font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #3E2A1F; background: rgba(62, 42, 31, 0.08); }
+.yoy.down { color: #DC2626; background: rgba(220, 38, 38, 0.08); }
+.yoy.flat { color: #5C6770; }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #E5DCC8; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; color: #3E2A1F; }
+.direction-bar { height: 8px; background: rgba(199, 123, 92, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #5C6770; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #3E2A1F; }
+.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #5C6770; transform: translateY(-2px); }
+.path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #3E2A1F; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: var(--font-heading); color: #5C6770; font-size: 0.875rem; margin-top: 8px; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #E5DCC8; border-left: 4px solid #C77B5C; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: var(--font-heading); font-weight: 700; color: #3E2A1F; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: var(--font-heading); color: #5C6770; font-size: 0.75rem; }
+.quote-text { font-family: var(--font-heading); font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #3E2A1F; }
+.quote-text::before { content: "「"; color: #C77B5C; }
+.quote-text::after { content: "」"; color: #C77B5C; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #E5DCC8; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: var(--font-heading); font-size: 1.0625rem; color: #3E2A1F; }
+.xuanke-bar { height: 6px; background: #E5DCC8; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #5C6770; }
+.xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #3E2A1F; }
+.curriculum-lede { font-family: var(--font-heading); color: #5C6770; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 22px 26px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
+.curriculum-block:last-child { margin-bottom: 0; }
+.curriculum-block:hover { border-color: #5C6770; }
+.curriculum-title { font-family: var(--font-heading); font-size: 1.0625rem; color: #3E2A1F; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(199, 123, 92, 0.30); font-weight: 700; }
+.course { color: #3E2A1F; border-bottom: 1px dashed rgba(199, 123, 92, 0.20); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(199, 123, 92, 0.04); padding-left: 8px; }
+.course-name { color: #3E2A1F; }
+.course-credit { color: #5C6770; font-family: var(--font-heading); font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #3E2A1F; text-align: center; position: relative; }
+.cta-block::before { content: "◆  ◆  ◆"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #F5F0E5; padding: 0 16px; color: #3E2A1F; font-size: 0.875rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: var(--font-heading); font-size: 1.75rem; margin-bottom: 12px; color: #3E2A1F; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: #5C6770; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #F5F0E5; border: 1px solid #E5DCC8; color: #3E2A1F; font-family: var(--font-heading); font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #5C6770; }
+.cta-button { padding: 14px 36px; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-button:hover { background: #F5F0E5; color: #5C6770; }
+.cta-note { font-family: var(--font-heading); font-size: 0.75rem; color: #5C6770; margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #3E2A1F; color: #3E2A1F; font-family: var(--font-heading); font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #3E2A1F; color: #F5F0E5; }
+
+/* ── 5 列一行 (GONGAN / BUSINESS 都有 5 个深造路径) ── */
+.gg-hero + section.tab .path-grid, .gg-hero ~ section.tab .path-grid,
+.biz-hero + section.tab .path-grid, .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr); }
+.gg-hero + section.tab .path-card, .gg-hero ~ section.tab .path-card,
+.biz-hero + section.tab .path-card, .biz-hero ~ section.tab .path-card { padding: 28px 12px 24px; }
+.gg-hero + section.tab .path-pct, .gg-hero ~ section.tab .path-pct,
+.biz-hero + section.tab .path-pct, .biz-hero ~ section.tab .path-pct { font-size: clamp(1.75rem, 2.5vw, 2.25rem); }
+
+/* ── ovv-tl-step 一行 + ovv-fit-list 列表 marker 修复 (所有 ovv 主题) ── */
+.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline,
+.biz-hero + section.tab .ovv-timeline, .biz-hero ~ section.tab .ovv-timeline { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 10px; padding-bottom: 8px; }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step,
+.biz-hero + section.tab .ovv-tl-step, .biz-hero ~ section.tab .ovv-tl-step { flex: 0 0 auto; min-width: 100px; text-align: center; }
+.gg-hero + section.tab .ovv-fit-list, .gg-hero ~ section.tab .ovv-fit-list,
+.biz-hero + section.tab .ovv-fit-list, .biz-hero ~ section.tab .ovv-fit-list { list-style: none; padding-left: 0; margin: 0; }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li,
+.biz-hero + section.tab .ovv-fit-list li, .biz-hero ~ section.tab .ovv-fit-list li { padding-left: 0; }
+.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before,
+.biz-hero + section.tab .ovv-fit-list li::before, .biz-hero ~ section.tab .ovv-fit-list li::before { content: none; }
+
 """
 
 
@@ -3003,115 +3376,11 @@ def render_v4(data: dict, style: str) -> str:
   <div class="biz-marble"></div>
   <div class="biz-ceiling-light"></div>
   <div class="biz-grain"></div>
-  <!-- 顶部 3 屏数据墙 (财务/地图/KPI) -->
-  <div class="biz-data-wall">
-    <div class="biz-screen biz-screen--finance">
-      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-        <text x="12" y="18" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">Q1-Q4 · REVENUE (¥B)</text>
-        <text x="308" y="18" text-anchor="end" font-family="Bebas Neue" font-size="8" fill="var(--biz-rose-gold)" letter-spacing="1.5">FY 2025</text>
-        <line x1="12" y1="24" x2="308" y2="24" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
-        <rect x="50" y="105" width="28" height="75" fill="var(--biz-pos)" opacity="0.85"/>
-        <rect x="84" y="88" width="28" height="92" fill="var(--biz-pos)" opacity="0.85"/>
-        <rect x="118" y="68" width="28" height="112" fill="var(--biz-pos)" opacity="0.95"/>
-        <rect x="152" y="50" width="28" height="130" fill="var(--biz-pos)"/>
-        <polyline points="64,108 98,93 132,74 166,56" stroke="var(--biz-warn)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-        <g fill="var(--biz-warn)">
-          <circle cx="64" cy="108" r="2.5"/><circle cx="98" cy="93" r="2.5"/><circle cx="132" cy="74" r="2.5"/><circle cx="166" cy="56" r="2.5"/>
-        </g>
-        <g font-family="Inter" font-size="6" font-weight="600" fill="var(--biz-steel)" letter-spacing="1">
-          <text x="64" y="194" text-anchor="middle">Q1</text><text x="98" y="194" text-anchor="middle">Q2</text>
-          <text x="132" y="194" text-anchor="middle">Q3</text><text x="166" y="194" text-anchor="middle">Q4</text>
-        </g>
-        <rect x="200" y="44" width="108" height="44" fill="var(--biz-screen-blue-2)" stroke="var(--biz-pos)" stroke-width="0.5" opacity="0.8"/>
-        <text x="208" y="60" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">NET PROFIT</text>
-        <text x="208" y="78" font-family="Bebas Neue" font-size="20" fill="var(--biz-pos)" letter-spacing="1">¥48.2B</text>
-        <text x="298" y="78" text-anchor="end" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)">+12.4%</text>
-        <rect x="200" y="98" width="108" height="44" fill="var(--biz-screen-blue-2)" stroke="var(--biz-warn)" stroke-width="0.5" opacity="0.8"/>
-        <text x="208" y="114" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">MARGIN</text>
-        <text x="208" y="132" font-family="Bebas Neue" font-size="20" fill="var(--biz-warn)" letter-spacing="1">22.8%</text>
-        <text x="298" y="132" text-anchor="end" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-warn)">+1.6pp</text>
-        <rect x="200" y="152" width="108" height="38" fill="var(--biz-screen-blue-2)" stroke="var(--biz-neg)" stroke-width="0.5" opacity="0.8"/>
-        <text x="208" y="166" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">DEBT / EQUITY</text>
-        <text x="208" y="183" font-family="Bebas Neue" font-size="16" fill="var(--biz-neg)" letter-spacing="1">0.42</text>
-        <text x="298" y="183" text-anchor="end" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)">-0.08</text>
-      </svg>
-    </div>
-    <div class="biz-screen biz-screen--map">
-      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-        <text x="12" y="18" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-rose-gold)" letter-spacing="2">STRATEGIC MAP · CHINA</text>
-        <text x="308" y="18" text-anchor="end" font-family="Bebas Neue" font-size="8" fill="var(--biz-leather)" letter-spacing="1.5">Q4 PLAN</text>
-        <line x1="12" y1="24" x2="308" y2="24" stroke="var(--biz-rose-gold)" stroke-width="0.5" opacity="0.5"/>
-        <path d="M 60 86 L 78 78 L 96 82 L 114 74 L 134 78 L 152 86 L 172 82 L 194 95 L 216 90 L 240 100 L 262 112 L 276 124 L 272 142 L 250 154 L 226 158 L 206 150 L 184 154 L 162 146 L 142 150 L 124 142 L 106 138 L 88 124 L 70 110 Z" fill="none" stroke="var(--biz-walnut-dk)" stroke-width="1.1" stroke-dasharray="3,2" opacity="0.7"/>
-        <g transform="translate(168, 90)"><circle r="5" fill="var(--biz-neg)" opacity="0.3"/><circle r="2.5" fill="var(--biz-neg)"/><text y="-9" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">BJ</text></g>
-        <g transform="translate(228, 124)"><circle r="5" fill="var(--biz-neg)" opacity="0.3"/><circle r="2.5" fill="var(--biz-neg)"/><text y="-9" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">SH</text></g>
-        <g transform="translate(194, 150)"><circle r="5" fill="var(--biz-neg)" opacity="0.3"/><circle r="2.5" fill="var(--biz-neg)"/><text y="12" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">SZ</text></g>
-        <g transform="translate(120, 134)"><circle r="4" fill="var(--biz-screen-blue)" opacity="0.3"/><circle r="2" fill="var(--biz-screen-blue)"/><text y="-7" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">CD</text></g>
-        <g stroke="var(--biz-neg)" stroke-width="1.3" fill="none" stroke-dasharray="4,3">
-          <path d="M 168 90 Q 188 86 228 124"/>
-          <path d="M 228 124 Q 212 142 194 150"/>
-          <path d="M 168 90 Q 150 110 120 134"/>
-        </g>
-      </svg>
-    </div>
-    <div class="biz-screen biz-screen--kpi">
-      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-        <text x="12" y="18" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">LIVE KPI · DASHBOARD</text>
-        <text x="308" y="18" text-anchor="end" font-family="Bebas Neue" font-size="8" fill="var(--biz-warn)" letter-spacing="1.5">14:32:08</text>
-        <line x1="12" y1="24" x2="308" y2="24" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
-        <g transform="translate(16, 42)">
-          <rect width="68" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
-          <text x="34" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">ARR</text>
-          <text x="34" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-pos)" letter-spacing="1">¥2.4B</text>
-          <text x="34" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▲ 18.2%</text>
-        </g>
-        <g transform="translate(94, 42)">
-          <rect width="68" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-warn)" stroke-width="0.5"/>
-          <text x="34" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">NPS</text>
-          <text x="34" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-warn)" letter-spacing="1">72</text>
-          <text x="34" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▲ 4</text>
-        </g>
-        <g transform="translate(172, 42)">
-          <rect width="68" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-neg)" stroke-width="0.5"/>
-          <text x="34" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CHURN</text>
-          <text x="34" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-neg)" letter-spacing="1">2.1%</text>
-          <text x="34" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▼ 0.3pp</text>
-        </g>
-        <g transform="translate(250, 42)">
-          <rect width="58" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
-          <text x="29" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CAC</text>
-          <text x="29" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="20" fill="var(--biz-pos)" letter-spacing="1">¥820</text>
-          <text x="29" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▼ 12%</text>
-        </g>
-        <g transform="translate(60, 142)">
-          <circle r="34" fill="none" stroke="var(--biz-walnut-xd)" stroke-width="7"/>
-          <circle r="34" fill="none" stroke="var(--biz-pos)" stroke-width="7" stroke-dasharray="160 56" transform="rotate(-90)" stroke-linecap="round"/>
-          <text y="-2" text-anchor="middle" font-family="Bebas Neue" font-size="20" fill="var(--biz-pos)" letter-spacing="1">75%</text>
-          <text y="12" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">RETENTION</text>
-        </g>
-        <g transform="translate(140, 116)">
-          <text y="0" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">REVENUE · LAST 24H</text>
-          <line y1="60" x2="170" y2="60" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
-          <polyline points="0,52 18,46 36,40 54,44 72,34 90,28 108,24 126,30 144,22 162,16" stroke="var(--biz-warn)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-        </g>
-      </svg>
-    </div>
-  </div>
-
+  
   <div class="biz-title-zone">
-    <div class="biz-top-tag">
-      <span class="biz-top-tag-text">Boardroom No.</span>
-      <span class="biz-top-tag-num">02 · 24</span>
-    </div>
-    <div class="biz-discipline">BUSINESS ADMIN · 120200</div>
-    <div class="biz-discipline-cn">工 商 管 理 · 战 略 · 决 策 · 组 织</div>
-    <h1 class="biz-title-main">Strategic Management</h1>
+  <h1 class="biz-title-main">Strategic Management</h1>
     <h2 class="biz-title-main-cn"><span class="biz-title-cn-accent">战略管理</span> · 决策科学</h2>
-    <div class="biz-subtitle">FROM BCG MATRIX TO BLUE OCEAN — EXEC MIND & DECISION SCIENCE</div>
-    <div class="biz-subtitle-line"></div>
-    <p class="biz-lede">
-      商业不是「赚钱」— 是<em>战略 + 组织 + 运营 + 财务</em>的系统决策。毕业生 90 万/年, 但能进 MBB 咨询 / 500 强管培 / 战略投资部的不到 5%。
-    </p>
-    <div class="biz-hero-quote">
+  <div class="biz-hero-quote">
       "If you don't know where you're going, you might not get there."
       <span class="biz-hero-quote-sig">— Yogi Berra</span>
     </div>
