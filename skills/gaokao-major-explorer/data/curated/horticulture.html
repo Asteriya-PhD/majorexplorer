@@ -267,7 +267,7 @@ section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif 
   z-index: 3;
 }
 .cp-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 0.85rem; color: #2E5A2E; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid #B8CC98; padding-bottom: 6px; margin-bottom: 8px; }
-.chloro-line { display: grid; grid-template-columns: 24px 1fr auto; gap: 6px; font-size: 0.78rem; padding: 3px 0; color: #2E5A2E; align-items: baseline; }
+.chloro-line { display: grid; grid-template-columns: 90px 1fr auto; gap: 8px; font-size: 0.78rem; padding: 3px 0; color: #2E5A2E; align-items: baseline; }
 .chloro-line .num { font-style: italic; color: #B8902A; }
 .chloro-line .ch { font-family: 'Noto Serif SC', serif; }
 .chloro-line .note { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.7rem; }
@@ -282,19 +282,90 @@ footer .label { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
 footer .data-source { color: #6B8E23; }
 .drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B8902A; }
 
+/* ── Agri body section 框架 (仿 HUMANITIES 极简浅色 + 绿色主题) ── */
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; box-shadow: 0 1px 0 rgba(46, 90, 46, 0.04); }
+.bento-item::before { content: "❀"; position: absolute; top: 20px; right: 20px; color: #6B8E23; font-size: 0.875rem; opacity: 0.4; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #6B8E23; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #6B8E23; transform: translateY(-2px); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #2E5A2E; border: 1px solid #2E5A2E; border-radius: 0; font-family: 'Noto Serif SC', serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; color: #2E5A2E; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8125rem; color: #6B8E23; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 28px 24px 22px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #6B8E23; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #6B8E23; color: #6B8E23; font-family: 'Noto Serif SC', serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #2E5A2E; color: #F0F5E2; border-color: #2E5A2E; }
+.tier-A { background: transparent; }
+.tier-B { background: transparent; color: #6B8E23; border-color: #B8CC98; }
+.company-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #2E5A2E; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #DCE8C5; }
+.sparkline-bar { flex: 1; background: #B8CC98; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #6B8E23; opacity: 0.7; }
+.sparkline-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.6875rem; color: #6B8E23; letter-spacing: 0.05em; margin-top: 6px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #DCE8C5; font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #F0F5E2; font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #6B8E23; }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #DCE8C5; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #2E5A2E; }
+.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #6B8E23; transform: translateY(-2px); }
+.path-pct { font-family: 'Noto Serif SC', serif; font-size: 2.5rem; font-weight: 700; color: #2E5A2E; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.875rem; margin-top: 8px; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-left: 4px solid #B8902A; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'Noto Serif SC', serif; font-weight: 700; color: #2E5A2E; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.75rem; }
+.quote-text { font-family: 'Noto Serif SC', serif; font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #2E5A2E; }
+.quote-text::before { content: "「"; color: #B8902A; }
+.quote-text::after { content: "」"; color: #B8902A; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #DCE8C5; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #2E5A2E; }
+.xuanke-bar { height: 6px; background: #DCE8C5; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #6B8E23; }
+.xuanke-pct { font-family: 'Noto Serif SC', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #6B8E23; }
+.curriculum-lede { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FAFCF3; border: 1px solid #2E5A2E; text-align: center; position: relative; }
+.cta-block::before { content: "❀  ❀  ❀"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #F0F5E2; padding: 0 16px; color: #2E5A2E; font-size: 0.875rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: 'Noto Serif SC', serif; font-size: 1.75rem; margin-bottom: 12px; color: #2E5A2E; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: #4A5A3A; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #F0F5E2; border: 1px solid #B8CC98; color: #2E5A2E; font-family: 'Noto Serif SC', serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #6B8E23; }
+.cta-button { padding: 14px 36px; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B8E23; margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #2E5A2E; color: #2E5A2E; font-family: 'Noto Serif SC', serif; font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #2E5A2E; color: #F0F5E2; }
+
 /* ── Agri body section 配色 (浅绿底, 保持与 BASE_CSS 默认对比) ── */
 section.tab { border-top: 1px solid #C5D9A8; }
 .section-num { color: #6B8E23; }
 .watermark { color: #6B8E23; opacity: 0.04; }
 .salary-stage { color: #2E5A2E; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(107, 142, 35, 0.15); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #6B8E23; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .salary-bar { background: rgba(107, 142, 35, 0.15); }
 .salary-bar-fill { background: #6B8E23; }
-.yoy.up { color: #2E5A2E; }
-.yoy.down { color: #DC2626; }
+.yoy { display: inline-block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #2E5A2E; background: rgba(46, 90, 46, 0.08); }
+.yoy.down { color: #DC2626; background: rgba(220, 38, 38, 0.08); }
 .yoy.flat { color: #999; }
 .direction-bar { background: rgba(107, 142, 35, 0.12); }
 .direction-bar-fill { background: #6B8E23; }
 .direction-name { color: #2E5A2E; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .direction-pct { color: #2E5A2E; }
 .path-name { color: #2E5A2E; }
 .quote-byline strong { color: #2E5A2E; }
