@@ -1563,9 +1563,12 @@ footer .data-source { color: #6B8E23; }
 .salary-table tr:last-child td { border-bottom: none; }
 .salary-table th { background: #F0F5E2; font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #6B8E23; }
 .direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #DCE8C5; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #DCE8C5; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #2E5A2E; }
+.direction-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 600; color: #2E5A2E; }
+.direction-bar { height: 8px; background: rgba(107, 142, 35, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #6B8E23; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: 'Cormorant Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #6B8E23; }
 .path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #6B8E23; transform: translateY(-2px); }
@@ -1632,7 +1635,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .curriculum-block { padding: 22px 26px; background: rgba(245, 249, 236, 0.55); border: 1px solid #B8CC98; border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
 .curriculum-block:last-child { margin-bottom: 0; }
 .curriculum-block:hover { border-color: #6B8E23; }
-.curriculum-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 0.8rem; color: #6B8E23; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(107,142,35,0.25); }
+.curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #2E5A2E; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(107,142,35,0.3); font-weight: 700; }
 .course-name { color: #2E5A2E; }
 .course-credit { color: #6B8E23; }
 .bento-tag { color: #6B8E23; }
@@ -1765,9 +1768,12 @@ footer .data-source { color: #999; }
 .salary-table tr:last-child td { border-bottom: none; }
 .salary-table th { background: #14110D; font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #F59E0B; }
 .direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #3A3A3A; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #3A3A3A; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.0625rem; color: #FAFAFA; }
+.direction-name { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 600; color: #FAFAFA; }
+.direction-bar { height: 8px; background: rgba(250, 250, 250, 0.08); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #DC2626; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: 'Cormorant Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #F59E0B; }
 .path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #DC2626 !important; transform: translateY(-2px); }
@@ -1854,7 +1860,7 @@ section.tab p.lede { color: #D9CFB9; }
 .xuanke-pct { color: #F59E0B; }
 .curriculum-block { background: #2A2520; border: 1px solid #3A3A3A; }
 .curriculum-block:hover { border-color: #DC2626; }
-.curriculum-title { color: #F59E0B; border-bottom: 1px solid rgba(250, 250, 250, 0.15); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding-bottom: 10px; margin-bottom: 14px; }
+.curriculum-title { font-family: 'Cormorant Garamond', 'Noto Serif SC', serif; font-size: 1.1875rem; color: #FAFAFA; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #3A3A3A; font-weight: 700; }
 .course { color: #FAFAFA; border-bottom: 1px dashed rgba(250, 250, 250, 0.1); }
 .course-name { color: #FAFAFA; }
 .course-credit { color: #999; }
@@ -2194,23 +2200,23 @@ def render_v4(data: dict, style: str) -> str:
 </header>'''
 
     elif style == "administration":
-        # 国发文件红头 + 公文纸主体
+        # 公文式抬头 (中性 / 非官方 — Major Explorer 编辑部出品, 避免模仿真实政府公文)
         hero_html = f'''
 <header class="hero">
   <div class="gov-red-header">
-    <span class="doc-num">国发〔2026〕第 03 号</span>
-    <strong>中华人民共和国教育部</strong>
-    <span class="doc-num">文件 · 内部传阅</span>
+    <span class="doc-num">MAJOR · 〔2026〕第 {tags[0] if tags else "001"} 号</span>
+    <strong>Major Explorer 编辑部</strong>
+    <span class="doc-num">专题资料 · 编辑部内阅</span>
   </div>
   <div class="gov-redline"></div>
   <div class="container" style="padding: 0;">
     <div class="gov-paper">
       <div class="gov-stamp">
-        <span class="gov-stamp-text">教育 部<br/>高等教育<br/>研究司</span>
+        <span class="gov-stamp-text">升学<br/>研究组</span>
       </div>
-      <div class="gov-seal-strip">已归档 · 内部资料</div>
+      <div class="gov-seal-strip">归档 · 内部资料</div>
       <div class="gov-doc-title">专业介绍</div>
-      <div class="gov-doc-no">教高函〔2026〕第 {tags[0] if tags else "001"} 号</div>
+      <div class="gov-doc-no">专题号 ME〔2026〕第 {tags[0] if tags else "001"} 号</div>
       <div class="gov-doc-line"></div>
       <h1 class="gov-h1">{title}</h1>
       <p class="gov-tagline">{summary[:120]}</p>
@@ -2222,10 +2228,10 @@ def render_v4(data: dict, style: str) -> str:
         <div class="stat" data-num="01"><div class="stat-label">学 科 门 类</div><div class="stat-value">{category}</div></div>
         <div class="stat" data-num="02"><div class="stat-label">学 制 · 学 位</div><div class="stat-value">{duration}Y · {degree}</div></div>
         <div class="stat" data-num="03"><div class="stat-label">难 度 评 定</div><div class="stat-value">{difficulty}</div></div>
-        <div class="stat" data-num="04"><div class="stat-label">文 件 修 订</div><div class="stat-value">{updated_at}</div></div>
+        <div class="stat" data-num="04"><div class="stat-label">编 纂 修 订</div><div class="stat-value">{updated_at}</div></div>
       </div>
       <div class="gov-foot">
-        <span>印发机关: 教育部高等教育司</span>
+        <span>编纂: Major Explorer 编辑部 · 升学研究组</span>
         <span>成文日期: {updated_at}</span>
         <span>份号: 0026-ME-{data.get("slug", "doc")[:6].upper()}</span>
       </div>
