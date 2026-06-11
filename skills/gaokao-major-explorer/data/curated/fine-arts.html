@@ -319,6 +319,174 @@ section.tab p.lede { color: #D9CFB9; }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
 .hu-tag { font-family: 'Archivo', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; padding: 4px 12px; border: 1px solid #D9CFB9; color: #FAFAFA; border-radius: 0; text-transform: uppercase; font-weight: 500; }
 
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
+
 </style>
 </head>
 <body>
@@ -377,16 +545,7 @@ section.tab p.lede { color: #D9CFB9; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">美术学是「研究美术本身」 — 美术史 + 美术理论 + 美术批评 + 美术教育 + 美术馆学 + 文物保护与修复, 是「理论 + 史论 + 鉴赏」为主, 跟「绘画」(技法) 是不同方向。本科起薪 5-8 万, 流向博物馆/美术馆/画廊/学校美术教师/拍卖行/文化机构; 想进「九大美院」(央美/国美/西美/川美/天美/鲁美/湖美/广美/清美) 教学/科研岗, 硕士起步, 美术学是「美育时代 + 文化复兴」的长线风口。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 中外美术史 (中国美术史 / 西方美术史 / 亚洲美术史 / 20 世纪现代艺术) + 美术概论 + 艺术概论 + 素描 + 色彩 + 速写 (基础训练) + 中国画基础 / 油画基础 / 雕塑基础 / 版画基础 (1-2 个方向入门) + 美术鉴赏 + 视觉文化导论 — 美术学主体是「史 + 论 + 鉴赏」, 但保留基础技法课。
-
-大三大四分流到 5 大方向: (1) 美术史与美术理论 (中国/西方/亚洲美术史, 进博物馆/美术馆/高校首选); (2) 美术教育 (师范方向, 中小学美术教师 + 高校美育课教师, 跟「美育进中考」政策直接相关); (3) 美术批评 (写艺术评论 + 策展, 跟画廊/美术馆/拍卖行强相关); (4) 美术馆学与博物馆学 (藏品管理 / 展览策划 / 公共教育 / 文物保护, 进美术馆/博物馆首选); (5) 文物保护与修复 (青铜器/书画/陶瓷/壁画修复, 跟故宫/国博/各省博物馆强相关, 是「冷门高薪」蓝海)。
-
-技能树三条: (1) 美术史写作与研究 (会用中英文文献 + 学术写作规范, 论文 1-2 万字是常态); (2) 美术鉴赏与策展 (能讲画 + 能组织展览 + 能写展览前言 + 能策划公教活动); (3) 文物保护与修复 (传统技艺 + 现代科技, 书画装裱 / 青铜器修复 / 壁画修复)。美术学是「美育时代」的核心 — 2020 年中办国办《关于全面加强和改进新时代学校美育工作的意见》后, 美育进中考在多省试点, 中小学美术教师缺口 50 万+, 美术馆/博物馆免费开放政策带动策展/公教人才需求。</p>
-    <h3>什么人适合?</h3><p>适合对「为什么《千里江山图》能成为青绿山水巅峰」「为什么印象派改变了西方艺术史」「怎么给中学生讲清楚美育」有持续兴趣, 且能接受前 5 年低收入 + 长线积累的人。美术学的优势是「政策风口 + 文化复兴 + 体制内出口」: 2020 年「美育进中考」政策落地后, 中小学美术教师缺口巨大 (2024 年缺口约 50 万), 985 美术学师范生直接进省级重点中学, 是「冷门高分」路径。
-
-不适合: 把美术学等同于「学画画」的人 (这是「史 + 论 + 鉴赏」学科, 不是技法); 不能接受「画技不如绘画专业」的人 (绘画专业是「油画/国画/版画/雕塑」的技法训练, 美术学是「研究美术本身」); 想本科毕业就高薪的人 (2024 届美术学本科半年后月收入约 5000 元, 在艺术类里偏低); 期待「对口大厂」的人 (头部是故宫/国博/各省博物馆 + 各大美院 + 拍卖行, 不是字节腾讯)。适合的人是: 喜欢「美术 + 文化 + 教育 + 政策」组合, 愿意前 5 年在博物馆/学校/美术馆/画廊积累, 之后做策展人/教研员/教授/拍卖行专家的人。</p>
-    <h3>避坑指南</h3><p>❌ 「美术学就是学画画」→ 严重错。美术学主体是「史 + 论 + 鉴赏」, 跟「绘画」(油画/国画/版画/雕塑技法) 是完全不同方向。绘画是「实践」, 美术学是「研究美术本身」, 选错后悔 4 年。❌ 「美术学毕业只能当画家」→ 错。美术学的 5 大出口: 中小学美术教师 (35%, 师范方向, 跟「美育进中考」政策风口, 985 师范直接进省级重点中学)、博物馆/美术馆/纪念馆 (20%, 策展/公教/藏品管理/修复)、拍卖行/画廊/艺术机构 (15%, 拍卖图录编辑/艺术品经纪人/策展助理)、公务员/事业编 (文化和旅游部/文物局/各省文旅厅, 10%)、跨专业出口 (艺术品金融/文创/艺术自媒体/教培, 20%)。❌ 「美术学冷门好考, 容易上岸」→ 被严重高估。央美/国美/西美/川美/天美/鲁美/湖美/广美/清美 美术学 2024 年河北物理组最低 580-620 分, 985 分数打底, 不是「保底」专业。❌ 「美院毕业就成名成家」→ 严重幻想。央美/国美等「九大美院」美术学本科直接就业率 50%+, 改行率 40%+; 真正成为「美术史学者/策展人/拍卖行专家」, 平均需要 8-12 年积累。❌ 「美术学不用学高数, 简单」→ 半对。美术学数学要求低, 但「史 + 论 + 鉴赏」要求极高的英语 + 古文 + 论文写作能力 — 中外美术史 60% 是英文文献, 中国美术史要读繁体《画传》《画论》, 论文 1-2 万字是常态。❌ 「AI 时代美术史/策展要被淘汰」→ 过度焦虑。AI 不会取代「真迹鉴赏 + 现场策展 + 公教活动」, 反而会替代「基础信息检索」, 美术学的「高端鉴赏 + 策展 + 研究」能力反而是护城河。❌ 「美术学和艺术设计一个专业」→ 严重错。美术学 (艺术学学士, 偏史论 + 师范 + 美术馆) 跟艺术设计 (艺术学学士, 偏视觉传达/环境设计/产品设计/数字媒体, 设计院/互联网/地产出口) 是完全不同专业, 选错后悔 4 年。</p>
+    <p class="lede drop-cap ovv-lede">美术学是「研究美术本身」 — 美术史 + 美术理论 + 美术批评 + 美术教育 + 美术馆学 + 文物保护与修复, 是「理论 + 史论 + 鉴赏」为主, 跟「绘画」(技法) 是不同方向。本科起薪 5-8 万, 流向博物馆/美术馆/画廊/学校美术教师/拍卖行/文化机构; 想进「九大美院」教学/科研岗, 硕士起步, 是「美育时代 + 文化复兴」的长线风口。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>中国美术史</span></div><div class="ovv-tl-step"><span>西方美术史</span></div><div class="ovv-tl-step"><span>美术概论</span></div><div class="ovv-tl-step"><span>素描·色彩·速写</span></div><div class="ovv-tl-step"><span>中国画基础</span></div><div class="ovv-tl-step"><span>美术鉴赏</span></div><div class="ovv-tl-step"><span>视觉文化导论</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">美术史与美术理论</div><div class="ovv-dir-desc">中国/西方/亚洲美术史, 进博物馆/美术馆/高校首选</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">美术教育 (师范)</div><div class="ovv-dir-desc">中小学美术教师 + 高校美育, 跟「美育进中考」政策直接相关</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">美术批评</div><div class="ovv-dir-desc">艺术评论 + 策展, 跟画廊/美术馆/拍卖行强相关</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">美术馆学与博物馆学</div><div class="ovv-dir-desc">藏品管理 / 展览策划 / 公共教育, 美术馆/博物馆首选</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">文物保护与修复</div><div class="ovv-dir-desc">青铜器/书画/陶瓷/壁画修复, 故宫/国博方向, 冷门高薪蓝海</div></div></div><div class="ovv-skills"><span class="ovv-skill">美术史写作与研究 (中英文文献 + 学术规范)</span><span class="ovv-skill">美术鉴赏与策展 (讲画 + 策展 + 展览前言 + 公教活动)</span><span class="ovv-skill">文物保护与修复 (传统技艺 + 现代科技)</span></div><div class="ovv-bonus">大三大四「田野学期」 — 央美/国美带学生进故宫/各省博物馆真迹实习; 2020 年中办国办「美育进中考」后, 中小学美术教师缺口 50 万+, 美术馆/博物馆免费开放政策带动策展/公教人才需求。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对「为什么《千里江山图》是青绿山水巅峰」「印象派为何改变西方艺术史」有持续兴趣</li><li>能接受前 5 年低收入 + 长线积累</li><li>喜欢「美术 + 文化 + 教育 + 政策」组合</li><li>愿意在博物馆/学校/美术馆/画廊沉淀, 之后做策展人/教研员/教授</li><li>英语 + 古文 + 论文写作能力强, 或愿意恶补</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把美术学等同于「学画画」 (这是「史 + 论 + 鉴赏」, 不是技法)</li><li>不能接受「画技不如绘画专业」(绘画是油画/国画/版画的技法训练)</li><li>想本科毕业就高薪 (2024 届美术学本科半年后月收入约 5000 元)</li><li>期待「对口大厂」(头部是故宫/国博/美院/拍卖行, 不是字节腾讯)</li><li>想 4 年内成名成家 (成为美术史学者/策展人/拍卖专家平均需 8-12 年积累)</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">7 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 美术学就是学画画</div><div class="ovv-pit-reality">严重错。美术学主体是「史 + 论 + 鉴赏」, 跟「绘画」(油画/国画/版画/雕塑技法) 是完全不同方向。绘画是「实践」, 美术学是「研究美术本身」, 选错后悔 4 年。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 美术学毕业只能当画家</div><div class="ovv-pit-reality">错。美术学 5 大出口: 中小学美术教师 (35%, 跟「美育进中考」政策风口)、博物馆/美术馆/纪念馆 (20%, 策展/公教/藏品管理/修复)、拍卖行/画廊/艺术机构 (15%)、公务员/事业编 (文旅部/文物局, 10%)、跨专业出口 (艺术品金融/文创/艺术自媒体/教培, 20%)。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 美术学冷门好考, 容易上岸</div><div class="ovv-pit-reality">被严重高估。央美/国美/西美/川美/天美/鲁美/湖美/广美/清美 美术学 2024 年河北物理组最低 580-620 分, 985 分数打底, 不是「保底」专业。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 美院毕业就成名成家</div><div class="ovv-pit-reality">严重幻想。「九大美院」美术学本科直接就业率 50%+, 改行率 40%+; 真正成为「美术史学者/策展人/拍卖行专家」, 平均需要 8-12 年积累。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 美术学不用学高数, 简单</div><div class="ovv-pit-reality">半对。数学要求低, 但「史 + 论 + 鉴赏」要求极高英语 + 古文 + 论文写作能力 — 中外美术史 60% 英文文献, 中国美术史要读繁体《画传》《画论》, 论文 1-2 万字是常态。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ AI 时代美术史/策展要被淘汰</div><div class="ovv-pit-reality">过度焦虑。AI 不会取代「真迹鉴赏 + 现场策展 + 公教活动」, 反而会替代「基础信息检索」, 美术学的「高端鉴赏 + 策展 + 研究」能力反而是护城河。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ 美术学和艺术设计是一个专业</div><div class="ovv-pit-reality">严重错。美术学 (艺术学学士, 偏史论+师范+美术馆) 跟艺术设计 (艺术学学士, 偏视觉传达/环境设计/产品设计) 是完全不同专业, 选错后悔 4 年。</div></div></div></div>
   </div>
 </section>
 
