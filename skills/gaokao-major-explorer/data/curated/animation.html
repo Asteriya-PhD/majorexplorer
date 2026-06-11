@@ -85,6 +85,49 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
 
 /* ──────────────────────────────────────────────────────────
    BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
@@ -624,16 +667,7 @@ footer .data-source { color: #999; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">动画是「让画动起来讲故事」 — 二维动画 (传统手绘) + 三维动画 (CG/电脑) + 定格动画 (黏土/偶/实拍合成) + 实验动画 + 影视特效 + 游戏动画, 是「美术 + 影视 + 故事 + 技术」的交叉。本科起薪 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 校招 15-25 万, 头部游戏 (米哈游/腾讯天美) 动画师校招 18-30 万, 是「国漫崛起 + 影视风口 + AI 时代」风口专业。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 美术基础 (素描/色彩/速写, 绘画功底是核心) + 动画概论 + 中外动画史 + 动漫造型基础 (角色/场景) + 动漫运动规律 + 分镜脚本 + 数字图像处理 (PS/AI) + 摄影摄像 + 数字绘画 + 软件基础 (Animate CC/TVPaint/Clip Studio Paint) — 美术功底 + 动画规律 + 故事能力 + 软件工具的四脚架。
-
-大三大四分流到 4 大方向: (1) 二维动画 (传统手绘 + 数字二维, 跟《罗小黑战记》/《大鱼海棠》/日本 TV 动画风格强相关); (2) 三维动画 (CG/电脑, 角色/场景/绑定/动画/渲染, 跟追光/原力/Base Media/迪士尼/皮克斯强相关); (3) 定格动画 (黏土/偶/实拍合成, 跟阿德曼《小羊肖恩》/中国偶动画强相关); (4) 实验动画 + 影视特效 (实验短片/独立动画 + VFX, 跟双年展/独立影展/特效公司强相关)。
-
-技能树四条: (1) 二维软件 (Animate CC/TVPaint/Clip Studio Paint, 传统动画师核心); (2) 三维软件 (Maya/Blender/C4D/ZBrush/Substance, 三维动画师核心); (3) 动画规律 (12 原则 + 力学 + 表情 + 口型 + 表演, 动画师核心硬技能); (4) AI 动画工具 (Stable Diffusion/Runway/Sora/Kling, 2024 年起 985 动画学生必会)。动画的核心是「用画面讲故事」, 是「离影视 + 故事最近的纯艺 + 设计交叉」专业, 国漫崛起 (哪吒之魔童降世 50 亿+ / 长安三万里 18 亿+ / 白蛇系列 / 哪吒 2 突破 100 亿) 政策风口专业。</p>
-    <h3>什么人适合?</h3><p>适合对「让一个角色活过来」「让一段画动起来讲故事」「让一部国漫感动千万观众」有持续热情, 且能接受前期熬夜画稿/做项目 + 中期技术快速迭代 + 后期持续学习新工具的人。动画的优势是「国漫崛起 + 影视风口 + 商业化好 + AI 时代」四栖: 它的就业比纯艺好太多, 起薪 6-12 万, 头部动画公司 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深动画师/导演/创意总监 30-60 万, 10 年后能到 50-100 万。
-
-不适合: 把动画等同于「学画画」的人 (这是「美术 + 故事 + 技术」, 主体是「让画动起来讲故事」); 不能接受熬夜做项目的人 (动画/影视/游戏「9105/9106」是常态, 项目节点连续 1-3 个月高强度); 数学/物理/编程极差但想做三维动画的人 (三维涉及绑定/特效/物理, 编程思维不能缺); 期待「对口考公岗位多」的人 (动画公务员岗位少, 主要靠企业/工作室/自由职业); 期待「学完就能找到对口工作」的人 (动画技术迭代极快, 1-2 年不学就跟不上)。适合的人是: 喜欢美学 + 故事 + 影视 + 技术 + 角色表演交叉, 愿意前 5 年在动画/影视/游戏公司做动画师, 之后做动画导演/创意总监/独立动画人/创业的人。</p>
-    <h3>避坑指南</h3><p>❌ 「动画就是学画画, 工资低」→ 严重低估。动画校招 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万。动画是「艺术类里起薪高 + 国漫崛起风口」的专业之一。❌ 「动画毕业 = 流水线画师」→ 错。动画的核心是「画面 + 故事 + 表演」, 头部 5% 动画师做的是「动画导演 + 创意总监 + 独立动画人」, 不是「流水线画师」。AI 时代 (2024 起), 只会画画的画师正在被淘汰, 「懂故事 + 懂表演 + 懂技术」的全能动画师反而更值钱。❌ 「动画和数媒/视传/影视一个专业」→ 严重错。动画 (偏二维/三维/定格 + 故事 + 表演, 影视/动画/游戏公司出口) 跟数字媒体艺术 (偏影视 + 游戏 + 交互 + 装置 + VR/AR, 影视/游戏/科技公司出口)、视传 (偏品牌 + UX/UI, 互联网/广告出口)、影视摄影与制作 (偏影视摄影/导演, 影视公司出口) 是不同专业, 选错后悔 4 年。❌ 「动画进大厂容易, 应届 30 万+」→ 部分对。北电/中传/国美/央美/清美 等头部 5 院校, 校招进追光/原力/光线彩条屋 15-25 万, 校招进米哈游/腾讯天美动画师 18-30 万, 是真实的; 但普通院校动画校招进小公司起薪 5-7 万, 差距 2-3 倍。❌ 「动画不需要编程」→ 严重错。2024 年起 985 动画学生必会: (1) 至少 1-2 个三维软件 (Maya/Blender/C4D); (2) 至少 1-2 个绑定/特效工具 (Houdini/Nuke); (3) AI 动画工具 (Stable Diffusion/Runway/Sora/Kling); (4) 至少 1-2 个编程/Python 入门 (动画绑定/工具脚本)。不会三维的动画毕业生, 5 年后会被淘汰。❌ 「AI 时代动画师要被淘汰」→ 严重错。AI (Stable Diffusion/Runway/Sora) 2024 起爆发, 是动画师的新工具集, 不是威胁。AI 不会取代「懂故事 + 懂表演 + 懂技术」的全能动画师, 反而让头部动画师效率提升 5-10 倍, 动画的「故事 + 表演 + 美术」复合门槛是护城河。❌ 「国漫崛起, 学动画就能出名成家」→ 严重幻想。哪吒之魔童降世导演饺子是华西医科大学毕业转行, 长安三万里导演谢君伟、邹靖是北电/中传动画专业, 国漫崛起需要 8-12 年积累, 不是「学 4 年动画就能出爆款」。动画的「国漫崛起」是行业风口, 不是「个人出名成家」的捷径。</p>
+    <p class="lede drop-cap ovv-lede">动画是「让画动起来讲故事」, 二维手绘、三维 CG、定格与实验动画交叉, 是「美术 + 故事 + 技术」的复合。本科起薪 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 校招 15-25 万, 头部游戏 (米哈游/腾讯天美) 动画师校招 18-30 万, 是国漫崛起 + 影视风口 + AI 时代三重叠加的风口专业。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>动漫造型基础</span></div><div class="ovv-tl-step"><span>动漫运动规律</span></div><div class="ovv-tl-step"><span>中外动画史</span></div><div class="ovv-tl-step"><span>动画概论</span></div><div class="ovv-tl-step"><span>分镜脚本</span></div><div class="ovv-tl-step"><span>数字图像处理</span></div><div class="ovv-tl-step"><span>二维动画软件</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">二维动画</div><div class="ovv-dir-desc">传统手绘 + 数字二维, 对应《大鱼海棠》《罗小黑战记》等国产与日式 TV 动画风格。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">三维动画</div><div class="ovv-dir-desc">CG 角色与场景建模、绑定、动画、渲染全流程, 追光/原力/Base Media 等头部公司主赛道。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">定格动画</div><div class="ovv-dir-desc">黏土、偶、实拍合成方向, 对应阿德曼《小羊肖恩》与中国偶动画传统。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">实验动画</div><div class="ovv-dir-desc">实验短片与独立动画方向, 主攻双年展与独立影展艺术表达路径。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">影视特效</div><div class="ovv-dir-desc">VFX 合成与动捕方向, 服务于影视后期与头部视效公司业务。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.06</div><div class="ovv-dir-name">游戏动画</div><div class="ovv-dir-desc">游戏内角色与怪物动画、特效, 对应米哈游/腾讯天美/网易雷火等头部公司。</div></div></div><div class="ovv-skills"><span class="ovv-skill">二维软件 (Animate CC/TVPaint/Clip Studio Paint)</span><span class="ovv-skill">三维软件 (Maya/Blender/C4D/ZBrush/Substance)</span><span class="ovv-skill">动画规律 (12 原则 + 力学 + 表情 + 口型 + 表演)</span><span class="ovv-skill">绑定与特效 (Houdini/Nuke)</span><span class="ovv-skill">AI 动画工具 (Stable Diffusion/Runway/Sora/Kling)</span><span class="ovv-skill">数字图像处理 (PS/AI)</span></div><div class="ovv-bonus">国漫崛起是政策风口, 哪吒之魔童降世破 50 亿、长安三万里破 18 亿、哪吒 2 突破 100 亿, 头部 5 校 (北电/中传/国美/央美/清美) 校招 985 起。AI 工具 2024 年起成为新基础设施, 不会的 5 年后会被淘汰。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对让角色活过来、用画面讲故事有持续热情的人。</li><li>能接受熬夜画稿与项目节点高强度节奏, 愿意在 9105/9106 中成长的人。</li><li>愿意前 5 年在动画公司或游戏公司做动画师, 之后走导演/总监路线。</li><li>对国漫崛起有信念, 看好追光/原力/光线彩条屋/米哈游等头部公司。</li><li>乐于持续学习新工具, 把 AI 动画工具当作效率放大器。</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把动画等同于学画画, 只想做静态美术而不愿接触动起来讲故事。</li><li>不能接受熬夜做项目、节点期高强度加班, 动画影视游戏加班是常态。</li><li>数学、物理或编程思维极差却想做三维动画, 绑定/特效/物理都需逻辑。</li><li>期待对口考公岗位多、工作稳定, 动画公务员岗位少, 靠企业或自由职业。</li><li>期待学完就能对口就业、一劳永逸, 动画技术 1-2 年不学就会掉队。</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">7 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 动画就是学画画, 工资低</div><div class="ovv-pit-reality">严重低估。动画校招 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万。动画是艺术类里起薪高 + 国漫崛起风口的专业之一。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 动画毕业 = 流水线画师</div><div class="ovv-pit-reality">错。动画的核心是画面 + 故事 + 表演, 头部 5% 动画师走的是动画导演 + 创意总监 + 独立动画人, 不是流水线画师。AI 时代 (2024 起) 只会画画的画师正在被淘汰, 懂故事 + 懂表演 + 懂技术的全能动画师反而更值钱。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 动画和数媒/视传/影视一个专业</div><div class="ovv-pit-reality">严重错。动画偏二维/三维/定格 + 故事 + 表演, 出口在影视/动画/游戏公司; 数媒偏影视 + 游戏 + 交互 + VR/AR, 视传偏品牌 + UX/UI, 影视摄影与制作偏影视摄影/导演, 选错方向后悔 4 年。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 动画进大厂容易, 应届 30 万+</div><div class="ovv-pit-reality">部分对。北电/中传/国美/央美/清美等头部 5 院校, 校招进追光/原力/光线彩条屋 15-25 万, 校招进米哈游/腾讯天美动画师 18-30 万是真实的; 但普通院校动画校招进小公司起薪 5-7 万, 差距 2-3 倍。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 动画不需要编程</div><div class="ovv-pit-reality">严重错。2024 年起 985 动画学生必会三维软件 (Maya/Blender/C4D)、绑定特效 (Houdini/Nuke)、AI 工具 (Stable Diffusion/Runway/Sora/Kling) 与 Python 入门写绑定/工具脚本, 不会三维的动画毕业生 5 年后会被淘汰。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ AI 时代动画师要被淘汰</div><div class="ovv-pit-reality">严重错。AI (Stable Diffusion/Runway/Sora) 2024 起爆发, 是动画师的新工具集, 不是威胁。AI 不会取代懂故事 + 懂表演 + 懂技术的全能动画师, 反而让头部动画师效率提升 5-10 倍, 故事 + 表演 + 美术的复合门槛是护城河。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ 国漫崛起, 学动画就能出名成家</div><div class="ovv-pit-reality">严重幻想。哪吒之魔童降世导演饺子是华西医科大学毕业转行, 长安三万里导演来自北电/中传动画专业, 国漫崛起需要 8-12 年积累, 不是学 4 年动画就能出爆款。动画的国漫崛起是行业风口, 不是个人出名成家的捷径。</div></div></div></div>
   </div>
 </section>
 

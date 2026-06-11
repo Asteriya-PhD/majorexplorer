@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: #FAFAF6; color: #1A2438; font-family: 'IBM Plex Serif', 'Noto Serif SC', serif; }
 /* 招 #5: 公文纸底纹 + 政府蓝 radial 暗示红头 */
@@ -98,6 +194,174 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
     repeating-linear-gradient(0deg, rgba(26, 36, 56, 0.012) 0px, transparent 1px, transparent 3px),
     url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0 0.18 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
   opacity: 0.5;
+}
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
 }
 
 
@@ -276,21 +540,7 @@ footer .data-source { color: #5A6A7A; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">行政管理是研究政府与社会治理、机关与公共部门运作规律的「体制内对口」管理类本科专业。它是考公选调的核心赛道之一,每年国考职位表中「公共管理类 / 行政管理」岗位占比稳居前五;但它也是管理学里被吐槽最多的「万金油」专业,体制外就业宽度有,深度欠缺,硕士起步是走上研究/教学/智库岗的隐性门槛。</p>
-    <h3>这个专业学什么?</h3><p>前两年打管理与社科基础: 高等数学(微积分+线性代数+概率论)、管理学原理、政治学原理、微观经济学、宏观经济学、法学概论(宪法/行政法/民法总论)、社会学概论、大学英语、计算机应用。这个阶段和工商管理重合度很高,差别在政治学、法学和行政学的权重明显加大。
-
-大三进入专业核心: 行政学原理(行政管理学)、公共政策分析、公共经济学、公共部门人力资源管理、组织行为学、地方政府学、公共关系学、政府绩效管理。这些课程围绕「政府如何决策 / 如何执行 / 如何评估 / 如何与公众沟通」展开, 案例多来自真实政策(营改增 / 放管服 / 乡村振兴 / 基层治理)。
-
-大四按方向分流: 城市治理 / 公共财政 / 公共部门人力资源 / 数字政府 / 应急管理 / 公共政策评估等选修模块, 同时完成毕业实习(政府机关 / 事业单位 / 公益组织)和毕业论文。多数院校要求不少于2-3个月的实习, 优秀的学生会争取到省委组织部 / 区县政府 / 街道办跟岗实习。</p>
-    <h3>什么人适合?</h3><p>适合目标感清晰、有志于进入体制内(公务员 / 事业编 / 国企行政岗 / 选调生 / 军队文职)的学生。行政管理是「考公最对口」的本科专业之一 — 国考、省考、选调生、烟草电网等垄断行业行政岗,招聘专业目录几乎必有「公共管理类 / 行政管理 / 行政管理学」。如果你的目标是「稳定 + 体面 + 城市生活」,这个专业是性价比很高的赛道。
-
-不适合以下几种人: 期待毕业后起薪 30 万+ 的人(普通本科毕业进非体制岗月薪 5-8k 是常态); 只想做纯学术研究的人(行政管理本科偏应用, 真正的学术路径要走硕博 — 公共管理 / 公共政策 / 行政法学); 严重社恐+抗拒文字工作的人(行政管理的核心是「写材料 + 办会 + 协调」); 想本科毕业去大厂做产品 / 运营 / 数据的人(工商管理 / 信息管理 / 统计会更对口)。</p>
-    <h3>避坑指南</h3><p>❌ 「行政管理就是培养公务员」 → 半对半错。本科课程帮你建立知识框架, 但能不能考上公务员取决于行测/申论/面试分数, 和你大学课程关联度有限。专业只是给你「报名资格」, 真本事靠刷题和实习。
-❌ 「万金油 = 哪里都能进」 → 体制外对口窄。行政管理的课比工商管理虚, 私企 HR 眼里它和「工商管理 / 人力资源管理 / 公共关系」几乎无差别, 反而因为专业名字「行政」容易被打上「考公考不上才来」的标签。
-❌ 「不读研也能找好工作」 → 看赛道。体制内本科生可考公, 但走学术 / 高校行政 / 智库 / 央企总部文秘岗, 硕士几乎是隐性门槛。行政管理本科毕业生直接做咨询/HRBP/政策研究, 卡学历非常普遍。
-❌ 「哪个学校读出来都一样」 → 错。学科评估 A+ 的人大、北大、复旦、武大、中山和普通二本, 在选调生资格、考公面试认可度、考研保研率上有数量级差距 — 985 毕业生进中央部委和省委办的比例远高于普通院校。
-❌ 「学了行政管理就能搞定人际关系」 → 学科教你的是「制度设计」和「政策分析」, 不是「职场厚黑学」。真正的人际处理能力来自实习和做事, 不来自课本。
-❌ 「选调生一定比省考好」 → 不一定。选调生要下基层 2-3 年, 偏远乡镇条件艰苦; 省考直接进省会机关起点更高。两条赛道各有利弊, 不能一概而论。</p>
+    <p class="lede drop-cap ovv-lede">行政管理是「考公选调」对口的管理学本科专业, 国考「公共管理类」岗位常年稳居前五;课程围绕政府决策、执行、评估与公众沟通展开, 是体制内赛道的高性价比入口,但体制外对口偏窄, 走学术/智库/咨询岗普遍要硕士起步。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>高等数学</span></div><div class="ovv-tl-step"><span>管理学原理</span></div><div class="ovv-tl-step"><span>政治学原理</span></div><div class="ovv-tl-step"><span>微观经济学</span></div><div class="ovv-tl-step"><span>宏观经济学</span></div><div class="ovv-tl-step"><span>社会学概论</span></div><div class="ovv-tl-step"><span>行政法学</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">中国政府与政治</div><div class="ovv-dir-desc">中国人民大学 特色方向, 偏部委实习与政治学传统路径。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">公共政策量化评估</div><div class="ovv-dir-desc">北京大学 特色方向, 强调 Stata 与 Python 的政策数据分析。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">数字政府与电子政务</div><div class="ovv-dir-desc">复旦大学 特色方向, 对接智慧城市与一网通办等改革场景。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">行政法与公共治理</div><div class="ovv-dir-desc">武汉大学 特色方向, 法学交叉, 适合公务员法制岗。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">城市治理与社区发展</div><div class="ovv-dir-desc">中山大学 特色方向, 服务粤港澳大湾区基层治理实践。</div></div></div><div class="ovv-skills"><span class="ovv-skill">公共政策分析 (案例拆解 + 政策评估)</span><span class="ovv-skill">政府绩效管理 (KPIs / 第三方评估)</span><span class="ovv-skill">公文写作与处理 (通知/报告/纪要/函)</span><span class="ovv-skill">公共部门人力资源管理 (岗位设计 + 考核)</span><span class="ovv-skill">Stata / Python 量化分析 (政策数据处理)</span><span class="ovv-skill">电子政务实操 (OA / 一网通办平台)</span></div><div class="ovv-bonus">近年「放管服改革」「数字政府」「基层减负」「乡村振兴」持续推进, 「一网通办」「跨省通办」让数字治理人才缺口扩大; 同时选调生扩招、基层公务员晋升年限缩短, 体制内对行政管理本科+硕士的复合背景需求稳中有升。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>目标「稳定 + 体面 + 城市生活」, 志在公务员/选调生/事业编</li><li>愿意走写作 + 办会 + 协调这类机关日常核心工作</li><li>对时政、政策、治理议题有持续兴趣</li><li>计划「本科打基础 + 硕士提门槛」的长线路径</li><li>家庭有体制内资源或地方选调目标省份</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>期待应届起薪 30 万+ 的快钱赛道</li><li>想做纯学术但不愿读到博士</li><li>严重社恐 + 抗拒文字与会议工作</li><li>想去大厂做产品 / 运营 / 数据 (对口不如工商/信管)</li><li>对「体制内节奏」和「科层文化」本能排斥</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 行政管理就是培养公务员</div><div class="ovv-pit-reality">半对半错。本科课程给的是「知识框架」, 能否上岸取决于行测/申论/面试分数, 和你大学课关联度有限。专业只解决「报名资格」, 真本事靠刷题和机关实习, 把毕业证当公务员录取通知会失望。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 万金油 = 哪里都能进</div><div class="ovv-pit-reality">体制外对口很窄。私企 HR 眼中它和「工商管理 / 人力资源」几乎无差, 专业名里的「行政」反而容易被贴上「考公考不上才来」的标签, 进大厂非 HR 岗难度高于科班。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 不读研也能找好工作</div><div class="ovv-pit-reality">看赛道。体制内本科生能考公, 但走学术 / 高校行政 / 智库 / 央企总部文秘岗, 硕士几乎是隐性门槛; 行政管理本科直接做咨询/政策研究, 卡学历极为普遍。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 哪个学校读出来都一样</div><div class="ovv-pit-reality">错。学科评估 A+ 的人大、北大、复旦、武大、中山与普通二本, 在选调生资格、考公面试认可度、考研保研率上有数量级差距 — 985 毕业生进中央部委和省委办的比例远高于双非。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 学了就能搞定人际关系</div><div class="ovv-pit-reality">学科教的是「制度设计」与「政策分析」, 不是「职场厚黑学」。真正的人际处理能力来自机关/街道办/课题组实习中的反复打磨, 不来自课本。把它当公务员速成课会大失所望, 也别指望读完就擅长酒局应酬。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 选调生一定比省考好</div><div class="ovv-pit-reality">不一定。选调生要下基层 2-3 年, 偏远乡镇条件艰苦, 配偶随迁与子女教育成本高;省考直接进省会机关起点更高, 生活质量与晋升节奏常优于基层选调。两条赛道各有利弊, 不能一概而论, 选错赛道的隐性代价非常高。</div></div></div></div>
   </div>
 </section>
 

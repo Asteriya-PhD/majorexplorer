@@ -54,7 +54,7 @@ footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 .yoy, .approx,
 .sparkline-label,
 .curriculum-title,
-.path-pct,
+.path-name, .path-pct,
 .direction-pct, .xuanke-pct,
 .vital-label, .vital-value,
 .docket-court, .docket-title, .docket-meta span,
@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: #0B1120; color: #F8FAFC; font-family: 'JetBrains Mono', 'PingFang SC', monospace; }
 /* 招 #5: 1px dot grid */
@@ -98,6 +194,174 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 }
 /* 招 #6: 终端光标 */
 body { cursor: text; }
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
 
 
 .hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #1F2937; position: relative; z-index: 2; overflow: hidden; }
@@ -195,7 +459,7 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #22C55E; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #F8FAFC; }
 
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #22C55E; transform: translateY(-2px); }
 .path-pct { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #22C55E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
@@ -257,6 +521,13 @@ footer .data-source { color: #94A3B8; }
 
 .terminal-prompt, .hero-decor { color: #22C55E; }
 
+/* ── CS mobile patch (≤480px) — hide 终端 ASCII 3D 大字, 因为下方有干净标题重复显示 ── */
+@media (max-width: 480px) {
+  .terminal-panel { display: none !important; }
+  .hero-grid { display: block !important; }
+  .hero { padding-top: 40px !important; padding-bottom: 32px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -312,10 +583,7 @@ footer .data-source { color: #94A3B8; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">AI = 数学 + 算法 + 算力 + 数据。应届生年薪 28.7 万领跑全行业, 大模型算法岗月薪 6.8 万, 顶尖 AI 科学家月薪 13 万。但课程硬核 (5 门数学打底), 60% 算法岗要求硕博, 35 岁危机 + 算力瓶颈 + 赛道饱和三把刀同时悬着。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年和 CS 高度重叠: 高等数学 A (微积分/级数) / 线性代数 (矩阵/特征值/分解) / 概率论与数理统计 / 程序设计 (C+Python) / 数据结构与算法 / 计算机组成原理 / 操作系统 / 计算机网络。大三进入真正的 AI 核心: 人工智能导论 / 机器学习 (监督/无监督/集成) / 深度学习 (CNN/RNN/Transformer) / 模式识别 / 自然语言处理 (BERT/GPT/RAG) / 计算机视觉 (OpenCV/YOLO) / 强化学习 (Q-learning/PPO) / 优化理论与凸优化 / 大模型与多模态。大四: Kaggle/天池比赛 + 顶会论文复现 + 头部企业实习。核心铁律: 数学占 50%, 编程占 30%, 业务场景占 20%, 缺一项就掉队。</p>
-    <h3>什么人适合?</h3><p>数学不反感 (大一线代听不懂, 后面就别想了), 能接受自学 60%+ (课堂上教的是 2018 年的 CNN, 现在是 LLM/Agent), 能顶住算力焦虑 (没有 GPU 集群就只能调小模型), 能熬 35 岁危机 (算法岗迭代快, 5 年前做推荐现在被多模态挤压), 心理素质强 (论文 10 次有 9 次跑不通, 调参调到怀疑人生)。如果只想「稳定躺平拿高薪」别来, 2025 年算法岗投录比已 200:1, 60% 岗位要求硕博。</p>
-    <h3>避坑指南</h3><p>❌ 「AI = 调包侠」 → 培训班 6 个月能教你跑通 YOLOv8, 但大厂面试必问反向传播推导 + 损失函数数学性质。❌ 「本科直接进大厂算法岗」 → 2025 算法岗 60% 要求硕博, 本科 985 也只能去 AI 产品/数据标注。❌ 「数学学不学都行」 → 大错。高数/线代/概率/优化 5 门课是大三所有 AI 核心课的前置, 缺一全盘崩。❌ 「AI 永远高薪」 → 2024 末开始, 推理优化/AI Infra 岗涨薪 36%, 但传统推荐算法岗实际在降薪。❌ 「选 AI 是因为兴趣」 → 真话是 80% 的人是因为「听说赚钱多」。没有真兴趣撑不过大二线代 + 大三调参地狱。❌ 「AI 等于 ChatGPT」 → 大模型只是 AI 的一支, 还有机器人/自动驾驶/AI for Science/具身智能, 选错细分赛道 3 年白学。❌ 「学校排名决定一切」 → 发顶会论文 + Kaggle 排名 + GitHub Star 数 比 GPA 重要 10 倍。</p>
+    <p class="lede drop-cap ovv-lede">AI 等于数学加算法加算力加数据。应届生年薪 28.7 万领跑全行业, 大模型算法岗月薪 6.8 万, 顶尖 AI 科学家月薪 13 万。但课程硬核, 60% 算法岗要求硕博, 35 岁危机加算力瓶颈加赛道饱和三把刀同时悬着。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>高等数学 A</span></div><div class="ovv-tl-step"><span>线性代数</span></div><div class="ovv-tl-step"><span>概率论与数理统计</span></div><div class="ovv-tl-step"><span>程序设计基础</span></div><div class="ovv-tl-step"><span>数据结构与算法</span></div><div class="ovv-tl-step"><span>计算机组成原理与操作系统</span></div><div class="ovv-tl-step"><span>离散数学</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">智能机器人与具身智能</div><div class="ovv-dir-desc">清华大学 特色方向, 把大模型塞进机器人身体, 服务工业和家庭场景。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">机器学习理论与数据挖掘</div><div class="ovv-dir-desc">南京大学 LAMDA 学派, 偏学术, 是周志华带出来的算法理论高地。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">智能图像理解与雷达信号 AI</div><div class="ovv-dir-desc">西安电子科技大学 特色, 电子信息底座加 AI, 服务国防和工业视觉。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">医学影像 AI 与智慧医疗</div><div class="ovv-dir-desc">上海交通大学 特色, AI 加医疗影像诊断, 走卓越人才试点班路线。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">脑机接口与神经形态计算</div><div class="ovv-dir-desc">浙江大学 特色, AI 加脑科学交叉, 押注下一代人机交互。</div></div></div><div class="ovv-skills"><span class="ovv-skill">PyTorch 与 TensorFlow 深度学习框架</span><span class="ovv-skill">Transformer 与大模型微调</span><span class="ovv-skill">Kaggle 与天池竞赛实操</span><span class="ovv-skill">顶会论文复现</span><span class="ovv-skill">CUDA 与 GPU 算子优化</span><span class="ovv-skill">OpenCV 与 YOLO 视觉部署</span></div><div class="ovv-bonus">大模型与多模态在 2025 年起成为头部院校选修课, 但课堂教的是 2018 年的 CNN, 真正落地靠自学。核心铁律: 数学占 50%, 编程占 30%, 业务场景占 20%, 缺一项就掉队。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>数学不反感, 大一线代听不懂后面就别想了</li><li>能接受自学 60% 以上, 课堂内容远落后业界</li><li>能顶住算力焦虑, 没 GPU 集群只能调小模型</li><li>心理素质强, 论文 10 次有 9 次跑不通</li><li>能熬 35 岁危机, 算法岗 5 年就换代一轮</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>只想稳定躺平拿高薪, 2025 年算法岗投录比已 200 比 1</li><li>数学一碰就头疼, AI 5 门数学是后续所有核心课的前置</li><li>讨厌自学, 课堂教的是 2018 年的 CNN, 现在是 LLM 与 Agent</li><li>害怕 35 岁淘汰, 算法岗迭代比传统软件快一倍以上</li><li>只因听说赚钱多就选, 没有真兴趣撑不过调参地狱</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ AI 等于调包侠</div><div class="ovv-pit-reality">培训班 6 个月能教你跑通 YOLOv8, 但大厂面试必问反向传播推导加损失函数数学性质, 没数学底子一题就卡。真正能拿高薪的 AI 工程师, 都能手推梯度下降与 Transformer 注意力机制的完整公式链。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 本科直接进大厂算法岗</div><div class="ovv-pit-reality">2025 算法岗 60% 要求硕博, 本科 985 也只能去 AI 产品或数据标注岗, 真正的算法岗留给博士加顶会论文的人。本科想突围, 必须靠 Kaggle 银牌加顶会 workshop 加一年大厂实习三件套硬拼。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 数学学不学都行</div><div class="ovv-pit-reality">大错。高数线代概率优化 5 门课是大三所有 AI 核心课的前置, 缺一全盘崩, 后续连 Transformer 的 QKV 矩阵推导都看不懂。AI 课程的数学占比高达 50%, 是后期所有模型创新的根。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ AI 永远高薪</div><div class="ovv-pit-reality">2024 末开始, 推理优化与 AI Infra 岗涨薪 36%, 但传统推荐算法岗实际在降薪, 赛道分化已经非常明显。选对细分方向, 应届起薪能差出 20 万, 选错就只能卷数据标注与模型微调。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ AI 等于 ChatGPT</div><div class="ovv-pit-reality">大模型只是 AI 一支, 还有机器人自动驾驶 AI for Science 具身智能等细分赛道, 选错方向 3 年白学。每个赛道的工具链与论文体系完全不同, 转方向的沉没成本极高。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 学校排名决定一切</div><div class="ovv-pit-reality">发顶会论文加 Kaggle 排名加 GitHub Star 数, 比 GPA 重要 10 倍, 大厂面试官基本不看学校只看作品。即使是 211 科班, 只要有一篇 NeurIPS 加 Kaggle 金牌, 也能拿下字节 SP offer。</div></div></div></div>
   </div>
 </section>
 

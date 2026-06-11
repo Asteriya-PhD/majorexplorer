@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: linear-gradient(165deg, #F5F9EC 0%, #E8EFDC 45%, #F5F9EC 100%); color: #2E5A2E; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -576,6 +672,18 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
 .hu-tag { font-family: 'Noto Serif SC', serif; font-size: 0.8rem; padding: 4px 12px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6); }
 
+/* ── agri (林奈植物图鉴) mobile patch — chloro-panel/wheat/top-mark 重叠 园艺 大字 ──
+   策略: 隐藏装饰元素, 让 hero 主体 (标题+stats+tags) 干净显示 */
+@media (max-width: 480px) {
+  .chloro-panel { display: none !important; }
+  .wheat { display: none !important; }
+  .top-mark { font-size: 0.55rem !important; padding: 4px 8px !important; }
+  .corner-mark { width: 14px !important; height: 14px !important; }
+  .hu-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 14px 0 !important; }
+  /* 标题区上下间距收紧 */
+  .title-en { font-size: 1.1rem !important; margin-top: 6px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -653,16 +761,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">园艺是「种瓜得瓜, 种豆得豆」 — 果树 (苹果/柑橘/桃) + 蔬菜 (番茄/黄瓜) + 花卉 (玫瑰/百合) + 茶学 + 观赏园艺, 偏「精细化农业」, 比农学更接近终端市场。本科起薪 5-7 万, 流向科研院所/种业/花卉企业/园艺师/家庭农场; 想做「休闲农业」「花园设计」, 跨专业学设计更香。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 植物学 + 植物生理学 + 生物化学 + 遗传学 + 土壤学 + 园艺植物保护学 — 跟农学 70% 重合, 但更偏「经济作物」。
-
-大三大四分流到 5 大方向: (1) 果树学 (苹果、柑橘、葡萄、桃、梨, 分子育种 + 设施栽培); (2) 蔬菜学 (茄果类/瓜类/叶菜, 设施蔬菜 + 无土栽培); (3) 花卉学 (鲜切花 + 盆栽 + 观赏苗木, 切花玫瑰/百合/康乃馨); (4) 茶学 (茶树栽培 + 制茶工艺 + 茶文化, 浙江大学茶学全国第一); (5) 观赏园艺与园林植物 (跟园林专业交叉)。
-
-技能树三条: (1) 园艺植物栽培管理 (修剪/嫁接/水肥一体化); (2) 设施园艺 (温室 / 无土栽培 / 植物工厂 / 智慧农业); (3) 园艺产品采后处理与营销 (果蔬采后生理 + 冷链物流 + 品牌打造)。园艺的核心是「在有限的土地上, 用科学 + 美学创造最大经济价值」 — 比农学更精致, 适合对「看着东西长出来」有热情的人。</p>
-    <h3>什么人适合?</h3><p>适合对「种出一棵完美的苹果树」「让玫瑰一年开 3 次」「把家里的阳台变成花园」有持续兴趣, 且能接受前 5 年在地里/温室/果园工作的人。园艺的就业比农学略好: 因为果蔬花卉的「市场属性」强, 直接对接消费者/餐饮/花卉市场, 创业门槛更低。
-
-不适合: 把园艺等同于「插花 / 花园设计」的人 (这只是观赏园艺的一个出口, 主体是果树蔬菜的分子育种 + 设施栽培); 不能接受下地/出差的人 (果园在山东/陕西/海南, 茶园在浙江/云南, 花卉大棚在云南/广东); 想本科毕业就高薪的人 (2024 届园艺本科半年后月收入约 5400 元); 期待「对口大厂」的人 (头部公司是隆平高科/登海/京鹏园艺/虹越花卉, 不是字节腾讯)。适合的人是: 喜欢「把科学 + 美学」结合, 愿意在地里/果园/温室积累 3-5 年经验, 之后做技术管理/科研/创业的人。</p>
-    <h3>避坑指南</h3><p>❌ 「园艺就是插花 + 花园设计」→ 错。插花是观赏园艺里的一个小方向, 园艺主体是果树 / 蔬菜 / 花卉 / 茶树的科学化栽培。园艺本科生 60% 课程在实验室 + 田间, 不是花店。❌ 「园艺比农学更轻松, 不用下大田」→ 半对。果树 / 茶树确实不如玉米 / 小麦那么粗犷, 但设施蔬菜、花卉的劳动密集度极高 (温室 30 度高温 + 弯腰工作 8 小时是常态)。❌ 「园艺就业广, 万金油」→ 部分对。园艺的 5 大出口: 果树/蔬菜/花卉企业 (35%, 隆平 / 京鹏 / 虹越 / 缤纷园艺 / 鑫荣懋)、农业农村局公务员 (15%, 园艺专业岗位少)、科研院所/高校 (20%, 硕士起步)、自主创业 (家庭农场 / 园艺师 / 花园设计 / 茶叶品牌, 15%)、跨专业出口 (景观设计 / 食品 / 电商 / 智慧农业, 15%)。❌ 「学园艺必须考研才有出路」→ 严重高估。本科直接就业率约 70%, 但「进科研院所 / 高校 / 隆平高科研发岗」必须硕士。❌ 「茶学毕业只能去茶馆」→ 错。浙江大学茶学全国第一, 毕业生进的是中茶/八马/天福/竹叶青, 以及茶叶深加工/茶饮品牌 (喜茶/茶颜悦色等新茶饮的研发岗)。❌ 「园艺不读研, 30 岁就定型」→ 不准确。园艺的优势是「经验值钱」 — 一个熟练的果树修剪师 / 嫁接师 / 茶园管理师, 10 年经验在市场上值 30-50 万年薪, 不比硕士差。</p>
+    <p class="lede drop-cap ovv-lede">园艺是「种瓜得瓜, 种豆得豆」的精细化农业, 涵盖果树、蔬菜、花卉、茶学与观赏园艺, 比农学更贴近终端市场。本科起薪 5-7 万, 主流入科研院所、种业、花卉企业、园艺师与家庭农场; 想做花园设计或休闲农业, 跨专业学设计更香。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>植物学</span></div><div class="ovv-tl-step"><span>植物生理学</span></div><div class="ovv-tl-step"><span>生物化学</span></div><div class="ovv-tl-step"><span>遗传学</span></div><div class="ovv-tl-step"><span>土壤与植物营养学</span></div><div class="ovv-tl-step"><span>园艺植物栽培学</span></div><div class="ovv-tl-step"><span>园艺植物育种学</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">果树学</div><div class="ovv-dir-desc">苹果、柑橘、葡萄、桃、梨的分子育种与设施栽培, 主产区在山东、陕西、湖北。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">蔬菜学</div><div class="ovv-dir-desc">茄果、瓜类与叶菜的设施蔬菜和无土栽培, 南京农业大学全国第一。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">花卉学</div><div class="ovv-dir-desc">鲜切花、盆栽与观赏苗木, 含玫瑰、百合、康乃馨等主流品类。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">茶学</div><div class="ovv-dir-desc">茶树栽培、制茶工艺与茶文化, 浙江大学全国第一, 对接新茶饮研发。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">观赏园艺与园林植物</div><div class="ovv-dir-desc">跟园林专业交叉, 偏向城市绿化与花卉产业基地服务。</div></div></div><div class="ovv-skills"><span class="ovv-skill">修剪、嫁接与水肥一体化</span><span class="ovv-skill">温室设计与无土栽培</span><span class="ovv-skill">植物工厂与智慧农业</span><span class="ovv-skill">果蔬采后生理与冷链</span><span class="ovv-skill">园艺产品品牌打造</span></div><div class="ovv-bonus">政策端, 乡村振兴与「一县一品」持续推高果树、茶学、蔬菜的区域刚需; 产业端, 新茶饮 2024 年规模 1700 亿, 喜茶、茶颜悦色、霸王茶姬等品牌在抢茶学与园艺背景的研发岗, 赛道仍在爆发期。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对「种出完美的苹果树」或「让玫瑰一年开 3 次」有持续热情。</li><li>愿意前 5 年在地里、温室、果园、茶园积累一线经验。</li><li>喜欢把科学与美学结合, 接受科学化栽培而非纯经验种植。</li><li>对果蔬花卉的市场化与品牌打造有兴趣, 未来想创业或做技术管理。</li><li>能接受园艺本科起薪不高, 用 3-5 年经验换后期薪资跃升。</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把园艺等同于插花或花园设计的人, 主体其实是果树蔬菜的科学化栽培。</li><li>不能接受下地、出差与温室高温弯腰作业的人, 果园茶园常在偏远产区。</li><li>期待本科毕业就拿高薪或进互联网大厂的人, 头部公司是隆平、京鹏、虹越。</li><li>期待专业「万金油」、哪里都能去的人, 园艺对口岗位集中在农业产业链。</li><li>只想读研留高校、不愿下地做实验的人, 园艺科研的田间劳动不可回避。</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">7 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 园艺就是插花加花园设计</div><div class="ovv-pit-reality">插花只是观赏园艺里的小方向, 园艺主体是果树、蔬菜、花卉、茶树的科学化栽培, 本科生 60% 课程在实验室与田间完成, 不是花店学徒, 跟插花完全是两码事, 别再混为一谈。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 园艺比农学轻松, 不用下大田</div><div class="ovv-pit-reality">半对。果树茶树确实不如小麦玉米粗犷, 但设施蔬菜与花卉的劳动密集度极高, 温室 30 度高温加连续弯腰 8 小时是常态, 园艺师的体力消耗并不比农学轻松多少, 别再被名字骗了。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 园艺就业广, 万金油</div><div class="ovv-pit-reality">部分对。园艺的 5 大出口是果树蔬菜花卉企业占 35%, 公务员占 15%, 科研院所与高校占 20%, 自主创业占 15%, 跨专业出口占 15%, 看似广, 但都绕不开农业产业链, 并非真万金油。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 学园艺必须考研才有出路</div><div class="ovv-pit-reality">严重高估。本科直接就业率约 70%, 想进科研院所、高校或隆平高科研发岗才必须硕士, 走企业销售、家庭农场、园艺师路线本科完全够用, 考研不是唯一的出路, 经验积累同样重要。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 茶学毕业只能去茶馆</div><div class="ovv-pit-reality">错。浙江大学茶学全国第一, 毕业生进中茶、八马、天福等传统茶企, 以及喜茶、茶颜悦色等新茶饮的茶叶研发岗, 茶多酚与茶氨酸的提取纯化才是真正的研发核心, 不是卖茶那么简单。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 园艺不读研, 30 岁就定型</div><div class="ovv-pit-reality">不准确。园艺的优势是经验值钱, 一个熟练的果树修剪师、嫁接师或茶园管理师, 10 年经验在市场上值 30-50 万年薪, 反而比硕士更稀缺, 经验比学历更直接值钱, 30 岁正是黄金期。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ 园艺公务员岗位很多, 容易考</div><div class="ovv-pit-reality">错。园艺在公务员招录中常被并入「农学大类」, 独立岗位少, 想走选调或省厅园艺处, 985 背景与选调生身份才是关键, 不是园艺专业本身岗位就多, 实际竞争也很激烈, 别想当然。</div></div></div></div>
   </div>
 </section>
 

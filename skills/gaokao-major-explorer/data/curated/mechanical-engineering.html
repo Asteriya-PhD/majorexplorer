@@ -54,7 +54,7 @@ footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 .yoy, .approx,
 .sparkline-label,
 .curriculum-title,
-.path-pct,
+.path-name, .path-pct,
 .direction-pct, .xuanke-pct,
 .vital-label, .vital-value,
 .docket-court, .docket-title, .docket-meta span,
@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: #F5F2EA; color: #1A1F2E; font-family: 'Source Sans 3', 'PingFang SC', sans-serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -94,6 +190,174 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
   background-size: 64px 64px, 64px 64px;
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.22 0 0 0 0 0.36 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.04; }
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
 
 
 .hero { padding: 0; background: transparent; border-bottom: 1px solid #FDBA74; position: relative; z-index: 2; overflow: hidden; }
@@ -298,7 +562,7 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
@@ -356,6 +620,25 @@ footer .data-source { color: #78716C; }
 
 .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 4.5em; font-weight: 500; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #9A3412; }
 
+/* ── eng (工程图纸) mobile patch — 顶部 DWG 三列 docket 在 390px 严重拥挤 ──
+   inline style 用 grid-template-columns: auto 1fr auto; 通过属性选择器降到单列堆叠 */
+@media (max-width: 480px) {
+  header.hero > div[style*="grid-template-columns: auto 1fr auto"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+  }
+  header.hero > div[style*="grid-template-columns: auto 1fr auto"] > span {
+    border: none !important;
+    padding: 0 !important;
+    font-size: 0.65rem !important;
+    text-align: left !important;
+  }
+  /* sci 同主题 docket meta (顶部 4-cell 杂志页眉) — 在 480px 已经堆叠为 2-row, 字体保持 */
+}
+
 </style>
 </head>
 <body>
@@ -388,10 +671,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">机械工程不是「车铣刨磨」, 是力学 + 设计 + 制造 + 自动化 + 控制的系统学科。中国是全球第一制造业大国, 就业率常年 95%+, 但行业正从「传统机械」向「智能装备 + 机器人 + 新能源」转型。适合能画图、能下车间、能沉下心做技术的人, 不适合追求短期高薪或纯软件办公的人。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年打力学 + 制造基础: 高等数学 / 线性代数 / 概率统计 / 大学物理 / 理论力学 / 材料力学 / 工程制图 (CAD/SolidWorks) / 机械原理 / 机械设计 / 工程材料 / 互换性与技术测量。大二是第一个分水岭 — 力学与制图基础决定后续是走设计、制造还是自动化方向。大三进入专业核心: 机械制造技术基础 / 数控加工与编程 / 液压与气压传动 / 机械控制工程 / 机电一体化 / 机器人技术基础 / 有限元分析 / 热工基础。大四是综合实践: 课程设计 (典型零件 / 机床 / 数控) + 金工实习 (车钳铣刨磨) + 生产实习 + 毕业设计。选修方向通常分「机械设计制造及其自动化」「机电一体化」「机器人工程」「智能制造」四条线, 不同学校侧重不同。一句话: 「力学 + 制图 + 制造」三件套是核心, 力学是骨, 制图是皮, 制造是肉。</p>
-    <h3>什么人适合?</h3><p>物理成绩中等以上 (力学基础必备), 能接受工厂/车间环境 (金工实习会有油污、铁屑、噪音), 有耐心画图建模 (SolidWorks/UG/CATIA 是吃饭工具), 对实体结构和机械传动有天然兴趣 (齿轮/连杆/轴承/液压原理), 能沉下心做技术 (机械行业经验积累非常重要)。如果想做设计, 需要扎实的力学 + CAD/CAE 功底; 如果想做工艺, 需要能下车间、懂加工、能解决现场问题; 如果想做设备/项目管理, 需要协调能力 + 现场经验。女生慎重但不是禁忌, 设计院 / 仿真岗 / 机械 CAE / 研发岗对女性友好, 但车间一线和出差岗确实以男生为主。</p>
-    <h3>避坑指南</h3><p>❌ 「机械工程是夕阳专业」 → 错。传统机械是, 但智能装备 / 工业机器人 / 新能源汽车 / 半导体设备 / 航空航天 都是机械 + 自动化的延伸, 缺口极大。❌ 「机械本科毕业就能进研究所设计机床」 → 大部分本科生去的是制造企业车间、设备维护、工艺岗或销售岗, 设计岗基本要硕士。❌ 「机械毕业起薪高, 月薪过万」 → 应届生本科普遍 6-10 万/年, 真正能 15 万+ 的多为 985 硕或进 BYD/三一热门岗。前 3 年是「沉淀期」, 35 岁以后才是真正的黄金期。❌ 「机械越老越吃香, 不用读研」 → 半对。经验值钱, 但头部车企 / 半导体设备 / 机器人公司研发岗基本卡硕士及以上, 不读研上限较低。❌ 「学机械不用学编程」 → 错。SolidWorks/UG/CATIA 是基操, MATLAB/Python 做仿真和数据分析, 数控编程 (G 代码/M 代码) 是机械 + 自动化复合岗的入场券。不会编程的机械工程师正在被淘汰。❌ 「机械行业不看学历只看手艺」 → 设计院 / 央企研发 / 外企 (西门子/舍弗勒/博世) 校招基本卡 985/211 本硕, 普通本科更多进民营制造企业。</p>
+    <p class="lede drop-cap ovv-lede">机械工程是力学 + 设计 + 制造 + 自动化 + 控制的系统学科, 中国制造业大国背景下就业率常年 95%+, 行业正从传统机械向智能装备、机器人和新能源转型。前期需要力学 + 制图 + 制造三件套打基础, 后期按方向分流, 适合能画图、能下车间、能沉心做技术的人。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>高等数学</span></div><div class="ovv-tl-step"><span>理论力学</span></div><div class="ovv-tl-step"><span>材料力学</span></div><div class="ovv-tl-step"><span>工程制图与 CAD</span></div><div class="ovv-tl-step"><span>机械原理</span></div><div class="ovv-tl-step"><span>机械设计</span></div><div class="ovv-tl-step"><span>工程材料</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">智能制造与微纳米制造</div><div class="ovv-dir-desc">以上海交大智能装备方向为代表, 面向精密加工与智能产线, 含金工实习 + 数控产线实训</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">快速原型与先进成形技术</div><div class="ovv-dir-desc">西安交大传统强项, 聚焦 3D 打印、增材制造与先进成形工艺, 对接航空航天与汽车</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">机器人与空间机构学</div><div class="ovv-dir-desc">哈工大国防背景特色, 工业机器人本体设计、空间机构、航天机械结构是主战场</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">数控技术与数字制造装备</div><div class="ovv-dir-desc">华中科技大学数控方向国内第一, 覆盖 G/M 代码、车铣复合与五轴加工中心</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">微机电系统与精密机械</div><div class="ovv-dir-desc">清华大学精密装备方向, 面向 MEMS、半导体设备与精密仪器, 学历门槛高</div></div></div><div class="ovv-skills"><span class="ovv-skill">SolidWorks/UG/CATIA 三维建模</span><span class="ovv-skill">ANSYS 有限元分析</span><span class="ovv-skill">数控 G 代码 M 代码编程</span><span class="ovv-skill">MATLAB Python 仿真与数据分析</span><span class="ovv-skill">PLC 与单片机控制系统</span><span class="ovv-skill">液压气压回路设计</span></div><div class="ovv-bonus">国家「中国制造 2025」与「工业母机」专项持续加码, 新能源车、半导体设备、工业机器人三大方向对机械 + 自动化复合人才缺口巨大, 行业 5-10 年仍是上升期。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>物理成绩中等以上, 力学基础扎实</li><li>能接受工厂与车间的金工实习环境</li><li>有耐心画图建模, 不抗拒 CAD 与三维制图</li><li>对齿轮、连杆、轴承等机械传动有天然兴趣</li><li>能沉下心做技术, 接受 35 岁后才是黄金期</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>追求短期高薪或纯办公室软件岗</li><li>完全不能接受车间油污、噪音与出差</li><li>物理与力学基础薄弱, 看到受力分析就头疼</li><li>既不想下车间也不想读研, 只想要轻松白领岗</li><li>对编程和自动化有强烈抵触, 只想做纯传统机械</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 机械工程是夕阳专业</div><div class="ovv-pit-reality">传统机械是, 但智能装备、工业机器人、新能源汽车、半导体设备、航空航天都是机械 + 自动化的延伸, 行业缺口极大, 头部车企与机器人公司校招热度连年上升。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 本科毕业就能进研究所设计机床</div><div class="ovv-pit-reality">大部分本科生去的是制造企业车间、设备维护、工艺岗或销售岗, 设计院与研究所设计岗基本要硕士及以上, 这是行业普遍规则, 不是个例。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 机械毕业起薪高, 月薪过万</div><div class="ovv-pit-reality">应届本科普遍 6-10 万/年, 真正能拿到 15 万+ 的多为 985 硕或进 BYD、宁德时代等热门岗。前 3 年是沉淀期, 35 岁后才是真正的薪资黄金期。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 机械越老越吃香, 不用读研</div><div class="ovv-pit-reality">经验值钱, 但头部车企、半导体设备、机器人公司研发岗基本卡硕士及以上, 不读研上限较低, 这是行业天花板决定的现实。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 学机械不用学编程</div><div class="ovv-pit-reality">SolidWorks、UG、CATIA 是基操, MATLAB、Python 做仿真和数据分析, 数控编程 G 代码 M 代码是机械 + 自动化复合岗的入场券, 不会编程正在被淘汰。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 机械行业不看学历只看手艺</div><div class="ovv-pit-reality">设计院、央企研发、外企西门子、舍弗勒、博世校招基本卡 985/211 本硕, 普通本科更多进民营制造企业, 学历是敲门砖不是全部但极重要。</div></div></div></div>
   </div>
 </section>
 

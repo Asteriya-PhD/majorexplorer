@@ -85,6 +85,49 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
 
 /* ──────────────────────────────────────────────────────────
    BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
@@ -624,16 +667,7 @@ footer .data-source { color: #999; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">环境设计是「设计人类生活的空间」 — 室内设计 + 景观设计 + 建筑设计 + 城市规划 + 陈设设计 + 光环境设计, 是「建筑 + 室内 + 景观 + 城市」的交叉。本科起薪 6-10 万, 头部设计院/装饰公司 (金螳螂/亚厦/土人/山水比德) 校招 10-20 万, 一级注册建筑师 (含建筑师/室内设计师/景观设计师) 是「专业护城河」, 想拿证必须读完研 + 工作 4 年, 是「艺术 + 建筑 + 商业」复合性价比之王。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 美术基础 (素描/色彩/速写) + 设计基础 (构成/色彩/透视) + 建筑学基础 (建筑设计初步 + 建筑构造 + 建筑结构) + 制图 (CAD/SU 入门) + 中外建筑史 + 人体工程学 + 材料与构造 + 工程预算基础 — 美术功底 + 建筑基础 + 软件工具 + 工程概念。
-
-大三大四分流到 4 大方向: (1) 室内设计 (住宅 / 办公 / 商业 / 酒店 / 餐饮 / 展览, 跟金螳螂/亚厦/郑中设计 CCD/集艾设计强相关); (2) 景观设计 (跟园林专业 70% 重合, 城市公园/居住区景观/风景区); (3) 建筑设计 (跟建筑学专业 60% 重合, 中小尺度公共建筑/展览馆/工作室); (4) 城市规划与城市设计 (跟城市规划专业 50% 重合, 城市设计/街区/旧城更新/公园城市)。
-
-技能树四条: (1) 室内设计软件 (CAD/PS/SU/Enscape/Lumion/3Dmax, AI 工具 Stable Diffusion/Interior AI); (2) 工程预算与施工图 (工程预算 / 施工图深化 / 工程监理, 室内设计的核心是「落地」); (3) 软装陈设与材料 (家具/灯具/布艺/绿植/艺术品, 软装设计师是高利润方向); (4) 城市规划与法规 (《城乡规划法》/《建筑工程施工许可管理办法》/《城市设计管理办法》)。环境设计的核心是「把空间 + 功能 + 美学 + 工程」统一在「人 - 环境 - 体验」的关系里, 是「离建筑最近的纯设计」专业, 跟一级注册建筑师/景观设计师/室内设计师职业路径深度绑定。</p>
-    <h3>什么人适合?</h3><p>适合对「让一个毛坯房变成杂志样板间」「让一个废弃工厂变成文创园」「让一个老旧小区变成网红街」有持续热情, 且能接受前期熬夜画图 + 中期工地跑现场 + 后期注册建筑师/室内设计师/景观设计师考试的人。环艺的优势是「艺术 + 建筑 + 商业」三栖: 它的就业比纯艺好太多, 起薪 6-10 万, 头部装饰公司/设计院能到 12-20 万, 5 年后主创/合伙人 30-60 万, 10 年后能到 50-100 万。
-
-不适合: 把环艺等同于「学画画」的人 (这是「设计 + 工程 + 商业」, 主体是「用设计解决问题」); 不能接受熬夜画图的人 (设计院/装饰公司「9106」是常态, 赶项目连续 1-2 个月 12 点后下班); 数学/物理极差的人 (环艺涉及结构计算, 力学基础不能缺); 期待「对口大厂」的人 (头部是金螳螂/亚厦/土人/山水比德/郑中设计 CCD, 不是字节腾讯); 期待「对口考公岗位多」的人 (环艺公务员岗位少, 主要靠企业/工作室/自由职业)。适合的人是: 喜欢美学 + 建筑 + 工程 + 商业交叉, 愿意前 5 年在设计院/装饰公司/地产做设计, 之后做主创设计师/项目负责人/合伙人/教学的人。</p>
-    <h3>避坑指南</h3><p>❌ 「环艺就是室内设计, 工资低」→ 严重低估。环艺校招 6-10 万, 头部装饰公司 12-20 万, 设计院 10-18 万, 5 年后主创 30-60 万, 10 年后合伙人 50-100 万。环艺是「艺术类里起薪高 + 商业化好」的专业之一。❌ 「环艺毕业 = 画图机器」→ 错。环艺的核心是「空间 + 功能 + 美学 + 工程」, 头部 5% 设计师做的是「设计总监 + 项目负责人 + 合伙人」, 不是「美工」。AI 时代 (2024 起), 只会画图的美工正在被淘汰, 「懂策略 + 懂工程 + 懂商业」的全能设计师反而更值钱。❌ 「环艺和园林/视传/建筑学一个专业」→ 严重错。环境设计 (偏室内 + 景观 + 中小建筑 + 城市设计, 设计院/装饰公司出口) 跟园林 (偏景观设计, 设计院/地产出口)、视传 (偏品牌 + UX/UI, 互联网/广告出口)、建筑学 (偏建筑设计, 设计院/地产/规划局出口) 是不同专业, 选错后悔 4 年。❌ 「环艺毕业就拿一级注册建筑师」→ 严重错。一级注册建筑师要求: 建筑学专业 + 硕士 + 4 年工作经验 + 9 门考试, 难度极大 (通过率 5-10%), 5-8 年才能拿证。环艺毕业生能考的是「室内设计师 / 景观设计师 / 装饰设计师」, 含金量低于一级注册建筑师。❌ 「环艺进设计院容易, 应届 20 万+」→ 部分对。清华美院/央美/同济/华南理工 环艺 校招进土人/山水比德/奥雅/金螳螂/亚厦, 起薪 10-20 万, 5 年后能到 30-60 万; 但普通院校环艺校招进小公司起薪 5-7 万, 差距 2-3 倍。❌ 「环艺冷门好考, 容易上岸」→ 被严重高估。清美/央美/同济/华南理工 环艺 2024 年河北物理组最低 590-630 分, 985 分数打底, 不是「保底」专业。❌ 「AI 时代环艺设计师要被淘汰」→ 过度焦虑。AI (Midjourney/Interior AI/Stable Diffusion) 是设计辅助工具, 2024 年起 985 环艺学生必会; AI 不会取代「懂工程 + 懂法规 + 懂甲方」的全能设计师, 反而会替代「只会画效果图」, 环艺的复合门槛反而是护城河。</p>
+    <p class="lede drop-cap ovv-lede">环境设计是「设计人类生活的空间」 — 用「空间 + 功能 + 美学 + 工程」服务人的体验, 覆盖室内 + 景观 + 中小建筑 + 城市设计四大出口, 是「艺术 + 建筑 + 商业」三栖复合的性价比之王。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>设计基础</span></div><div class="ovv-tl-step"><span>中外建筑史</span></div><div class="ovv-tl-step"><span>建筑学基础</span></div><div class="ovv-tl-step"><span>建筑制图与识图</span></div><div class="ovv-tl-step"><span>人体工程学</span></div><div class="ovv-tl-step"><span>材料与构造</span></div><div class="ovv-tl-step"><span>城市规划原理</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">室内设计</div><div class="ovv-dir-desc">住宅、办公、商业、酒店、餐饮、展览空间, 跟金螳螂、亚厦、郑中设计 CCD、集艾设计强相关, 是环艺最大出口。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">景观设计</div><div class="ovv-dir-desc">城市公园、居住区景观、风景区与海绵城市, 跟土人、山水比德、奥雅、棕榈深度绑定, 公园城市风口。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">建筑设计</div><div class="ovv-dir-desc">中小尺度公共建筑、展览馆、工作室, 跟建筑学专业 60% 重合, 主出口是建筑设计院与工作室。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">陈设与软装设计</div><div class="ovv-dir-desc">家具、灯具、布艺、绿植、艺术品的高利润方向, 跟郑中 CCD 与高端住宅项目深度绑定。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">城市规划与城市设计</div><div class="ovv-dir-desc">城市设计、街区更新、旧城改造、公园城市, 跟城市规划专业 50% 重合, 出口是市政设计院与规划局。</div></div></div><div class="ovv-skills"><span class="ovv-skill">室内设计软件 (CAD + PS + SketchUp + Enscape + Lumion + 3Dmax)</span><span class="ovv-skill">工程预算与施工图深化 (室内设计的核心是落地)</span><span class="ovv-skill">软装陈设与材料选型 (家具灯具布艺绿植艺术品)</span><span class="ovv-skill">城市规划与法规 (《城乡规划法》《城市设计管理办法》)</span><span class="ovv-skill">AI 辅助设计 (Stable Diffusion + Interior AI + Midjourney, 2024 年起 985 环艺学生必会)</span></div><div class="ovv-bonus">「公园城市 + 城市更新 + ESG 设计 + 数字化设计」是 2024 年起的新蓝海, 地产室内 2023 年起降温 60%, 头部装饰公司与设计院逆势上行。AI 时代只会画效果图的美工正在被淘汰, 「懂工程 + 懂法规 + 懂甲方」的全能设计师反而更值钱, 环艺的复合门槛是护城河。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对「让毛坯房变成样板间」「让废弃工厂变成文创园」有持续热情, 且愿意前 5 年画图 + 跑工地。</li><li>喜欢「艺术 + 建筑 + 工程 + 商业」四栖交叉, 不把设计等同于「学画画」, 想做主创或合伙人。</li><li>能接受设计院 9106 节奏 + 赶项目连续熬夜, 目标 5 年后年薪 30-60 万。</li><li>愿意读研读博走一级注册建筑师路径, 把「专业护城河」当长期投资。</li><li>对空间美学、商业体验、儿童友好、文旅 IP 等有审美追求 + 作品感。</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把环艺等同于「学画画」的人, 实际是「设计 + 工程 + 商业」, 主体是「用设计解决问题」。</li><li>不能接受熬夜画图、不能接受 9106 节奏、不能接受跑工地的人, 装饰公司常态。</li><li>数学物理极差的人, 环艺涉及结构计算与工程预算, 力学与微积分基础不能缺。</li><li>期待「对口大厂」的人, 头部是金螳螂、亚厦、土人、CCD, 不是字节腾讯。</li><li>期待「对口考公岗位多」的人, 环艺公务员岗位少, 主要靠企业、事务所、选调三条路。</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">7 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 环艺就是室内设计, 工资低</div><div class="ovv-pit-reality">严重低估。环艺校招 6-10 万, 头部装饰公司 12-20 万, 设计院 10-18 万, 5 年后主创 30-60 万, 10 年后合伙人 50-100 万, 是「艺术类里起薪高 + 商业化好」的专业之一。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 环艺毕业 = 画图机器</div><div class="ovv-pit-reality">错。环艺的核心是「空间 + 功能 + 美学 + 工程」, 头部 5% 设计师做的是「设计总监 + 项目负责人 + 合伙人」, 不是「美工」。AI 时代只会画图的正在被淘汰, 「懂策略 + 懂工程 + 懂商业」的全能设计师反而更值钱。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 环艺跟园林、视传、建筑学一个专业</div><div class="ovv-pit-reality">严重错。环境设计偏室内 + 景观 + 中小建筑 + 城市设计, 主出口是设计院与装饰公司; 园林偏景观对接地产, 视传偏品牌与互联网, 建筑学偏建筑设计对接设计院与规划局, 选错专业后悔 4 年。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 环艺毕业就拿一级注册建筑师</div><div class="ovv-pit-reality">严重错。一级注册建筑师要求建筑学专业 + 硕士 + 4 年工作经验 + 9 门考试, 通过率 5-10%, 5-8 年才能拿证。环艺毕业生能考的是「室内设计师 + 景观设计师 + 装饰设计师」, 含金量低于一级注册建筑师。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 环艺进设计院容易, 应届 20 万加</div><div class="ovv-pit-reality">部分对。清华美院、央美、同济、华南理工环艺校招进土人、山水比德、奥雅、金螳螂、亚厦起薪 10-20 万, 5 年后能到 30-60 万; 但普通院校环艺校招进小公司起薪 5-7 万, 头部与普通差距 2-3 倍。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 环艺冷门好考, 容易上岸</div><div class="ovv-pit-reality">被严重高估。清美、央美、同济、华南理工环艺 2024 年河北物理组最低 590-630 分, 985 分数打底, 不是「保底」专业。普通院校环艺看似好进, 但就业差距 2-3 倍, 选错学校代价极高。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ AI 时代环艺设计师要被淘汰</div><div class="ovv-pit-reality">过度焦虑。AI 是设计辅助工具, 2024 年起 985 环艺学生必会 Midjourney、Interior AI、Stable Diffusion; AI 不会取代「懂工程 + 懂法规 + 懂甲方」的全能设计师, 反而会替代「只会画效果图」, 环艺的复合门槛反而是护城河。</div></div></div></div>
   </div>
 </section>
 

@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: #FAFAF6; color: #1A2438; font-family: 'IBM Plex Serif', 'Noto Serif SC', serif; }
 /* 招 #5: 公文纸底纹 + 政府蓝 radial 暗示红头 */
@@ -98,6 +194,174 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
     repeating-linear-gradient(0deg, rgba(26, 36, 56, 0.012) 0px, transparent 1px, transparent 3px),
     url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0 0.18 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
   opacity: 0.5;
+}
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
 }
 
 
@@ -276,22 +540,7 @@ footer .data-source { color: #5A6A7A; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">图书馆学是研究「信息 / 文献 / 知识」如何被收集、组织、保存、检索与传播的管理类本科专业。它是「冷门但稳定」的典型 — 全国年招生规模仅 3000-4000 人, 80% 院校文理兼收, 招录分数低, 但体制内 (图书馆 / 档案馆 / 高校 / 博物馆) 招聘对口, 编制岗竞争远小于「三不限」; 它的另一面是「万金油信息管理」, 跨考数据 / IT / 编辑出版 / 公务员都敞开, 但缺乏硬技能, 硕士起步是走上研究 / 高校 / 智库岗的隐性门槛。</p>
-    <h3>这个专业学什么?</h3><p>前两年打管理与信息基础: 高等数学(微积分 + 线性代数 + 概率论基础)、管理学原理、信息管理学概论、大学英语、计算机应用基础(数据库 + 文字处理 + 信息检索工具)、大学语文、信息素养与学术写作。这个阶段和「信息管理与信息系统」「档案学」重合度很高, 差别在图书馆学更偏「面向公众的信息服务」和「文献组织」。
-
-大三进入专业核心: 图书馆学基础、信息组织(分类法 + 主题法 + 元数据)、信息检索、信息资源管理与利用、目录学、文献学、情报学概论、数字图书馆技术、用户研究与信息服务。这些课程围绕「信息怎么进馆 / 怎么摆 / 怎么找到 / 怎么用 / 怎么数字化」展开, 案例多来自国家图书馆 / 高校图书馆 / 公共图书馆真实业务。
-
-大四按方向分流: 数字图书馆 / 古籍保护与版本学 / 知识图谱与信息组织 / 出版编辑 / 档案管理 / 信息咨询等选修模块, 同时完成毕业实习(图书馆 / 档案馆 / 出版社 / 信息咨询公司)和毕业论文。多数院校要求不少于 2-3 个月的实习, 优秀的学生会争取到国家图书馆 / 北大图书馆 / 武大图书馆跟岗实习。</p>
-    <h3>什么人适合?</h3><p>适合目标感清晰、有志于进入「体制内 + 偏文化 / 偏安静」岗位 (公共图书馆 / 高校图书馆 / 档案馆 / 博物馆 / 出版社 / 文物局) 的学生。图书馆学是「图书馆招聘最对口」的本科专业 — 国家图书馆、各省图书馆每年都招图情档类专业, 高校图书馆招聘也认这个专业。如果你的目标是「稳定 + 体面 + 城市生活 + 不内卷」, 这个冷门专业是性价比很高的赛道。
-
-不适合以下几种人: 期待毕业后起薪 20 万+ 的人(图情档硕士进互联网大厂信息岗 20-30 万是上限, 本科进图书馆 8-12 万是常态); 想本科毕业直接做产品 / 运营 / 数据的人(「信息管理与信息系统」或「数据科学与大数据技术」更对口); 完全不想读书、希望一毕业就有「硬技能」的人(图情档课偏理论, 真正的硬技能靠自学 + 实习); 想 30 岁前买房的人(图书馆 / 档案馆起薪低, 涨薪慢, 一线城市 5-8 年才看到曙光)。</p>
-    <h3>避坑指南</h3><p>❌ 「图书馆学 = 毕业后去图书馆」 → 半对半错。本科课程帮你建立知识框架, 但能不能进图书馆取决于编制考试 / 公开招聘的分数, 和你大学课程关联度有限。专业只是给你「报名资格」, 真本事靠学历 + 考编。
-❌ 「冷门 = 没人报 = 好考」 → 错。冷门意味着招生人数少(全国年招 3000-4000 人, 不到 CS 的 1%), 多数学校不开这个专业, 想读好学校只能拼 985。冷门的另一面是「冷门行业的人才需求也少」, 转行可去岗位比 CS 少一个数量级。
-❌ 「万金油 = 哪里都能进」 → 体制外对口窄。图书馆学的课比「信息管理与信息系统」虚, 私企眼里它和「档案学 / 信息管理 / 编辑出版」几乎无差别, 反而因为「图书馆」三个字容易被互联网 HR 误判为「养老专业」。
-❌ 「不读研也能找好工作」 → 看赛道。体制内本科生可考公 + 进图书馆, 但走学术 / 高校图书馆 / 智库 / 国家图书馆核心业务岗, 硕士几乎是隐性门槛。本科毕业去出版社当编辑, 卡学历 (985/211) 非常普遍。
-❌ 「哪个学校读出来都一样」 → 错。学科评估 A+ 的武大、北大、南大和普通二本, 在国家图书馆招聘、985 高校图书馆准入、考研保研率上有数量级差距 — 武大图情档毕业生进国家图书馆和 985 高校图书馆的比例远高于普通院校。
-❌ 「图情档冷门 = 容易上岸」 → 不绝对。冷门是「报名人数少」, 不是「考试难度低」, 国考图书馆岗位笔试和「三不限」一样是行测 + 申论, 卷的是应试能力, 不是专业。
-❌ 「学了图书馆学就懂图书馆」 → 学科教你的是「信息组织」和「用户服务」, 不是「如何整理书架」。真正的图书馆业务能力来自实习和编制考试, 不来自课本。</p>
+    <p class="lede drop-cap ovv-lede">图书馆学研究「信息 / 文献 / 知识」如何被收集、组织、保存、检索与传播的冷门管理类本科专业， 全国年招仅 3000-4000 人， 80% 院校文理兼收。体制内 （图书馆 / 档案馆 / 高校） 对口稳定， 编制岗竞争小于「三不限」； 体制外窄， 硕士是高校 / 智库岗的隐性门槛。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>高等数学 (微积分 + 线代 + 概率论)</span></div><div class="ovv-tl-step"><span>管理学原理</span></div><div class="ovv-tl-step"><span>信息管理学概论</span></div><div class="ovv-tl-step"><span>大学语文与学术写作</span></div><div class="ovv-tl-step"><span>信息素养</span></div><div class="ovv-tl-step"><span>计算机应用基础 (数据库 + 检索工具)</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">信息资源管理</div><div class="ovv-dir-desc">武汉大学 特色, 古籍整理方向, 国图实习推荐信</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">数字人文</div><div class="ovv-dir-desc">北京大学 特色, 知识图谱方向, Python/R 数据分析</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">古典文献学</div><div class="ovv-dir-desc">南京大学 特色, 版本目录学方向, 古籍修复延伸</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">信息服务与图书馆交流</div><div class="ovv-dir-desc">中山大学 特色, 港澳台馆员交换项目</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">信息资源与档案学</div><div class="ovv-dir-desc">中国人民大学 特色, 信息资源建设 + 档案学交叉</div></div></div><div class="ovv-skills"><span class="ovv-skill">元数据与分类法信息组织</span><span class="ovv-skill">中图法 + 主题词表标引</span><span class="ovv-skill">信息检索 (CNKI / 万方 / Web of Science)</span><span class="ovv-skill">数字图书馆系统 (DSPACE / 汇文)</span><span class="ovv-skill">用户研究与参考咨询</span><span class="ovv-skill">Python/R 数据分析</span></div><div class="ovv-bonus">近年公共文化服务体系建设和智慧图书馆政策双轮驱动， 国家「十四五」公共文化服务规划 + 数字中国战略持续扩容编制岗； 大厂信息岗对图情档硕需求看涨， 985 硕 + 强实习已成隐形入场券。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>目标「稳定 + 体面 + 城市生活 + 不内卷」的体制内路线</li><li>立志进国家图书馆 / 985 高校图书馆 / 省馆做馆员</li><li>喜欢安静 + 文化 + 文献工作, 能沉下心做版本校对</li><li>接受本科起薪 8-12 万, 看重编制 + 寒暑假 + 子女入学福利</li><li>愿意文理兼收, 数学只要求微积分 + 线代 + 概率基础</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>期待毕业起薪 20 万+ 的高收入选手</li><li>想本科直接做产品 / 运营 / 数据的应用派</li><li>完全不想读书, 渴望一毕业就有硬技能的人</li><li>想 30 岁前在一线城市买房的快速回报选手</li><li>完全不能接受古籍 / 分类法等慢节奏理论课程的人</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 图书馆学 = 毕业后去图书馆</div><div class="ovv-pit-reality">半对半错。本科课程帮你建立信息组织 + 用户服务思维框架， 但能否进馆取决于编制考试 / 公开招聘的分数， 与大学课程关联度有限。专业只给「报名资格」， 真本事靠学历 + 考编 + 实习。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 冷门 = 没人报 = 好考</div><div class="ovv-pit-reality">错。冷门意味着招生人数少 （全国年招 3000-4000 人， 不到 CS 的 1%）， 多数学校不开这个专业， 想读好学校只能拼 985。冷门的另一面是冷门行业人才需求也少， 转行可去岗位比 CS 少一个数量级。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 万金油 = 哪里都能进</div><div class="ovv-pit-reality">体制外对口窄。图书馆学课程比「信息管理与信息系统」虚， 私企眼里和档案学 / 信息管理 / 编辑出版几乎无差别， 「图书馆」三字还容易被互联网 HR 误判为「养老专业」， 转码需自学补硬技能。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 不读研也能找好工作</div><div class="ovv-pit-reality">看赛道。体制内本科生可考公 + 进图书馆， 但走学术 / 高校图书馆 / 智库 / 国图核心业务岗， 硕士几乎是隐性门槛； 本科毕业去出版社当编辑， 卡 985/211 学历非常普遍， 体制外高薪岗基本无门。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 哪个学校读出来都一样</div><div class="ovv-pit-reality">错。学科评估 A+ 的武大 / 北大 / 南大和普通二本， 在国家图书馆招聘、985 高校图书馆准入、考研保研率上有数量级差距 — 武大图情档毕业生进国图和 985 高校馆的比例远高于普通院校， 校友资源也差距明显。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 图情档冷门 = 容易上岸</div><div class="ovv-pit-reality">不绝对。冷门是「报名人数少」， 不是「考试难度低」， 国考图书馆岗位笔试和「三不限」一样是行测 + 申论， 卷的是应试能力， 不是专业， 二本考编上岸率实际比 985 硕士低很多。</div></div></div></div>
   </div>
 </section>
 

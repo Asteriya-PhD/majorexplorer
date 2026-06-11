@@ -54,7 +54,7 @@ footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 .yoy, .approx,
 .sparkline-label,
 .curriculum-title,
-.path-pct,
+.path-name, .path-pct,
 .direction-pct, .xuanke-pct,
 .vital-label, .vital-value,
 .docket-court, .docket-title, .docket-meta span,
@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: #F2E8D5; color: #1F140A; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
 /* 招 #5: 米白宣纸 + 顶部台灯辐射光斑 */
@@ -95,6 +191,174 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
     radial-gradient(ellipse 600px 400px at 85% 100%, rgba(139, 90, 43, 0.04) 0%, transparent 60%);
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.20 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.18; mix-blend-mode: multiply; }
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
 
 
 /* ── 招 #5: 翻开的线装书 hero + 米白宣纸底层 ── */
@@ -184,7 +448,7 @@ section.tab:last-of-type { border-bottom: none; }
 .direction-bar { height: 6px; background: #E8DFC8; overflow: hidden; }
 .direction-bar-fill { height: 100%; background: #8B5A2B; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Noto Serif SC', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #8B5A2B; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FBF6E9; border: 1px solid #C5B89A; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #8B5A2B; transform: translateY(-2px); }
 .path-pct { font-family: 'Noto Serif SC', serif; font-size: 2.5rem; font-weight: 700; color: #1F140A; margin-bottom: 4px; line-height: 1; }
@@ -233,6 +497,18 @@ footer { background: #F2E8D5; border-top: 1px solid #C5B89A; }
 footer .label { color: #1F140A; font-family: 'Noto Serif SC', serif; }
 footer .data-source { color: #6B5D3F; }
 .drop-cap::first-letter { font-family: 'Noto Serif SC', serif; font-size: 4.5em; font-weight: 900; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #9A2A2A; }
+
+/* ── humanities (线装书) mobile patch — book-shell 1fr-36px-1fr + rotate 在 390px 严重溢出 ──
+   策略: 关闭翻开效果, 单页显示, 隐藏 spine + left page, 取消 rotate */
+@media (max-width: 480px) {
+  .book-shell { grid-template-columns: 1fr !important; transform: none !important; }
+  .book-page { aspect-ratio: auto !important; padding: 28px 22px !important; }
+  .book-page.left { display: none !important; }
+  .book-spine { display: none !important; }
+  .book-page.right { border-radius: 4px !important; }
+  /* 大背景 01 数字 与 01/10·速览 label 重叠 — 弱化背景数字 */
+  .book-page-num { opacity: 0.15 !important; font-size: 6rem !important; }
+}
 
 </style>
 </head>
@@ -284,16 +560,7 @@ footer .data-source { color: #6B5D3F; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">哲学不是「抬杠」, 而是用概念分析 + 逻辑论证 + 思想史对话, 追问「何为真 / 何为善 / 何为美 / 何为存在」。它是所有学科的底层操作系统 — 数学用公理, 物理用定律, 哲学用反思。本科对口就业最窄, 起薪最低, 70%+ 毕业生必须读研, 否则改行率过半。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年打底: 哲学导论 (introduction to philosophy) + 逻辑学 (含一阶逻辑 / 命题演算) + 中国哲学史 (先秦诸子 → 宋明理学 → 近代) + 西方哲学史 (古希腊 → 中世纪 → 德国古典 → 现象学 / 分析哲学) + 马克思主义哲学 (辩证唯物主义 + 历史唯物主义) + 哲学论文写作。这是哲学的「史 + 论 + 逻辑」三脚架, 缺一不可。
-
-大三大四分流到二级学科, 主流 8 大方向: (1) 中国哲学 (儒道佛 + 宋明理学 + 现代新儒家); (2) 外国哲学 (分析哲学传统 / 欧陆现象学 / 后结构主义); (3) 马克思主义哲学 (辩证法 + 西方马克思主义); (4) 伦理学 (美德伦理 / 义务论 / 后果主义 / 元伦理学); (5) 美学 (审美经验 / 艺术哲学 / 中西美学比较); (6) 宗教学 (佛教 / 基督教 / 伊斯兰教 / 宗教哲学); (7) 科学技术哲学 (科学哲学 / 复杂性 / 人工智能哲学); (8) 逻辑学 (数理逻辑 / 哲学逻辑 / 非形式逻辑)。中哲和外哲是最大方向, 各占 25-30%; 伦理学近 10 年热度上升。
-
-技能树三条: (1) 概念分析与论证 — 把一个模糊的日常观念 (如「自由」「正义」) 拆成可证伪的命题, 这点哲学最强; (2) 文本细读 — 一学期精读 1-2 本原著是常态, 柏拉图《理想国》/ 康德《纯粹理性批判》/ 维特根斯坦《逻辑哲学论》是绕不过的; (3) 论文写作与问题意识 — 1 篇 8000-15000 字学年论文是标配。本科 4 年最大隐性收获: 训练了一种「怀疑 + 论证 + 自我修正」的思维方式, 几乎可以迁移到任何行业 — 这是哲学被称为「无用之大用」的根本原因。</p>
-    <h3>什么人适合?</h3><p>适合真正对「人应当如何生活」「知识何以可能」「语言如何塑造世界」有持续好奇, 且能承受前 10 年低收入的人。哲学是「长线专业之王」: 它的红利通常要读到博士 / 进高校 / 进研究院后才兑现。如果期待本科毕业就高薪, 一定会非常失望 — 2025 届哲学本科半年后月收入中位数约 4500 元, 在所有文科专业里属于最低一档, 改行率 50%+。
-
-不适合: 把哲学等同于「鸡汤/玄学」的人(哲学是严格论证学科, 不是感性的形而上); 不愿读古文和外语的人(中哲要读繁体竖排的《四书章句集注》《朱子语类》, 西方哲学的德语/法语/拉丁语是绕不过的硬门槛); 期待「学完就能找到对口工作」的人(哲学没有「对口」, 它的对口是「任何需要深度思考的岗位」, 但这类岗位通常被博士抢走); 想本科毕业就反哺家庭的人(起薪低 + 改行率高, 家里经济压力大慎选)。适合的人是: 愿意用 10 年换一种「能穿透表象看本质」的认知能力, 而且家庭能给到长期低收入的支撑。</p>
-    <h3>避坑指南</h3><p>❌ 「哲学就是鸡汤 + 形而上」→ 大错。哲学是分析 + 论证 + 逻辑, 形而上学只是哲学的一小部分。只会感性抒发的人, 会在大二逻辑学直接熄火 — 一阶逻辑是「哲学的工具课」, 比数学系的离散数学还硬。❌ 「哲学是万金油, 改行容易」→ 半对半错。哲学的「思辨能力」是加分项, 但专业壁垒极低, 改行那一刻你的「哲学」标签就消失了 — 5 年后没人记得你读过康德。实际改行路径是: 考公 (申论有优势) / 教育培训 (教资对口) / 自媒体 (写得好能成网红, 但头部 1% 而已) / 出版社 / 媒体撰稿 — 没有一条路是「学哲学就拿高薪」的捷径。❌ 「冷门好考研究生」→ 被严重高估。2024 年中国哲学考研报录比 6-10:1 (普通 211), 顶尖院系 (北大 / 复旦 / 人大 / 中山) 报录比 20-30:1, 跨考生 (法学 / 中文 / 历史 / 政治) 挤爆。保研率约 10-15% (985), 比理工科低。❌ 「哲学就业去高校很轻松」→ 高校哲学教师岗 2024 起「非升即走」全面铺开 (清华 -3+3 / 复旦 -3+7 / 人大 -3+3), 博士毕业进 985 几乎不可能, 多数去地方二本/三本/独立学院, 编制门槛已经从博士降到「博士 + 海外经历 + 顶刊发文」。❌ 「读哲学找不到工作」→ 也不完全对。公考 / 党校 / 文博 / 出版 / 文化机构 / 媒体 / 高校行政 / 党政研究室 / 互联网产品 / 咨询 / 投资研究, 都是出口。问题是对口起薪低 (5-8 万/年), 改行率高 (约 50-60% 毕业生最终不进哲学相关行业), 时间成本极高。❌ 「不挑学校, 哲学都差不多」→ 严重低估了学科壁垒。北大的外国哲学 (陈来 / 赵敦华一线) / 复旦的中西哲比较 / 人大的马哲和伦理学 / 中山的长江学者密度 / 武大与湖大的德国哲学 / 南大与浙大的现代西方哲学, 各有专精, 学科壁垒比想象中厚 — 哲学的「学派传承」比理工科更明显, 导师 > 学校 > 方向。</p>
+    <p class="lede drop-cap ovv-lede">哲学不是「抬杠」, 而是用概念分析 + 逻辑论证 + 思想史对话, 追问「何为真 / 何为善 / 何为美 / 何为存在」。本科对口就业最窄、起薪最低 (应届 p50 约 5 万), 70%+ 毕业生必须读研, 否则改行率过半, 是典型的「长线冷门」纯文专业。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>哲学导论</span></div><div class="ovv-tl-step"><span>逻辑学</span></div><div class="ovv-tl-step"><span>中国哲学史</span></div><div class="ovv-tl-step"><span>西方哲学史</span></div><div class="ovv-tl-step"><span>马克思主义哲学</span></div><div class="ovv-tl-step"><span>伦理学</span></div><div class="ovv-tl-step"><span>美学</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">中国哲学</div><div class="ovv-dir-desc">儒道佛 + 宋明理学 + 现代新儒家, 古文与繁体原典是硬门槛</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">外国哲学</div><div class="ovv-dir-desc">分析哲学传统 + 欧陆现象学 + 后结构主义, 二外德语法语拉丁语是硬门槛</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">马克思主义哲学</div><div class="ovv-dir-desc">辩证唯物主义 + 历史唯物主义 + 西方马克思主义, 党政与高校需求最稳</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">伦理学</div><div class="ovv-dir-desc">美德伦理 + 义务论 + 后果主义 + 元伦理学, 近 10 年热度上升最快</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">美学</div><div class="ovv-dir-desc">审美经验 + 艺术哲学 + 中西美学比较, 文博与文化机构出口清晰</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.06</div><div class="ovv-dir-name">科学技术哲学</div><div class="ovv-dir-desc">科学哲学 + 复杂性 + 人工智能哲学, 与 AI 伦理时代强绑定的新方向</div></div></div><div class="ovv-skills"><span class="ovv-skill">一阶逻辑与命题演算</span><span class="ovv-skill">概念分析与论证 (把「自由 / 正义」拆成可证伪命题)</span><span class="ovv-skill">原典精读 (柏拉图 / 康德 / 老子 / 朱子)</span><span class="ovv-skill">学术论文写作 (8000-15000 字学年论文)</span><span class="ovv-skill">批判性思维 + 自我修正</span><span class="ovv-skill">德语 / 法语 / 拉丁语 二外</span></div><div class="ovv-bonus">哲学被称为「无用之大用」: 本科 4 年训练「怀疑 + 论证 + 自我修正」的思维方式, 可迁移到咨询 / 投资 / 产品 / 公考等任何需要深度思考的赛道。AI 时代 AI 伦理与科技哲学方向走强, 一阶逻辑是哲学工具课, 难度接近数学系离散数学。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对「人应当如何生活 / 知识何以可能」有持续好奇</li><li>能接受前 10 年低收入 + 长线读到博士</li><li>愿意啃古文 (中哲) + 二外 (西哲)</li><li>家庭能给到长期低收入支撑</li><li>未来想进高校 / 党校 / 智库 / 党政研究室</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把哲学等同于「鸡汤 / 玄学」的人</li><li>期待本科毕业就高薪 (应届月薪中位数 ≈ 4500 元)</li><li>不愿读古文与外语</li><li>想本科就反哺家庭 (起薪低 + 改行率 50%+)</li><li>不喜欢严格论证 + 一阶逻辑推演</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 哲学就是鸡汤 + 形而上</div><div class="ovv-pit-reality">大错。哲学是分析 + 论证 + 逻辑, 形而上学只是哲学的一小部分。只会感性抒发的人会在大二逻辑学直接熄火 — 一阶逻辑是「哲学的工具课」, 比数学系离散数学还硬。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 哲学是万金油, 改行容易</div><div class="ovv-pit-reality">半对半错。哲学的「思辨能力」是加分项, 但专业壁垒极低, 改行那一刻「哲学」标签就消失 — 5 年后没人记得你读过康德。实际改行路径: 考公 / 教培 / 自媒体 / 出版社 / 媒体撰稿, 没有一条是「学哲学就拿高薪」的捷径。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 冷门好考研究生</div><div class="ovv-pit-reality">被严重高估。2024 年中国哲学考研报录比 6-10:1 (普通 211), 顶尖院系 (北大 / 复旦 / 人大 / 中山) 报录比 20-30:1, 跨考生 (法学 / 中文 / 历史 / 政治) 挤爆, 保研率仅 10-15% (985)。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 哲学就业去高校很轻松</div><div class="ovv-pit-reality">高校哲学教师岗 2024 起「非升即走」全面铺开 (清华 -3+3 / 复旦 -3+7 / 人大 -3+3), 博士毕业进 985 几乎不可能, 多数去地方二本/三本, 编制门槛已升到「博士 + 海外经历 + 顶刊发文」。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 读哲学找不到工作</div><div class="ovv-pit-reality">不完全对。公考 / 党校 / 文博 / 出版 / 文化机构 / 媒体 / 高校行政 / 党政研究室 / 互联网产品 / 咨询 / 投资研究 都是出口, 但对口起薪 5-8 万/年, 改行率约 50-60%, 时间成本极高。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 不挑学校, 哲学都差不多</div><div class="ovv-pit-reality">严重低估学科壁垒。北大外国哲学 (陈来 / 赵敦华) / 复旦中西哲比较 / 人大马哲伦理学 / 中山长江学者密度 / 武大与湖大德国哲学 / 南大浙大现代西方哲学, 各有专精 — 哲学的「学派传承」比理工科更明显, 导师 > 学校 > 方向。</div></div></div></div>
   </div>
 </section>
 

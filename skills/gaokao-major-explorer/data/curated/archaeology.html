@@ -54,7 +54,7 @@ footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 .yoy, .approx,
 .sparkline-label,
 .curriculum-title,
-.path-pct,
+.path-name, .path-pct,
 .direction-pct, .xuanke-pct,
 .vital-label, .vital-value,
 .docket-court, .docket-title, .docket-meta span,
@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: #F2E8D5; color: #1F140A; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
 /* 招 #5: 米白宣纸 + 顶部台灯辐射光斑 */
@@ -95,6 +191,174 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
     radial-gradient(ellipse 600px 400px at 85% 100%, rgba(139, 90, 43, 0.04) 0%, transparent 60%);
 }
 body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.20 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.18; mix-blend-mode: multiply; }
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
 
 
 /* ── 招 #5: 翻开的线装书 hero + 米白宣纸底层 ── */
@@ -184,7 +448,7 @@ section.tab:last-of-type { border-bottom: none; }
 .direction-bar { height: 6px; background: #E8DFC8; overflow: hidden; }
 .direction-bar-fill { height: 100%; background: #8B5A2B; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Noto Serif SC', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #8B5A2B; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FBF6E9; border: 1px solid #C5B89A; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #8B5A2B; transform: translateY(-2px); }
 .path-pct { font-family: 'Noto Serif SC', serif; font-size: 2.5rem; font-weight: 700; color: #1F140A; margin-bottom: 4px; line-height: 1; }
@@ -233,6 +497,18 @@ footer { background: #F2E8D5; border-top: 1px solid #C5B89A; }
 footer .label { color: #1F140A; font-family: 'Noto Serif SC', serif; }
 footer .data-source { color: #6B5D3F; }
 .drop-cap::first-letter { font-family: 'Noto Serif SC', serif; font-size: 4.5em; font-weight: 900; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #9A2A2A; }
+
+/* ── humanities (线装书) mobile patch — book-shell 1fr-36px-1fr + rotate 在 390px 严重溢出 ──
+   策略: 关闭翻开效果, 单页显示, 隐藏 spine + left page, 取消 rotate */
+@media (max-width: 480px) {
+  .book-shell { grid-template-columns: 1fr !important; transform: none !important; }
+  .book-page { aspect-ratio: auto !important; padding: 28px 22px !important; }
+  .book-page.left { display: none !important; }
+  .book-spine { display: none !important; }
+  .book-page.right { border-radius: 4px !important; }
+  /* 大背景 01 数字 与 01/10·速览 label 重叠 — 弱化背景数字 */
+  .book-page-num { opacity: 0.15 !important; font-size: 6rem !important; }
+}
 
 </style>
 </head>
@@ -284,16 +560,7 @@ footer .data-source { color: #6B5D3F; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">考古学不是「挖宝」, 是用科学方法(地层学/类型学/碳十四/同位素分析)重建人类过去, 兼具田野艰苦与学术优雅。本科毕业对口岗位稀缺, 读研是主流路径, 适合能耐住寂寞、对人类文明有长期好奇心的人。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年打基础: 中国通史 / 世界通史 / 历史文选 / 考古学概论 / 旧石器时代考古 / 新石器时代考古 / 田野考古方法 / 体质人类学 / 考古绘图与测量 / 地质学基础。田野是考古的灵魂 — 暑假会被派到野外工地(甘肃/陕西/河南/湖北/山东/新疆等), 住老乡家或临时板房, 顶着烈日拿着手铲一寸一寸刮面, 手会磨出茧、腰椎也会出问题, 但亲手挖出陶片的那一刻, 一切辛苦都值了。
-
-大三起按方向分流: 中国考古学(夏商周/秦汉魏晋南北朝/隋唐宋元明) / 科技考古(碳十四测年 / 动植物考古 / 冶金考古 / 古DNA) / 文化遗产 / 文物与博物馆学 / 古文字学(甲骨文/金文/简牍)/ 外国考古(埃及/两河/希腊罗马)。技能树三项: (1) 田野发掘与记录 — 画探方图 / 写发掘日记 / 拍照建档, 是考古人的基本功; (2) 器物整理与研究 — 陶器/青铜/玉器/石器类型学分析, 学会读「地层」和「型式」背后的故事; (3) 论文写作与文献综述 — 大部分本科论文以某遗址或某类器物为研究对象, 需要啃下数百篇中外文献。
-
-和很多人想象的不同, 考古学专业不教「鉴宝」也不教「盗墓」。你学的是: 这块陶片为什么出现在这一层? 它的形制来自哪个文化? 这条灰沟是排水沟还是房址边界? 这种训练会让你形成一种「透过物看人」的独特视角 — 看到任何一件器物, 都能脑补出它背后的人群、生活与时代。</p>
-    <h3>什么人适合?</h3><p>适合对人类过去有持久好奇心、能忍受田野艰苦(烈日/风沙/蚊虫/住工地)、不急于「赚大钱」、愿意做长期积累的人。考古是个典型的「慢学科」, 35 岁才博士毕业是常态, 50 岁才有自己的学术声望是常态, 一辈子挖一个遗址是常态。如果你喜欢《国家宝藏》《探索发现》式的揭秘感, 也愿意用科学的耐心把碎片拼成完整图景, 那你适合。
-
-不适合: 想本科毕业就高薪的人(几乎不可能); 不能吃苦的人(田野是硬门槛); 怕日晒/怕虫/怕脏的人(夏天 40 度在戈壁滩刮面是日常); 期望做「电视上的考古学家」(中国考古人平均上镜率极低, 大部分时间都在工地或办公室); 喜欢热闹、不愿独处的人(读研后大量时间花在写论文、整理资料、与陶片对话上)。</p>
-    <h3>避坑指南</h3><p>❌ 「考古就是挖宝, 一夜暴富」→ 最大误解。出土文物全部归国家, 考古人月薪 5-8 千是常态。盗墓小说看多了。❌ 「考古冷门所以好考」→ 北大/吉大/山大/复旦/南大等头部院校考古学分数线并不低, 因为很多家长和学生被「冷门=好就业」误导, 反推 985 院校考古系竞争其实激烈。❌ 「考古毕业就是当考古队员」→ 全国年新增考古编制岗位不到 500 个, 而应届考古毕业生 2000+。差额去了工地临时工、博物馆合同制、文化公司、修文物。❌ 「田野实习很浪漫」→ 真实是: 8 月甘肃 38 度戈壁 / 凌晨 4 点抢收 / 灰土里蹲 6 小时 / 腰椎间盘突出。女生尤其要慎重, 工地厕所以及夜晚安全问题需要考虑。❌ 「本科毕业好找工作」→ 麦可思数据显示考古专业 2024 届本科毕业半年后就业率约 78%, 月收入中位数 4.5-5.5K, 低于全国本科平均水平。❌ 「喜欢历史就能学考古」→ 历史学与考古学是两套方法论, 历史靠文献, 考古靠实物。学不下去的往往是把两者搞混的人。</p>
+    <p class="lede drop-cap ovv-lede">考古学不是「挖宝」, 是用科学方法重建人类过去, 兼具田野艰苦与学术优雅。本科毕业对口岗位稀缺, 读研是主流路径, 适合能耐住寂寞、对人类文明有长期好奇心的人。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>旧石器时代考古</span></div><div class="ovv-tl-step"><span>新石器时代考古</span></div><div class="ovv-tl-step"><span>夏商周考古</span></div><div class="ovv-tl-step"><span>秦汉魏晋南北朝考古</span></div><div class="ovv-tl-step"><span>隋唐宋元明考古</span></div><div class="ovv-tl-step"><span>田野考古方法与技术</span></div><div class="ovv-tl-step"><span>考古绘图与测量</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">科技考古与古DNA</div><div class="ovv-dir-desc">北京大学 特色方向, 用碳十四测年和古DNA 还原先民迁徙与生计。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">边疆考古</div><div class="ovv-dir-desc">吉林大学 特色方向, 聚焦东北亚与高句丽渤海等边疆文化序列。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">东方考古与盐业考古</div><div class="ovv-dir-desc">山东大学 特色方向, 史前盐业生产与早期国家形成研究全球知名。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">文化遗产与文博</div><div class="ovv-dir-desc">复旦大学 特色方向, 都市考古与现代博物馆管理并重。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">巴蜀考古与三星堆</div><div class="ovv-dir-desc">四川大学 特色方向, 西南区域唯一强校, 三星堆金沙核心团队。</div></div></div><div class="ovv-skills"><span class="ovv-skill">田野发掘与记录, 画探方图、写发掘日记、拍照建档</span><span class="ovv-skill">器物类型学分析, 陶器青铜玉器石器形制与分期</span><span class="ovv-skill">碳十四测年与古DNA 实验操作, 科技考古基本功</span><span class="ovv-skill">考古绘图与测量, 探方剖面图与器物线图</span><span class="ovv-skill">中外文献综述与学术写作, 啃数百篇文献是常态</span></div><div class="ovv-bonus">国家「中华文明探源工程」持续投入, 三星堆、殷墟、海昏侯等大遗址招聘需求向硕士倾斜。文博系统事业编稳定, 越老越吃香, 50 岁才是考古人黄金期。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对人类过去有持久好奇心, 能享受与陶片对话的孤独</li><li>能忍受田野艰苦, 烈日风沙蚊虫工地板房是日常</li><li>不急于赚大钱, 愿意做十年磨一剑的长期积累</li><li>动手能力强, 愿意在工地一寸寸刮面记录</li><li>对学术有耐心, 接受 35 岁博士毕业的节奏</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>想本科毕业就拿高薪, 期望快速变现的人</li><li>怕日晒怕脏怕虫, 体质弱不能下工地的人</li><li>喜欢热闹抗拒独处, 耐不住大量案头工作的人</li><li>把考古当鉴宝盗墓, 期待一夜暴富的人</li><li>想当电视明星考古学家, 错估曝光度的人</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 考古就是挖宝, 一夜暴富</div><div class="ovv-pit-reality">最大误解。出土文物全部归国家, 考古人月薪 5-8 千是常态。一线田野助理研究员年薪多在 8-12 万区间, 盗墓小说看多了, 真正的考古是清贫的学术工作而非寻宝。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 考古冷门所以好考</div><div class="ovv-pit-reality">北大、吉大、山大、复旦、南大等头部院校考古学分数线并不低, 因为很多家长被「冷门等于好就业」误导, 反推 985 院校考古系竞争其实激烈, 录取分常年居中高位甚至超越部分热门文科专业。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 考古毕业就是当考古队员</div><div class="ovv-pit-reality">全国年新增考古编制岗位不到 500 个, 而应届考古毕业生 2000+。差额分流到工地临时工、博物馆合同制、文化公司、文物修复等岗位, 编制是稀缺品, 大部分人需要硕士起步才有进编资格。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 田野实习很浪漫</div><div class="ovv-pit-reality">真实是 8 月甘肃 38 度戈壁、凌晨 4 点抢收、灰土里蹲 6 小时、腰椎间盘突出, 工地厕所和夜间安全都是现实问题, 女生尤其要慎重评估长期驻地的身体与安全成本。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 本科毕业好找工作</div><div class="ovv-pit-reality">麦可思数据显示考古专业 2024 届本科毕业半年后就业率约 78%, 月收入中位数 4.5-5.5K, 低于全国本科平均水平, 读研是把就业从「临时工」拉回「事业编」的主流绕路。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 喜欢历史就能学考古</div><div class="ovv-pit-reality">历史学与考古学是两套方法论, 历史靠文献辨伪, 考古靠实物地层。学不下去的往往是把两者搞混的人, 实物功夫和实验能力需要从零练起, 不是历史好就能直接迁移, 选专业前务必先体验一次工地。</div></div></div></div>
   </div>
 </section>
 

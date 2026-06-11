@@ -85,6 +85,49 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
 
 /* ──────────────────────────────────────────────────────────
    BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
@@ -624,16 +667,7 @@ footer .data-source { color: #999; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">视觉传达设计是「让信息更美更有效」 — 品牌设计 + 字体设计 + 包装设计 + 海报设计 + 书籍设计 + UI/UX + 数字媒体设计 + 影视动画包装, 是「平面 + 数字 + 商业」交叉。本科起薪 7-12 万, 头部互联网 (字节/腾讯/阿里/小米) UX 岗校招 18-30 万, 4A 广告/品牌咨询/出版/独立设计师, 是「艺术 + 商业 + 互联网」复合性价比之王。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 美术基础 (素描/色彩/速写) + 设计基础 (构成/色彩/透视) + 设计史 (现代设计史/中国设计史) + 字体设计基础 + 摄影基础 + 软件基础 (PS/AI/ID/Sketch/Figma) + 图形语言 + 设计思维 — 美术功底 + 设计思维 + 软件工具的三脚架。
-
-大三大四分流到 5 大方向: (1) 品牌设计 (Logo / VI / 品牌策略 / 品牌咨询, 跟 4A 广告 + 品牌咨询公司强相关); (2) 包装设计 (食品/化妆品/电子产品/快消品包装, 跟消费品行业强相关); (3) 编辑设计 (书籍/杂志/画册/海报/视觉出版物, 跟出版社/工作室强相关); (4) UI/UX 设计 (App/网页/小程序/车载/HMI 交互设计, 跟互联网/智能硬件强相关); (5) 数字媒体设计 (动态海报/影视包装/信息可视化/动态图形 MG, 跟影视/广告/互联网强相关)。
-
-技能树四条: (1) 平面软件精通 (PS/AI/ID/C4D/AE/Figma/Sketch 至少 4 个); (2) 字体设计与排版 (中英文字体设计 + 网格系统 + 书籍装帧); (3) 品牌策略与设计系统 (Design System / 品牌识别系统 / 用户体验地图); (4) AI 设计工具 (Midjourney/Stable Diffusion/Runway/Sora 是新基础设施, 2024 年起 985 视传学生必会)。视传的核心是「用视觉语言解决商业 + 文化 + 用户体验问题」, 是「离商业最近的纯艺 + 设计交叉」专业。</p>
-    <h3>什么人适合?</h3><p>适合对「让一个 Logo 改变品牌」「让一个 App 改变用户行为」「让一本杂志变成收藏品」有持续热情, 且能接受前期熬夜做稿 + 中期对接客户 + 后期持续学习新软件的人。视传的优势是「艺术 + 商业 + 互联网」三栖: 它的就业不像纯艺那样「毕业即失业」, 也不像纯工科那样「35 岁焦虑」, 而是「视觉能力 + 设计思维」的复合背景, 5 年后能到 30-60 万, 头部能到 50-100 万。
-
-不适合: 把视传等同于「学画画」的人 (这是「设计 + 商业」, 主体是「用设计解决问题」); 不能接受熬夜做稿的人 (4A 广告/互联网「9105/9106」是常态); 数学/物理极差但想进互联网交互岗的人 (UI/UX 涉及数据思维 + A/B 测试 + 用户研究); 期待「对口考公岗位多」的人 (视传公务员岗位少, 主要靠企业/工作室/自由职业)。适合的人是: 喜欢「美学 + 商业 + 用户体验」交叉, 愿意前 5 年在广告/互联网/品牌/工作室做设计师, 之后做设计总监/创意总监/独立设计师/创业的人。</p>
-    <h3>避坑指南</h3><p>❌ 「视传就是平面设计, 工资低」→ 严重低估。视传校招 7-12 万, 互联网 UX 校招 18-30 万, 4A 广告 12-20 万, 5 年后资深设计师/创意总监能到 30-80 万。视传是「艺术类里起薪高 + 商业化最好」的专业之一。❌ 「视传毕业 = 画图机器」→ 错。视传的核心是「设计思维 + 品牌策略 + 用户研究」, 头部 5% 设计师做的是「设计总监 + 品牌策略 + 用户体验」, 不是「美工」。AI 时代 (2024 起), 只会画图的美工正在被淘汰, 「懂策略 + 懂用户 + 懂商业」的全能设计师反而更值钱。❌ 「视传进大厂容易, 应届 30 万+」→ 部分对。央美国美江南大学/同济/清美/浙大等头部 5 院校, 校招进字节/腾讯/阿里/小米 UX 岗 18-30 万, 是真实的; 但普通院校视传校招进互联网 UX 难度大, 起薪 7-10 万。❌ 「视传和动画/数字媒体一个专业」→ 严重错。视传 (偏品牌 + 包装 + 编辑 + UX/UI, 平面 + 数字) 跟动画 (偏二维/三维/定格动画, 影视/游戏) 和数字媒体艺术 (偏影视/游戏/交互/装置, 数字 + 科技) 是不同方向, 选错后悔 4 年。❌ 「4A 广告黄金期已过, 没前途」→ 部分对。2018-2022 4A 广告巅峰期, 奥美/李奥贝纳/麦肯/智威汤逊校招 12-20 万; 2023 年起 4A 缩招, 大量视传转互联网 UX/品牌/独立设计师。但「品牌设计 + 品牌咨询」依然有生命力, 4A 仍能到 12-20 万。❌ 「AI 时代设计师要被淘汰」→ 过度焦虑。AI (Midjourney/Stable Diffusion) 是设计辅助工具, 2024 年起 985 视传学生必会; AI 不会取代「懂策略 + 懂用户 + 懂商业」的全能设计师, 反而会替代「只会画效果图」, 视传的复合门槛是护城河。❌ 「视传冷门好考, 容易上岸」→ 被严重高估。央美/国美/清美/江南大学 视传 2024 年河北物理组最低 590-630 分, 985 分数打底, 不是「保底」专业。</p>
+    <p class="lede drop-cap ovv-lede">视觉传达设计是「让信息更美更有效」 — 品牌 + 字体 + 包装 + 海报 + 书籍 + UI/UX + 数字媒体的「平面 + 数字 + 商业」交叉学科。本科起薪 7-12 万, 头部互联网校招 18-30 万, 是艺术类里复合性价比之王。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>设计基础 (构成 + 色彩 + 透视)</span></div><div class="ovv-tl-step"><span>现代设计史与中国设计史</span></div><div class="ovv-tl-step"><span>字体设计 (Typography)</span></div><div class="ovv-tl-step"><span>图形语言与标志设计 (Logo)</span></div><div class="ovv-tl-step"><span>版式设计 (Layout Design)</span></div><div class="ovv-tl-step"><span>书籍装帧 (Book Design)</span></div><div class="ovv-tl-step"><span>插画 (Illustration)</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">品牌设计</div><div class="ovv-dir-desc">Logo 与 VI 视觉识别系统, 延伸到品牌策略与咨询, 是 4A 广告与品牌咨询公司的核心岗位</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">包装设计</div><div class="ovv-dir-desc">食品 / 化妆品 / 电子产品 / 快消品包装, 与消费品行业紧密绑定, 强调材料工艺与货架视觉</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">编辑设计</div><div class="ovv-dir-desc">书籍 / 杂志 / 画册 / 海报等视觉出版物, 对接出版社与独立工作室, 重视文字与图像编排</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">交互体验设计</div><div class="ovv-dir-desc">App 与网页以及小程序车载 HMI 交互设计, 头部去向为字节腾讯阿里小米等互联网与智能硬件公司</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">数字媒体设计</div><div class="ovv-dir-desc">动态海报与影视包装以及信息可视化和动态图形 MG, 覆盖影视广告与互联网内容方向</div></div></div><div class="ovv-skills"><span class="ovv-skill">平面软件精通 (PS + AI + ID + Figma + Sketch 至少四项)</span><span class="ovv-skill">三维与动态软件 (C4D + AE 动效)</span><span class="ovv-skill">字体设计与网格排版 (中英文字体 + 书籍装帧)</span><span class="ovv-skill">品牌策略与设计系统 (Design System + 品牌识别 + 用户体验地图)</span><span class="ovv-skill">AI 设计工具 (Midjourney + Stable Diffusion + Runway + Sora)</span></div><div class="ovv-bonus">2024 年起, 头部 5 院校 (央美国美江南大学同济清美) 学生把 Midjourney 与 Stable Diffusion 作为新基础设施。AI 不会取代设计师, 反而会淘汰只会画效果图的美工, 「懂策略 + 懂用户 + 懂商业」的全能设计师更值钱。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对让一个 Logo 改变品牌有持续热情</li><li>愿意前 5 年在广告或互联网做设计师</li><li>能接受前期熬夜做稿与对接客户</li><li>喜欢美学商业与用户体验的交叉</li><li>期待 5 年后走到设计总监或独立设计师</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把视传等同于学画画的人</li><li>不能接受熬夜做稿的人</li><li>期待对口考公岗位多的人</li><li>数学与数据思维极差但想做 UI/UX 的人</li><li>只想做美工不想学策略与用户研究的人</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">7 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 视传就是平面设计工资低</div><div class="ovv-pit-reality">严重低估。视传校招 7-12 万, 互联网 UX 校招 18-30 万, 4A 广告 12-20 万, 5 年后资深设计师或创意总监能到 30-80 万。视传是「艺术类里起薪高 + 商业化最好」的专业之一。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 视传毕业等于画图机器</div><div class="ovv-pit-reality">错。视传核心是「设计思维 + 品牌策略 + 用户研究」, 头部 5% 设计师做的是设计总监 + 品牌策略 + 用户体验, 不是美工。AI 时代只会画图的美工正在被淘汰, 「懂策略 + 懂用户 + 懂商业」的全能设计师反而更值钱。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 视传进大厂容易应届 30 万加</div><div class="ovv-pit-reality">部分对。央美国美江南大学同济清美浙大等头部 5 院校, 校招进字节腾讯阿里小米 UX 岗 18-30 万是真实的; 但普通院校视传校招进互联网 UX 难度大, 起薪 7-10 万。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 视传和动画数字媒体一个专业</div><div class="ovv-pit-reality">严重错。视传 (偏品牌 + 包装 + 编辑 + UX/UI, 平面 + 数字) 跟动画 (偏二维 / 三维 / 定格动画, 影视 / 游戏) 和数字媒体艺术 (偏影视 / 游戏 / 交互 / 装置, 数字 + 科技) 是不同方向, 选错后悔 4 年。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 4A 广告黄金期已过没前途</div><div class="ovv-pit-reality">部分对。2018-2022 是 4A 广告巅峰期, 奥美李奥贝纳麦肯智威汤逊校招 12-20 万; 2023 年起 4A 缩招, 大量视传转互联网 UX 与品牌和独立设计师。但品牌设计 + 品牌咨询依然有生命力, 4A 仍能到 12-20 万。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ AI 时代设计师要被淘汰</div><div class="ovv-pit-reality">过度焦虑。AI (Midjourney 与 Stable Diffusion) 是设计辅助工具, 2024 年起 985 视传学生必会; AI 不会取代「懂策略 + 懂用户 + 懂商业」的全能设计师, 反而会替代只会画效果图的美工, 视传的复合门槛是护城河。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ 视传冷门好考容易上岸</div><div class="ovv-pit-reality">被严重高估。央美国美清美江南大学视传 2024 年河北物理组最低 590-630 分, 985 分数打底, 普通院校招生名额也极少, 是竞争激烈的热门艺术专业而非保底选项。</div></div></div></div>
   </div>
 </section>
 

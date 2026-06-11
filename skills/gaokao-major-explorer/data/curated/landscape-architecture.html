@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: linear-gradient(165deg, #F5F9EC 0%, #E8EFDC 45%, #F5F9EC 100%); color: #2E5A2E; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -576,6 +672,18 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
 .hu-tag { font-family: 'Noto Serif SC', serif; font-size: 0.8rem; padding: 4px 12px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6); }
 
+/* ── agri (林奈植物图鉴) mobile patch — chloro-panel/wheat/top-mark 重叠 园艺 大字 ──
+   策略: 隐藏装饰元素, 让 hero 主体 (标题+stats+tags) 干净显示 */
+@media (max-width: 480px) {
+  .chloro-panel { display: none !important; }
+  .wheat { display: none !important; }
+  .top-mark { font-size: 0.55rem !important; padding: 4px 8px !important; }
+  .corner-mark { width: 14px !important; height: 14px !important; }
+  .hu-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 14px 0 !important; }
+  /* 标题区上下间距收紧 */
+  .title-en { font-size: 1.1rem !important; margin-top: 6px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -653,16 +761,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">园林是「把地球表面设计成画」 — 园林设计 + 城市规划 + 植物配置 + 工程制图, 偏「景观设计」+「植物学」双底子, 跟林学 / 园艺不同: 它是设计学 + 农学的交叉。本科起薪 6-9 万, 设计院/房企/政府/规划院是主要出口, 加班严重, 但 5-10 年经验能到 20-40 万, 是稳定的「设计+」专业。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 素描 + 色彩 + 三大构成 (平面/色彩/立体) + 建筑制图 + CAD/PS/SU/Rhino 基础 + 植物学 + 测量学 — 跟林学 50% 重合, 但「设计」+「美术」课占 1/3, 跟林学完全不同。
-
-大三大四分流到 4 大方向: (1) 园林规划与设计 (城市公园 / 居住区景观 / 广场设计); (2) 风景园林规划 (风景区 / 国家公园 / 区域生态); (3) 园林工程与技术 (施工图 / 工程预算 / 工程管理); (4) 园林植物应用 (植物配置 / 苗木繁育 / 植物造景)。
-
-大三暑假和大四是「设计实习」 — 进设计院/规划院真做项目 (居住区 / 公园 / 广场)。技能树三条: (1) 设计能力 (手绘 + 电脑制图 + 项目汇报); (2) 植物认知 (辨识 200+ 园林植物, 配置合理群落); (3) 工程能力 (施工图 + 工程预算 + 施工现场配合)。园林的核心是「用植物 + 山水 + 建筑, 把城市和自然缝合」 — 跟建筑学是「孪生专业」, 区别是建筑做房子, 园林做房子以外的所有室外空间。</p>
-    <h3>什么人适合?</h3><p>适合对「画图 + 植物 + 空间美学」3 件事都有持续热情, 且能接受前 5 年加班 + 改图 + 跑工地的人。园林比林学/园艺「更接近城市」, 设计院/规划院/房企是主要出口, 起薪 6-9 万比林学/园艺高 30-50%。
-
-不适合: 把园林等同于「种花种草」的人 (这是「设计 + 植物 + 工程」综合学科, 不是体力活); 不能接受加班的人 (设计院加班是常态, 投标前一晚通宵改图是标配); 美术/手绘零基础且不打算练的人 (手绘 + 电脑制图是核心技能, 4 年内必须达到熟练); 想「考公对口」的人 (园林公务员岗位少, 国土空间规划 / 自然资源局 / 园林绿化局招「城乡规划/风景园林」, 竞争比 50:1)。适合的人是: 喜欢「画图 + 植物 + 城市」, 愿意 5-10 年磨炼设计能力, 接受「35 岁前 8-15 万, 35 岁后 20-40 万」曲线的人。</p>
-    <h3>避坑指南</h3><p>❌ 「园林就是种花的」→ 错。园林是「设计 + 植物 + 工程」, 园林本科生 50% 课程是设计 + 制图, 不是下地种花。真正的「种花」是园艺/林学。❌ 「园林和建筑一个专业」→ 半对。建筑学 5 年制, 园林多数 4 年制 (但也有 5 年制), 课程 50% 重合 (设计 + 美术), 区别是建筑做室内 + 建筑本身, 园林做室外空间。❌ 「园林比林学好就业」→ 部分对。园林的设计院/房企出口比林学多, 起薪高 30-50%, 但加班严重 (设计院通宵改图是常态), 性价比见仁见智。❌ 「园林可以进设计院高薪」→ 部分对。一线设计院 (AECOM / SWA / 易亚源境 / 棕榈设计) 5 年经验 25-40 万, 但一线设计院 80% 招硕士, 985 起点。❌ 「园林考公岗位多」→ 错。园林 (农学学士) 公务员岗位极少, 多数要「城乡规划/风景园林」(工/理学学士), 园林本科生考公只能报「不限专业」, 竞争激烈。❌ 「园林不读研也能干」→ 部分对。设计院/施工图方向本科能进, 但「主创设计师」「规划院」「科研院所」「高校」必须硕士, 985 选调也比农学/林学难 (岗位少)。</p>
+    <p class="lede drop-cap ovv-lede">园林是设计学与农学的交叉 — 用植物、山水与建筑缝合城市与自然, 出口在设计院、房企景观部与规划院, 起薪 6-9 万, 5-10 年经验能到 20-40 万, 是稳定的「设计+」专业。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>素描与色彩</span></div><div class="ovv-tl-step"><span>三大构成 (平面/色彩/立体)</span></div><div class="ovv-tl-step"><span>建筑制图与透视</span></div><div class="ovv-tl-step"><span>园林树木学 (200+ 园林植物辨识)</span></div><div class="ovv-tl-step"><span>园林花卉学</span></div><div class="ovv-tl-step"><span>园林设计初步 (手绘 + 电脑制图)</span></div><div class="ovv-tl-step"><span>生态学基础 (含城市生态)</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">园林规划与设计</div><div class="ovv-dir-desc">城市公园、居住区景观与广场设计, 是设计院与房企景观部的主战场。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">风景园林规划</div><div class="ovv-dir-desc">风景区、国家公园与区域生态规划, 同济风景园林规划全国第一。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">园林工程与技术</div><div class="ovv-dir-desc">施工图、工程预算与施工现场配合, 园林上市公司主力方向。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">园林植物应用</div><div class="ovv-dir-desc">植物配置、苗木繁育与植物造景, 北林与南林两校最正统。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">园林历史与遗产保护</div><div class="ovv-dir-desc">江南古典园林研究, 东南大学遗产保护方向全国最强。</div></div></div><div class="ovv-skills"><span class="ovv-skill">手绘与电脑制图 (CAD/PS/SU/Rhino)</span><span class="ovv-skill">园林植物辨识 (200+ 树种花卉)</span><span class="ovv-skill">施工图绘制与工程预算</span><span class="ovv-skill">项目汇报与方案汇报能力</span><span class="ovv-skill">现场配合与工程组织能力</span></div><div class="ovv-bonus">「公园城市」「口袋公园」「城市更新」连续三年写入住建部工作要点, 国土空间规划体系下园林与规划口径进一步打通; 房企景观部 (龙湖/万科/华润/中海) 仍是对口大出口, 设计院国际公司 (AECOM/SWA) 985 硕士起招, 风景园林硕士学历加权明显。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对画图、植物与空间美学三件事都有持续热情</li><li>能接受前 5 年加班、改图与跑工地</li><li>愿意花 4 年练手绘与电脑制图</li><li>目标设计院、房企景观部或规划院</li><li>接受 35 岁前 8-15 万、35 岁后 20-40 万的成长曲线</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把园林等同于「种花种草」的体力活</li><li>完全不能接受设计院加班与投标通宵</li><li>美术与手绘零基础且不打算练的人</li><li>想考公对口 (园林农学学士岗位极少)</li><li>想「赚快钱」或追求 CS 式短期高薪</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 园林就是种花的</div><div class="ovv-pit-reality">错。园林是「设计 + 植物 + 工程」, 本科生 50% 课程是设计与制图, 不是下地种花; 真正的「种花」是园艺与林学。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 园林和建筑是一个专业</div><div class="ovv-pit-reality">半对。建筑学多为 5 年制, 园林以 4 年制为主, 课程 50% 重合 (设计与美术), 区别是建筑做室内与建筑本身, 园林做室外空间。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 园林比林学好就业</div><div class="ovv-pit-reality">部分对。设计院与房企出口比林学多, 起薪高 30-50%, 但加班严重, 设计院投标前一晚通宵改图是常态, 性价比见仁见智。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 园林能进一线设计院高薪</div><div class="ovv-pit-reality">部分对。AECOM、SWA、易亚源境、棕榈 5 年经验 25-40 万, 但一线设计院 80% 招硕士且 985 起点, 本科直接进很难。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 园林考公岗位多</div><div class="ovv-pit-reality">错。园林 (农学学士) 公务员岗位极少, 多数要「城乡规划/风景园林」工学学士, 园林本科生考公基本只能报「不限专业」, 竞争激烈。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 园林不读研也能干</div><div class="ovv-pit-reality">部分对。设计院与施工图方向本科能进, 但主创设计师、规划院、科研院所与高校基本要求硕士, 985 选调岗位也比农学、林学少。</div></div></div></div>
   </div>
 </section>
 

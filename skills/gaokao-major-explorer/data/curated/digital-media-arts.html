@@ -85,6 +85,49 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
 
 /* ──────────────────────────────────────────────────────────
    BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
@@ -624,16 +667,7 @@ footer .data-source { color: #999; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">数字媒体艺术是「用数字技术创造新体验」 — 影视特效 + 游戏美术 + 交互设计 + 装置艺术 + VR/AR/MR + 人工智能艺术 + 数据可视化, 是「影视 + 游戏 + 交互 + 科技」的交叉。本科起薪 7-12 万, 头部游戏公司 (米哈游/腾讯天美/网易雷火) 校招 18-30 万, 头部影视 (追光/原力) 校招 12-20 万, 是「艺术 + 技术 + 商业」复合风口专业。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 美术基础 (素描/色彩/速写) + 设计基础 (构成/色彩/透视) + 影视基础 (镜头语言/剪辑/分镜) + 摄影摄像 + 数字图像处理 (PS/PR/AE) + 三维基础 (C4D/Blender/Maya) + 编程基础 (Processing/Python/JavaScript) + 设计史/影视史/游戏史 — 美术功底 + 影视基础 + 软件工具 + 编程思维的四脚架。
-
-大三大四分流到 4 大方向: (1) 影视特效与动画 (VFX/合成/动态捕捉/虚拟拍摄, 跟追光/原力/Base Media/Netflix/迪士尼强相关); (2) 游戏美术与设计 (角色/场景/UI/特效/技术美术 TA, 跟米哈游/腾讯天美/网易雷火/莉莉丝强相关); (3) 交互设计 (App/网页/装置/体验设计, 跟互联网/科技公司强相关); (4) 新媒体艺术与装置 (VR/AR/MR/AI 艺术/数据可视化/生成艺术, 跟画廊/双年展/科技公司强相关)。
-
-技能树四条: (1) 三维软件 (Maya/Blender/C4D/ZBrush/Substance, 影视/游戏核心); (2) 影视后期 (Nuke/Houdini/AE/PR/达芬奇, 影视特效核心); (3) 编程与 AI (Processing/Python/Unity/Unreal + Stable Diffusion/Runway/Sora/Midjourney, 2024 年起 985 数媒学生必会); (4) 交互与体验设计 (Figma/TouchDesigner/Arduino/Raspberry Pi, 新媒体艺术核心)。数媒的核心是「用数字技术 + 美学, 创造新体验」, 是「离科技最近的纯艺 + 设计交叉」专业, AI 时代 (2024 起) 风口专业。</p>
-    <h3>什么人适合?</h3><p>适合对「让一个游戏角色栩栩如生」「让一个 VR 体验身临其境」「让一段 AI 视频冲击视觉」有持续热情, 且能接受前期熬夜做项目 + 中期技术快速迭代 + 后期持续学习新工具的人。数媒的优势是「艺术 + 技术 + 商业 + 科技」四栖: 它的就业比纯艺好太多, 起薪 7-12 万, 头部游戏公司 18-30 万, 头部影视 12-20 万, 5 年后资深设计师/技术美术/创意总监 30-60 万, 10 年后能到 50-100 万。
-
-不适合: 把数媒等同于「学画画」的人 (这是「艺术 + 技术」, 主体是「用技术创造新体验」); 不能接受熬夜做项目的人 (游戏/影视/互联网「9105/9106」是常态, 项目节点连续 1-2 个月高强度); 数学/物理/编程极差的人 (数媒涉及编程/算法/数学, 跨专业难度大); 期待「对口考公岗位多」的人 (数媒公务员岗位少, 主要靠企业/工作室/自由职业); 期待「学完就能找到对口工作」的人 (数媒技术迭代极快, 1-2 年不学就跟不上)。适合的人是: 喜欢美学 + 技术 + 影视 + 游戏 + 科技交叉, 愿意前 5 年在游戏/影视/互联网/科技公司做设计, 之后做技术美术/创意总监/独立艺术家/创业的人。</p>
-    <h3>避坑指南</h3><p>❌ 「数媒就是学 Photoshop, 工资低」→ 严重低估。数媒校招 7-12 万, 头部游戏公司 (米哈游/腾讯天美) 18-30 万, 头部影视 (追光/原力) 12-20 万, 5 年后资深设计师/技术美术 30-60 万, 10 年后能到 50-100 万。数媒是「艺术类里起薪高 + 商业化最好 + AI 风口」的专业之一。❌ 「数媒毕业 = 画图机器」→ 错。数媒的核心是「数字技术 + 美学 + 体验」, 头部 5% 设计师做的是「技术美术 TA + 创意总监 + 独立艺术家」, 不是「美工」。AI 时代 (2024 起), 只会画图的美工正在被淘汰, 「懂技术 + 懂艺术 + 懂商业」的全能设计师反而更值钱。❌ 「数媒和视传/动画/影视一个专业」→ 严重错。数字媒体艺术 (偏影视 + 游戏 + 交互 + 装置 + VR/AR, 影视/游戏/科技公司出口) 跟视传 (偏品牌 + UX/UI, 互联网/广告出口)、动画 (偏二维/三维/定格, 影视/游戏出口)、影视摄影与制作 (偏影视摄影/导演, 影视公司出口) 是不同专业, 选错后悔 4 年。❌ 「数媒进大厂容易, 应届 30 万+」→ 部分对。央美/国美/北电/中传/清美 等头部 5 院校, 校招进米哈游/腾讯天美/网易雷火 18-30 万, 是真实的; 但普通院校数媒校招进小公司起薪 5-7 万, 差距 2-3 倍。❌ 「数媒不需要编程」→ 严重错。2024 年起 985 数媒学生必会: (1) 至少 1-2 个编程语言 (Processing/Python/JavaScript); (2) 至少 1-2 个游戏引擎 (Unity/Unreal); (3) AI 工具链 (Stable Diffusion/Runway/Sora/Midjourney); (4) 数据可视化工具 (D3.js/Three.js)。不会编程的数媒毕业生, 5 年后会被淘汰。❌ 「AI 时代数媒设计师要被淘汰」→ 严重错。AI (Stable Diffusion/Runway/Sora) 2024 起爆发, 是数媒学生的新工具集, 不是威胁。AI 不会取代「懂技术 + 懂艺术 + 懂商业」的全能设计师, 反而让头部数媒设计师效率提升 5-10 倍, 数媒的「技术 + 艺术」复合门槛是护城河。❌ 「数媒冷门好考, 容易上岸」→ 被严重高估。央美/国美/北电/中传/清美 数媒 2024 年河北物理组最低 580-620 分, 985 分数打底, 不是「保底」专业。</p>
+    <p class="lede drop-cap ovv-lede">数字媒体艺术是「用数字技术创造新体验」, 影视特效 + 游戏美术 + 交互设计 + 装置艺术 + VR/AR/MR + AI 艺术的交叉。本科起薪 7-12 万, 头部游戏校招 18-30 万, 头部影视 12-20 万, 是「艺术 + 技术 + 商业」复合风口专业。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>设计基础 (构成/色彩/透视)</span></div><div class="ovv-tl-step"><span>中外设计史 / 影视史 / 游戏史</span></div><div class="ovv-tl-step"><span>数字图像处理 (PS/PR/AE)</span></div><div class="ovv-tl-step"><span>三维建模基础 (Maya/Blender/C4D)</span></div><div class="ovv-tl-step"><span>影视语言与镜头</span></div><div class="ovv-tl-step"><span>摄影摄像 + 灯光基础</span></div><div class="ovv-tl-step"><span>交互设计基础 (含 Figma)</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">影视特效与动画</div><div class="ovv-dir-desc">VFX/合成/动态捕捉/虚拟拍摄, 跟追光/原力/Base Media 等影视特效公司强相关。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">游戏美术与设计</div><div class="ovv-dir-desc">角色/场景/UI/特效/技术美术 TA, 跟米哈游/腾讯天美/网易雷火/莉莉丝强相关。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">交互设计</div><div class="ovv-dir-desc">App/网页/装置/体验设计, 跟互联网/科技公司强相关。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">新媒体艺术与装置</div><div class="ovv-dir-desc">VR/AR/MR/AI 艺术/数据可视化/生成艺术, 跟画廊/双年展/科技公司强相关。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">互联网 UX 与 AI 设计</div><div class="ovv-dir-desc">字节/腾讯/阿里 UX 中心 + AI Lab, 数媒背景做 AI 设计是真对口。</div></div></div><div class="ovv-skills"><span class="ovv-skill">三维软件 (Maya/Blender/C4D/ZBrush/Substance)</span><span class="ovv-skill">影视后期 (Nuke/Houdini/AE/PR/达芬奇)</span><span class="ovv-skill">游戏引擎 (Unity/Unreal)</span><span class="ovv-skill">编程与 AI (Processing/Python/JavaScript + Stable Diffusion/Runway/Sora/Midjourney)</span><span class="ovv-skill">数据可视化 (D3.js/Three.js)</span><span class="ovv-skill">交互与装置 (Figma/TouchDesigner/Arduino/Raspberry Pi)</span></div><div class="ovv-bonus">2024 年起 AI 工具 (Stable Diffusion/Runway/Sora) 已是数媒学生的新基础设施, 985 数媒学生必会。央美/国美/北电/中传/清美 是头部 5 院校, 校招进米哈游/腾讯天美 25-45 万, 普通院校 5-7 万, 差距 2-3 倍。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>喜欢让游戏角色栩栩如生, 让 VR 体验身临其境, 让 AI 视频冲击视觉</li><li>能接受前期熬夜做项目, 中期技术快速迭代, 后期持续学新工具</li><li>美学 + 技术 + 影视 + 游戏 + 科技四栖, 愿意前 5 年做设计</li><li>接受艺术 + 技术复合门槛, 想走技术美术/创意总监/独立艺术家路径</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把数媒等同于「学画画」, 不知道主体是「用技术创造新体验」</li><li>不能接受 9105/9106 节奏, 项目节点连续 1-2 个月高强度</li><li>数学/物理/编程极差, 跨专业难度大</li><li>期待「对口考公岗位多」, 主要靠企业/工作室/自由职业</li><li>期待学完就能对口就业, 数媒技术迭代极快 1-2 年不学就跟不上</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">6 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 数媒就是学 Photoshop, 工资低</div><div class="ovv-pit-reality">严重低估。数媒校招 7-12 万, 头部游戏 (米哈游/腾讯天美) 18-30 万, 头部影视 (追光/原力) 12-20 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万, 是艺术类里起薪高 + 商业化最好的专业之一。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 数媒毕业 = 画图机器</div><div class="ovv-pit-reality">严重错。核心是「数字技术 + 美学 + 体验」, 头部 5% 设计师做的是技术美术 TA + 创意总监 + 独立艺术家, 不是「美工」。AI 时代只会画图的美工正在被淘汰, 「懂技术 + 懂艺术 + 懂商业」的全能设计师反而更值钱。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 数媒和视传/动画/影视一个专业</div><div class="ovv-pit-reality">严重错。数媒偏影视 + 游戏 + 交互 + 装置 + VR/AR, 影视/游戏/科技公司出口; 视传偏品牌 + UX/UI, 互联网/广告出口; 动画偏二维/三维/定格, 影视/游戏出口; 影视摄影与制作偏导演/摄影, 影视公司出口, 选错后悔 4 年。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 数媒进大厂容易, 应届 30 万+</div><div class="ovv-pit-reality">部分对。央美/国美/北电/中传/清美 等头部 5 院校, 校招进米哈游/腾讯天美/网易雷火 18-30 万是真实的; 但普通院校数媒校招进小公司起薪 5-7 万, 差距 2-3 倍, 不是「保底」专业。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 数媒不需要编程</div><div class="ovv-pit-reality">严重错。2024 年起 985 数媒学生必会: 1-2 个编程语言 (Processing/Python/JavaScript)、1-2 个游戏引擎 (Unity/Unreal)、AI 工具链 (Stable Diffusion/Runway/Sora/Midjourney)、数据可视化工具 (D3.js/Three.js), 不会编程 5 年后会被淘汰。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ AI 时代数媒设计师要被淘汰</div><div class="ovv-pit-reality">严重错。AI (Stable Diffusion/Runway/Sora) 2024 起爆发, 是数媒学生的新工具集, 不是威胁。AI 不会取代「懂技术 + 懂艺术 + 懂商业」的全能设计师, 反而让头部设计师效率提升 5-10 倍, 「技术 + 艺术」复合门槛反而是护城河。</div></div></div></div>
   </div>
 </section>
 

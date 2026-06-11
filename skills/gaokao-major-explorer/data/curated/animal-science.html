@@ -85,6 +85,102 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .fade-up { opacity: 1; transform: none; }
 }
 
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
 
 body { background: linear-gradient(165deg, #F5F9EC 0%, #E8EFDC 45%, #F5F9EC 100%); color: #2E5A2E; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -576,6 +672,18 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
 .hu-tag { font-family: 'Noto Serif SC', serif; font-size: 0.8rem; padding: 4px 12px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6); }
 
+/* ── agri (林奈植物图鉴) mobile patch — chloro-panel/wheat/top-mark 重叠 园艺 大字 ──
+   策略: 隐藏装饰元素, 让 hero 主体 (标题+stats+tags) 干净显示 */
+@media (max-width: 480px) {
+  .chloro-panel { display: none !important; }
+  .wheat { display: none !important; }
+  .top-mark { font-size: 0.55rem !important; padding: 4px 8px !important; }
+  .corner-mark { width: 14px !important; height: 14px !important; }
+  .hu-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 14px 0 !important; }
+  /* 标题区上下间距收紧 */
+  .title-en { font-size: 1.1rem !important; margin-top: 6px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -653,16 +761,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">动物科学是「让 14 亿人吃上放心肉」 — 动物遗传育种 + 动物营养与饲料 + 动物繁殖 + 动物生产管理 + 草业科学, 跟「兽医」(动物医学) 是完全不同专业, 动科偏「养殖 + 饲料 + 育种」, 兽医偏「临床 + 疾病防治」。本科起薪 5-8 万, 流向饲料/养殖/育种企业 (新希望/海大/温氏/牧原/大北农), 想进农科院/高校必须读研, 硕士起薪 12-18 万, 是「长线 + 稳定 + 不卷」的农学代表。</p>
-    <h3>这个专业学什么?</h3><p>前 2 年基础: 动物学 + 动物生理学 + 动物生物化学 + 动物遗传学 + 动物营养学 + 生物统计学 + 饲料学 + 兽医学基础 — 跟农学 50% 重合, 但主体是「动物」而不是「植物」。
-
-大三大四分流到 4 大方向: (1) 动物遗传育种 (猪/鸡/牛/羊/鱼的分子育种, 跟中国农大「节粮型猪」/ 华中农大「高品质鸡」/ 华南农大「石岐鸽」等地方品种相关); (2) 动物营养与饲料科学 (饲料配方设计 + 精准营养 + 预混料 + 添加剂, 跟新希望/海大/大北农等饲料企业强相关); (3) 动物繁殖 (人工授精 + 胚胎移植 + 性别控制, 奶牛/猪的核心技术); (4) 草业科学 (牧草栽培 + 草地生态 + 草原管理, 跟西部生态保护 + 退牧还草相关)。
-
-技能树三条: (1) 饲料配方与动物营养 (会用「中国饲料成分及营养价值表」+ 设计预混料/浓缩料/全价料配方); (2) 动物繁殖与育种 (人工授精 + 同期发情 + 分子育种, 跟猪场/牛场/种禽场对接); (3) 牧场管理 (现代化猪场/鸡场/牛场/水产养殖场的生产管理 + 数据分析 + 生物安全)。大三暑假和大四有「牧场实习」 — 真的去猪场/鸡场/牛场跟岗, 这是动科的「田野学期」。</p>
-    <h3>什么人适合?</h3><p>适合对「一只猪怎么长到 250 斤」「饲料配方怎么让料肉比降到 2.5」「石岐鸽怎么保种」有持续兴趣, 且能接受前 5 年在猪场/鸡场/饲料厂/养殖场工作的人。动科的优势是「长线 + 稳定 + 不卷」: 它的就业不像 CS 那样 35 岁焦虑, 但也不像金融那样一毕业就 30 万, 而是「35 岁后 25-40 万」的「专家型」曲线。
-
-不适合: 把动科等同于「养猪」的人 (这是科学, 包含饲料配方 + 分子育种 + 繁殖技术); 不能接受猪场/鸡场封闭环境的人 (现代化猪场是 3 个月不出场的「生物安全」, 跟 CS 远程办公是两个世界); 想本科毕业就高薪的人 (2024 届动科本科半年后月收入约 5400 元); 期待「对口大厂」的人 (头部公司是新希望/海大/温氏/牧原/大北农, 不是字节腾讯); 把动科当兽医的人 (动科 = 养殖, 兽医 = 临床, 选错后悔 4 年)。适合的人是: 喜欢动物 + 接受封闭牧场 3-6 个月 + 愿意前 5 年「在场」换 10 年「专家」, 接受从基层技术员做起的同学。</p>
-    <h3>避坑指南</h3><p>❌ 「动科就是养猪, 没前途」→ 严重错。现代动科是「饲料配方 + 分子育种 + 精准营养 + 智慧牧场」, 一只商品猪的料肉比从 3.0 降到 2.5, 直接给中国每年省 1000 万吨粮食。中国农大「节粮型猪」育种, 每年贡献 30 亿+ 经济价值。❌ 「动科对口窄, 只能去猪场」→ 半对。动科的 5 大出口: 饲料企业 (新希望/海大/大北农/通威, 35%, 校招管培生 12-20 万)、养殖企业 (温氏/牧原/正邦/双汇/雨润, 25%)、公务员/事业编 (农业农村局/海关/检验检疫, 15%)、科研院所/高校 (中国农科院/中国农大/华中农大, 15%)、跨专业出口 (宠物食品/动物保健/生物技术, 10%)。❌ 「动科和兽医一个专业」→ 严重错。动科 (农学学士, 偏养殖 + 饲料 + 育种) 跟兽医 (动物医学, 农学学士, 偏临床 + 疾病防治 + 宠物医疗) 是完全不同专业。动科核心课是「动物营养学 + 饲料学」, 兽医核心课是「病理学 + 诊断学 + 内外科」, 选错后悔 4 年。❌ 「学动科必须考研才有出路」→ 严重高估。饲料企业 60% 岗位本科可进, 但「配方师 + 育种专家 + 科研岗」必须硕士, 想进农科院/高校/育种公司研发岗基本要求博士。❌ 「猪场封闭 3 个月, 受不了」→ 这是真的。现代化猪场 (温氏/牧原) 是「3 个月不出场」的生物安全管理, 想做养殖必须接受; 想做饲料/营养/育种/科研可以「不进场」, 但研发岗要求硕士起步。❌ 「女生不适合动科」→ 被严重高估。动科女生就业率 90%+, 饲料企业研发/营养/配方/品控岗, 女生比男生更细心更受欢迎, 牧原/温氏/新希望管培生女生比例 40%+。❌ 「动科对口宠物经济, 毕业就高薪」→ 部分对。宠物食品/动物保健/宠物医疗是动科新出口, 但「宠物食品配方师」要求硕士, 本科做销售/服务岗, 起薪 6-8 万, 比传统饲料略高但需 5 年深耕。</p>
+    <p class="lede drop-cap ovv-lede">动物科学是「让14 亿人吃上放心肉」的农学专业 — 主攻动物遗传育种 +动物营养与饲料 +动物繁殖 +草业科学，跟动物医学完全不同方向。本科起薪5-8 万，流向新希望/海大/温氏/牧原等龙头; 想进农科院必须读研，硕士起薪12-18 万， 是「长线 +稳定 + 不卷」的农学代表。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>动物学 (Zoology)</span></div><div class="ovv-tl-step"><span>动物生理学 (Animal Physiology)</span></div><div class="ovv-tl-step"><span>动物生物化学 (Animal Biochemistry)</span></div><div class="ovv-tl-step"><span>动物遗传学 (Animal Genetics)</span></div><div class="ovv-tl-step"><span>动物营养学 (Animal Nutrition)</span></div><div class="ovv-tl-step"><span>饲料学 (Feed Science)</span></div><div class="ovv-tl-step"><span>兽医学基础</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">动物遗传育种</div><div class="ovv-dir-desc">猪/鸡/牛/羊/鱼的分子育种，跟中国农大「节粮型猪」、华中农大「高品质鸡」、华南农大「石岐鸽」等地方品种保种相关。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">动物营养与饲料科学</div><div class="ovv-dir-desc">饲料配方设计 +精准营养 +预混料 +添加剂，跟新希望/海大/大北农等饲料企业强相关，是动科最对口的就业口。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">动物繁殖</div><div class="ovv-dir-desc">人工授精 +胚胎移植 +同期发情 +性别控制，是奶牛场和规模化猪场的核心技术，华南农大特色方向。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">动物生产学</div><div class="ovv-dir-desc">现代化猪场/鸡场/牛场/水产养殖场的生产管理 +数据分析 +生物安全，跟温氏/牧原等养殖龙头强相关。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">草业科学</div><div class="ovv-dir-desc">牧草栽培 +草地生态 +草原管理，跟西部退牧还草 +黄土高原生态修复相关，西北农林科技大学特色方向。</div></div></div><div class="ovv-skills"><span class="ovv-skill">饲料配方设计（中国饲料成分及营养价值表 +预混料/浓缩料/全价料）</span><span class="ovv-skill">R/SPSS畜牧数据分析</span><span class="ovv-skill">人工授精 +同期发情 +胚胎移植</span><span class="ovv-skill">分子育种（DNA标记 +基因组选择）</span><span class="ovv-skill">现代化牧场管理（智能环控 +自动饲喂 +生物安全）</span><span class="ovv-skill">牧场实习（大三暑假 +大四猪场/鸡场/牛场跟岗）</span></div><div class="ovv-bonus">政策 +趋势亮点：中国「十四五」种业振兴行动把「节粮型猪」「高品质鸡」列为国家战略，中国农大节粮型猪育种每年贡献30 亿+ 经济价值。智慧牧场（巡检机器人 +猪脸识别 +自动饲喂）是未来5 年最猛赛道，动科是少数能「越老越值钱」的农学专业。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对「一只猪怎么长到250斤」「料肉比怎么降到2.5」有持续兴趣的人。</li><li>能接受前5 年在猪场/鸡场/饲料厂/养殖场工作的同学。</li><li>喜欢动物 +接受前期封闭牧场3-6 个月 +愿意用「在场」换「专家」。</li><li>想走「长线 +稳定 +不卷」路线，接受35 岁后才到25-40 万的专家型曲线。</li><li>愿意从基层技术员/配方助理做起的踏实型选手。</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>把动科等同于「养猪」、觉得「没前途」的人（这是科学，含配方 +育种 +繁殖）。</li><li>不能接受猪场/鸡场3 个月封闭生物安全管理的人。</li><li>想本科毕业就拿高薪的人（应届起薪约5400 元/月，比CS 低一半）。</li><li>期待「对口大厂是字节腾讯」的人（头部是新希望/海大/温氏/牧原/大北农）。</li><li>把动科当兽医的人（动科偏养殖 +饲料 +育种，兽医偏临床 +疾病防治）。</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">7 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 动科就是养猪，没前途</div><div class="ovv-pit-reality">严重错。现代动科是「饲料配方 +分子育种 +精准营养 +智慧牧场」的综合学科，一只商品猪料肉比从3.0降到2.5，直接给中国每年省1000万吨粮食。中国农大「节粮型猪」育种每年贡献30 亿+ 经济价值。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 动科对口窄，只能去猪场</div><div class="ovv-pit-reality">半对。动科有5 大出口：饲料企业（新希望/海大/大北农/通威，35%，校招管培生12-20 万）、养殖企业（温氏/牧原/正邦/双汇/雨润，25%）、公务员/事业编（农业农村局/海关/检验检疫，15%）、科研院所/高校（中国农科院/中国农大/华中农大，12%）、跨专业出口（宠物食品/动物保健/生物技术，3%）。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 动科和兽医是同一个专业</div><div class="ovv-pit-reality">严重错。动科（农学学士，偏养殖 +饲料 +育种）跟兽医（动物医学，农学学士，偏临床 +疾病防治 +宠物医疗）是完全不同专业。动科核心课是「动物营养学 +饲料学」，兽医核心课是「病理学 +诊断学 +内外科」，选错后悔4 年。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 学动科必须考研才有出路</div><div class="ovv-pit-reality">严重高估。饲料企业60%岗位本科可进（新希望/海大/通威管培生），但「配方师 +育种专家 +科研岗」必须硕士起步，想进农科院/高校/育种公司研发岗基本要求博士。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 猪场封闭3 个月，受不了</div><div class="ovv-pit-reality">是真的。现代化猪场（温氏/牧原）是「3 个月不出场」的生物安全管理，想做养殖必须接受；想做饲料/营养/育种/科研可以「不进场」，但研发岗要求硕士起步。牧原智能化猪场（巡检机器人 +猪脸识别）略宽松但仍是封闭管理。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 女生不适合动科</div><div class="ovv-pit-reality">被严重高估。动科女生就业率90%+，饲料企业研发/营养/配方/品控岗女生比男生更细心更受欢迎，牧原/温氏/新希望管培生女生比例40%+（海大水产配方师2024届校招女生占近一半）。</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ 动科对口宠物经济，毕业就高薪</div><div class="ovv-pit-reality">部分对。宠物食品/动物保健/宠物医疗是动科新出口（占比约3%），但「宠物食品配方师」要求硕士，本科只能做销售/服务岗，起薪6-8 万，比传统饲料略高但需5 年深耕才能拿到15 万+。</div></div></div></div>
   </div>
 </section>
 
