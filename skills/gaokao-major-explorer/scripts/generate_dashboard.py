@@ -184,6 +184,74 @@ STYLE_TOKENS = {
     "hero_layout": "v2",
     "mouse_cursor": "default",
   },
+  "gongan": {
+    "name": "Gongan · 国际司法范式 (盾+十字剑+橄榄枝)",
+    "fonts": {
+      "heading": "'Cinzel', 'Noto Serif SC', serif",
+      "body":    "'Noto Serif SC', 'Inter', 'PingFang SC', sans-serif",
+      "cn":      "'Noto Serif SC', 'Songti SC', 'PingFang SC', serif",
+      "num":     "'Oswald', 'JetBrains Mono', monospace",
+    },
+    "colors": {
+      "bg":          "#0A1420",
+      "fg":          "#FAFAF6",
+      "muted":       "#94A3B8",
+      "primary":     "#D4AF37",
+      "primary_dim": "#B8902A",
+      "primary_glow":"rgba(212, 175, 55, 0.25)",
+      "surface":     "#0F1F33",
+      "surface_alt": "#1E3A5F",
+      "border":      "rgba(212, 175, 55, 0.30)",
+      "border_strong":"#D4AF37",
+      "accent":      "#B91C1C",
+      "accent_glow": "rgba(185, 28, 28, 0.30)",
+      "monogram_bg": "#D4AF37",
+      "monogram_fg": "#0F1F33",
+      "shadow":      "0 1px 0 rgba(212, 175, 55, 0.10), 0 8px 32px rgba(0, 0, 0, 0.5)",
+      "shadow_hover":"0 1px 0 rgba(212, 175, 55, 0.25), 0 12px 40px rgba(185, 28, 28, 0.20)",
+    },
+    "decor": "CASE No.{slug}",
+    "label": "PUBLIC SECURITY",
+    "tagline": "警蓝 + 国徽金 + 朱红 + 盾·十字剑·橄榄枝",
+    "hero_align": "center",
+    "hero_decor_extra": " · PSA-2026",
+    "hero_layout": "v2",
+    "mouse_cursor": "default",
+  },
+  "business": {
+    "name": "Business · 椭圆董事局 (玫瑰金+胡桃木)",
+    "fonts": {
+      "heading": "'Bodoni Moda', 'Noto Serif SC', serif",
+      "body":    "'Inter', 'Noto Serif SC', 'PingFang SC', sans-serif",
+      "cn":      "'Noto Serif SC', 'Songti SC', 'PingFang SC', serif",
+      "num":     "'JetBrains Mono', 'Bebas Neue', monospace",
+    },
+    "colors": {
+      "bg":          "#FAFAF6",
+      "fg":          "#1A1A1A",
+      "muted":       "#5C6770",
+      "primary":     "#C77B5C",
+      "primary_dim": "#9C4A35",
+      "primary_glow":"rgba(199, 123, 92, 0.20)",
+      "surface":     "#FFFFFF",
+      "surface_alt": "#F5F0E5",
+      "border":      "#E5DCC8",
+      "border_strong":"#C77B5C",
+      "accent":      "#6B1F2A",
+      "accent_glow": "rgba(107, 31, 42, 0.18)",
+      "monogram_bg": "#1A1A1A",
+      "monogram_fg": "#C77B5C",
+      "shadow":      "0 1px 0 rgba(62, 42, 31, 0.06), 0 8px 24px rgba(62, 42, 31, 0.10)",
+      "shadow_hover":"0 1px 0 rgba(199, 123, 92, 0.18), 0 12px 36px rgba(199, 123, 92, 0.18)",
+    },
+    "decor": "Boardroom No.{slug}",
+    "label": "STRATEGIC BOARDROOM",
+    "tagline": "玫瑰金 + 胡桃木 + 屏幕深蓝 + 8 椅董事局",
+    "hero_align": "center",
+    "hero_decor_extra": " · BUS-2026",
+    "hero_layout": "v2",
+    "mouse_cursor": "default",
+  },
   "finance": {
     "name": "金融 · 高贵精致",
     "fonts": {
@@ -411,6 +479,8 @@ FONT_URLS = {
   "education": "@import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');",
   "agri":  "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700;900&family=ZCOOL+XiaoWei&display=swap');",
   "arts":  "@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');",
+  "gongan":  "@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');",
+  "business":"@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap');",
 }
 
 # ──────────────────────────────────────────────────────────
@@ -1391,7 +1461,7 @@ def generate_dashboard(data: dict, style: str, output_path: str | None = None) -
     if style == "medicine":
         from v4_medicine import render_v4_medicine
         html = render_v4_medicine(data)
-    elif style in ("cs", "humanities", "administration", "finance", "law", "education", "sci", "eng", "agri", "arts"):
+    elif style in ("cs", "humanities", "administration", "finance", "law", "education", "sci", "eng", "agri", "arts", "gongan", "business"):
         from v4_styles import render_v4
         html = render_v4(data, style)
     else:

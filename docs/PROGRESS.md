@@ -160,6 +160,58 @@ law             ×  1
 
 ---
 
+## 1. 2026-06-11 — 个人网站部署方案定型 ⏸️ 实施延后
+
+**状态**: 方案已定型,实施延后到前端大改完成 (见 ADR-015)
+**完整方案**: [`docs/DEPLOYMENT.md`](DEPLOYMENT.md) · 253 行
+
+### 推进节奏
+
+| 阶段 | 触发条件 | 工作内容 | 预计耗时 | 预计启动 |
+|------|---------|---------|---------|---------|
+| **阶段 0** | 现在即可 | 买 `.cn` 域名,注册腾讯云账号(实名),资料准备 | 用户自己 | 2026-06-11+ |
+| **前端大改** | 用户驱动 | `frontend/index.html` 重写为纯静态 SPA,加 dashboard 索引页 | 用户驱动 | 持续中 |
+| **备案申请** | 域名实名后 | 阿里云备案系统提交(用现有 2C4G 轻量作主体) | 用户操作 | 阶段 0 后立即 |
+| **备案审核** | 提交后 | 管局审核 15-20 天 | 等 | 提交后 |
+| **阶段一 实施** | **前端定型 + 用户说"开始部署"** | 写 SCF 函数、build_static.py、纯前端 recommender.js、dist/ 目录、EdgeOne Pages 上传 | 1-2 天 | 待定 |
+| **阶段一 上线** | 实施完成 | 配 DNS、绑域名、SCF 部署到香港 | 1-2 h | 阶段一实施后 |
+| **阶段二 切换** | 备案通过 | EdgeOne Pages 切到大陆区域,SCF 克隆到境内 | 2-3 h | 备案通过后 |
+
+### 5 个新增 ADR (2026-06-11)
+
+| ADR | 标题 | 状态 |
+|-----|------|------|
+| [ADR-011](DECISIONS.md#adr-011-两阶段部署策略edgeone-pages-海外--大陆) | 两阶段部署策略 (EdgeOne Pages 海外 → 大陆) | ✅ 锁定 |
+| [ADR-012](DECISIONS.md#adr-012-llm-临时搜索后端走腾讯云-scf不用-fastapi-容器) | LLM 临时搜索后端走腾讯云 SCF | ✅ 锁定 |
+| [ADR-013](DECISIONS.md#adr-013-备案主体用阿里云轻量跨厂商架构) | 备案主体用阿里云轻量 (跨厂商架构) | ✅ 锁定 |
+| [ADR-014](DECISIONS.md#adr-014-捐赠走纯静态方案赞赏码--外链) | 捐赠走纯静态方案 (赞赏码 + 外链) | ✅ 锁定 |
+| [ADR-015](DECISIONS.md#adr-015-部署实施延后到前端定型) | 部署实施延后到前端定型 | ✅ 锁定 |
+
+### 关键决策要点 (一句话版)
+
+1. **平台**: EdgeOne Pages (静态) + 腾讯云 SCF 香港 (LLM 后端) + 阿里云 (备案主体) — 跨厂商但都合规
+2. **域名**: `.cn`, 阿里云万网买, ~30 RMB/年
+3. **零后端部署**: 61 个 dashboard + 纯前端 recommender (算法移植到 JS) + SCF LLM 搜索 (50 行)
+4. **月成本**: < 5 元 (除域名), EdgeOne Pages/SCF 免费层 + DeepSeek ~0.5 元/月
+5. **阶段二**: 备案后 EdgeOne Pages 切大陆区域 + SCF 克隆到境内, **代码不动, DNS 不动**
+
+### Do NOT (在用户说"开始部署"前)
+
+- ❌ 写 SCF 函数代码 (`scf/search_major/main.py` 等)
+- ❌ 写 `scripts/build_static.py`
+- ❌ 写 SCF IaC (`scf/template.yaml` / `serverless.yml`)
+- ❌ 创建 EdgeOne Pages 项目
+- ❌ 创建 SCF 函数
+- ❌ 写本地测试 (mock DeepSeek 响应)
+
+### Do (现在可以做)
+
+- ✅ 引用 `docs/DEPLOYMENT.md` 作为 reference
+- ✅ 用户问"部署进度"时 → 提示"等前端定型, 详见 ADR-015"
+- ✅ 用户问"XX 部署方案好不好"时 → 引用 ADR-011 ~ 014 给具体答案
+
+---
+
 ## 0. 2026-06-10 里程碑 A — gaokao-major-explorer 50 精品专业完整矩阵 ✅
 
 **Commit**: `48c491b feat(skill): gaokao-major-explorer 50 精品专业完整矩阵` (+39,636 / -1,671 lines · 91 files)
