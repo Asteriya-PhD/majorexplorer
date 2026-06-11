@@ -311,13 +311,14 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 """
     if style == "arts":
         return """
-body { background: #14110D; color: #FAFAFA; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
+body { background: #F8F6F2; color: #1A1A1A; font-family: 'Noto Serif SC', 'EB Garamond', serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 800px 500px at 70% 25%, rgba(255, 232, 176, 0.10), transparent 60%),
-    radial-gradient(ellipse 600px 400px at 15% 75%, rgba(220, 38, 38, 0.06), transparent 60%);
+    radial-gradient(ellipse 800px 500px at 50% 0%, rgba(255, 248, 220, 0.30), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 50% 100%, rgba(184, 144, 42, 0.08), transparent 60%);
 }
-body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.18 0 0 0 0 0.15 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.35; }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); opacity: 0.30; mix-blend-mode: multiply; }
+section.tab { background: transparent; }
 """
     if style == "gongan":
         return """
@@ -1728,14 +1729,15 @@ ARTS_CSS = """
   box-shadow: 0 2px 6px rgba(107, 93, 67, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
 
 /* === 装饰色卡 === */
-.color-swatches { position: absolute; left: 24px; bottom: 32px; z-index: 5; display: flex; gap: 4px; }
-.color-swatch { width: 28px; height: 42px; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(0,0,0,0.06); }
-.swatch-1 { background: linear-gradient(180deg, #F59E0B, #B45309); }
-.swatch-2 { background: linear-gradient(180deg, #DC2626, #7F1D1D); }
-.swatch-3 { background: linear-gradient(180deg, #1E40AF, #1E3A8A); }
-.swatch-4 { background: linear-gradient(180deg, #4A5D3A, #2A3A1A); }
-.swatch-5 { background: linear-gradient(180deg, #6B3410, #4A2A0A); }
-.color-swatch-label { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.55rem; color: #6B5D43; white-space: nowrap; }
+.color-swatches { position: absolute; left: 24px; top: 200px; z-index: 5; display: flex; flex-direction: column; gap: 6px; padding: 14px 12px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.color-swatch { width: 56px; height: 16px; position: relative; display: flex; align-items: center; justify-content: center; font-family: 'EB Garamond', serif; font-size: 0.6rem; color: #FFFFFF; font-weight: 700; letter-spacing: 0.1em; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+.swatch-1 { background: linear-gradient(90deg, #C8A26E 0%, #B8902A 50%, #8B6914 100%); color: #2A1A0A; }
+.swatch-2 { background: linear-gradient(90deg, #DC2626, #7F1D1D); }
+.swatch-3 { background: linear-gradient(90deg, #1E40AF, #1E3A8A); }
+.swatch-4 { background: linear-gradient(90deg, #4A5D3A, #2A3A1A); }
+.swatch-5 { background: linear-gradient(90deg, #6B3410, #4A2A0A); }
+.color-swatch::before { content: "■"; margin-right: 4px; opacity: 0.6; }
+.color-swatch-label { display: none; }
 
 /* === 画框 (双线 + 暖金内沿) === */
 .gallery-frame-wrap { position: relative; margin: 80px auto 0; max-width: 880px; z-index: 4; padding: 18px; background: #F8F6F2;
@@ -1749,7 +1751,7 @@ ARTS_CSS = """
 .gallery-frame-inner { background: #FFFFFF; padding: 60px 56px 40px; position: relative; }
 
 /* === 展签 (bottom gallery label) === */
-.gallery-label { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 6; padding: 12px 28px; background: #FFFFFF; border: 1px solid #1A1A1A; box-shadow: 0 4px 12px rgba(0,0,0,0.12); text-align: center; min-width: 320px; }
+.gallery-label { position: relative; margin: 32px auto 0; z-index: 6; padding: 12px 28px; background: #FFFFFF; border: 1px solid #1A1A1A; box-shadow: 0 4px 12px rgba(0,0,0,0.12); text-align: center; max-width: 720px; }
 .gallery-label::before { content: ""; position: absolute; top: -1px; left: 16px; right: 16px; height: 1px; background: linear-gradient(90deg, transparent, #B8902A 20%, #B8902A 80%, transparent); }
 .label-eyebrow { font-family: 'EB Garamond', serif; font-weight: 600; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: #B8902A; }
 .label-title { font-family: 'Noto Serif SC', serif; font-size: 0.95rem; font-weight: 700; color: #1A1A1A; margin-top: 4px; }
@@ -2956,6 +2958,7 @@ def render_v4(data: dict, style: str) -> str:
 </header>'''
     elif style == "business":
         # 工商管理 · 椭圆董事局 + 玫瑰金 + 胡桃木 + 屏幕深蓝
+        # 6 核心元素: 3 屏数据墙 / 椭圆桌 / 8 椅 / 8 名牌 / 标题+引言 / 6 hu-tag + 4 stats
         hero_html = f'''
 <header class="hero biz-hero">
   <div class="biz-marble"></div>
@@ -2964,158 +2967,139 @@ def render_v4(data: dict, style: str) -> str:
   <!-- 顶部 3 屏数据墙 (财务/地图/KPI) -->
   <div class="biz-data-wall">
     <div class="biz-screen biz-screen--finance">
-      <svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg">
-        <text x="14" y="20" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">Q1-Q4 · REVENUE (¥B)</text>
-        <text x="366" y="20" text-anchor="end" font-family="Bebas Neue" font-size="9" fill="var(--biz-rose-gold)" letter-spacing="1.5">FY 2025</text>
-        <line x1="14" y1="26" x2="366" y2="26" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
-        <rect x="60" y="120" width="34" height="86" fill="var(--biz-pos)" opacity="0.85"/>
-        <rect x="100" y="100" width="34" height="106" fill="var(--biz-pos)" opacity="0.85"/>
-        <rect x="140" y="78"  width="34" height="128" fill="var(--biz-pos)" opacity="0.95"/>
-        <rect x="180" y="58"  width="34" height="148" fill="var(--biz-pos)"/>
-        <polyline points="77,124 117,108 157,82 197,60" stroke="var(--biz-warn)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="12" y="18" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">Q1-Q4 · REVENUE (¥B)</text>
+        <text x="308" y="18" text-anchor="end" font-family="Bebas Neue" font-size="8" fill="var(--biz-rose-gold)" letter-spacing="1.5">FY 2025</text>
+        <line x1="12" y1="24" x2="308" y2="24" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
+        <rect x="50" y="105" width="28" height="75" fill="var(--biz-pos)" opacity="0.85"/>
+        <rect x="84" y="88" width="28" height="92" fill="var(--biz-pos)" opacity="0.85"/>
+        <rect x="118" y="68" width="28" height="112" fill="var(--biz-pos)" opacity="0.95"/>
+        <rect x="152" y="50" width="28" height="130" fill="var(--biz-pos)"/>
+        <polyline points="64,108 98,93 132,74 166,56" stroke="var(--biz-warn)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
         <g fill="var(--biz-warn)">
-          <circle cx="77" cy="124" r="3"/><circle cx="117" cy="108" r="3"/><circle cx="157" cy="82" r="3"/><circle cx="197" cy="60" r="3"/>
+          <circle cx="64" cy="108" r="2.5"/><circle cx="98" cy="93" r="2.5"/><circle cx="132" cy="74" r="2.5"/><circle cx="166" cy="56" r="2.5"/>
         </g>
-        <g font-family="Inter" font-size="7" font-weight="600" fill="var(--biz-steel)" letter-spacing="1">
-          <text x="77" y="222" text-anchor="middle">Q1</text><text x="117" y="222" text-anchor="middle">Q2</text>
-          <text x="157" y="222" text-anchor="middle">Q3</text><text x="197" y="222" text-anchor="middle">Q4</text>
+        <g font-family="Inter" font-size="6" font-weight="600" fill="var(--biz-steel)" letter-spacing="1">
+          <text x="64" y="194" text-anchor="middle">Q1</text><text x="98" y="194" text-anchor="middle">Q2</text>
+          <text x="132" y="194" text-anchor="middle">Q3</text><text x="166" y="194" text-anchor="middle">Q4</text>
         </g>
-        <rect x="240" y="50" width="120" height="50" fill="var(--biz-screen-blue-2)" stroke="var(--biz-pos)" stroke-width="0.5" opacity="0.8"/>
-        <text x="248" y="68" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">NET PROFIT</text>
-        <text x="248" y="88" font-family="Bebas Neue" font-size="22" fill="var(--biz-pos)" letter-spacing="1">¥48.2B</text>
-        <text x="350" y="88" text-anchor="end" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-pos)">+12.4%</text>
-        <rect x="240" y="110" width="120" height="50" fill="var(--biz-screen-blue-2)" stroke="var(--biz-warn)" stroke-width="0.5" opacity="0.8"/>
-        <text x="248" y="128" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">MARGIN</text>
-        <text x="248" y="148" font-family="Bebas Neue" font-size="22" fill="var(--biz-warn)" letter-spacing="1">22.8%</text>
-        <text x="350" y="148" text-anchor="end" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-warn)">+1.6pp</text>
+        <rect x="200" y="44" width="108" height="44" fill="var(--biz-screen-blue-2)" stroke="var(--biz-pos)" stroke-width="0.5" opacity="0.8"/>
+        <text x="208" y="60" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">NET PROFIT</text>
+        <text x="208" y="78" font-family="Bebas Neue" font-size="20" fill="var(--biz-pos)" letter-spacing="1">¥48.2B</text>
+        <text x="298" y="78" text-anchor="end" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)">+12.4%</text>
+        <rect x="200" y="98" width="108" height="44" fill="var(--biz-screen-blue-2)" stroke="var(--biz-warn)" stroke-width="0.5" opacity="0.8"/>
+        <text x="208" y="114" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">MARGIN</text>
+        <text x="208" y="132" font-family="Bebas Neue" font-size="20" fill="var(--biz-warn)" letter-spacing="1">22.8%</text>
+        <text x="298" y="132" text-anchor="end" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-warn)">+1.6pp</text>
+        <rect x="200" y="152" width="108" height="38" fill="var(--biz-screen-blue-2)" stroke="var(--biz-neg)" stroke-width="0.5" opacity="0.8"/>
+        <text x="208" y="166" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1.5">DEBT / EQUITY</text>
+        <text x="208" y="183" font-family="Bebas Neue" font-size="16" fill="var(--biz-neg)" letter-spacing="1">0.42</text>
+        <text x="298" y="183" text-anchor="end" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)">-0.08</text>
       </svg>
     </div>
     <div class="biz-screen biz-screen--map">
-      <svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg">
-        <text x="14" y="20" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-rose-gold)" letter-spacing="2">STRATEGIC MAP · CHINA</text>
-        <text x="366" y="20" text-anchor="end" font-family="Bebas Neue" font-size="9" fill="var(--biz-leather)" letter-spacing="1.5">Q4 PLAN</text>
-        <line x1="14" y1="26" x2="366" y2="26" stroke="var(--biz-rose-gold)" stroke-width="0.5" opacity="0.5"/>
-        <path d="M 70 100 L 90 90 L 110 95 L 130 85 L 155 90 L 175 100 L 200 95 L 225 110 L 250 105 L 280 115 L 305 130 L 320 145 L 315 165 L 290 180 L 260 185 L 235 175 L 210 180 L 185 170 L 160 175 L 140 165 L 120 160 L 100 145 L 80 130 Z" fill="none" stroke="var(--biz-walnut-dk)" stroke-width="1.2" stroke-dasharray="3,2" opacity="0.7"/>
-        <g transform="translate(195, 105)"><circle r="6" fill="var(--biz-neg)" opacity="0.3"/><circle r="3" fill="var(--biz-neg)"/><text y="-10" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">BJ</text></g>
-        <g transform="translate(265, 145)"><circle r="6" fill="var(--biz-neg)" opacity="0.3"/><circle r="3" fill="var(--biz-neg)"/><text y="-10" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">SH</text></g>
-        <g transform="translate(225, 175)"><circle r="6" fill="var(--biz-neg)" opacity="0.3"/><circle r="3" fill="var(--biz-neg)"/><text y="14" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">SZ</text></g>
-        <g transform="translate(140, 155)"><circle r="5" fill="var(--biz-screen-blue)" opacity="0.3"/><circle r="2.5" fill="var(--biz-screen-blue)"/><text y="-8" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-leather)">CD</text></g>
-        <g stroke="var(--biz-neg)" stroke-width="1.5" fill="none" stroke-dasharray="4,3">
-          <path d="M 195 105 Q 220 100 265 145"/>
-          <path d="M 265 145 Q 245 165 225 175"/>
-          <path d="M 195 105 Q 175 130 140 155"/>
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="12" y="18" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-rose-gold)" letter-spacing="2">STRATEGIC MAP · CHINA</text>
+        <text x="308" y="18" text-anchor="end" font-family="Bebas Neue" font-size="8" fill="var(--biz-leather)" letter-spacing="1.5">Q4 PLAN</text>
+        <line x1="12" y1="24" x2="308" y2="24" stroke="var(--biz-rose-gold)" stroke-width="0.5" opacity="0.5"/>
+        <path d="M 60 86 L 78 78 L 96 82 L 114 74 L 134 78 L 152 86 L 172 82 L 194 95 L 216 90 L 240 100 L 262 112 L 276 124 L 272 142 L 250 154 L 226 158 L 206 150 L 184 154 L 162 146 L 142 150 L 124 142 L 106 138 L 88 124 L 70 110 Z" fill="none" stroke="var(--biz-walnut-dk)" stroke-width="1.1" stroke-dasharray="3,2" opacity="0.7"/>
+        <g transform="translate(168, 90)"><circle r="5" fill="var(--biz-neg)" opacity="0.3"/><circle r="2.5" fill="var(--biz-neg)"/><text y="-9" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">BJ</text></g>
+        <g transform="translate(228, 124)"><circle r="5" fill="var(--biz-neg)" opacity="0.3"/><circle r="2.5" fill="var(--biz-neg)"/><text y="-9" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">SH</text></g>
+        <g transform="translate(194, 150)"><circle r="5" fill="var(--biz-neg)" opacity="0.3"/><circle r="2.5" fill="var(--biz-neg)"/><text y="12" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">SZ</text></g>
+        <g transform="translate(120, 134)"><circle r="4" fill="var(--biz-screen-blue)" opacity="0.3"/><circle r="2" fill="var(--biz-screen-blue)"/><text y="-7" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-leather)">CD</text></g>
+        <g stroke="var(--biz-neg)" stroke-width="1.3" fill="none" stroke-dasharray="4,3">
+          <path d="M 168 90 Q 188 86 228 124"/>
+          <path d="M 228 124 Q 212 142 194 150"/>
+          <path d="M 168 90 Q 150 110 120 134"/>
         </g>
       </svg>
     </div>
     <div class="biz-screen biz-screen--kpi">
-      <svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg">
-        <text x="14" y="20" font-family="Inter" font-size="8" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">LIVE KPI · DASHBOARD</text>
-        <text x="366" y="20" text-anchor="end" font-family="Bebas Neue" font-size="9" fill="var(--biz-warn)" letter-spacing="1.5">14:32:08</text>
-        <line x1="14" y1="26" x2="366" y2="26" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
-        <g transform="translate(20, 50)">
-          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
-          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">ARR</text>
-          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-pos)" letter-spacing="1">¥2.4B</text>
-          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▲ 18.2%</text>
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="12" y="18" font-family="Inter" font-size="7" font-weight="700" fill="var(--biz-pos)" letter-spacing="2">LIVE KPI · DASHBOARD</text>
+        <text x="308" y="18" text-anchor="end" font-family="Bebas Neue" font-size="8" fill="var(--biz-warn)" letter-spacing="1.5">14:32:08</text>
+        <line x1="12" y1="24" x2="308" y2="24" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
+        <g transform="translate(16, 42)">
+          <rect width="68" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
+          <text x="34" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">ARR</text>
+          <text x="34" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-pos)" letter-spacing="1">¥2.4B</text>
+          <text x="34" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▲ 18.2%</text>
         </g>
-        <g transform="translate(110, 50)">
-          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-warn)" stroke-width="0.5"/>
-          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">NPS</text>
-          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-warn)" letter-spacing="1">72</text>
-          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▲ 4</text>
+        <g transform="translate(94, 42)">
+          <rect width="68" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-warn)" stroke-width="0.5"/>
+          <text x="34" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">NPS</text>
+          <text x="34" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-warn)" letter-spacing="1">72</text>
+          <text x="34" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▲ 4</text>
         </g>
-        <g transform="translate(200, 50)">
-          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-neg)" stroke-width="0.5"/>
-          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CHURN</text>
-          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-neg)" letter-spacing="1">2.1%</text>
-          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▼ 0.3pp</text>
+        <g transform="translate(172, 42)">
+          <rect width="68" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-neg)" stroke-width="0.5"/>
+          <text x="34" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CHURN</text>
+          <text x="34" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-neg)" letter-spacing="1">2.1%</text>
+          <text x="34" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▼ 0.3pp</text>
         </g>
-        <g transform="translate(290, 50)">
-          <rect width="80" height="70" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
-          <text x="40" y="20" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CAC</text>
-          <text x="40" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="26" fill="var(--biz-pos)" letter-spacing="1">¥820</text>
-          <text x="40" y="64" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-pos)">▼ 12%</text>
+        <g transform="translate(250, 42)">
+          <rect width="58" height="58" fill="var(--biz-screen-blue-2)" opacity="0.6" stroke="var(--biz-pos)" stroke-width="0.5"/>
+          <text x="29" y="16" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">CAC</text>
+          <text x="29" y="42" text-anchor="middle" font-family="Bebas Neue" font-size="20" fill="var(--biz-pos)" letter-spacing="1">¥820</text>
+          <text x="29" y="54" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-pos)">▼ 12%</text>
         </g>
-        <g transform="translate(70, 165)">
-          <circle r="38" fill="none" stroke="var(--biz-walnut-xd)" stroke-width="8"/>
-          <circle r="38" fill="none" stroke="var(--biz-pos)" stroke-width="8" stroke-dasharray="180 60" transform="rotate(-90)" stroke-linecap="round"/>
-          <text y="-2" text-anchor="middle" font-family="Bebas Neue" font-size="22" fill="var(--biz-pos)" letter-spacing="1">75%</text>
-          <text y="14" text-anchor="middle" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">RETENTION</text>
+        <g transform="translate(60, 142)">
+          <circle r="34" fill="none" stroke="var(--biz-walnut-xd)" stroke-width="7"/>
+          <circle r="34" fill="none" stroke="var(--biz-pos)" stroke-width="7" stroke-dasharray="160 56" transform="rotate(-90)" stroke-linecap="round"/>
+          <text y="-2" text-anchor="middle" font-family="Bebas Neue" font-size="20" fill="var(--biz-pos)" letter-spacing="1">75%</text>
+          <text y="12" text-anchor="middle" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">RETENTION</text>
         </g>
-        <g transform="translate(160, 135)">
-          <text y="0" font-family="Inter" font-size="6" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">REVENUE · LAST 24H</text>
-          <polyline points="0,55 20,50 40,42 60,48 80,38 100,32 120,28 140,35 160,25 180,18 200,22" stroke="var(--biz-warn)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <g transform="translate(140, 116)">
+          <text y="0" font-family="Inter" font-size="5" font-weight="700" fill="var(--biz-steel)" letter-spacing="1">REVENUE · LAST 24H</text>
+          <line y1="60" x2="170" y2="60" stroke="var(--biz-walnut-xd)" stroke-width="0.5"/>
+          <polyline points="0,52 18,46 36,40 54,44 72,34 90,28 108,24 126,30 144,22 162,16" stroke="var(--biz-warn)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
         </g>
       </svg>
     </div>
   </div>
   <!-- 椭圆董事桌 (中央) -->
   <div class="biz-conf-table">
-    <svg viewBox="0 0 1080 320" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="bizTopG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--biz-walnut-soft)"/><stop offset="0.4" stop-color="var(--biz-walnut-dk)"/><stop offset="1" stop-color="var(--biz-walnut-xd)"/></linearGradient>
         <linearGradient id="bizSideG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--biz-walnut-xd)"/><stop offset="1" stop-color="#1A0F08"/></linearGradient>
         <linearGradient id="bizRimG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--biz-rose-gold)" stop-opacity="0.4"/><stop offset="0.5" stop-color="var(--biz-rose-gold)" stop-opacity="0.85"/><stop offset="1" stop-color="var(--biz-rose-gold)" stop-opacity="0.4"/></linearGradient>
       </defs>
-      <ellipse cx="540" cy="200" rx="520" ry="110" fill="url(#bizSideG)"/>
-      <ellipse cx="540" cy="170" rx="520" ry="100" fill="url(#bizTopG)"/>
+      <ellipse cx="360" cy="140" rx="350" ry="72" fill="url(#bizSideG)"/>
+      <ellipse cx="360" cy="118" rx="350" ry="65" fill="url(#bizTopG)"/>
       <g fill="none" stroke="#1A0F08" stroke-width="0.4" opacity="0.4">
-        <ellipse cx="540" cy="170" rx="490" ry="92"/><ellipse cx="540" cy="170" rx="450" ry="80"/>
-        <ellipse cx="540" cy="170" rx="400" ry="68"/>
+        <ellipse cx="360" cy="118" rx="328" ry="58"/><ellipse cx="360" cy="118" rx="296" ry="50"/>
+        <ellipse cx="360" cy="118" rx="260" ry="42"/>
       </g>
-      <ellipse cx="540" cy="170" rx="520" ry="100" fill="none" stroke="url(#bizRimG)" stroke-width="1.5"/>
-      <ellipse cx="540" cy="135" rx="450" ry="40" fill="rgba(255,255,255,0.05)"/>
-    </svg>
-  </div>
-  <!-- 3D 沙盘 (右上) -->
-  <div class="biz-sand-table">
-    <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="120" cy="110" rx="110" ry="35" fill="#1A0F08" stroke="var(--biz-rose-gold)" stroke-width="0.6"/>
-      <ellipse cx="120" cy="105" rx="105" ry="32" fill="var(--biz-ivory)" stroke="var(--biz-walnut-soft)" stroke-width="0.4"/>
-      <g transform="translate(40, 70)">
-        <rect x="0" y="-22" width="14" height="22" fill="var(--biz-walnut-dk)" stroke="var(--biz-rose-gold)" stroke-width="0.4"/>
-        <g fill="var(--biz-warn)" opacity="0.8"><rect x="2" y="-18" width="2" height="1.5"/><rect x="6" y="-18" width="2" height="1.5"/><rect x="10" y="-18" width="2" height="1.5"/></g>
-        <text x="7" y="10" text-anchor="middle" font-family="Inter" font-size="4" font-weight="700" fill="var(--biz-walnut-dk)">OFFICE</text>
-      </g>
-      <g transform="translate(110, 85)">
-        <rect x="0" y="-15" width="18" height="15" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.4"/>
-        <g fill="var(--biz-pos)" opacity="0.9"><rect x="2" y="-12" width="14" height="1"/><rect x="2" y="-9" width="14" height="1"/><rect x="2" y="-6" width="14" height="1"/></g>
-        <text x="9" y="7" text-anchor="middle" font-family="Inter" font-size="4" font-weight="700" fill="var(--biz-walnut-dk)">DATA</text>
-      </g>
-      <g transform="translate(160, 95)">
-        <rect x="0" y="-10" width="26" height="10" fill="var(--biz-walnut-dk)" stroke="var(--biz-rose-gold)" stroke-width="0.4"/>
-        <rect x="2" y="-14" width="6" height="4" fill="var(--biz-neg)" stroke="var(--biz-rose-gold)" stroke-width="0.2"/>
-        <rect x="9" y="-14" width="6" height="4" fill="var(--biz-screen-blue)" stroke="var(--biz-rose-gold)" stroke-width="0.2"/>
-        <rect x="16" y="-14" width="6" height="4" fill="var(--biz-warn)" stroke="var(--biz-rose-gold)" stroke-width="0.2"/>
-        <text x="13" y="7" text-anchor="middle" font-family="Inter" font-size="4" font-weight="700" fill="var(--biz-walnut-dk)">PORT</text>
-      </g>
+      <ellipse cx="360" cy="118" rx="350" ry="65" fill="none" stroke="url(#bizRimG)" stroke-width="1.4"/>
+      <ellipse cx="360" cy="92" rx="296" ry="26" fill="rgba(255,255,255,0.05)"/>
     </svg>
   </div>
   <!-- 8 把高管椅 (环桌, 简化) -->
   <div class="biz-chair-ring">
     <div class="biz-chair" style="left:50%;top:8%;transform:translateX(-50%);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
     <div class="biz-chair" style="left:25%;top:14%;transform:translateX(-50%) rotate(-6deg);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
     <div class="biz-chair" style="left:75%;top:14%;transform:translateX(-50%) rotate(6deg);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
     <div class="biz-chair" style="left:10%;top:35%;transform:translateX(-50%) rotate(-15deg);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
     <div class="biz-chair" style="left:90%;top:35%;transform:translateX(-50%) rotate(15deg);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
     <div class="biz-chair" style="left:25%;top:82%;transform:translateX(-50%) rotate(-6deg);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
     <div class="biz-chair" style="left:50%;top:88%;transform:translateX(-50%);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
     <div class="biz-chair" style="left:75%;top:82%;transform:translateX(-50%) rotate(6deg);">
-      <svg viewBox="0 0 56 64"><rect x="4" y="0" width="48" height="40" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="40" width="48" height="20" fill="var(--biz-leather)"/><rect x="4" y="40" width="48" height="5" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="24" y="58" width="8" height="4" fill="var(--biz-rose-gold)"/></svg>
+      <svg viewBox="0 0 50 58"><rect x="4" y="0" width="42" height="36" rx="2" fill="var(--biz-leather)" stroke="var(--biz-rose-gold)" stroke-width="0.5"/><rect x="4" y="36" width="42" height="18" fill="var(--biz-leather)"/><rect x="4" y="36" width="42" height="4" fill="var(--biz-burgundy)" opacity="0.6"/><rect x="22" y="52" width="6" height="4" fill="var(--biz-rose-gold)"/></svg>
     </div>
   </div>
   <!-- 8 个座位名牌 (CEO/COO/CFO/CMO/CTO/CSO/CHRO/CDO) -->
@@ -3137,12 +3121,12 @@ def render_v4(data: dict, style: str) -> str:
     </div>
     <div class="biz-discipline">BUSINESS ADMIN · 120200</div>
     <div class="biz-discipline-cn">工 商 管 理 · 战 略 · 决 策 · 组 织</div>
-    <h1 class="biz-title-main">Strategic<br/>Management</h1>
+    <h1 class="biz-title-main">Strategic Management</h1>
     <h2 class="biz-title-main-cn"><span class="biz-title-cn-accent">战略管理</span> · 决策科学</h2>
     <div class="biz-subtitle">FROM BCG MATRIX TO BLUE OCEAN — EXEC MIND & DECISION SCIENCE</div>
     <div class="biz-subtitle-line"></div>
     <p class="biz-lede">
-      商业不是「赚钱」— 是<em>战略 + 组织 + 运营 + 财务</em>的系统决策。毕业生 90 万/年, 但能进 MBB 咨询 / 500 强管培 / 战略投资部的不到 5%。「<em>看得远 + 算得清 + 拍得准</em>」的高管预备役才值钱。
+      商业不是「赚钱」— 是<em>战略 + 组织 + 运营 + 财务</em>的系统决策。毕业生 90 万/年, 但能进 MBB 咨询 / 500 强管培 / 战略投资部的不到 5%。
     </p>
     <div class="biz-hero-quote">
       "If you don't know where you're going, you might not get there."
@@ -3179,31 +3163,6 @@ def render_v4(data: dict, style: str) -> str:
       <div class="biz-stat-label">Avg. Promotion</div>
       <div class="biz-stat-num">4.2<span class="biz-stat-num-sub">年</span></div>
       <div class="biz-stat-label-cn">管培生 → 中层管理 平均年限</div>
-    </div>
-  </div>
-  <!-- 角落印章 + footer -->
-  <div class="biz-stamp-bottom">STRATEGIC <span>·</span> MANAGEMENT <span>·</span> HERO 2026</div>
-  <div class="biz-stamp-corner">
-    <div class="biz-stamp-cn">高 管 战 略 会 议 室</div>
-    <div class="biz-stamp-en">Boardroom · Strategic Management</div>
-  </div>
-  <div class="biz-footer-strip">
-    <div>REPORT ID · BUS-2026-02 <span class="dot"></span> DATED · 2026.06.10 <span class="dot"></span> SOURCE · TOP MBA CASE STUDIES</div>
-    <div>STRATEGIC MANAGEMENT <span class="dot"></span> HERO 2026</div>
-  </div>
-  <!-- 动态变量注入 (隐藏) -->
-  <div class="hero-content" style="display:none;">
-    <div class="hero-chapter">{category} · 第一章</div>
-    <h1 class="hero-title"><span class="title-cn">{title}</span></h1>
-    <p class="hero-tagline">{summary[:160]}</p>
-    <div class="hu-stats-grid">
-      <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">{category}</span></div>
-      <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">{duration} 年 · {degree}</span></div>
-      <div class="hu-stat"><span class="hu-stat-label">难度</span><span class="hu-stat-value">{difficulty}</span></div>
-      <div class="hu-stat"><span class="hu-stat-label">更新</span><span class="hu-stat-value">{updated_at}</span></div>
-    </div>
-    <div class="hero-tags">
-      {"".join(f'<span class="hu-tag">{t}</span>' for t in tags[:5])}
     </div>
   </div>
 </header>'''

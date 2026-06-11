@@ -86,13 +86,14 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 
-body { background: #14110D; color: #FAFAFA; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
+body { background: #F8F6F2; color: #1A1A1A; font-family: 'Noto Serif SC', 'EB Garamond', serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 800px 500px at 70% 25%, rgba(255, 232, 176, 0.10), transparent 60%),
-    radial-gradient(ellipse 600px 400px at 15% 75%, rgba(220, 38, 38, 0.06), transparent 60%);
+    radial-gradient(ellipse 800px 500px at 50% 0%, rgba(255, 248, 220, 0.30), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 50% 100%, rgba(184, 144, 42, 0.08), transparent 60%);
 }
-body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.18 0 0 0 0 0.15 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.35; }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); opacity: 0.30; mix-blend-mode: multiply; }
+section.tab { background: transparent; }
 
 
 /* === 速览 v2 — 3 子卡堆叠 === */
@@ -302,14 +303,15 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   box-shadow: 0 2px 6px rgba(107, 93, 67, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
 
 /* === 装饰色卡 === */
-.color-swatches { position: absolute; left: 24px; bottom: 32px; z-index: 5; display: flex; gap: 4px; }
-.color-swatch { width: 28px; height: 42px; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(0,0,0,0.06); }
-.swatch-1 { background: linear-gradient(180deg, #F59E0B, #B45309); }
-.swatch-2 { background: linear-gradient(180deg, #DC2626, #7F1D1D); }
-.swatch-3 { background: linear-gradient(180deg, #1E40AF, #1E3A8A); }
-.swatch-4 { background: linear-gradient(180deg, #4A5D3A, #2A3A1A); }
-.swatch-5 { background: linear-gradient(180deg, #6B3410, #4A2A0A); }
-.color-swatch-label { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.55rem; color: #6B5D43; white-space: nowrap; }
+.color-swatches { position: absolute; left: 24px; top: 200px; z-index: 5; display: flex; flex-direction: column; gap: 6px; padding: 14px 12px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.color-swatch { width: 56px; height: 16px; position: relative; display: flex; align-items: center; justify-content: center; font-family: 'EB Garamond', serif; font-size: 0.6rem; color: #FFFFFF; font-weight: 700; letter-spacing: 0.1em; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+.swatch-1 { background: linear-gradient(90deg, #C8A26E 0%, #B8902A 50%, #8B6914 100%); color: #2A1A0A; }
+.swatch-2 { background: linear-gradient(90deg, #DC2626, #7F1D1D); }
+.swatch-3 { background: linear-gradient(90deg, #1E40AF, #1E3A8A); }
+.swatch-4 { background: linear-gradient(90deg, #4A5D3A, #2A3A1A); }
+.swatch-5 { background: linear-gradient(90deg, #6B3410, #4A2A0A); }
+.color-swatch::before { content: "■"; margin-right: 4px; opacity: 0.6; }
+.color-swatch-label { display: none; }
 
 /* === 画框 (双线 + 暖金内沿) === */
 .gallery-frame-wrap { position: relative; margin: 80px auto 0; max-width: 880px; z-index: 4; padding: 18px; background: #F8F6F2;
@@ -323,7 +325,7 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 .gallery-frame-inner { background: #FFFFFF; padding: 60px 56px 40px; position: relative; }
 
 /* === 展签 (bottom gallery label) === */
-.gallery-label { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 6; padding: 12px 28px; background: #FFFFFF; border: 1px solid #1A1A1A; box-shadow: 0 4px 12px rgba(0,0,0,0.12); text-align: center; min-width: 320px; }
+.gallery-label { position: relative; margin: 32px auto 0; z-index: 6; padding: 12px 28px; background: #FFFFFF; border: 1px solid #1A1A1A; box-shadow: 0 4px 12px rgba(0,0,0,0.12); text-align: center; max-width: 720px; }
 .gallery-label::before { content: ""; position: absolute; top: -1px; left: 16px; right: 16px; height: 1px; background: linear-gradient(90deg, transparent, #B8902A 20%, #B8902A 80%, transparent); }
 .label-eyebrow { font-family: 'EB Garamond', serif; font-weight: 600; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: #B8902A; }
 .label-title { font-family: 'Noto Serif SC', serif; font-size: 0.95rem; font-weight: 700; color: #1A1A1A; margin-top: 4px; }
