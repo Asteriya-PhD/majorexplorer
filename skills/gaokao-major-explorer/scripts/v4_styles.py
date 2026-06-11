@@ -1740,6 +1740,27 @@ footer .label { color: #FAFAFA; font-family: 'Cormorant Garamond', serif; }
 footer .data-source { color: #999; }
 .drop-cap::first-letter { font-family: 'Cormorant Garamond', serif; color: #DC2626; }
 
+/* === Arts 速览 v2 深色适配 (避免白卡片在暗背景上刺眼) === */
+.ovv-card { background: rgba(42, 37, 32, 0.55); border-color: #3A3A3A; }
+.ovv-card-title { color: #FAFAFA; }
+.ovv-card-tag { color: #999; }
+.ovv-foundations-label, .ovv-dir-name, .ovv-skill { color: #FAFAFA; }
+.ovv-dir { background: rgba(250, 250, 250, 0.04); border-color: #3A3A3A; }
+.ovv-dir:hover { background: rgba(220, 38, 38, 0.06); }
+.ovv-dir-desc { color: #D9CFB9; }
+.ovv-skill { background: rgba(0, 0, 0, 0.3); }
+.ovv-bonus { color: #FAFAFA; background: rgba(184, 144, 42, 0.08); }
+.ovv-pit { background: rgba(185, 28, 28, 0.06); border-color: #3A3A3A; }
+.ovv-pit-reality { color: #D9CFB9; }
+.ovv-fit-col { background: rgba(250, 250, 250, 0.04); border-color: #3A3A3A; }
+.ovv-fit-col.is-yes { background: rgba(46, 125, 50, 0.06); }
+.ovv-fit-col.is-no { background: rgba(185, 28, 28, 0.06); }
+.ovv-fit-list li { color: #FAFAFA; border-color: #3A3A3A; }
+.ovv-card-head { border-color: #3A3A3A; }
+
+/* === Arts 速览 误区 奇数条 fix: 最后一条跨整行 === */
+.ovv-pits .ovv-pit:last-child:nth-child(odd) { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
+
 /* ── Arts body section 框架 (暗色画室 + 暖橙点缀) ── */
 .bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .bento-item { padding: 28px 24px 24px; position: relative; transition: background 250ms; }
@@ -2579,8 +2600,8 @@ def render_v4(data: dict, style: str) -> str:
 {FONT_URLS[style]}
 {get_base_css()}
 {body_bg}
-{css_extra}
 {OVERVIEW_V2_CSS}
+{css_extra}
 </style>
 </head>
 <body>
