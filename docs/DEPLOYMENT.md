@@ -1,262 +1,285 @@
-# DEPLOYMENT.md — 个人网站部署方案
+# DEPLOYMENT.md — Major Explorer 海外直链部署方案 v2
 
-> **状态**: 方案已定型,实施延后到前端大改完成
-> **最后更新**: 2026-06-11
-> **对应 plan**: `/Users/zhewenliu/.claude/plans/gentle-stargazing-hartmanis.md`（同源, 这份是项目内 mirror）
+> **状态**: 方案已定型, 实施进行中
+> **最后更新**: 2026-06-12
+> **对应 ADR**: ADR-011 (过期) → ADR-016/017/018/019
+> **对应 plan**: `/Users/zhewenliu/.claude/plans/gentle-stargazing-hartmanis.md` (这份是项目内 mirror)
 
-## Context
+## Context (为什么重做)
 
-用户要把项目正式部署到个人网站，但前端还要大改。计划分两阶段：
-- **阶段一（无 ICP）**：EdgeOne Pages 选"全球可用区（不含中国大陆）"，先上线
-- **阶段二（ICP 完成后）**：EdgeOne Pages 切到"全球可用区（含中国大陆）"
+2026-06-12 重新校准后, 部署策略发生 **5 项重大变动**:
 
-本方案给**已确定的部分**（域名、备案、平台）和**待前端定稿后**的部署要求清单。
+| 旧方案 (ADR-011 ~ 015) | 新方案 (v2) | 变化原因 |
+|------------------------|-------------|----------|
+| `.cn` 双持 (.cn + .com) | `majorexplorer.com` 单持 | 2 字 .cn 全军覆没, 英文 .com 跟 index.html 品牌一致 |
+| EdgeOne Pages 两阶段 (海外 → 大陆) | **Cloudflare Pages 单阶段** | 用户明确不做微信/SEO/变现, 备案价值消失 |
+| 7-15 天 ICP 备案 (阿里云轻量) | **短期不做** | 错过 6/23 出分高峰, 公益项目无商业化需求 |
+| 备案后切到大陆节点 | **永久海外**, 优选 IP 解决 | Cloudflare 国内有 21 接入商, 30-100ms 足够 |
+| 备案主体 = 阿里云轻量 2C4G | **不备案**, 留作未来 | 教师身份不暴露策略 |
 
-## 项目实际结构（已勘探）
+**核心场景校准**:
+- 100% 国内用户 (高三学生 + 家长)
+- 公益, 不变现, 不做微信公众号
+- 不做 SEO 长尾积累 (一年流量高峰就几天)
+- 海外需求 = 0
+- **不备案 = 节省 7-15 天, 抢高考出分流量窗口**
 
-| 模块 | 类型 | 是否可纯静态 |
-|------|------|--------------|
-| 61 个 `curated/*.html`（专业 dashboard） | 纯静态 | ✅ |
-| 仪表盘索引 + 推荐 UI（重写后） | 纯静态 + JS | ✅ |
-| 临时搜索新专业（LLM 合成） | **必须后端**（API key 保护） | ❌ 需 serverless |
-| 纯前端 recommender（推荐志愿组） | 纯静态 + JS | ✅ |
-| `data/*.csv`（合成数据） | 数据文件 | — |
-| 捐赠（赞赏码/外链） | 纯静态 | ✅ |
+## 项目实际结构 (2026-06-12)
 
-**关键约束**：
-- EdgeOne Pages **不能** 跑 Python 后端
-- LLM API key 不能暴露在浏览器 → **临时搜索能力必须走 serverless 函数**
-- **61 个 dashboard + LLM 搜索后端可以一起上阶段一**——两者完全独立、并行部署
+| 模块 | 类型 | 是否可纯静态 | 上线状态 |
+|------|------|--------------|----------|
+| 68 个 `public/{slug}.html` (专业 dashboard) | 纯静态 | ✅ | 阶段 1 |
+| `public/index.html` (主页, 380+ 行, "先专业后志愿"流程) | 纯静态 | ✅ | 阶段 1 |
+| `public/css/shared.css` + 各主题 CSS | 纯静态 | ✅ | 阶段 1 |
+| `public/js/wishlist-store.js` + UI helpers + 搜索 | 纯静态 | ✅ | 阶段 1 |
+| `public/data/manifest.json` (68 精品元数据) | 纯静态数据 | ✅ | 阶段 1 |
+| 临时搜索新专业 (LLM 合成) | **必须后端** (API key 保护) | ❌ 需 serverless | **阶段 2 (不阻塞)** |
+| `scf/synth/` (后端 LLM 合成代码, 7 模块) | Python serverless | — | 阶段 2 |
+| `data/` (投档表/一分一段/校专业关联) | 数据 | — | 阶段 1 (静态快照) |
 
-## 决策记录
+**关键约束** (没变):
+- Cloudflare Pages 是 **纯静态托管** (跟 EdgeOne Pages 一样, 不能跑 Python)
+- LLM API key 不能暴露在浏览器 → 临时搜索必须 serverless
+- **68 个 dashboard + 主页可以独立上线**, 不依赖 LLM 后端
+
+## 决策记录 (新, 2026-06-12)
 
 | 决策点 | 选择 | 理由 |
 |--------|------|------|
-| 域名 TLD | `.cn` | 国内长期运营，DNSPod/阿里云万网购买最顺 |
-| 静态托管 | **EdgeOne Pages** | 阶段一区域 = "全球可用区（不含中国大陆）"，无需备案 |
-| 临时搜索后端 | **腾讯云 SCF 香港地域** | 境外地域无需备案，10万次/月免费，冷启动 ~1s |
-| 备案主体 | **阿里云轻量** | 用户已有 2C4G 轻量，符合阿里云备案主体资格 |
-| EdgeOne Pages 区域 | 阶段一："全球可用区（不含中国大陆）" | 无需备案，海外/香港节点 |
-| | 阶段二：迁移到"全球可用区（含中国大陆）" | 备案后切换 |
-| 捐赠 | **微信赞赏码 + 支付宝收款码 + 爱发电外链** | 纯静态图片 + 外链，0 成本，0 后端 |
-| LLM 选型 | **DeepSeek API**（推荐） | 1 元/百万 token，1 次搜索 ~2000 token ≈ 0.002 元 |
-| SCF 运行时 | **Python 3.11**（与现有 core/ 一致） | 后续可复用 filter/probability 算法 |
+| 域名 TLD | **`.com`** | 英文名 `MajorExplorer` 已根植于 `index.html`/og/sitemap, 单持最一致 |
+| 域名注册商 | **Cloudflare Registrar** | 成本价 $9.15/年 (永久不涨价), 跟 Pages 集成最顺 |
+| 静态托管 | **Cloudflare Pages** | 21 接入商, 国内节点最广, 优选 IP 后 30-100ms, 免费层够用 |
+| 国内访问优化 | **Cloudflare 优选 IP** (民间方案) | 30 分钟跑出 top 5 IP 写入 DNS, 30-100ms |
+| DNS 管理 | **Cloudflare DNS** (强制) | 注册即用, 优选 IP 写入最方便 |
+| ICP 备案 | **不做** (短期) | 公益不变现, 微信不做, 备案价值不抵时间成本 |
+| 微信生态 | **不做** | 公益项目 + 教师身份不暴露策略 |
+| SEO 长尾 | **不主动做** | 一年几天流量高峰, 长尾 ROI 低 |
+| 商业化 | **不做** | 纯公益, 0 变现 |
+| LLM 搜索后端 | **SCF 香港** (保留 ADR-012) | 0 成本, 10万次/月免费, 无需备案 |
+| SCF 部署时点 | **阶段 2**, 不阻塞阶段 1 | 静态站先上, LLM 搜索后置 |
+| 备案/教师身份 | **保留 ADR-018, 019 备用** | 未来若有需要, 普通个人备案 + 不暴露教师身份 |
 
-## 实施步骤
+## 架构 (v2)
 
-### 阶段 0：现在可以做的准备工作（不花钱、不部署）
-
-1. **买域名**
-   - 注册商：阿里云万网（便于后续在阿里云备案走一体化）或 腾讯云 DNSPod
-   - 域名建议：`你的名字缩写.cn` 或 `gaokao-hubei.cn` 之类短名
-   - 实名认证：1-2 天
-   - 费用：~30 RMB/年
-
-2. **部署前的代码改造**（前端大改时一并做）
-   - `frontend/index.html` 重构为**纯前端 recommender**：
-     - 首次加载时 fetch `data.json`（预构建的 admission + rank 数据）
-     - `core/recommender.py` 的 filter / probability / strategy 算法**移植到 JS**
-     - 移除 `http://localhost:8000` 硬编码，改为同源路径
-   - 加 `index.html` 入口页（dashboard 索引、按专业分类、搜索）
-   - 准备 `dist/` 构建产物目录：
-     ```
-     dist/
-       index.html
-       majors/{slug}.html       # 复制 61 个 curated/
-       data/{province}_{subject}_{year}.json   # 预构建的 admission 表
-       data/rank/{province}_{subject}.json     # 预构建的 rank 表
-       assets/...
-     ```
-   - 写 `scripts/build_static.py`：把 `data/*.csv` + `core/` 的算法输出 JSON
-
-3. **EdgeOne Pages 项目准备**
-   - 注册腾讯云账号（实名认证 1-2 天）
-   - 在 EdgeOne Pages 控制台 **不要现在创建项目**（前端没定稿会浪费）
-   - 等前端定稿后，建项目 → 选"全球可用区（不含中国大陆）" → Git 仓库或手动上传 `dist/`
-
-4. **备案准备**（域名实名后即可启动）
-   - 登录阿里云备案系统（已有阿里云轻量可作主体资格）
-   - 资料：身份证 + 域名证书 + 阿里云轻量服务器购买凭证
-   - 预计：15-20 天（管局审核）
-   - 期间：网站用 EdgeOne Pages 海外区域继续跑
-
-### 阶段 1：前端定稿 → 部署上线（无 ICP，61 dashboard + LLM 搜索同时上）
-
-**整体架构**：
 ```
-浏览器
+浏览器 (国内 16-22 岁高三生 / 35-50 岁家长)
+  ↓ DNS 解析到 Cloudflare 优选 IP (国内 30-100ms)
+majorexplorer.com (HTTPS)
   ↓
-yourname.cn (HTTPS)
-  ↓
-EdgeOne Pages (全球不含中国大陆)
-  ├── 61 个 curated/*.html
-  ├── index.html (dashboard 索引 + 搜索 + 推荐 UI)
-  ├── recommender.js (纯前端推荐算法)
-  ├── search-major.js (调下方 API)
-  └── data/*.json (预构建数据)
+Cloudflare Pages (全球 CDN, 国内 21 接入商节点)
+  ├── public/index.html (主页, "先专业后志愿" 流程)
+  ├── public/{68 个 slug}.html (精品专业 dashboard)
+  ├── public/css/ (12 主题 CSS)
+  ├── public/js/ (wishlist + 搜索 + UI helpers)
+  ├── public/data/manifest.json (68 精品元数据)
+  └── public/data/curated/*.json (各专业精编数据)
+  
+  阶段 2 后端 (不阻塞阶段 1):
   ↓ fetch('/api/search-major?q=...')
   ↓
-腾讯云 SCF (香港地域，无需备案)
+腾讯云 SCF (香港地域, 无需备案)
   ├── 入口: POST /search-major
   ├── 鉴权: 简单 rate-limit (按 IP)
-  ├── 调 DeepSeek API
+  ├── 调 DeepSeek API (scf/synth/llm.py, raw HTTP 修复后)
   └── 合成 HTML 片段 + 简单结构化字段
 ```
 
-**实施步骤**：
+**跟 v1 架构的关键差异**:
+- ❌ 删了 EdgeOne Pages / 两阶段切换 / 阿里云备案
+- ❌ 删了"阶段二迁移到大陆节点"流程
+- ✅ 加入 Cloudflare 优选 IP 机制
+- ✅ 加入 LLM 后端可后置的解耦设计
 
-1. **DNS 解析**
-   - 在 DNSPod / 阿里云 DNS 添加 CNAME 记录
-   - `yourname.cn` → `yourname.edgeone.app`（EdgeOne Pages 默认域）
-   - 或用子域：`www.yourname.cn` / `majors.yourname.cn`
+## 实施步骤
 
-2. **EdgeOne Pages 部署**
-   - 项目设置 → 域名管理 → 添加 `yourname.cn`
-   - 勾选"免费生成 SSL 证书"
-   - 部署 `dist/` 目录（含 61 dashboard + index + JS + 预构建 JSON）
+### 阶段 0: 准备工作 (今天 6/12, 30 分钟)
 
-3. **腾讯云 SCF 部署（临时搜索后端）**
-   - 创建 SCF 函数，地域选**香港**，运行时 Python 3.11
-   - 函数代码：~50 行，接收 `?q=专业名`，调 DeepSeek API，返回结构化 JSON
-   - 配置 API 网关触发器，路径 `/search-major`
-   - 配置 CORS：允许 `https://yourname.cn`
-   - 环境变量注入 `DEEPSEEK_API_KEY`（不要硬编码）
+**0.1 注册域名**
+- 平台: Cloudflare Registrar
+- URL: https://dash.cloudflare.com → Add a Site → Register Domains
+- 搜 `majorexplorer.com` → 加购物车 → 付款 (Visa/Mastercard/PayPal)
+- 预计 5 分钟
 
-4. **前端集成**
-   - `index.html` 搜索框：输入 → fetch SCF → 展示临时合成的 HTML 片段
-   - 缓存策略：已搜过的存 localStorage，避免重复调用 LLM
-   - rate-limit：前端 1 次/秒，避免刷额度
+**0.2 准备 DNS**
+- Cloudflare 自动接管域名 DNS
+- 暂时加占位 A 记录 → `192.0.2.1` (TEST-NET-1, RFC 5737, 不会真解析)
+- 阶段 1 部署后改成 Cloudflare Pages 分配的 IP 或 CNAME
 
-5. **验证**
-   - `curl -I https://yourname.cn` 看 200 + EdgeOne 节点
-   - `curl https://yourname.cn/api/search-major?q=核工程` 看返回 JSON
-   - `https://itdog.net` 测速，海外/香港节点预期延迟 30-80ms
-   - 浏览器实测：搜索 61 个已有专业 + 1 个未收录专业，2 路都能用
+**0.3 准备 git push** (用户做)
+- 仓库: GitHub 个人仓库 (已有, gh CLI 可用)
+- 当前工作树有未提交改动 (manifest + 8 新 HTML + scf/synth/raw HTTP 修复), 隔壁修复完后一起 push
+- 推送后 Cloudflare Pages 自动部署
 
-**月成本估算**：
-| 项 | 用量 | 费用 |
-|---|---|---|
-| EdgeOne Pages | 1GB 存储 + <10GB 流量 | 0 元（免费层） |
-| 腾讯云 SCF 香港 | 1 万次调用 | 0 元（免费层 10万次） |
-| DeepSeek API | 1 千次搜索 × 2K token | ~0.5 元/月 |
-| 域名 | 1 个 | ~30 元/年 |
-| **合计** | | **< 5 元/月（除域名）** |
+### 阶段 1: 静态站上线 (今天, 1-2 小时)
 
-### 阶段 2：ICP 备案完成后切换大陆节点
+**1.1 创建 Cloudflare Pages 项目**
+1. Cloudflare Dashboard → Workers & Pages → Create application → Pages
+2. 选 "Connect to Git" → 选 GitHub → 授权 → 选 `gaokao-hubei-mvp` 仓库
+3. 项目名: `majorexplorer` (生成 `majorexplorer.pages.dev` 临时 URL)
+4. 构建配置:
+   - Build command: **留空** (无构建, public/ 已是产物)
+   - Build output directory: `public`
+   - Root directory: `/` (项目根, 不是 public/)
+5. 点 Save and Deploy → Cloudflare 自动 git clone + 部署 → 30 秒拿到 `majorexplorer.pages.dev`
 
-1. **ICP 备案**（与阶段 1 并行）
-   - 阿里云备案系统提交（用现有 2C4G 轻量作主体资格）
-   - 管局审核 15-20 天
-   - 通过后会发备案号，需在网站底部挂载并链接到 `https://beian.miit.gov.cn`
+**1.2 绑定自定义域名**
+1. Pages 项目 → Custom domains → Set up a custom domain
+2. 输入 `majorexplorer.com` → Cloudflare 自动检查 DNS → 一键添加
+3. 自动签发 SSL 证书 (Let's Encrypt, 1-2 分钟)
+4. 验证: 浏览器打开 `https://majorexplorer.com` → 应该能看到主页
 
-2. **EdgeOne Pages 区域切换**
-   - ⚠️ **不是"开关"**——EdgeOne Pages 的加速区域通常**项目创建时锁定**
-   - 实际做法（二选一）：
-     - **(A) 推荐**：在 EdgeOne Pages 控制台 → 项目设置 → 找"加速区域"或"迁移"功能（部分计划支持）
-     - **(B) 兜底**：新建一个 EdgeOne Pages 项目，区域选"全球可用区（含中国大陆）"，把 `dist/` 部署过去；DNS 切到新项目的 CNAME；老的海外项目保留作 fallback
-   - **DNS 解析不动**——这是两阶段方案的核心优势
-   - **代码不动**——这是另一大优势
+**1.3 验证清单**
+```bash
+# DNS 解析
+dig majorexplorer.com A +short
+# 期望: Cloudflare 的 IP 段 (104.16.x.x ~ 172.64.x.x)
 
-3. **SCF 后端切到境内**
-   - 在腾讯云 SCF 控制台把函数克隆到**广州/上海地域**
-   - 用境内 API 网关触发器（可绑已备案域名）
-   - DNS 加一条 `api.yourname.cn` 指向境内 API 网关
-   - 前端切换 API base URL（或保留香港 SCF 作 fallback）
+# HTTPS 状态
+curl -I https://majorexplorer.com
+# 期望: HTTP/2 200, server: cloudflare
 
-4. **验证**
-   - `https://itdog.net` 国内节点测速，预期延迟 10-30ms
-   - 浏览器访问 https://yourname.cn 看备案号是否正确显示
-   - 临时搜索功能：从国内发起，延迟 < 200ms
+# 主页
+curl -s https://majorexplorer.com | grep "Major Explorer"
+# 期望: <title>看清专业,再谈志愿 · Major Explorer ...
+
+# 68 个 dashboard 抽样
+for slug in accounting auditing clinical-medicine public-order; do
+    status=$(curl -o /dev/null -s -w "%{http_code}" https://majorexplorer.com/${slug}.html)
+    echo "${slug}: ${status}"
+done
+# 期望: 4 个都是 200
+
+# 国内访问速度 (用户/朋友帮忙测)
+# https://itdog.net 测速 → 国内三网 < 200ms 可接受 (优选 IP 后 < 100ms)
+```
+
+### 阶段 2: 优选 IP 加速 (今天-明天, 30 分钟)
+
+**目的**: 把国内访问从默认 200-300ms 优化到 30-100ms
+
+**步骤**:
+1. 跑 `deploy/optimal-cf-ip.sh` (本文档配套脚本)
+2. 脚本会:
+   - 下载 Cloudflare 公开 IP 段
+   - 用 TCP ping 测速找出 top 5
+   - 调用 Cloudflare DNS API 写入 A 记录
+3. Cloudflare DNS 自动生效 (TTL 300s, 5 分钟内全球生效)
+4. 复测国内访问: 应该降到 30-100ms
+
+**长期维护**: IP 偶尔会变, 每月跑一次脚本即可。
+
+### 阶段 3: LLM 搜索后端 (后续, 不阻塞)
+
+**触发条件**: 用户主动说要部署, 或有真实用户开始搜未收录专业。
+
+**部署目标**: 腾讯云 SCF (香港地域, 沿用 ADR-012)
+
+**简化路径** (跟 v1 几乎一样):
+1. 腾讯云账号 → SCF → 新建函数 → 地域"香港" → 运行时 Python 3.11
+2. 上传 `scf/synth/` 整个目录 + `scf/template.yaml` (略改 trigger 路径)
+3. 环境变量注入 `DEEPSEEK_API_KEY` (从 scf/synth/llm.py 看, 用 raw HTTP 调, 0 SDK 依赖)
+4. API 网关触发器 → 路径 `/synth/*` → CORS 允许 `https://majorexplorer.com`
+5. 前端 `public/js/synth-client.js` 已有轮询逻辑 (commit f494378), 把 base URL 指向新 SCF
+
+**月成本** (按 v1 估算):
+- SCF 香港: 1 万次调用 → ¥0 (免费层 10万次/月)
+- DeepSeek API: 1 千次搜索 × 2K token → ~0.5 元/月
+
+**重要**: LLM 后端**上线后**前端 `index.html` 的"未收录专业"搜索才能用。**不部署也能正常服务** (68 个 dashboard 全部本地化, 不依赖后端)。
+
+### 阶段 4: 备案 (6 个月后再议, 触发条件驱动)
+
+**当前明确不做**。但保留未来选项:
+
+**触发条件 (任一满足才启动备案)**:
+- 微信公众号/小程序嵌入需求 (用户: 当前不做)
+- 国内 CDN 大幅提速需求 (用户: 优选 IP 够用)
+- 与国内机构合作需要备案号 (出版社/教育局)
+- 商业化 (广告/付费/咨询 — 用户: 纯公益不变现)
+
+**备案时主体** (ADR-019): 普通个人身份, 不交教师资格证/在职证明。
 
 ## 关键文件清单
 
-需要修改/新建的文件（前端大改时）：
+### 阶段 1 必改 (本周末)
 
-- **新建**：`frontend/index.html`（重写为纯静态 SPA 或多页应用）
-- **新建**：`scripts/build_static.py`（数据预构建）
-- **新建**：`dist/index.html`（dashboard 索引入口）
-- **新建**：`dist/data/*.json`（构建产物，提交到 Git）
-- **改造**：`core/recommender.py` → 移植为 `frontend/assets/recommender.js`
-- **不动**：`skills/gaokao-major-explorer/data/curated/*.html`（61 个 dashboard 已完工）
-- **不动**：`data/*.csv`（保持原样，构建脚本读取）
+| 文件 | 改动 | 说明 |
+|------|------|------|
+| `public/data/manifest.json` | `site_name` / `og:site_name` → "Major Explorer" | 跟 index.html 品牌统一 |
+| `public/index.html` | `<link rel="canonical">` / `<meta property="og:url">` | 改成 `https://majorexplorer.com` |
+| `public/data/manifest.json` (每个 major 的 `html_path`) | 不变 | 已经是相对路径, Cloudflare Pages 自动处理 |
+| `public/robots.txt` | Sitemap URL 改成 `https://majorexplorer.com/sitemap.xml` | (如有) |
+| `public/sitemap.xml` | 所有 URL 改成 `https://majorexplorer.com/...` | (如有) |
 
-LLM 搜索后端（新增）：
+### 阶段 1 配套新建
 
-- **新建**：`scf/search_major/main.py`（~50 行 SCF 入口，Python 3.11）
-- **新建**：`scf/search_major/prompt.txt`（DeepSeek prompt 模板，~10 行）
-- **新建**：`scf/search_major/scf_bootstrap`（SCF 启动脚本）
-- **新建**：`scf/template.yaml`（SCF + API 网关 IaC 定义，Serverless Framework 格式）
-- **配置**：腾讯云控制台添加 `DEEPSEEK_API_KEY` 环境变量
+| 文件 | 路径 | 说明 |
+|------|------|------|
+| Cloudflare Pages 部署操作指南 | `deploy/cloudflare-pages.md` | 阶段 1.1-1.3 详细截图级步骤 |
+| 优选 IP + DNS 同步脚本 | `deploy/optimal-cf-ip.sh` | 阶段 2 一键跑出 top 5 IP + 写 DNS |
 
-捐赠（新增）：
+### 阶段 1 不动
 
-- **新建**：`dist/donate/wechat-qr.png`（微信赞赏码截图）
-- **新建**：`dist/donate/alipay-qr.png`（支付宝收款码截图）
-- **修改**：`dist/index.html` 加一个"支持作者"链接 → `dist/donate/`
+- 68 个 `public/{slug}.html` (已是产物, 直接部署)
+- `public/css/` (12 主题 CSS)
+- `public/js/` (wishlist + 搜索 + UI)
+- `public/data/curated/*.json` (各专业精编数据)
+- `scf/synth/` (后端代码, 阶段 3 才用)
 
-## 阶段切换成本对比
+### 阶段 3 改 (后置)
 
-| 操作 | 阶段一 | 阶段二 |
-|------|--------|--------|
-| EdgeOne Pages 项目创建 | ✅ 一次 | ✅ 一次（或迁移） |
-| SCF 香港地域创建 | ✅ 一次 | ✅ 一次（克隆到境内） |
-| DNS 解析配置 | ✅ 一次 | ❌ 不动 |
-| SSL 证书 | ✅ 自动 | ✅ 自动 |
-| 代码部署 | ✅ 一次 | ❌ 不动 |
-| DeepSeek API key 注入 | ✅ 一次 | ❌ 同一个 key（切地域） |
-| 备案号挂载 | ❌ 不需要 | ✅ 必须 |
-| 实际工作量 | 1-2 h（含 SCF 部署） | 2-3 h（迁移 EdgeOne + 克隆 SCF） |
+- `scf/template.yaml` (改 trigger path + CORS)
+- `public/js/synth-client.js` (base URL 改 Cloudflare Pages 子路径)
 
-## 验证清单
+## 阶段 1 验证清单 (6/12 上线后)
 
-- [ ] 阶段 1 上线后：`curl -I https://yourname.cn` 返回 200
-- [ ] 阶段 1 上线后：https://itdog.net 国内三网测速，海外节点 30-80ms 可接受
-- [ ] 阶段 1 上线后：61 个 dashboard 全部能正常打开，站内链接不断
-- [ ] 阶段 1 上线后：纯前端 recommender 能跑通（即使数据是合成的也演示完整流程）
-- [ ] 阶段 1 上线后：搜索 1 个未收录专业（如"核工程"），< 3s 返回合成 HTML
-- [ ] 阶段 1 上线后：localStorage 缓存生效，重复搜索 0 LLM 调用
-- [ ] 阶段 1 上线后：rate-limit 生效，前端不会刷额度
-- [ ] 阶段 1 上线后：捐赠页能正常打开，微信/支付宝赞赏码显示
-- [ ] 阶段 2 备案后：备案号正确显示在网站底部
-- [ ] 阶段 2 切换后：https://itdog.net 国内三网测速 < 30ms
-- [ ] 阶段 2 切换后：DNS 解析 IP 变成腾讯云大陆节点
-- [ ] 阶段 2 切换后：临时搜索 API 切到境内 SCF，延迟 < 200ms
-- [ ] 阶段 2 切换后：原海外 EdgeOne Pages 项目（如果新建了）保留作 fallback
+- [ ] `dig majorexplorer.com A +short` 返回 Cloudflare IP
+- [ ] `https://majorexplorer.com` 浏览器打开, 看到 "看清专业,再谈志愿 · Major Explorer 2026 高考 (湖北)" 主页
+- [ ] 主页 "精品" 区块显示 68 个专业卡片
+- [ ] 点击任一专业卡片 → 跳到 `/{slug}.html` → 看到该专业 dashboard
+- [ ] 主页 "心愿单" 按钮 + "搜专业" 框可交互
+- [ ] 顶部 "12 主题" 切换可工作
+- [ ] `curl -I https://majorexplorer.com` 返回 200 + server: cloudflare
+- [ ] `https://itdog.net` 国内三网测速 < 300ms (优选 IP 前) / < 100ms (优选 IP 后)
+- [ ] 浏览器开发者工具 → Lighthouse 跑分: Performance > 80, SEO > 90, Best Practices > 90
+- [ ] `https://majorexplorer.com/sitemap.xml` 可访问 (如有)
+- [ ] `https://majorexplorer.com/robots.txt` 可访问 (如有)
 
-## 风险与缓解
+## 风险与缓解 (v2 重新评估)
 
 | 风险 | 概率 | 缓解 |
 |------|------|------|
-| EdgeOne Pages 不支持"区域开关" | 中 | 准备"新建项目 + DNS 切换" 兜底方案 |
-| 阿里云轻量备案审核超时 | 低 | 提前 1-2 周提交，与阶段 1 并行 |
-| `data/*.csv` 太大导致 dist 超限 | 低 | 当前最大 312KB，预构建 JSON 后可能略大；EdgeOne Pages 免费层 1GB 够用 |
-| 纯前端 recommender 性能问题 | 中 | 输入空间大，JS 跑 96 推荐可能 2-5s；用 Web Worker + 增量渲染 |
-| 域名被墙 / 解析失败 | 极低 | 选主流注册商（DNSPod/万网），不被墙 |
-| DeepSeek API 被刷额度 | 中 | SCF 入口加 IP rate-limit (10次/分钟)；前端 1 次/秒 throttle |
-| DeepSeek API 输出不稳定 | 中 | prompt 加 schema 约束；返回结构化 JSON 而非裸 HTML |
-| SCF 冷启动慢 | 中 | 搜索场景可接受（~1s）；用户预期 1-3s 看到结果 |
-| SCF 跨域 CORS 配错 | 低 | API 网关显式返回 `Access-Control-Allow-Origin: https://yourname.cn` |
+| Cloudflare 节点晚高峰跳到美西 | 中 | 优选 IP 5 个, DNS TTL 300s 切换 |
+| 国内 ISP 路由偶发拥堵 | 中 | Cloudflare 21 接入商覆盖, 单点故障率低 |
+| 域名被抢注 | 极低 | 已在 6/12 注册, 续费不涨价 |
+| Cloudflare Pages 流量超额 | 极低 | 免费层 5 万次/月, 出分当天估 1-3k 次 |
+| LLM 后端没部署影响搜索 | 低 | 68 个精品已本地化, "搜未收录" 不可用, 但主功能无影响 |
+| 突发流量打爆 (某省份家长群传开) | 低 | Cloudflare Pages 免费层 + Workers Limits 兜底 |
+| Cloudflare 账号风控 (新注册+无信用卡) | 极低 | 用户用信用卡, 风控概率极低 |
+| 国内 GFW 干扰 | 极低 | 纯教育内容, 无政治敏感词 |
+| 浏览器 HTTPS 证书失败 | 极低 | Cloudflare 自动 Let's Encrypt, 1-2 分钟 |
 
-## 开放问题（等前端定稿后明确）
+## 开放问题 (等用户回 Cloudflare 注册后明确)
 
-1. `frontend/index.html` 是保留 recommender 入口，还是只做 dashboard 展示？
-2. 预构建数据粒度：按"省份+科目+年份"还是全量打包？
-3. 61 个 dashboard 的目录结构：平铺 vs 按学科分类（文科/理科/工科/医科）？
-4. 是否需要 SEO（每页 meta description、sitemap.xml、robots.txt）？
-5. 是否需要暗色模式（i18n / 主题切换）？
-6. LLM 临时搜索的输出格式：返回结构化 JSON 让前端渲染 vs 返回 HTML 片段？推荐前者（更可控）
-7. SCF 入口是否需要用户输入验证（防 injection）？推荐用 prompt template 隔离
-8. SCF 部署工具链：Serverless Framework（推荐）vs 腾讯云控制台手动 vs Terraform？
+1. LLM 搜索后端的部署时点: 阶段 3 一周内 vs 等真实用户触发?
+2. 内容更新流程: GitHub push 自动部署 (Cloudflare Pages 默认) vs 手动 approve?
+3. 是否需要 Google Analytics / Plausible 埋点? (用户: 公益无变现, 可能不需要)
+4. 是否加 favicon? (现 `index.html` 已有 inline SVG, 应该 OK)
+5. 6/25 出分当天如何监控? (Cloudflare Analytics 自带)
+6. 微信公众号保留作为 "出分日推文引流到 majorexplorer.com" 通道? (用户: 不做)
 
-## 决策记录
+## 决策记录 (新, 2026-06-12)
 
-- **2026-06-11 早期**：方案定型，前端大改期间不部署，备案走阿里云
-- **2026-06-11 中期**：明确阶段一同时上 61 dashboard + LLM 搜索后端
-- **2026-06-11 中期**：LLM 搜索后端选 腾讯云 SCF 香港地域（无需备案）
-- **2026-06-11 中期**：LLM 选型 = DeepSeek API（成本最低，~0.002 元/次）
-- **2026-06-11 中期**：捐赠方案 = 微信赞赏码 + 支付宝收款码 + 爱发电外链（纯静态）
+- **2026-06-12 上午**: 域名调研, 2 字中文 .cn 全部被注
+- **2026-06-12 中午**: 决定 `majorexplorer.com` 单持 (Cloudflare Registrar)
+- **2026-06-12 中午**: 决策 Cloudflare Pages (海外免备案, 优选 IP 国内 30-100ms)
+- **2026-06-12 中午**: 决策短期不做 ICP 备案 (公益+不变现+不微信)
+- **2026-06-12 中午**: 决策教师身份不暴露 (普通个人备案备用, ADR-019)
+- **2026-06-12 下午**: 写 v2 部署文档 (本文件) + 优选 IP 脚本 + Cloudflare Pages 操作指南
 
-## 推进节奏
+## 推进节奏 (跟用户对齐)
 
-> 用户拍板：**前端大改完后再启动实施**。详见 ADR-015。
-> 这份 doc 在前端定稿前是 reference，不催代码生成。
+- **用户**: Cloudflare 注册 + 等隔壁修完前端 + git push
+- **AI (我)**: 文档 + 部署指南 + 优选 IP 脚本 ✅
+- **联调**: 用户 git push → Cloudflare Pages 自动部署 → 验证 → 优选 IP → 完成
+- **目标时间线**: 6/12 当天 `https://majorexplorer.com` 可访问, 抢 6/13-6/25 高考结束-出分空档
