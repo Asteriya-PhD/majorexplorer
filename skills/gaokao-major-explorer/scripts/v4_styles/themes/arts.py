@@ -246,6 +246,7 @@ footer .data-source { color: #999; }
   .museum-logo { top: 16px; }
   .museum-logo-text { font-size: 0.7rem; letter-spacing: 0.25em; }
   .museum-logo-sub { font-size: 0.55rem; }
+}
 """
 
 def render_hero_arts(data, *, title, summary, category, degree, duration, tags, difficulty, updated_at, hero_quote, hero_quote_sig):
