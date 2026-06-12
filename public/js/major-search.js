@@ -194,9 +194,16 @@
     if (!lower) return [];
     const out = new Set();
     for (const key of Object.keys(SYNONYMS)) {
-      // 双向子串 (短词不再加权过头)
-      if (lower.includes(key) || (key.length >= 2 && key.includes(lower))) {
+      // 严匹配: 仅当 key 完整出现在 q 开头(后跟空/学/类/方向/工程 等限定)
+      // 避免"天体物理"包含"物理"这种 false positive
+      if (lower === key) {
         SYNONYMS[key].forEach((s) => out.add(s));
+      } else if (lower.startsWith(key)) {
+        const suffix = lower.slice(key.length);
+        // 限定词白名单: 学/类/方向/工程/技术/专业/系/学院/学专业/专业方向
+        if (suffix === "" || /^(学|类|方向|工程|技术|专业|系|学院|学专业|专业方向)$/.test(suffix)) {
+          SYNONYMS[key].forEach((s) => out.add(s));
+        }
       }
     }
     return Array.from(out);

@@ -70,14 +70,20 @@
         body: JSON.stringify({ title: query, slug: slug }),
       });
     } catch (e) {
-      _setProgress(resultsEl, "failed", "网络失败, 请重试");
-      console.error("synth generate error", e);
+      _setProgress(resultsEl, "failed",
+        "服务暂未上线 (SCF 未部署), 请留邮箱催更");
+      console.error("synth generate network error", e);
       return;
     }
 
+    if (resp.status === 404) {
+      _setProgress(resultsEl, "failed",
+        "按需生成功能暂未上线 (404), 留邮箱催更 → " + (api));
+      return;
+    }
     if (!resp.ok) {
       const t = await resp.text();
-      _setProgress(resultsEl, "failed", "服务异常: " + t.slice(0, 100));
+      _setProgress(resultsEl, "failed", "服务异常 " + resp.status + ": " + t.slice(0, 80));
       return;
     }
 
