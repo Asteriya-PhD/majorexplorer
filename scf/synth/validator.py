@@ -213,18 +213,38 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
         else:
             what = ov.get("what", {})
             if not isinstance(what, dict):
-                errors.append("overview_v2.what 不是 dict")
+                errors.append("overview_v2.what 不是 dict (LLM 偶尔返回 string)")
             else:
                 for k, mn in (("foundations", 3), ("directions", 3), ("skills", 3)):
                     arr = what.get(k, [])
                     if isinstance(arr, list) and len(arr) < mn:
                         warnings.append(f"overview_v2.what.{k} 推荐 ≥{mn} 项, 当前 {len(arr)}")
+            # fit 必须是 dict (含 yes/no list), 不能是 string
             fit = ov.get("fit", {})
-            if isinstance(fit, dict):
-                if len(fit.get("yes", [])) < 3:
-                    warnings.append("overview_v2.fit.yes 推荐 ≥3 项")
-                if len(fit.get("no", [])) < 2:
-                    warnings.append("overview_v2.fit.no 推荐 ≥2 项")
+            if not isinstance(fit, dict):
+                errors.append(
+                    f"overview_v2.fit 必须是 dict (含 yes/no), 当前是 "
+                    f"{type(fit).__name__}; LLM 误把 fit 合成长 string"
+                )
+            else:
+                if not isinstance(fit.get("yes"), list) or len(fit["yes"]) < 3:
+                    errors.append("overview_v2.fit.yes 必须是 list 且 ≥3 项")
+                if not isinstance(fit.get("no"), list) or len(fit["no"]) < 2:
+                    errors.append("overview_v2.fit.no 必须是 list 且 ≥2 项")
+            # pitfalls 必须是 list[dict], 不能是 string
+            pitfalls = ov.get("pitfalls", [])
+            if not isinstance(pitfalls, list):
+                errors.append(
+                    f"overview_v2.pitfalls 必须是 list[{{myth, reality}}], "
+                    f"当前是 {type(pitfalls).__name__}; LLM 误把 pitfalls 合成长 string"
+                )
+            else:
+                for i, p in enumerate(pitfalls):
+                    if not isinstance(p, dict) or not _is_str(p.get("myth", "")) or not _is_str(p.get("reality", "")):
+                        errors.append(f"overview_v2.pitfalls[{i}] 必须是 dict 含 myth/reality 字符串")
+                        break
+                    if i >= 4:  # 看前 4 个就够
+                        break
 
     return len(errors) == 0, errors, warnings
 

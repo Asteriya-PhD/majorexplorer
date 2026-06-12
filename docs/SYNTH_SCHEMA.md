@@ -5,6 +5,36 @@
 
 ---
 
+## 0. 配置
+
+### DeepSeek API key
+
+`scf/synth/llm.py` 用 raw HTTP 调 DeepSeek (Anthropic 兼容端点). **不要用 anthropic SDK**, 因为它会注入 Claude 自家 auth token, 覆盖用户 key.
+
+```bash
+# 方式 1: .env (gitignored)
+echo "DEEPSEEK_API_KEY=sk-..." > /Users/zhewenliu/Claude/gaokao-hubei-mvp/.env
+
+# 方式 2: 直接 export
+export DEEPSEEK_API_KEY="sk-..."
+```
+
+**端点**: `https://api.deepseek.com/anthropic/v1/messages`
+**Header**:
+- `x-api-key: <DEEPSEEK_API_KEY>`
+- `anthropic-version: 2023-06-01`
+- `Content-Type: application/json`
+
+**模型**: `deepseek-chat` (V3)
+
+### 不在 key 时的降级
+
+`scf/synth/mock_llm.py` 提供 template-based mock, 让 pipeline 仍可跑 (供 T9 调优 + CI 测试).
+
+`get_llm_client()` 自动选择: `DEEPSEEK_API_KEY` 设 → DeepSeek, 否则 mock.
+
+---
+
 ## 1. 顶层必填字段 (10 个)
 
 | 字段 | 类型 | 说明 | 示例 |

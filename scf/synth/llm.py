@@ -1,35 +1,33 @@
 """
-synth/llm.py — DeepSeek 客户端 (Anthropic SDK 兼容).
+synth/llm.py — DeepSeek 客户端 (raw HTTP, 不用 anthropic SDK).
 
-DeepSeek 提供 Anthropic 兼容端点, base_url = "https://api.deepseek.com/anthropic"
-文档: https://api-docs.deepseek.com/guides/anthropic_api
+为什么不用 SDK: anthropic SDK 0.97+ 在某些环境下会自动注入 Claude 自家 auth token
+(Authorization: Bearer sk-cp-...), 覆盖用户提供的 base_url + api_key, 导致
+DeepSeek 端 401. 用 raw HTTP 完全可控.
+
+DeepSeek Anthropic 兼容端点: https://api.deepseek.com/anthropic
+  Headers:
+    Content-Type: application/json
+    x-api-key: <DEEPSEEK_API_KEY>
+    anthropic-version: 2023-06-01
 
 3 method:
   validate_is_major(name, ctx)         -> bool   0-shot 判定
   route_style(name, summary)           -> str    13-style 路由
-  synthesize_json(name, style, ctx)    -> dict   严格 JSON 输出
-
-输出严控:
-  - synthesize_json 强制 tool_choice, 失败抛 RetryableError 让上层反喂
-  - token 计数在 response.usage 暴露
+  synthesize_json(name, style, ctx)    -> dict   严格 JSON 输出 (tool_use 模拟)
 """
 from __future__ import annotations
 import json
 import os
 import re
+import urllib.request
+import urllib.error
 from typing import Any
-
-try:
-    from anthropic import Anthropic
-except ImportError as e:  # noqa: F401
-    raise ImportError(
-        "synth.llm 需要 anthropic SDK, 请 pip install 'anthropic>=0.39'"
-    ) from e
 
 from .validator import VALID_STYLES
 
 DEEPSEEK_BASE = "https://api.deepseek.com/anthropic"
-DEFAULT_MODEL = "deepseek-chat"  # DeepSeek-V3
+DEFAULT_MODEL = "deepseek-chat"  # DeepSeek-V3, anthropic 端点用这个名
 
 
 class RetryableError(Exception):
@@ -41,26 +39,48 @@ class PermanentError(Exception):
 
 
 class DeepSeekClient:
-    """DeepSeek 客户端封装."""
+    """DeepSeek raw HTTP 客户端 (Anthropic 兼容)."""
 
     def __init__(self, api_key: str | None = None, model: str = DEFAULT_MODEL):
         self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY", "")
         if not self.api_key:
             raise PermanentError("DEEPSEEK_API_KEY 未配置")
-        self.client = Anthropic(api_key=self.api_key, base_url=DEEPSEEK_BASE)
         self.model = model
+        self.base_url = DEEPSEEK_BASE
         self.total_input_tokens = 0
         self.total_output_tokens = 0
 
-    # ── 1. 验证是否本科专业 ──
-    def validate_is_major(self, name: str) -> tuple[bool, str]:
-        """
-        0-shot 判定 name 是否为中国本科专业.
+    # ── raw HTTP 调 LLM ──
+    def _call(self, body: dict, expect_tool: bool = False) -> dict:
+        url = f"{self.base_url}/v1/messages"
+        headers = {
+            "Content-Type": "application/json",
+            "x-api-key": self.api_key,
+            "anthropic-version": "2023-06-01",
+        }
+        data = json.dumps(body).encode("utf-8")
+        req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode("utf-8", errors="replace")[:500]
+            if e.code in (401, 403):
+                raise PermanentError(f"DeepSeek auth 失败 ({e.code}): {err_body}") from e
+            raise RetryableError(f"DeepSeek HTTP {e.code}: {err_body}") from e
+        except urllib.error.URLError as e:
+            raise RetryableError(f"DeepSeek 网络失败: {e}") from e
 
-        Returns: (is_major, normalized_name)
-            - is_major: True/False
-            - normalized_name: 若是,返回标准中文全称;若否,返回原 name
-        """
+        # token 累计
+        try:
+            self.total_input_tokens += payload["usage"]["input_tokens"]
+            self.total_output_tokens += payload["usage"]["output_tokens"]
+        except (KeyError, TypeError):
+            pass
+        return payload
+
+    # ── 1. validate_is_major ──
+    def validate_is_major(self, name: str) -> tuple[bool, str]:
         prompt = f"""判断以下字符串是否为中国普通高等学校本科专业目录中的专业名 (包括 14 个学科门类下的所有本科专业, 不含专科/高职/职业培训):
 
 输入: "{name}"
@@ -69,34 +89,21 @@ class DeepSeekClient:
 如果不是 (比如是人名/公司名/无意义词/培训机构/专科专业), 用 JSON 回答: {{"is_major": false, "reason": "原因"}}
 
 只输出 JSON, 不要 markdown 代码块, 不要多余解释."""
-
         try:
-            resp = self.client.messages.create(
-                model=self.model,
-                max_tokens=200,
-                temperature=0.0,
-                messages=[{"role": "user", "content": prompt}],
-            )
-        except Exception as e:
-            raise RetryableError(f"DeepSeek API 失败: {e}") from e
-
-        self._track_usage(resp)
-        text = self._extract_text(resp)
-        try:
-            data = json.loads(text)
-        except json.JSONDecodeError:
-            # 尝试从 markdown 块抽取
-            m = re.search(r"\{[^{}]+\}", text, re.DOTALL)
-            if not m:
-                raise RetryableError(f"validate_is_major 返回非 JSON: {text[:200]}")
-            data = json.loads(m.group(0))
+            payload = self._call({
+                "model": self.model,
+                "max_tokens": 200,
+                "temperature": 0.0,
+                "messages": [{"role": "user", "content": prompt}],
+            })
+        except (RetryableError, PermanentError):
+            raise
+        text = self._extract_text(payload)
+        data = self._parse_json_loose(text, expect_keys=("is_major",))
         return bool(data.get("is_major")), str(data.get("normalized") or name)
 
-    # ── 2. 主题路由 ──
+    # ── 2. route_style ──
     def route_style(self, title: str, summary: str = "") -> str:
-        """
-        0-shot 把专业路由到 13 个合法 style 之一.
-        """
         style_list = "|".join(sorted(VALID_STYLES))
         style_desc = (
             "cs=计算机/AI/软件/数据;eng=工科/机械/电子/材料/船舶;"
@@ -117,32 +124,23 @@ class DeepSeekClient:
 返回 JSON: {{"style": "<{style_list}>", "reason": "一句话理由"}}
 
 只输出 JSON, 不要 markdown, 不要多余解释."""
-
         try:
-            resp = self.client.messages.create(
-                model=self.model,
-                max_tokens=200,
-                temperature=0.0,
-                messages=[{"role": "user", "content": prompt}],
-            )
-        except Exception as e:
-            raise RetryableError(f"DeepSeek route_style 失败: {e}") from e
-
-        self._track_usage(resp)
-        text = self._extract_text(resp)
-        try:
-            data = json.loads(text)
-        except json.JSONDecodeError:
-            m = re.search(r"\{[^{}]+\}", text, re.DOTALL)
-            if not m:
-                raise RetryableError(f"route_style 返回非 JSON: {text[:200]}")
-            data = json.loads(m.group(0))
+            payload = self._call({
+                "model": self.model,
+                "max_tokens": 200,
+                "temperature": 0.0,
+                "messages": [{"role": "user", "content": prompt}],
+            })
+        except (RetryableError, PermanentError):
+            raise
+        text = self._extract_text(payload)
+        data = self._parse_json_loose(text, expect_keys=("style",))
         chosen = str(data.get("style", "")).strip()
         if chosen not in VALID_STYLES:
             raise RetryableError(f"route_style 返回非法 style: {chosen!r}")
         return chosen
 
-    # ── 3. 合成 JSON ──
+    # ── 3. synthesize_json (用 tool_use 强制 JSON 输出) ──
     def synthesize_json(
         self,
         title: str,
@@ -153,42 +151,34 @@ class DeepSeekClient:
         previous_errors: list[str] | None = None,
         previous_warnings: list[str] | None = None,
     ) -> dict:
-        """
-        用 LLM 合成符合 schema 的完整 major JSON.
-        失败时: 前一轮 errors 反喂, 让 LLM 修复 (≤3 轮).
-        """
         retry_note = ""
         if previous_errors:
             retry_note += "\n\n【上轮校验失败,必须修复】\n" + "\n".join(f"- {e}" for e in previous_errors)
         if previous_warnings:
             retry_note += "\n\n【上轮警告,建议修复】\n" + "\n".join(f"- {w}" for w in previous_warnings)
 
-        # 用 tool_choice 强制 JSON 输出 (Anthropic SDK 0.39+ 支持 tool_use)
         tool = {
             "name": "emit_major_json",
             "description": "输出符合 schema 的完整 major JSON, 严禁任何其他文本.",
             "input_schema": {
                 "type": "object",
                 "properties": {
-                    "slug": {"type": "string", "description": "kebab-case 英文 slug"},
-                    "title": {"type": "string", "description": "标准中文专业全称"},
-                    "category": {"type": "string", "description": "学科门类 · 专业类"},
+                    "slug": {"type": "string"},
+                    "title": {"type": "string"},
+                    "category": {"type": "string"},
                     "style": {"type": "string", "enum": list(VALID_STYLES)},
                     "degree": {"type": "string"},
                     "duration_years": {"type": "integer", "enum": [4, 5]},
                     "tags": {"type": "array", "items": {"type": "string"}, "minItems": 4},
                     "difficulty": {"type": "string"},
-                    "updated_at": {"type": "string", "description": "YYYY-MM"},
+                    "updated_at": {"type": "string"},
                     "data_source": {"type": "string"},
-                    "summary": {"type": "string", "description": "50-200 字 Hero lede"},
+                    "summary": {"type": "string"},
                     "hero_quote": {"type": "string"},
                     "hero_quote_sig": {"type": "string"},
-                    "curriculum": {
-                        "type": "object",
-                        "description": "3 块以上, 含 公共必修/通用专业核心/5 校特色选修 3 个特殊 key",
-                    },
+                    "curriculum": {"type": "object"},
                     "top_schools": {"type": "array", "minItems": 5},
-                    "salary": {"type": "object", "description": "≥3 stage, 每 stage 含 p25/p50/p75/yoy"},
+                    "salary": {"type": "object"},
                     "employment_direction": {"type": "array", "minItems": 3},
                     "alumni_quotes": {"type": "array", "minItems": 2},
                     "xuanke_req_list": {"type": "array", "minItems": 3},
@@ -226,43 +216,65 @@ class DeepSeekClient:
 请调用 emit_major_json tool 输出完整 JSON (严禁任何额外文本)."""
 
         try:
-            resp = self.client.messages.create(
-                model=self.model,
-                max_tokens=8000,
-                temperature=0.4,
-                tools=[tool],
-                tool_choice={"type": "tool", "name": "emit_major_json"},
-                messages=[{"role": "user", "content": prompt}],
-            )
-        except Exception as e:
-            raise RetryableError(f"DeepSeek synthesize 失败: {e}") from e
+            payload = self._call({
+                "model": self.model,
+                "max_tokens": 8000,
+                "temperature": 0.4,
+                "tools": [tool],
+                "tool_choice": {"type": "tool", "name": "emit_major_json"},
+                "messages": [{"role": "user", "content": prompt}],
+            })
+        except (RetryableError, PermanentError):
+            raise
 
-        self._track_usage(resp)
-        for block in resp.content:
-            if block.type == "tool_use" and block.name == "emit_major_json":
-                return block.input
-        raise RetryableError("synthesize_json 未返回 tool_use 块")
+        # 抽 tool_use input
+        for block in payload.get("content", []):
+            if block.get("type") == "tool_use" and block.get("name") == "emit_major_json":
+                return block["input"]
+        # fallback: 抽 text 里的 JSON
+        text = self._extract_text(payload)
+        if text:
+            try:
+                return self._parse_json_loose(text, expect_keys=("title", "style"))
+            except RetryableError:
+                pass
+        raise RetryableError("synthesize_json 未返回 tool_use 块且 text 也无 JSON")
 
-    # ── 内部: 提取文本 / 累计 token ──
-    def _extract_text(self, resp) -> str:
-        for block in resp.content:
-            if block.type == "text":
-                return block.text
+    # ── 内部 ──
+    def _extract_text(self, payload: dict) -> str:
+        for block in payload.get("content", []):
+            if block.get("type") == "text":
+                return block.get("text", "")
         return ""
 
-    def _track_usage(self, resp):
+    def _parse_json_loose(self, text: str, expect_keys: tuple = ()) -> dict:
+        # 1. 直接 parse
         try:
-            self.total_input_tokens += resp.usage.input_tokens
-            self.total_output_tokens += resp.usage.output_tokens
-        except Exception:
+            return json.loads(text)
+        except json.JSONDecodeError:
             pass
+        # 2. 抽 ```json ... ``` 块
+        m = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+        if m:
+            try:
+                return json.loads(m.group(1))
+            except json.JSONDecodeError:
+                pass
+        # 3. 抽第一个 {...}
+        m = re.search(r"\{.*\}", text, re.DOTALL)
+        if m:
+            try:
+                return json.loads(m.group(0))
+            except json.JSONDecodeError:
+                pass
+        raise RetryableError(f"LLM 返回非 JSON: {text[:200]}")
 
     def cost_estimate_cny(self) -> float:
-        """DeepSeek-V3 定价: 1元/百万 token (input), 2元/百万 (output) [2026 估算]."""
+        """DeepSeek-V3 定价: 1元/百万 input, 2元/百万 output."""
         return (self.total_input_tokens * 1 + self.total_output_tokens * 2) / 1_000_000
 
 
-# ── 便捷: 本地 CLI 调试 ──
+# ── 便捷 CLI 调试 ──
 if __name__ == "__main__":
     import sys
     if len(sys.argv) < 2:
@@ -271,8 +283,9 @@ if __name__ == "__main__":
     name = sys.argv[1]
     c = DeepSeekClient()
     is_major, normalized = c.validate_is_major(name)
-    print(f"validate_is_major: {is_major}, normalized={normalized!r}")
+    print(f"validate_is_major: ({is_major}, {normalized!r})")
     if is_major:
         style = c.route_style(normalized)
         print(f"route_style: {style}")
-    print(f"\n成本估算: {c.cost_estimate_cny():.4f} 元 (input {c.total_input_tokens}, output {c.total_output_tokens})")
+    print(f"\n成本估算: {c.cost_estimate_cny():.4f} 元 "
+          f"(input {c.total_input_tokens}, output {c.total_output_tokens})")
