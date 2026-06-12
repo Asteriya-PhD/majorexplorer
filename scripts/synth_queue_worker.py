@@ -235,12 +235,6 @@ def main():
     d1 = D1(cf_account, cf_d1, cf_token)
     env = {**os.environ, "DEEPSEEK_API_KEY": deepseek}
 
-    # DEBUG: print env var lengths + URL
-    print(f"DEBUG account_id len={len(cf_account)} value={cf_account!r}")
-    print(f"DEBUG d1_id len={len(cf_d1)} value={cf_d1!r}")
-    print(f"DEBUG token len={len(cf_token)} value={cf_token!r}")
-    print(f"DEBUG base URL: {d1.base}")
-
     processed = 0
     while processed < args.max:
         job = claim_next(d1)
