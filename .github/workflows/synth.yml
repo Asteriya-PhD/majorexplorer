@@ -56,7 +56,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
+          # 故意: 仓库没 requirements.txt (改名 requirements-backend.txt 避免 CF Pages 装 deps)
+          # cache: 'pip' 找不到会报 No file matched, 改用 'false'
+          cache: false
 
       - name: Install deps
         run: |
