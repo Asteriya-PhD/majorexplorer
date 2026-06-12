@@ -25,6 +25,20 @@ import json
 import re
 from pathlib import Path
 
+# ── 心愿单注入 (chip / FAB / 12 主题卡) — 4 页 v1 一致 ──
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from wishlist_inject import (
+        WISHLIST_INJECT_STYLE as _WL_STYLE,
+        WISHLIST_INJECT_HEAD_LINKS as _WL_HEAD,
+        render_related_themes_section as _wl_related,
+        build_wishlist_init_js as _wl_init,
+    )
+    _WL_MANIFEST = Path(__file__).resolve().parent.parent / "data" / "curated" / "manifest.json"
+except Exception:
+    _WL_STYLE = ""; _WL_HEAD = ""; _wl_related = lambda *a, **k: ""; _wl_init = lambda *a, **k: ""; _WL_MANIFEST = None
+
 # ── 字体: 换 Inter → IBM Plex Sans + Mono ──
 # 国内部署: 已将 Google Fonts 替换为 fonts.loli.net 镜像 (国内可访问)
 FONT_URL = "@import url('https://fonts.loli.net/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');"
@@ -724,11 +738,13 @@ def render_v4_medicine(data: dict) -> str:
 <!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
 <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.loli.net">
+{_WL_HEAD}
 <title>{title}专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="严谨 · 冷静 · 鸟瞰。{summary[:80]}">
 <style>
 {FONT_URL}
 {V4_BASE_CSS}
+{_WL_STYLE}
 </style>
 </head>
 <body>
@@ -848,24 +864,7 @@ def render_v4_medicine(data: dict) -> str:
   </div>
 </section>
 
-<section class="tab" id="cta">
-  <div class="watermark">11</div>
-  <div class="container">
-    <div class="section-num">11 / 11 · 关联志愿</div>
-    <h2>关联志愿</h2>
-    <div class="cta-block">
-      <h3>基于位次推荐你的校</h3>
-      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
-      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
-        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
-        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
-        <button type="submit" class="cta-button">推荐志愿 →</button>
-      </form>
-      <p class="cta-note">⚠ 本页所有数据截至 {updated_at}, 仅供高考志愿参考, 不构成最终决策建议。</p>
-    </div>
-  </div>
-</section>
-
+{_wl_related(slug, _WL_MANIFEST) if _WL_MANIFEST else ""}
 <footer>
   <div class="container">
     <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
@@ -874,5 +873,6 @@ def render_v4_medicine(data: dict) -> str:
 </footer>
 
 {COUNT_UP_JS}
+{_wl_init(slug, title, "medicine", category)}
 </body>
 </html>"""

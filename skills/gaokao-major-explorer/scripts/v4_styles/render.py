@@ -3,10 +3,25 @@ v4_styles/render.py — 通用 v4 渲染 orchestrator (cs/finance/law/education/
 
 替代原 891 行 if/elif hero 链, 调用 dispatch 表生成 hero + 主体 9 个 section.
 """
+from pathlib import Path
 from .base import FONT_URLS, get_base_css, COUNT_UP_JS, BASE_V4_CSS, _dedup_by_name, soft_break_name, get_first_char
 from .body_bg import get_body_bg_css
 from .overview_v2 import render_overview_v2, OVERVIEW_V2_CSS
 from .themes import HERO_FN, THEME_CSS
+
+# ── 心愿单注入 (chip / FAB / 12 主题卡) — 4 页 v1 一致 ──
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from wishlist_inject import (
+        WISHLIST_INJECT_STYLE as _WL_STYLE,
+        WISHLIST_INJECT_HEAD_LINKS as _WL_HEAD,
+        render_related_themes_section as _wl_related,
+        build_wishlist_init_js as _wl_init,
+    )
+    _WL_MANIFEST = Path(__file__).resolve().parent.parent.parent / "data" / "curated" / "manifest.json"
+except Exception:
+    _WL_STYLE = ""; _WL_HEAD = ""; _wl_related = lambda *a, **k: ""; _wl_init = lambda *a, **k: ""; _WL_MANIFEST = None
 
 
 def render_v4(data: dict, style: str) -> str:
@@ -15,6 +30,7 @@ def render_v4(data: dict, style: str) -> str:
         raise ValueError(f"Unknown v4 style: {style}")
 
     title = data.get("title", "未命名")
+    slug = data.get("slug", "")
     summary = data.get("summary", "")
     category = data.get("category", "")
     degree = data.get("degree", "")
@@ -176,6 +192,7 @@ def render_v4(data: dict, style: str) -> str:
 <link rel="dns-prefetch" href="https://fonts.loli.net">
 <!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+{_WL_HEAD}
 <title>{title}专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="{summary[:100]}">
 <style>
@@ -185,6 +202,7 @@ def render_v4(data: dict, style: str) -> str:
 {body_bg}
 {OVERVIEW_V2_CSS}
 {THEME_CSS[style]}
+{_WL_STYLE}
 </style>
 </head>
 <body>
@@ -302,24 +320,7 @@ def render_v4(data: dict, style: str) -> str:
   </div>
 </section>
 
-<section class="tab" id="cta">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 关联志愿</div>
-    <h2>关联志愿</h2>
-    <div class="cta-block">
-      <h3>基于你的位次, 推荐这些校 + 组</h3>
-      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
-      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
-        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
-        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
-        <button type="submit" class="cta-button">推荐志愿 →</button>
-      </form>
-      <p class="cta-note">⚠ 本页所有数据截至 {updated_at}, 仅供高考志愿参考, 不构成最终决策建议。</p>
-    </div>
-  </div>
-</section>
-
+{_wl_related(slug, _WL_MANIFEST) if _WL_MANIFEST else ""}
 <footer>
   <div class="container">
     <div class="label">Major Explorer · 2026 高考专业指南</div>
@@ -328,5 +329,6 @@ def render_v4(data: dict, style: str) -> str:
 </footer>
 
 {COUNT_UP_JS}
+{_wl_init(slug, title, style, category)}
 </body>
 </html>"""
