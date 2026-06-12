@@ -48,7 +48,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "skills" / "gaokao-major-explorer" / "scripts"))
 
 # 复用 synth_trigger 的单篇 pipeline
-from scf.synth.llm import DeepSeekClient, RetryableError, PermanentError
+from scf.synth.llm import get_client, RetryableError, PermanentError
 from scf.synth.search import search_multi, queries_for_major, format_for_prompt
 from scf.synth.prompts import load_schema_doc, load_sample_for_style, summarize_sample
 from scf.synth.validator import validate, score_quality
@@ -135,7 +135,7 @@ def worker(run_id: str, title: str, slug: str, style_override: str | None = None
     try:
         # ── Step 1: validate_is_major ──
         update("validate", 0.1)
-        llm = DeepSeekClient()
+        llm = get_client()
         is_major, normalized = llm.validate_is_major(title)
         if not is_major:
             state["status"] = "failed"

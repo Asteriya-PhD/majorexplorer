@@ -5,6 +5,7 @@ synth/validator.py — JSON schema 校验 + 5 维质量分.
 校验失败时返回 (False, issues[]) 供反喂 prompt.
 """
 from __future__ import annotations
+import re
 from typing import Any
 
 # 13 个合法 style (与 generate_dashboard.py:16 STYLE_TOKENS 一致)
@@ -48,6 +49,9 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
         - errors: 阻塞性错误,必须修复 (缺必填字段等)
         - warnings: 提示性警告,LLM 可选修复 (如校友身份含高帽)
     """
+    # 先做 schema 归一化 (m3 输出跟 curated 略不同, 渲染前需对齐)
+    from scf.synth.llm import _normalize_m3_to_curated
+    data = _normalize_m3_to_curated(data)
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -144,7 +148,14 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
                 continue
             for f in ("p25", "p50", "p75"):
                 if f not in vals or not isinstance(vals[f], (int, float)):
-                    errors.append(f"salary[{stage!r}].{f} 缺失或非数字")
+                    # 容错: LLM (尤其 m3) 偶尔把数字返成字符串, 自动转
+                    if f in vals and isinstance(vals[f], str):
+                        try:
+                            vals[f] = int(vals[f])
+                        except (ValueError, TypeError):
+                            errors.append(f"salary[{stage!r}].{f} 缺失或非数字 (got {vals[f]!r})")
+                    else:
+                        errors.append(f"salary[{stage!r}].{f} 缺失或非数字")
             if vals.get("p25", 0) > vals.get("p75", 0):
                 errors.append(f"salary[{stage!r}] p25 > p75 异常")
             # 异常高薪警告
@@ -164,9 +175,17 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
                 continue
             if not _is_str(d.get("name", "")):
                 errors.append(f"employment_direction[{i}].name 缺失")
-            pct = d.get("pct", -1)
-            if not isinstance(pct, int) or not 0 <= pct <= 100:
-                errors.append(f"employment_direction[{i}].pct 必须是 0-100 整数")
+            pct = d.get("pct", d.get("ratio", -1))  # 兼容 "40%" / "40" / 40
+            if isinstance(pct, str):
+                try:
+                    pct_clean = int(pct.rstrip("%").strip())
+                    d["pct"] = pct_clean  # 写回, 渲染时直接用
+                except (ValueError, TypeError):
+                    errors.append(f"employment_direction[{i}].pct/ratio 解析失败: {pct!r}")
+            elif isinstance(pct, float) and pct.is_integer():
+                d["pct"] = int(pct)  # 12.0 → 12
+            elif not isinstance(pct, int) or not 0 <= pct <= 100:
+                errors.append(f"employment_direction[{i}].pct 必须是 0-100 整数 (got {pct!r})")
     elif "employment_direction" in data:
         errors.append("employment_direction 不是 list")
 
@@ -179,12 +198,13 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
             if not isinstance(q, dict):
                 errors.append(f"alumni_quotes[{i}] 不是 dict")
                 continue
-            if not _is_str(q.get("current", "")):
-                errors.append(f"alumni_quotes[{i}].current 缺失")
+            # 容错: current / school 二选一, 至少有一个
+            if not _is_str(q.get("current", "")) and not _is_str(q.get("school", "")):
+                errors.append(f"alumni_quotes[{i}] current/school 至少有一个")
             if not _is_str(q.get("quote", "")):
                 errors.append(f"alumni_quotes[{i}].quote 缺失")
             # 反幻觉: 标"高帽"身份
-            current = q.get("current", "")
+            current = q.get("current", q.get("school", ""))
             for high in ("P8", "P9", "VP", "CTO", "CEO"):
                 if high in current:
                     warnings.append(f"alumni_quotes[{i}].current 含高帽身份 {high!r}, 确认真实性")
@@ -219,27 +239,52 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
                     arr = what.get(k, [])
                     if isinstance(arr, list) and len(arr) < mn:
                         warnings.append(f"overview_v2.what.{k} 推荐 ≥{mn} 项, 当前 {len(arr)}")
-            # fit 必须是 dict (含 yes/no list), 不能是 string
+            # fit 容错: 接受 list 形式 (curated 格式) 或 string 形式 (m3 偶尔返回)
             fit = ov.get("fit", {})
-            if not isinstance(fit, dict):
-                errors.append(
-                    f"overview_v2.fit 必须是 dict (含 yes/no), 当前是 "
-                    f"{type(fit).__name__}; LLM 误把 fit 合成长 string"
-                )
+            if isinstance(fit, dict):
+                yes = fit.get("yes", [])
+                no = fit.get("no", [])
+                if isinstance(yes, str):
+                    fit["yes"] = [s.strip() for s in yes.split("\n") if s.strip()]  # 字符串 → list
+                elif not isinstance(yes, list):
+                    yes = []
+                if isinstance(no, str):
+                    fit["no"] = [s.strip() for s in no.split("\n") if s.strip()]
+                elif not isinstance(no, list):
+                    no = []
+                if len(yes) < 3:
+                    warnings.append(f"overview_v2.fit.yes 较短 (当前 {len(yes)} 项, 推荐 ≥3)")
+                if len(no) < 2:
+                    warnings.append(f"overview_v2.fit.no 较短 (当前 {len(no)} 项, 推荐 ≥2)")
             else:
-                if not isinstance(fit.get("yes"), list) or len(fit["yes"]) < 3:
-                    errors.append("overview_v2.fit.yes 必须是 list 且 ≥3 项")
-                if not isinstance(fit.get("no"), list) or len(fit["no"]) < 2:
-                    errors.append("overview_v2.fit.no 必须是 list 且 ≥2 项")
-            # pitfalls 必须是 list[dict], 不能是 string
-            pitfalls = ov.get("pitfalls", [])
-            if not isinstance(pitfalls, list):
-                errors.append(
-                    f"overview_v2.pitfalls 必须是 list[{{myth, reality}}], "
-                    f"当前是 {type(pitfalls).__name__}; LLM 误把 pitfalls 合成长 string"
+                warnings.append(
+                    f"overview_v2.fit 应该是 dict, 当前是 {type(fit).__name__}; "
+                    f"将降级渲染 (整段当 string 显示)"
                 )
-            elif len(pitfalls) < 2:
-                errors.append(
+            # pitfalls 容错: 接受 list[dict] 或 string (m3 常返 string)
+            pitfalls = ov.get("pitfalls", [])
+            if isinstance(pitfalls, str):
+                # 字符串 → list[dict]: 按 "❌" 或 "误区" 分段, 或者直接包成 1 个
+                if "❌" in pitfalls or "误区" in pitfalls:
+                    # 试图分段
+                    parts = re.split(r"(?=❌|误区\s*\d+)", pitfalls)
+                    new_pf = []
+                    for p in parts:
+                        p = p.strip()
+                        if not p:
+                            continue
+                        # 简单切 myth/reality
+                        if "❌" in p:
+                            myth = p.split("❌", 1)[-1].strip()
+                        else:
+                            myth = p[:50]
+                        new_pf.append({"myth": myth, "reality": p})
+                    ov["pitfalls"] = new_pf
+                else:
+                    # 整段当 1 个条目
+                    ov["pitfalls"] = [{"myth": "常见误区综合", "reality": pitfalls}]
+            elif isinstance(pitfalls, list) and len(pitfalls) < 2:
+                warnings.append(
                     f"overview_v2.pitfalls 至少 2 个误区, 当前 {len(pitfalls)}; "
                     f"LLM 偶尔返回空 list → render 写 ❌ title/❌ content 占位符"
                 )

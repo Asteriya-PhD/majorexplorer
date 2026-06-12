@@ -29,7 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from scf.synth.llm import DeepSeekClient, RetryableError, PermanentError
+from scf.synth.llm import get_client, RetryableError, PermanentError
 from scf.synth.mock_llm import get_llm_client, MockLLM
 from scf.synth.search import search_multi, queries_for_major, format_for_prompt
 from scf.synth.prompts import (

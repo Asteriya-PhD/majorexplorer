@@ -375,6 +375,11 @@ class M3Client(_AnthropicCompatClient):
         (实际账单以官方为准, 这里仅供监控体量)."""
         return (self.total_input_tokens * 0.05 + self.total_output_tokens * 0.20) / 1000
 
+    def synthesize_json(self, *args, **kwargs) -> dict:
+        """Override: 拿 m3 输出后, 调 _normalize 转成 curated schema (curriculum 拆 item 包装, employment_direction 改 key 名)."""
+        raw = super().synthesize_json(*args, **kwargs)
+        return _normalize_m3_to_curated(raw)
+
 
 class DeepSeekClient(_AnthropicCompatClient):
     """DeepSeek-V3 (https://api.deepseek.com/anthropic)."""
@@ -400,6 +405,65 @@ def get_client(enable_thinking: bool = False):
         return DeepSeekClient()
     else:
         raise PermanentError(f"未知 LLM_PROVIDER: {provider!r} (可选: m3 / deepseek)")
+
+
+# ─────────────────────────────────────────────────────────────
+# m3 → curated schema 转换器 (Post-process 兼容层)
+# ─────────────────────────────────────────────────────────────
+def _normalize_m3_to_curated(data: dict) -> dict:
+    """m3 输出 schema 略不同于 curated (animation.json 等), 渲染前需归一化.
+
+    已知 m3 quirks:
+      - curriculum: {category: {"item": [...]}} → {category: [...]}
+      - employment_direction: [{name, dest, share, note}] → [{name, dest, desc, pct}]
+      - alumni_quotes 可能缺 current/school (但 validator 已容错)
+    """
+    if not isinstance(data, dict):
+        return data
+
+    # curriculum 拆 item 包装
+    curr = data.get("curriculum")
+    if isinstance(curr, dict):
+        for cat, val in list(curr.items()):
+            if isinstance(val, dict) and "item" in val and isinstance(val["item"], list):
+                curr[cat] = val["item"]
+
+    # salary 各阶段 yoy 字符串转 int (m3 经常把数字返成字符串, render 报 yoy > 0 TypeError)
+    salary = data.get("salary")
+    if isinstance(salary, dict):
+        for stage, vals in list(salary.items()):
+            if isinstance(vals, dict) and isinstance(vals.get("yoy"), str):
+                try:
+                    vals["yoy"] = int(vals["yoy"])
+                except (ValueError, TypeError):
+                    vals["yoy"] = 0
+
+    # employment_direction key 改名 + 类型转换
+    eds = data.get("employment_direction")
+    if isinstance(eds, list):
+        new_eds = []
+        for ed in eds:
+            if not isinstance(ed, dict):
+                continue
+            new_ed = dict(ed)
+            # share (如 "40%") → pct (int 40)
+            if "share" in new_ed and "pct" not in new_ed:
+                share = new_ed.pop("share")
+                if isinstance(share, str):
+                    try:
+                        new_ed["pct"] = int(share.rstrip("%").strip())
+                    except (ValueError, TypeError):
+                        new_ed["pct"] = -1
+                elif isinstance(share, (int, float)):
+                    new_ed["pct"] = int(share)
+            # note → desc
+            if "note" in new_ed and "desc" not in new_ed:
+                new_ed["desc"] = new_ed.pop("note")
+            # dest 保留 (extra field, render 不读但留着无害)
+            new_eds.append(new_ed)
+        data["employment_direction"] = new_eds
+
+    return data
 
 
 # ── 便捷 CLI 调试 ──

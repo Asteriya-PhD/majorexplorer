@@ -201,25 +201,34 @@ class MockLLM:
 import json  # noqa: E402
 
 
-# ── 工厂: 按可用性返回 DeepSeekClient 或 MockLLM ──
+# ── 工厂: 按 LLM_PROVIDER 选 m3 / deepseek, fallback mock ──
 def get_llm_client(root: Path | None = None):
-    """返回可用 LLM 客户端. 优先 DeepSeek, 否则 mock."""
+    """返回可用 LLM 客户端. 优先 m3 / deepseek (按 LLM_PROVIDER), 否则 mock."""
     import os
-    if os.environ.get("DEEPSEEK_API_KEY"):
+    provider = os.environ.get("LLM_PROVIDER", "m3").strip().lower()
+    # m3 优先 (默认)
+    if provider == "m3" and os.environ.get("M3_API_KEY"):
+        try:
+            from scf.synth.llm import M3Client
+            print("🤖 LLM: MiniMax-M3 (real, anthropic SDK)")
+            return M3Client()
+        except Exception as e:
+            print(f"⚠️  M3Client 初始化失败 ({e}), 降级到 mock")
+    if (provider == "m3" or not os.environ.get("M3_API_KEY")) and os.environ.get("DEEPSEEK_API_KEY"):
         try:
             from scf.synth.llm import DeepSeekClient
             print("🤖 LLM: DeepSeek-V3 (real)")
             return DeepSeekClient()
         except Exception as e:
-            print(f"⚠️  DeepSeek 初始化失败 ({e}), 降级到 mock")
+            print(f"⚠️  DeepSeekClient 初始化失败 ({e}), 降级到 mock")
     if os.environ.get("ANTHROPIC_API_KEY"):
         try:
             from scf.synth.llm import DeepSeekClient
-            print("🤖 LLM: Anthropic Claude (real)")
+            print("🤖 LLM: Anthropic Claude (real, via DeepSeekClient compat)")
             return DeepSeekClient(api_key=os.environ["ANTHROPIC_API_KEY"])
         except Exception as e:
             print(f"⚠️  Anthropic 初始化失败 ({e}), 降级到 mock")
-    print("🤖 LLM: MockLLM (template-based, 需 DEEPSEEK_API_KEY 启真实合成)")
+    print("🤖 LLM: MockLLM (template-based, 需 M3_API_KEY / DEEPSEEK_API_KEY 启真实合成)")
     return MockLLM(root=root)
 
 
