@@ -238,6 +238,11 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
                     f"overview_v2.pitfalls 必须是 list[{{myth, reality}}], "
                     f"当前是 {type(pitfalls).__name__}; LLM 误把 pitfalls 合成长 string"
                 )
+            elif len(pitfalls) < 2:
+                errors.append(
+                    f"overview_v2.pitfalls 至少 2 个误区, 当前 {len(pitfalls)}; "
+                    f"LLM 偶尔返回空 list → render 写 ❌ title/❌ content 占位符"
+                )
             else:
                 for i, p in enumerate(pitfalls):
                     if not isinstance(p, dict) or not _is_str(p.get("myth", "")) or not _is_str(p.get("reality", "")):
