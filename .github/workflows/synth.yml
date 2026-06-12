@@ -1,0 +1,108 @@
+# .github/workflows/synth.yml — Hybrid 队列 worker 调度
+#
+# 仓库要求: public (解锁 unlimited minutes)
+# 触发:
+#   1. 每 1 分钟 cron (公开仓库 0 成本)
+#   2. workflow_dispatch (手动跑 PoC)
+#
+# 流程:
+#   - checkout 仓库
+#   - 设 DEEPSEEK_API_KEY from secret
+#   - python scripts/synth_queue_worker.py
+#     - 拉 D1 status='queued' 排头 1 个
+#     - 跑 synth_trigger.py 1 篇 (~5-15min)
+#     - 自动写 public/{slug}.html + manifest.json
+#     - 自动 git add + commit + push (用 GH Actions token)
+#   - CF Pages 监到 push → 30s 自动重新部署
+
+name: synth-queue-worker
+
+on:
+  schedule:
+    # 每 1 分钟, 公开仓库 unlimited, 私有 2000min/月
+    - cron: "*/1 * * * *"
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "可选: 手动触发时, 强制 slug (留空走队列)"
+        required: false
+        type: string
+      title:
+        description: "可选: 手动触发时, 强制 title"
+        required: false
+        type: string
+
+concurrency:
+  # 同一时间只跑 1 个 worker (单进程 Python 锁即可)
+  group: synth-worker
+  cancel-in-progress: false
+
+jobs:
+  drain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20  # 1 篇 synth 最长 ~15min, 留 5min buffer
+    permissions:
+      contents: write  # 需要 push 触发 CF Pages 重新部署
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 拉深一点, 含 70 精品 + 模板
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          # 只装 synth 需要的 (synth_trigger.py + scf/synth/* 引用了 pypinyin)
+          pip install pypinyin==0.51.0
+
+      - name: Drain queue
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_D1_DATABASE_ID: ${{ secrets.CF_D1_DATABASE_ID }}
+          # 手动触发: 走 synth_trigger.py 一次 (不入队列)
+          RUN_TITLE: ${{ inputs.title }}
+          RUN_SLUG: ${{ inputs.slug }}
+        run: |
+          set -euo pipefail
+          echo "=== synth worker start: $(date -Iseconds) ==="
+          if [ -n "${RUN_TITLE:-}" ]; then
+            echo "workflow_dispatch 模式: title=$RUN_TITLE slug=$RUN_SLUG"
+            python scripts/synth_trigger.py \
+              --title "$RUN_TITLE" \
+              --slug "${RUN_SLUG:-}"
+            # workflow_dispatch 模式下不自动 push, 用户 review 后手动 push
+            exit 0
+          fi
+          # 正常模式: 跑 worker, 内部会 claim next + 跑 synth + push
+          python scripts/synth_queue_worker.py
+          echo "=== synth worker end ==="
+
+      - name: Auto-commit + push (if changed)
+        # synth_trigger 跑了, public/ + manifest.json 一定变了, 自动 commit push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/ skills/gaokao-major-explorer/data/curated/manifest.json public/data/manifest.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "无变更, 跳过 push"
+            exit 0
+          fi
+          COUNT=$(git diff --cached --name-only | wc -l | tr -d ' ')
+          echo "检测到 $COUNT 个变更, 自动 commit + push"
+          git commit -m "feat(synth): auto-generated major from queue worker
+
+          - $(git diff --cached --name-only | head -10 | tr '\n' ' ')" \
+            --no-verify -q
+          git push origin HEAD:main
+          echo "✅ push 完成, CF Pages 会在 30s 内自动重新部署"
