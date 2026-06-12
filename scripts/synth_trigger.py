@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from scf.synth.llm import DeepSeekClient, RetryableError, PermanentError
+from scf.synth.mock_llm import get_llm_client, MockLLM
 from scf.synth.search import search_multi, queries_for_major, format_for_prompt
 from scf.synth.prompts import (
     load_schema_doc, load_sample_for_style, summarize_sample, build_retry_prompt
@@ -68,13 +69,15 @@ def synth_one(
     slug = slug or slugify(title)
     summary: dict = {"title": title, "slug": slug, "steps": []}
 
-    # ── 0. LLM 客户端 ──
+    # ── 0. LLM 客户端 (auto-fallback: DeepSeek → Anthropic → Mock) ──
     try:
-        llm = DeepSeekClient()
-    except PermanentError as e:
+        llm = get_llm_client(root=ROOT)
+    except (PermanentError, RetryableError) as e:
         summary["error"] = f"LLM 客户端初始化失败: {e}"
         return summary
-    print(f"🤖 LLM 客户端就绪 (model={llm.model})")
+    llm_type = "MockLLM" if isinstance(llm, MockLLM) else type(llm).__name__
+    summary["llm"] = llm_type
+    print(f"🤖 LLM 客户端就绪 ({llm_type})")
 
     # ── 1. validate_is_major ──
     try:
@@ -195,6 +198,7 @@ def synth_one(
 
     # ── 7. append manifest ──
     try:
+        is_mock = bool(data.get("_mock"))
         ok = upsert_manifest_minimal(
             root=ROOT, slug=slug, title=data.get("title", title),
             style=style, category=data.get("category", ""),
@@ -202,6 +206,7 @@ def synth_one(
             duration_years=data.get("duration_years", 4),
             tags=data.get("tags", []),
             data_source=data.get("data_source", "按需生成"),
+            _mock=is_mock,  # 守卫: mock 产物不入 manifest
         )
         summary["steps"].append({"step": 7, "manifest_upsert": ok})
         print(f"✅ Step 7: manifest {'追加' if ok else '已存在, 跳过'}")
@@ -233,8 +238,9 @@ def main():
     args = p.parse_args()
 
     if args.batch:
-        # 批量模式
+        # 批量模式 (默认 skip-search, 因为没有 web search API key)
         results = []
+        skip_search = args.skip_search or True  # 批量默认 skip
         for line in Path(args.batch).read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if not line or line.startswith("#"):
@@ -244,7 +250,7 @@ def main():
             slug = parts[1] if len(parts) > 1 else None
             style = parts[2] if len(parts) > 2 else None
             print(f"\n{'='*60}\n📚 {title}\n{'='*60}")
-            r = synth_one(title, slug, style)
+            r = synth_one(title, slug, style, skip_search=skip_search)
             results.append(r)
             if not r.get("ok"):
                 print(f"⚠️  {title} 失败: {r.get('error')}")

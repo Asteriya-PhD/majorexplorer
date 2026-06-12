@@ -78,7 +78,13 @@ def append_major(root: Path, entry: dict) -> bool:
     entry 必须含: slug, title, style, category, degree, duration_years, tags,
                   status="done", data_source, html_path, data_path.
     若 slug 已存在, 跳过返回 False.
+    若 entry 含 _mock=True, 拒绝追加 (防 mock 产物污染 manifest).
     """
+    # ── 守卫: mock 产物不入 manifest ──
+    if entry.get("_mock"):
+        print(f"  [manifest] slug={entry.get('slug', '?')} 是 mock 产物, 拒绝入 manifest")
+        return False
+
     lock = root / SKILL_MANIFEST
     if not _acquire_lock(lock.with_suffix(lock.suffix + ".lock")):
         raise RuntimeError("manifest lock acquire timeout")
@@ -130,8 +136,9 @@ def upsert_manifest_minimal(
     duration_years: int = 4,
     tags: list[str] | None = None,
     data_source: str = "Web 搜索综合 (按需生成)",
+    _mock: bool = False,
 ) -> bool:
-    """便利函数: 凑齐最小 entry 追加."""
+    """便利函数: 凑齐最小 entry 追加. _mock=True 拒绝入 manifest."""
     return append_major(root, {
         "slug": slug,
         "title": title,
@@ -141,6 +148,7 @@ def upsert_manifest_minimal(
         "duration_years": duration_years,
         "tags": tags or ["按需生成"],
         "data_source": data_source,
+        "_mock": _mock,
     })
 
 
