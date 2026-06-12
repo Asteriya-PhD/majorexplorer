@@ -353,6 +353,13 @@
   display: flex; align-items: center; justify-content: center; gap: 10px;
   margin-top: 14px; flex-wrap: wrap;
 }
+.ms-synth-email {
+  appearance: none; border: 1px solid #BFB9AB; border-radius: 999px;
+  padding: 8px 14px; font-size: 0.8125rem; background: #fff;
+  color: #14110D; outline: none; min-width: 220px; transition: border-color 0.15s;
+}
+.ms-synth-email:focus { border-color: #B8323A; }
+.ms-synth-email::placeholder { color: #BFB9AB; }
 .ms-synth-btn {
   appearance: none; border: 0; cursor: pointer;
   padding: 10px 20px; border-radius: 999px;
@@ -443,26 +450,35 @@
     function _render(list, query) {
       results.innerHTML = "";
       if (list.length === 0) {
-        // ── 改造: 现场按需生成 CTA ──
+        // ── 改造: 现场按需生成 CTA + 邮箱通知 (Hybrid 5-20min) ──
         results.innerHTML =
           '<div class="ms-empty">' +
           '  没找到匹配「<strong>' + _escapeHtml(query) + '</strong>」的精品样板。' +
-          '  <br>要不要让 AI 现场为你合成一份？约 5-15 分钟出报告。' +
+          '  <br>要不要让 AI 现场为你合成一份？约 5-20 分钟出报告。' +
           '  <div class="ms-synth-cta">' +
+          '    <input type="email" class="ms-synth-email" placeholder="邮箱 (可选, 出结果通知)" />' +
           '    <button type="button" class="ms-synth-btn" data-query="' + _escapeHtml(query) + '">' +
           '      🪄 现场为我合成' +
           '    </button>' +
-          '    <span class="ms-synth-hint">基于 Web 搜索 + 60 精品样板</span>' +
           '  </div>' +
+          '  <div class="ms-synth-hint" style="text-align:center;margin-top:6px">基于 Web 搜索 + 70 精品样板 · 无需在线等</div>' +
           '  <div class="ms-synth-progress" hidden></div>' +
           '  <a class="ms-suggest" href="#majors">浏览已上线的精品样板 →</a>' +
           '</div>';
         // 绑定 CTA 按钮 → 调 synth-client
         const btn = results.querySelector(".ms-synth-btn");
+        const emailInput = results.querySelector(".ms-synth-email");
         if (btn) {
           btn.addEventListener("click", () => {
+            const email = emailInput && emailInput.value ? emailInput.value.trim() : "";
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+              alert("邮箱格式不对, 留空则不通知");
+              return;
+            }
+            // 同步 email 到 button dataset 给 SynthClient 用
+            if (email) btn.dataset.email = email;
             if (global.SynthClient && global.SynthClient.start) {
-              global.SynthClient.start(btn.dataset.query, results);
+              global.SynthClient.start(btn.dataset.query, results, email || null);
             } else {
               console.warn("SynthClient 未加载, 走 fallback 文案");
             }
