@@ -8,6 +8,11 @@
 <link rel="dns-prefetch" href="https://fonts.loli.net">
 <!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+<!-- Wishlist UI: 共享 store + helpers (顶部 chip / 右下 FAB / 12 主题卡 / 搜专业) -->
+<link rel="preload" href="/js/wishlist-store.js" as="script">
+<link rel="preload" href="/js/ui-helpers.js" as="script">
+<link rel="preload" href="/js/major-search.js" as="script">
+
 <title>数字媒体艺术专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="数字媒体艺术是「用数字技术创造新体验」 — 影视特效 + 游戏美术 + 交互设计 + 装置艺术 + VR/AR/MR + 人工智能艺术 + 数据可视化, 是「影视 + 游戏 + 交互 + 科技」的交叉">
 <style>
@@ -606,6 +611,187 @@ footer .data-source { color: #999; }
   .museum-logo { top: 16px; }
   .museum-logo-text { font-size: 0.7rem; letter-spacing: 0.25em; }
   .museum-logo-sub { font-size: 0.55rem; }
+}
+
+
+/* ─── Wishlist inject: 顶部 chip + 右下 FAB + 12 主题卡 ─── */
+.wl-chip {
+  position: fixed; top: 16px; right: 16px; z-index: 95;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 7px 12px; border-radius: 999px;
+  background: rgba(250,250,247,0.95); color: #14110D;
+  border: 1px solid #BFB9AB; cursor: pointer;
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  transition: all 180ms; letter-spacing: 0.02em;
+  text-decoration: none; box-shadow: 0 2px 8px rgba(20,17,13,0.06);
+}
+.wl-chip:hover { background: #B8323A; color: #FAFAF7; border-color: #B8323A; transform: translateY(-1px); opacity: 1; }
+.wl-chip[data-state="ready"] { background: #B8323A; color: #FAFAF7; border-color: #B8323A; }
+.wl-chip .count { font-weight: 700; }
+@media (max-width: 640px) {
+  .wl-chip { top: 10px; right: 10px; font-size: 0.6875rem; padding: 6px 10px; }
+}
+
+.wl-fab {
+  position: fixed; right: 24px; bottom: 24px; z-index: 9000;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #B8323A; color: #FAFAF7;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  cursor: pointer; border: none; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wl-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 32px rgba(184,50,58,0.32); }
+.wl-fab[data-state="added"] { background: #2F5F3E; }
+@media (max-width: 640px) { .wl-fab { right: 16px; bottom: 16px; width: 50px; height: 50px; font-size: 1.25rem; } }
+
+.wl-modal {
+  position: fixed; right: 24px; bottom: 96px; z-index: 9001;
+  width: min(320px, calc(100vw - 32px));
+  background: #FAFAF7; color: #14110D;
+  border: 1px solid #BFB9AB; border-radius: 12px; padding: 20px;
+  box-shadow: 0 20px 48px rgba(20,17,13,0.24);
+  transform: translateY(8px); opacity: 0; pointer-events: none;
+  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-modal[data-open="true"] { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.wl-modal .wl-mt { font-family: 'Source Han Serif SC', 'Songti SC', serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; }
+.wl-modal .wl-msub { font-size: 0.8125rem; color: #6F6A60; margin-bottom: 16px; }
+.wl-modal .wl-stars { display: flex; gap: 4px; align-items: center; margin-bottom: 16px; }
+.wl-modal .wl-stars button { font-size: 1.25rem; padding: 4px 2px; color: #BFB9AB; background: none; border: none; cursor: pointer; transition: color 120ms, transform 120ms; }
+.wl-modal .wl-stars button.on { color: #B8323A; }
+.wl-modal .wl-stars button:hover { transform: scale(1.12); }
+.wl-modal .wl-act { display: flex; gap: 8px; }
+.wl-modal .wl-act button { font: inherit; cursor: pointer; padding: 10px 14px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; border: none; }
+.wl-modal .wl-act .wl-ok { flex: 1; background: #14110D; color: #FAFAF7; }
+.wl-modal .wl-act .wl-cancel { background: transparent; color: #6F6A60; border: 1px solid #E2DFD5; }
+.wl-modal .wl-act .wl-ok:disabled { opacity: 0.4; cursor: not-allowed; }
+@media (max-width: 640px) { .wl-modal { right: 16px; bottom: 80px; } }
+
+.wl-toast {
+  position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px);
+  background: #14110D; color: #FAFAF7; padding: 10px 16px;
+  border-radius: 8px; font-size: 0.8125rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  opacity: 0; pointer-events: none; transition: all 220ms; z-index: 9100;
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── 心意框 CTA (在 wl-related 之上) — 看完专业必出 ─── */
+.wl-decide {
+  padding: 64px 0 32px;
+  background: linear-gradient(180deg, #FAFAF7 0%, #F5F2EA 100%);
+  border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-decide .container { max-width: 880px; margin: 0 auto; padding: 0 32px; text-align: center; }
+.wl-decide-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
+  color: #B8323A; letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 12px; font-weight: 600;
+}
+.wl-decide-title {
+  font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600; line-height: 1.3; margin-bottom: 32px; letter-spacing: -0.01em;
+}
+.wl-decide-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  max-width: 720px; margin: 0 auto;
+}
+.wl-decide-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  padding: 28px 24px; background: #fff;
+  border: 1.5px solid #E2DFD5; border-radius: 14px;
+  text-decoration: none; color: #14110D;
+  cursor: pointer; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left; font: inherit;
+}
+.wl-decide-card:hover {
+  transform: translateY(-3px);
+  border-color: #BFB9AB;
+  box-shadow: 0 12px 28px rgba(20,17,13,0.10);
+  opacity: 1;
+}
+.wl-decide-card.primary {
+  background: linear-gradient(180deg, #B8323A 0%, #9F2A31 100%);
+  color: #FAFAF7; border-color: #B8323A;
+}
+.wl-decide-card.primary:hover { border-color: #9F2A31; box-shadow: 0 14px 32px rgba(184,50,58,0.28); }
+.wl-decide-card .wl-decide-emoji { font-size: 1.875rem; line-height: 1; margin-bottom: 12px; }
+.wl-decide-card .wl-decide-h { font-family: 'Source Han Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.wl-decide-card .wl-decide-sub { font-size: 0.8125rem; opacity: 0.8; line-height: 1.5; margin-top: 4px; }
+.wl-decide-card.primary .wl-decide-sub { color: #FAEAEB; opacity: 0.95; }
+.wl-decide-card[data-state="added"] {
+  background: linear-gradient(180deg, #2F5F3E 0%, #244E32 100%);
+  border-color: #2F5F3E;
+}
+@media (max-width: 640px) {
+  .wl-decide { padding: 48px 0 24px; }
+  .wl-decide .container { padding: 0 16px; }
+  .wl-decide-grid { grid-template-columns: 1fr; gap: 12px; }
+  .wl-decide-card { padding: 22px 20px; }
+}
+
+/* ── 12 主题相关卡 (3×4) ───────────────── */
+.wl-related {
+  padding: 80px 0 64px;
+  background: #F2F2EB; border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
+.wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
+.wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
+.wl-related .wl-cta-bar { display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; }
+.wl-related .wl-cta-bar a {
+  font-family: inherit; font-size: 0.875rem; font-weight: 600;
+  padding: 10px 18px; border-radius: 8px; text-decoration: none; transition: all 180ms;
+}
+.wl-related .wl-cta-bar .wl-primary { background: #14110D; color: #FAFAF7; }
+.wl-related .wl-cta-bar .wl-primary:hover { background: #B8323A; opacity: 1; }
+.wl-related .wl-cta-bar .wl-ghost { background: transparent; color: #14110D; border: 1px solid #BFB9AB; }
+.wl-related .wl-cta-bar .wl-ghost:hover { background: #FAFAF7; opacity: 1; }
+.wl-related .wl-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+@media (max-width: 900px) { .wl-related .wl-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .wl-related .wl-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .wl-related { padding: 56px 0 40px; } .wl-related .container { padding: 0 16px; } }
+.wl-card {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px 16px 14px; background: #FAFAF7;
+  border: 1px solid #E2DFD5; border-radius: 10px;
+  text-decoration: none; color: #14110D;
+  transition: all 200ms; min-height: 120px;
+  position: relative; overflow: hidden;
+}
+.wl-card:hover { transform: translateY(-2px); border-color: #BFB9AB; box-shadow: 0 8px 20px rgba(20,17,13,0.08); opacity: 1; }
+.wl-card .wl-badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5625rem; font-weight: 600; padding: 2px 6px; border-radius: 3px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #FAFAF7;
+  align-self: flex-start;
+}
+.wl-card.cs .wl-badge { background: #2A4A7F; }
+.wl-card.finance .wl-badge { background: #5A4632; }
+.wl-card.medicine .wl-badge { background: #8B2424; }
+.wl-card.education .wl-badge { background: #5C7C4A; }
+.wl-card.law .wl-badge { background: #3A3A3A; }
+.wl-card.humanities .wl-badge { background: #6B4F35; }
+.wl-card.sci .wl-badge { background: #1E5E72; }
+.wl-card.eng .wl-badge { background: #5B5B47; }
+.wl-card.administration .wl-badge { background: #4A4564; }
+.wl-card.agri .wl-badge { background: #6B7A3F; }
+.wl-card.arts .wl-badge { background: #8B3A62; }
+.wl-card.gongan .wl-badge { background: #1F2A44; }
+.wl-card.business .wl-badge { background: #6F5A3A; }
+.wl-card .wl-title { font-family: 'Source Han Serif SC', serif; font-size: 0.9375rem; font-weight: 600; margin-top: 2px; line-height: 1.3; }
+.wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
+.wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
 </style>
 </head>
@@ -1155,20 +1341,55 @@ footer .data-source { color: #999; }
   </div>
 </section>
 
-<section class="tab" id="cta">
-  <div class="watermark">10</div>
+
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
+<section class="wl-decide" id="wl-decide">
   <div class="container">
-    <div class="section-num">10 / 10 · 关联志愿</div>
-    <h2>关联志愿</h2>
-    <div class="cta-block">
-      <h3>基于你的位次, 推荐这些校 + 组</h3>
-      <p>上面院校列表已内置, 输入位次和分数, 立刻出志愿表 (冲 / 稳 / 保 比例 25/50/25)。</p>
-      <form class="cta-form" onsubmit="event.preventDefault(); alert('功能开发中, 请关注后续更新');">
-        <input type="number" class="cta-input" placeholder="位次 (如 1234)" required>
-        <input type="number" class="cta-input" placeholder="分数 (如 620)" required>
-        <button type="submit" class="cta-button">推荐志愿 →</button>
-      </form>
-      <p class="cta-note">⚠ 本页所有数据截至 2026-06, 仅供高考志愿参考, 不构成最终决策建议。</p>
+    <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
+    <h2 class="wl-decide-title">「数字媒体艺术」<br>是你愿意学 4 年的方向吗?</h2>
+    <div class="wl-decide-grid">
+      <button class="wl-decide-card primary" data-act="add">
+        <span class="wl-decide-emoji">🌟</span>
+        <span class="wl-decide-h">心仪 · 加入心愿单</span>
+        <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
+      </button>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="wl-related" id="wl-related">
+  <div class="container">
+    <div class="wl-eyebrow">More to explore</div>
+    <h2>没找到想看的? 搜一下别的专业</h2>
+    <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
+    <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
+    <div class="wl-cta-bar">
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
+      <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card arts" href="/animation.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">动画</span><span class="wl-hook">追光原力, 国漫崛起</span></a>
+      <a class="wl-card arts" href="/environmental-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">环境设计</span><span class="wl-hook">室内 + 室外, 设计院</span></a>
+      <a class="wl-card arts" href="/visual-communication-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">视觉传达设计</span><span class="wl-hook">UI/UX + 品牌, 字节腾讯</span></a>
+      <a class="wl-card arts" href="/fine-arts.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card education" href="/psychology.html" data-tag="跨界"><span class="wl-badge">教育</span><span class="wl-title">心理学</span><span class="wl-hook">用户研究 + 认知神经科学</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
+      <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
     </div>
   </div>
 </section>
@@ -1223,6 +1444,158 @@ footer .data-source { color: #999; }
       el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
     });
   }
+})();
+</script>
+
+
+<!-- Wishlist UI: 共享 store + helpers + 本页 chip/FAB 启动 + 搜专业 chat -->
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/major-search.js"></script>
+<script>
+(function () {
+  "use strict";
+  if (!window.WishlistStore || !window.UIHelpers) return;
+  var META = { slug: 'digital-media-arts', title: '数字媒体艺术', style: 'arts', category: '艺术学 · 设计学类' };
+
+  // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
+  if (window.MajorSearch) {
+    var chatHost = document.getElementById('wl-chat-host');
+    if (chatHost) {
+      window.MajorSearch.mountChat(chatHost, {
+        size: 'compact',
+        placeholder: '搜其他专业…  比如「编程」「医生」「考公」「金融」',
+      });
+    }
+  }
+
+  // 1) 顶部右上角 chip
+  var chip = document.createElement('a');
+  chip.className = 'wl-chip';
+  chip.href = '/wishlist.html';
+  chip.setAttribute('aria-label', '心愿单');
+  document.body.appendChild(chip);
+  function paintChip(items) {
+    var c = items.length;
+    chip.innerHTML = '<span aria-hidden="true">🎒</span> <span>心愿单</span> <span class="count">' + c + '/6</span> <span class="arrow">→</span>';
+    if (c >= 4) chip.setAttribute('data-state', 'ready'); else chip.removeAttribute('data-state');
+  }
+  window.WishlistStore.subscribe(paintChip);
+
+  // 2) 右下 FAB + 弹窗 (复用 UIHelpers.mountWishlistFab 的样式但用本注入的类名)
+  var fab = document.createElement('button');
+  fab.className = 'wl-fab'; fab.type = 'button';
+  fab.setAttribute('aria-label', '加入心愿单');
+  fab.textContent = '⭐';
+  document.body.appendChild(fab);
+
+  var modal = document.createElement('div');
+  modal.className = 'wl-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.innerHTML =
+    '<div class="wl-mt">' + META.title + '</div>' +
+    '<div class="wl-msub">给这个专业评几颗星 (1-5)</div>' +
+    '<div class="wl-stars"></div>' +
+    '<div class="wl-act"><button class="wl-cancel">取消</button><button class="wl-ok">加入心愿单</button></div>';
+  document.body.appendChild(modal);
+
+  var current = window.WishlistStore.getScore(META.slug) || 4;
+  var starsHolder = modal.querySelector('.wl-stars');
+  for (var i = 1; i <= 5; i++) (function (v) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = '★'; b.dataset.v = String(v);
+    if (v <= current) b.classList.add('on');
+    b.addEventListener('click', function () {
+      current = v;
+      starsHolder.querySelectorAll('button').forEach(function (bb) {
+        bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+      });
+    });
+    starsHolder.appendChild(b);
+  })(i);
+
+  function syncFab() {
+    var inList = window.WishlistStore.has(META.slug);
+    var full = window.WishlistStore.isFull();
+    fab.setAttribute('data-state', inList ? 'added' : (full ? 'full' : 'idle'));
+    fab.textContent = inList ? '✓' : (full ? '🎒' : '⭐');
+    var ok = modal.querySelector('.wl-ok');
+    ok.textContent = inList ? '保存调整' : '加入心愿单';
+    modal.querySelector('.wl-msub').textContent = inList ? '已加入心愿单, 可调整星级' : (full ? '心愿单已满 6 个 (去管理)' : '给这个专业评几颗星 (1-5)');
+    ok.disabled = !inList && full;
+    // 同步「心意框」主按钮
+    var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+    if (decideBtn) {
+      decideBtn.setAttribute('data-state', inList ? 'added' : 'idle');
+      var dh = decideBtn.querySelector('.wl-decide-h');
+      var ds = decideBtn.querySelector('.wl-decide-sub');
+      var de = decideBtn.querySelector('.wl-decide-emoji');
+      if (dh && ds && de) {
+        if (inList) {
+          de.textContent = '✓';
+          dh.textContent = '已加入心愿单 · 调整星级';
+          ds.textContent = '当前 ' + (window.WishlistStore.getScore(META.slug) || 4) + ' 颗星, 点击修改';
+        } else if (full) {
+          de.textContent = '🎒';
+          dh.textContent = '心愿单已满 6 个';
+          ds.textContent = '先去心愿单页删一个';
+        } else {
+          de.textContent = '🌟';
+          dh.textContent = '心仪 · 加入心愿单';
+          ds.textContent = '打 1-5 颗星, 凑齐 4 个跑志愿推荐';
+        }
+      }
+    }
+  }
+  syncFab();
+
+  function openModal() {
+    current = window.WishlistStore.getScore(META.slug) || 4;
+    starsHolder.querySelectorAll('button').forEach(function (bb) {
+      bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+    });
+    modal.setAttribute('data-open', 'true');
+  }
+  function closeModal() { modal.setAttribute('data-open', 'false'); }
+
+  fab.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+      window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+      return;
+    }
+    if (modal.getAttribute('data-open') === 'true') closeModal(); else openModal();
+  });
+
+  // 「心意框」主按钮 → 直接触发 FAB modal
+  var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+  if (decideBtn) {
+    decideBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+        window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+        return;
+      }
+      openModal();
+    });
+  }
+  modal.querySelector('.wl-cancel').addEventListener('click', closeModal);
+  modal.querySelector('.wl-ok').addEventListener('click', function () {
+    var res = window.WishlistStore.upsert({ slug: META.slug, title: META.title, style: META.style, category: META.category, score: current });
+    if (!res.ok && res.reason === 'full') { window.UIHelpers.toast('心愿单已满 6 个'); return; }
+    window.UIHelpers.toast(res.updated ? '已更新星级' : '已加入心愿单');
+    closeModal();
+  });
+  document.addEventListener('click', function (e) {
+    if (modal.getAttribute('data-open') !== 'true') return;
+    if (modal.contains(e.target) || fab.contains(e.target)) return;
+    closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.getAttribute('data-open') === 'true') closeModal();
+  });
+  window.WishlistStore.subscribe(syncFab);
 })();
 </script>
 
