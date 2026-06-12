@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+<title>看清专业,再谈志愿 · Major Explorer 2026 高考 (湖北)</title>
+<meta name="description" content="先专业, 后志愿。把最热门、最易踩坑的本科专业一个一个讲透了。同义词搜索 + 心愿单 + 1008 院校位次推荐。给一无所知的 18 岁高三生看的, 不是给已经会算位次的家长看的。">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+  /* ── 主页定制 (v2: chat 栏为主 + 流程降级 + 精品样板重于位次) ── */
+  .home-hero {
+    padding: 88px 0 56px;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,50,58,0.06) 0%, transparent 70%),
+      linear-gradient(180deg, #FAFAF7 0%, #F5F2EA 100%);
+    border-bottom: 1px solid var(--line);
+    position: relative; overflow: visible;
+  }
+  .home-hero::before {
+    content: "专业"; position: absolute;
+    top: -30px; right: 0;
+    transform: translateX(20%);
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 20vw, 20rem);
+    font-weight: 700; line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: rgba(20,17,13,0.04);
+    pointer-events: none; user-select: none; z-index: 0;
+  }
+  .home-hero .container { position: relative; z-index: 2; max-width: 880px; text-align: center; }
+  .home-hero .eyebrow {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 5px 14px; border: 1px solid var(--accent); border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  .home-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.18; margin-bottom: 18px;
+    letter-spacing: -0.025em;
+  }
+  .home-hero h1 em { color: var(--accent); font-style: normal; }
+  .home-hero h1 .strike { text-decoration: line-through; text-decoration-thickness: 2px; opacity: 0.45; font-weight: 500; }
+  .home-hero .tagline {
+    font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+    color: var(--muted); max-width: 640px; margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+  .home-hero .tagline strong { color: var(--fg); }
+  .home-hero .chat-host { margin: 0 auto; max-width: 720px; }
+  .home-hero .below-chat {
+    margin-top: 22px;
+    font-size: 0.8125rem; color: var(--muted);
+    display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap;
+  }
+  .home-hero .below-chat a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+
+  /* hero 内的 inline pills — 4 个一行强制不换行 (桌面), 移动端水平滚动 */
+  .hero-pills {
+    display: flex; flex-wrap: nowrap; gap: 10px;
+    justify-content: center; align-items: center;
+    margin: 28px auto 24px;
+    max-width: 100%; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 0;
+  }
+  .hero-pills::-webkit-scrollbar { display: none; }
+  .hero-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 999px;
+    background: #fff; border: 1px solid var(--line-strong);
+    font-size: 0.8125rem; color: var(--fg); line-height: 1.4;
+    font-family: var(--font-body);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .hero-pill .pill-check {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent); color: var(--bg);
+    font-size: 0.625rem; font-weight: 700; flex-shrink: 0;
+  }
+  .hero-pill strong { font-weight: 600; }
+  .hero-pill .pill-sub { color: var(--muted); font-size: 0.75rem; margin-left: 4px; }
+  @media (max-width: 768px) {
+    .hero-pills { gap: 8px; margin: 20px auto 18px; justify-content: flex-start; padding-left: 16px; padding-right: 16px; }
+    .hero-pill { padding: 6px 12px; font-size: 0.75rem; }
+  }
+  @media (max-width: 480px) {
+    .hero-pill .pill-sub { display: none; }
+  }
+
+  /* ── 精品报告 (主体) ───── */
+  .home-majors { padding: 64px 0 32px; background: var(--bg-soft); border-top: 1px solid var(--line); scroll-margin-top: 70px; }
+  .home-majors .container { max-width: 1120px; }
+  .home-majors .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid var(--fg);
+  }
+  .home-majors .section-head h2 { font-size: 1.5rem; }
+  .home-majors .section-head .count { font-family: var(--font-num); color: var(--muted); font-size: 0.8125rem; letter-spacing: 0.1em; }
+  .home-majors .sub-lede {
+    font-size: 0.9375rem; color: var(--muted); margin-bottom: 28px; line-height: 1.7;
+    max-width: 720px;
+  }
+  .home-majors .sub-lede strong { color: var(--fg); }
+  .home-majors .sub-lede .hint-icon {
+    display: inline-block; vertical-align: -2px;
+    width: 16px; height: 16px; line-height: 16px; text-align: center;
+    background: var(--accent); color: var(--bg); border-radius: 50%;
+    font-size: 0.625rem; font-weight: 700; margin-right: 4px;
+  }
+
+  .theme-block { margin-bottom: 32px; }
+  .theme-block .theme-title {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .theme-block .theme-title .dot {
+    width: 10px; height: 10px; border-radius: 2px;
+    display: inline-block;
+  }
+  .theme-block .theme-title .meta {
+    margin-left: auto;
+    font-family: var(--font-num); font-size: 0.75rem; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;
+  }
+  .major-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  @media (max-width: 900px) { .major-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px) { .major-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
+
+  .major-card {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 14px 14px 12px; background: #fff;
+    border: 1px solid var(--line); border-radius: 8px;
+    text-decoration: none; color: var(--fg);
+    transition: all 180ms; min-height: 98px;
+  }
+  .major-card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(20,17,13,0.08);
+    opacity: 1;
+  }
+  .major-card .title { font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600; line-height: 1.3; }
+  .major-card .cat { font-size: 0.6875rem; color: var(--muted); line-height: 1.4; margin-top: auto; }
+  .major-card .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .major-card .tags .tag-mini { font-size: 0.625rem; padding: 1px 6px; background: var(--bg-soft); border-radius: 3px; color: var(--muted); }
+
+  .dot-cs { background: var(--theme-cs); }
+  .dot-finance { background: var(--theme-finance); }
+  .dot-medicine { background: var(--theme-medicine); }
+  .dot-education { background: var(--theme-education); }
+  .dot-law { background: var(--theme-law); }
+  .dot-humanities { background: var(--theme-humanities); }
+  .dot-sci { background: var(--theme-sci); }
+  .dot-eng { background: var(--theme-eng); }
+  .dot-administration { background: var(--theme-administration); }
+  .dot-agri { background: var(--theme-agri); }
+  .dot-arts { background: var(--theme-arts); }
+
+  /* ── 之后才是志愿推荐 (降级) ─────────────── */
+  .next-step {
+    padding: 56px 0;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .next-step .container { max-width: 880px; text-align: center; }
+  .next-step .eyebrow {
+    font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted);
+    letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .next-step h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 12px; }
+  .next-step .lede { font-size: 1rem; color: var(--muted); max-width: 600px; margin: 0 auto 28px; line-height: 1.7; }
+  .step-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    max-width: 720px; margin: 0 auto;
+  }
+  .step-card {
+    padding: 20px; background: #fff; border: 1px solid var(--line);
+    border-radius: 10px; text-decoration: none; color: var(--fg);
+    transition: all 180ms; text-align: left;
+  }
+  .step-card:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 6px 16px rgba(20,17,13,0.08); opacity: 1; }
+  .step-card .num { font-family: var(--font-num); font-size: 0.625rem; color: var(--accent); letter-spacing: 0.2em; font-weight: 700; }
+  .step-card h3 { font-size: 0.9375rem; margin: 6px 0; }
+  .step-card p { font-size: 0.75rem; color: var(--muted); line-height: 1.6; }
+  @media (max-width: 640px) {
+    .step-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="/">
+      Major Explorer<span class="sub">2026 高考 · 湖北 · 先专业, 后志愿</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="/" class="active">首页</a>
+      <a href="#majors">精品专业</a>
+      <a href="/wishlist.html">心愿单</a>
+      <a href="/preferences.html">填偏好</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ────────── HERO + chat 栏 ────────── -->
+<section class="home-hero">
+  <div class="container">
+    <div class="eyebrow">湖北 2026 · 新高考 3+1+2</div>
+    <h1>
+      <span class="strike">分数能上什么学校</span><br>
+      <em>选一个你愿意学 4 年的专业</em>
+    </h1>
+    <p class="tagline">
+      18 岁的高三生, 对国内 800+ 本科专业, <strong>真正了解过的可能不到 10 个</strong>。
+      我们挑了最热门、最易踩坑的, <strong>一个一个讲透</strong> — 先看清专业, 再谈志愿。
+    </p>
+
+    <div class="hero-pills">
+      <span class="hero-pill"><span class="pill-check">✓</span><strong>深度专业讲解</strong><span class="pill-sub">一口气看懂</span></span>
+      <span class="hero-pill"><span class="pill-check">✓</span><strong>智能搜索</strong><span class="pill-sub">自动匹配</span></span>
+      <span class="hero-pill"><span class="pill-check">✓</span><strong>本地跑</strong><span class="pill-sub">0 上传</span></span>
+      <span class="hero-pill"><span class="pill-check">✓</span><strong>位次驱动推荐</strong><span class="pill-sub">配套工具</span></span>
+    </div>
+
+    <div class="chat-host" id="chat-host"></div>
+
+    <div class="below-chat">
+      <span>不知道从哪开始?</span>
+      <a href="#majors">📚 浏览精品报告 ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── 精品报告 (主体) ────────── -->
+<section class="home-majors" id="majors">
+  <div class="container">
+    <div class="section-head">
+      <h2>深度专业解读·精品报告</h2>
+      <div class="count" id="major-count">加载中…</div>
+    </div>
+    <p class="sub-lede">
+      <span class="hint-icon">!</span>
+      下方是目前已上线的 <strong>精品报告</strong> (覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, <strong>持续扩充中</strong>)。
+      没找到你想看的? <strong>用上面的搜索框</strong>或<a href="mailto:hello@example.com" style="color: var(--accent); text-decoration: underline;">留邮箱催更</a>。
+      每个报告页右下角 <strong>⭐ 按钮</strong> 可加入心愿单 (1–5 颗星), 凑 4 个就能跑志愿推荐。
+    </p>
+    <div id="theme-zone"></div>
+  </div>
+</section>
+
+<!-- ────────── 看完专业 → 才是志愿推荐 ────────── -->
+<section class="next-step">
+  <div class="container">
+    <div class="eyebrow">Already know what to study?</div>
+    <h2>看完专业, 再用位次法算志愿</h2>
+    <p class="lede">
+      想清楚要学什么了, 再开"志愿推荐"工具。湖北 1008 所院校 · 4 年位次 · 物化生你的选科组 — 算冲 6 / 稳 10 / 保 4, 完全本地跑, 不上传。
+    </p>
+    <div class="step-row">
+      <a class="step-card" href="/wishlist.html">
+        <div class="num">STEP A</div>
+        <h3>🎒 心愿单</h3>
+        <p>从精品样板里挑 4–6 个, 各打 1–5 颗星表示热度</p>
+      </a>
+      <a class="step-card" href="/preferences.html">
+        <div class="num">STEP B</div>
+        <h3>📝 填一屏偏好</h3>
+        <p>分数 / 位次 / 选科 / 意向城市 / 填报模式</p>
+      </a>
+      <a class="step-card" href="/recommendations.html">
+        <div class="num">STEP C</div>
+        <h3>🎯 拿 20 张推荐卡</h3>
+        <p>冲 6 + 稳 10 + 保 4 · 每卡含 4 年位次 + 主打专业</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="container">
+    <div class="caps">Major Explorer · 2026 高考 · 湖北 · 先专业, 后志愿</div>
+    <div>数据存储于浏览器本地, 不上传服务器</div>
+    <div style="margin-top: 6px;">
+      <a href="#majors">精品专业</a> · <a href="/wishlist.html">心愿单</a> · <a href="/preferences.html">填偏好</a> · <a href="/recommendations.html">推荐结果</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/major-search.js"></script>
+<script>
+(async function () {
+  "use strict";
+  const UI = window.UIHelpers;
+
+  // 1) chat 栏
+  window.MajorSearch.mountChat(document.getElementById('chat-host'), {
+    size: 'hero',
+    placeholder: '想学什么? 试试「编程」「医生」「考公」「设计」「金融」…',
+  });
+
+  // 2) 加载 manifest + 渲染精品专业 grid
+  const manifest = await window.MajorSearch.loadManifest();
+  const majors = manifest.majors || [];
+  document.getElementById('major-count').textContent = '已上线 ' + majors.length + ' 个 · 持续扩充中';
+
+  const THEME_ORDER = [
+    { key: 'cs', name: '计算机 / 工科 (代码 + 硬件 + 控制)', hint: 'CS · 自动化 · 通信 · 网安 · 数据 · 电气 · 电子' },
+    { key: 'medicine', name: '医学 (临床 + 药学 + 中医 + 麻醉 + 口腔 + 预防)', hint: '5+3+X · 越老越值钱' },
+    { key: 'eng', name: '工程 (机械 + 化工 + 食品 + IC + 材料 + 车辆)', hint: '万金油 · 国产替代' },
+    { key: 'finance', name: '财经 (会计 + 金融 + 经济 + 工商 + 国贸)', hint: '考证 · 名校导向' },
+    { key: 'law', name: '法学', hint: '法考 + 红圈所' },
+    { key: 'education', name: '教育 / 应用心理 / 设计 / 新闻', hint: '寒暑假 · 稳定' },
+    { key: 'sci', name: '理科 (数学 + 物理 + 化学 + 大气)', hint: '基础学科 · 深造导向' },
+    { key: 'humanities', name: '人文 (汉语言 + 历史 + 哲学 + 考古)', hint: '考公友好 · 长线' },
+    { key: 'administration', name: '管理 (公管 + 财管 + 图情 + 信管)', hint: '公务员对口' },
+    { key: 'agri', name: '农学 (农林牧渔 + 园艺 + 园林)', hint: '袁隆平精神 · 长线稳定' },
+    { key: 'arts', name: '艺术 (美术 + 视传 + 环艺 + 数媒 + 动画)', hint: '九大美院 · 互联网设计' },
+  ];
+
+  const byStyle = {};
+  for (const m of majors) {
+    if (!byStyle[m.style]) byStyle[m.style] = [];
+    byStyle[m.style].push(m);
+  }
+  for (const k of Object.keys(byStyle)) {
+    byStyle[k].sort((a, b) => a.title.localeCompare(b.title, 'zh'));
+  }
+
+  const themeZone = document.getElementById('theme-zone');
+  for (const t of THEME_ORDER) {
+    const list = byStyle[t.key];
+    if (!list || list.length === 0) continue;
+    const block = document.createElement('div');
+    block.className = 'theme-block';
+    block.innerHTML = [
+      '<div class="theme-title">',
+      '  <span class="dot dot-' + t.key + '"></span>',
+      '  <span>' + UI.escapeHtml(t.name) + '</span>',
+      '  <span class="meta">' + list.length + ' / ' + UI.escapeHtml(t.hint) + '</span>',
+      '</div>',
+      '<div class="major-grid"></div>',
+    ].join('');
+    const grid = block.querySelector('.major-grid');
+    for (const m of list) {
+      const a = document.createElement('a');
+      a.className = 'major-card';
+      a.href = '/' + m.slug + '.html';
+      const tagsHtml = (m.tags || []).slice(0, 2).map((tg) =>
+        '<span class="tag-mini">' + UI.escapeHtml(tg) + '</span>'
+      ).join('');
+      a.innerHTML = [
+        '<div class="title">' + UI.escapeHtml(m.title) + '</div>',
+        '<div class="tags">' + tagsHtml + '</div>',
+        '<div class="cat">' + UI.escapeHtml(m.category || '') + '</div>',
+      ].join('');
+      grid.appendChild(a);
+    }
+    themeZone.appendChild(block);
+  }
+
+  // 3) 顶部 chip
+  if (window.WishlistStore) {
+    const chipHolder = document.createElement('span');
+    chipHolder.id = 'top-chip-holder';
+    chipHolder.style.cssText = 'margin-left: 12px;';
+    document.querySelector('.topbar .nav-links').appendChild(chipHolder);
+    UI.mountWishlistChip(chipHolder);
+  }
+})();
+</script>
+
+</body>
+</html>

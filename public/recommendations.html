@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>🎯</text></svg>">
+<title>志愿推荐 Top 20 · Major Explorer 2026 高考</title>
+<meta name="description" content="基于位次法 + 选科 + 心愿单 + 偏好融合, 输出冲 6 / 稳 10 / 保 4 张推荐卡片。">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+  .stats-bar {
+    display: flex; flex-wrap: wrap; gap: 12px 32px;
+    padding: 16px 20px; background: var(--bg-soft); border-radius: 10px;
+    margin-bottom: 32px; font-size: 0.875rem;
+  }
+  .stats-bar .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stats-bar .label { font-family: var(--font-num); font-size: 0.625rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .stats-bar .value { font-family: var(--font-heading); font-weight: 700; font-size: 1.125rem; color: var(--fg); }
+  .stats-bar .value em { font-family: var(--font-num); font-style: normal; color: var(--accent); }
+
+  .loader-card {
+    padding: 24px; background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    display: flex; flex-direction: column; gap: 12px; min-height: 180px;
+  }
+  .loader-card .skeleton { height: 14px; }
+
+  .compare-tray {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+    background: var(--fg); color: var(--bg);
+    padding: 14px 20px; transform: translateY(100%); transition: transform 280ms;
+  }
+  .compare-tray.show { transform: translateY(0); }
+  .compare-tray .container { display: flex; align-items: center; gap: 12px; }
+  .compare-tray .pills { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; }
+  .compare-tray .pill { padding: 4px 10px; border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; font-size: 0.75rem; }
+  .compare-tray button { background: var(--accent); color: var(--bg); padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; }
+  .compare-tray button.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.4); margin-right: 8px; }
+
+  /* compare modal */
+  .compare-modal-bg {
+    position: fixed; inset: 0; background: rgba(20,17,13,0.72); z-index: 110;
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 5vh 16px; overflow-y: auto;
+  }
+  .compare-modal-bg.show { display: flex; }
+  .compare-modal {
+    width: min(960px, 100%); background: var(--bg); border-radius: 14px;
+    padding: 32px; box-shadow: 0 24px 64px rgba(0,0,0,0.4); animation: fadeIn 240ms;
+  }
+  .compare-modal .head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line);
+  }
+  .compare-modal table {
+    width: 100%; border-collapse: collapse; font-size: 0.8125rem; line-height: 1.5;
+  }
+  .compare-modal th, .compare-modal td {
+    padding: 10px 8px; text-align: left; vertical-align: top;
+    border-bottom: 1px solid var(--line);
+  }
+  .compare-modal th {
+    background: var(--bg-soft); font-family: var(--font-heading); font-weight: 600;
+    position: sticky; top: 0;
+  }
+  .compare-modal td.num { font-family: var(--font-num); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="/">
+      Major Explorer<span class="sub">2026 高考 · 湖北</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/wishlist.html">心愿单</a>
+      <a href="/preferences.html">填偏好</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <div class="container">
+
+    <div class="page-head">
+      <div class="eyebrow">Step 3 · Recommendations</div>
+      <h1 id="head-title">志愿推荐 Top 20</h1>
+      <p class="lede" id="head-lede">
+        基于位次法 (recent 3 年中位 vs 你的位次), 跑过所有 1008 所院校的专业组,
+        过滤选科, 用你的偏好融合排序, 分桶冲 / 稳 / 保。
+      </p>
+    </div>
+
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat"><span class="label">Loading</span><span class="value">数据加载中...</span></div>
+    </div>
+
+    <div id="result-zone"></div>
+
+    <!-- 底部 CTA -->
+    <div id="bottom-cta" style="display: none; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--line); gap: 12px; flex-wrap: wrap;">
+      <a class="btn ghost" href="/preferences.html">← 改偏好</a>
+      <a class="btn ghost" href="/wishlist.html">改心愿单</a>
+      <button class="btn ghost" id="cta-export">导出 JSON</button>
+      <button class="btn ghost" id="cta-share">复制分享链接</button>
+    </div>
+
+  </div>
+</main>
+
+<!-- 对比托盘 -->
+<div class="compare-tray" id="compare-tray">
+  <div class="container">
+    <div class="pills" id="compare-pills"></div>
+    <button class="ghost" id="compare-clear">清空</button>
+    <button id="compare-open">对比 (<span id="compare-count">0</span>)</button>
+  </div>
+</div>
+
+<!-- 对比 modal -->
+<div class="compare-modal-bg" id="compare-bg">
+  <div class="compare-modal">
+    <div class="head">
+      <h2 style="font-size: 1.25rem;">院校对比</h2>
+      <button class="btn ghost" id="compare-close">✕ 关闭</button>
+    </div>
+    <div id="compare-body"></div>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="container">
+    <div class="caps">Major Explorer · 2026 高考 · 湖北</div>
+    <div>数据存储于浏览器本地, 不上传服务器</div>
+  </div>
+</footer>
+
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/data-loader.js"></script>
+<script src="/js/recommender.js"></script>
+<script>
+(function () {
+  "use strict";
+  const UI = window.UIHelpers;
+  const STORE = window.WishlistStore;
+  const $ = (s) => document.querySelector(s);
+
+  // ─── 1. 读 user 信息 ───
+  let user;
+  try {
+    user = JSON.parse(sessionStorage.getItem("gk.user.v1") || "null");
+  } catch (e) { user = null; }
+  if (!user || (user.score == null && user.rank == null)) {
+    window.location.href = "/preferences.html";
+    return;
+  }
+  // 合并 wishlist → interests
+  user.interests = STORE.toInterests();
+
+  // ─── 2. 收藏 / 对比 storage ───
+  const KEY_FAV = "gk.fav.v1";
+  const KEY_CMP = "gk.cmp.v1";
+  function readSet(key) {
+    try { return new Set(JSON.parse(localStorage.getItem(key) || "[]")); } catch { return new Set(); }
+  }
+  function writeSet(key, set) { localStorage.setItem(key, JSON.stringify(Array.from(set))); }
+  let favSet = readSet(KEY_FAV);
+  let cmpSet = readSet(KEY_CMP);
+
+  // ─── 3. 加载数据 ───
+  const resultZone = $("#result-zone");
+  function renderSkeletons() {
+    resultZone.innerHTML = "";
+    ["冲 (6)", "稳 (10)", "保 (4)"].forEach((label, idx) => {
+      const wrap = document.createElement("section");
+      wrap.className = "rec-bucket";
+      wrap.innerHTML = '<div class="bucket-head"><h2>' + label + '</h2><span class="tag">加载中</span></div>';
+      const grid = document.createElement("div");
+      grid.className = "rec-grid";
+      const n = idx === 0 ? 6 : idx === 1 ? 10 : 4;
+      for (let i = 0; i < n; i++) {
+        const card = document.createElement("div");
+        card.className = "loader-card";
+        card.innerHTML = '<div class="skeleton" style="width: 60%;"></div><div class="skeleton" style="width: 40%;"></div><div class="skeleton" style="width: 80%;"></div><div class="skeleton" style="width: 50%;"></div>';
+        grid.appendChild(card);
+      }
+      wrap.appendChild(grid);
+      resultZone.appendChild(wrap);
+    });
+  }
+  renderSkeletons();
+
+  // ─── 4. 推荐结果渲染 ───
+  function renderProb(prob) {
+    const pct = Math.round(prob * 100);
+    return pct + "%";
+  }
+
+  function buildRanksLine(hist) {
+    const keys = Object.keys(hist).sort();
+    if (keys.length === 0) return "—";
+    return keys.map((k) => '<span><span class="label">' + k + '</span>' + hist[k] + '</span>').join("  ");
+  }
+
+  function buildMajorsLine(majors, interests) {
+    if (!majors || majors.length === 0) return "";
+    const interestNames = (interests || []).map((x) => x.major);
+    const html = majors.slice(0, 5).map((m) => {
+      const rk = m.xueke || m.ruanke || "";
+      const matched = interestNames.some((kw) =>
+        m.name.indexOf(kw) !== -1 || kw.indexOf(m.name) !== -1 || m.name.slice(0, 2) === kw.slice(0, 2)
+      );
+      const tag = rk ? ' <span style="opacity: 0.6;">(' + UI.escapeHtml(rk) + ')</span>' : '';
+      const name = matched ? '<em>' + UI.escapeHtml(m.name) + '</em>' : UI.escapeHtml(m.name);
+      return name + tag;
+    }).join(" / ");
+    return '<span class="label">主打专业</span>' + html;
+  }
+
+  function buildGroupsLine(groups) {
+    if (!groups || groups.length === 0) return "";
+    const html = groups.map((g) => {
+      const info = (g.sg_info || "").replace(/首选/g, "首").replace(/再选/g, "再");
+      return [
+        '<div class="group-row">',
+        '  <span class="sg-name">(' + UI.escapeHtml(g.sg_name || "") + ') ' + UI.escapeHtml(info.slice(0, 30)) + '</span>',
+        '  <span class="sg-min">' + (g.min_score_2025 || "—") + ' 分 / 位 ' + (g.min_rank_2025 || "—") + '</span>',
+        '</div>',
+      ].join("");
+    }).join("");
+    return '<div class="groups">' + html + '</div>';
+  }
+
+  function renderCard(c) {
+    const slug = "s" + c.school_id;
+    const card = document.createElement("article");
+    card.className = "rec-card fade-in";
+    card.dataset.id = c.school_id;
+    card.innerHTML = [
+      '<div class="head">',
+      '  <div>',
+      '    <div class="school-name">' + UI.escapeHtml(c.school_name) + '</div>',
+      '    <span class="tier">' + UI.escapeHtml(c.tier || "—") + '</span>',
+      '  </div>',
+      '  <div class="prob" title="录取概率 (位次法估算)">' + renderProb(c.prob) + '</div>',
+      '</div>',
+      '<div class="meta">',
+      '  <span>📍 ' + UI.escapeHtml(c.city) + '</span>',
+      '  <span>🎓 ' + UI.escapeHtml(c.type || "综合") + '</span>',
+      '  <span>📊 score ' + c.score.toFixed(1) + '</span>',
+      '  <span>3 年中位 ' + Math.round(c.median_rank_3y) + '</span>',
+      '</div>',
+      '<div class="ranks num"><span class="label">4 年位次</span>' + buildRanksLine(c.history_brief) + '</div>',
+      '<div class="majors">' + buildMajorsLine(c.top_majors, user.interests) + '</div>',
+      buildGroupsLine(c.top_groups),
+      '<div class="card-actions">',
+      '  <button data-act="fav" aria-pressed="' + (favSet.has(c.school_id) ? "true" : "false") + '">★ 收藏</button>',
+      '  <button data-act="cmp" aria-pressed="' + (cmpSet.has(c.school_id) ? "true" : "false") + '">⇄ 对比</button>',
+      '</div>',
+    ].join("");
+
+    card.querySelector('button[data-act="fav"]').addEventListener("click", (e) => {
+      const id = c.school_id;
+      if (favSet.has(id)) favSet.delete(id); else favSet.add(id);
+      writeSet(KEY_FAV, favSet);
+      e.currentTarget.setAttribute("aria-pressed", favSet.has(id) ? "true" : "false");
+      UI.toast(favSet.has(id) ? "已收藏" : "已取消收藏", 1000);
+    });
+    card.querySelector('button[data-act="cmp"]').addEventListener("click", (e) => {
+      const id = c.school_id;
+      if (cmpSet.has(id)) {
+        cmpSet.delete(id);
+      } else {
+        if (cmpSet.size >= 4) { UI.toast("最多对比 4 个"); return; }
+        cmpSet.add(id);
+      }
+      writeSet(KEY_CMP, cmpSet);
+      e.currentTarget.setAttribute("aria-pressed", cmpSet.has(id) ? "true" : "false");
+      paintCompareTray();
+    });
+    return card;
+  }
+
+  function paintBucket(name, tier, arr) {
+    const wrap = document.createElement("section");
+    wrap.className = "rec-bucket";
+    wrap.setAttribute("data-tier", tier);
+    const explainer = tier === "chong" ? "P~20-35% · 跳一跳"
+      : tier === "wen" ? "P~60-75% · 主力"
+      : "P~88-95% · 兜底";
+    wrap.innerHTML = '<div class="bucket-head"><h2><span>' + name + '</span> <span class="caps" style="font-size: 0.6875rem; opacity: 0.7;">(' + arr.length + ')</span></h2><span class="tag">' + explainer + '</span></div>';
+    const grid = document.createElement("div");
+    grid.className = "rec-grid";
+    arr.forEach((c) => grid.appendChild(renderCard(c)));
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
+  function paintCompareTray() {
+    const tray = $("#compare-tray");
+    const pills = $("#compare-pills");
+    const cnt = $("#compare-count");
+    cnt.textContent = String(cmpSet.size);
+    if (cmpSet.size === 0) {
+      tray.classList.remove("show");
+      pills.innerHTML = "";
+      return;
+    }
+    tray.classList.add("show");
+    pills.innerHTML = "";
+    cmpSet.forEach((id) => {
+      const card = window.__rec_byId[id];
+      if (!card) return;
+      const p = document.createElement("span");
+      p.className = "pill";
+      p.textContent = card.school_name;
+      pills.appendChild(p);
+    });
+  }
+
+  function openCompare() {
+    const bg = $("#compare-bg");
+    const body = $("#compare-body");
+    const items = Array.from(cmpSet).map((id) => window.__rec_byId[id]).filter(Boolean);
+    if (items.length < 2) { UI.toast("至少选 2 个再对比"); return; }
+    const rows = [
+      ["学校", (c) => c.school_name],
+      ["档次", (c) => c.tier],
+      ["城市", (c) => c.city],
+      ["概率", (c) => renderProb(c.prob), "num"],
+      ["桶", (c) => c.category, "num"],
+      ["综合 score", (c) => c.score.toFixed(2), "num"],
+      ["3年中位位次", (c) => Math.round(c.median_rank_3y), "num"],
+      ["主打 (前 3)", (c) => (c.top_majors || []).slice(0, 3).map((m) => m.name + (m.xueke ? " " + m.xueke : "")).join(" / ")],
+      ["首专业组 min 分/位", (c) => {
+        const g = (c.top_groups || [])[0];
+        return g ? (g.min_score_2025 + " / " + g.min_rank_2025) : "—";
+      }, "num"],
+    ];
+    const head = ['<th></th>'].concat(items.map((i) => '<th>' + UI.escapeHtml(i.school_name) + '</th>')).join("");
+    const body2 = rows.map(([label, fn, cls]) =>
+      '<tr><td><strong>' + label + '</strong></td>' +
+      items.map((c) => '<td class="' + (cls || "") + '">' + UI.escapeHtml(String(fn(c))) + '</td>').join("") +
+      '</tr>'
+    ).join("");
+    body.innerHTML = '<table><thead><tr>' + head + '</tr></thead><tbody>' + body2 + '</tbody></table>';
+    bg.classList.add("show");
+  }
+
+  $("#compare-open").addEventListener("click", openCompare);
+  $("#compare-close").addEventListener("click", () => $("#compare-bg").classList.remove("show"));
+  $("#compare-bg").addEventListener("click", (e) => {
+    if (e.target.id === "compare-bg") e.target.classList.remove("show");
+  });
+  $("#compare-clear").addEventListener("click", () => {
+    cmpSet = new Set();
+    writeSet(KEY_CMP, cmpSet);
+    paintCompareTray();
+    document.querySelectorAll('.rec-card button[data-act="cmp"][aria-pressed="true"]').forEach((b) => b.setAttribute("aria-pressed", "false"));
+  });
+
+  // ─── 5. 跑推荐 ───
+  (async function run() {
+    const t0 = performance.now();
+    try {
+      const data = await window.DataLoader.loadAll();
+      window.__data = data;
+      const result = window.Recommender.recommend(user, data);
+      const elapsed = performance.now() - t0;
+      window.__result = result;
+
+      // map id → card for compare
+      window.__rec_byId = {};
+      ["冲", "稳", "保"].forEach((k) => result[k].forEach((c) => { window.__rec_byId[c.school_id] = c; }));
+
+      // 头部 stats
+      $("#stats-bar").innerHTML = [
+        '<div class="stat"><span class="label">位次</span><span class="value num"><em>' + result.stats.user_rank + '</em></span></div>',
+        '<div class="stat"><span class="label">分数</span><span class="value num"><em>' + (user.score || "—") + '</em></span></div>',
+        '<div class="stat"><span class="label">类型</span><span class="value">' + user.type + '</span></div>',
+        '<div class="stat"><span class="label">选科</span><span class="value" style="font-size: 0.875rem;">' + user.xuanke.join("·") + '</span></div>',
+        '<div class="stat"><span class="label">模式</span><span class="value" style="font-size: 0.875rem;">' + user.mode + '</span></div>',
+        '<div class="stat"><span class="label">候选池</span><span class="value num"><em>' + result.stats.total_candidates + '</em></span></div>',
+        '<div class="stat"><span class="label">耗时</span><span class="value num"><em>' + Math.round(elapsed) + '</em> ms</span></div>',
+      ].join("");
+
+      // 推荐桶
+      resultZone.innerHTML = "";
+      resultZone.appendChild(paintBucket("冲", "chong", result["冲"]));
+      resultZone.appendChild(paintBucket("稳", "wen", result["稳"]));
+      resultZone.appendChild(paintBucket("保", "bao", result["保"]));
+
+      // 底部 CTA
+      const bot = $("#bottom-cta");
+      bot.style.display = "flex";
+
+      paintCompareTray();
+    } catch (e) {
+      console.error(e);
+      resultZone.innerHTML =
+        '<div class="wish-empty"><div class="icon">⚠️</div><h3>加载失败</h3><p>' +
+        UI.escapeHtml(e.message || String(e)) + '</p><a class="btn ghost" href="/preferences.html">回上一步</a></div>';
+    }
+  })();
+
+  // 导出
+  $("#cta-export").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify({ user: user, result: window.__result }, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "gk-recommendations-" + Date.now() + ".json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  });
+  $("#cta-share").addEventListener("click", () => {
+    navigator.clipboard.writeText(window.location.href).then(() => UI.toast("链接已复制"));
+  });
+})();
+</script>
+
+</body>
+</html>

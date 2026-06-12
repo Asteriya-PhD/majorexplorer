@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>🎒</text></svg>">
+<title>我的心愿单 · Major Explorer 2026 高考</title>
+<meta name="description" content="管理你的 4-6 个意向专业, 调整星级, 准备生成志愿推荐。">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/css/shared.css">
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="/">
+      Major Explorer<span class="sub">2026 高考 · 湖北</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/wishlist.html" class="active">心愿单</a>
+      <a href="/preferences.html">填偏好</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <div class="container">
+
+    <div class="page-head">
+      <div class="eyebrow">Step 1 · Wishlist</div>
+      <h1>我的心愿单</h1>
+      <p class="lede">
+        把你感兴趣的 <strong>4–6 个专业</strong> 攒到这里, 每个打 1–5 颗星表示热度。
+        下一步用这些信息 + 你的分数, 现场跑湖北 1008 所院校的位次推荐, 输出 Top 20 卡片。
+      </p>
+    </div>
+
+    <!-- 直接搜专业添加 -->
+    <div style="margin-bottom: 32px; padding: 20px 22px; background: var(--bg-soft); border-radius: 12px; border: 1px solid var(--line);">
+      <div style="font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; font-weight: 600;">+ 直接添加</div>
+      <div id="add-search-host"></div>
+    </div>
+
+    <!-- 进度计数器 -->
+    <div class="wish-counter" id="counter">
+      <span class="progress"><strong id="cnt">0</strong> / 6 已加入</span>
+      <span class="hint" id="hint">还需 4 个再生成推荐</span>
+    </div>
+
+    <!-- 列表 / 空态 -->
+    <div id="list-zone"></div>
+
+    <!-- 行动区 -->
+    <div style="margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <a class="btn ghost" href="/">← 继续逛专业</a>
+      <button class="btn primary" id="cta-next" disabled>
+        生成志愿推荐 →
+      </button>
+      <span class="caps" style="color: var(--muted); margin-left: auto;" id="reset-hint">
+        <button class="btn ghost" id="cta-clear" style="font-size: 0.75rem; padding: 6px 14px;">清空</button>
+      </span>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="caps">Major Explorer · 2026 高考 · 湖北</div>
+    <div>数据存储于浏览器本地, 不上传服务器</div>
+  </div>
+</footer>
+
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/major-search.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const store = window.WishlistStore;
+  const UI = window.UIHelpers;
+  const $ = (sel) => document.querySelector(sel);
+
+  // 内嵌搜专业 (C) — 用 MajorSearch chat, 但用户点结果时 → 直接加心愿单 (而不是跳页)
+  if (window.MajorSearch) {
+    window.MajorSearch.mountChat(document.getElementById('add-search-host'), {
+      size: 'compact',
+      placeholder: '搜专业直接加入 (比如「编程」「医生」「考公」)…',
+    });
+    // 改写下拉结果链接 → 改为"加心愿单"行为
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('#add-search-host .ms-result');
+      if (!a) return;
+      e.preventDefault();
+      const href = a.getAttribute('href') || '';
+      const slug = href.replace(/^\//, '').replace(/\.html$/, '');
+      // 从 manifest 取 title / style / category
+      window.MajorSearch.loadManifest().then((m) => {
+        const rec = (m.majors || []).find((x) => x.slug === slug);
+        if (!rec) return;
+        if (store.has(slug)) {
+          UI.toast('「' + rec.title + '」已在心愿单');
+          return;
+        }
+        if (store.isFull()) {
+          UI.toast('心愿单已满 6 个');
+          return;
+        }
+        const res = store.upsert({ slug, title: rec.title, style: rec.style, category: rec.category, score: 4 });
+        if (res.ok) {
+          UI.toast('已加入「' + rec.title + '」 ★★★★ 默认 4 星');
+          // 清空搜索框
+          const inp = document.querySelector('#add-search-host .ms-input');
+          if (inp) { inp.value = ''; }
+          document.querySelectorAll('#add-search-host .ms-results').forEach((r) => r.classList.remove('open'));
+          document.querySelectorAll('#add-search-host .ms-shell').forEach((s) => s.removeAttribute('data-active'));
+        }
+      });
+    }, true);
+  }
+
+  const cntEl = $("#cnt");
+  const hintEl = $("#hint");
+  const counterEl = $("#counter");
+  const listZone = $("#list-zone");
+  const ctaNext = $("#cta-next");
+  const ctaClear = $("#cta-clear");
+
+  function paintCounter(items) {
+    cntEl.textContent = String(items.length);
+    if (items.length >= store.MIN) {
+      counterEl.classList.add("ready");
+      hintEl.textContent = "✓ 可以生成志愿推荐";
+      ctaNext.disabled = false;
+    } else {
+      counterEl.classList.remove("ready");
+      hintEl.textContent = "还需 " + (store.MIN - items.length) + " 个再生成推荐";
+      ctaNext.disabled = true;
+    }
+    if (items.length >= store.MAX) {
+      hintEl.textContent = "已满 6 个 (上限)";
+    }
+  }
+
+  function paintList(items) {
+    if (items.length === 0) {
+      listZone.innerHTML = [
+        '<div class="wish-empty fade-in">',
+        '  <div class="icon">🎒</div>',
+        '  <h3>心愿单还是空的</h3>',
+        '  <p>从首页或任何专业页面右下角的 <span style="color: var(--accent); font-weight: 600;">⭐ 按钮</span> 加入 4–6 个感兴趣的专业。</p>',
+        '  <a class="btn primary" href="/">浏览 69 个精品专业 →</a>',
+        '</div>',
+      ].join("");
+      return;
+    }
+    const ul = document.createElement("ul");
+    ul.className = "wish-list";
+    items.forEach((it) => {
+      const li = document.createElement("li");
+      li.className = "wish-card fade-in";
+      li.innerHTML = [
+        '<div class="meta">',
+        '  <div class="name">',
+        '    <a href="/' + encodeURIComponent(it.slug) + '.html">' + UI.escapeHtml(it.title) + '</a>',
+        '    <span class="theme-badge ' + UI.escapeHtml(it.style || 'humanities') + '" style="margin-left: 8px;">' + UI.escapeHtml(UI.getThemeLabel(it.style)) + '</span>',
+        '  </div>',
+        '  <div class="cat">' + UI.escapeHtml(it.category || "未分类") + '</div>',
+        '</div>',
+        '<div class="actions">',
+        '  <span class="stars-holder"></span>',
+        '  <button class="del" aria-label="移除 ' + UI.escapeHtml(it.title) + '">✕</button>',
+        '</div>',
+      ].join("");
+
+      // 星级 (可改)
+      const starsHolder = li.querySelector(".stars-holder");
+      const stars = UI.renderStars(it.score || 4, {
+        onChange: (v) => {
+          store.setScore(it.slug, v);
+          UI.toast("已更新为 " + v + " 颗星", 1200);
+        },
+      });
+      starsHolder.appendChild(stars);
+
+      li.querySelector("button.del").addEventListener("click", () => {
+        if (!confirm("确定从心愿单移除「" + it.title + "」吗?")) return;
+        store.remove(it.slug);
+        UI.toast("已移除", 1200);
+      });
+
+      ul.appendChild(li);
+    });
+    listZone.innerHTML = "";
+    listZone.appendChild(ul);
+  }
+
+  function paintAll(items) {
+    paintCounter(items);
+    paintList(items);
+  }
+
+  // 订阅 store
+  store.subscribe(paintAll);
+
+  // CTA: 生成推荐
+  ctaNext.addEventListener("click", () => {
+    if (!store.isReady()) return;
+    window.location.href = "/preferences.html";
+  });
+
+  // 清空
+  ctaClear.addEventListener("click", () => {
+    if (store.count() === 0) return;
+    if (!confirm("清空整个心愿单? 此操作不可恢复。")) return;
+    store.clear();
+    UI.toast("心愿单已清空");
+  });
+})();
+</script>
+
+</body>
+</html>
