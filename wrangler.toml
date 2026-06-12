@@ -1,0 +1,14 @@
+# Wrangler config for Cloudflare Pages
+# 作用: 绑 D1 database (Hybrid Pipeline synth-jobs 队列)
+# 注: 仅 Pages 配置 (无 [main] / 无 [build]), 避免 commit 8b48acb 提到的 Workers 误判
+
+name = "majorexplorer"
+pages_build_output_dir = "public"
+compatibility_date = "2026-06-12"
+
+# D1 binding (Pages Function 用 env.DB 访问)
+# 跟 migrations/0001_init.sql 的 schema 对齐
+[[d1_databases]]
+binding = "DB"
+database_name = "synth-jobs"
+database_id = "c74a412b-6587-48e5-ae2e-b2cde43acdc7"
