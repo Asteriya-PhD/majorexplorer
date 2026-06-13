@@ -248,6 +248,42 @@
 @media (max-width: 600px) {
   .strategy-section { padding: 0 16px; }
 }
+
+/* 📚 学科门类 chip 区(战略 chip 下方,职业 chip(待加)上方) */
+.discipline-section {
+  max-width: 880px; margin: 16px auto 8px; padding: 0 24px;
+}
+.discipline-section-label {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  font-size: 0.875rem;
+}
+.discipline-section-icon { color: #2A6F4F; font-size: 1.1rem; }
+.discipline-section-title {
+  color: #2A6F4F; font-weight: 600;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  letter-spacing: 0.05em; font-size: 0.95rem;
+}
+.discipline-section-source { color: #8B7355; font-size: 0.75rem; }
+.discipline-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.discipline-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: white;
+  border: 1.5px solid rgba(42,111,79,0.4);
+  border-radius: 999px; text-decoration: none;
+  color: #2A6F4F; font-size: 0.8125rem; font-weight: 500;
+  transition: all 0.2s;
+}
+.discipline-pill:hover {
+  background: linear-gradient(90deg, rgba(42,111,79,0.06), rgba(217,119,6,0.04));
+  border-color: #2A6F4F; transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(42,111,79,0.15);
+}
+.discipline-pill-icon { font-size: 1rem; }
+.discipline-pill-name { color: #1A1A1A; }
+.discipline-pill-count { color: #8B7355; font-size: 0.6875rem; }
+@media (max-width: 600px) {
+  .discipline-section { padding: 0 16px; }
+}
 </style>
 </head>
 <body>
@@ -294,6 +330,17 @@
         <a href="/strategy.html" class="strategy-section-more">查看全部 →</a>
       </div>
       <div class="strategy-pills" id="strategy-host">
+        <!-- JS 动态注入 chip 列表 -->
+      </div>
+    </div>
+
+    <div class="discipline-section">
+      <div class="discipline-section-label">
+        <span class="discipline-section-icon">📚</span>
+        <span class="discipline-section-title">按学科门类浏览 (2026)</span>
+        <span class="discipline-section-source">· 13 门类 / 92 专业类</span>
+      </div>
+      <div class="discipline-pills" id="discipline-host">
         <!-- JS 动态注入 chip 列表 -->
       </div>
     </div>
@@ -367,6 +414,7 @@
 <script src="/js/major-search.js"></script>
 <script src="/js/synth-client.js"></script>
 <script src="/js/strategy-pills.js"></script>
+<script src="/js/discipline-pills.js"></script>
 <script>
 (async function () {
   "use strict";
