@@ -69,6 +69,10 @@ def _cache_put(q: str, items: list[dict]):
 
 
 # ── 单路实现 ──
+# 搜索源开关 (env 控制, 测试时可关掉)
+SKIP_DDG = os.environ.get("SKIP_DDG", "1") == "1"  # 默认跳过 DDG (境外 IP 不稳)
+
+
 def _bing_search(q: str, n: int = 10) -> list[Snippet]:
     """Azure Bing Web Search API (7 天 free trial)."""
     key = os.environ.get("BING_SEARCH_API_KEY", "")
@@ -154,7 +158,9 @@ def _serper_search(q: str, n: int = 10) -> list[Snippet]:
 
 
 def _ddg_html_search(q: str, n: int = 10) -> list[Snippet]:
-    """DuckDuckGo HTML scrape fallback (无 key, 易 rate-limit)."""
+    """DuckDuckGo HTML scrape fallback (无 key, 易 rate-limit). 默认禁用."""
+    if SKIP_DDG:
+        return []
     try:
         resp = requests.post(
             "https://html.duckduckgo.com/html/",

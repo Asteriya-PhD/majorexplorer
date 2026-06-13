@@ -38,7 +38,8 @@ M3_BASE = "https://api.minimaxi.com/anthropic"
 M3_DEFAULT_MODEL = "MiniMax-M3"
 
 DEEPSEEK_BASE = "https://api.deepseek.com/anthropic"
-DEEPSEEK_DEFAULT_MODEL = "deepseek-chat"
+# V3 快过期, 改用 V4 Flash (快且便宜: 缓存命中 ¥0.02/M, 未命中 ¥1/M input)
+DEEPSEEK_DEFAULT_MODEL = "deepseek-v4-flash"
 
 
 class RetryableError(Exception):
@@ -99,8 +100,12 @@ class _AnthropicCompatClient:
 
         # token 累计
         try:
-            self.total_input_tokens += payload["usage"]["input_tokens"]
-            self.total_output_tokens += payload["usage"]["output_tokens"]
+            usage = payload["usage"]
+            self.total_input_tokens += usage["input_tokens"]
+            self.total_output_tokens += usage["output_tokens"]
+            # 记录 cache_read 给 deepseek 定价用
+            self._last_cache_read = usage.get("cache_read_input_tokens", 0)
+            self._last_usage = usage
         except (KeyError, TypeError):
             pass
         return payload
@@ -237,12 +242,12 @@ class _AnthropicCompatClient:
 
         payload = self._call({
             "model": self.model,
-            "max_tokens": 8000,
+            "max_tokens": 16000,  # m3 thinking 4096 + JSON 8000, 必须留足, 否则 stop_reason=max_tokens
             "temperature": 0.4,
             "tools": [tool],
             "tool_choice": {"type": "tool", "name": "emit_major_json"},
             "messages": [{"role": "user", "content": prompt}],
-        })
+        }, expect_tool=True)
 
         # 抽 tool_use input
         for block in payload.get("content", []):
@@ -255,7 +260,12 @@ class _AnthropicCompatClient:
                 return self._parse_json_loose(text, expect_keys=("title", "style"))
             except RetryableError:
                 pass
-        raise RetryableError("synthesize_json 未返回 tool_use 块且 text 也无 JSON")
+        # debug: dump 完整 content 便于排查
+        content_types = [b.get("type") for b in payload.get("content", [])]
+        raise RetryableError(
+            f"synthesize_json 未返回 tool_use 块且 text 也无 JSON "
+            f"(content types: {content_types}, stop_reason: {payload.get('stop_reason')})"
+        )
 
     # ── 内部 ──
     def _extract_text(self, payload: dict) -> str:
@@ -323,7 +333,7 @@ class M3Client(_AnthropicCompatClient):
         # body → SDK 参数
         kwargs = {
             "model": body.get("model", self.model),
-            "max_tokens": body.get("max_tokens", 8000),
+            "max_tokens": body.get("max_tokens", 16000),
             "messages": body.get("messages", []),
         }
         if "temperature" in body:
@@ -382,15 +392,35 @@ class M3Client(_AnthropicCompatClient):
 
 
 class DeepSeekClient(_AnthropicCompatClient):
-    """DeepSeek-V3 (https://api.deepseek.com/anthropic)."""
+    """DeepSeek-V4-Flash (https://api.deepseek.com/anthropic).
+
+    注意: V4 Flash 默认 thinking on, 但 thinking mode 不支持 tool_choice,
+    会返回 400. synthesize_json 必须显式禁 thinking.
+    """
     provider_name = "deepseek"
     default_model = DEEPSEEK_DEFAULT_MODEL
     base_url = DEEPSEEK_BASE
     api_key_env = "DEEPSEEK_API_KEY"
 
+    def synthesize_json(self, *args, **kwargs) -> dict:
+        """Override: deepseek 走 raw HTTP 不带 thinking + 自动 normalize 到 curated schema."""
+        raw = _AnthropicCompatClient.synthesize_json(self, *args, **kwargs)
+        return _normalize_deepseek_to_curated(raw)
+
+    def _call(self, body: dict, expect_tool: bool = False) -> dict:
+        # V4 Flash + tool_choice 不兼容 thinking, 必须显式禁
+        if expect_tool:
+            body.setdefault("thinking", {"type": "disabled"})
+        return super()._call(body, expect_tool=expect_tool)
+
     def cost_estimate_cny(self) -> float:
-        """DeepSeek-V3 定价: 1元/百万 input, 2元/百万 output."""
-        return (self.total_input_tokens * 1 + self.total_output_tokens * 2) / 1_000_000
+        """DeepSeek V4 Flash 定价: 缓存命中 ¥0.02/M, 未命中 ¥1/M input, 输出 ~¥2/M."""
+        usage = getattr(self, "_last_usage", None)
+        if usage is None:
+            return 0.0
+        cache_read = getattr(self, "_last_cache_read", 0)
+        in_t = self.total_input_tokens - cache_read
+        return (cache_read * 0.02 + in_t * 1.0 + self.total_output_tokens * 2.0) / 1_000_000
 
 
 # ─────────────────────────────────────────────────────────────
@@ -598,6 +628,319 @@ def _normalize_m3_to_curated(data: dict) -> dict:
                         x["pct"] = int(m.group(1)) if m else 50
                 elif isinstance(level, (int, float)):
                     x["pct"] = int(level)
+
+    return data
+
+
+# ─────────────────────────────────────────────────────────────
+# DeepSeek → curated schema 转换器 (Post-process 兼容层)
+# ─────────────────────────────────────────────────────────────
+def _normalize_deepseek_to_curated(data: dict) -> dict:
+    """DeepSeek V4 Flash 输出 schema 跟 m3 / curated 都不同, 渲染前需归一化.
+
+    已知 DeepSeek quirks (从 D 组 10 篇实战中发现):
+      - salary: {note, stages:[{stage, salary_range, description}]} → {stage_name: {p25,p50,p75,yoy}}
+        salary_range "8-15 万/年" → p25=8, p50=12, p75=15 (中位数取平均)
+      - deep_study: 自由 key (intro/undergrad_plan/cert_plan/core_skills/certificates/...)
+        → {books, certification, internships, skills}
+      - deep_study.certificates: [{name, why, difficulty}] → list[str] "name (难度: X)"
+      - deep_study.recommended_books: [{title, author, desc}] → list[str] "《title》— desc"
+      - alumni_quotes: 偶尔含 {name, background, insight} 而非 {quote}, 改名
+      - xuanke_req_list: 偶尔返 [{subject, ratio, requirement_note}], 改名
+      - overview_v2.pitfalls: m3 兼容层已处理, 这里补一下直接 list[dict] 但缺字段
+    """
+    if not isinstance(data, dict):
+        return data
+
+    # ── salary: {note, stages:[...]} → {stage: {p25,p50,p75,yoy}} ──
+    salary = data.get("salary")
+    if isinstance(salary, dict) and "stages" in salary and isinstance(salary["stages"], list):
+        new_salary = {}
+        for s in salary["stages"]:
+            if not isinstance(s, dict):
+                continue
+            stage = str(s.get("stage", s.get("name", "未命名"))).strip()
+            # 抽数字 from "8-15 万/年" → (8, 15)
+            rng = str(s.get("salary_range", ""))
+            nums = re.findall(r"(\d+(?:\.\d+)?)", rng)
+            p25, p50, p75 = 0, 0, 0
+            if len(nums) >= 2:
+                p25 = int(float(nums[0]))
+                p75 = int(float(nums[1]))
+                p50 = (p25 + p75) // 2
+            elif len(nums) == 1:
+                p50 = p25 = p75 = int(float(nums[0]))
+            new_salary[stage] = {
+                "p25": p25,
+                "p50": p50,
+                "p75": p75,
+                "yoy": 5,  # 默认值, deepseek 不返 yoy
+                "desc": str(s.get("description", ""))[:200],
+            }
+        if new_salary:
+            data["salary"] = new_salary
+
+    # ── deep_study: 自由 key → curated 标准 (关键: 合并为长字符串, 不要每段拆 1 项) ──
+    ds = data.get("deep_study")
+    if isinstance(ds, dict):
+        new_ds = {"books": [], "certification": [], "internships": [], "skills": []}
+        for k, v in ds.items():
+            k_lower = k.lower()
+            # 分类
+            if any(x in k_lower for x in ("cert", "资格证", "证书", "certificate")):
+                target = "certification"
+            elif any(x in k_lower for x in ("intern", "实习", "实习规划")):
+                target = "internships"
+            elif any(x in k_lower for x in ("skill", "技能", "能力", "core_skills")):
+                target = "skills"
+            elif any(x in k_lower for x in ("book", "书", "阅读", "undergrad", "grad_plan", "study", "规划", "intro", "background", "overview")):
+                target = "books"
+            else:
+                # 杂项 → 塞 books (与读书规划相关)
+                target = "books"
+
+            # 关键: 把同 key 的多段内容拼成 1 段长字符串, 不要拆成 list
+            parts = []
+            if isinstance(v, str):
+                parts.append(v)
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, str):
+                        parts.append(item)
+                    elif isinstance(item, dict):
+                        # 优先取 name/desc/text/title 拼成单行
+                        sub = []
+                        if item.get("name"): sub.append(str(item["name"]))
+                        if item.get("title"): sub.append(f"《{item['title']}》")
+                        if item.get("author"): sub.append(f"— {item['author']}")
+                        if item.get("difficulty"): sub.append(f"难度: {item['difficulty']}")
+                        if item.get("why"): sub.append(f"为什么: {item['why']}")
+                        if item.get("value"): sub.append(str(item["value"]))
+                        if item.get("level"): sub.append(f"({item['level']})")
+                        if item.get("cost"): sub.append(f"费用: {item['cost']}")
+                        if item.get("description"): sub.append(str(item["description"]))
+                        if item.get("desc"): sub.append(str(item["desc"]))
+                        if item.get("text"): sub.append(str(item["text"]))
+                        if sub:
+                            parts.append(" ".join(sub))
+            elif isinstance(v, dict):
+                sub = []
+                if v.get("name"): sub.append(str(v["name"]))
+                if v.get("description"): sub.append(str(v["description"]))
+                if v.get("desc"): sub.append(str(v["desc"]))
+                if v.get("text"): sub.append(str(v["text"]))
+                if sub:
+                    parts.append(" ".join(sub))
+
+            if parts:
+                # 合并为 1 段长字符串 (curated 格式), 限 500 字
+                combined = " / ".join(p for p in parts if p)[:500]
+                new_ds[target].append(combined)
+
+        # 合并 books 里多个 item 为单条 (1-2 段长)
+        for k in new_ds:
+            if len(new_ds[k]) > 2:
+                # 超过 2 项就合并前 N 项
+                new_ds[k] = [" / ".join(new_ds[k])[:800]]
+
+        # 过滤空 list
+        data["deep_study"] = {k: v for k, v in new_ds.items() if v}
+
+    # ── alumni_quotes: {background, insight} 改 {quote} ──
+    aq = data.get("alumni_quotes")
+    if isinstance(aq, list):
+        for q in aq:
+            if isinstance(q, dict) and not q.get("quote"):
+                if q.get("insight"):
+                    q["quote"] = str(q.pop("insight"))[:300]
+                elif q.get("background"):
+                    q["quote"] = str(q.pop("background"))[:300]
+
+    # ── xuanke_req_list: 多种格式 → {name, pct, note} ──
+    # DeepSeek 实战中常用 3 种格式:
+    #   A. {subject, ratio, requirement_note}      ← 字段版
+    #   B. {province, req, note}                  ← 按省份版 (D 组实战发现!)
+    #   C. {name, pct, note}                       ← 标准版
+    xr = data.get("xuanke_req_list")
+    if isinstance(xr, list):
+        new_xr = []
+        for x in xr:
+            if not isinstance(x, dict):
+                continue
+            nx = dict(x)
+
+            # 省份版 → 抽 req 关键词
+            if "province" in x and "req" in x and "name" not in nx:
+                # 从 req 抽 "物理"/"历史"/"化学"/"生物" 等关键词
+                req_str = str(x.get("req", ""))
+                # 优先级: 物理/历史/化学/生物/不限/政治/地理
+                found_subj = None
+                for subj in ["物理", "历史", "化学", "生物", "政治", "地理", "不限"]:
+                    if subj in req_str:
+                        found_subj = subj
+                        break
+                # 抽 "X+Y" 组合
+                if not found_subj:
+                    m = re.search(r"([物理历史化学生物政治地理不限])[+/]([物理历史化学生物政治地理不限])", req_str)
+                    if m:
+                        found_subj = f"{m.group(1)}+{m.group(2)}"
+                if not found_subj:
+                    found_subj = "其他"
+
+                # 派生 pct: 关键词 "必选" → 100, "均可" → 80, "建议" → 60, 默认 50
+                pct = 50
+                if "必选" in req_str or "要求" in req_str and "必" in req_str:
+                    pct = 100
+                elif "均可" in req_str or "不限" in req_str or "文理兼收" in req_str:
+                    pct = 80
+                elif "建议" in req_str:
+                    pct = 60
+
+                nx["name"] = found_subj
+                nx["pct"] = pct
+                if "note" not in nx and "note" in x:
+                    nx["note"] = x["note"]
+                # province 留作参考
+                nx["province"] = x["province"]
+                nx["req_text"] = req_str
+
+            # 课程版 (law 实测) → {course, reason} 抽 course 作 name, reason 作 note
+            elif "course" in x and "name" not in nx:
+                nx["name"] = str(x["course"])
+                if "reason" in x and "note" not in nx:
+                    nx["note"] = str(x["reason"])
+                # 默认 80 (因为"门槛"暗示普遍要求)
+                if "pct" not in nx:
+                    reason_str = str(x.get("reason", ""))
+                    if "门槛" in reason_str or "必" in reason_str or "强" in reason_str:
+                        nx["pct"] = 90
+                    elif "建议" in reason_str:
+                        nx["pct"] = 60
+                    else:
+                        nx["pct"] = 80
+
+            # 字段版 → 改名
+            if "subject" in x and "name" not in nx:
+                nx["name"] = x["subject"]
+            if "ratio" in x and "pct" not in nx:
+                ratio = x["ratio"]
+                if isinstance(ratio, str):
+                    m = re.search(r"(\d+)", ratio)
+                    nx["pct"] = int(m.group(1)) if m else 50
+                elif isinstance(ratio, (int, float)):
+                    nx["pct"] = int(ratio)
+            if "requirement_note" in x and "note" not in nx:
+                nx["note"] = x.pop("requirement_note")
+
+            # 兜底: 缺 name / pct
+            if "name" not in nx:
+                nx["name"] = str(x.get("subject", x.get("province", "其他")))
+            if "pct" not in nx:
+                nx["pct"] = 0
+
+            new_xr.append(nx)
+        data["xuanke_req_list"] = new_xr
+
+    # ── overview_v2: 强制 {what:{foundations,directions,skills}, fit:{yes,no}, pitfalls:[{myth,reality}]} ──
+    ov = data.get("overview_v2")
+    if isinstance(ov, dict):
+        # what 归一
+        what = ov.get("what", {})
+        if not isinstance(what, dict):
+            what = {}
+        new_what = {
+            "foundations": what.get("foundations") or what.get("learn") or what.get("intro") or [],
+            "directions": what.get("directions") or what.get("branches") or what.get("subfields") or [],
+            "skills": what.get("skills") or what.get("abilities") or what.get("competencies") or [],
+        }
+        # title 字段丢掉
+        what.pop("title", None)
+        ov["what"] = new_what
+
+        # fit 归一
+        fit = ov.get("fit", {})
+        if not isinstance(fit, dict):
+            fit = {}
+        ov["fit"] = {
+            "yes": fit.get("yes") or [],
+            "no": fit.get("no") or [],
+        }
+
+        # pitfalls 归一
+        pf = ov.get("pitfalls", [])
+        if not isinstance(pf, list):
+            pf = []
+        new_pf = []
+        for p in pf:
+            if isinstance(p, dict) and p.get("myth") and p.get("reality"):
+                new_pf.append({"myth": p["myth"], "reality": p["reality"]})
+        ov["pitfalls"] = new_pf
+
+    # ── salary: 强制 4 阶段 (应届 / 3年 / 5年 / 10年+), 不够就合并/补默认 ──
+    # 单位归一: 检测 note 里 "元/月" 或数字 < 1000 → 认为是 元/月, ×12/10000 转 万/年
+    salary = data.get("salary")
+    if isinstance(salary, dict) and salary:
+        new_salary = {}
+
+        # 检测单位: 如果 p50 < 1000 且有 "规培/月薪" 等月相关字眼 → 元/月
+        # 或看 note / 数据规模
+        sample_vals = [v for v in salary.values() if isinstance(v, dict)]
+        if sample_vals:
+            sample_note = " ".join(str(v.get("note", "")) for v in sample_vals)
+            sample_p50s = [v.get("p50", 0) for v in sample_vals if v.get("p50")]
+            # 启发: p50 < 1000 几乎肯定是元/月; p50 > 1000 但 < 100 也可能是元/月
+            is_monthly = (
+                any(s < 1000 for s in sample_p50s) or
+                "元/月" in sample_note or
+                "月薪" in sample_note or
+                "规培" in sample_note
+            )
+
+        def classify_stage(s: str) -> str:
+            s_lower = s.lower()
+            if "应届" in s or "junior" in s_lower or "0-" in s or s.strip().startswith("0年") or "规培" in s:
+                return "应届生 (一线)"
+            if "10" in s or "15" in s or "20" in s or "资深" in s or "高级" in s or "senior" in s_lower or "持证" in s or "合伙人" in s or "主任" in s or "副主" in s or "正高" in s:
+                return "10年+ (持证/资深)"
+            m = re.search(r"(\d+)\s*年", s)
+            if m:
+                years = int(m.group(1))
+                if years >= 8:
+                    return "10年+ (持证/资深)"
+                if years >= 4:
+                    return "5年经验"
+                if years >= 2:
+                    return "3年经验"
+            return s
+
+        for stage, vals in salary.items():
+            if not isinstance(vals, dict):
+                continue
+            mapped = classify_stage(str(stage))
+            # 单位换算: 元/月 → 万/年
+            if is_monthly:
+                vals = dict(vals)  # 复制避免改原
+                for k in ("p25", "p50", "p75"):
+                    if k in vals and isinstance(vals[k], (int, float)):
+                        vals[k] = round(vals[k] * 12 / 10000, 1)
+            new_salary[mapped] = vals
+
+        # 合并同名 (取较大值)
+        merged = {}
+        for stage, vals in new_salary.items():
+            if stage in merged:
+                for k in ("p25", "p50", "p75"):
+                    if k in vals:
+                        merged[stage][k] = max(merged[stage].get(k, 0), vals.get(k, 0))
+            else:
+                merged[stage] = dict(vals)
+
+        canonical_order = ["应届生 (一线)", "3年经验", "5年经验", "10年+ (持证/资深)"]
+        ordered = {k: merged[k] for k in canonical_order if k in merged}
+        for k, v in merged.items():
+            if k not in ordered:
+                ordered[k] = v
+        data["salary"] = ordered
 
     return data
 
