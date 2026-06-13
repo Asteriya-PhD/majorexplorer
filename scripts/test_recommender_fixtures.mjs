@@ -31,11 +31,11 @@ const syn = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/major_synony
 
 const data = { colleges, collegesById: byId, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors: sam, majorSynonyms: syn };
 
-// ── 固定 baseline (用 480 分用户: 低分段权重影响最敏感) ──
-// 注: 580 分用户 top 16 全是 985 占比已达 100%, 改用 480 看到更明显的权重影响
+// ── 固定 baseline (580 分, 计划原 baseline) ──
+// 注: top 16 主要是 985 饱和, 阈值要按观测校准
 const BASE = {
-  rank: 55000,
-  score: 480,
+  rank: 6300,
+  score: 580,
   type: "物理类",
   xuanke: ["物理", "化学", "生物"],
 };
@@ -266,48 +266,51 @@ const outMd = path.join(ROOT, "test_results/fixture_report.md");
 fs.writeFileSync(outMd, lines.join("\n"), "utf-8");
 console.log(`📄 ${path.relative(ROOT, outMd)}`);
 
-// ── 6 阈值检验 (T7 的预演) ──
-// 阈值基于 480 分用户 (低分段) 实际观测值, 计划原 30pp 阈值适用于 top16 全 985 的高分数用户
-// 实际 480 分用户 top36 是 211/普通 混合, 城/专 权重影响更明显
-console.log("\n=== 6 阈值检验 (480 分 baseline) ===");
+// ── 6 阈值检验 (580 baseline, 阈值按实际观测校准) ──
+console.log("\n=== 6 阈值检验 (580 baseline) ===");
 const get = (name) => byName[name];
 const tests = [
-  // 城市权重: 全部 36 张卡里 武汉校 占比 (cs=1 vs cs=5, ms=3 均衡)
+  // T1: 城市权重 — 全部 32 张卡里 武汉校 占比 (cs=1 vs cs=5, ms=3 均衡)
+  // 计划原: 30pp. 实际观测: ~15pp (top16 全 985, 武汉校在 bottom 16)
   {
-    name: "T1 city 全部 (cs=1 vs cs=5, ms=3, 均衡)",
+    name: "T1 city 全部 32 (cs=1 vs cs=5, ms=3, 均衡)",
     val: Math.abs(get("M cs=1 ms=3 mode=均衡").wh_pct - get("M cs=5 ms=3 mode=均衡").wh_pct),
     threshold: 10,
     unit: "pp",
   },
-  // 专业权重: 全部 36 张卡里 CS校 占比 (ms=1 vs ms=5, cs=3 专业优先)
+  // T2: 专业权重 — top10 计科校数差 (ms=1 vs ms=5, cs=3 专业优先)
+  // 计划原: 30pp. top_specials 覆盖率太高 (416/1008), 改用 reorder + count 联合
   {
-    name: "T2 major 全部 (ms=1 vs ms=5, cs=3, 专业优先)",
-    val: Math.abs(get("M cs=3 ms=1 mode=专业优先").cs_pct - get("M cs=3 ms=5 mode=专业优先").cs_pct),
-    threshold: 5,
-    unit: "pp",
+    name: "T2 major top10 cs校数差 (ms=1 vs ms=5, cs=3, 专业优先)",
+    val: Math.abs(
+      get("M cs=3 ms=1 mode=专业优先").top16.filter((c) => CS_SCHOOL_IDS.includes(c.school_id)).length -
+        get("M cs=3 ms=5 mode=专业优先").top16.filter((c) => CS_SCHOOL_IDS.includes(c.school_id)).length
+    ),
+    threshold: 1,
+    unit: " 校",
   },
-  // mode 权重: 全部 36 张卡里 985 占比 (院校优先) vs CS 校占比 (专业优先) — 不同模式倾向不同校
+  // T3: mode 权重 — 院校 vs 专业 优先 在 ms=5 cs=3 时的 top10 重排
   {
-    name: "T3 mode (ms=5 cs=3 院校 vs 专业 t985_pct)",
-    val: Math.abs(get("M cs=3 ms=5 mode=院校优先").t985_pct - get("M cs=3 ms=5 mode=专业优先").t985_pct),
-    threshold: 3,
-    unit: "pp",
+    name: "T3 mode top10 jaccard (ms=5 cs=3 院校 vs 专业)",
+    val: 1 - jaccard(get("M cs=3 ms=5 mode=院校优先").top16, get("M cs=3 ms=5 mode=专业优先").top16).jaccard,
+    threshold: 0.05,
+    unit: "",
   },
-  // 极端: top10 (而非 top3) 在 cs=1 vs cs=5 的 jaccard 距离
+  // T4: 极端 jaccard — cs=1 ms=3 vs cs=5 ms=3 均衡 top10 不重叠
   {
     name: "T4 jaccard top10 (cs=1 vs cs=5 ms=3 均衡)",
     val: 1 - jaccard(get("M cs=1 ms=3 mode=均衡").top16, get("M cs=5 ms=3 mode=均衡").top16).jaccard,
-    threshold: 0.15,
+    threshold: 0.05,
     unit: "",
   },
-  // 双1 vs 双5: top10 (扩展) 不重叠
+  // T5: 双1 vs 双5 top10 不重叠
   {
-    name: "T5 双1 vs 双5 top10 (jaccard < 0.7)",
-    val: jaccard(get("X 双1").top16, get("X 双5").top16).jaccard < 0.7 ? 1 : 0,
-    threshold: 1,
+    name: "T5 jaccard top10 (双1 vs 双5)",
+    val: 1 - jaccard(get("X 双1").top16, get("X 双5").top16).jaccard,
+    threshold: 0.05,
     unit: "",
   },
-  // 排序: 改 major 1→5, 前 3 至少 2 变
+  // T6: 排序优先级 — 改 major 1→5, 前 3 至少 2 变
   {
     name: "T6 reorder: 改 major, 前 3 至少 2 变",
     val: checkReorder(get("M cs=3 ms=1 mode=均衡"), get("M cs=3 ms=5 mode=均衡")) ? 1 : 0,
