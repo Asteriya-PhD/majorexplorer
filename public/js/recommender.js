@@ -82,10 +82,10 @@
   function computeChance(userRank, medRank, maxRank) {
     if (!medRank || medRank <= 0) return [null, null, null];
 
-    // ── 强保底: 用户位次比"该校最深录取线"还差 20% 以上, 闭眼能上 ──
-    if (maxRank && maxRank > 0 && userRank > maxRank * 1.2) {
-      return ["保", 0.99, "保兜底"];
-    }
+    // 注: 之前有 'userRank > maxRank * 1.2 → 兜底' 的早期 check, 已删除.
+    // 该 check 逻辑反了: maxRank 是历史最难年(位次最大=最深), user 比 worst 还差
+    // 应该是'冲不上', 不是'兜底'. 兜底正确判定走 diff-based 分类末行 (diff <= -0.65).
+    // maxRank 参数保留 (maxRank3y 在 caller 仍算), 但函数内不再用.
 
     const diff = (userRank - medRank) / medRank;
 

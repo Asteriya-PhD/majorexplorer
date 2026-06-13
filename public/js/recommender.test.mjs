@@ -223,6 +223,26 @@ test("8.3 cap: userScore=5 + A+ bonus 0.5 = 5.5, capped 5.0", () => {
 // ══════════════════════════════════════════════════════
 // 9. 防误报 (regression tests — 之前发现过的 bug)
 // ══════════════════════════════════════════════════════
+
+test("9.0 REGRESSION 兜底反逻辑: 中山大学 985 不应被早期 maxRank*1.2 误判保兜底", () => {
+  // 实战 user 场景: user rank 16067, 中山大学 median 7356, max 8645 (2022 worst)
+  // 旧 bug: userRank > maxRank * 1.2 (16067 > 10374) 误判为 保兜底 99%
+  // 正确: diff = (16067-7356)/7356 = 1.18 → 极冲 (冲档)
+  const r = Rec.computeChance(16067, 7356, 8645);
+  assert.deepEqual(r, ["冲", 0.25, "极冲"], "985 校不应被 maxRank*1.2 误判兜底");
+});
+
+test("9.0b 保兜底正确路径: user 位次比 median 还好 65% 以上 (diff <= -0.65)", () => {
+  // user rank 2000, median 7356 → diff = -0.73 → 保兜底
+  const r = Rec.computeChance(2000, 7356, 8645);
+  assert.deepEqual(r, ["保", 0.99, "保兜底"]);
+});
+
+test("9.0c 过冲丢弃: user 位次比 median 差 150% 以上 (diff >= 1.5)", () => {
+  // user 30000, median 7356 → diff = 3.08 → 过冲 (null)
+  assert.deepEqual(Rec.computeChance(30000, 7356, 8645), [null, null, null]);
+});
+
 test("9.1 REGRESSION: 上海大学+计算机 不应误报 (信息工程 vs 智能电网信息工程)", () => {
   // 上海大学 all_majors 含 "信息工程"/"信息管理与信息系统", 但用户输入 "计算机"
   // 旧 bug: "信息工程" 是 "智能电网信息工程" 子串, 误命中
