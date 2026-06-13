@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>⭐</text></svg>">
+<title>国家战略产业全景 · 2026 高考专业指南 | Major Explorer</title>
+<meta name="description" content="基于 4+6 国家产业格局(4 大新兴支柱 + 6 大未来产业),盘点哪些本科专业对应国家战略方向,4 年后毕业踩上产业爆发期。">
+<style>
+:root {
+  --c-primary: #B8323A;
+  --c-amber: #D97706;
+  --c-bg: #F8F6F0;
+  --c-paper: #FFFFFF;
+  --c-ink: #1A1A1A;
+  --c-muted: #8B7355;
+  --c-border: #E2DFD5;
+  --f-serif: 'Songti SC', 'SimSun', '宋体', serif;
+  --f-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--f-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.container { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+/* ── Hero ── */
+.strategy-hero {
+  padding: 64px 0 32px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(184,50,58,0.04), transparent);
+}
+.strategy-hero .eyebrow {
+  display: inline-block;
+  padding: 6px 16px; border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 999px; color: var(--c-primary);
+  font-size: 0.8125rem; font-family: var(--f-serif);
+  letter-spacing: 0.1em; margin-bottom: 16px;
+}
+.strategy-hero h1 {
+  font-family: var(--f-serif);
+  font-size: 2.5rem; font-weight: 600;
+  margin: 0 0 16px; color: var(--c-ink);
+  letter-spacing: 0.02em;
+}
+.strategy-hero h1 em {
+  font-style: normal; color: var(--c-primary);
+}
+.strategy-hero .tagline {
+  max-width: 680px; margin: 0 auto;
+  font-size: 1rem; color: var(--c-muted);
+}
+.strategy-hero .tagline strong { color: var(--c-ink); }
+.strategy-hero .source {
+  margin-top: 12px; font-size: 0.75rem; color: var(--c-muted);
+}
+
+/* ── Tier section ── */
+.tier-section { padding: 32px 0; }
+.tier-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 24px; padding-bottom: 12px;
+  border-bottom: 2px solid var(--c-border);
+}
+.tier-title {
+  font-family: var(--f-serif);
+  font-size: 1.5rem; color: var(--c-primary);
+  letter-spacing: 0.05em; margin: 0;
+}
+.tier-count {
+  font-size: 0.875rem; color: var(--c-muted);
+  font-family: var(--f-sans);
+}
+
+/* ── Industry card ── */
+.industry-card {
+  background: var(--c-paper);
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  scroll-margin-top: 80px;
+  transition: all 0.2s;
+}
+.industry-card:target {
+  border-color: var(--c-primary);
+  box-shadow: 0 4px 20px rgba(184,50,58,0.1);
+}
+.industry-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px;
+}
+.industry-icon {
+  font-size: 1.75rem; line-height: 1;
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, rgba(184,50,58,0.06), rgba(217,119,6,0.06));
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+.industry-name {
+  font-family: var(--f-serif);
+  font-size: 1.375rem; font-weight: 600;
+  margin: 0; color: var(--c-ink);
+  letter-spacing: 0.05em;
+}
+.industry-tagline {
+  font-size: 0.875rem; color: var(--c-muted);
+  margin: 4px 0 0; font-style: italic;
+}
+.industry-meta {
+  display: grid; grid-template-columns: 1fr;
+  gap: 12px; margin: 16px 0 20px;
+}
+.industry-meta-row {
+  display: flex; gap: 10px;
+  font-size: 0.875rem; line-height: 1.6;
+}
+.industry-meta-label {
+  flex-shrink: 0; color: var(--c-primary);
+  font-weight: 600; min-width: 60px;
+}
+.industry-meta-text { color: var(--c-ink); flex: 1; }
+
+.industry-majors-title {
+  font-size: 0.8125rem; color: var(--c-muted);
+  margin: 0 0 8px; text-transform: uppercase;
+  letter-spacing: 0.1em; font-weight: 500;
+}
+.industry-majors {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.industry-major {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; background: var(--c-bg);
+  border: 1px solid var(--c-border); border-radius: 6px;
+  text-decoration: none; color: var(--c-ink);
+  font-size: 0.8125rem; font-weight: 500;
+  transition: all 0.2s;
+}
+.industry-major:hover {
+  background: var(--c-primary); color: white;
+  border-color: var(--c-primary);
+  transform: translateY(-1px);
+}
+.industry-major-cat {
+  color: var(--c-muted); font-size: 0.6875rem;
+  padding-left: 6px; border-left: 1px solid var(--c-border);
+}
+.industry-major:hover .industry-major-cat {
+  color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3);
+}
+
+/* ── Footer ── */
+.strategy-footer {
+  margin-top: 64px; padding: 32px 0;
+  border-top: 1px solid var(--c-border);
+  text-align: center;
+}
+.strategy-footer p {
+  margin: 4px 0; font-size: 0.8125rem; color: var(--c-muted);
+}
+.strategy-footer a {
+  color: var(--c-primary); text-decoration: none;
+}
+.strategy-footer a:hover { text-decoration: underline; }
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .strategy-hero { padding: 40px 0 24px; }
+  .strategy-hero h1 { font-size: 1.875rem; }
+  .tier-title { font-size: 1.25rem; }
+  .industry-card { padding: 20px; }
+  .industry-name { font-size: 1.125rem; }
+}
+</style>
+</head>
+<body>
+
+<section class="strategy-hero">
+  <div class="container">
+    <div class="eyebrow">⭐ 国家战略产业全景 · 2026</div>
+    <h1>4 + 6 产业格局<br>哪个专业<em>踩中时代赛道</em>?</h1>
+    <p class="tagline">
+      基于 <strong>教育部 2026.4.28 新增 38 种本科专业</strong> + 《"十五五"规划纲要》+《2026 政府工作报告》,
+      整理出 <strong>4 大新兴支柱</strong>和 <strong>6 大未来产业</strong>,
+      帮你看清<strong>4 年后毕业时</strong>哪些产业正处爆发期。
+    </p>
+    <p class="source" id="source-line">数据源加载中…</p>
+  </div>
+</section>
+
+<main>
+  <section class="tier-section" id="emerging">
+    <div class="container">
+      <div class="tier-header">
+        <h2 class="tier-title">🏛 4 大新兴支柱产业</h2>
+        <span class="tier-count" id="emerging-count"></span>
+      </div>
+      <div id="emerging-list"></div>
+    </div>
+  </section>
+
+  <section class="tier-section" id="future">
+    <div class="container">
+      <div class="tier-header">
+        <h2 class="tier-title">🚀 6 大未来产业</h2>
+        <span class="tier-count" id="future-count"></span>
+      </div>
+      <div id="future-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="strategy-footer">
+  <div class="container">
+    <p>⭐ 战略契合 ≠ 个人兴趣,选专业请结合自身情况综合判断</p>
+    <p><a href="/index.html">← 返回主页</a> · <a href="/data/strategy_industries.json">数据源 JSON</a></p>
+    <p id="footer-source"></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  fetch("/data/strategy_industries.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      if (!data) return;
+
+      // 来源标注
+      const src = data.policy_source || "—";
+      const updated = data.last_updated || "—";
+      document.getElementById("source-line").textContent =
+        `数据源: ${src} · 更新于 ${updated}`;
+      document.getElementById("footer-source").textContent =
+        `Version ${data.version || "?"} · ${updated}`;
+
+      const industries = data.industries || {};
+      const emerging = [];
+      const future = [];
+
+      Object.entries(industries).forEach(([name, info]) => {
+        if ((info.tier || "").includes("支柱")) emerging.push([name, info]);
+        else if ((info.tier || "").includes("未来")) future.push([name, info]);
+      });
+
+      // 渲染卡片
+      const renderCard = (name, info) => `
+        <article class="industry-card" id="${name}">
+          <div class="industry-head">
+            <div class="industry-icon">${info.icon || "⭐"}</div>
+            <div>
+              <h3 class="industry-name">${name}</h3>
+              <p class="industry-tagline">${info.tagline || ""}</p>
+            </div>
+          </div>
+          <div class="industry-meta">
+            <div class="industry-meta-row">
+              <span class="industry-meta-label">📋 背景</span>
+              <span class="industry-meta-text">${info.context || "—"}</span>
+            </div>
+            <div class="industry-meta-row">
+              <span class="industry-meta-label">🎯 窗口</span>
+              <span class="industry-meta-text">${info.window || "—"}</span>
+            </div>
+            <div class="industry-meta-row">
+              <span class="industry-meta-label">⚠️ 避坑</span>
+              <span class="industry-meta-text">${info.pitfall || "—"}</span>
+            </div>
+          </div>
+          <p class="industry-majors-title">命中精品专业</p>
+          <div class="industry-majors">
+            ${(info.matched_majors || []).map((m) => `
+              <a href="/${m.slug}.html" class="industry-major">
+                <span>${m.title}</span>
+                <span class="industry-major-cat">${m.category || ""}</span>
+              </a>
+            `).join("")}
+          </div>
+        </article>
+      `;
+
+      document.getElementById("emerging-list").innerHTML =
+        emerging.map(([n, i]) => renderCard(n, i)).join("");
+      document.getElementById("future-list").innerHTML =
+        future.map(([n, i]) => renderCard(n, i)).join("");
+
+      document.getElementById("emerging-count").textContent = `· ${emerging.length} 个产业`;
+      document.getElementById("future-count").textContent = `· ${future.length} 个产业`;
+
+      // 处理锚点跳转
+      const hash = decodeURIComponent(window.location.hash.slice(1));
+      if (hash) {
+        setTimeout(() => {
+          const el = document.getElementById(hash);
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+    })
+    .catch((e) => {
+      console.warn("[strategy] fetch failed:", e);
+      document.getElementById("source-line").textContent = "数据加载失败,请稍后再试。";
+    });
+})();
+</script>
+</body>
+</html>

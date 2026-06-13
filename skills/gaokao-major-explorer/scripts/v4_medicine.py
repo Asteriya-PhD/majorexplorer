@@ -532,7 +532,7 @@ def render_v4_medicine(data: dict) -> str:
     if "5 校特色选修" in curriculum:
         course_sections.append(("5 校特色选修 (按方向分流)", curriculum["5 校特色选修"]))
     for k, v in curriculum.items():
-        if k not in ("公共必修", "通用专业核心", "5 校特色选修"):
+        if k not in ("公共必修", "通用专业核心", "5 校特色选修") and isinstance(v, list):
             course_sections.append((k, v))
     # 为课程加 prereq (fallback 推断)
     prereq_map = {

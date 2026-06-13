@@ -7,6 +7,7 @@ from pathlib import Path
 from .base import FONT_URLS, get_base_css, COUNT_UP_JS, BASE_V4_CSS, _dedup_by_name, soft_break_name, get_first_char
 from .body_bg import get_body_bg_css
 from .overview_v2 import render_overview_v2, OVERVIEW_V2_CSS
+from .overview_simple import render_overview_simple, OVERVIEW_SIMPLE_CSS, is_simple_format
 from .themes import HERO_FN, THEME_CSS
 
 # ── 心愿单注入 (chip / FAB / 12 主题卡) — 4 页 v1 一致 ──
@@ -22,6 +23,135 @@ try:
     _WL_MANIFEST = Path(__file__).resolve().parent.parent.parent / "data" / "curated" / "manifest.json"
 except Exception:
     _WL_STYLE = ""; _WL_HEAD = ""; _wl_related = lambda *a, **k: ""; _wl_init = lambda *a, **k: ""; _WL_MANIFEST = None
+
+
+# ── 国家战略 ⭐ 徽章 + mini-card 样式(纯展示层,不动算法) ──
+STRATEGY_CSS = """
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+"""
+
+
+def apply_strategy_tags(html: str, data: dict) -> str:
+    """注入 ⭐ 徽章(标题旁) + 战略契合度 mini-card(就业方向 section 上方)。
+
+    - 任意主题(12 套 v4 + medicine)HTML 都可调
+    - 找不到 anchor(<h1> 或就业方向 section)时静默跳过
+    - data 缺 national_strategy_tags 字段时静默跳过
+    """
+    import re
+    tags = data.get("national_strategy_tags", [])
+    if not tags:
+        return html
+
+    # 1) 徽章: 注入到第一个 </h1> 后
+    badge = (
+        '<span class="strategy-badge" '
+        f'title="{" · ".join(tags)}">'
+        '⭐ 国家战略</span>'
+    )
+    html, n = re.subn(r'(</h1>)', r'\1' + badge, html, count=1)
+    if n == 0:
+        # 兜底: 注入到 hero-tags 之前(medicine 主题的结构)
+        html, n2 = re.subn(
+            r'(<div class="hero-tags">)',
+            badge + r'\1',
+            html, count=1
+        )
+        if n2 == 0:
+            print(f"[strategy] WARN: no anchor for badge in {data.get('slug', '?')}")
+
+    # 2) mini-card: 注入到 <div class="direction-list"> 之前
+    industry_links = []
+    for tag in tags:
+        if "-" in tag:
+            tier, industry_name = tag.split("-", 1)
+        else:
+            tier, industry_name = "", tag
+        industry_links.append(
+            f'<a href="/strategy.html#{industry_name}" class="strategy-link">'
+            f'<span class="strategy-link-name">⭐ {industry_name}</span>'
+            f'<span class="strategy-link-tier">{tier}</span>'
+            f'</a>'
+        )
+    fit_html = f'''
+    <div class="strategy-fit-card">
+      <div class="strategy-fit-header">
+        <span class="strategy-fit-icon">⭐</span>
+        <span class="strategy-fit-title">国家战略契合度</span>
+        <span class="strategy-fit-source">· 4+6 产业格局</span>
+      </div>
+      <div class="strategy-fit-list">
+        {"".join(industry_links)}
+      </div>
+      <div class="strategy-fit-tip">⚠️ 战略契合 ≠ 个人兴趣,请结合自身情况判断</div>
+    </div>'''
+    html, n = re.subn(r'(<div class="direction-list">)', fit_html + r'\1', html, count=1)
+    if n == 0:
+        print(f"[strategy] WARN: no direction-list anchor in {data.get('slug', '?')}")
+
+    return html
+
+
+def get_strategy_css() -> str:
+    """返回 strategy CSS 字符串,供 v4_medicine 注入用。"""
+    return STRATEGY_CSS
 
 
 def render_v4(data: dict, style: str) -> str:
@@ -51,6 +181,7 @@ def render_v4(data: dict, style: str) -> str:
     deep_study = data.get("deep_study", {})
     quotes = _dedup_by_name(data.get("alumni_quotes", []), "current")
     xuanke = data.get("xuanke_req_list", [])
+    national_strategy_tags = data.get("national_strategy_tags", [])
 
     # ── 课程 ──
     def render_courses(block_name: str, courses: list) -> str:
@@ -181,9 +312,11 @@ def render_v4(data: dict, style: str) -> str:
         hero_quote=hero_quote, hero_quote_sig=hero_quote_sig,
     )
 
+    # ── 国家战略 ⭐ 徽章: 中心化注入在完整 HTML 末尾(不动 12 个 theme 文件) ──
+
     body_bg = get_body_bg_css(style)
 
-    return f"""<!DOCTYPE html>
+    _html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -202,8 +335,10 @@ def render_v4(data: dict, style: str) -> str:
 {BASE_V4_CSS}
 {body_bg}
 {OVERVIEW_V2_CSS}
+{OVERVIEW_SIMPLE_CSS}
 {THEME_CSS[style]}
 {_WL_STYLE}
+{STRATEGY_CSS}
 </style>
 </head>
 <body>
@@ -214,10 +349,10 @@ def render_v4(data: dict, style: str) -> str:
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    {render_overview_v2(data) if data.get("overview_v2") else f'''<p class="lede drop-cap">{summary}</p>
-    {f'<h3>这个专业学什么?</h3><p>{data.get("what_you_learn", "")}</p>' if data.get("what_you_learn") else ''}
-    {f'<h3>什么人适合?</h3><p>{data.get("who_fits", "")}</p>' if data.get("who_fits") else ''}
-    {f'<h3>避坑指南</h3><p>{data.get("pitfalls", "")}</p>' if data.get("pitfalls") else ''}'''}
+    {render_overview_simple(data) if is_simple_format(data) else (render_overview_v2(data) if data.get("overview_v2") else (f"<p class=lede drop-cap>{summary}</p>"
+    + (f"<h3>这个专业学什么?</h3><p>{data.get("what_you_learn", "")}</p>" if data.get("what_you_learn") else "")
+    + (f"<h3>什么人适合?</h3><p>{data.get("who_fits", "")}</p>" if data.get("who_fits") else "")
+    + (f"<h3>避坑指南</h3><p>{data.get("pitfalls", "")}</p>" if data.get("pitfalls") else "")))}
   </div>
 </section>
 
@@ -333,3 +468,6 @@ def render_v4(data: dict, style: str) -> str:
 {_wl_init(slug, title, style, category)}
 </body>
 </html>"""
+
+    # ── 在完整 HTML 上注入 ⭐ 徽章 + mini-card(对 12 theme 都生效) ──
+    return apply_strategy_tags(_html, data)

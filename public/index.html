@@ -207,6 +207,48 @@
     .step-row { grid-template-columns: 1fr; }
   }
 </style>
+<style>
+/* ⭐ 国家战略产业 chip 区(独立于 12 个职业 chip) */
+.strategy-section {
+  max-width: 880px; margin: 24px auto 8px; padding: 0 24px;
+}
+.strategy-section-label {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  font-size: 0.875rem;
+}
+.strategy-section-star { color: #B8323A; font-size: 1.1rem; }
+.strategy-section-title {
+  color: #B8323A; font-weight: 600;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  letter-spacing: 0.05em; font-size: 0.95rem;
+}
+.strategy-section-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-section-more {
+  margin-left: auto; color: #B8323A;
+  text-decoration: none; font-size: 0.8125rem;
+}
+.strategy-section-more:hover { text-decoration: underline; }
+.strategy-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.strategy-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: white;
+  border: 1.5px solid rgba(184,50,58,0.4);
+  border-radius: 999px; text-decoration: none;
+  color: #B8323A; font-size: 0.8125rem; font-weight: 500;
+  transition: all 0.2s;
+}
+.strategy-pill:hover {
+  background: linear-gradient(90deg, rgba(184,50,58,0.06), rgba(217,119,6,0.06));
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(184,50,58,0.15);
+}
+.strategy-pill-icon { font-size: 1rem; }
+.strategy-pill-name { color: #1A1A1A; }
+.strategy-pill-tier { color: #D97706; font-size: 0.6875rem; }
+@media (max-width: 600px) {
+  .strategy-section { padding: 0 16px; }
+}
+</style>
 </head>
 <body>
 
@@ -242,6 +284,18 @@
       <span class="hero-pill"><span class="pill-check">✓</span><strong>智能搜索</strong><span class="pill-sub">自动匹配</span></span>
       <span class="hero-pill"><span class="pill-check">✓</span><strong>本地跑</strong><span class="pill-sub">0 上传</span></span>
       <span class="hero-pill"><span class="pill-check">✓</span><strong>位次驱动推荐</strong><span class="pill-sub">配套工具</span></span>
+    </div>
+
+    <div class="strategy-section">
+      <div class="strategy-section-label">
+        <span class="strategy-section-star">⭐</span>
+        <span class="strategy-section-title">国家战略产业 (2026)</span>
+        <span class="strategy-section-source">· 4+6 格局</span>
+        <a href="/strategy.html" class="strategy-section-more">查看全部 →</a>
+      </div>
+      <div class="strategy-pills" id="strategy-host">
+        <!-- JS 动态注入 chip 列表 -->
+      </div>
     </div>
 
     <div class="chat-host" id="chat-host"></div>
@@ -312,6 +366,7 @@
 <script src="/js/ui-helpers.js"></script>
 <script src="/js/major-search.js"></script>
 <script src="/js/synth-client.js"></script>
+<script src="/js/strategy-pills.js"></script>
 <script>
 (async function () {
   "use strict";

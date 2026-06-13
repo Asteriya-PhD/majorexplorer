@@ -1504,6 +1504,16 @@ def generate_dashboard(data: dict, style: str, output_path: str | None = None) -
     if style == "medicine":
         from v4_medicine import render_v4_medicine
         html = render_v4_medicine(data)
+        # 注入 ⭐ 战略徽章 + mini-card(medicine 走自己的渲染路径,需后处理)
+        try:
+            from v4_styles.render import apply_strategy_tags, get_strategy_css
+            html = apply_strategy_tags(html, data)
+            # 注入 strategy CSS(medicine 自带全部 CSS,这里追加即可)
+            css = get_strategy_css()
+            if ".strategy-badge {" not in html and css:
+                html = html.replace("</style>", css + "\n</style>", 1)
+        except Exception as e:
+            print(f"[warn] strategy inject failed for {data.get('slug', '?')}: {e}")
     elif style in ("cs", "humanities", "administration", "finance", "law", "education", "sci", "eng", "agri", "arts", "gongan", "business"):
         from v4_styles import render_v4
         html = render_v4(data, style)
