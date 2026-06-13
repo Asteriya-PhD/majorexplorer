@@ -819,6 +819,62 @@ def _normalize_deepseek_to_curated(data: dict) -> dict:
                     else:
                         nx["pct"] = 80
 
+            # 4. {subject, requirement, reason} → 抽 subject→name, requirement→note, 派生 pct
+            elif "subject" in x and "requirement" in x and "name" not in nx:
+                nx["name"] = str(x["subject"])
+                if "note" not in nx:
+                    req_str = str(x.get("requirement", "")) + " | " + str(x.get("reason", ""))
+                    nx["note"] = req_str[:200]
+                # 派生 pct: 从 requirement/reason 文本里抽
+                if "pct" not in nx:
+                    text = str(x.get("requirement", "")) + " " + str(x.get("reason", ""))
+                    if "必修" in text or "必选" in text:
+                        nx["pct"] = 95
+                    elif "强烈建议" in text or "必" in text or "门槛" in text:
+                        nx["pct"] = 85
+                    elif "多数" in text or "大部分" in text:
+                        nx["pct"] = 75
+                    elif "部分" in text or "少数" in text:
+                        nx["pct"] = 40
+                    elif "建议" in text:
+                        nx["pct"] = 60
+                    else:
+                        nx["pct"] = 50
+
+            # 兜底: name 是占位 (其他/未知/空) 时, 用 course 或 subject 替换
+            if str(nx.get("name", "")).strip() in ("其他", "未知", "不限", ""):
+                if x.get("course"):
+                    nx["name"] = str(x["course"])
+                elif x.get("subject") and "requirement" in x:
+                    nx["name"] = str(x["subject"])
+
+            # 兜底: pct=0 时强制从 note / requirement / reason / level 文本重算
+            if nx.get("pct", 0) == 0 and isinstance(nx.get("name"), str) and nx["name"] not in ("其他", ""):
+                # 收集所有文本线索
+                clues = " ".join([
+                    str(nx.get("note", "")),
+                    str(nx.get("requirement", "")),
+                    str(nx.get("reason", "")),
+                    str(nx.get("level", "")),
+                    str(nx.get("req_text", "")),
+                ])
+                if clues.strip():
+                    if "必修" in clues or "必选" in clues:
+                        nx["pct"] = 90
+                    elif "强烈建议" in clues or "必" in clues:
+                        nx["pct"] = 85
+                    elif "多数" in clues or "大部分" in clues:
+                        nx["pct"] = 75
+                    elif "部分" in clues or "少数" in clues:
+                        nx["pct"] = 40
+                    elif "建议" in clues:
+                        nx["pct"] = 60
+                    elif "门槛" in clues:
+                        nx["pct"] = 85
+                    else:
+                        # 默认 70 (有 name 但无强信号, 大概率是常见要求)
+                        nx["pct"] = 70
+
             # 字段版 → 改名
             if "subject" in x and "name" not in nx:
                 nx["name"] = x["subject"]
@@ -881,21 +937,57 @@ def _normalize_deepseek_to_curated(data: dict) -> dict:
     if isinstance(salary, dict) and salary:
         new_salary = {}
 
-        # 严格检测 元/月: 必须有 note 明确说"元/月"/"规培"/"月薪", 数字 < 1000 不能作为唯一依据
+        # 启发式单位检测 (3 类):
+        #   max < 500:    已经是 万/年 (应届 12 万, 资深 200 万, 都在这范围)
+        #   500-100000:  元/月 (× 12 / 10000 → 12 万 = 120000 元/月)
+        #   max > 100000: 元 (× /10000, 例如 60000 → 6 万)
         sample_vals = [v for v in salary.values() if isinstance(v, dict)]
-        is_monthly = False
-        if sample_vals:
-            sample_note = " ".join(str(v.get("note", "")) for v in sample_vals)
-            sample_p50s = [v.get("p50", 0) for v in sample_vals if isinstance(v.get("p50"), (int, float)) and v.get("p50") > 0]
-            is_monthly = (
-                "元/月" in sample_note or
-                "月薪" in sample_note or
-                "规培" in sample_note
-            ) and not any(s > 1000 for s in sample_p50s)  # 元/月 AND 没有任何 > 1000 的值
+        all_p50s = [v.get("p50") for v in sample_vals if isinstance(v.get("p50"), (int, float)) and v.get("p50") > 0]
+        all_p25s = [v.get("p25") for v in sample_vals if isinstance(v.get("p25"), (int, float)) and v.get("p25") > 0]
+        all_p75s = [v.get("p75") for v in sample_vals if isinstance(v.get("p75"), (int, float)) and v.get("p75") > 0]
+        all_p = all_p50s + all_p25s + all_p75s
+        max_val = max(all_p) if all_p else 0
+        sample_note = " ".join(str(v.get("note", "")) for v in sample_vals)
+
+        if max_val < 500:
+            is_monthly = False
+            need_div = False
+        elif max_val <= 100000:
+            is_monthly = True
+            need_div = False
+        else:  # > 100000
+            is_monthly = False
+            need_div = True
+
+        # note 解析器: 从 "10-15k" / "6-12 万" / "30-50 万+" 推算 p50
+        def parse_from_note(note: str) -> tuple[int, int, int] | None:
+            """从 note 抽 p25/p50/p75. 优先 k (元/月), 否则 万."""
+            if not note:
+                return None
+            # 找 "X-Yk" 范围 (k = 千)
+            m = re.search(r"(\d+)\s*[-~到至]\s*(\d+)\s*k", note)
+            if m:
+                lo, hi = int(m.group(1)), int(m.group(2))
+                p25, p75 = lo, hi  # 元/月
+                p50 = (p25 + p75) // 2
+                return p25, p50, p75
+            # 单 "Xk" (住院医师三甲约 10-15k → range 10-15)
+            m = re.search(r"(\d+)\s*k", note)
+            if m and "万" not in note and "年薪" not in note:
+                p50 = int(m.group(1))
+                return p50, p50, int(p50 * 1.4)
+            # "X-Y 万" 范围
+            m = re.search(r"(\d+)\s*[-~到至]\s*(\d+)\s*万", note)
+            if m:
+                lo, hi = int(m.group(1)), int(m.group(2))
+                p25, p75 = lo, hi
+                p50 = (p25 + p75) // 2
+                return p25, p50, p75
+            return None
 
         def classify_stage(s: str) -> str:
             s_lower = s.lower()
-            if "应届" in s or "junior" in s_lower or "0-" in s or s.strip().startswith("0年") or "规培" in s:
+            if "应届" in s or "junior" in s_lower or "0-" in s or s.strip().startswith("0年") or "规培" in s or "intern" in s_lower:
                 return "应届生 (一线)"
             if "10" in s or "15" in s or "20" in s or "资深" in s or "高级" in s or "senior" in s_lower or "持证" in s or "合伙人" in s or "主任" in s or "副主" in s or "正高" in s:
                 return "10年+ (持证/资深)"
@@ -914,11 +1006,29 @@ def _normalize_deepseek_to_curated(data: dict) -> dict:
             if not isinstance(vals, dict):
                 continue
             mapped = classify_stage(str(stage))
-            if is_monthly:
-                vals = dict(vals)
+            vals = dict(vals)  # 复制
+
+            # 单位换算
+            if is_monthly or need_div:
                 for k in ("p25", "p50", "p75"):
-                    if k in vals and isinstance(vals[k], (int, float)) and vals[k] > 0:
-                        vals[k] = round(vals[k] * 12 / 10000, 1)
+                    v_old = vals.get(k)
+                    if isinstance(v_old, (int, float)) and v_old > 0:
+                        if is_monthly:
+                            vals[k] = round(v_old * 12 / 10000, 1)
+                        else:  # need_div (元 → 万)
+                            vals[k] = round(v_old / 10000, 1)
+
+            # 补 None: 从 note 抽
+            for k in ("p25", "p50", "p75"):
+                if vals.get(k) is None or vals.get(k) == 0:
+                    parsed = parse_from_note(str(vals.get("note", "")))
+                    if parsed:
+                        idx = {"p25": 0, "p50": 1, "p75": 2}[k]
+                        val = parsed[idx]
+                        if is_monthly:
+                            val = round(val * 12 / 10000, 1)
+                        vals[k] = val
+
             new_salary[mapped] = vals
 
         # 合并同名 (取较大值)
@@ -926,8 +1036,9 @@ def _normalize_deepseek_to_curated(data: dict) -> dict:
         for stage, vals in new_salary.items():
             if stage in merged:
                 for k in ("p25", "p50", "p75"):
-                    if k in vals and vals[k] > 0:
-                        merged[stage][k] = max(merged[stage].get(k, 0), vals.get(k, 0))
+                    v_new = vals.get(k)
+                    if isinstance(v_new, (int, float)) and v_new > 0:
+                        merged[stage][k] = max(merged[stage].get(k, 0) or 0, v_new)
             else:
                 merged[stage] = dict(vals)
 
