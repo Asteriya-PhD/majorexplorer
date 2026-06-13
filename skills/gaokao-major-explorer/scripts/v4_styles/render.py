@@ -88,6 +88,31 @@ STRATEGY_CSS = """
 """
 
 
+# ── 📚 学科门类 breadcrumb(纯展示层,不动算法) ──
+DISCIPLINE_CSS = """
+/* 📚 学科定位 breadcrumb(hero 标题下方) */
+.discipline-breadcrumb {
+  max-width: 880px; margin: -16px auto 24px; padding: 0 24px;
+  font-size: 0.875rem; color: var(--c-muted, #6B7280);
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+}
+.discipline-breadcrumb a {
+  color: #2A6F4F; text-decoration: none;
+  border-bottom: 1px dotted rgba(42,111,79,0.4);
+  transition: all 0.2s;
+}
+.discipline-breadcrumb a:hover {
+  background: rgba(42,111,79,0.06);
+  border-bottom-color: #2A6F4F;
+}
+.bc-sep { margin: 0 8px; color: #ccc; }
+.bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
+@media (max-width: 600px) {
+  .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
+}
+"""
+
+
 def apply_strategy_tags(html: str, data: dict) -> str:
     """注入 ⭐ 徽章(标题旁) + 战略契合度 mini-card(就业方向 section 上方)。
 
@@ -152,6 +177,75 @@ def apply_strategy_tags(html: str, data: dict) -> str:
 def get_strategy_css() -> str:
     """返回 strategy CSS 字符串,供 v4_medicine 注入用。"""
     return STRATEGY_CSS
+
+
+# ── 📚 学科门类 lookup + breadcrumb 注入 ──
+_HIERARCHY_CACHE = None
+
+def _load_hierarchy():
+    """读 discipline_hierarchy.json,返回 (disc_name_map, sub_name_map)。带缓存。"""
+    global _HIERARCHY_CACHE
+    if _HIERARCHY_CACHE is not None:
+        return _HIERARCHY_CACHE
+    try:
+        from pathlib import Path
+        hier_path = Path(__file__).resolve().parent.parent.parent.parent.parent / "public" / "data" / "discipline_hierarchy.json"
+        import json as _json
+        data = _json.load(open(hier_path, encoding="utf-8"))
+        disc_map = {}  # code → name
+        sub_map = {}   # code → name
+        for code, disc in data.get("门类", {}).items():
+            disc_map[code] = disc["name"]
+            for sub_code, sub in disc.get("sub_classes", {}).items():
+                sub_map[sub_code] = sub["name"]
+        _HIERARCHY_CACHE = (disc_map, sub_map)
+        return _HIERARCHY_CACHE
+    except Exception as e:
+        print(f"[discipline] WARN: hierarchy load failed: {e}")
+        _HIERARCHY_CACHE = ({}, {})
+        return _HIERARCHY_CACHE
+
+
+def apply_discipline_breadcrumb(html: str, data: dict) -> str:
+    """注入 📚 学科定位 breadcrumb (hero h1 下方一行)。
+
+    - 任意主题(12 套 v4 + medicine)HTML 都可调
+    - data 缺 discipline + sub_discipline 时静默跳过
+    """
+    import re
+    disc = data.get("discipline")
+    sub = data.get("sub_discipline")
+    title = data.get("title", "")
+    if not disc or not sub:
+        return html
+
+    disc_map, sub_map = _load_hierarchy()
+    disc_name = disc_map.get(disc, disc)
+    sub_name = sub_map.get(sub, sub)
+
+    bc_html = (
+        f'\n<div class="discipline-breadcrumb">'
+        f'<a href="/?discipline={disc}#majors">{disc_name}</a>'
+        f'<span class="bc-sep">›</span>'
+        f'<a href="/?discipline={disc}&sub={sub}#majors">{sub_name}</a>'
+        f'<span class="bc-sep">›</span>'
+        f'<span class="bc-current">{title}</span>'
+        f'</div>'
+    )
+
+    # 注入到 </h1> 后(跟 strategy badge 同行,div 强制换行)
+    html, n = re.subn(r'(</h1>)', r'\1' + bc_html, html, count=1)
+    if n == 0:
+        # 兜底: 注入到 <body> 第一个 </section> 后
+        html, n2 = re.subn(r'(</section>)', r'\1' + bc_html, html, count=1)
+        if n2 == 0:
+            print(f"[discipline] WARN: no anchor for breadcrumb in {data.get('slug', '?')}")
+    return html
+
+
+def get_discipline_css() -> str:
+    """返回 discipline CSS 字符串,供 v4_medicine 注入用。"""
+    return DISCIPLINE_CSS
 
 
 def render_v4(data: dict, style: str) -> str:
@@ -469,5 +563,5 @@ def render_v4(data: dict, style: str) -> str:
 </body>
 </html>"""
 
-    # ── 在完整 HTML 上注入 ⭐ 徽章 + mini-card(对 12 theme 都生效) ──
-    return apply_strategy_tags(_html, data)
+    # ── 在完整 HTML 上注入 ⭐ 徽章 + mini-card + 📚 breadcrumb(对 12 theme 都生效) ──
+    return apply_discipline_breadcrumb(apply_strategy_tags(_html, data), data)

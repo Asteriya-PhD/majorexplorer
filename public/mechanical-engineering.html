@@ -12,18 +12,9 @@
 <link rel="preload" href="/js/wishlist-store.js" as="script">
 <link rel="preload" href="/js/ui-helpers.js" as="script">
 <link rel="preload" href="/js/major-search.js" as="script">
-<link rel="preload" href="/js/synth-client.js" as="script">
 
 <title>机械工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="机械工程不是「车铣刨磨」, 是力学 + 设计 + 制造 + 自动化 + 控制的系统学科。中国是全球第一制造业大国, 就业率常年 95%+, 但行业正从「传统机械」向「智能装备 + 机器人 + 新能源」">
-  <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/mechanical-engineering.html">
-  <meta property="og:url" content="https://majorexplorer.com/mechanical-engineering.html">
-  <meta property="og:site_name" content="Major Explorer">
-  <meta property="og:title" content="机械工程专业介绍 2026 高考 | Major Explorer">
-  <meta property="og:description" content="机械工程不是「车铣刨磨」, 是力学 + 设计 + 制造 + 自动化 + 控制的系统学科。中国是全球第一制造业大国, 就业率常年 95%+, 但行业正从「传统机械」向「智能装备 + 机器人 + 新能源」">
-  <meta property="og:type" content="article">
-
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -374,6 +365,89 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 @media (prefers-reduced-motion: reduce) {
   .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
   .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
+
+
+/* === 简化速览 (TEMPLATE 锁版, 不分 cards) === */
+.ovv-simple { max-width: 880px; margin: 0 auto; }
+.ovv-simple-section { margin-bottom: 56px; }
+.ovv-simple-lede {
+  font-family: var(--font-heading);
+  font-size: 1.1875rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+  margin-bottom: 48px; max-width: 760px; padding-left: 0;
+  font-weight: 400;
+}
+.ovv-simple-lede::first-letter {
+  font-family: var(--font-heading);
+  font-size: 3.25rem; font-weight: 700; line-height: 1;
+  color: var(--accent, #DC2626); margin-right: 8px; float: left;
+  padding-top: 4px;
+}
+.ovv-simple-h {
+  font-family: var(--font-heading);
+  font-size: 1.375rem; font-weight: 700; color: var(--ink, #1A1A1A);
+  margin: 0 0 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  letter-spacing: -0.01em;
+}
+.ovv-simple-h .ovv-num {
+  font-family: var(--font-num);
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--muted, #6B6B6B); letter-spacing: 0.2em;
+  margin-right: 12px;
+}
+.ovv-simple-body {
+  font-family: var(--font-body);
+  font-size: 1rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+}
+.ovv-simple-fit {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-top: 16px;
+}
+.ovv-simple-fit-col { padding: 20px 0; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-label {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #2E7D32; }
+.ovv-simple-fit-col.is-no  .ovv-simple-fit-label { color: #B8323A; }
+.ovv-simple-fit-list {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-fit-list li {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A);
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+.ovv-simple-fit-list li:last-child { border-bottom: none; }
+.ovv-simple-pitfalls {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-pitfalls li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  display: grid; grid-template-columns: 1fr; gap: 6px;
+}
+.ovv-simple-pitfalls li:last-child { border-bottom: none; }
+.ovv-simple-pit-myth {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem; color: #B8323A; font-weight: 600;
+}
+.ovv-simple-pit-myth::before { content: "❌ "; }
+.ovv-simple-pit-reality {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+.ovv-simple-pit-reality::before { content: "✓ "; color: #2E7D32; font-weight: 700; }
+@media (max-width: 768px) {
+  .ovv-simple-fit { grid-template-columns: 1fr; gap: 16px; }
 }
 
 
@@ -836,6 +910,66 @@ footer .data-source { color: #78716C; }
 .wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
 .wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
+
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+
 </style>
 </head>
 <body>
@@ -849,6 +983,7 @@ footer .data-source { color: #78716C; }
   <div class="container" style="padding-top: 64px;">
     <div class="hero-decor" style="color: #FF6B35;">▶ 机械工程 · 制造业基础</div>
     <h1 class="display" style="font-family: 'Inter', sans-serif; color: #1A1F2E; font-weight: 800; letter-spacing: -0.03em;">机械工程</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=08#majors">工学</a><span class="bc-sep">›</span><a href="/?discipline=08&sub=0803#majors">机械类</a><span class="bc-sep">›</span><span class="bc-current">机械工程</span></div>
     <p class="hero-tagline" style="color: #5C6373; max-width: 720px;">机械工程不是「车铣刨磨」, 是力学 + 设计 + 制造 + 自动化 + 控制的系统学科。中国是全球第一制造业大国, 就业率常年 95%+, 但行业正从「传统机械」向「智能装备 + 机器人 + 新能源」转型。适合能画图、能下车间、能沉下心做技术的人, 不适合追求短期高薪或纯软件办公</p>
     <div class="hero-tags">
       <span class="tag primary">万金油</span><span class="tag primary">越老越香</span><span class="tag primary">制造业脊梁</span>
@@ -1258,24 +1393,29 @@ footer .data-source { color: #78716C; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">12%</div>
+          <div class="path-pct">12<span class="path-unit">%</span></div>
           <div class="path-name">保研 (985/211 机械硕)</div>
+          
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">28%</div>
+          <div class="path-pct">28<span class="path-unit">%</span></div>
           <div class="path-name">考研 (本校/跨考机械/车辆/自动化)</div>
+          
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">3%</div>
+          <div class="path-pct">3<span class="path-unit">%</span></div>
           <div class="path-name">出国 (美/德/日机械方向)</div>
+          
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">50%</div>
+          <div class="path-pct">50<span class="path-unit">%</span></div>
           <div class="path-name">直接就业 (车企/装备/机器人/外企)</div>
+          
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">7%</div>
+          <div class="path-pct">7<span class="path-unit">%</span></div>
           <div class="path-name">考公/进研究所/选调</div>
+          
         </div>
     </div>
   </div>
@@ -1406,9 +1546,9 @@ footer .data-source { color: #78716C; }
     </div>
     <div class="wl-grid">
       <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card eng" href="/integrated-circuit-design.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">集成电路设计与集成系统</span><span class="wl-hook">卡脖子的芯片设计</span></a>
       <a class="wl-card eng" href="/chemical-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">化学工程与工艺</span><span class="wl-hook">流程工业, 万华中石化</span></a>
-      <a class="wl-card eng" href="/vehicle-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">车辆工程</span><span class="wl-hook">新能源车的核心</span></a>
-      <a class="wl-card eng" href="/food-science-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">食品科学与工程</span><span class="wl-hook">伊利蒙牛, 食药监公务员</span></a>
+      <a class="wl-card eng" href="/microelectronics.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">微电子科学与工程</span><span class="wl-hook">芯片设计, 高薪风口</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1479,7 +1619,6 @@ footer .data-source { color: #78716C; }
 <script src="/js/wishlist-store.js"></script>
 <script src="/js/ui-helpers.js"></script>
 <script src="/js/major-search.js"></script>
-<script src="/js/synth-client.js"></script>
 <script>
 (function () {
   "use strict";

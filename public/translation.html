@@ -14,7 +14,7 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>翻译专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="翻译不是「词典搬家」，是在两种语言、两种文化之间架桥。从文学翻译的「信达雅」到同声传译的「分秒必争」，从CAT工具辅助到AI冲击下的行业洗牌，翻译专业培养的是语言敏感度、文化洞察力和快速决策能力。适合">
+<meta name="description" content="翻译不是「词典搬家」, 而是在两种语言之间架一座精确、优雅的桥。从文学翻译到商务口译, 从字幕组到 AI 译后编辑, 这个专业培养的是「带着镣铐跳舞」的语言匠人。AI 冲击真实存在, 但高端口译、文学">
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -369,6 +369,89 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 }
 
 
+/* === 简化速览 (TEMPLATE 锁版, 不分 cards) === */
+.ovv-simple { max-width: 880px; margin: 0 auto; }
+.ovv-simple-section { margin-bottom: 56px; }
+.ovv-simple-lede {
+  font-family: var(--font-heading);
+  font-size: 1.1875rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+  margin-bottom: 48px; max-width: 760px; padding-left: 0;
+  font-weight: 400;
+}
+.ovv-simple-lede::first-letter {
+  font-family: var(--font-heading);
+  font-size: 3.25rem; font-weight: 700; line-height: 1;
+  color: var(--accent, #DC2626); margin-right: 8px; float: left;
+  padding-top: 4px;
+}
+.ovv-simple-h {
+  font-family: var(--font-heading);
+  font-size: 1.375rem; font-weight: 700; color: var(--ink, #1A1A1A);
+  margin: 0 0 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  letter-spacing: -0.01em;
+}
+.ovv-simple-h .ovv-num {
+  font-family: var(--font-num);
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--muted, #6B6B6B); letter-spacing: 0.2em;
+  margin-right: 12px;
+}
+.ovv-simple-body {
+  font-family: var(--font-body);
+  font-size: 1rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+}
+.ovv-simple-fit {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-top: 16px;
+}
+.ovv-simple-fit-col { padding: 20px 0; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-label {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #2E7D32; }
+.ovv-simple-fit-col.is-no  .ovv-simple-fit-label { color: #B8323A; }
+.ovv-simple-fit-list {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-fit-list li {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A);
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+.ovv-simple-fit-list li:last-child { border-bottom: none; }
+.ovv-simple-pitfalls {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-pitfalls li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  display: grid; grid-template-columns: 1fr; gap: 6px;
+}
+.ovv-simple-pitfalls li:last-child { border-bottom: none; }
+.ovv-simple-pit-myth {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem; color: #B8323A; font-weight: 600;
+}
+.ovv-simple-pit-myth::before { content: "❌ "; }
+.ovv-simple-pit-reality {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+.ovv-simple-pit-reality::before { content: "✓ "; color: #2E7D32; font-weight: 700; }
+@media (max-width: 768px) {
+  .ovv-simple-fit { grid-template-columns: 1fr; gap: 16px; }
+}
+
+
 /* ── 招 #5: 翻开的线装书 hero + 米白宣纸底层 ── */
 .hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #C5B89A; position: relative; z-index: 2; overflow: hidden; }
 .book-shell { position: relative; display: grid; grid-template-columns: 1fr 36px 1fr; gap: 0; max-width: 1080px; margin: 0 auto; transform: rotate(-1.2deg); }
@@ -698,6 +781,66 @@ footer .data-source { color: #6B5D3F; }
 .wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
 .wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
+
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+
 </style>
 </head>
 <body>
@@ -711,6 +854,7 @@ footer .data-source { color: #6B5D3F; }
         <div class="hu-folio">folio ii</div>
         <div class="hu-watermark">翻</div>
         <h1 class="hu-title">翻译</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=05#majors">文学</a><span class="bc-sep">›</span><a href="/?discipline=05&sub=0502#majors">外国语言文学类</a><span class="bc-sep">›</span><span class="bc-current">翻译</span></div>
         <div class="hu-subtitle">History &amp; Humanities · 2026</div>
         <div class="hu-quote">
           「一時代之學術, 必有其新材料與新問題。<br/>
@@ -748,7 +892,13 @@ footer .data-source { color: #6B5D3F; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap ovv-lede">翻译不是「词典搬家」，是在两种语言、两种文化之间架桥。从文学翻译的「信达雅」到同声传译的「分秒必争」，从CAT工具辅助到AI冲击下的行业洗牌，翻译专业培养的是语言敏感度、文化洞察力和快速决策能力。适合对语言有极致追求、能在文字间找到快感的人。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">1 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 「英语好就能做翻译」</div><div class="ovv-pit-reality">最大误解。翻译考察的是汉语表达能力, 很多英语好的人翻出来的中文「不像人话」。❌ 「AI马上取代翻译」→ 基础笔译确实被冲击, 但高端口译、文学翻译、法律/医学翻译、游戏本地化等需要人类判断力的领域反而更稀缺。❌ 「翻译专业好就业」→ 本科毕业对口就业率约 60%, 月薪中位数 6-8K, 低于全国本科平均水平。❌ 「同传很酷很赚钱」→ 同传日薪 3000-8000 元, 但全国全职同传不到 500 人, 门槛极高, 需要 3-5 年高强度训练。❌ 「学翻译不用学数学」→ 确实不学高数, 但翻译技术课需要一定的逻辑思维和计算机操作能力。</div></div></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">翻译不是「词典搬家」, 而是在两种语言之间架一座精确、优雅的桥。从文学翻译到商务口译, 从字幕组到 AI 译后编辑, 这个专业培养的是「带着镣铐跳舞」的语言匠人。AI 冲击真实存在, 但高端口译、文学翻译、专业本地化仍是人力护城河。适合对语言敏感、有耐心推敲字句、能在不同文化间自如切换的人。</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">前 2 年打语言基础: 现代汉语 / 古代汉语 / 英语精读泛读 / 英语听力口语 / 英语写作 / 语言学概论 / 翻译学概论。翻译专业和英语专业最大的区别是——翻译不教「英语文学赏析」, 而是教「怎么把 A 语言变成 B 语言」, 这是完全不同的思维训练。
+
+大三起进入核心技能训练: 英汉笔译 (从新闻/散文到法律/医学文本)、汉英笔译 (中式英语纠正、地道表达)、交替传译 (笔记法训练、短时记忆、数字口译)、同声传译基础 (影子跟读、分脑训练)。口译课是「高压锅」——老师放一段 3 分钟的英文演讲, 你要在 30 秒内用中文复述, 全班录音, 课后逐句回听, 每个「嗯」「啊」和语法错误都会被标记。
+
+技能树三项: (1) 双语转换能力 — 不是「逐词翻译」, 而是理解原文意图后在目标语言中重构; (2) 术语管理与查证 — 学会用语料库、术语库、平行文本做快速查证; (3) 口译笔记法与分脑 — 一边听一边记一边译, 大脑要同时处理输入、存储和输出。
+
+和很多人想象的不同, 翻译专业不教「英语流利就行」。你学的是: 这句话在中文里用「把」字句还是「被」字句? 这个文化负载词是直译加注还是意译? 这段法律条文的中英文句式如何对等? 这种训练会让你形成一种「语言洁癖」——看到任何翻译, 都会下意识地分析它好在哪里、差在哪里。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"></ul></div></div>
   </div>
 </section>
 
@@ -764,34 +914,33 @@ footer .data-source { color: #6B5D3F; }
           <div class="course"><span class="course-name">思想政治理论</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">体育 (I-IV)</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">计算机应用基础</span><span class="course-credit">2 学分</span></div>
-          <div class="course"><span class="course-name">现代汉语</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">古代汉语</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">现代汉语 / 古代汉语</span><span class="course-credit">4 学分</span></div>
           <div class="course"><span class="course-name">中国现当代文学</span><span class="course-credit">3 学分</span></div>
           <div class="course"><span class="course-name">外国文学</span><span class="course-credit">3 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
-          <div class="course"><span class="course-name">基础口译</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">基础笔译</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">高级口译</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">高级笔译</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">英汉语言对比</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">翻译理论导论</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">交替传译</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">同声传译入门</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">文体与翻译</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">翻译技术 (CAT/计算机辅助翻译)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">翻译学概论</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">英汉 / 汉英笔译</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">英汉 / 汉英口译</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">交替传译</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">同声传译基础</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">翻译理论与实务</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">语言学概论</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">跨文化交际</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">英语阅读与写作</span><span class="course-credit">4 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">北京外国语大学 · 联合国文件翻译与外交口译</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">上海外国语大学 · 会议口译与商务谈判</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">广东外语外贸大学 · 法律翻译与经贸翻译</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">北京语言大学 · 文学翻译与典籍英译</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">对外经济贸易大学 · 商务口译与跨文化管理</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">北京外国语大学 · 高级同声传译 (联合国/欧盟方向)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">上海外国语大学 · 多语种口译 (英法/英德/英日)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">广东外语外贸大学 · 商务翻译与本地化 (CAT 工具)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">对外经济贸易大学 · 经贸翻译与法律翻译</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">北京大学 · 文学翻译与比较诗学</span><span class="course-credit">3 学分</span></div>
         </div>
-        <div class="curriculum-block fade-up"><div class="curriculum-title">实践与实训</div>
-          <div class="course"><span class="course-name">翻译工作坊 (模拟会议/模拟法庭)</span><span class="course-credit">2 学分</span></div>
-          <div class="course"><span class="course-name">翻译实习 (翻译公司/国际组织/外事办)</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">毕业翻译项目 (2万字笔译或口译实践报告)</span><span class="course-credit">6 学分</span></div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">实践与拓展</div>
+          <div class="course"><span class="course-name">翻译工作坊 / 模拟会议口译</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">计算机辅助翻译 (Trados / memoQ)</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">字幕翻译与视听翻译</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">翻译实习 (翻译公司 / 国际组织)</span><span class="course-credit">4 学分</span></div>
         </div>
     </div>
   </div>
@@ -808,61 +957,61 @@ footer .data-source { color: #6B5D3F; }
           <div class="bento-monogram">北</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">北京外国语大学</div>
-          <div class="bento-tag">北京 · 高翻院全国顶尖, 联合国合作翻译项目, 外交口译王牌</div>
+          <div class="bento-tag">北京 · 高翻学院全国顶尖, 联合国/欧盟口译司合作单位</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">上</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">上海外国语大学</div>
-          <div class="bento-tag">上海 · 会议口译方向极强, AIIC会员师资, 国际组织实习资源丰富</div>
+          <div class="bento-tag">上海 · 高级翻译学院, 多语种口译与外交翻译重镇</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">广</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">广东外语外贸大学</div>
-          <div class="bento-tag">广州 · 法律/经贸翻译特色, 华南翻译第一, CATTI通过率领先</div>
+          <div class="bento-tag">广州 · 商务翻译与本地化全国领先, CAT 工具教学强</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">北</div>
+          <div class="bento-monogram">对</div>
           <span class="bento-rank">A</span>
-          <div class="bento-name">北京语言大学</div>
-          <div class="bento-tag">北京 · 文学翻译与典籍英译传统深厚, 小语种翻译资源多</div>
+          <div class="bento-name">对外经济贸易大学</div>
+          <div class="bento-tag">北京 · 经贸/法律翻译特色, 商务部/贸促会定向输送</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">对</div>
-          <span class="bento-rank">A-</span>
-          <div class="bento-name">对外经济贸易大学</div>
-          <div class="bento-tag">北京 · 商务翻译与经贸谈判, 跨国企业就业率高</div>
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">北京大学</div>
+          <div class="bento-tag">北京 · 文学翻译与比较文学, 学术底蕴深厚</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">南</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">南京大学</div>
-          <div class="bento-tag">南京 · 翻译学理论研究强, 学术导向, 读研率高</div>
+          <div class="bento-tag">南京 · 翻译学理论强, 英美文学与翻译交叉培养</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">复</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">复旦大学</div>
-          <div class="bento-tag">上海 · 翻译理论与跨文化研究, 综合性大学人文底蕴</div>
+          <div class="bento-tag">上海 · 翻译与跨文化研究, 国际组织人才培养基地</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">北京语言大学</div>
+          <div class="bento-tag">北京 · 语言学科底蕴深, 翻译理论与实践并重</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">四</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">四川大学</div>
-          <div class="bento-tag">成都 · 西南翻译重镇, 文学翻译与口译并重</div>
+          <div class="bento-tag">成都 · 西南翻译重镇, 文学翻译与典籍翻译特色</div>
         </div>
-        <div class="bento-item fade-up" data-delay="0">
+        <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">西</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">西安外国语大学</div>
-          <div class="bento-tag">西安 · 西北翻译中心, 丝路翻译与旅游翻译特色</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">大</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">大连外国语大学</div>
-          <div class="bento-tag">大连 · 日语翻译突出, 东北亚翻译基地</div>
+          <div class="bento-tag">西安 · 西北翻译教育中心, 丝路沿线语言翻译方向</div>
         </div>
     </div>
   </div>
@@ -877,15 +1026,15 @@ footer .data-source { color: #6B5D3F; }
     <div class="company-grid">
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">中</div>
+            <div class="company-monogram">传</div>
             <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">中国对外翻译有限公司 (CTC)</div>
-          <div class="company-meta">★★ · 校招 应届 8-12 万/年, 资深 15-25 万/年</div>
+          <div class="company-name">传神语联 (Transn)</div>
+          <div class="company-meta">★★★ · 校招 笔译 6-12K, 项目经理 10-18K</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:60.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -893,30 +1042,30 @@ footer .data-source { color: #6B5D3F; }
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">传</div>
-            <span class="company-tier tier-A">A</span>
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">传神语联网</div>
-          <div class="company-meta">★★★ · 校招 应届 6-10 万/年, 含项目提成</div>
+          <div class="company-name">中译语通 (GTC)</div>
+          <div class="company-meta">★★★ · 校招 笔译 7-14K, 口译 15-25K</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:50.0%"></div>
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">华</div>
-            <span class="company-tier tier-S">S</span>
+            <div class="company-monogram">文</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">华为翻译中心</div>
-          <div class="company-meta">★★ · 校招 应届 12-18 万/年, 含年终奖</div>
+          <div class="company-name">文思海辉 (Pactera)</div>
+          <div class="company-meta">★★★★ · 校招 本地化工程师 8-15K</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -925,31 +1074,31 @@ footer .data-source { color: #6B5D3F; }
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">字</div>
-            <span class="company-tier tier-A">A</span>
+            <div class="company-monogram">华</div>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">字节跳动国际化翻译团队</div>
-          <div class="company-meta">★★ · 校招 应届 10-15 万/年</div>
+          <div class="company-name">华为翻译中心</div>
+          <div class="company-meta">★★ · 校招 in-house 翻译 15-25K, 需 CATTI 二级+</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:60.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:62.5%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:87.5%"></div>
+            <div class="sparkline-bar" style="height:87.5%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">S</div>
+            <div class="company-monogram">字</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">SDL/RWS (全球最大语言服务商)</div>
-          <div class="company-meta">★★★ · 校招 应届 7-12 万/年</div>
+          <div class="company-name">字节跳动国际化翻译组</div>
+          <div class="company-meta">★★ · 校招 翻译/本地化 12-20K</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -978,15 +1127,15 @@ footer .data-source { color: #6B5D3F; }
         </tr>
         <tr>
           <td class="salary-stage">3 年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="10">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="16">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="25">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">5 年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.22222222222222%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="45">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.5%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.00000000000001%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1001,7 +1150,12 @@ footer .data-source { color: #6B5D3F; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">翻译公司 / 自由译员</div>
+          <div class="direction-name">翻译公司 / 本地化企业 (笔译/译后编辑)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
+          <div class="direction-pct">0%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">自由职业口译 / 笔译</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
@@ -1011,22 +1165,12 @@ footer .data-source { color: #6B5D3F; }
           <div class="direction-pct">0%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">教育 / 高校教师</div>
+          <div class="direction-name">教育 / 培训 (高校/培训机构)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">国际组织 / 外交外事</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
-          <div class="direction-pct">0%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">出版 / 媒体 / 本地化</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
-          <div class="direction-pct">0%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">继续深造 (读研/出国)</div>
+          <div class="direction-name">媒体 / 出版 (编辑/编译)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
@@ -1041,16 +1185,24 @@ footer .data-source { color: #6B5D3F; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">['语言敏感度: 对词汇/语法/语体的细微差异有直觉', '文化洞察力: 理解源语文化隐含假设, 在目标语中找到等效表达', '快速决策: 口译中 0.5 秒内完成理解-转换-输出', '技术素养: Trados/MemoQ/DeepL/大模型提示工程等工具熟练使用', '抗压能力: 同传/交传高强度脑力劳动, 需极强专注力']%</div>
-          <div class="path-name">core_skills</div>
+          <div class="path-pct">4<span class="path-unit">项</span></div>
+          <div class="path-name">考研方向</div>
+          <ul class="path-bullets"><li>翻译硕士 (MTI)</li><li>英语语言文学</li><li>外国语言学及应用语言学</li><li>比较文学与世界文学</li></ul>
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">['初级译员 (0-3年) → 中级译员/项目经理 (3-5年) → 资深译员/审校 (5-10年) → 翻译总监/自由译员品牌化 (10年+)']%</div>
-          <div class="path-name">career_paths</div>
+          <div class="path-pct">5<span class="path-unit">项</span></div>
+          <div class="path-name">推荐院校</div>
+          <ul class="path-bullets"><li>北京外国语大学高翻学院</li><li>上海外国语大学高级翻译学院</li><li>广东外语外贸大学高翻学院</li><li>对外经济贸易大学</li><li>北京大学外国语学院</li></ul>
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">AI (DeepL/ChatGPT等) 对翻译行业冲击巨大, 基础笔译需求下降约 30-40%。但高端口译、文学翻译、法律/医学等专业领域翻译仍不可替代。翻译专业正从「语言转换」转向「语言服务+本地化+AI后期编辑」复合能力。%</div>
-          <div class="path-name">ai_impact</div>
+          <div class="path-pct">推荐<span class="path-unit">项</span></div>
+          <div class="path-name">读研比例</div>
+          <div class="path-detail">约 45%</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">3<span class="path-unit">项</span></div>
+          <div class="path-name">留学方向</div>
+          <ul class="path-bullets"><li>英国 (巴斯/纽卡斯尔/利兹/威斯敏斯特口译强校)</li><li>美国 (蒙特雷国际研究院 MIIS)</li><li>香港 (港中文/港理工翻译系)</li></ul>
         </div>
     </div>
   </div>
@@ -1065,13 +1217,13 @@ footer .data-source { color: #6B5D3F; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">校</div>
+            <div class="quote-avatar">?</div>
             <div class="quote-byline">
-              <strong>校友</strong>
-              <span class="quote-source"> · 基于知乎公开访谈综合</span>
+              <strong></strong>
+              <span class="quote-source">2024 · </span>
             </div>
           </div>
-          <p class="quote-text">学翻译最痛苦的不是背单词, 而是你明明知道原文有多美, 却找不到中文里那个恰好的词。但当你终于找到的那一刻, 那种快乐无可替代。</p>
+          <p class="quote-text">学翻译最痛苦也最迷人的地方是——你永远找不到一个「完美」的译法, 只能在无数个「差不多」里选一个最不差的。AI 确实能干掉 80% 的初级笔译, 但高端口译和文学翻译, 机器还差得远。</p>
         </div>
     </div>
   </div>
@@ -1084,6 +1236,11 @@ footer .data-source { color: #6B5D3F; }
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name"></div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
+          <div class="xuanke-pct">0%</div>
+        </div>
         <div class="xuanke">
           <div class="xuanke-name"></div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
@@ -1142,8 +1299,8 @@ footer .data-source { color: #6B5D3F; }
     <div class="wl-grid">
       <a class="wl-card humanities" href="/philosophy.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">哲学</span><span class="wl-hook">纯文冷门, 考博长线</span></a>
       <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
+      <a class="wl-card humanities" href="/汉语言文学.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">汉语言文学</span></a>
       <a class="wl-card humanities" href="/archaeology.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">考古学</span><span class="wl-hook">田野 + 文博 + 事业编</span></a>
-      <a class="wl-card humanities" href="/history.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">历史学</span><span class="wl-hook">考公友好 + 师范对口</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1159,7 +1316,7 @@ footer .data-source { color: #6B5D3F; }
 <footer>
   <div class="container">
     <div class="label">Major Explorer · 2026 高考专业指南</div>
-    <div class="data-source">数据源: 教育部第四轮学科评估（外国语言文学）+ 中国翻译协会2025行业报告 + 麦可思2025翻译专业就业报告 + 知乎/豆瓣翻译学子实录 2018-2026 + 阳光高考2026选科要求 + 北外/上外/广外翻译学院培养方案 + CATTI考试中心2025数据</div>
+    <div class="data-source">数据源: 基于通用知识估算 (教育部第四轮学科评估 + 麦可思 2024 外语类就业报告 + CATTI 官网 2025 考试数据 + 知乎/豆瓣翻译从业者访谈 + 阳光高考 2026 选科要求 + 北外/上外/广外翻译专业培养方案)</div>
   </div>
 </footer>
 

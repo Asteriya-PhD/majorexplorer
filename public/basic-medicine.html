@@ -595,6 +595,27 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
   .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
 }
 
+/* 📚 学科定位 breadcrumb(hero 标题下方) */
+.discipline-breadcrumb {
+  max-width: 880px; margin: -16px auto 24px; padding: 0 24px;
+  font-size: 0.875rem; color: var(--c-muted, #6B7280);
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+}
+.discipline-breadcrumb a {
+  color: #2A6F4F; text-decoration: none;
+  border-bottom: 1px dotted rgba(42,111,79,0.4);
+  transition: all 0.2s;
+}
+.discipline-breadcrumb a:hover {
+  background: rgba(42,111,79,0.06);
+  border-bottom-color: #2A6F4F;
+}
+.bc-sep { margin: 0 8px; color: #ccc; }
+.bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
+@media (max-width: 600px) {
+  .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
+}
+
 </style>
 </head>
 <body>
@@ -637,7 +658,8 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       </div>
       <div>
         <div class="hero-decor">▶ 基础医学 · 权威数据源</div>
-        <h1>基础医学</h1><span class="strategy-badge" title="4新兴支柱-生物医药 · 6未来产业-脑机接口">⭐ 国家战略</span>
+        <h1>基础医学</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=10#majors">医学</a><span class="bc-sep">›</span><a href="/?discipline=10&sub=1001#majors">基础医学类</a><span class="bc-sep">›</span><span class="bc-current">基础医学</span></div><span class="strategy-badge" title="4新兴支柱-生物医药 · 6未来产业-脑机接口">⭐ 国家战略</span>
         <p class="hero-tagline">严谨 · 冷静 · 鸟瞰 — 医学界的「科研特种兵」——不看病、不拿手术刀, 却在实验室里解码疾病本质。全国每年本科招生不足 2000 人, 读研率超 85%, 是通往生物医学科学家最窄也最深的路径。适合「想当科学家又不想离开医学</p>
         <div class="hero-tags">
           <span class="tag primary">5年制</span><span class="tag primary">科研导向</span><span class="tag primary">非临床</span>
