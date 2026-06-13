@@ -248,6 +248,35 @@ def get_discipline_css() -> str:
     return DISCIPLINE_CSS
 
 
+def _coerce_named(items, name_key: str = "name"):
+    """Normalize each item: dict→as-is, str→{name_key: str}, drop empty/non-str-or-dict.
+
+    Defensive shim for schemas where top_schools/top_companies/alumni_quotes/etc.
+    come back as bare-string lists (LLM drift) — code downstream calls `.get(...)`
+    and would otherwise crash.
+    """
+    out = []
+    for it in items or []:
+        if isinstance(it, dict):
+            out.append(it)
+        elif isinstance(it, str) and it.strip():
+            out.append({name_key: it.strip()})
+    return out
+
+
+def _path_item_text(item) -> str:
+    """Render one deep_study path-list item — supports dict({name,desc}) or str."""
+    if isinstance(item, dict):
+        name = item.get("name", "")
+        desc = item.get("desc", "")
+        if name and desc:
+            return f"<strong>{name}</strong> — {desc}"
+        return name or desc or ""
+    if isinstance(item, str):
+        return item[:80]
+    return ""
+
+
 def render_v4(data: dict, style: str) -> str:
     """通用 12 套极致渲染"""
     if style not in HERO_FN:
@@ -268,13 +297,13 @@ def render_v4(data: dict, style: str) -> str:
     hero_quote = data.get("hero_quote", "研究「怎么学」, 而非「教什么」")
     hero_quote_sig = data.get("hero_quote_sig", "—— Major Explorer 编辑寄言")
     curriculum = data.get("curriculum", {})
-    top_schools = _dedup_by_name(data.get("top_schools", []), "name")
-    top_companies = data.get("top_companies", [])
+    top_schools = _coerce_named(_dedup_by_name(data.get("top_schools", []), "name"), "name")
+    top_companies = _coerce_named(data.get("top_companies", []), "name")
     salary = data.get("salary", {})
-    directions = data.get("employment_direction", [])
+    directions = _coerce_named(data.get("employment_direction", []), "name")
     deep_study = data.get("deep_study", {})
-    quotes = _dedup_by_name(data.get("alumni_quotes", []), "current")
-    xuanke = data.get("xuanke_req_list", [])
+    quotes = _coerce_named(_dedup_by_name(data.get("alumni_quotes", []), "current"), "current")
+    xuanke = _coerce_named(data.get("xuanke_req_list", []), "name")
     national_strategy_tags = data.get("national_strategy_tags", [])
 
     # ── 课程 ──
@@ -283,9 +312,18 @@ def render_v4(data: dict, style: str) -> str:
             return ""
         items = []
         for c in courses:
-            name = c.get("name", "")
-            credit = c.get("credit", "")
-            items.append(f'          <div class="course"><span class="course-name">{name}</span><span class="course-credit">{credit} 学分</span></div>')
+            # Defensive: courses may be list[str] (LLM drift — just course names) or list[dict]
+            if isinstance(c, str):
+                name, credit = c.strip(), ""
+                if not name:
+                    continue
+            elif isinstance(c, dict):
+                name = c.get("name", "")
+                credit = c.get("credit", "")
+            else:
+                continue
+            credit_html = f'<span class="course-credit">{credit} 学分</span>' if credit else ""
+            items.append(f'          <div class="course"><span class="course-name">{name}</span>{credit_html}</div>')
         return f'        <div class="curriculum-block fade-up"><div class="curriculum-title">{block_name}</div>\n' + "\n".join(items) + "\n        </div>"
 
     course_sections = []
@@ -338,6 +376,18 @@ def render_v4(data: dict, style: str) -> str:
     # ── 薪资 (招 #3 数字滚动) ──
     salary_rows = []
     for stage, vals in salary.items():
+        # Defensive: vals may be a descriptive str (LLM drift) instead of {p25,p50,p75,yoy} dict.
+        # In that case render a single colspan'd row with the text — drop bars/yoy.
+        if isinstance(vals, str):
+            salary_rows.append(
+                f'''        <tr>
+          <td class="salary-stage">{stage}</td>
+          <td colspan="3" class="salary-narrative">{vals}</td>
+        </tr>'''
+            )
+            continue
+        if not isinstance(vals, dict):
+            continue
         p25, p50, p75 = vals.get("p25", 0), vals.get("p50", 0), vals.get("p75", 0)
         yoy = vals.get("yoy", 0)
         max_v = max(p25, p50, p75, 1)
@@ -370,7 +420,7 @@ def render_v4(data: dict, style: str) -> str:
         f'''        <div class="path-card fade-up" data-delay="{(i % 4) * 80}">
           <div class="path-pct">{v if isinstance(v, (int, float)) else len(v) if isinstance(v, list) else "推荐"}<span class="path-unit">{"%" if isinstance(v, (int, float)) else "项"}</span></div>
           <div class="path-name">{k}</div>
-          {f'<ul class="path-bullets">{"".join(f"<li>{item[:80]}</li>" for item in v[:5])}</ul>' if isinstance(v, list) else f'<div class="path-detail">{v}</div>' if isinstance(v, str) else ""}
+          {f'<ul class="path-bullets">{"".join(f"<li>{_path_item_text(item)}</li>" for item in v[:5])}</ul>' if isinstance(v, list) else f'<div class="path-detail">{v}</div>' if isinstance(v, str) else ""}
         </div>'''
         for i, (k, v) in enumerate(deep_study.items())
     ) if deep_study else '<p>深造数据待补充</p>'

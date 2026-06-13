@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+<!-- Wishlist UI: 共享 store + helpers (顶部 chip / 右下 FAB / 12 主题卡 / 搜专业) -->
+<link rel="preload" href="/js/wishlist-store.js" as="script">
+<link rel="preload" href="/js/ui-helpers.js" as="script">
+<link rel="preload" href="/js/major-search.js" as="script">
+
+<title>涉外警务专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="涉外警务是公安学下设的特色专业,主要面向公安机关涉外部门、出入境管理、边境管理、国际执法合作等业务领域,培养具备国际法、涉外法律法规、外语能力和跨文化沟通能力的高素质应用型警务人才。毕业生主要进入国家">
+<style>
+@import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; transition: opacity 200ms; }
+a:hover { opacity: 0.65; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
+
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Universal mobile patches — apply across all 12 v4 themes (≤480px)
+   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   ============================================================ */
+@media (max-width: 480px) {
+  /* container 收紧 — base 已设 20px, 这里再压到 14px */
+  .container { padding: 0 14px !important; }
+
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
+
+body { background: #0A1420; color: #FAFAF6; font-family: 'Noto Serif SC', 'Cinzel', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 20% 15%, rgba(212, 175, 55, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 85% 80%, rgba(127, 29, 29, 0.10), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.83 0 0 0 0 0.69 0 0 0 0 0.22 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.5; mix-blend-mode: overlay; }
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
+
+
+/* === 简化速览 (TEMPLATE 锁版, 不分 cards) === */
+.ovv-simple { max-width: 880px; margin: 0 auto; }
+.ovv-simple-section { margin-bottom: 56px; }
+.ovv-simple-lede {
+  font-family: var(--font-heading);
+  font-size: 1.1875rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+  margin-bottom: 48px; max-width: 760px; padding-left: 0;
+  font-weight: 400;
+}
+.ovv-simple-lede::first-letter {
+  font-family: var(--font-heading);
+  font-size: 3.25rem; font-weight: 700; line-height: 1;
+  color: var(--accent, #DC2626); margin-right: 8px; float: left;
+  padding-top: 4px;
+}
+.ovv-simple-h {
+  font-family: var(--font-heading);
+  font-size: 1.375rem; font-weight: 700; color: var(--ink, #1A1A1A);
+  margin: 0 0 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  letter-spacing: -0.01em;
+}
+.ovv-simple-h .ovv-num {
+  font-family: var(--font-num);
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--muted, #6B6B6B); letter-spacing: 0.2em;
+  margin-right: 12px;
+}
+.ovv-simple-body {
+  font-family: var(--font-body);
+  font-size: 1rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+}
+.ovv-simple-fit {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-top: 16px;
+}
+.ovv-simple-fit-col { padding: 20px 0; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-label {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #2E7D32; }
+.ovv-simple-fit-col.is-no  .ovv-simple-fit-label { color: #B8323A; }
+.ovv-simple-fit-list {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-fit-list li {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A);
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+.ovv-simple-fit-list li:last-child { border-bottom: none; }
+.ovv-simple-pitfalls {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-pitfalls li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  display: grid; grid-template-columns: 1fr; gap: 6px;
+}
+.ovv-simple-pitfalls li:last-child { border-bottom: none; }
+.ovv-simple-pit-myth {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem; color: #B8323A; font-weight: 600;
+}
+.ovv-simple-pit-myth::before { content: "❌ "; }
+.ovv-simple-pit-reality {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+.ovv-simple-pit-reality::before { content: "✓ "; color: #2E7D32; font-weight: 700; }
+@media (max-width: 768px) {
+  .ovv-simple-fit { grid-template-columns: 1fr; gap: 16px; }
+}
+
+
+:root {
+  /* 主题色 */
+  --gg-red: #B91C1C;        --gg-red-dk: #7F1D1D;    --gg-red-soft: #DC2626;
+  --gg-blue: #1E3A5F;       --gg-blue-dk: #0F1F33;   --gg-blue-2: #2A4A75;
+  --gg-gold: #D4AF37;       --gg-gold-dk: #B8902A;   --gg-gold-soft: #E5C158;
+  --gg-silver: #94A3B8;     --gg-silver-soft: #CBD5E1;
+  --gg-paper: #FAFAF6;      --gg-ink: #1A0A0A;
+  --gg-glow: rgba(212, 175, 55, 0.35);
+  /* 字体 (修复 v4_styles 未注入 base CSS 的问题) */
+  --font-heading: "Cinzel", "Noto Serif SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Songti SC", serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "Oswald", "JetBrains Mono", monospace;
+}
+/* ── Hero 主体 ── */
+.gg-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
+  background: radial-gradient(ellipse 30% 35% at 50% 22%, rgba(212,175,55,0.18) 0%, transparent 60%),
+              radial-gradient(ellipse 30% 50% at 88% 70%, rgba(148,163,184,0.12) 0%, transparent 60%),
+              linear-gradient(155deg, #0F1F33 0%, #1E3A5F 35%, #3A1424 70%, #0F1F33 100%);
+  border-bottom: 1px solid #1F1408; color: var(--gg-paper);
+  font-family: var(--font-body); }
+.gg-bg-noise { position: absolute; inset: 0; opacity: 0.5; mix-blend-mode: overlay; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.83 0 0 0 0 0.69 0 0 0 0 0.22 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+.gg-gold-band { position: absolute; top: 0; left: 0; right: 0; height: 56px; z-index: 4; pointer-events: none;
+  background: linear-gradient(180deg, #D4AF37 0%, #B8902A 50%, #8B6F1F 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 96% 78%, 100% 88%, 100% 100%, 0 100%, 0 88%, 4% 78%, 0 70%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
+/* ── 主徽 (盾+十字剑+橄榄枝) ── */
+.gg-main-emblem { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 320px; height: 320px; z-index: 2; opacity: 0.18; pointer-events: none; filter: drop-shadow(0 0 60px var(--gg-glow)); animation: ggGlow 6s ease-in-out infinite; }
+.gg-main-emblem svg { width: 100%; height: 100%; }
+@keyframes ggGlow { 0%,100% { opacity: 0.18; } 50% { opacity: 0.28; } }
+/* ── 6 大专业 hu-tag (顶部装饰) ── */
+.gg-hu-tags { position: relative; z-index: 10; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; max-width: 1100px; margin: 0 auto 32px; padding: 0 24px; }
+.gg-hu-tag { padding: 7px 16px 7px 14px; background: rgba(15,31,51,0.78); border: 1px solid var(--gg-gold);
+  font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--gg-gold-soft);
+  letter-spacing: 0.12em; clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+.gg-hu-tag::before { content: "▪"; color: var(--gg-red-soft); margin-right: 6px; font-size: 10px; }
+/* ── 标题区 ── */
+.gg-title-zone { position: relative; z-index: 10; text-align: center; max-width: 1100px; margin: 0 auto 36px; padding: 0 24px; }
+.gg-discipline { font-family: var(--font-heading); font-size: 11px; font-weight: 600; letter-spacing: 0.55em; color: var(--gg-gold); margin-bottom: 12px; text-transform: uppercase; }
+.gg-hero-title { font-family: var(--font-body); font-weight: 900; font-size: clamp(2.5rem, 5.5vw, 4.25rem); line-height: 1; color: var(--gg-paper); letter-spacing: 0.08em;
+  text-shadow: 0 0 30px rgba(212,175,55,0.4), 0 4px 14px rgba(0,0,0,0.7); margin: 0 0 8px; }
+.gg-hero-title .accent { color: var(--gg-gold); }
+.gg-title-en { font-family: var(--font-heading); font-weight: 500; font-size: clamp(15px, 1.4vw, 20px); color: var(--gg-gold-soft); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px; }
+.gg-subtitle { margin-top: 18px; display: inline-block; padding: 8px 22px; background: rgba(15,31,51,0.6); border-left: 3px solid var(--gg-red); border-right: 3px solid var(--gg-red);
+  font-family: var(--font-body); font-size: 14px; color: rgba(250,250,246,0.85); letter-spacing: 0.18em; }
+/* ── 4 stats 关键数据 ── */
+.gg-stats-row { position: relative; z-index: 10; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1100px; margin: 0 auto 40px; padding: 0 24px; }
+.gg-stat { position: relative; padding: 18px 22px 16px; background: linear-gradient(180deg, rgba(15,31,51,0.85) 0%, rgba(30,58,95,0.65) 100%);
+  border-top: 2px solid var(--gg-gold); border-bottom: 1px solid rgba(212,175,55,0.4); text-align: center; }
+.gg-stat + .gg-stat { border-left: 1px solid rgba(212,175,55,0.2); }
+.gg-stat-label { font-family: var(--font-heading); font-size: 10px; font-weight: 600; letter-spacing: 0.35em; color: var(--gg-gold-soft); text-transform: uppercase; margin-bottom: 4px; }
+.gg-stat-label-cn { font-family: var(--font-body); font-size: 11px; color: rgba(250,250,246,0.55); letter-spacing: 0.25em; margin-bottom: 8px; }
+.gg-stat-value { font-family: var(--font-num); font-weight: 700; font-size: clamp(28px, 3vw, 40px); line-height: 1; color: var(--gg-paper); letter-spacing: 0.02em; }
+.gg-stat-value .unit { font-size: 14px; font-weight: 500; color: var(--gg-gold-soft); margin-left: 4px; letter-spacing: 0.1em; }
+.gg-stat.featured { background: linear-gradient(180deg, rgba(127,29,29,0.8) 0%, rgba(185,28,28,0.55) 100%); }
+/* ── 引言 ── */
+.gg-quote { position: relative; z-index: 10; text-align: center; margin: 0 auto; max-width: 900px; padding: 0 24px; }
+.gg-quote-text { font-family: var(--font-body); font-weight: 700; font-size: clamp(15px, 1.5vw, 22px); color: var(--gg-gold-soft); letter-spacing: 0.4em;
+  text-shadow: 0 0 24px var(--gg-glow), 0 2px 8px rgba(0,0,0,0.6); margin-bottom: 10px; }
+.gg-quote-text .sep { color: var(--gg-red-soft); margin: 0 10px; font-weight: 400; }
+.gg-quote-sig { font-family: var(--font-heading); font-style: italic; font-size: 11px; letter-spacing: 0.4em; color: rgba(250,250,246,0.55); text-transform: uppercase; }
+.gg-quote-sig::before, .gg-quote-sig::after { content: "——"; margin: 0 12px; color: var(--gg-gold); }
+/* ── 4 角金线角标 (装饰) ── */
+.gg-corner-mark { position: absolute; width: 26px; height: 26px; border: 1px solid var(--gg-gold); z-index: 50; opacity: 0.55; }
+.gg-corner-mark::before { content: ""; position: absolute; inset: 4px; border: 1px solid var(--gg-gold); }
+.gg-cm-tl { top: 70px; left: 24px; border-right: none; border-bottom: none; }
+.gg-cm-tr { top: 70px; right: 24px; border-left: none; border-bottom: none; }
+.gg-cm-bl { bottom: 24px; left: 24px; border-right: none; border-top: none; }
+.gg-cm-br { bottom: 24px; right: 24px; border-left: none; border-top: none; }
+/* ── Section tab 主题色 (下方内容区) ── */
+body.gg-body { background: #0A1420; color: var(--gg-paper); font-family: var(--font-body); }
+.gg-hero h1, .gg-hero h2, .gg-hero h3 { font-family: var(--font-heading); }
+.gg-hero .num, .gg-hero .num * { font-family: var(--font-num); }
+.gg-hero + section.tab, .gg-hero ~ section.tab { background: #0A1420; color: var(--gg-paper); border-top: 1px solid #1F1408; }
+.gg-hero + section.tab h2, .gg-hero + section.tab h3,
+.gg-hero ~ section.tab h2, .gg-hero ~ section.tab h3 { color: var(--gg-paper); }
+.gg-hero + section.tab p, .gg-hero + section.tab .lede,
+.gg-hero ~ section.tab p, .gg-hero ~ section.tab .lede { color: rgba(250,250,246,0.78); }
+.gg-hero + section.tab .bento-card, .gg-hero + section.tab .company-card, .gg-hero + section.tab .curriculum-block,
+.gg-hero ~ section.tab .bento-card, .gg-hero ~ section.tab .company-card, .gg-hero ~ section.tab .curriculum-block { background: rgba(15,31,51,0.55); border: 1px solid rgba(212,175,55,0.25); color: var(--gg-paper); }
+.gg-hero + section.tab .bento-card:hover, .gg-hero + section.tab .company-card:hover, .gg-hero + section.tab .curriculum-block:hover,
+.gg-hero ~ section.tab .bento-card:hover, .gg-hero ~ section.tab .company-card:hover, .gg-hero ~ section.tab .curriculum-block:hover { border-color: var(--gg-gold); }
+.gg-hero + section.tab .quote, .gg-hero ~ section.tab .quote { background: rgba(15,31,51,0.55); border: 1px solid rgba(212,175,55,0.25); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .quote-text, .gg-hero ~ section.tab .quote-text { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .course-name, .gg-hero ~ section.tab .course-name { color: var(--gg-paper); }
+.gg-hero + section.tab .course-credit, .gg-hero ~ section.tab .course-credit { color: var(--gg-gold); }
+.gg-hero ~ footer { color: rgba(250,250,246,0.5); }
+/* ── 响应式 ── */
+@media (max-width: 1280px) {
+  .gg-hero { min-height: 660px; padding: 80px 0 90px; }
+  .gg-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .gg-main-emblem { width: 240px; height: 240px; }
+  .gg-hu-tag { font-size: 11px; padding: 6px 14px 6px 12px; }
+}
+@media (max-width: 768px) {
+  .gg-hero { min-height: auto; padding: 72px 0 60px; }
+  .gg-stats-row { grid-template-columns: 1fr 1fr; }
+  .gg-main-emblem { width: 180px; height: 180px; opacity: 0.12; }
+  .gg-hero-title { font-size: clamp(1.875rem, 8vw, 2.5rem); }
+  .gg-quote-text { letter-spacing: 0.25em; }
+  .gg-corner-mark { width: 20px; height: 20px; }
+  .gg-cm-tl, .gg-cm-tr { top: 64px; }
+}
+/* ── 主体 section tab 样式 (复刻 agri 范式 + 主题色) ── */
+section.tab { border-top: 1px solid rgba(212, 175, 55, 0.25); }
+section.tab h2 { color: #0F1F33; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
+section.tab h3 { color: #0F1F33; font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: var(--font-body); }
+section.tab p.lede { color: rgba(250, 250, 246, 0.55); }
+.watermark { font-family: var(--font-heading); color: #0F1F33; opacity: 0.04; }
+footer { background: #FAFAF6; border-top: 1px solid rgba(212, 175, 55, 0.25); }
+footer .label { color: #0F1F33; font-family: var(--font-body); }
+footer .data-source { color: #2A4A75; }
+.drop-cap::first-letter { font-family: var(--font-heading); color: #D4AF37; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; box-shadow: 0 1px 0 rgba(212, 175, 55, 0.08); }
+.bento-item::before { content: "◆"; position: absolute; top: 20px; right: 20px; color: #2A4A75; font-size: 0.875rem; opacity: 0.4; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #2A4A75; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #0F1F33; border: 1px solid #0F1F33; border-radius: 0; font-family: var(--font-heading); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; color: #0F1F33; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: var(--font-heading); font-size: 0.8125rem; color: #2A4A75; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 28px 24px 22px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #2A4A75; color: #2A4A75; font-family: var(--font-heading); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #0F1F33; color: #FAFAF6; border-color: #0F1F33; }
+.tier-A { background: transparent; }
+.tier-B { background: transparent; color: #2A4A75; border-color: rgba(212, 175, 55, 0.25); }
+.company-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #0F1F33; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.25); }
+.sparkline-bar { flex: 1; background: rgba(212, 175, 55, 0.25); min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #2A4A75; opacity: 0.7; }
+.sparkline-label { font-family: var(--font-heading); font-size: 0.6875rem; color: #2A4A75; letter-spacing: 0.05em; margin-top: 6px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid rgba(212, 175, 55, 0.25); font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #FAFAF6; font-family: var(--font-heading); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #2A4A75; }
+.salary-stage { color: #0F1F33; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(212, 175, 55, 0.12); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.yoy { display: inline-block; font-family: var(--font-heading); font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #0F1F33; background: rgba(212, 175, 55, 0.10); }
+.yoy.down { color: #DC2626; background: rgba(220, 38, 38, 0.10); }
+.yoy.flat { color: rgba(250, 250, 246, 0.55); }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.25); }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; color: #0F1F33; }
+.direction-bar { height: 8px; background: rgba(212, 175, 55, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
+.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #2A4A75; transform: translateY(-2px); }
+.path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #0F1F33; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: var(--font-heading); color: #2A4A75; font-size: 0.875rem; margin-top: 8px; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-left: 4px solid #D4AF37; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: var(--font-heading); font-weight: 700; color: #0F1F33; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: var(--font-heading); color: rgba(250, 250, 246, 0.55); font-size: 0.75rem; }
+.quote-text { font-family: var(--font-heading); font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #0F1F33; }
+.quote-text::before { content: "「"; color: #D4AF37; }
+.quote-text::after { content: "」"; color: #D4AF37; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.25); }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: var(--font-heading); font-size: 1.0625rem; color: #0F1F33; }
+.xuanke-bar { height: 6px; background: rgba(212, 175, 55, 0.25); overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #2A4A75; }
+.xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
+.curriculum-lede { font-family: var(--font-heading); color: #2A4A75; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 22px 26px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
+.curriculum-block:last-child { margin-bottom: 0; }
+.curriculum-block:hover { border-color: #2A4A75; }
+.curriculum-title { font-family: var(--font-heading); font-size: 1.0625rem; color: #0F1F33; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(212, 175, 55, 0.30); font-weight: 700; }
+.course { color: #0F1F33; border-bottom: 1px dashed rgba(212, 175, 55, 0.20); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(212, 175, 55, 0.04); padding-left: 8px; }
+.course-name { color: #0F1F33; }
+.course-credit { color: #2A4A75; font-family: var(--font-heading); font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: rgba(250, 250, 246, 0.55); border: 1px solid #0F1F33; text-align: center; position: relative; }
+.cta-block::before { content: "◆  ◆  ◆"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #FAFAF6; padding: 0 16px; color: #0F1F33; font-size: 0.875rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: var(--font-heading); font-size: 1.75rem; margin-bottom: 12px; color: #0F1F33; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: rgba(250, 250, 246, 0.55); margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #FAFAF6; border: 1px solid rgba(212, 175, 55, 0.25); color: #0F1F33; font-family: var(--font-heading); font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #2A4A75; }
+.cta-button { padding: 14px 36px; background: #0F1F33; color: #FAFAF6; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-button:hover { background: #FAFAF6; color: #2A4A75; }
+.cta-note { font-family: var(--font-heading); font-size: 0.75rem; color: rgba(250, 250, 246, 0.55); margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #0F1F33; color: #0F1F33; font-family: var(--font-heading); font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #0F1F33; color: #FAFAF6; }
+
+/* ── GONGAN 深色主题 section 文字色反转 (警蓝底, 文字必须亮色) ── */
+.gg-hero + section.tab, .gg-hero ~ section.tab,
+/* (原通配 * { color: inherit } 删除 — 会让 ovv-card 内部文字透明) */
+/* 标题 (h2/h3) — 金色突出 */
+.gg-hero + section.tab h2, .gg-hero + section.tab h3,
+.gg-hero ~ section.tab h2, .gg-hero ~ section.tab h3 { color: var(--gg-gold-soft); }
+/* 章节小字 (06/10 · 院校) */
+.gg-hero + section.tab .section-num, .gg-hero ~ section.tab .section-num { color: var(--gg-gold); }
+/* lede 段 */
+.gg-hero + section.tab p.lede, .gg-hero ~ section.tab p.lede { color: rgba(250, 250, 246, 0.85); }
+.gg-hero + section.tab p, .gg-hero ~ section.tab p,
+.gg-hero + section.tab li, .gg-hero ~ section.tab li { color: rgba(250, 250, 246, 0.78); }
+/* bento (院校) */
+.gg-hero + section.tab .bento-item, .gg-hero ~ section.tab .bento-item { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .bento-monogram, .gg-hero ~ section.tab .bento-monogram { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .bento-rank, .gg-hero ~ section.tab .bento-rank { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .bento-name, .gg-hero ~ section.tab .bento-name { color: var(--gg-paper); }
+.gg-hero + section.tab .bento-tag, .gg-hero ~ section.tab .bento-tag { color: rgba(212, 175, 55, 0.7); }
+/* company (头部公司) */
+.gg-hero + section.tab .company, .gg-hero ~ section.tab .company { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .company-monogram, .gg-hero ~ section.tab .company-monogram { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .company-name, .gg-hero ~ section.tab .company-name { color: var(--gg-paper); }
+.gg-hero + section.tab .company-tier, .gg-hero ~ section.tab .company-tier { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tier-S, .gg-hero ~ section.tab .tier-S { background: var(--gg-gold); color: var(--gg-blue-dk); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tier-B, .gg-hero ~ section.tab .tier-B { color: rgba(212, 175, 55, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .sparkline, .gg-hero ~ section.tab .sparkline { border-top-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .sparkline-bar, .gg-hero ~ section.tab .sparkline-bar { background: rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .company:hover .sparkline-bar, .gg-hero ~ section.tab .company:hover .sparkline-bar { background: var(--gg-gold); }
+.gg-hero + section.tab .sparkline-label, .gg-hero ~ section.tab .sparkline-label { color: rgba(212, 175, 55, 0.6); }
+/* salary */
+.gg-hero + section.tab .salary-table, .gg-hero ~ section.tab .salary-table { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); color: var(--gg-paper); }
+.gg-hero + section.tab .salary-table th, .gg-hero ~ section.tab .salary-table th { background: rgba(15, 31, 51, 0.85); color: var(--gg-gold-soft); }
+.gg-hero + section.tab .salary-table td, .gg-hero ~ section.tab .salary-table td { color: var(--gg-paper); border-bottom-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .salary-stage, .gg-hero ~ section.tab .salary-stage { color: var(--gg-paper); }
+.gg-hero + section.tab .salary-bar, .gg-hero ~ section.tab .salary-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .salary-bar-fill, .gg-hero ~ section.tab .salary-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .yoy.up, .gg-hero ~ section.tab .yoy.up { color: #22C55E; background: rgba(34, 197, 94, 0.12); }
+.gg-hero + section.tab .yoy.down, .gg-hero ~ section.tab .yoy.down { color: #FCA5A5; background: rgba(220, 38, 38, 0.12); }
+/* direction (就业方向) — 关键修复: 文字必须亮色 */
+.gg-hero + section.tab .direction-name, .gg-hero ~ section.tab .direction-name { color: var(--gg-paper); }
+.gg-hero + section.tab .direction-bar, .gg-hero ~ section.tab .direction-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .direction-bar-fill, .gg-hero ~ section.tab .direction-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .direction-pct, .gg-hero ~ section.tab .direction-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .direction, .gg-hero ~ section.tab .direction { border-bottom-color: rgba(212, 175, 55, 0.20); }
+/* path */
+.gg-hero + section.tab .path-card, .gg-hero ~ section.tab .path-card { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .path-pct, .gg-hero ~ section.tab .path-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .path-name, .gg-hero ~ section.tab .path-name { color: rgba(212, 175, 55, 0.7); }
+/* quote (校友引言) — 关键修复 */
+.gg-hero + section.tab .quote, .gg-hero ~ section.tab .quote { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .quote-avatar, .gg-hero ~ section.tab .quote-avatar { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .quote-byline strong, .gg-hero ~ section.tab .quote-byline strong { color: var(--gg-paper); }
+.gg-hero + section.tab .quote-byline .quote-source, .gg-hero ~ section.tab .quote-byline .quote-source { color: rgba(212, 175, 55, 0.7); }
+.gg-hero + section.tab .quote-text, .gg-hero ~ section.tab .quote-text { color: var(--gg-paper); }
+.gg-hero + section.tab .quote-text::before, .gg-hero ~ section.tab .quote-text::before,
+.gg-hero + section.tab .quote-text::after, .gg-hero ~ section.tab .quote-text::after { color: var(--gg-gold); }
+/* xuanke (选科要求) — 关键修复 */
+.gg-hero + section.tab .xuanke-name, .gg-hero ~ section.tab .xuanke-name { color: var(--gg-paper); }
+.gg-hero + section.tab .xuanke-bar, .gg-hero ~ section.tab .xuanke-bar { background: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .xuanke-bar-fill, .gg-hero ~ section.tab .xuanke-bar-fill { background: var(--gg-gold); }
+.gg-hero + section.tab .xuanke-pct, .gg-hero ~ section.tab .xuanke-pct { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .xuanke, .gg-hero ~ section.tab .xuanke { border-bottom-color: rgba(212, 175, 55, 0.20); }
+/* curriculum */
+.gg-hero + section.tab .curriculum-block, .gg-hero ~ section.tab .curriculum-block { background: rgba(15, 31, 51, 0.65); border-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .curriculum-title, .gg-hero ~ section.tab .curriculum-title { color: var(--gg-gold-soft); border-bottom-color: rgba(212, 175, 55, 0.30); }
+.gg-hero + section.tab .course, .gg-hero ~ section.tab .course { color: var(--gg-paper); border-bottom-color: rgba(212, 175, 55, 0.20); }
+.gg-hero + section.tab .course:hover, .gg-hero ~ section.tab .course:hover { background: rgba(212, 175, 55, 0.05); }
+.gg-hero + section.tab .course-name, .gg-hero ~ section.tab .course-name { color: var(--gg-paper); }
+.gg-hero + section.tab .course-credit, .gg-hero ~ section.tab .course-credit { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .curriculum-lede, .gg-hero ~ section.tab .curriculum-lede { color: var(--gg-gold-soft); }
+/* cta */
+.gg-hero + section.tab .cta-block, .gg-hero ~ section.tab .cta-block { background: rgba(15, 31, 51, 0.7); border-color: var(--gg-gold); }
+.gg-hero + section.tab .cta-block::before, .gg-hero ~ section.tab .cta-block::before { background: var(--gg-blue-dk); color: var(--gg-gold); }
+.gg-hero + section.tab .cta-block h3, .gg-hero ~ section.tab .cta-block h3 { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .cta-block p, .gg-hero ~ section.tab .cta-block p { color: rgba(250, 250, 246, 0.78); }
+.gg-hero + section.tab .cta-input, .gg-hero ~ section.tab .cta-input { background: rgba(15, 31, 51, 0.8); border-color: rgba(212, 175, 55, 0.4); color: var(--gg-paper); }
+.gg-hero + section.tab .cta-input:focus, .gg-hero ~ section.tab .cta-input:focus { border-color: var(--gg-gold); }
+.gg-hero + section.tab .cta-button, .gg-hero ~ section.tab .cta-button { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .cta-button:hover, .gg-hero ~ section.tab .cta-button:hover { background: var(--gg-paper); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .cta-note, .gg-hero ~ section.tab .cta-note { color: rgba(212, 175, 55, 0.6); }
+.gg-hero + section.tab .tag, .gg-hero ~ section.tab .tag { color: var(--gg-gold-soft); border-color: var(--gg-gold); }
+.gg-hero + section.tab .tag.primary, .gg-hero ~ section.tab .tag.primary { background: var(--gg-gold); color: var(--gg-blue-dk); }
+.gg-hero + section.tab .drop-cap::first-letter, .gg-hero ~ section.tab .drop-cap::first-letter { color: var(--gg-gold); }
+.gg-hero + section.tab .watermark, .gg-hero ~ section.tab .watermark { color: var(--gg-gold); opacity: 0.03; }
+.gg-hero + section.tab footer, .gg-hero ~ section.tab footer { background: rgba(15, 31, 51, 0.85); color: rgba(250, 250, 246, 0.5); }
+.gg-hero + section.tab footer .label, .gg-hero ~ section.tab footer .label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab footer .data-source, .gg-hero ~ section.tab footer .data-source { color: rgba(212, 175, 55, 0.6); }
+
+/* ── GONGAN ovv-card (速览 3 子卡) 深色覆写 ── */
+.gg-hero + section.tab .ovv-card, .gg-hero ~ section.tab .ovv-card { background: rgba(15, 31, 51, 0.7); border-color: rgba(212, 175, 55, 0.3); color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-lede, .gg-hero ~ section.tab .ovv-lede { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-lede::first-letter, .gg-hero ~ section.tab .ovv-lede::first-letter { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-card-title, .gg-hero ~ section.tab .ovv-card-title { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-card-num, .gg-hero ~ section.tab .ovv-card-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-card-tag, .gg-hero ~ section.tab .ovv-card-tag { color: rgba(212, 175, 55, 0.7); border-color: rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-foundations-label, .gg-hero ~ section.tab .ovv-foundations-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step { background: rgba(212, 175, 55, 0.10); color: var(--gg-paper); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-directions-label, .gg-hero ~ section.tab .ovv-directions-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-dir, .gg-hero ~ section.tab .ovv-dir { background: rgba(15, 31, 51, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-dir-num, .gg-hero ~ section.tab .ovv-dir-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-dir-name, .gg-hero ~ section.tab .ovv-dir-name { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-dir-desc, .gg-hero ~ section.tab .ovv-dir-desc { color: rgba(212, 175, 55, 0.7); }
+.gg-hero + section.tab .ovv-skills, .gg-hero ~ section.tab .ovv-skills { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-skill, .gg-hero ~ section.tab .ovv-skill { background: rgba(212, 175, 55, 0.10); color: var(--gg-paper); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-bonus, .gg-hero ~ section.tab .ovv-bonus { color: var(--gg-gold-soft); background: rgba(212, 175, 55, 0.08); border-left: 4px solid var(--gg-gold); }
+.gg-hero + section.tab .ovv-fit-col.is-yes, .gg-hero ~ section.tab .ovv-fit-col.is-yes { color: #22C55E; }
+.gg-hero + section.tab .ovv-fit-col.is-no, .gg-hero ~ section.tab .ovv-fit-col.is-no { color: #FCA5A5; }
+.gg-hero + section.tab .ovv-fit-label, .gg-hero ~ section.tab .ovv-fit-label { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li { color: var(--gg-paper); }
+.gg-hero + section.tab .ovv-pit, .gg-hero ~ section.tab .ovv-pit { background: rgba(15, 31, 51, 0.6); border-color: rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-pit-num, .gg-hero ~ section.tab .ovv-pit-num { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-pit-myth, .gg-hero ~ section.tab .ovv-pit-myth { color: #FCA5A5; }
+.gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); }
+
+/* ── GONGAN ovv-card (速览 3 子卡) 文字加亮 + 边框加深 ── */
+.gg-hero + section.tab .ovv-card, .gg-hero ~ section.tab .ovv-card { background: rgba(15, 31, 51, 0.85); border: 1.5px solid rgba(212, 175, 55, 0.45); box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.gg-hero + section.tab .ovv-card.is-blue, .gg-hero ~ section.tab .ovv-card.is-blue { border-color: rgba(96, 165, 250, 0.6); }
+.gg-hero + section.tab .ovv-card.is-orange, .gg-hero ~ section.tab .ovv-card.is-orange { border-color: rgba(251, 146, 60, 0.7); }
+.gg-hero + section.tab .ovv-lede, .gg-hero ~ section.tab .ovv-lede { color: var(--gg-paper); line-height: 1.85; }
+.gg-hero + section.tab .ovv-lede::first-letter, .gg-hero ~ section.tab .ovv-lede::first-letter { color: var(--gg-gold); font-size: 3em; }
+.gg-hero + section.tab .ovv-card-head, .gg-hero ~ section.tab .ovv-card-head { border-bottom: 1px solid rgba(212, 175, 55, 0.3); }
+.gg-hero + section.tab .ovv-card-title, .gg-hero ~ section.tab .ovv-card-title { color: var(--gg-gold-soft); font-weight: 700; }
+.gg-hero + section.tab .ovv-card-num, .gg-hero ~ section.tab .ovv-card-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-card-tag, .gg-hero ~ section.tab .ovv-card-tag { color: var(--gg-paper); background: rgba(212, 175, 55, 0.18); border: 1px solid rgba(212, 175, 55, 0.5); padding: 3px 10px; }
+.gg-hero + section.tab .ovv-foundations-label, .gg-hero ~ section.tab .ovv-foundations-label { color: var(--gg-gold-soft); font-weight: 600; letter-spacing: 0.1em; }
+.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline { border-top: 1px solid rgba(212, 175, 55, 0.2); border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+.gg-hero + section.tab .ovv-tl-step span, .gg-hero ~ section.tab .ovv-tl-step span { color: var(--gg-paper); font-weight: 600; font-size: 0.95rem; }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step { background: rgba(212, 175, 55, 0.15); border: 1.5px solid rgba(212, 175, 55, 0.5); padding: 12px 16px; }
+.gg-hero + section.tab .ovv-tl-step::before, .gg-hero ~ section.tab .ovv-tl-step::before { background: var(--gg-gold); border-color: var(--gg-gold); width: 12px; height: 12px; box-shadow: 0 0 8px var(--gg-glow); }
+.gg-hero + section.tab .ovv-directions-label, .gg-hero ~ section.tab .ovv-directions-label { color: var(--gg-gold-soft); font-weight: 600; letter-spacing: 0.1em; }
+.gg-hero + section.tab .ovv-dir, .gg-hero ~ section.tab .ovv-dir { background: rgba(15, 31, 51, 0.7); border: 1.5px solid rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-dir-num, .gg-hero ~ section.tab .ovv-dir-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-dir-name, .gg-hero ~ section.tab .ovv-dir-name { color: var(--gg-paper); font-weight: 700; font-size: 1.0625rem; }
+.gg-hero + section.tab .ovv-dir-desc, .gg-hero ~ section.tab .ovv-dir-desc { color: rgba(212, 175, 55, 0.85); font-size: 0.85rem; }
+.gg-hero + section.tab .ovv-skills-label, .gg-hero ~ section.tab .ovv-skills-label { color: var(--gg-gold-soft); }
+.gg-hero + section.tab .ovv-skill, .gg-hero ~ section.tab .ovv-skill { background: rgba(212, 175, 55, 0.18); color: var(--gg-paper); border: 1.5px solid rgba(212, 175, 55, 0.5); font-weight: 500; }
+.gg-hero + section.tab .ovv-bonus, .gg-hero ~ section.tab .ovv-bonus { color: var(--gg-paper); background: rgba(212, 175, 55, 0.10); border-left: 4px solid var(--gg-gold); padding: 16px 20px; line-height: 1.75; }
+.gg-hero + section.tab .ovv-fit-col.is-yes, .gg-hero ~ section.tab .ovv-fit-col.is-yes { color: #22C55E; font-weight: 600; }
+.gg-hero + section.tab .ovv-fit-col.is-no, .gg-hero ~ section.tab .ovv-fit-col.is-no { color: #FCA5A5; font-weight: 600; }
+.gg-hero + section.tab .ovv-fit-label, .gg-hero ~ section.tab .ovv-fit-label { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li { color: var(--gg-paper); line-height: 1.7; padding: 4px 0; }
+.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before { color: var(--gg-gold); }
+.gg-hero + section.tab .ovv-pit, .gg-hero ~ section.tab .ovv-pit { background: rgba(15, 31, 51, 0.7); border: 1.5px solid rgba(212, 175, 55, 0.4); }
+.gg-hero + section.tab .ovv-pit-num, .gg-hero ~ section.tab .ovv-pit-num { color: var(--gg-gold); font-weight: 700; }
+.gg-hero + section.tab .ovv-pit-myth, .gg-hero ~ section.tab .ovv-pit-myth { color: #FCA5A5; font-weight: 600; }
+.gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); line-height: 1.65; }
+/* ── 强制 .path-grid 5 列一行 (高 specificity) ── */
+body.gg-body .gg-hero + section.tab .path-grid, body.gg-body .gg-hero ~ section.tab .path-grid,
+body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+body.gg-body .gg-hero + section.tab .path-card, body.gg-body .gg-hero ~ section.tab .path-card,
+body.biz-body .biz-hero + section.tab .path-card, body.biz-body .biz-hero ~ section.tab .path-card { padding: 24px 8px 20px !important; }
+body.gg-body .gg-hero + section.tab .path-pct, body.gg-body .gg-hero ~ section.tab .path-pct,
+body.biz-body .biz-hero + section.tab .path-pct, body.biz-body .biz-hero ~ section.tab .path-pct { font-size: clamp(1.5rem, 2.2vw, 2rem) !important; }
+body.gg-body .gg-hero + section.tab .path-name, body.gg-body .gg-hero ~ section.tab .path-name,
+body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ section.tab .path-name { font-size: 0.7rem !important; line-height: 1.4 !important; padding: 0 4px !important; word-break: break-all !important; }
+
+/* ── ovv-tl-step 一行 + ovv-fit-list 列表 marker 修复 (所有 ovv 主题) ── */
+.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline,
+.biz-hero + section.tab .ovv-timeline, .biz-hero ~ section.tab .ovv-timeline { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 10px; padding-bottom: 8px; }
+.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step,
+.biz-hero + section.tab .ovv-tl-step, .biz-hero ~ section.tab .ovv-tl-step { flex: 0 0 auto; min-width: 100px; text-align: center; }
+.gg-hero + section.tab .ovv-fit-list, .gg-hero ~ section.tab .ovv-fit-list,
+.biz-hero + section.tab .ovv-fit-list, .biz-hero ~ section.tab .ovv-fit-list { list-style: none; padding-left: 0; margin: 0; }
+.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li,
+.biz-hero + section.tab .ovv-fit-list li, .biz-hero ~ section.tab .ovv-fit-list li { padding-left: 0; }
+.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before,
+.biz-hero + section.tab .ovv-fit-list li::before, .biz-hero ~ section.tab .ovv-fit-list li::before { content: none; }
+
+
+
+/* ─── Wishlist inject: 顶部 chip + 右下 FAB + 12 主题卡 ─── */
+.wl-chip {
+  position: fixed; top: 16px; right: 16px; z-index: 95;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 7px 12px; border-radius: 999px;
+  background: rgba(250,250,247,0.95); color: #14110D;
+  border: 1px solid #BFB9AB; cursor: pointer;
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  transition: all 180ms; letter-spacing: 0.02em;
+  text-decoration: none; box-shadow: 0 2px 8px rgba(20,17,13,0.06);
+}
+.wl-chip:hover { background: #B8323A; color: #FAFAF7; border-color: #B8323A; transform: translateY(-1px); opacity: 1; }
+.wl-chip[data-state="ready"] { background: #B8323A; color: #FAFAF7; border-color: #B8323A; }
+.wl-chip .count { font-weight: 700; }
+@media (max-width: 640px) {
+  .wl-chip { top: 10px; right: 10px; font-size: 0.6875rem; padding: 6px 10px; }
+}
+
+.wl-fab {
+  position: fixed; right: 24px; bottom: 24px; z-index: 9000;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #B8323A; color: #FAFAF7;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  cursor: pointer; border: none; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wl-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 32px rgba(184,50,58,0.32); }
+.wl-fab[data-state="added"] { background: #2F5F3E; }
+@media (max-width: 640px) { .wl-fab { right: 16px; bottom: 16px; width: 50px; height: 50px; font-size: 1.25rem; } }
+
+.wl-modal {
+  position: fixed; right: 24px; bottom: 96px; z-index: 9001;
+  width: min(320px, calc(100vw - 32px));
+  background: #FAFAF7; color: #14110D;
+  border: 1px solid #BFB9AB; border-radius: 12px; padding: 20px;
+  box-shadow: 0 20px 48px rgba(20,17,13,0.24);
+  transform: translateY(8px); opacity: 0; pointer-events: none;
+  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-modal[data-open="true"] { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.wl-modal .wl-mt { font-family: 'Source Han Serif SC', 'Songti SC', serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; }
+.wl-modal .wl-msub { font-size: 0.8125rem; color: #6F6A60; margin-bottom: 16px; }
+.wl-modal .wl-stars { display: flex; gap: 4px; align-items: center; margin-bottom: 16px; }
+.wl-modal .wl-stars button { font-size: 1.25rem; padding: 4px 2px; color: #BFB9AB; background: none; border: none; cursor: pointer; transition: color 120ms, transform 120ms; }
+.wl-modal .wl-stars button.on { color: #B8323A; }
+.wl-modal .wl-stars button:hover { transform: scale(1.12); }
+.wl-modal .wl-act { display: flex; gap: 8px; }
+.wl-modal .wl-act button { font: inherit; cursor: pointer; padding: 10px 14px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; border: none; }
+.wl-modal .wl-act .wl-ok { flex: 1; background: #14110D; color: #FAFAF7; }
+.wl-modal .wl-act .wl-cancel { background: transparent; color: #6F6A60; border: 1px solid #E2DFD5; }
+.wl-modal .wl-act .wl-ok:disabled { opacity: 0.4; cursor: not-allowed; }
+@media (max-width: 640px) { .wl-modal { right: 16px; bottom: 80px; } }
+
+.wl-toast {
+  position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px);
+  background: #14110D; color: #FAFAF7; padding: 10px 16px;
+  border-radius: 8px; font-size: 0.8125rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  opacity: 0; pointer-events: none; transition: all 220ms; z-index: 9100;
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── 心意框 CTA (在 wl-related 之上) — 看完专业必出 ─── */
+.wl-decide {
+  padding: 64px 0 32px;
+  background: linear-gradient(180deg, #FAFAF7 0%, #F5F2EA 100%);
+  border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-decide .container { max-width: 880px; margin: 0 auto; padding: 0 32px; text-align: center; }
+.wl-decide-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
+  color: #B8323A; letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 12px; font-weight: 600;
+}
+.wl-decide-title {
+  font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600; line-height: 1.3; margin-bottom: 32px; letter-spacing: -0.01em;
+}
+.wl-decide-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  max-width: 720px; margin: 0 auto;
+}
+.wl-decide-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  padding: 28px 24px; background: #fff;
+  border: 1.5px solid #E2DFD5; border-radius: 14px;
+  text-decoration: none; color: #14110D;
+  cursor: pointer; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left; font: inherit;
+}
+.wl-decide-card:hover {
+  transform: translateY(-3px);
+  border-color: #BFB9AB;
+  box-shadow: 0 12px 28px rgba(20,17,13,0.10);
+  opacity: 1;
+}
+.wl-decide-card.primary {
+  background: linear-gradient(180deg, #B8323A 0%, #9F2A31 100%);
+  color: #FAFAF7; border-color: #B8323A;
+}
+.wl-decide-card.primary:hover { border-color: #9F2A31; box-shadow: 0 14px 32px rgba(184,50,58,0.28); }
+.wl-decide-card .wl-decide-emoji { font-size: 1.875rem; line-height: 1; margin-bottom: 12px; }
+.wl-decide-card .wl-decide-h { font-family: 'Source Han Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.wl-decide-card .wl-decide-sub { font-size: 0.8125rem; opacity: 0.8; line-height: 1.5; margin-top: 4px; }
+.wl-decide-card.primary .wl-decide-sub { color: #FAEAEB; opacity: 0.95; }
+.wl-decide-card[data-state="added"] {
+  background: linear-gradient(180deg, #2F5F3E 0%, #244E32 100%);
+  border-color: #2F5F3E;
+}
+@media (max-width: 640px) {
+  .wl-decide { padding: 48px 0 24px; }
+  .wl-decide .container { padding: 0 16px; }
+  .wl-decide-grid { grid-template-columns: 1fr; gap: 12px; }
+  .wl-decide-card { padding: 22px 20px; }
+}
+
+/* ── 12 主题相关卡 (3×4) ───────────────── */
+.wl-related {
+  padding: 80px 0 64px;
+  background: #F2F2EB; border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
+.wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
+.wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
+.wl-related .wl-cta-bar { display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; }
+.wl-related .wl-cta-bar a {
+  font-family: inherit; font-size: 0.875rem; font-weight: 600;
+  padding: 10px 18px; border-radius: 8px; text-decoration: none; transition: all 180ms;
+}
+.wl-related .wl-cta-bar .wl-primary { background: #14110D; color: #FAFAF7; }
+.wl-related .wl-cta-bar .wl-primary:hover { background: #B8323A; opacity: 1; }
+.wl-related .wl-cta-bar .wl-ghost { background: transparent; color: #14110D; border: 1px solid #BFB9AB; }
+.wl-related .wl-cta-bar .wl-ghost:hover { background: #FAFAF7; opacity: 1; }
+.wl-related .wl-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+@media (max-width: 900px) { .wl-related .wl-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .wl-related .wl-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .wl-related { padding: 56px 0 40px; } .wl-related .container { padding: 0 16px; } }
+.wl-card {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px 16px 14px; background: #FAFAF7;
+  border: 1px solid #E2DFD5; border-radius: 10px;
+  text-decoration: none; color: #14110D;
+  transition: all 200ms; min-height: 120px;
+  position: relative; overflow: hidden;
+}
+.wl-card:hover { transform: translateY(-2px); border-color: #BFB9AB; box-shadow: 0 8px 20px rgba(20,17,13,0.08); opacity: 1; }
+.wl-card .wl-badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5625rem; font-weight: 600; padding: 2px 6px; border-radius: 3px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #FAFAF7;
+  align-self: flex-start;
+}
+.wl-card.cs .wl-badge { background: #2A4A7F; }
+.wl-card.finance .wl-badge { background: #5A4632; }
+.wl-card.medicine .wl-badge { background: #8B2424; }
+.wl-card.education .wl-badge { background: #5C7C4A; }
+.wl-card.law .wl-badge { background: #3A3A3A; }
+.wl-card.humanities .wl-badge { background: #6B4F35; }
+.wl-card.sci .wl-badge { background: #1E5E72; }
+.wl-card.eng .wl-badge { background: #5B5B47; }
+.wl-card.administration .wl-badge { background: #4A4564; }
+.wl-card.agri .wl-badge { background: #6B7A3F; }
+.wl-card.arts .wl-badge { background: #8B3A62; }
+.wl-card.gongan .wl-badge { background: #1F2A44; }
+.wl-card.business .wl-badge { background: #6F5A3A; }
+.wl-card .wl-title { font-family: 'Source Han Serif SC', serif; font-size: 0.9375rem; font-weight: 600; margin-top: 2px; line-height: 1.3; }
+.wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
+.wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+
+
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="hero gg-hero">
+  <div class="gg-bg-noise"></div>
+  <div class="gg-gold-band"></div>
+  <!-- 中央主徽: 盾+十字剑+橄榄枝 (背景氛围, 半透明) -->
+  <div class="gg-main-emblem" aria-hidden="true">
+    <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ggGoldG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#E5C158"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#B8902A"/>
+        </linearGradient>
+        <linearGradient id="ggShieldG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1E3A5F"/><stop offset="100%" stop-color="#0F1F33"/>
+        </linearGradient>
+      </defs>
+      <path d="M 120 24 L 200 44 L 200 120 Q 200 168 120 210 Q 40 168 40 120 L 40 44 Z" fill="url(#ggShieldG)" stroke="url(#ggGoldG)" stroke-width="2.5"/>
+      <circle cx="120" cy="64" r="10" fill="none" stroke="url(#ggGoldG)" stroke-width="1.5"/>
+      <circle cx="120" cy="64" r="5" fill="url(#ggGoldG)"/>
+      <g fill="url(#ggGoldG)">
+        <rect x="117" y="74" width="6" height="14"/>
+        <rect x="98" y="88" width="44" height="5"/>
+        <rect x="96" y="86" width="4" height="9"/>
+        <rect x="140" y="86" width="4" height="9"/>
+        <polygon points="116,93 124,93 122,170 118,170"/>
+        <polygon points="118,170 122,170 120,182"/>
+      </g>
+      <g stroke="url(#ggGoldG)" stroke-width="0.8" fill="url(#ggGoldG)">
+        <path d="M 60 130 Q 80 154 110 170" fill="none"/>
+        <ellipse cx="68" cy="138" rx="2.5" ry="5" transform="rotate(-30 68 138)"/>
+        <ellipse cx="78" cy="146" rx="2.5" ry="5" transform="rotate(-20 78 146)"/>
+        <ellipse cx="88" cy="156" rx="2.5" ry="5" transform="rotate(-10 88 156)"/>
+        <ellipse cx="98" cy="164" rx="2.5" ry="5" transform="rotate(-5 98 164)"/>
+        <ellipse cx="64" cy="148" rx="2.5" ry="5" transform="rotate(30 64 148)"/>
+        <ellipse cx="74" cy="158" rx="2.5" ry="5" transform="rotate(20 74 158)"/>
+      </g>
+      <g stroke="url(#ggGoldG)" stroke-width="0.8" fill="url(#ggGoldG)">
+        <path d="M 180 130 Q 160 154 130 170" fill="none"/>
+        <ellipse cx="172" cy="138" rx="2.5" ry="5" transform="rotate(30 172 138)"/>
+        <ellipse cx="162" cy="146" rx="2.5" ry="5" transform="rotate(20 162 146)"/>
+        <ellipse cx="152" cy="156" rx="2.5" ry="5" transform="rotate(10 152 156)"/>
+        <ellipse cx="142" cy="164" rx="2.5" ry="5" transform="rotate(5 142 164)"/>
+        <ellipse cx="176" cy="148" rx="2.5" ry="5" transform="rotate(-30 176 148)"/>
+        <ellipse cx="166" cy="158" rx="2.5" ry="5" transform="rotate(-20 166 158)"/>
+      </g>
+    </svg>
+  </div>
+  <!-- 4 角金线角标 -->
+  <div class="gg-corner-mark gg-cm-tl"></div>
+  <div class="gg-corner-mark gg-cm-tr"></div>
+  <div class="gg-corner-mark gg-cm-bl"></div>
+  <div class="gg-corner-mark gg-cm-br"></div>
+  <!-- 6 大专业 hu-tag -->
+  <div class="gg-hu-tags">
+    <div class="gg-hu-tag">公 安 学</div>
+    <div class="gg-hu-tag">治 安 学</div>
+    <div class="gg-hu-tag">侦 查 学</div>
+    <div class="gg-hu-tag">刑事科学技术</div>
+    <div class="gg-hu-tag">禁 毒 学</div>
+    <div class="gg-hu-tag">公安管理学</div>
+  </div>
+  <!-- 标题区 -->
+  <div class="gg-title-zone">
+    <div class="gg-discipline">PUBLIC SECURITY &amp; LAW STUDIES · 030600</div>
+    <h1 class="gg-hero-title">公 安 <span class="accent">学</span> 类</h1>
+    <div class="gg-title-en">Public Security &amp; Law Studies</div>
+    <div class="gg-subtitle">从 部 委 直 属 高 校 到 省 属 警 院 — 公 正 的 守 护 者 通 道</div>
+  </div>
+  <!-- 4 stats -->
+  <div class="gg-stats-row">
+    <div class="gg-stat featured">
+      <div class="gg-stat-label">Police Acad.</div>
+      <div class="gg-stat-label-cn">公 安 院 校</div>
+      <div class="gg-stat-value">No.52<span class="unit">所</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Enrollment</div>
+      <div class="gg-stat-label-cn">年 招 生 规 模</div>
+      <div class="gg-stat-value">6.8<span class="unit">万</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Posts</div>
+      <div class="gg-stat-label-cn">警 种 岗 位</div>
+      <div class="gg-stat-value">200<span class="unit">+</span></div>
+    </div>
+    <div class="gg-stat">
+      <div class="gg-stat-label">Employment</div>
+      <div class="gg-stat-label-cn">入 警 率</div>
+      <div class="gg-stat-value">98.2<span class="unit">%</span></div>
+    </div>
+  </div>
+  <!-- 引言 -->
+  <div class="gg-quote">
+    <div class="gg-quote-text">对 党 忠 诚<span class="sep">·</span>服 务 人 民<span class="sep">·</span>执 法 公 正<span class="sep">·</span>纪 律 严 明</div>
+    <div class="gg-quote-sig">入 警 誓 词 · OATH OF OFFICE</div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <div class="ovv-simple"><p class="ovv-simple-lede">涉外警务是公安学下设的特色专业,主要面向公安机关涉外部门、出入境管理、边境管理、国际执法合作等业务领域,培养具备国际法、涉外法律法规、外语能力和跨文化沟通能力的高素质应用型警务人才。毕业生主要进入国家移民管理局、地方公安出入境管理部门、边境管理支队、国际刑警中国国家中心局协作单位,以及外交部、商务部涉外安保等岗位。本专业仅在公安院校公安专业中开设,实行单独招生、提前批次录取,需通过政治考察、面试、</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">涉外警务是公安学下设的特色专业,主要面向公安机关涉外部门、出入境管理、边境管理、国际执法合作等业务领域,培养具备国际法、涉外法律法规、外语能力和跨文化沟通能力的高素质应用型警务人才。毕业生主要进入国家移民管理局、地方公安出入境管理部门、边境管理支队、国际刑警中国国家中心局协作单位,以及外交部、商务部涉外安保等岗位。本专业仅在公安院校公安专业中开设,实行单独招生、提前批次录取,需通过政治考察、面试、体检和体能测评,毕业时通过公安院校公安专业招录考试(公安联考)方可入警,入警率高。涉外警务对英语、国际法、跨境案件办理实务要求突出,适合外语基础好、有志于加入公安涉外战线且愿意赴边境地区工作的考生。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对学科基础课程 (数学/统计/经济) 有兴趣, 愿意投入长期学习</li><li>能接受 4 年制本硕博长跑, 或愿意持证上岗</li><li>对行业核心岗位的薪资范围有合理预期 (中位数而非上限)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>只想本科毕业立刻高薪 (无耐心考证/读研)</li><li>对学科核心内容 (如数学/案例分析) 完全无兴趣</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">毕业 = 自动高薪</div><div class="ovv-simple-pit-reality">行业核心岗位需持证或读研 3-5 年, 本科就业与专业相关性较低</div></li><li><div class="ovv-simple-pit-myth">本专业就是 X 行业全部</div><div class="ovv-simple-pit-reality">专业侧重学科基础, 实际工作中需持续学习行业最新动态</div></li><li><div class="ovv-simple-pit-myth">不考证/不读研也能进头部</div><div class="ovv-simple-pit-reality">头部岗位 (如精算师/CFA/四大事务所) 持证是硬门槛</div></li></ul></div></div>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 课程</div>
+    <h2>主要课程</h2>
+    <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">core_courses</div>
+          <div class="course"><span class="course-name">公安学基础理论</span></div>
+          <div class="course"><span class="course-name">治安学概论</span></div>
+          <div class="course"><span class="course-name">侦查学概论</span></div>
+          <div class="course"><span class="course-name">涉外警务概论</span></div>
+          <div class="course"><span class="course-name">国际公法</span></div>
+          <div class="course"><span class="course-name">国际私法</span></div>
+          <div class="course"><span class="course-name">涉外法律法规专题</span></div>
+          <div class="course"><span class="course-name">出入境管理学</span></div>
+          <div class="course"><span class="course-name">外国警察制度</span></div>
+          <div class="course"><span class="course-name">跨境犯罪侦查</span></div>
+          <div class="course"><span class="course-name">涉外案件办理实务</span></div>
+          <div class="course"><span class="course-name">国际执法合作</span></div>
+          <div class="course"><span class="course-name">边境管理学</span></div>
+          <div class="course"><span class="course-name">刑事案件侦查(涉外方向)</span></div>
+          <div class="course"><span class="course-name">涉外警务文书</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">featured_courses</div>
+          <div class="course"><span class="course-name">联合国维和警务</span></div>
+          <div class="course"><span class="course-name">跨国电信网络诈骗治理</span></div>
+          <div class="course"><span class="course-name">反恐国际合作</span></div>
+          <div class="course"><span class="course-name">移民管理实务</span></div>
+          <div class="course"><span class="course-name">司法协助与引渡</span></div>
+          <div class="course"><span class="course-name">东南亚/中亚区域研究</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">lab_or_practice</div>
+          <div class="course"><span class="course-name">公安院校警务实战训练基地实训</span></div>
+          <div class="course"><span class="course-name">出入境管理局跟岗实习</span></div>
+          <div class="course"><span class="course-name">边境管理支队见习</span></div>
+          <div class="course"><span class="course-name">涉外案件模拟法庭(双语)</span></div>
+          <div class="course"><span class="course-name">国际刑警组织中国国家中心局业务实习(部分院校)</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">language_requirement</div>
+          <div class="course"><span class="course-name">大</span></div>
+          <div class="course"><span class="course-name">学</span></div>
+          <div class="course"><span class="course-name">英</span></div>
+          <div class="course"><span class="course-name">语</span></div>
+          <div class="course"><span class="course-name">四</span></div>
+          <div class="course"><span class="course-name">级</span></div>
+          <div class="course"><span class="course-name">/</span></div>
+          <div class="course"><span class="course-name">六</span></div>
+          <div class="course"><span class="course-name">级</span></div>
+          <div class="course"><span class="course-name">,</span></div>
+          <div class="course"><span class="course-name">部</span></div>
+          <div class="course"><span class="course-name">分</span></div>
+          <div class="course"><span class="course-name">院</span></div>
+          <div class="course"><span class="course-name">校</span></div>
+          <div class="course"><span class="course-name">另</span></div>
+          <div class="course"><span class="course-name">设</span></div>
+          <div class="course"><span class="course-name">警</span></div>
+          <div class="course"><span class="course-name">务</span></div>
+          <div class="course"><span class="course-name">英</span></div>
+          <div class="course"><span class="course-name">语</span></div>
+          <div class="course"><span class="course-name">、</span></div>
+          <div class="course"><span class="course-name">涉</span></div>
+          <div class="course"><span class="course-name">外</span></div>
+          <div class="course"><span class="course-name">俄</span></div>
+          <div class="course"><span class="course-name">语</span></div>
+          <div class="course"><span class="course-name">或</span></div>
+          <div class="course"><span class="course-name">东</span></div>
+          <div class="course"><span class="course-name">南</span></div>
+          <div class="course"><span class="course-name">亚</span></div>
+          <div class="course"><span class="course-name">小</span></div>
+          <div class="course"><span class="course-name">语</span></div>
+          <div class="course"><span class="course-name">种</span></div>
+          <div class="course"><span class="course-name">选</span></div>
+          <div class="course"><span class="course-name">修</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 10 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank"></span>
+          <div class="bento-name">中国人民公安大学</div>
+          <div class="bento-tag"></div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank"></span>
+          <div class="bento-name">中国刑事警察学院</div>
+          <div class="bento-tag"></div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">铁</div>
+          <span class="bento-rank"></span>
+          <div class="bento-name">铁道警察学院</div>
+          <div class="bento-tag"></div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank"></span>
+          <div class="bento-name">南京森林警察学院</div>
+          <div class="bento-tag"></div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">广</div>
+          <span class="bento-rank"></span>
+          <div class="bento-name">广西警察学院</div>
+          <div class="bento-tag"></div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">云</div>
+          <span class="bento-rank"></span>
+          <div class="bento-name">云南警官学院</div>
+          <div class="bento-tag"></div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">新</div>
+          <span class="bento-rank"></span>
+          <div class="bento-name">新疆警察学院</div>
+          <div class="bento-tag"></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">国</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">国家移民管理局及下属出入境边防检查总站</div>
+          <div class="company-meta"> · 校招 </div>
+
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">公</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">公安部国际合作局、国际刑警组织中国国家中心局</div>
+          <div class="company-meta"> · 校招 </div>
+
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">各</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">各省公安厅外事处、边境管理总队/支队</div>
+          <div class="company-meta"> · 校招 </div>
+
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">中国海警局(部分岗位需另考)</div>
+          <div class="company-meta"> · 校招 </div>
+
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">外</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">外交部、商务部派驻人员(需另考公务员)</div>
+          <div class="company-meta"> · 校招 </div>
+
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">联</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">联合国维和行动部(民事警察岗位,需选拔派遣)</div>
+          <div class="company-meta"> · 校招 </div>
+
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="salary">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">growth_path</td>
+          <td colspan="3" class="salary-narrative">实习民警→二级警员→一级警员→四级警长→三级警长……警衔与职级并行,工作5-8年可晋升至科级/副科级;外语突出者可选派联合国维和任务、公安部国际合作局、驻外警务联络官(竞争激烈)。</td>
+        </tr>
+        <tr>
+          <td class="salary-stage">monthly_estimate_cny</td>
+          <td colspan="3" class="salary-narrative">6000-10000</td>
+        </tr>
+        <tr>
+          <td class="salary-stage">monthly_note</td>
+          <td colspan="3" class="salary-narrative">基于2024年公开招聘数据估算;公安系统公务员工资由基本工资+警衔工资+岗位津贴+执勤补贴+艰苦边远地区津贴等构成,入警后享警衔套改与警衔津贴。边境地区另享艰苦边远地区津贴,可显著上浮。</td>
+        </tr>
+        <tr>
+          <td class="salary-stage">regional_diff</td>
+          <td colspan="3" class="salary-narrative">一线城市(北京/上海/广州)与东南沿海公安系统综合待遇较好;云南、广西、新疆等边境省份因有艰苦边远地区津贴,综合收入反而可观;中西部非边境县区基础工资相对较低。</td>
+        </tr>
+        <tr>
+          <td class="salary-stage">yearly_note</td>
+          <td colspan="3" class="salary-narrative">含各类补贴的税前综合估算,不含公积金;具体受地区、警衔与岗位影响较大。</td>
+        </tr>
+        <tr>
+          <td class="salary-stage">yearly_total_cny</td>
+          <td colspan="3" class="salary-narrative">100000-180000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+<p>就业方向待补充</p>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">推荐<span class="path-unit">项</span></div>
+          <div class="path-name">abroad_paths</div>
+          <div class="path-detail">少数毕业生赴英国莱斯特大学(犯罪学/警务研究知名)、荷兰莱顿大学、美国宾州州立大学等攻读国际刑法/比较警务/跨国犯罪方向硕士,需自费,毕业仍须通过国内公安联考方可入警。</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">推荐<span class="path-unit">项</span></div>
+          <div class="path-name">career_ceiling</div>
+          <div class="path-detail">中长期可成长为出入境管理/边境管理业务骨干、涉外案件专案组成员;极少数优秀者可入选公安部国际合作局、驻外警务联络官、联合国维和民事警察(需外派选拔)。</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">推荐<span class="path-unit">项</span></div>
+          <div class="path-name">grad_schools</div>
+          <div class="path-detail">中国人民公安大学(公安学/法学方向硕士,含涉外警务方向)、中国政法大学(国际法方向)、北京大学/清华大学国际法项目、外交学院、外交部外交学院国际关系方向。</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">推荐<span class="path-unit">项</span></div>
+          <div class="path-name">rec_exams</div>
+          <div class="path-detail">全国统一法律职业资格考试(客观题+主观题,部分岗位需要);大学英语六级/专四/专八/小语种等级证书;在校可准备公安联考。</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">匿</div>
+            <div class="quote-byline">
+              <strong>匿名校友</strong>
+              <span class="quote-source"> · 基于校友平台公开访谈综合</span>
+            </div>
+          </div>
+          <p class="quote-text"></p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">仅限公安院校公安专业单独招生,需政治考察合格(本人及直系亲属无违法违纪及不良记录)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
+          <div class="xuanke-pct">0%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">须通过公安院校招生面试、身高/视力/体检(男生身高170cm、女生160cm以上,单侧裸眼视力4.8以上等,具体以当年招生章程为准)及体能测评(立定跳远、跑步等)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
+          <div class="xuanke-pct">0%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">外语语种通常要求英语,部分院校专业方向另招小语种(俄语、越南语、泰语等)考生;需参加普通高等学校招生全国统一考试,提前批次录取</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
+          <div class="xuanke-pct">0%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">强烈建议选考政治(几乎所有公安院校涉外警务要求政治为选考科目之一),物理/历史均可,具体以各校2026年选考要求为准</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
+          <div class="xuanke-pct">0%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">无犯罪记录、无纹身(部分院校限制),品行端正,家庭成员无危害国家安全行为</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
+          <div class="xuanke-pct">0%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container">
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
+    <div class="data-source">数据源: 基于2024-2025年公开招生章程与就业数据综合</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+
+<!-- Wishlist UI: 共享 store + helpers + 本页 chip/FAB 启动 + 搜专业 chat -->
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/major-search.js"></script>
+<script>
+(function () {
+  "use strict";
+  if (!window.WishlistStore || !window.UIHelpers) return;
+  var META = { slug: 'shewai-jingwu', title: '涉外警务', style: 'gongan', category: '公安学类' };
+
+  // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
+  if (window.MajorSearch) {
+    var chatHost = document.getElementById('wl-chat-host');
+    if (chatHost) {
+      window.MajorSearch.mountChat(chatHost, {
+        size: 'compact',
+        placeholder: '搜其他专业…  比如「编程」「医生」「考公」「金融」',
+      });
+    }
+  }
+
+  // 1) 顶部右上角 chip
+  var chip = document.createElement('a');
+  chip.className = 'wl-chip';
+  chip.href = '/wishlist.html';
+  chip.setAttribute('aria-label', '心愿单');
+  document.body.appendChild(chip);
+  function paintChip(items) {
+    var c = items.length;
+    chip.innerHTML = '<span aria-hidden="true">🎒</span> <span>心愿单</span> <span class="count">' + c + '/6</span> <span class="arrow">→</span>';
+    if (c >= 4) chip.setAttribute('data-state', 'ready'); else chip.removeAttribute('data-state');
+  }
+  window.WishlistStore.subscribe(paintChip);
+
+  // 2) 右下 FAB + 弹窗 (复用 UIHelpers.mountWishlistFab 的样式但用本注入的类名)
+  var fab = document.createElement('button');
+  fab.className = 'wl-fab'; fab.type = 'button';
+  fab.setAttribute('aria-label', '加入心愿单');
+  fab.textContent = '⭐';
+  document.body.appendChild(fab);
+
+  var modal = document.createElement('div');
+  modal.className = 'wl-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.innerHTML =
+    '<div class="wl-mt">' + META.title + '</div>' +
+    '<div class="wl-msub">给这个专业评几颗星 (1-5)</div>' +
+    '<div class="wl-stars"></div>' +
+    '<div class="wl-act"><button class="wl-cancel">取消</button><button class="wl-ok">加入心愿单</button></div>';
+  document.body.appendChild(modal);
+
+  var current = window.WishlistStore.getScore(META.slug) || 4;
+  var starsHolder = modal.querySelector('.wl-stars');
+  for (var i = 1; i <= 5; i++) (function (v) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = '★'; b.dataset.v = String(v);
+    if (v <= current) b.classList.add('on');
+    b.addEventListener('click', function () {
+      current = v;
+      starsHolder.querySelectorAll('button').forEach(function (bb) {
+        bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+      });
+    });
+    starsHolder.appendChild(b);
+  })(i);
+
+  function syncFab() {
+    var inList = window.WishlistStore.has(META.slug);
+    var full = window.WishlistStore.isFull();
+    fab.setAttribute('data-state', inList ? 'added' : (full ? 'full' : 'idle'));
+    fab.textContent = inList ? '✓' : (full ? '🎒' : '⭐');
+    var ok = modal.querySelector('.wl-ok');
+    ok.textContent = inList ? '保存调整' : '加入心愿单';
+    modal.querySelector('.wl-msub').textContent = inList ? '已加入心愿单, 可调整星级' : (full ? '心愿单已满 6 个 (去管理)' : '给这个专业评几颗星 (1-5)');
+    ok.disabled = !inList && full;
+    // 同步「心意框」主按钮
+    var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+    if (decideBtn) {
+      decideBtn.setAttribute('data-state', inList ? 'added' : 'idle');
+      var dh = decideBtn.querySelector('.wl-decide-h');
+      var ds = decideBtn.querySelector('.wl-decide-sub');
+      var de = decideBtn.querySelector('.wl-decide-emoji');
+      if (dh && ds && de) {
+        if (inList) {
+          de.textContent = '✓';
+          dh.textContent = '已加入心愿单 · 调整星级';
+          ds.textContent = '当前 ' + (window.WishlistStore.getScore(META.slug) || 4) + ' 颗星, 点击修改';
+        } else if (full) {
+          de.textContent = '🎒';
+          dh.textContent = '心愿单已满 6 个';
+          ds.textContent = '先去心愿单页删一个';
+        } else {
+          de.textContent = '🌟';
+          dh.textContent = '心仪 · 加入心愿单';
+          ds.textContent = '打 1-5 颗星, 凑齐 4 个跑志愿推荐';
+        }
+      }
+    }
+  }
+  syncFab();
+
+  function openModal() {
+    current = window.WishlistStore.getScore(META.slug) || 4;
+    starsHolder.querySelectorAll('button').forEach(function (bb) {
+      bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+    });
+    modal.setAttribute('data-open', 'true');
+  }
+  function closeModal() { modal.setAttribute('data-open', 'false'); }
+
+  fab.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+      window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+      return;
+    }
+    if (modal.getAttribute('data-open') === 'true') closeModal(); else openModal();
+  });
+
+  // 「心意框」主按钮 → 直接触发 FAB modal
+  var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+  if (decideBtn) {
+    decideBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+        window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+        return;
+      }
+      openModal();
+    });
+  }
+  modal.querySelector('.wl-cancel').addEventListener('click', closeModal);
+  modal.querySelector('.wl-ok').addEventListener('click', function () {
+    var res = window.WishlistStore.upsert({ slug: META.slug, title: META.title, style: META.style, category: META.category, score: current });
+    if (!res.ok && res.reason === 'full') { window.UIHelpers.toast('心愿单已满 6 个'); return; }
+    window.UIHelpers.toast(res.updated ? '已更新星级' : '已加入心愿单');
+    closeModal();
+  });
+  document.addEventListener('click', function (e) {
+    if (modal.getAttribute('data-open') !== 'true') return;
+    if (modal.contains(e.target) || fab.contains(e.target)) return;
+    closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.getAttribute('data-open') === 'true') closeModal();
+  });
+  window.WishlistStore.subscribe(syncFab);
+})();
+</script>
+
+</body>
+</html>

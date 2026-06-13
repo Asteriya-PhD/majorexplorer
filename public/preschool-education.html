@@ -12,18 +12,9 @@
 <link rel="preload" href="/js/wishlist-store.js" as="script">
 <link rel="preload" href="/js/ui-helpers.js" as="script">
 <link rel="preload" href="/js/major-search.js" as="script">
-<link rel="preload" href="/js/synth-client.js" as="script">
 
 <title>学前教育专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="学前教育不是「带小孩玩」，而是「研究 0-6 岁儿童发展规律并设计科学教育方案」的专业学科。它融合儿童心理学、教育学、艺术技能（钢琴/舞蹈/美术）与卫生保健，毕业生主要进入幼儿园、早教机构、儿童出版与">
-  <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/preschool-education.html">
-  <meta property="og:url" content="https://majorexplorer.com/preschool-education.html">
-  <meta property="og:site_name" content="Major Explorer">
-  <meta property="og:title" content="学前教育专业介绍 2026 高考 | Major Explorer">
-  <meta property="og:description" content="学前教育不是「带小孩玩」，而是「研究 0-6 岁儿童发展规律并设计科学教育方案」的专业学科。它融合儿童心理学、教育学、艺术技能（钢琴/舞蹈/美术）与卫生保健，毕业生主要进入幼儿园、早教机构、儿童出版与">
-  <meta property="og:type" content="article">
-
 <style>
 @import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
 
@@ -375,6 +366,89 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 @media (prefers-reduced-motion: reduce) {
   .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
   .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
+
+
+/* === 简化速览 (TEMPLATE 锁版, 不分 cards) === */
+.ovv-simple { max-width: 880px; margin: 0 auto; }
+.ovv-simple-section { margin-bottom: 56px; }
+.ovv-simple-lede {
+  font-family: var(--font-heading);
+  font-size: 1.1875rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+  margin-bottom: 48px; max-width: 760px; padding-left: 0;
+  font-weight: 400;
+}
+.ovv-simple-lede::first-letter {
+  font-family: var(--font-heading);
+  font-size: 3.25rem; font-weight: 700; line-height: 1;
+  color: var(--accent, #DC2626); margin-right: 8px; float: left;
+  padding-top: 4px;
+}
+.ovv-simple-h {
+  font-family: var(--font-heading);
+  font-size: 1.375rem; font-weight: 700; color: var(--ink, #1A1A1A);
+  margin: 0 0 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  letter-spacing: -0.01em;
+}
+.ovv-simple-h .ovv-num {
+  font-family: var(--font-num);
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--muted, #6B6B6B); letter-spacing: 0.2em;
+  margin-right: 12px;
+}
+.ovv-simple-body {
+  font-family: var(--font-body);
+  font-size: 1rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+}
+.ovv-simple-fit {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-top: 16px;
+}
+.ovv-simple-fit-col { padding: 20px 0; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-label {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #2E7D32; }
+.ovv-simple-fit-col.is-no  .ovv-simple-fit-label { color: #B8323A; }
+.ovv-simple-fit-list {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-fit-list li {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A);
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+.ovv-simple-fit-list li:last-child { border-bottom: none; }
+.ovv-simple-pitfalls {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-pitfalls li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  display: grid; grid-template-columns: 1fr; gap: 6px;
+}
+.ovv-simple-pitfalls li:last-child { border-bottom: none; }
+.ovv-simple-pit-myth {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem; color: #B8323A; font-weight: 600;
+}
+.ovv-simple-pit-myth::before { content: "❌ "; }
+.ovv-simple-pit-reality {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+.ovv-simple-pit-reality::before { content: "✓ "; color: #2E7D32; font-weight: 700; }
+@media (max-width: 768px) {
+  .ovv-simple-fit { grid-template-columns: 1fr; gap: 16px; }
 }
 
 
@@ -837,6 +911,66 @@ footer .data-source { color: #78716C; }
 .wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
 .wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
+
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+
 </style>
 </head>
 <body>
@@ -869,6 +1003,7 @@ footer .data-source { color: #78716C; }
     <div class="book-recto">
       <div class="recto-corner">CHAPTER I · 专业全貌</div>
       <h1>学前教育</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=04#majors">教育学</a><span class="bc-sep">›</span><a href="/?discipline=04&sub=0401#majors">教育学类</a><span class="bc-sep">›</span><span class="bc-current">学前教育</span></div>
       <p class="hero-tagline">— 学前教育不是「带小孩玩」，而是「研究 0-6 岁儿童发展规律并设计科学教育方案」的专业学科。它融合儿童心理学、教育学、艺术技能（钢琴/舞蹈/美术）与卫生保健，毕业生主要进入幼儿园、早教机构、儿童出版与教育产品行业。教育学学士 + 教师资格证 —</p>
       <div class="hero-tags">
         <span class="tag primary">师范</span><span class="tag primary">教师资格证</span><span class="tag primary">多才多艺</span>
@@ -889,7 +1024,11 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap ovv-lede">学前教育不是「带小孩玩」，而是「研究 0-6 岁儿童发展规律并设计科学教育方案」的专业学科。它融合儿童心理学、教育学、艺术技能（钢琴/舞蹈/美术）与卫生保健，毕业生主要进入幼儿园、早教机构、儿童出版与教育产品行业。教育学学士 + 教师资格证是标配，考编入体制内是主流路径，稳定但薪资天花板有限。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">1 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 「学前教育 = 带小孩玩，谁都能干」</div><div class="ovv-pit-reality">最大的误解。学前教育需要懂儿童发展心理学、课程设计、卫生保健、家长沟通，还要会弹琴画画跳舞，专业门槛其实很高。❌ 「学前教育好就业 = 工资高」→ 好就业是真的（幼儿园缺人），但工资低也是真的。公办园有编制但起薪普遍 4-8k，民办园更低。❌ 「学学前教育 = 必须当幼儿园老师」→ 也可以做教育产品研发、儿童内容策划、早教培训师、家庭教育指导等，但幼儿园教师确实是主流（约 65%）。❌ 「钢琴舞蹈零基础学不了」→ 大部分学校从零基础教起，只要肯练都能过关，但确实需要投入大量课余时间练琴练舞。❌ 「男生不能学学前教育」→ 男幼师在就业市场非常抢手，很多公办园专门招男教师，但社会偏见和薪资低仍是现实问题。❌ 「考了教师资格证就能进公办园」→ 公办园需要参加当地教育局的编制考试（考编），竞争激烈，部分城市报录比超过 30:1。❌ 「学前教育本科毕业就能当园长」→ 园长通常需要 5-10 年一线经验 + 园长任职资格培训，本科只是起点。</div></div></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">学前教育不是「带小孩玩」，而是「研究 0-6 岁儿童发展规律并设计科学教育方案」的专业学科。它融合儿童心理学、教育学、艺术技能（钢琴/舞蹈/美术）与卫生保健，毕业生主要进入幼儿园、早教机构、儿童出版与教育产品行业。教育学学士 + 教师资格证是标配，考编入体制内是主流路径，稳定但薪资天花板有限。</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">学前教育专业的核心是「懂孩子 + 会设计 + 有技能」。前 2 年以理论为主：学前教育学、儿童发展心理学、学前卫生学、中外学前教育史——这些课让你理解 0-6 岁儿童的身体、认知、语言、社会性发展规律。大二开始接触「幼儿园课程与活动设计」「学前儿童游戏理论与指导」，学习如何把理论转化为教案。
+
+大三进入真正的技能爆发期：(1) 艺术技能模块——钢琴（儿童歌曲伴奏）、舞蹈（幼儿舞蹈创编）、美术（儿童画/手工/玩教具制作）、声乐——这是学前教育区别于其他教育类专业的最大特色，也是面试幼儿园的硬门槛；(2) 实践模块——幼儿园见习、实习、教育研习，累计不少于 18 周，直接进班级带娃；(3) 研究方法模块——学前教育研究方法、教育统计与测量，为毕业论文和教研工作打底。
+
+技能树：(1) 观察与评估能力——能通过观察儿童行为判断发展水平并调整教学策略；(2) 活动设计与组织能力——能独立设计 15-30 分钟的教学活动并控场；(3) 艺术表现力——钢琴弹唱、舞蹈编排、绘画手工，三项至少两项过关；(4) 家长沟通能力——学前教育中家长工作占很大比重，需要高情商沟通；(5) 环境创设能力——幼儿园班级环境、主题墙、区域角的布置设计。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"></ul></div></div>
   </div>
 </section>
 
@@ -1010,7 +1149,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">公办幼儿园 (各地教育局直属)</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="80">
@@ -1019,7 +1158,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">红黄蓝教育机构</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="160">
@@ -1028,7 +1167,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">金宝贝早教</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="240">
@@ -1037,7 +1176,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">美吉姆国际儿童教育</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="0">
@@ -1046,7 +1185,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">宝宝树 (儿童内容)</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="80">
@@ -1055,7 +1194,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">凯叔讲故事 (儿童内容)</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="160">
@@ -1064,7 +1203,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">好未来/学而思 (素养方向)</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="240">
@@ -1073,7 +1212,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">新东方 (少儿部)</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="0">
@@ -1082,7 +1221,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">巧虎 (儿童教育产品)</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="80">
@@ -1091,7 +1230,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-B">B</span>
           </div>
           <div class="company-name">华东师范大学<wbr>出版社 (学前教育分社)</div>
-          <div class="company-meta">— · 校招 —</div>
+          <div class="company-meta"> · 校招 </div>
 
         </div>
     </div>
@@ -1140,32 +1279,32 @@ footer .data-source { color: #78716C; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">幼儿园教师 (公办/民办)</div>
+          <div class="direction-name"></div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">早教机构/托育中心教师</div>
+          <div class="direction-name"></div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">学前教育产品/内容研发</div>
+          <div class="direction-name"></div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">幼儿园管理/教研岗位</div>
+          <div class="direction-name"></div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">继续深造 (考研/留学)</div>
+          <div class="direction-name"></div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">其他 (儿童康复/特殊教育/家庭教育指导)</div>
+          <div class="direction-name"></div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:0%"></div></div>
           <div class="direction-pct">0%</div>
         </div>
@@ -1180,20 +1319,24 @@ footer .data-source { color: #78716C; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">['学前教育学 (学硕)', '学前教育 (专硕)', '儿童发展心理学', '教育管理学', '特殊教育学']%</div>
+          <div class="path-pct">5<span class="path-unit">项</span></div>
           <div class="path-name">考研方向</div>
+          <ul class="path-bullets"><li>学前教育学 (学硕)</li><li>学前教育 (专硕)</li><li>儿童发展心理学</li><li>教育管理学</li><li>特殊教育学</li></ul>
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">['北京师范大学', '华东师范大学', '南京师范大学', '东北师范大学', '浙江师范大学']%</div>
+          <div class="path-pct">5<span class="path-unit">项</span></div>
           <div class="path-name">推荐院校</div>
+          <ul class="path-bullets"><li>北京师范大学</li><li>华东师范大学</li><li>南京师范大学</li><li>东北师范大学</li><li>浙江师范大学</li></ul>
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">['Early Childhood Education (美/英/澳)', 'Child Development (美/加)', 'Education (TESOL/Curriculum Design)']%</div>
+          <div class="path-pct">3<span class="path-unit">项</span></div>
           <div class="path-name">留学方向</div>
+          <ul class="path-bullets"><li>Early Childhood Education (美/英/澳)</li><li>Child Development (美/加)</li><li>Education (TESOL/Curriculum Design)</li></ul>
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">['幼儿园教师资格证 (必备)', '普通话等级证书 (二甲以上)', '育婴师/保育员 (加分项)', '家庭教育指导师 (选修)']%</div>
+          <div class="path-pct">4<span class="path-unit">项</span></div>
           <div class="path-name">考证建议</div>
+          <ul class="path-bullets"><li>幼儿园教师资格证 (必备)</li><li>普通话等级证书 (二甲以上)</li><li>育婴师/保育员 (加分项)</li><li>家庭教育指导师 (选修)</li></ul>
         </div>
     </div>
   </div>
@@ -1208,23 +1351,13 @@ footer .data-source { color: #78716C; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">李</div>
+            <div class="quote-avatar">?</div>
             <div class="quote-byline">
-              <strong>李老师，华东师范大学学前教育本科毕业，上海某公办园主班教师，工作 4 年</strong>
+              <strong></strong>
               <span class="quote-source"> · 基于知乎平台公开访谈综合</span>
             </div>
           </div>
           <p class="quote-text">很多人问我一个本科毕业生去幼儿园是不是浪费，但真正进了这行才知道，学前教育需要懂发展心理学、课程设计、家长沟通，还要会弹琴画画做手工。公办园有编制，虽然工资不高但稳定，寒暑假是真的香。</p>
-        </div>
-        <div class="quote fade-up" data-delay="80" >
-          <div class="quote-head">
-            <div class="quote-avatar">小</div>
-            <div class="quote-byline">
-              <strong>小王，南京师范大学学前教育本科毕业，教育产品经理，工作 3 年</strong>
-              <span class="quote-source"> · 基于小红书平台公开访谈综合</span>
-            </div>
-          </div>
-          <p class="quote-text">毕业后没去幼儿园，去了某教育科技公司做课程研发。学前教育的课程设计能力其实很值钱——懂儿童认知发展、懂游戏化学习、懂怎么把知识点转化成 3-6 岁孩子能理解的形式。薪资比一线教师高不少，但压力也大。</p>
         </div>
     </div>
   </div>
@@ -1256,6 +1389,58 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
+
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
+<section class="wl-decide" id="wl-decide">
+  <div class="container">
+    <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
+    <h2 class="wl-decide-title">「学前教育」<br>是你愿意学 4 年的方向吗?</h2>
+    <div class="wl-decide-grid">
+      <button class="wl-decide-card primary" data-act="add">
+        <span class="wl-decide-emoji">🌟</span>
+        <span class="wl-decide-h">心仪 · 加入心愿单</span>
+        <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
+      </button>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="wl-related" id="wl-related">
+  <div class="container">
+    <div class="wl-eyebrow">More to explore</div>
+    <h2>没找到想看的? 搜一下别的专业</h2>
+    <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
+    <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
+    <div class="wl-cta-bar">
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
+      <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card education" href="/english.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">英语</span><span class="wl-hook">教学/翻译/考公考编</span></a>
+      <a class="wl-card education" href="/journalism-communication.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">新闻传播学</span><span class="wl-hook">新媒体 + 短视频, 内卷</span></a>
+      <a class="wl-card education" href="/psychology.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">心理学</span><span class="wl-hook">用户研究 + 认知神经科学</span></a>
+      <a class="wl-card education" href="/education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">师范教育 (数学/语文/英语 等)</span><span class="wl-hook">稳定 + 寒暑假 + 入编</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
+      <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
+      <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
+    </div>
+  </div>
+</section>
 
 <footer>
   <div class="container">
@@ -1315,7 +1500,6 @@ footer .data-source { color: #78716C; }
 <script src="/js/wishlist-store.js"></script>
 <script src="/js/ui-helpers.js"></script>
 <script src="/js/major-search.js"></script>
-<script src="/js/synth-client.js"></script>
 <script>
 (function () {
   "use strict";
