@@ -136,29 +136,99 @@
     "双一流": 3.5, "公办本科": 2.5, "民办/独立": 1.5,
   };
 
-  function majorMatch(schoolId, interests, specialties) {
-    if (!interests || interests.length === 0 || !specialties) return 0;
-    const spData = specialties[String(schoolId)];
-    if (!spData) return 0;
-    const topSpecs = spData.top_specials || [];
-    if (topSpecs.length === 0) return 0;
+  function majorMatch(schoolId, interests, specialties, allMajorsById, synonymMap) {
+    if (!interests || interests.length === 0) return 0;
+    const sid = String(schoolId);
+    const spData = specialties && specialties[sid];
+    const topSpecs = (spData && spData.top_specials) || [];
+    // all_majors 主源: 128 校 admissions_raw 全量, 命中给 +0.2 (校真有这个专业, 强证据)
+    // 880 校无 all_majors 数据, schoolAllMajors[sid] 为 undefined → 自然 fallback
+    const schoolAllMajors = (allMajorsById && allMajorsById[sid] && allMajorsById[sid].all_majors) || [];
+    // synonyms 兼容: 老调用方可能没传 synonymMap
+    synonymMap = synonymMap || {};
+
+    // 同义词展开 (4 路):
+    //   1) 正向: kw 是 category key → 整个类目
+    //   2) 反向: kw 精确等于某 category value (e.g. "金融学")
+    //   3) 前缀: kw 是某 major 的前 N 字 (e.g. "金融" 是 "金融学"/"金融工程" 前缀)
+    //   4) 子串: kw (>=3 字) 是某 major 的子串
+    // 注: kw 自身永远在 set (用户可能直接打完整 major 名)
+    function expandInterest(kw) {
+      const out = new Set([kw]);
+      if (!kw) return out;
+      // 1) 正向
+      if (synonymMap[kw]) synonymMap[kw].forEach((m) => out.add(m));
+      // 2/3/4) 扫描全 synonyms, 找匹配
+      for (const cat of Object.keys(synonymMap)) {
+        if (cat === "_meta") continue;
+        const list = synonymMap[cat];
+        if (!Array.isArray(list)) continue;
+        for (const m of list) {
+          if (out.has(m)) continue; // 已加 (1) 或 (2)
+          if (m === kw) {
+            // 2) 精确
+            list.forEach((x) => out.add(x));
+            break;
+          } else if (kw.length >= 2 && m.indexOf(kw) === 0) {
+            // 3) 前缀: kw 是 m 的开头 (e.g. "金融" → "金融学")
+            list.forEach((x) => out.add(x));
+            break;
+          } else if (kw.length >= 3 && m.indexOf(kw) !== -1) {
+            // 4) 子串: kw (>=3) 出现在 m 里
+            out.add(m);
+          }
+        }
+      }
+      return out;
+    }
+
+    // 匹配 helper: major name vs expanded set
+    // 设计原则: matchAny 是最后兜底, 主要匹配逻辑在 expandInterest 已完成 (双向 + 前缀 + 子串).
+    // 这里只保留两类: exact 命中 + 大类兼容. 双向 indexOf 容易误报 (e.g. "信息工程" ⊂ "智能电网信息工程"),
+    // 走 expandInterest 的 prefix rule 处理.
+    function matchAny(sname, expanded) {
+      if (!sname) return false;
+      if (expanded.has(sname)) return true;
+      for (const e of expanded) {
+        if (!e) continue;
+        // 学科大类兼容: "计算机" → "计算机类" (sname 是 e + "类")
+        if (sname === e + "类" || sname === e + "（...）") return true;
+      }
+      return false;
+    }
 
     let best = 0;
-    for (const spec of topSpecs) {
-      const sname = spec.name || "";
-      for (const it of interests) {
-        const kw = it.major;
-        if (!kw) continue;
-        // 双向包含 / 首 2 字相同
-        if (sname.indexOf(kw) !== -1 || kw.indexOf(sname) !== -1 || sname.slice(0, 2) === kw.slice(0, 2)) {
-          let bonus = 0;
-          const rk = spec.xueke_rank_score || spec.ruanke_level || "";
-          if (rk.indexOf("A+") === 0) bonus = 0.5;
-          else if (rk.indexOf("A") === 0) bonus = 0.3;
-          else if (rk.indexOf("B") === 0) bonus = 0.1;
-          const score = Math.min(5.0, (it.score || 0) + bonus);
-          if (score > best) best = score;
-          break;
+    for (const it of interests) {
+      const kw = it.major;
+      if (!kw) continue;
+      const userScore = it.score || 0;
+      const expanded = expandInterest(kw);
+
+      // ── 主源: 校 all_majors (128 校有, 880 校跳过) ──
+      if (schoolAllMajors.length > 0) {
+        for (const m of schoolAllMajors) {
+          if (matchAny(m, expanded)) {
+            const score = Math.min(5.0, userScore + 0.2); // 真有这个专业, 强证据
+            if (score > best) best = score;
+            break; // 1 个 interest × 1 校只计最强
+          }
+        }
+      }
+
+      // ── Fallback: top_specials (软科 bonus 替代 all_majors 0.2) ──
+      if (best < userScore + 0.5 && topSpecs.length > 0) {
+        for (const spec of topSpecs) {
+          const sname = spec.name || "";
+          if (matchAny(sname, expanded)) {
+            let bonus = 0;
+            const rk = spec.xueke_rank_score || spec.ruanke_level || "";
+            if (rk.indexOf("A+") === 0) bonus = 0.5;
+            else if (rk.indexOf("A") === 0) bonus = 0.3;
+            else if (rk.indexOf("B") === 0) bonus = 0.1;
+            const score = Math.min(5.0, userScore + bonus);
+            if (score > best) best = score;
+            break;
+          }
         }
       }
     }
@@ -176,10 +246,10 @@
     return 0;
   }
 
-  function computeScore(user, college, specialties) {
+  function computeScore(user, college, specialties, allMajorsById, synonymMap) {
     const w = WEIGHTS[user.mode] || WEIGHTS["均衡"];
     const [a, b, g] = w;
-    const m = majorMatch(college.school_id, user.interests || [], specialties);
+    const m = majorMatch(college.school_id, user.interests || [], specialties, allMajorsById, synonymMap);
     const c = cityMatch(college.city || "", user.cities || []);
     const t = TIER_SCORE[college.tier || "民办/独立"] || 1.5;
     return {
@@ -205,7 +275,7 @@
     const topWen = opts.topWen || (subQuotas["稳压线"] + subQuotas["稳基本"] + subQuotas["稳有余"]);
     const topBao = opts.topBao || (subQuotas["保中坚"] + subQuotas["保稳妥"] + subQuotas["保兜底"]);
 
-    const { collegesById, schoolHistory, groupsLatest, specialties, yfyd } = data;
+    const { collegesById, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms } = data;
     if (!collegesById || !schoolHistory || !groupsLatest || !specialties || !yfyd) {
       throw new Error("recommend: data is incomplete");
     }
@@ -257,7 +327,7 @@
       const [cat, prob, subTier] = computeChance(user.rank, med3y, maxRank3y);
       if (!cat) continue;
 
-      const scoreInfo = computeScore(user, college, specialties);
+      const scoreInfo = computeScore(user, college, specialties, schoolAllMajors, majorSynonyms);
 
       // 用户位次 ±30% 的专业组排前
       let rankTargets = passing.filter((pg) =>

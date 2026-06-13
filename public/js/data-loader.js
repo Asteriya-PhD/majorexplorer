@@ -12,6 +12,8 @@
  *   - school_history.json    (4 年位次)
  *   - groups_latest.json     (2025 专业组+选科)
  *   - school_specialties.json (院校主打专业)
+ *   - school_all_majors.json  (128 校 × 3 年合并, 完整专业清单) — majorMatch 主源
+ *   - major_synonyms.json     (20 类目同义词) — majorMatch 展开用户兴趣
  *
  * 缓存策略:
  *   1) 首次 fetch → 写 IndexedDB (objstore "files", key = name)
@@ -20,7 +22,7 @@
  *
  * 公开 API (window.DataLoader):
  *   await loadLight()    → {colleges, provinceLines, yfyd}
- *   await loadHeavy()    → {schoolHistory, groupsLatest, specialties}
+ *   await loadHeavy()    → {schoolHistory, groupsLatest, specialties, schoolAllMajors, majorSynonyms}
  *   await loadAll()      → 合并两批
  *   await clear()        → 清缓存
  * ==================================================================== */
@@ -28,14 +30,20 @@
 (function (global) {
   "use strict";
 
-  // 改这里来强制全量重取 (例: 2026-06-12 第一版 → 20260612a)
-  const DATA_VERSION = "20260612a";
+  // 改这里来强制全量重取 (例: 2026-06-13 加 school_all_majors + major_synonyms → 20260613a)
+  const DATA_VERSION = "20260613a";
   const DATA_DIR = "/data";
   const DB_NAME = "gk.dataCache.v1";
   const DB_STORE = "files";
 
   const LIGHT_FILES = ["colleges.json", "province_lines.json", "yfyd_2025.json"];
-  const HEAVY_FILES = ["school_history.json", "groups_latest.json", "school_specialties.json"];
+  const HEAVY_FILES = [
+    "school_history.json",
+    "groups_latest.json",
+    "school_specialties.json",
+    "school_all_majors.json",   // 128 校全量专业 (T1 产物, majorMatch 主源)
+    "major_synonyms.json",      // 20 类目同义词 (T2 产物, majorMatch 展开)
+  ];
   const SPECIAL_FILES = ["linkage.json"]; // 可选, 当前不强制
 
   // ─────────────── IndexedDB 极简封装 ───────────────
@@ -136,8 +144,8 @@
   }
 
   async function loadHeavy() {
-    const [schoolHistory, groupsLatest, specialties] = await _loadGroup(HEAVY_FILES, "heavy");
-    return { schoolHistory, groupsLatest, specialties };
+    const [schoolHistory, groupsLatest, specialties, schoolAllMajors, majorSynonyms] = await _loadGroup(HEAVY_FILES, "heavy");
+    return { schoolHistory, groupsLatest, specialties, schoolAllMajors, majorSynonyms };
   }
 
   async function loadAll() {
