@@ -232,10 +232,10 @@ test("9.0 REGRESSION 兜底反逻辑: 中山大学 985 不应被早期 maxRank*1
   assert.deepEqual(r, ["冲", 0.25, "极冲"], "985 校不应被 maxRank*1.2 误判兜底");
 });
 
-test("9.0b 保兜底正确路径: user 位次比 median 还好 65% 以上 (diff <= -0.65)", () => {
-  // user rank 2000, median 7356 → diff = -0.73 → 保兜底
+test("9.0b 兜底正确路径: user 位次比 median 还好 65% 以上 (diff <= -0.65)", () => {
+  // user rank 2000, median 7356 → diff = -0.73 → 兜底
   const r = Rec.computeChance(2000, 7356, 8645);
-  assert.deepEqual(r, ["保", 0.99, "保兜底"]);
+  assert.deepEqual(r, ["保", 0.99, "兜底"]);
 });
 
 test("9.0c 过冲丢弃: user 位次比 median 差 150% 以上 (diff >= 1.5)", () => {
