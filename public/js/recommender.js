@@ -387,54 +387,42 @@
       subBuckets[k].sort((a, b) => b.score - a.score);
     }
 
-    // ── 第一轮: 按 sub_tier 配额取数 ──
+    // ── T4 改造: 同档 (冲/稳/保) 跨 sub_tier 合并, 按 score 全局降序取 top N ──
+    // 旧: 每 sub_tier 固定 quota (4/4/4+6/6/4+...), 桶内 score 排, 截断后高 score 校反被卡
+    // 新: 整档合并 → 按 score 降序 → 取 top N → 仍按 sub_tier 顺序显示 (保留 9 档梯度)
     const result = { "冲": [], "稳": [], "保": [] };
     const taken = new Set();
-    for (const sub of Object.keys(subQuotas)) {
-      const need = subQuotas[sub] || 0;
-      const picks = subBuckets[sub].slice(0, need);
-      for (const p of picks) {
-        result[SUB_TO_CAT[sub]].push(p);
-        taken.add(p.school_id);
-      }
-      subBuckets[sub] = subBuckets[sub].slice(need); // 剩下的作 fallback 池
-    }
-
-    // ── 第二轮: 档内额度不足时, 从相邻 sub_tier 借 ──
-    function fillCategory(cat, target) {
-      const order = FILL_ORDER[cat];
-      while (result[cat].length < target) {
-        let filled = false;
-        for (const sub of order) {
-          if (subBuckets[sub].length > 0) {
-            const p = subBuckets[sub].shift();
-            if (taken.has(p.school_id)) continue;
-            result[cat].push(p);
-            taken.add(p.school_id);
-            filled = true;
-            if (result[cat].length >= target) break;
-          }
+    const catTarget = { "冲": topChong, "稳": topWen, "保": topBao };
+    for (const cat of ["冲", "稳", "保"]) {
+      // 合并该档所有 sub_tier candidates
+      const catPool = [];
+      for (const sub of Object.keys(subBuckets)) {
+        if (SUB_TO_CAT[sub] === cat) {
+          for (const c of subBuckets[sub]) catPool.push(c);
         }
-        if (!filled) break; // 池全空
+      }
+      // 按 score 全局降序
+      catPool.sort((a, b) => b.score - a.score);
+      // 取 top N
+      const target = catTarget[cat];
+      for (const c of catPool.slice(0, target)) {
+        result[cat].push(c);
+        taken.add(c.school_id);
       }
     }
-    fillCategory("冲", topChong);
-    fillCategory("稳", topWen);
-    fillCategory("保", topBao);
 
-    // ── 第三轮: 保档配额不足时, 从稳档"稳有余"借 (边缘用户位次太低没保底时兜底) ──
-    // 用户低分段 (e.g. 480) 保档常为空, 此时让稳档"稳有余"晋升当保, 是合理 fallback.
+    // ── 跨档兜底: 保档不足时, 从稳档"稳有余"/"稳基本"借 (用户低分段无保底时保平安) ──
+    // T4 后其他档的 score 主导, 但仍允许这种"身份降级", 因为保档对低分用户真没校
     function crossFillBaoFromWen(target) {
-      const sources = ["稳有余", "稳基本"]; // 稳档里最稳的先借
+      const sources = ["稳有余", "稳基本"];
       while (result["保"].length < target) {
         let filled = false;
         for (const sub of sources) {
           if (subBuckets[sub].length > 0) {
             const p = subBuckets[sub].shift();
             if (taken.has(p.school_id)) continue;
-            // 重打标签: 显示为"保"档但保留原 prob, sub_tier 标 "保(原稳有余)"
             p.category = "保";
-            p.sub_tier = "保" + p.sub_tier; // e.g. "保稳有余", chip 走默认色
+            p.sub_tier = "保" + p.sub_tier;
             result["保"].push(p);
             taken.add(p.school_id);
             filled = true;
@@ -446,12 +434,13 @@
     }
     crossFillBaoFromWen(topBao);
 
-    // ── 档内按概率升序排 (整 36 条单调递增, 冲→保 prob 25%→99%) ──
+    // ── 档内按 sub_tier 顺序 (即 prob) 升序排, 保留 9 档梯度显示 ──
     for (const k of Object.keys(result)) {
       result[k].sort((a, b) => {
-        if (a.prob !== b.prob) return a.prob - b.prob;
-        // 同 prob 时 按 score 降序 (热门校优先)
-        return b.score - a.score;
+        const oa = SUB_TIER_ORDER[a.sub_tier] || 99;
+        const ob = SUB_TIER_ORDER[b.sub_tier] || 99;
+        if (oa !== ob) return oa - ob;
+        return b.score - a.score; // 同 sub_tier 时按 score 降序
       });
     }
 
