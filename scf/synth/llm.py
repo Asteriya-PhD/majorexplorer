@@ -415,30 +415,126 @@ def _normalize_m3_to_curated(data: dict) -> dict:
 
     已知 m3 quirks:
       - curriculum: {category: {"item": [...]}} → {category: [...]}
+      - deep_study: {key: {"item": [...]}} → {key: [...]} (深造内容也同款)
+      - salary 各阶段 yoy 字符串转 int (m3 经常把数字返成字符串)
+      - salary 顺序乱 (m3 不按 career stage 排) → 按 应届→3年→5年→10年+ 排
       - employment_direction: [{name, dest, share, note}] → [{name, dest, desc, pct}]
-      - alumni_quotes 可能缺 current/school (但 validator 已容错)
+      - alumni_quotes 缺 current (只有 name) → 用 name/school 填 current
+      - xuanke_req_list: [{subject, level, note}] → [{name=subject, pct=level→int, note}]
     """
     if not isinstance(data, dict):
         return data
 
-    # curriculum 拆 item 包装
+    # ── curriculum 拆 item 包装 ──
     curr = data.get("curriculum")
     if isinstance(curr, dict):
         for cat, val in list(curr.items()):
             if isinstance(val, dict) and "item" in val and isinstance(val["item"], list):
                 curr[cat] = val["item"]
 
-    # salary 各阶段 yoy 字符串转 int (m3 经常把数字返成字符串, render 报 yoy > 0 TypeError)
+    # ── deep_study 拆 item 包装, KEEP 原始 list/dict 内容 (不压缩!) ──
+    ds = data.get("deep_study")
+    if isinstance(ds, dict):
+        for k, val in list(ds.items()):
+            # 拆 item 包装 (m3 风格)
+            if isinstance(val, dict) and "item" in val and isinstance(val["item"], list):
+                ds[k] = val["item"]
+            # 嵌套 sub-dict 也拆 (如 certification 内部)
+            elif isinstance(val, dict):
+                for sub_k, sub_v in list(val.items()):
+                    if isinstance(sub_v, dict) and "item" in sub_v and isinstance(sub_v["item"], list):
+                        val[sub_k] = sub_v["item"]
+            # m3 返 dict {name, difficulty, why} → 包装成 list[str] (description + detail)
+            if isinstance(ds.get(k), dict):
+                d = ds[k]
+                bullets = []
+                if d.get("name"):
+                    bullets.append(d["name"])
+                if d.get("difficulty"):
+                    bullets.append(f"难度: {d['difficulty']}")
+                if d.get("why"):
+                    bullets.append(f"为什么重要: {d['why']}")
+                ds[k] = bullets if bullets else ["推荐"]
+
+    # ── overview_v2: m3 返 {what_you_learn, who_fits, pitfalls} (字符串), 转成 curated 嵌套结构 ──
+    ov = data.get("overview_v2")
+    if isinstance(ov, dict):
+        # what_you_learn (str) → 拆成段 (按 。 或 \n 切)
+        wyl = ov.get("what_you_learn")
+        if isinstance(wyl, str) and wyl.strip():
+            # 按句号切
+            segs = re.split(r"[。\n]+", wyl)
+            segs = [s.strip() for s in segs if s.strip() and len(s.strip()) > 5]
+            ov.setdefault("what", {})
+            if "foundations" not in ov["what"]:
+                ov["what"]["foundations"] = segs[:3] if segs else [wyl[:200]]
+            if "directions" not in ov["what"]:
+                ov["what"]["directions"] = segs[3:6] if len(segs) > 3 else segs
+        # who_fits (str) → 拆成段
+        wf = ov.get("who_fits")
+        if isinstance(wf, str) and wf.strip():
+            segs = re.split(r"[。\n]+", wf)
+            segs = [s.strip() for s in segs if s.strip() and len(s.strip()) > 5]
+            ov.setdefault("fit", {})
+            if not ov["fit"].get("yes"):
+                ov["fit"]["yes"] = segs[:3] if segs else [wf[:200]]
+        # pitfalls (str) → 按 ❌ 或 "误区 N" 切, 转成 list[{myth, reality}]
+        pf = ov.get("pitfalls")
+        if isinstance(pf, str) and pf.strip():
+            # 尝试按 ❌ 切
+            if "❌" in pf:
+                parts = re.split(r"❌", pf)
+                new_pf = []
+                for p in parts:
+                    p = p.strip()
+                    if not p:
+                        continue
+                    # 找 "→" 或 "正确" 之类分隔符
+                    if "→" in p:
+                        myth, reality = p.split("→", 1)
+                        new_pf.append({"myth": myth.strip(), "reality": reality.strip()})
+                    else:
+                        new_pf.append({"myth": p[:50], "reality": p})
+                if new_pf:
+                    ov["pitfalls"] = new_pf
+            elif "误区" in pf:
+                # 按 "误区N" 切
+                parts = re.split(r"误区\s*\d*[：:]?", pf)
+                new_pf = []
+                for p in parts:
+                    p = p.strip()
+                    if p:
+                        new_pf.append({"myth": p[:50], "reality": p})
+                if new_pf:
+                    ov["pitfalls"] = new_pf
+
+    # ── salary 排序 + yoy 转 int ──
     salary = data.get("salary")
     if isinstance(salary, dict):
+        # yoy str → int
         for stage, vals in list(salary.items()):
             if isinstance(vals, dict) and isinstance(vals.get("yoy"), str):
                 try:
                     vals["yoy"] = int(vals["yoy"])
                 except (ValueError, TypeError):
                     vals["yoy"] = 0
+        # 排序: 应届(0) → 3年(3) → 5年(5) → 10年+/持证(8-10) → 其他(99)
+        def _stage_sort_key(stage_name: str) -> int:
+            s = stage_name.lower()
+            if "应届" in s or "junior" in s or "0" in s and "年" in s:
+                return 0
+            # 抽第一个数字
+            m = re.search(r"(\d+)", stage_name)
+            if m:
+                n = int(m.group(1))
+                return n
+            if "持证" in s or "资深" in s or "高级" in s:
+                return 8
+            return 99
+        sorted_salary = dict(sorted(salary.items(), key=lambda kv: _stage_sort_key(kv[0])))
+        data["salary"] = sorted_salary
 
-    # employment_direction key 改名 + 类型转换
+    # ── employment_direction key 改名 + 类型转换 ──
     eds = data.get("employment_direction")
     if isinstance(eds, list):
         new_eds = []
@@ -459,9 +555,49 @@ def _normalize_m3_to_curated(data: dict) -> dict:
             # note → desc
             if "note" in new_ed and "desc" not in new_ed:
                 new_ed["desc"] = new_ed.pop("note")
-            # dest 保留 (extra field, render 不读但留着无害)
             new_eds.append(new_ed)
         data["employment_direction"] = new_eds
+
+    # ── alumni_quotes 缺 current → 用 name + school 拼 ──
+    aq = data.get("alumni_quotes")
+    if isinstance(aq, list):
+        for q in aq:
+            if isinstance(q, dict) and not q.get("current"):
+                name = q.get("name", "")
+                school = q.get("school", "")
+                q["current"] = f"{name} @ {school}" if school else name
+            if isinstance(q, dict) and not q.get("year"):
+                # 从 school 里抽 "2019 届" / "2022 届" 这种
+                school = q.get("school", "")
+                m = re.search(r"(\d{4})\s*届", school)
+                if m:
+                    q["year"] = m.group(1) + " 届"
+
+    # ── xuanke_req_list: m3 用 {subject, level, note}, render 要 {name, pct} ──
+    xr = data.get("xuanke_req_list")
+    if isinstance(xr, list):
+        for x in xr:
+            if not isinstance(x, dict):
+                continue
+            # subject → name
+            if "subject" in x and "name" not in x:
+                x["name"] = x["subject"]
+            # level → pct: "多数校要求" → 80, "多数不限制" → 50, "极少数" → 10, 否则取数字
+            if "level" in x and "pct" not in x:
+                level = x["level"]
+                if isinstance(level, str):
+                    if "多数" in level or "大部分" in level:
+                        x["pct"] = 80
+                    elif "少数" in level or "部分" in level:
+                        x["pct"] = 40
+                    elif "极少" in level or "个别" in level:
+                        x["pct"] = 10
+                    else:
+                        # 尝试从字符串抽数字
+                        m = re.search(r"(\d+)", level)
+                        x["pct"] = int(m.group(1)) if m else 50
+                elif isinstance(level, (int, float)):
+                    x["pct"] = int(level)
 
     return data
 

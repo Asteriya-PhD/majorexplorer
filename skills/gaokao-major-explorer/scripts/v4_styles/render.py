@@ -143,8 +143,9 @@ def render_v4(data: dict, style: str) -> str:
 
     path_html = "\n".join(
         f'''        <div class="path-card fade-up" data-delay="{(i % 4) * 80}">
-          <div class="path-pct">{v}%</div>
+          <div class="path-pct">{v if isinstance(v, (int, float)) else len(v) if isinstance(v, list) else "推荐"}<span class="path-unit">{"%" if isinstance(v, (int, float)) else "项"}</span></div>
           <div class="path-name">{k}</div>
+          {f'<ul class="path-bullets">{"".join(f"<li>{item[:80]}</li>" for item in v[:5])}</ul>' if isinstance(v, list) else f'<div class="path-detail">{v}</div>' if isinstance(v, str) else ""}
         </div>'''
         for i, (k, v) in enumerate(deep_study.items())
     ) if deep_study else '<p>深造数据待补充</p>'
