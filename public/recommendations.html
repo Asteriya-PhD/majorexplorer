@@ -6,14 +6,14 @@
 <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.loli.net">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>🎯</text></svg>">
-<title>志愿推荐 Top 20 · Major Explorer 2026 高考</title>
-<meta name="description" content="基于位次法 + 选科 + 心愿单 + 偏好融合, 输出冲 6 / 稳 10 / 保 4 张推荐卡片。">
+<title>志愿推荐 Top 36 · Major Explorer 2026 高考</title>
+<meta name="description" content="基于位次法 9 档细分 (极冲/中冲/微冲 + 稳压线/稳基本/稳有余 + 保中坚/保稳妥/保兜底), 输出冲 12 / 稳 16 / 保 8 张推荐卡片, 概率 25%→99% 单调梯度。">
   <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/recommendations.html">
   <meta property="og:url" content="https://majorexplorer.com/recommendations.html">
   <meta property="og:site_name" content="Major Explorer">
-  <meta property="og:title" content="志愿推荐 Top 20 · Major Explorer 2026 高考">
-  <meta property="og:description" content="基于位次法 + 选科 + 心愿单 + 偏好融合, 输出冲 6 / 稳 10 / 保 4 张推荐卡片。">
+  <meta property="og:title" content="志愿推荐 Top 36 · Major Explorer 2026 高考">
+  <meta property="og:description" content="基于位次法 9 档细分, 输出冲 12 / 稳 16 / 保 8 张推荐卡片, 概率梯度 25%→99%。">
   <meta property="og:type" content="article">
 
 <meta name="robots" content="noindex">
@@ -96,10 +96,10 @@
 
     <div class="page-head">
       <div class="eyebrow">Step 3 · Recommendations</div>
-      <h1 id="head-title">志愿推荐 Top 20</h1>
+      <h1 id="head-title">志愿推荐</h1>
       <p class="lede" id="head-lede">
-        基于位次法 (recent 3 年中位 vs 你的位次), 跑过所有 1008 所院校的专业组,
-        过滤选科, 用你的偏好融合排序, 分桶冲 / 稳 / 保。
+        位次法 9 档细分 — 冲 / 稳 / 保 各档内拉梯度, 概率 25%→99% 单调递增。
+        冲 = 极冲 + 中冲 + 微冲; 稳 = 稳压线 + 稳基本 + 稳有余; 保 = 保中坚 + 稳妥 + 兜底。
       </p>
     </div>
 
@@ -184,13 +184,13 @@
   const resultZone = $("#result-zone");
   function renderSkeletons() {
     resultZone.innerHTML = "";
-    ["冲 (6)", "稳 (10)", "保 (4)"].forEach((label, idx) => {
+    ["冲 (12)", "稳 (16)", "保 (8)"].forEach((label, idx) => {
       const wrap = document.createElement("section");
       wrap.className = "rec-bucket";
       wrap.innerHTML = '<div class="bucket-head"><h2>' + label + '</h2><span class="tag">加载中</span></div>';
       const grid = document.createElement("div");
       grid.className = "rec-grid";
-      const n = idx === 0 ? 6 : idx === 1 ? 10 : 4;
+      const n = idx === 0 ? 12 : idx === 1 ? 16 : 8;
       for (let i = 0; i < n; i++) {
         const card = document.createElement("div");
         card.className = "loader-card";
@@ -244,18 +244,29 @@
     return '<div class="groups">' + html + '</div>';
   }
 
+  // sub_tier 视觉色板 — 冲红 / 稳蓝 / 保绿, 同档内深浅区分难度
+  const SUB_TIER_COLORS = {
+    "极冲": "#c0392b", "中冲": "#e67e22", "微冲": "#f39c12",
+    "稳压线": "#2c7a7b", "稳基本": "#3182ce", "稳有余": "#2b6cb0",
+    "保中坚": "#38a169", "保稳妥": "#48bb78", "保兜底": "#68d391",
+  };
+
   function renderCard(c) {
     const slug = "s" + c.school_id;
     const card = document.createElement("article");
     card.className = "rec-card fade-in";
     card.dataset.id = c.school_id;
+    const subColor = SUB_TIER_COLORS[c.sub_tier] || "#666";
+    const subChip = c.sub_tier
+      ? '<span class="sub-tier-chip" style="display:inline-block;padding:2px 8px;border-radius:10px;background:' + subColor + ';color:#fff;font-size:0.6875rem;font-weight:600;margin-right:6px;letter-spacing:0.05em;">' + UI.escapeHtml(c.sub_tier) + '</span>'
+      : "";
     card.innerHTML = [
       '<div class="head">',
       '  <div>',
       '    <div class="school-name">' + UI.escapeHtml(c.school_name) + '</div>',
-      '    <span class="tier">' + UI.escapeHtml(c.tier || "—") + '</span>',
+      '    ' + subChip + '<span class="tier">' + UI.escapeHtml(c.tier || "—") + '</span>',
       '  </div>',
-      '  <div class="prob" title="录取概率 (位次法估算)">' + renderProb(c.prob) + '</div>',
+      '  <div class="prob" title="录取概率 (位次法估算, sub_tier=' + UI.escapeHtml(c.sub_tier || "") + ')">' + renderProb(c.prob) + '</div>',
       '</div>',
       '<div class="meta">',
       '  <span>📍 ' + UI.escapeHtml(c.city) + '</span>',
@@ -298,9 +309,9 @@
     const wrap = document.createElement("section");
     wrap.className = "rec-bucket";
     wrap.setAttribute("data-tier", tier);
-    const explainer = tier === "chong" ? "P~20-35% · 跳一跳"
-      : tier === "wen" ? "P~60-75% · 主力"
-      : "P~88-95% · 兜底";
+    const explainer = tier === "chong" ? "P 25-50% · 极冲 / 中冲 / 微冲 内部梯度"
+      : tier === "wen" ? "P 65-88% · 稳压线 / 稳基本 / 稳有余 内部梯度"
+      : "P 93-99% · 保中坚 / 保稳妥 / 保兜底 内部梯度";
     wrap.innerHTML = '<div class="bucket-head"><h2><span>' + name + '</span> <span class="caps" style="font-size: 0.6875rem; opacity: 0.7;">(' + arr.length + ')</span></h2><span class="tag">' + explainer + '</span></div>';
     const grid = document.createElement("div");
     grid.className = "rec-grid";
@@ -387,6 +398,8 @@
       ["冲", "稳", "保"].forEach((k) => result[k].forEach((c) => { window.__rec_byId[c.school_id] = c; }));
 
       // 头部 stats
+      const totalShown = result["冲"].length + result["稳"].length + result["保"].length;
+      $("#head-title").textContent = "志愿推荐 Top " + totalShown;
       $("#stats-bar").innerHTML = [
         '<div class="stat"><span class="label">位次</span><span class="value num"><em>' + result.stats.user_rank + '</em></span></div>',
         '<div class="stat"><span class="label">分数</span><span class="value num"><em>' + (user.score || "—") + '</em></span></div>',

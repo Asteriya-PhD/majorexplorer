@@ -73,17 +73,57 @@
     return userSet.has(tail);
   }
 
-  // ───────── 3. 位次法 — 冲稳保分桶 ─────────
-  function computeChance(userRank, medRank) {
-    if (!medRank || medRank <= 0) return [null, null];
+  // ───────── 3. 位次法 — 冲稳保 9 档细分桶 ─────────
+  // diff = (userRank - medRank) / medRank
+  //   diff > 0 : 校位次更靠前 (校更强), 用户在冲
+  //   diff < 0 : 用户位次更靠前 (用户更强), 用户在保
+  // 设计原则: 冲档底线 25%; 9 档单调; 内部拉梯度.
+  // maxRank (可选): 该校该类别历史最深录取位次. 用户位次远超 maxRank 时, 强制归为"保兜底".
+  function computeChance(userRank, medRank, maxRank) {
+    if (!medRank || medRank <= 0) return [null, null, null];
+
+    // ── 强保底: 用户位次比"该校最深录取线"还差 20% 以上, 闭眼能上 ──
+    if (maxRank && maxRank > 0 && userRank > maxRank * 1.2) {
+      return ["保", 0.99, "保兜底"];
+    }
+
     const diff = (userRank - medRank) / medRank;
-    if (diff >= 0.30) return ["冲", 0.20];
-    if (diff >= 0.10) return ["冲", 0.35];
-    if (diff >= -0.05) return ["稳", 0.60];
-    if (diff >= -0.20) return ["稳", 0.75];
-    if (diff >= -0.40) return ["保", 0.88];
-    return ["保", 0.95];
+
+    // ── 过冲丢弃: 用户位次比校 median 高 150% 以上 (= 校录取位次 < 用户的 40%), 纯赌博, 不推荐 ──
+    if (diff >= 1.5) return [null, null, null];
+
+    // ── 冲档 (3 级, 25% → 50%) ──
+    if (diff >= 0.50)  return ["冲", 0.25, "极冲"]; // 校强自己 50%+
+    if (diff >= 0.25)  return ["冲", 0.38, "中冲"]; // 校强自己 25-50%
+    if (diff >= 0.10)  return ["冲", 0.50, "微冲"]; // 校强自己 10-25%
+    // ── 稳档 (3 级, 65% → 88%) ──
+    if (diff >= -0.05) return ["稳", 0.65, "稳压线"]; // ±5% borderline
+    if (diff >= -0.15) return ["稳", 0.78, "稳基本"]; // 自己强 5-15%
+    if (diff >= -0.28) return ["稳", 0.88, "稳有余"]; // 自己强 15-28%
+    // ── 保档 (3 级, 93% → 99%) ──
+    if (diff >= -0.45) return ["保", 0.93, "保中坚"]; // 自己强 28-45%
+    if (diff >= -0.65) return ["保", 0.97, "保稳妥"]; // 自己强 45-65%
+    return                  ["保", 0.99, "保兜底"]; // 自己强 65%+
   }
+
+  // sub_tier 在最终列表里的排序权重 (按概率单调升序排列)
+  const SUB_TIER_ORDER = {
+    "极冲": 1, "中冲": 2, "微冲": 3,
+    "稳压线": 4, "稳基本": 5, "稳有余": 6,
+    "保中坚": 7, "保稳妥": 8, "保兜底": 9,
+  };
+  // 各 sub_tier 所属档位
+  const SUB_TO_CAT = {
+    "极冲": "冲", "中冲": "冲", "微冲": "冲",
+    "稳压线": "稳", "稳基本": "稳", "稳有余": "稳",
+    "保中坚": "保", "保稳妥": "保", "保兜底": "保",
+  };
+  // 同档内借调时优先顺序 (相邻 sub_tier 先借, 边缘 sub_tier 后借)
+  const FILL_ORDER = {
+    "冲": ["微冲", "中冲", "极冲"],
+    "稳": ["稳基本", "稳有余", "稳压线"],
+    "保": ["保中坚", "保稳妥", "保兜底"],
+  };
 
   // ───────── 4. 偏好评分 ─────────
   const WEIGHTS = {
@@ -154,9 +194,16 @@
   // ───────── 5. 主流程 ─────────
   function recommend(user, data, opts) {
     opts = opts || {};
-    const topChong = opts.topChong || 6;
-    const topWen = opts.topWen || 10;
-    const topBao = opts.topBao || 4;
+    // 9 个 sub_tier 各自的配额 (合计 12+16+8=36 张卡)
+    // 内部强制每个 sub_tier 至少 1 条, 保证档内梯度.
+    const subQuotas = Object.assign({
+      "极冲": 4, "中冲": 4, "微冲": 4,    // 冲 12
+      "稳压线": 6, "稳基本": 6, "稳有余": 4, // 稳 16
+      "保中坚": 4, "保稳妥": 3, "保兜底": 1, // 保 8
+    }, opts.subQuotas || {});
+    const topChong = opts.topChong || (subQuotas["极冲"] + subQuotas["中冲"] + subQuotas["微冲"]);
+    const topWen = opts.topWen || (subQuotas["稳压线"] + subQuotas["稳基本"] + subQuotas["稳有余"]);
+    const topBao = opts.topBao || (subQuotas["保中坚"] + subQuotas["保稳妥"] + subQuotas["保兜底"]);
 
     const { collegesById, schoolHistory, groupsLatest, specialties, yfyd } = data;
     if (!collegesById || !schoolHistory || !groupsLatest || !specialties || !yfyd) {
@@ -190,20 +237,24 @@
       if (histKeys.length === 0) continue;
 
       const recentMedians = [];
+      const recentMaxes = [];
       for (const yr of histKeys) {
         const y = parseInt(yr, 10);
         const r = hist[yr];
         if (y >= 2023 && r && r.median_rank) recentMedians.push(r.median_rank);
+        if (y >= 2023 && r && r.max_rank) recentMaxes.push(r.max_rank);
       }
       if (recentMedians.length < 2) continue;
       const med3y = median(recentMedians);
+      // max_rank = 该校历史最深录取位次 (录取门槛上限). 用于"强保底"判定.
+      const maxRank3y = recentMaxes.length > 0 ? Math.max.apply(null, recentMaxes) : null;
 
       const passing = schoolGroups.filter((g) =>
         passesXuanke(g.sg_info, userSet, user.type)
       );
       if (passing.length === 0) continue;
 
-      const [cat, prob] = computeChance(user.rank, med3y);
+      const [cat, prob, subTier] = computeChance(user.rank, med3y, maxRank3y);
       if (!cat) continue;
 
       const scoreInfo = computeScore(user, college, specialties);
@@ -240,6 +291,7 @@
         type: college.type || "",
         nature: college.nature || "",
         category: cat,
+        sub_tier: subTier,
         prob: prob,
         median_rank_3y: med3y,
         history_brief: histBrief,
@@ -255,22 +307,93 @@
       });
     }
 
-    // 分桶 + 桶内按总分降序
-    const buckets = { "冲": [], "稳": [], "保": [] };
-    for (const c of candidates) buckets[c.category].push(c);
-    for (const k of Object.keys(buckets)) {
-      buckets[k].sort((a, b) => b.score - a.score);
+    // ── 9 sub_tier 细分桶, 每桶按 score 降序 ──
+    const subBuckets = {};
+    for (const k of Object.keys(SUB_TIER_ORDER)) subBuckets[k] = [];
+    for (const c of candidates) {
+      if (c.sub_tier && subBuckets[c.sub_tier]) subBuckets[c.sub_tier].push(c);
+    }
+    for (const k of Object.keys(subBuckets)) {
+      subBuckets[k].sort((a, b) => b.score - a.score);
+    }
+
+    // ── 第一轮: 按 sub_tier 配额取数 ──
+    const result = { "冲": [], "稳": [], "保": [] };
+    const taken = new Set();
+    for (const sub of Object.keys(subQuotas)) {
+      const need = subQuotas[sub] || 0;
+      const picks = subBuckets[sub].slice(0, need);
+      for (const p of picks) {
+        result[SUB_TO_CAT[sub]].push(p);
+        taken.add(p.school_id);
+      }
+      subBuckets[sub] = subBuckets[sub].slice(need); // 剩下的作 fallback 池
+    }
+
+    // ── 第二轮: 档内额度不足时, 从相邻 sub_tier 借 ──
+    function fillCategory(cat, target) {
+      const order = FILL_ORDER[cat];
+      while (result[cat].length < target) {
+        let filled = false;
+        for (const sub of order) {
+          if (subBuckets[sub].length > 0) {
+            const p = subBuckets[sub].shift();
+            if (taken.has(p.school_id)) continue;
+            result[cat].push(p);
+            taken.add(p.school_id);
+            filled = true;
+            if (result[cat].length >= target) break;
+          }
+        }
+        if (!filled) break; // 池全空
+      }
+    }
+    fillCategory("冲", topChong);
+    fillCategory("稳", topWen);
+    fillCategory("保", topBao);
+
+    // ── 第三轮: 保档配额不足时, 从稳档"稳有余"借 (边缘用户位次太低没保底时兜底) ──
+    // 用户低分段 (e.g. 480) 保档常为空, 此时让稳档"稳有余"晋升当保, 是合理 fallback.
+    function crossFillBaoFromWen(target) {
+      const sources = ["稳有余", "稳基本"]; // 稳档里最稳的先借
+      while (result["保"].length < target) {
+        let filled = false;
+        for (const sub of sources) {
+          if (subBuckets[sub].length > 0) {
+            const p = subBuckets[sub].shift();
+            if (taken.has(p.school_id)) continue;
+            // 重打标签: 显示为"保"档但保留原 prob, sub_tier 标 "保(原稳有余)"
+            p.category = "保";
+            p.sub_tier = "保" + p.sub_tier; // e.g. "保稳有余", chip 走默认色
+            result["保"].push(p);
+            taken.add(p.school_id);
+            filled = true;
+            if (result["保"].length >= target) break;
+          }
+        }
+        if (!filled) break;
+      }
+    }
+    crossFillBaoFromWen(topBao);
+
+    // ── 档内按概率升序排 (整 36 条单调递增, 冲→保 prob 25%→99%) ──
+    for (const k of Object.keys(result)) {
+      result[k].sort((a, b) => {
+        if (a.prob !== b.prob) return a.prob - b.prob;
+        // 同 prob 时 按 score 降序 (热门校优先)
+        return b.score - a.score;
+      });
     }
 
     return {
-      "冲": buckets["冲"].slice(0, topChong),
-      "稳": buckets["稳"].slice(0, topWen),
-      "保": buckets["保"].slice(0, topBao),
+      "冲": result["冲"],
+      "稳": result["稳"],
+      "保": result["保"],
       stats: {
         total_candidates: candidates.length,
-        chong_pool: buckets["冲"].length,
-        wen_pool: buckets["稳"].length,
-        bao_pool: buckets["保"].length,
+        chong_pool: candidates.filter((c) => c.category === "冲").length,
+        wen_pool: candidates.filter((c) => c.category === "稳").length,
+        bao_pool: candidates.filter((c) => c.category === "保").length,
         user_rank: user.rank,
         user_score: user.score,
       },
