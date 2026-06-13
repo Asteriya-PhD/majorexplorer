@@ -876,25 +876,22 @@ def _normalize_deepseek_to_curated(data: dict) -> dict:
                 new_pf.append({"myth": p["myth"], "reality": p["reality"]})
         ov["pitfalls"] = new_pf
 
-    # ── salary: 强制 4 阶段 (应届 / 3年 / 5年 / 10年+), 不够就合并/补默认 ──
-    # 单位归一: 检测 note 里 "元/月" 或数字 < 1000 → 认为是 元/月, ×12/10000 转 万/年
+    # ── salary: 强制 4 阶段 (应届 / 3年 / 5年 / 10年+), 单位归一万/年 ──
     salary = data.get("salary")
     if isinstance(salary, dict) and salary:
         new_salary = {}
 
-        # 检测单位: 如果 p50 < 1000 且有 "规培/月薪" 等月相关字眼 → 元/月
-        # 或看 note / 数据规模
+        # 严格检测 元/月: 必须有 note 明确说"元/月"/"规培"/"月薪", 数字 < 1000 不能作为唯一依据
         sample_vals = [v for v in salary.values() if isinstance(v, dict)]
+        is_monthly = False
         if sample_vals:
             sample_note = " ".join(str(v.get("note", "")) for v in sample_vals)
-            sample_p50s = [v.get("p50", 0) for v in sample_vals if v.get("p50")]
-            # 启发: p50 < 1000 几乎肯定是元/月; p50 > 1000 但 < 100 也可能是元/月
+            sample_p50s = [v.get("p50", 0) for v in sample_vals if isinstance(v.get("p50"), (int, float)) and v.get("p50") > 0]
             is_monthly = (
-                any(s < 1000 for s in sample_p50s) or
                 "元/月" in sample_note or
                 "月薪" in sample_note or
                 "规培" in sample_note
-            )
+            ) and not any(s > 1000 for s in sample_p50s)  # 元/月 AND 没有任何 > 1000 的值
 
         def classify_stage(s: str) -> str:
             s_lower = s.lower()
@@ -917,11 +914,10 @@ def _normalize_deepseek_to_curated(data: dict) -> dict:
             if not isinstance(vals, dict):
                 continue
             mapped = classify_stage(str(stage))
-            # 单位换算: 元/月 → 万/年
             if is_monthly:
-                vals = dict(vals)  # 复制避免改原
+                vals = dict(vals)
                 for k in ("p25", "p50", "p75"):
-                    if k in vals and isinstance(vals[k], (int, float)):
+                    if k in vals and isinstance(vals[k], (int, float)) and vals[k] > 0:
                         vals[k] = round(vals[k] * 12 / 10000, 1)
             new_salary[mapped] = vals
 
@@ -930,7 +926,7 @@ def _normalize_deepseek_to_curated(data: dict) -> dict:
         for stage, vals in new_salary.items():
             if stage in merged:
                 for k in ("p25", "p50", "p75"):
-                    if k in vals:
+                    if k in vals and vals[k] > 0:
                         merged[stage][k] = max(merged[stage].get(k, 0), vals.get(k, 0))
             else:
                 merged[stage] = dict(vals)
