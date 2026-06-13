@@ -227,9 +227,9 @@ test("8.3 cap: userScore=5 + A+ bonus 0.5 = 5.5, capped 5.0", () => {
 test("9.0 REGRESSION 兜底反逻辑: 中山大学 985 不应被早期 maxRank*1.2 误判保兜底", () => {
   // 实战 user 场景: user rank 16067, 中山大学 median 7356, max 8645 (2022 worst)
   // 旧 bug: userRank > maxRank * 1.2 (16067 > 10374) 误判为 保兜底 99%
-  // 正确: diff = (16067-7356)/7356 = 1.18 → 极冲 (冲档)
+  // 正确: diff = (16067-7356)/7356 = 1.18 → 强冲 (冲档)
   const r = Rec.computeChance(16067, 7356, 8645);
-  assert.deepEqual(r, ["冲", 0.25, "极冲"], "985 校不应被 maxRank*1.2 误判兜底");
+  assert.deepEqual(r, ["冲", 0.25, "强冲"], "985 校不应被 maxRank*1.2 误判兜底");
 });
 
 test("9.0b 兜底正确路径: user 位次比 median 还好 65% 以上 (diff <= -0.65)", () => {

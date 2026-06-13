@@ -93,40 +93,40 @@
     if (diff >= 1.5) return [null, null, null];
 
     // ── 冲档 (3 级, 25% → 50%) ──
-    if (diff >= 0.50)  return ["冲", 0.25, "极冲"]; // 校强自己 50%+
+    if (diff >= 0.50)  return ["冲", 0.25, "强冲"]; // 校强自己 50%+
     if (diff >= 0.25)  return ["冲", 0.38, "中冲"]; // 校强自己 25-50%
     if (diff >= 0.10)  return ["冲", 0.50, "微冲"]; // 校强自己 10-25%
     // ── 稳档 (3 级, 65% → 88%) ──
-    // 改名 (原 稳压线/稳基本/稳有余 → 稳上/稳中/稳下):
-    //   "稳压线" 容易误读"压线=踩线", "稳上/中/下" 2 字易读, 梯度清晰
-    if (diff >= -0.05) return ["稳", 0.65, "稳上"]; // ±5% borderline (压线, 改成'上'积极)
-    if (diff >= -0.15) return ["稳", 0.78, "稳中"]; // 自己强 5-15%
-    if (diff >= -0.28) return ["稳", 0.88, "稳下"]; // 自己强 15-28%
+    // 改名 (原 稳压线/稳基本/稳有余 → 强稳/中稳/弱稳):
+    //   "稳压线" 容易误读"压线=踩线", "强稳/中/下" 2 字易读, 梯度清晰
+    if (diff >= -0.05) return ["稳", 0.65, "强稳"]; // ±5% borderline (压线, 改成'上'积极)
+    if (diff >= -0.15) return ["稳", 0.78, "中稳"]; // 自己强 5-15%
+    if (diff >= -0.28) return ["稳", 0.88, "弱稳"]; // 自己强 15-28%
     // ── 保档 (3 级, 93% → 99%) ──
-    // 改名 (原 保中坚/保稳妥/保兜底 → 保中/保稳/兜底):
-    //   "保稳妥" 跟稳段混淆, "保中/保稳/兜底" 对称 2 字 + 业界"兜底"通用
-    if (diff >= -0.45) return ["保", 0.93, "保中"]; // 自己强 28-45%
-    if (diff >= -0.65) return ["保", 0.97, "保稳"]; // 自己强 45-65%
+    // 改名 (原 强保坚/中保妥/保兜底 → 强保/中保/兜底):
+    //   "中保妥" 跟稳段混淆, "强保/中保/兜底" 对称 2 字 + 业界"兜底"通用
+    if (diff >= -0.45) return ["保", 0.93, "强保"]; // 自己强 28-45%
+    if (diff >= -0.65) return ["保", 0.97, "中保"]; // 自己强 45-65%
     return                  ["保", 0.99, "兜底"]; // 自己强 65%+
   }
 
   // sub_tier 在最终列表里的排序权重 (按概率单调升序排列)
   const SUB_TIER_ORDER = {
-    "极冲": 1, "中冲": 2, "微冲": 3,
-    "稳上": 4, "稳中": 5, "稳下": 6,
-    "保中": 7, "保稳": 8, "兜底": 9,
+    "强冲": 1, "中冲": 2, "微冲": 3,
+    "强稳": 4, "中稳": 5, "弱稳": 6,
+    "强保": 7, "中保": 8, "兜底": 9,
   };
   // 各 sub_tier 所属档位
   const SUB_TO_CAT = {
-    "极冲": "冲", "中冲": "冲", "微冲": "冲",
-    "稳上": "稳", "稳中": "稳", "稳下": "稳",
-    "保中": "保", "保稳": "保", "兜底": "保",
+    "强冲": "冲", "中冲": "冲", "微冲": "冲",
+    "强稳": "稳", "中稳": "稳", "弱稳": "稳",
+    "强保": "保", "中保": "保", "兜底": "保",
   };
   // 同档内借调时优先顺序 (相邻 sub_tier 先借, 边缘 sub_tier 后借)
   const FILL_ORDER = {
-    "冲": ["微冲", "中冲", "极冲"],
-    "稳": ["稳中", "稳下", "稳上"],
-    "保": ["保稳", "兜底", "保中"],
+    "冲": ["微冲", "中冲", "强冲"],
+    "稳": ["中稳", "弱稳", "强稳"],
+    "保": ["中保", "兜底", "强保"],
   };
 
   // ───────── 4. 偏好评分 ─────────
@@ -271,13 +271,13 @@
     // 9 个 sub_tier 各自的配额 (合计 12+16+8=36 张卡)
     // 内部强制每个 sub_tier 至少 1 条, 保证档内梯度.
     const subQuotas = Object.assign({
-      "极冲": 4, "中冲": 4, "微冲": 4,    // 冲 12
-      "稳上": 6, "稳中": 6, "稳下": 4, // 稳 16
-      "保中": 4, "保稳": 3, "兜底": 1, // 保 8
+      "强冲": 4, "中冲": 4, "微冲": 4,    // 冲 12
+      "强稳": 6, "中稳": 6, "弱稳": 4, // 稳 16
+      "强保": 4, "中保": 3, "兜底": 1, // 保 8
     }, opts.subQuotas || {});
-    const topChong = opts.topChong || (subQuotas["极冲"] + subQuotas["中冲"] + subQuotas["微冲"]);
-    const topWen = opts.topWen || (subQuotas["稳上"] + subQuotas["稳中"] + subQuotas["稳下"]);
-    const topBao = opts.topBao || (subQuotas["保中"] + subQuotas["保稳"] + subQuotas["兜底"]);
+    const topChong = opts.topChong || (subQuotas["强冲"] + subQuotas["中冲"] + subQuotas["微冲"]);
+    const topWen = opts.topWen || (subQuotas["强稳"] + subQuotas["中稳"] + subQuotas["弱稳"]);
+    const topBao = opts.topBao || (subQuotas["强保"] + subQuotas["中保"] + subQuotas["兜底"]);
 
     const { collegesById, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms } = data;
     if (!collegesById || !schoolHistory || !groupsLatest || !specialties || !yfyd) {
@@ -415,10 +415,10 @@
       }
     }
 
-    // ── 跨档兜底: 保档不足时, 从稳档"稳下"/"稳中"借 (用户低分段无保底时保平安) ──
+    // ── 跨档兜底: 保档不足时, 从稳档"弱稳"/"中稳"借 (用户低分段无保底时保平安) ──
     // T4 后其他档的 score 主导, 但仍允许这种"身份降级", 因为保档对低分用户真没校
     function crossFillBaoFromWen(target) {
-      const sources = ["稳下", "稳中"];
+      const sources = ["弱稳", "中稳"];
       while (result["保"].length < target) {
         let filled = false;
         for (const sub of sources) {
