@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📚</text></svg>">
+<title>专业目录 · 13 学科门类 · Major Explorer 2026 高考 (湖北)</title>
+<meta name="description" content="教育部《普通高等学校本科专业目录》全量 2 层结构: 13 学科门类 / 92 专业类 / ~880 专业。已收录 70+ 精品专业可直接点开看深度报告。">
+<link rel="canonical" href="https://majorexplorer.com/majors.html">
+<meta property="og:url" content="https://majorexplorer.com/majors.html">
+<meta property="og:site_name" content="Major Explorer">
+<meta property="og:title" content="专业目录 · 13 学科门类 · Major Explorer">
+<meta property="og:description" content="教育部《普通高等学校本科专业目录》全量 2 层结构: 13 学科门类 / 92 专业类 / ~880 专业。">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+  /* ── majors.html 定制 ── */
+  .majors-toc {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(250,250,247,0.94); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+    margin-bottom: 32px;
+  }
+  .majors-toc-inner {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: center;
+  }
+  .toc-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--line); border-radius: 999px;
+    background: #fff; color: var(--fg);
+    font-size: 0.8125rem; line-height: 1;
+    text-decoration: none;
+    transition: all 150ms;
+    white-space: nowrap;
+  }
+  .toc-pill:hover {
+    border-color: #2A6F4F; color: #2A6F4F; transform: translateY(-1px);
+  }
+  .toc-pill .toc-icon { font-size: 0.9375rem; }
+  .toc-pill .toc-count {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; color: var(--muted);
+    margin-left: 2px;
+  }
+  .toc-pill .toc-stars {
+    font-size: 0.6875rem; color: #B8323A; font-weight: 700;
+    margin-left: 3px;
+  }
+
+  .discipline-section {
+    margin-bottom: 64px;
+    scroll-margin-top: 80px;
+  }
+  .discipline-head {
+    display: flex; align-items: baseline; gap: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--fg);
+  }
+  .discipline-head .icon { font-size: 2rem; line-height: 1; }
+  .discipline-head .code {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.15em;
+  }
+  .discipline-head h2 {
+    font-size: 1.625rem; margin: 0;
+  }
+  .discipline-head .stat {
+    font-family: var(--font-num); font-size: 0.8125rem;
+    color: var(--muted); margin-left: auto;
+  }
+  .discipline-head .stat strong { color: #B8323A; font-weight: 700; }
+
+  .sub-class {
+    margin-bottom: 28px;
+    padding: 18px 22px;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+  .sub-class-head {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .sub-class-head .sc-code {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.1em;
+  }
+  .sub-class-head h3 {
+    font-size: 1rem; margin: 0; font-weight: 600;
+  }
+  .sub-class-head .sc-stat {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); margin-left: auto;
+  }
+
+  .major-chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .major-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.8125rem; line-height: 1.4;
+    text-decoration: none;
+    transition: all 150ms;
+    white-space: nowrap;
+  }
+  .major-chip.curated {
+    background: #fff;
+    border: 1px solid var(--line);
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .major-chip.curated:hover {
+    background: var(--accent); color: #FAFAF7;
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .major-chip.curated::before {
+    content: "✦"; color: #B8323A; font-size: 0.625rem;
+  }
+  .major-chip.curated:hover::before { color: #FAFAF7; }
+  .major-chip.uncurated {
+    background: transparent;
+    border: 1px dashed var(--line);
+    color: var(--muted);
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .summary-bar {
+    margin: 24px 0 36px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(184,50,58,0.05), rgba(42,111,79,0.04));
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    display: flex; gap: 32px; flex-wrap: wrap;
+    font-size: 0.875rem; color: var(--muted);
+  }
+  .summary-bar .stat-num {
+    font-family: var(--font-num); font-size: 1.5rem;
+    font-weight: 700; color: var(--fg); line-height: 1;
+    margin-right: 6px;
+  }
+  .summary-bar .accent { color: #B8323A; }
+
+  /* 11 缺位提示 */
+  .gap-note {
+    display: block;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8125rem;
+    margin: 48px 0;
+    padding: 16px;
+    border-top: 1px dashed var(--line);
+    border-bottom: 1px dashed var(--line);
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .majors-toc-inner { gap: 6px; }
+    .toc-pill { font-size: 0.75rem; padding: 5px 10px; }
+    .discipline-head h2 { font-size: 1.25rem; }
+    .discipline-head .stat { display: none; }
+    .sub-class { padding: 14px 16px; }
+    .major-chip { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="/">
+      Major Explorer<span class="sub">2026 高考 · 湖北</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="/">首页</a>
+      <a href="/majors.html" class="active">专业目录</a>
+      <a href="/wishlist.html">心愿单</a>
+      <a href="/preferences.html">填偏好</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <div class="container">
+
+    <div class="page-head">
+      <div class="eyebrow">Catalog · 教育部 2026.4.28</div>
+      <h1>专业目录</h1>
+      <p class="lede">
+        《普通高等学校本科专业目录》全量 2 层结构 ——
+        <strong>13 个学科门类</strong> · <strong>92 个专业类</strong> · <strong>约 880 种本科专业</strong> (2026 年新增 38 种)。
+        我们已为 <strong style="color: #B8323A;">70+ 个</strong> 主流专业写了深度精品报告 (✦ 标记可点开)。
+      </p>
+    </div>
+
+    <!-- 数据小结 -->
+    <div class="summary-bar" id="summary-bar">
+      <div><span class="stat-num">13</span>学科门类</div>
+      <div><span class="stat-num">92</span>专业类</div>
+      <div><span class="stat-num">880+</span>本科专业</div>
+      <div><span class="stat-num accent" id="curated-count">—</span>精品收录</div>
+    </div>
+
+    <!-- 顶部 toc 跳转 chip -->
+    <div class="majors-toc">
+      <div class="majors-toc-inner" id="toc-host">
+        <span class="caps" style="color: var(--muted); margin-right: 6px;">跳转 →</span>
+      </div>
+    </div>
+
+    <!-- 13 学科 section -->
+    <div id="discipline-zone">
+      <p style="text-align: center; color: var(--muted); padding: 48px;">加载中…</p>
+    </div>
+
+    <!-- 11 缺位说明 -->
+    <div class="gap-note">
+      <strong>※ 11 缺位说明:</strong> 教育部目录编号 01–14 但跳过 11 (无学科门类), 这是规范, 不是我们的疏漏.
+    </div>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="caps">Major Explorer · 2026 高考 · 湖北</div>
+    <div>数据源: 教育部《普通高等学校本科专业目录》2026.4.28 版</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const tocHost = document.getElementById('toc-host');
+  const zone = document.getElementById('discipline-zone');
+  const curatedCountEl = document.getElementById('curated-count');
+
+  Promise.all([
+    fetch('/data/discipline_hierarchy.json', { cache: 'no-cache' }).then((r) => r.json()),
+    fetch('/data/manifest.json', { cache: 'no-cache' }).then((r) => r.json()),
+  ])
+    .then(([hier, manifest]) => {
+      if (!hier || !hier.门类) {
+        zone.innerHTML = '<p style="text-align:center;color:var(--muted);padding:48px;">学科目录加载失败</p>';
+        return;
+      }
+
+      // Build title → slug map from manifest (curated majors)
+      const slugByTitle = Object.create(null);
+      (manifest.majors || []).forEach((m) => {
+        slugByTitle[m.title] = m.slug;
+      });
+
+      const disciplines = hier.门类;
+      const codes = Object.keys(disciplines).sort();
+
+      // Compute counts
+      let totalCurated = 0;
+      const dStats = {};
+      codes.forEach((code) => {
+        const d = disciplines[code];
+        const subs = d.sub_classes || {};
+        const subCount = Object.keys(subs).length;
+        let majorCount = 0;
+        let curatedCount = 0;
+        Object.values(subs).forEach((sc) => {
+          (sc.majors || []).forEach((mn) => {
+            majorCount += 1;
+            if (slugByTitle[mn]) curatedCount += 1;
+          });
+        });
+        dStats[code] = { subCount, majorCount, curatedCount };
+        totalCurated += curatedCount;
+      });
+
+      curatedCountEl.textContent = totalCurated;
+
+      // Render TOC pills
+      tocHost.insertAdjacentHTML(
+        'beforeend',
+        codes
+          .map((code) => {
+            const d = disciplines[code];
+            const s = dStats[code];
+            const stars = s.curatedCount > 0
+              ? `<span class="toc-stars">✦${s.curatedCount}</span>`
+              : '';
+            return `<a class="toc-pill" href="#d-${code}">
+              <span class="toc-icon">${d.icon || '📚'}</span>
+              <span>${d.name}</span>
+              <span class="toc-count">(${s.majorCount})</span>${stars}
+            </a>`;
+          })
+          .join('')
+      );
+
+      // Render discipline sections
+      const sections = codes.map((code) => {
+        const d = disciplines[code];
+        const s = dStats[code];
+        const subs = d.sub_classes || {};
+        const subCodes = Object.keys(subs).sort();
+
+        const subClassesHtml = subCodes
+          .map((scCode) => {
+            const sc = subs[scCode];
+            const majors = sc.majors || [];
+            const scCurated = majors.filter((mn) => slugByTitle[mn]).length;
+            const chips = majors
+              .map((mn) => {
+                const slug = slugByTitle[mn];
+                if (slug) {
+                  return `<a class="major-chip curated" href="/${encodeURIComponent(slug)}.html">${mn}</a>`;
+                }
+                return `<span class="major-chip uncurated" title="未收录, 后续按需生成">${mn}</span>`;
+              })
+              .join('');
+            const statTxt = scCurated > 0
+              ? `${majors.length} 专业 · ✦${scCurated} 精品`
+              : `${majors.length} 专业`;
+            return `<div class="sub-class">
+              <div class="sub-class-head">
+                <span class="sc-code">${scCode}</span>
+                <h3>${sc.name}</h3>
+                <span class="sc-stat">${statTxt}</span>
+              </div>
+              <div class="major-chips">${chips}</div>
+            </div>`;
+          })
+          .join('');
+
+        const headStat = s.curatedCount > 0
+          ? `${s.subCount} 类 · ${s.majorCount} 专业 · <strong>✦${s.curatedCount}</strong> 精品`
+          : `${s.subCount} 类 · ${s.majorCount} 专业`;
+
+        return `<section class="discipline-section" id="d-${code}">
+          <header class="discipline-head">
+            <span class="icon">${d.icon || '📚'}</span>
+            <span class="code">${code}</span>
+            <h2>${d.name}</h2>
+            <span class="stat">${headStat}</span>
+          </header>
+          ${subClassesHtml}
+        </section>`;
+      });
+
+      zone.innerHTML = sections.join('');
+
+      // Hash routing — scroll to ?d=02 or #d-02
+      const url = new URL(window.location.href);
+      const fromQuery = url.searchParams.get('d');
+      const fromHash = (window.location.hash || '').replace('#d-', '');
+      const target = fromQuery || fromHash;
+      if (target && document.getElementById(`d-${target}`)) {
+        setTimeout(() => {
+          document.getElementById(`d-${target}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 200);
+      }
+    })
+    .catch((e) => {
+      console.warn('[majors] load failed', e);
+      zone.innerHTML = '<p style="text-align:center;color:var(--muted);padding:48px;">学科目录加载失败, 请刷新</p>';
+    });
+})();
+</script>
+
+</body>
+</html>
