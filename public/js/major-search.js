@@ -282,11 +282,15 @@
 .ms-shell.compact .ms-send { width: 36px; height: 36px; font-size: 1rem; }
 
 .ms-chips {
-  display: flex; flex-wrap: wrap; gap: 8px;
+  display: flex; flex-wrap: nowrap; gap: 8px;
   margin-top: 16px; justify-content: center;
-  max-height: 200px; opacity: 1; overflow: hidden;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-height: 56px; opacity: 1;
   transition: max-height 240ms ease, opacity 180ms ease, margin-top 180ms ease;
 }
+.ms-chips::-webkit-scrollbar { display: none; }
+.ms-chip { flex-shrink: 0; }
 .ms-shell.compact .ms-chips { justify-content: flex-start; }
 /* 下拉打开时折叠 chips, 让 results 紧贴 input 下方 */
 .ms-shell[data-active="true"] .ms-chips {

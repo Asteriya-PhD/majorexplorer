@@ -104,6 +104,16 @@
   @media (max-width: 480px) {
     .hero-pill .pill-sub { display: none; }
   }
+  /* 移动端首屏紧凑: hero padding 收紧 + 标题不强制换行, 让搜索框 above-the-fold */
+  @media (max-width: 768px) {
+    .home-hero { padding: 36px 0 28px; }
+    .home-hero h1 { font-size: 1.5rem; line-height: 1.22; margin-bottom: 12px; }
+    .home-hero h1 br { display: none; }
+    .home-hero .tagline { font-size: 0.8125rem; line-height: 1.55; margin-bottom: 18px; }
+    .home-hero .tagline br { display: none; }
+    .home-hero .eyebrow { margin-bottom: 14px; }
+    .home-hero .below-chat { margin-top: 14px; font-size: 0.75rem; }
+  }
 
   /* ── 精品报告 (主体) ───── */
   .home-majors { padding: 64px 0 32px; background: var(--bg-soft); border-top: 1px solid var(--line); scroll-margin-top: 70px; }
@@ -248,6 +258,15 @@
 @media (max-width: 600px) {
   .strategy-section { padding: 0 16px; }
 }
+/* 移动端首屏紧凑: 战略 chip 横向滚动 (1 行) + hero padding 收紧, 让搜索框 above-the-fold */
+@media (max-width: 768px) {
+  .strategy-pills {
+    flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; padding-bottom: 4px;
+  }
+  .strategy-pills::-webkit-scrollbar { display: none; }
+  .strategy-pill { flex-shrink: 0; }
+}
 
 /* 📚 学科门类 chip 区(战略 chip 下方,职业 chip(待加)上方) */
 .discipline-section {
@@ -283,6 +302,15 @@
 .discipline-pill-count { color: #8B7355; font-size: 0.6875rem; }
 @media (max-width: 600px) {
   .discipline-section { padding: 0 16px; }
+}
+/* 移动端首屏紧凑: discipline chip 横向滚动 (1 行) */
+@media (max-width: 768px) {
+  .discipline-pills {
+    flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; padding-bottom: 4px;
+  }
+  .discipline-pills::-webkit-scrollbar { display: none; }
+  .discipline-pill { flex-shrink: 0; }
 }
 </style>
 </head>
@@ -335,6 +363,13 @@
       </div>
     </div>
 
+    <div class="chat-host" id="chat-host"></div>
+
+    <div class="below-chat">
+      <span>不知道从哪开始?</span>
+      <a href="#majors">📚 浏览精品报告 ↓</a>
+    </div>
+
     <div class="discipline-section">
       <div class="discipline-section-label">
         <span class="discipline-section-icon">📚</span>
@@ -344,13 +379,6 @@
       <div class="discipline-pills" id="discipline-host">
         <!-- JS 动态注入 chip 列表 -->
       </div>
-    </div>
-
-    <div class="chat-host" id="chat-host"></div>
-
-    <div class="below-chat">
-      <span>不知道从哪开始?</span>
-      <a href="#majors">📚 浏览精品报告 ↓</a>
     </div>
   </div>
 </section>
