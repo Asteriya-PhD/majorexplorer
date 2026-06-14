@@ -132,9 +132,15 @@
 
   async function loadLight() {
     const [colleges, provinceLines, yfyd, chsiSchools] = await _loadGroup(LIGHT_FILES, "light");
-    // colleges 是 list, 转 by_id 方便取
+    // 双 index (Step 3.4 v1): byId 用 school_id (向后兼容), byEid 用 edu_id 主键
     const byId = {};
-    for (const c of colleges) byId[c.school_id] = c;
+    const byEid = {};
+    for (const c of colleges) {
+      if (c.school_id != null) byId[c.school_id] = c;
+      const eid = c.chsi_edu_id;
+      const key = eid ? String(eid) : (c.school_id != null ? `sch_${c.school_id}` : null);
+      if (key) byEid[key] = c;
+    }
     // chsi_schools 按 edu_id 索引 (用于 recommender 加 chsi 维度, Step 2.3)
     const chsiByEduId = {};
     for (const s of (chsiSchools || [])) {
@@ -142,7 +148,8 @@
     }
     return {
       colleges,
-      collegesById: byId,
+      collegesById: byId,        // legacy: school_id → college
+      collegesByEid: byEid,      // new (Step 3.4 v1): edu_id (or sch_<sid>) → college
       provinceLines,
       yfyd,
       chsiSchools,

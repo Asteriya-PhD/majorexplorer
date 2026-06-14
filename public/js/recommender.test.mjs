@@ -31,10 +31,20 @@ function loadRecommender() {
 // ── 加载测试数据 (一次, 所有 test 共享) ──
 const sam = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/school_all_majors.json"), "utf-8"));
 const syn = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/major_synonyms.json"), "utf-8"));
+const collegesArr = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/colleges.json"), "utf-8"));
+// Step 3.4 v1: 数据已重 key 为 chsi_edu_id, 测试 helper 把 school_id 翻译成 edu_id
+const sidToEid = {};
+for (const c of collegesArr) {
+  if (c.school_id != null) sidToEid[String(c.school_id)] = c.chsi_edu_id ? String(c.chsi_edu_id) : `sch_${c.school_id}`;
+}
 const Rec = loadRecommender();
 
 // ── helper ──
-const mm = (sid, interests) => Rec.majorMatch(sid, interests, null, sam, syn);
+// mm() 自动做 school_id → edu_id 翻译, 调用方仍可用老式 school_id (如 420)
+const mm = (sid, interests) => {
+  const eid = sidToEid[String(sid)] || String(sid);
+  return Rec.majorMatch(eid, interests, null, sam, syn);
+};
 
 // ══════════════════════════════════════════════════════
 // 1. 同义词命中 (用户 keyword → 同义词集 → 命中校 major)
@@ -156,8 +166,8 @@ test("5.3 null allMajorsById (880 校场景)", () => {
 });
 
 test("5.4 null synonymMap (老调用方兼容)", () => {
-  // 校 420 有 人工智能, 不传 synonyms 时只 exact match
-  const m = Rec.majorMatch(420, [{ major: "人工智能", score: 4 }], null, sam, null);
+  // 校 420 有 人工智能, 不传 synonyms 时只 exact match (Step 3.4 v1: 用 edu_id)
+  const m = Rec.majorMatch(sidToEid["420"], [{ major: "人工智能", score: 4 }], null, sam, null);
   // expanded = {"人工智能"} only, no expand → exact match in 华中师大 all_majors
   // userScore=4, +0.2 = 4.2
   assert.equal(m, 4.2, "null syn 但 exact 仍命中");
@@ -308,12 +318,18 @@ test("10.1 computeScore: 武汉 5★ + 计算机 5★ + 均衡 → 武汉大学 
 
 test("10.2 recommend 主流程: DEMO_USER 不崩", () => {
   const colleges = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/colleges.json"), "utf-8"));
-  const byId = {}; for (const c of colleges) byId[c.school_id] = c;
+  // Step 3.4 v1: 双 index, data 文件已重 key 为 edu_id
+  const byId = {}; const byEid = {};
+  for (const c of colleges) {
+    if (c.school_id != null) byId[c.school_id] = c;
+    const key = c.chsi_edu_id ? String(c.chsi_edu_id) : (c.school_id != null ? `sch_${c.school_id}` : null);
+    if (key) byEid[key] = c;
+  }
   const yfyd = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/yfyd_2025.json"), "utf-8"));
   const schoolHistory = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/school_history.json"), "utf-8"));
   const groupsLatest = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/groups_latest.json"), "utf-8"));
   const specialties = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/school_specialties.json"), "utf-8"));
-  const data = { colleges, collegesById: byId, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors: sam, majorSynonyms: syn };
+  const data = { colleges, collegesById: byId, collegesByEid: byEid, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors: sam, majorSynonyms: syn };
   const r = Rec.recommend(Rec.DEMO_USER, data);
   assert.equal(r["冲"].length > 0, true);
   assert.equal(r["稳"].length > 0, true);

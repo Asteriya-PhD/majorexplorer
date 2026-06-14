@@ -21,7 +21,12 @@ const Rec = recFn({});
 
 // ── 加载数据 ──
 const colleges = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/colleges.json"), "utf-8"));
-const byId = {}; for (const c of colleges) byId[c.school_id] = c;
+const byId = {}; const byEid = {};
+for (const c of colleges) {
+  if (c.school_id != null) byId[c.school_id] = c;
+  const key = c.chsi_edu_id ? String(c.chsi_edu_id) : (c.school_id != null ? `sch_${c.school_id}` : null);
+  if (key) byEid[key] = c;
+}
 const yfyd = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/yfyd_2025.json"), "utf-8"));
 const schoolHistory = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/school_history.json"), "utf-8"));
 const groupsLatest = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/groups_latest.json"), "utf-8"));
@@ -29,7 +34,8 @@ const specialties = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/scho
 const sam = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/school_all_majors.json"), "utf-8"));
 const syn = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/major_synonyms.json"), "utf-8"));
 
-const data = { colleges, collegesById: byId, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors: sam, majorSynonyms: syn };
+// Step 3.4 v1: 双 index, data 文件已重 key 为 edu_id
+const data = { colleges, collegesById: byId, collegesByEid: byEid, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors: sam, majorSynonyms: syn };
 
 // ── 固定 baseline (580 分, 计划原 baseline) ──
 // 注: top 16 主要是 985 饱和, 阈值要按观测校准
@@ -49,18 +55,20 @@ const KEY_SCHOOLS = [
 
 // ── 找"计科系校" — 用 specialties 覆盖全 1008 校 (不只 128 校 all_majors) ──
 // top_specials 里有"计算机"/"软件"/"人工智能" 的视为计科系校
+// Step 3.4 v1: keys 现在是 edu_id (or sch_<sid> fallback), 不用 Number()
 const CS_SCHOOL_IDS = [];
 for (const sid of Object.keys(specialties)) {
   const specs = specialties[sid]?.top_specials || [];
   if (specs.some((s) => /计算机|软件|人工智能|数据科学|智能|信息工程|信息安全|网络空间/.test(s.name || ""))) {
-    CS_SCHOOL_IDS.push(Number(sid));
+    CS_SCHOOL_IDS.push(sid);
   }
 }
-const CS_SCHOOL_NAMES = CS_SCHOOL_IDS.map((sid) => byId[sid]?.name).filter(Boolean);
+// 通过 byEid 反查 college name (CS_SCHOOL_IDS 现在是 edu_id 字符串)
+const CS_SCHOOL_NAMES = CS_SCHOOL_IDS.map((k) => byEid[k]?.name).filter(Boolean);
 
 // ── 武汉校 (city_pct 追踪) ──
-const WHUHAN_SCHOOL_IDS = Object.keys(byId).filter((sid) => byId[sid].city === "武汉市").map(Number);
-const WHUHAN_SCHOOL_NAMES = WHUHAN_SCHOOL_IDS.map((sid) => byId[sid]?.name).filter(Boolean);
+const WHUHAN_SCHOOL_IDS = Object.values(byId).filter((c) => c.city === "武汉市");
+const WHUHAN_SCHOOL_NAMES = WHUHAN_SCHOOL_IDS.map((c) => c.name).filter(Boolean);
 
 console.log(`CS 校 ${CS_SCHOOL_IDS.length}: ${CS_SCHOOL_NAMES.slice(0, 5).join(", ")}...`);
 console.log(`武汉校 ${WHUHAN_SCHOOL_IDS.length}: ${WHUHAN_SCHOOL_NAMES.slice(0, 5).join(", ")}...`);

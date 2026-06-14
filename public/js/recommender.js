@@ -257,7 +257,9 @@
     let [a, b, g, wChsi] = w;
     // 灰度: 默认不开 chsi 维度, ?source=chsi 或 opts.useChsi=true 才生效
     if (!opts.useChsi) wChsi = 0;
-    const m = majorMatch(college.school_id, user.interests || [], specialties, allMajorsById, synonymMap);
+    // Step 3.4 v1: 传 chsi_edu_id (or sch_<sid> fallback) 给 majorMatch, 与 data 文件 key 对齐
+    const collegeKey = college.chsi_edu_id ? String(college.chsi_edu_id) : (college.school_id != null ? `sch_${college.school_id}` : String(college.school_id));
+    const m = majorMatch(collegeKey, user.interests || [], specialties, allMajorsById, synonymMap);
     const c = cityMatch(college.city || "", user.cities || []);
     const t = TIER_SCORE[college.tier || "民办/独立"] || 1.5;
     // chsi 满意度 (1-5), 0 表示无数据 (中性, 不加分也不减分)
@@ -296,8 +298,8 @@
     const topWen = opts.topWen || (subQuotas["强稳"] + subQuotas["中稳"] + subQuotas["弱稳"]);
     const topBao = opts.topBao || (subQuotas["强保"] + subQuotas["中保"] + subQuotas["兜底"]);
 
-    const { collegesById, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms, chsiByEduId } = data;
-    if (!collegesById || !schoolHistory || !groupsLatest || !specialties || !yfyd) {
+    const { collegesById, collegesByEid, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms, chsiByEduId } = data;
+    if ((!collegesById && !collegesByEid) || !schoolHistory || !groupsLatest || !specialties || !yfyd) {
       throw new Error("recommend: data is incomplete");
     }
     // 自动反查位次
@@ -320,10 +322,12 @@
     }
 
     const candidates = [];
-    for (const [sid, schoolGroups] of bySchool.entries()) {
-      const college = collegesById[sid];
+    for (const [key, schoolGroups] of bySchool.entries()) {
+      // Step 3.4 v1: g.school_id is now chsi_edu_id (or sch_<sid> fallback). Look up via collegesByEid.
+      const college = (collegesByEid && collegesByEid[key]) || (collegesById && collegesById[Number(key) || key]);
       if (!college) continue;
-      const hist = (schoolHistory[String(sid)] || {})[user.type] || {};
+      // history/specialties/groups data are now keyed by edu_id, so direct lookup works.
+      const hist = (schoolHistory[String(key)] || {})[user.type] || {};
       const histKeys = Object.keys(hist);
       if (histKeys.length === 0) continue;
 
@@ -361,7 +365,7 @@
         rankTargets = passing.slice().sort((x, y) => -(x.min_score || 0) - (-(y.min_score || 0)));
       }
 
-      const spData = specialties[String(sid)] || {};
+      const spData = specialties[String(key)] || {};
       const topMajors = (spData.top_specials || []).slice(0, 5).map((s) => ({
         name: s.name,
         xueke: s.xueke_rank_score || "",
@@ -374,8 +378,12 @@
         histBrief[yr] = hist[yr].median_rank;
       }
 
+      // school_id 输出: 优先 chsi_edu_id (5 位数), fallback 原始 school_id (中外合办等)
+      const outSchoolId = college.chsi_edu_id ? String(college.chsi_edu_id) : college.school_id;
       candidates.push({
-        school_id: sid,
+        school_id: outSchoolId,
+        legacy_school_id: college.school_id,
+        chsi_edu_id: college.chsi_edu_id || null,
         school_name: college.name,
         city: college.city || "",
         tier: college.tier || "",
