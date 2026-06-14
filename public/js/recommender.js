@@ -130,10 +130,11 @@
   };
 
   // ───────── 4. 偏好评分 ─────────
+  // Step 2.3 加 chsi 维度 (10% 权重), 重新分配 3 维度权重 (按比例缩 0.9)
   const WEIGHTS = {
-    "院校优先": [0.3, 0.2, 0.5],
-    "专业优先": [0.6, 0.2, 0.2],
-    "均衡":   [0.4, 0.3, 0.3],
+    "院校优先": [0.27, 0.18, 0.45, 0.10],  // m, c, t, chsi
+    "专业优先": [0.54, 0.18, 0.18, 0.10],
+    "均衡":   [0.36, 0.27, 0.27, 0.10],
   };
   const TIER_SCORE = {
     "C9": 5.0, "985": 4.5, "211": 4.0,
@@ -250,18 +251,34 @@
     return 0;
   }
 
-  function computeScore(user, college, specialties, allMajorsById, synonymMap) {
+  function computeScore(user, college, specialties, allMajorsById, synonymMap, chsiByEduId, opts) {
+    opts = opts || {};
     const w = WEIGHTS[user.mode] || WEIGHTS["均衡"];
-    const [a, b, g] = w;
+    let [a, b, g, wChsi] = w;
+    // 灰度: 默认不开 chsi 维度, ?source=chsi 或 opts.useChsi=true 才生效
+    if (!opts.useChsi) wChsi = 0;
     const m = majorMatch(college.school_id, user.interests || [], specialties, allMajorsById, synonymMap);
     const c = cityMatch(college.city || "", user.cities || []);
     const t = TIER_SCORE[college.tier || "民办/独立"] || 1.5;
+    // chsi 满意度 (1-5), 0 表示无数据 (中性, 不加分也不减分)
+    let chsi = 0;
+    let chsiGoverning = null;
+    if (chsiByEduId && college.chsi_edu_id) {
+      const chsiSchool = chsiByEduId[String(college.chsi_edu_id)];
+      if (chsiSchool) {
+        const sat = chsiSchool.satisfaction;
+        if (typeof sat === "number" && sat > 0) chsi = sat;
+        chsiGoverning = chsiSchool.governing || null;
+      }
+    }
     return {
-      total: Math.round((a * m + b * c + g * t) * 100) / 100,
+      total: Math.round((a * m + b * c + g * t + wChsi * chsi) * 100) / 100,
       major: m,
       city: c,
       tier: t,
-      weights: [a, b, g],
+      chsi,
+      chsi_governing: chsiGoverning,
+      weights: [a, b, g, wChsi],
     };
   }
 
@@ -279,7 +296,7 @@
     const topWen = opts.topWen || (subQuotas["强稳"] + subQuotas["中稳"] + subQuotas["弱稳"]);
     const topBao = opts.topBao || (subQuotas["强保"] + subQuotas["中保"] + subQuotas["兜底"]);
 
-    const { collegesById, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms } = data;
+    const { collegesById, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms, chsiByEduId } = data;
     if (!collegesById || !schoolHistory || !groupsLatest || !specialties || !yfyd) {
       throw new Error("recommend: data is incomplete");
     }
@@ -331,7 +348,7 @@
       const [cat, prob, subTier] = computeChance(user.rank, med3y, maxRank3y);
       if (!cat) continue;
 
-      const scoreInfo = computeScore(user, college, specialties, schoolAllMajors, majorSynonyms);
+      const scoreInfo = computeScore(user, college, specialties, schoolAllMajors, majorSynonyms, chsiByEduId, opts);
 
       // 用户位次 ±30% 的专业组排前
       let rankTargets = passing.filter((pg) =>
@@ -371,6 +388,7 @@
         history_brief: histBrief,
         score: scoreInfo.total,
         score_breakdown: scoreInfo,
+        chsi_governing: scoreInfo.chsi_governing,
         top_groups: rankTargets.slice(0, 3).map((g) => ({
           sg_name: g.sg_name,
           sg_info: g.sg_info,

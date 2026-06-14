@@ -36,7 +36,7 @@
   const DB_NAME = "gk.dataCache.v1";
   const DB_STORE = "files";
 
-  const LIGHT_FILES = ["colleges.json", "province_lines.json", "yfyd_2025.json"];
+  const LIGHT_FILES = ["colleges.json", "province_lines.json", "yfyd_2025.json", "chsi_schools.json"];
   const HEAVY_FILES = [
     "school_history.json",
     "groups_latest.json",
@@ -131,15 +131,22 @@
   }
 
   async function loadLight() {
-    const [colleges, provinceLines, yfyd] = await _loadGroup(LIGHT_FILES, "light");
+    const [colleges, provinceLines, yfyd, chsiSchools] = await _loadGroup(LIGHT_FILES, "light");
     // colleges 是 list, 转 by_id 方便取
     const byId = {};
     for (const c of colleges) byId[c.school_id] = c;
+    // chsi_schools 按 edu_id 索引 (用于 recommender 加 chsi 维度, Step 2.3)
+    const chsiByEduId = {};
+    for (const s of (chsiSchools || [])) {
+      if (s.edu_id) chsiByEduId[String(s.edu_id)] = s;
+    }
     return {
       colleges,
       collegesById: byId,
       provinceLines,
       yfyd,
+      chsiSchools,
+      chsiByEduId,
     };
   }
 

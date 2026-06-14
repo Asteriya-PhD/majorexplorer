@@ -390,7 +390,9 @@
     try {
       const data = await window.DataLoader.loadAll();
       window.__data = data;
-      const result = window.Recommender.recommend(user, data);
+      // 灰度: ?source=chsi 启用 chsi 满意度维度 (Step 2.3, 10% 权重)
+      const useChsi = new URLSearchParams(window.location.search).get("source") === "chsi";
+      const result = window.Recommender.recommend(user, data, { useChsi });
       const elapsed = performance.now() - t0;
       window.__result = result;
 
