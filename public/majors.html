@@ -147,6 +147,67 @@
   .major-chip .chip-sat.low  { color: var(--muted); opacity: 0.6; }  /* <4.0 — muted */
   .major-chip.curated:hover .chip-sat { color: #FAFAF7; opacity: 1; }
 
+  /* chsi 详情角标 (灰 chip 边角小 📖) — 提示该专业有 chsi 详情可 hover */
+  .major-chip.has-chsi { position: relative; }
+  .major-chip.has-chsi::after {
+    content: "📖"; font-size: 0.6875rem;
+    margin-left: 4px; opacity: 0.55;
+  }
+  .major-chip.has-chsi:hover::after { opacity: 1; }
+
+  /* hover popover — 显示 chsi 就业/相似专业/开课院校 */
+  .chsi-popover {
+    display: none;
+    position: absolute; z-index: 50;
+    bottom: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%);
+    width: 280px; max-width: 90vw;
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(20,17,13,0.15);
+    padding: 12px 14px;
+    font-size: 0.8125rem;
+    text-align: left;
+    line-height: 1.55;
+    color: var(--fg);
+    pointer-events: none;
+  }
+  /* 小三角箭头 (popover 底部) */
+  .chsi-popover::after {
+    content: ""; position: absolute;
+    bottom: -6px; left: 50%; transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #fff;
+  }
+  .major-chip.has-chsi:hover .chsi-popover,
+  .major-chip.has-chsi.popover-open .chsi-popover {
+    display: block;
+  }
+  .chsi-popover .pp-title {
+    font-weight: 700; font-size: 0.875rem;
+    color: var(--accent); margin-bottom: 6px;
+  }
+  .chsi-popover .pp-row {
+    margin: 6px 0;
+    color: var(--muted);
+  }
+  .chsi-popover .pp-row strong { color: var(--fg); }
+  .chsi-popover .pp-list {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-top: 2px;
+  }
+  .chsi-popover .pp-list span {
+    padding: 1px 7px; border-radius: 999px;
+    background: var(--bg-soft); font-size: 0.75rem;
+  }
+  .chsi-popover .pp-source {
+    margin-top: 8px; padding-top: 6px;
+    border-top: 1px dashed var(--line);
+    font-size: 0.6875rem; color: var(--muted);
+  }
+
   .summary-bar {
     margin: 24px 0 36px;
     padding: 18px 22px;
@@ -266,8 +327,12 @@
     fetch('/data/chsi_majors.json', { cache: 'no-cache' })
       .then((r) => (r.ok ? r.json() : []))
       .catch(() => []),
+    // chsi_major_details.json — bundled subset for chip popover (Step 3.3)
+    fetch('/data/chsi_major_details.json', { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : {}))
+      .catch(() => ({})),
   ])
-    .then(([hier, manifest, chsiMajors]) => {
+    .then(([hier, manifest, chsiMajors, chsiDetails]) => {
       if (!hier || !hier.门类) {
         zone.innerHTML = '<p style="text-align:center;color:var(--muted);padding:48px;">学科目录加载失败</p>';
         return;
@@ -349,12 +414,30 @@
             const sc = subs[scCode];
             const majors = sc.majors || [];
             const scCurated = majors.filter((mn) => slugByTitle[mn]).length;
-            const chips = majors
+            const _esc = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const chips = majors
               .map((mn) => {
                 const slug = slugByTitle[mn];
                 const sat = satBadge(mn);
+                const chsi = chsiDetails[mn];
                 if (slug) {
                   return `<a class="major-chip curated" href="/${encodeURIComponent(slug)}.html">${mn}${sat}</a>`;
+                }
+                // 灰 chip: 有 chsi 详情就加 has-chsi 类 + popover
+                const hasChsi = chsi && (chsi.careers?.length || chsi.similar_majors?.length || chsi.opening_schools_count);
+                if (hasChsi) {
+                  const careers = (chsi.careers || []).slice(0, 4);
+                  const similar = (chsi.similar_majors || []).slice(0, 4);
+                  const schools = chsi.opening_schools_count || 0;
+                  const popover = `
+                    <div class="chsi-popover" role="tooltip">
+                      <div class="pp-title">${_esc(mn)} · chsi 速览</div>
+                      ${careers.length ? `<div class="pp-row"><strong>就业方向:</strong><div class="pp-list">${careers.map(c => `<span>${_esc(c)}</span>`).join('')}</div></div>` : ''}
+                      ${similar.length ? `<div class="pp-row"><strong>相近专业:</strong><div class="pp-list">${similar.map(c => `<span>${_esc(c)}</span>`).join('')}</div></div>` : ''}
+                      ${schools ? `<div class="pp-row"><strong>开设院校:</strong> ${schools} 所</div>` : ''}
+                      <div class="pp-source">数据: 阳光高考 (chsi.com.cn)</div>
+                    </div>`;
+                  return `<span class="major-chip uncurated has-chsi" tabindex="0">${mn}${sat}${popover}</span>`;
                 }
                 return `<span class="major-chip uncurated" title="未收录, 后续按需生成">${mn}${sat}</span>`;
               })
@@ -389,6 +472,25 @@
       });
 
       zone.innerHTML = sections.join('');
+
+      // 移动端 tap 退化 (touch 没有 hover): 点 chip toggle popover, 点外面关闭
+      if ('ontouchstart' in window) {
+        zone.addEventListener('click', (e) => {
+          const chip = e.target.closest('.major-chip.has-chsi');
+          if (chip) {
+            // Close others, toggle this
+            zone.querySelectorAll('.major-chip.has-chsi.popover-open').forEach((el) => {
+              if (el !== chip) el.classList.remove('popover-open');
+            });
+            chip.classList.toggle('popover-open');
+            e.preventDefault();
+          } else {
+            zone.querySelectorAll('.major-chip.has-chsi.popover-open').forEach((el) => {
+              el.classList.remove('popover-open');
+            });
+          }
+        });
+      }
 
       // Hash routing — scroll to ?d=02 or #d-02
       const url = new URL(window.location.href);
