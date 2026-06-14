@@ -179,6 +179,129 @@ def get_strategy_css() -> str:
     return STRATEGY_CSS
 
 
+# ── 📊 chsi 阳光高考评分注入 ──
+_CHSI_RATING_CACHE = None
+
+
+def _load_chsi_ratings() -> dict:
+    """读 public/data/chsi_majors.json → {专业名: 满意度(float)}. 带缓存."""
+    global _CHSI_RATING_CACHE
+    if _CHSI_RATING_CACHE is not None:
+        return _CHSI_RATING_CACHE
+    try:
+        from pathlib import Path
+        import json as _json
+        # Walk up to repo root (skills/gaokao-major-explorer/scripts/v4_styles/render.py)
+        p = Path(__file__).resolve().parents[4] / "public" / "data" / "chsi_majors.json"
+        data = _json.loads(p.read_text(encoding="utf-8"))
+        m = {}
+        for item in data or []:
+            name = item.get("name")
+            sat = item.get("satisfaction")
+            if name and isinstance(sat, (int, float)):
+                m[name] = float(sat)
+        _CHSI_RATING_CACHE = m
+    except Exception as e:
+        print(f"[chsi] WARN: could not load chsi_majors.json: {e}")
+        _CHSI_RATING_CACHE = {}
+    return _CHSI_RATING_CACHE
+
+
+# Inline CSS: 5th-cell-as-full-width-row injection. Works across all themes because
+# we use `grid-column: 1/-1` to span the full grid width on themes that use CSS
+# grid for .hero-stats (humanities/eng/cs/sci/agri/arts/finance/business/education/
+# administration). Themes without .hero-stats (law/gongan) get a different anchor.
+CHSI_CSS = """
+/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
+.hero-stats .chsi-rating-cell {
+  grid-column: 1 / -1;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 12px 16px; margin-top: 6px;
+  border-top: 1px dashed currentColor;
+  opacity: 0.92;
+  font-feature-settings: "tnum" 1;
+}
+.hero-stats .chsi-rating-cell .chsi-label {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.625rem; letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-stats .chsi-rating-cell .chsi-score {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
+  margin-left: auto;
+}
+.hero-stats .chsi-rating-cell .chsi-meta {
+  font-size: 0.6875rem; opacity: 0.7;
+}
+/* law 主题: 印章下方 mini-badge (无 hero-stats) */
+.hero .chsi-rating-badge {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  margin-top: 12px; padding: 6px 14px;
+  border: 1px solid currentColor; border-radius: 4px;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.75rem; opacity: 0.85;
+}
+.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
+"""
+
+
+def get_chsi_css() -> str:
+    """返回 chsi CSS 字符串, 供 v4_medicine 注入用."""
+    return CHSI_CSS
+
+
+def apply_chsi_rating(html: str, data: dict) -> str:
+    """注入 chsi 阳光高考用户满意度评分到 hero stat strip 末尾.
+
+    - 主要 anchor: <div class="hero-stats">...</div> (11 个主题: humanities/eng/cs/sci/
+      agri/arts/finance/business/education/administration/gongan)
+    - law 主题用印章设计无 hero-stats → 备选 anchor: <h1>...</h1> 后插小徽章
+    - medicine: 待集成
+    - 找不到 chsi 评分 (title 在 chsi_majors.json 不在) 时静默跳过
+    """
+    import re
+    title = (data.get("title") or "").strip()
+    if not title:
+        return html
+    ratings = _load_chsi_ratings()
+    sat = ratings.get(title)
+    if not sat:
+        return html  # 该专业 chsi 无评分 (493/868 才有)
+
+    # Primary inject: extend hero-stats grid with a full-width 5th row
+    cell = (
+        f'<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分">'
+        f'<span class="chsi-label">阳光高考 · 用户满意度</span>'
+        f'<span class="chsi-meta">5 分制</span>'
+        f'<span class="chsi-score">{sat:.1f}</span>'
+        f'</div>'
+    )
+    # Inject before the closing </div> of the hero-stats wrapper.
+    # The hero-stats wrapper closes after its last cell — we use a balanced regex
+    # that finds `<div class="hero-stats...">` and inserts the new cell before
+    # the matching </div>. Since CSS class always appears first, we target by
+    # finding the LAST </div> that follows a stat cell within the block.
+    pat = re.compile(
+        r'(<div class="hero-stats[^"]*">.*?)(</div>\s*(?=<(?:ul|div|footer|/header|/div)|\Z))',
+        re.DOTALL,
+    )
+    new_html, n = pat.subn(r'\1' + cell + r'\2', html, count=1)
+    if n > 0:
+        return new_html
+
+    # Fallback for law: inject mini-badge after <h1>
+    badge = (
+        f'<div class="chsi-rating-badge" title="数据来源: 阳光高考 / 用户实名评分">'
+        f'<span>阳光高考</span><span class="chsi-score">★ {sat:.1f}/5</span>'
+        f'</div>'
+    )
+    new_html, n = re.subn(r'(</h1>)', r'\1' + badge, html, count=1)
+    if n == 0:
+        print(f"[chsi] WARN: no anchor for chsi badge in {data.get('slug', '?')}")
+    return new_html
+
+
 # ── 📚 学科门类 lookup + breadcrumb 注入 ──
 _HIERARCHY_CACHE = None
 
@@ -483,6 +606,7 @@ def render_v4(data: dict, style: str) -> str:
 {THEME_CSS[style]}
 {_WL_STYLE}
 {STRATEGY_CSS}
+{CHSI_CSS}
 </style>
 </head>
 <body>
@@ -614,4 +738,4 @@ def render_v4(data: dict, style: str) -> str:
 </html>"""
 
     # ── 在完整 HTML 上注入 ⭐ 徽章 + mini-card + 📚 breadcrumb(对 12 theme 都生效) ──
-    return apply_discipline_breadcrumb(apply_strategy_tags(_html, data), data)
+    return apply_chsi_rating(apply_discipline_breadcrumb(apply_strategy_tags(_html, data), data), data)

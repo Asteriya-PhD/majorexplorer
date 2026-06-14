@@ -1506,11 +1506,12 @@ def generate_dashboard(data: dict, style: str, output_path: str | None = None) -
         html = render_v4_medicine(data)
         # 注入 ⭐ 战略徽章 + mini-card(medicine 走自己的渲染路径,需后处理)
         try:
-            from v4_styles.render import apply_strategy_tags, get_strategy_css, apply_discipline_breadcrumb, get_discipline_css
+            from v4_styles.render import apply_strategy_tags, get_strategy_css, apply_discipline_breadcrumb, get_discipline_css, apply_chsi_rating, get_chsi_css
             html = apply_strategy_tags(html, data)
             html = apply_discipline_breadcrumb(html, data)
-            # 注入 strategy + discipline CSS(medicine 自带全部 CSS,这里追加即可)
-            css = get_strategy_css() + get_discipline_css()
+            html = apply_chsi_rating(html, data)
+            # 注入 strategy + discipline + chsi CSS(medicine 自带全部 CSS,这里追加即可)
+            css = get_strategy_css() + get_discipline_css() + get_chsi_css()
             if ".strategy-badge {" not in html and css:
                 html = html.replace("</style>", css + "\n</style>", 1)
         except Exception as e:

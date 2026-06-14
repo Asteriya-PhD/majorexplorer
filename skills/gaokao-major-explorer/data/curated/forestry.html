@@ -1015,6 +1015,39 @@ section.tab { border-top: 1px solid #C5D9A8; }
   .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
 }
 
+
+/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
+.hero-stats .chsi-rating-cell {
+  grid-column: 1 / -1;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 12px 16px; margin-top: 6px;
+  border-top: 1px dashed currentColor;
+  opacity: 0.92;
+  font-feature-settings: "tnum" 1;
+}
+.hero-stats .chsi-rating-cell .chsi-label {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.625rem; letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-stats .chsi-rating-cell .chsi-score {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
+  margin-left: auto;
+}
+.hero-stats .chsi-rating-cell .chsi-meta {
+  font-size: 0.6875rem; opacity: 0.7;
+}
+/* law 主题: 印章下方 mini-badge (无 hero-stats) */
+.hero .chsi-rating-badge {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  margin-top: 12px; padding: 6px 14px;
+  border: 1px solid currentColor; border-radius: 4px;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.75rem; opacity: 0.85;
+}
+.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
+
 </style>
 </head>
 <body>
@@ -1073,7 +1106,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
     <h1 class="hero-title">
       <span class="title-cn">林学</span>
       <span class="title-en">Agri-Botany <span class="ampersand">&amp;</span> 林奈式分类</span>
-    </h1>
+    </h1><div class="chsi-rating-badge" title="数据来源: 阳光高考 / 用户实名评分"><span>阳光高考</span><span class="chsi-score">★ 4.0/5</span></div>
 <div class="discipline-breadcrumb"><a href="/?discipline=09#majors">农学</a><span class="bc-sep">›</span><a href="/?discipline=09&sub=0905#majors">林学类</a><span class="bc-sep">›</span><span class="bc-current">林学</span></div>
     <p class="hero-tagline">林学是「守护祖国的绿水青山」 — 林木育种 + 森林培育 + 森林保护 + 森林经理 + 生态修复, 跟农学/园艺同属植物生产大类, 但更偏「森林生态系统」, 体制内出口 (国家林草局 / 自然保护区) 极强。本科起薪 5-7 万, 但事业编 + 国考岗位多, 985 选调有定向, 是不挑城市 + 稳定 + 绿牌的长线</p>
     <div class="hu-stats-grid">
