@@ -40,6 +40,14 @@ JITTER = 0.4
 
 SCH_ID_RE = re.compile(r"schId-(\d+)")
 EDU_ID_RE = re.compile(r"/xh/(\d+)\.")
+# Strip leading Unicode Private-Use chars (iconfont glyphs leak from chsi spans)
+PUA_PREFIX_RE = re.compile(r"^[-\s]+")
+
+
+def _clean(s: str | None) -> str | None:
+    if not s:
+        return s
+    return PUA_PREFIX_RE.sub("", s).strip() or None
 
 
 def parse_card(item) -> dict | None:
@@ -93,11 +101,11 @@ def parse_card(item) -> dict | None:
     return {
         "sch_id": sch_id,
         "edu_id": edu_id,
-        "name": name_a.get_text(strip=True),
-        "province": province,
-        "governing": governing,
-        "degree": degree,
-        "tier": tier,
+        "name": _clean(name_a.get_text(strip=True)),
+        "province": _clean(province),
+        "governing": _clean(governing),
+        "degree": _clean(degree),
+        "tier": _clean(tier),
         "satisfaction": rating,
         "detail_url": BASE + href,
     }
