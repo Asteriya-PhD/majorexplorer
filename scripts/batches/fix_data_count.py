@@ -7,10 +7,15 @@ fix_data_count.py — 把 HTML 里 `<span data-count="X">0</span>` 改成 `<span
 修法: 把 textContent 默认设成 data-count 真值, 动画仍然工作 (JS 从 X 滚到 X, 无视觉变化但功能完整).
       不动 base.py, 只 post-process 12 篇 HTML.
 """
-import re, pathlib
+import re, pathlib, sys, csv, argparse
 
 CUR = pathlib.Path("/Users/zhewenliu/Claude/gaokao-hubei-mvp/skills/gaokao-major-explorer/data/curated")
 PATTERN = re.compile(r'(<span\s+data-count=")([\d.]+)(">)(0|0\.0+)(</span>)')
+DEFAULT_TARGETS = [
+    "international-law", "economic-law", "criminal-law", "civil-law-jurisprudence",
+    "commercial-law", "administrative-law", "civil-procedure", "criminal-procedure",
+    "prison-studies", "drug-control", "criminology", "foreign-police",
+]
 
 
 def fix_html(html: str) -> tuple[str, int]:
@@ -27,11 +32,20 @@ def fix_html(html: str) -> tuple[str, int]:
 
 
 def main():
-    targets = [
-        "international-law", "economic-law", "criminal-law", "civil-law-jurisprudence",
-        "commercial-law", "administrative-law", "civil-procedure", "criminal-procedure",
-        "prison-studies", "drug-control", "criminology", "foreign-police",
-    ]
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--csv", help="CSV with slug,title,style (覆盖 DEFAULT_TARGETS)")
+    ap.add_argument("--all", action="store_true", help="跑 curated/*.html 全部 (除 .bak)")
+    args = ap.parse_args()
+    if args.csv:
+        targets = []
+        with open(args.csv) as f:
+            for row in csv.DictReader(f):
+                if row.get("slug"):
+                    targets.append(row["slug"])
+    elif args.all:
+        targets = sorted(p.stem for p in CUR.glob("*.html") if not p.stem.endswith(".bak"))
+    else:
+        targets = DEFAULT_TARGETS
     total = 0
     for slug in targets:
         p = CUR / f"{slug}.html"
@@ -42,7 +56,7 @@ def main():
         new, c = fix_html(html)
         if c > 0:
             p.write_text(new, encoding="utf-8")
-            print(f"  ✅ {slug:30s} 修复 {c} 个 data-count")
+            print(f"  ✅ {slug:32s} 修复 {c} 个 data-count")
             total += c
     print(f"\n总计修复 {total} 处")
 
