@@ -134,6 +134,19 @@
     opacity: 0.7;
   }
 
+  /* chsi satisfaction badge (right of chip text) — 阳光高考官方评分 */
+  .major-chip .chip-sat {
+    font-family: var(--font-num);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    margin-left: 5px;
+    opacity: 0.85;
+  }
+  .major-chip .chip-sat.high { color: #C99A2A; }   /* ≥ 4.5 — gold */
+  .major-chip .chip-sat.mid  { color: #8B6914; opacity: 0.7; }  /* 4.0-4.49 — bronze */
+  .major-chip .chip-sat.low  { color: var(--muted); opacity: 0.6; }  /* <4.0 — muted */
+  .major-chip.curated:hover .chip-sat { color: #FAFAF7; opacity: 1; }
+
   .summary-bar {
     margin: 24px 0 36px;
     padding: 18px 22px;
@@ -198,7 +211,8 @@
       <p class="lede">
         《普通高等学校本科专业目录》全量 2 层结构 ——
         <strong>13 个学科门类</strong> · <strong>92 个专业类</strong> · <strong>约 880 种本科专业</strong> (2026 年新增 38 种)。
-        我们已为 <strong style="color: #B8323A;">70+ 个</strong> 主流专业写了深度精品报告 (✦ 标记可点开)。
+        我们已为 <strong style="color: #B8323A;">70+ 个</strong> 主流专业写了深度精品报告 (✦ 标记可点开);
+        其余专业附 <strong style="color: #C99A2A;">阳光高考官方满意度评分</strong> (493 个有评分)。
       </p>
     </div>
 
@@ -248,8 +262,12 @@
   Promise.all([
     fetch('/data/discipline_hierarchy.json', { cache: 'no-cache' }).then((r) => r.json()),
     fetch('/data/manifest.json', { cache: 'no-cache' }).then((r) => r.json()),
+    // chsi_majors.json may not exist on older deploys — degrade gracefully.
+    fetch('/data/chsi_majors.json', { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : []))
+      .catch(() => []),
   ])
-    .then(([hier, manifest]) => {
+    .then(([hier, manifest, chsiMajors]) => {
       if (!hier || !hier.门类) {
         zone.innerHTML = '<p style="text-align:center;color:var(--muted);padding:48px;">学科目录加载失败</p>';
         return;
@@ -260,6 +278,21 @@
       (manifest.majors || []).forEach((m) => {
         slugByTitle[m.title] = m.slug;
       });
+
+      // Build title → chsi satisfaction map (e.g. "区块链工程" → 5.0). 493/868 have ratings.
+      const satByTitle = Object.create(null);
+      (chsiMajors || []).forEach((m) => {
+        if (m.name && typeof m.satisfaction === 'number') {
+          satByTitle[m.name] = m.satisfaction;
+        }
+      });
+
+      function satBadge(name) {
+        const sat = satByTitle[name];
+        if (typeof sat !== 'number') return '';
+        const cls = sat >= 4.5 ? 'high' : sat >= 4.0 ? 'mid' : 'low';
+        return `<span class="chip-sat ${cls}" title="阳光高考用户评分 ${sat}/5">${sat.toFixed(1)}</span>`;
+      }
 
       const disciplines = hier.门类;
       const codes = Object.keys(disciplines).sort();
@@ -319,10 +352,11 @@
             const chips = majors
               .map((mn) => {
                 const slug = slugByTitle[mn];
+                const sat = satBadge(mn);
                 if (slug) {
-                  return `<a class="major-chip curated" href="/${encodeURIComponent(slug)}.html">${mn}</a>`;
+                  return `<a class="major-chip curated" href="/${encodeURIComponent(slug)}.html">${mn}${sat}</a>`;
                 }
-                return `<span class="major-chip uncurated" title="未收录, 后续按需生成">${mn}</span>`;
+                return `<span class="major-chip uncurated" title="未收录, 后续按需生成">${mn}${sat}</span>`;
               })
               .join('');
             const statTxt = scCurated > 0
