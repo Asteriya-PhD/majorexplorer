@@ -438,7 +438,7 @@ def render_hero_gongan(data, *, title, summary, category, degree, duration, tags
   <!-- 标题区 -->
   <div class="gg-title-zone">
     <div class="gg-discipline">PUBLIC SECURITY &amp; LAW STUDIES · 030600</div>
-    <h1 class="gg-hero-title">公 安 <span class="accent">学</span> 类</h1>
+    <h1 class="gg-hero-title">{title}</h1>
     <div class="gg-title-en">Public Security &amp; Law Studies</div>
     <div class="gg-subtitle">从 部 委 直 属 高 校 到 省 属 警 院 — 公 正 的 守 护 者 通 道</div>
   </div>
