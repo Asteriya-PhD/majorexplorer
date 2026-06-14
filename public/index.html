@@ -175,17 +175,18 @@
   .major-card .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
   .major-card .tags .tag-mini { font-size: 0.625rem; padding: 1px 6px; background: var(--bg-soft); border-radius: 3px; color: var(--muted); }
 
-  .dot-cs { background: var(--theme-cs); }
-  .dot-finance { background: var(--theme-finance); }
-  .dot-medicine { background: var(--theme-medicine); }
-  .dot-education { background: var(--theme-education); }
-  .dot-law { background: var(--theme-law); }
-  .dot-humanities { background: var(--theme-humanities); }
-  .dot-sci { background: var(--theme-sci); }
-  .dot-eng { background: var(--theme-eng); }
-  .dot-administration { background: var(--theme-administration); }
-  .dot-agri { background: var(--theme-agri); }
-  .dot-arts { background: var(--theme-arts); }
+  .dot-menjia { background: var(--accent); }
+  .dot-menjia[data-code="0106"] { background: #6B4F35; } /* 哲学·历史学 — 深棕 */
+  .dot-menjia[data-code="02"] { background: #5A4632; } /* 经济学 */
+  .dot-menjia[data-code="03"] { background: #3A3A3A; } /* 法学 */
+  .dot-menjia[data-code="04"] { background: #5C7C4A; } /* 教育学 */
+  .dot-menjia[data-code="05"] { background: #6B4F35; } /* 文学 */
+  .dot-menjia[data-code="07"] { background: #1E5E72; } /* 理学 */
+  .dot-menjia[data-code="08"] { background: #5B5B47; } /* 工学 */
+  .dot-menjia[data-code="09"] { background: #6B7A3F; } /* 农学 */
+  .dot-menjia[data-code="10"] { background: #8B2424; } /* 医学 */
+  .dot-menjia[data-code="12"] { background: #4A4564; } /* 管理学 */
+  .dot-menjia[data-code="13"] { background: #8B3A62; } /* 艺术学 */
 
   /* ── 之后才是志愿推荐 (降级) ─────────────── */
   .next-step {
@@ -258,15 +259,6 @@
 @media (max-width: 600px) {
   .strategy-section { padding: 0 16px; }
 }
-/* 移动端首屏紧凑: 战略 chip 横向滚动 (1 行) + hero padding 收紧, 让搜索框 above-the-fold */
-@media (max-width: 768px) {
-  .strategy-pills {
-    flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; padding-bottom: 4px;
-  }
-  .strategy-pills::-webkit-scrollbar { display: none; }
-  .strategy-pill { flex-shrink: 0; }
-}
 
 /* 📚 学科门类 chip 区(战略 chip 下方,职业 chip(待加)上方) */
 .discipline-section {
@@ -302,15 +294,6 @@
 .discipline-pill-count { color: #8B7355; font-size: 0.6875rem; }
 @media (max-width: 600px) {
   .discipline-section { padding: 0 16px; }
-}
-/* 移动端首屏紧凑: discipline chip 横向滚动 (1 行) */
-@media (max-width: 768px) {
-  .discipline-pills {
-    flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; padding-bottom: 4px;
-  }
-  .discipline-pills::-webkit-scrollbar { display: none; }
-  .discipline-pill { flex-shrink: 0; }
 }
 </style>
 </head>
@@ -351,6 +334,13 @@
       <span class="hero-pill"><span class="pill-check">✓</span><strong>位次驱动推荐</strong><span class="pill-sub">配套工具</span></span>
     </div>
 
+    <div class="chat-host" id="chat-host"></div>
+
+    <div class="below-chat">
+      <span>不知道从哪开始?</span>
+      <a href="#majors">📚 浏览精品报告 ↓</a>
+    </div>
+
     <div class="strategy-section">
       <div class="strategy-section-label">
         <span class="strategy-section-star">⭐</span>
@@ -359,24 +349,6 @@
         <a href="/strategy.html" class="strategy-section-more">查看全部 →</a>
       </div>
       <div class="strategy-pills" id="strategy-host">
-        <!-- JS 动态注入 chip 列表 -->
-      </div>
-    </div>
-
-    <div class="chat-host" id="chat-host"></div>
-
-    <div class="below-chat">
-      <span>不知道从哪开始?</span>
-      <a href="#majors">📚 浏览精品报告 ↓</a>
-    </div>
-
-    <div class="discipline-section">
-      <div class="discipline-section-label">
-        <span class="discipline-section-icon">📚</span>
-        <span class="discipline-section-title">按学科门类浏览 (2026)</span>
-        <span class="discipline-section-source">· 13 门类 / 92 专业类</span>
-      </div>
-      <div class="discipline-pills" id="discipline-host">
         <!-- JS 动态注入 chip 列表 -->
       </div>
     </div>
@@ -392,7 +364,7 @@
     </div>
     <p class="sub-lede">
       <span class="hint-icon">!</span>
-      下方是目前已上线的 <strong>精品报告</strong> (覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, <strong>持续扩充中</strong>)。
+      下方是按教育部 <strong>13 个学科门类</strong>分组的精品报告 (哲学·历史学 / 经济学 / 法学 / 教育学 / 文学 / 理学 / 工学 / 农学 / 医学 / 管理学 / 艺术学, <strong>持续扩充中</strong>)。
       没找到你想看的? <strong>用上面的搜索框</strong>或<a href="mailto:hello@example.com" style="color: var(--accent); text-decoration: underline;">留邮箱催更</a>。
       每个报告页右下角 <strong>⭐ 按钮</strong> 可加入心愿单 (1–5 颗星), 凑 4 个就能跑志愿推荐。
     </p>
@@ -443,57 +415,62 @@
 <script src="/js/major-search.js"></script>
 <script src="/js/synth-client.js"></script>
 <script src="/js/strategy-pills.js"></script>
-<script src="/js/discipline-pills.js"></script>
 <script>
 (async function () {
   "use strict";
   const UI = window.UIHelpers;
 
-  // 1) chat 栏
+  // 1) chat 栏 (Step 0/Step 3 改造: 移到 hero 最显眼位置, strategy 移到下方)
   window.MajorSearch.mountChat(document.getElementById('chat-host'), {
     size: 'hero',
     placeholder: '想学什么? 试试「编程」「医生」「考公」「设计」「金融」…',
   });
 
-  // 2) 加载 manifest + 渲染精品专业 grid
+  // 2) 加载 manifest + 渲染精品专业 grid (按教育部官方 13 门类分组)
   const manifest = await window.MajorSearch.loadManifest();
   const majors = manifest.majors || [];
   document.getElementById('major-count').textContent = '已上线 ' + majors.length + ' 个 · 持续扩充中';
 
-  const THEME_ORDER = [
-    { key: 'cs', name: '计算机 / 工科 (代码 + 硬件 + 控制)', hint: 'CS · 自动化 · 通信 · 网安 · 数据 · 电气 · 电子' },
-    { key: 'medicine', name: '医学 (临床 + 药学 + 中医 + 麻醉 + 口腔 + 预防)', hint: '5+3+X · 越老越值钱' },
-    { key: 'eng', name: '工程 (机械 + 化工 + 食品 + IC + 材料 + 车辆)', hint: '万金油 · 国产替代' },
-    { key: 'finance', name: '财经 (会计 + 金融 + 经济 + 工商 + 国贸)', hint: '考证 · 名校导向' },
-    { key: 'law', name: '法学', hint: '法考 + 红圈所' },
-    { key: 'education', name: '教育 / 应用心理 / 设计 / 新闻', hint: '寒暑假 · 稳定' },
-    { key: 'sci', name: '理科 (数学 + 物理 + 化学 + 大气)', hint: '基础学科 · 深造导向' },
-    { key: 'humanities', name: '人文 (汉语言 + 历史 + 哲学 + 考古)', hint: '考公友好 · 长线' },
-    { key: 'administration', name: '管理 (公管 + 财管 + 图情 + 信管)', hint: '公务员对口' },
-    { key: 'agri', name: '农学 (农林牧渔 + 园艺 + 园林)', hint: '袁隆平精神 · 长线稳定' },
-    { key: 'arts', name: '艺术 (美术 + 视传 + 环艺 + 数媒 + 动画)', hint: '九大美院 · 互联网设计' },
+  // 门类分组 (教育部 13 门类, 合并 01 哲学+06 历史学 → "哲学·历史学")
+  // 跳过 11 军事学 (chsi 空) 和 14 交叉学科 (无精品)
+  const MENJIA_ORDER = [
+    { code: '0106', name: '哲学·历史学', icon: '📜' },
+    { code: '02', name: '经济学', icon: '📈' },
+    { code: '03', name: '法学', icon: '⚖️' },
+    { code: '04', name: '教育学', icon: '🎓' },
+    { code: '05', name: '文学', icon: '✒️' },
+    { code: '07', name: '理学', icon: '🔬' },
+    { code: '08', name: '工学', icon: '⚙️' },
+    { code: '09', name: '农学', icon: '🌱' },
+    { code: '10', name: '医学', icon: '🩺' },
+    { code: '12', name: '管理学', icon: '📊' },
+    { code: '13', name: '艺术学', icon: '🎨' },
   ];
 
-  const byStyle = {};
+  // Group majors by menjia_moe (0106 group includes both 01 and 06)
+  const byMenjia = {};
   for (const m of majors) {
-    if (!byStyle[m.style]) byStyle[m.style] = [];
-    byStyle[m.style].push(m);
+    const code = m.menjia_moe || '';
+    // 合并 01 + 06 → '0106'
+    const groupKey = (code === '01' || code === '06') ? '0106' : code;
+    if (!byMenjia[groupKey]) byMenjia[groupKey] = [];
+    byMenjia[groupKey].push(m);
   }
-  for (const k of Object.keys(byStyle)) {
-    byStyle[k].sort((a, b) => a.title.localeCompare(b.title, 'zh'));
+  for (const k of Object.keys(byMenjia)) {
+    byMenjia[k].sort((a, b) => a.title.localeCompare(b.title, 'zh'));
   }
 
   const themeZone = document.getElementById('theme-zone');
-  for (const t of THEME_ORDER) {
-    const list = byStyle[t.key];
+  for (const t of MENJIA_ORDER) {
+    const list = byMenjia[t.code];
     if (!list || list.length === 0) continue;
     const block = document.createElement('div');
     block.className = 'theme-block';
     block.innerHTML = [
       '<div class="theme-title">',
-      '  <span class="dot dot-' + t.key + '"></span>',
+      '  <span class="dot dot-menjia" data-code="' + t.code + '"></span>',
       '  <span>' + UI.escapeHtml(t.name) + '</span>',
-      '  <span class="meta">' + list.length + ' / ' + UI.escapeHtml(t.hint) + '</span>',
+      '  <span class="meta">' + list.length + ' 个精品</span>',
       '</div>',
       '<div class="major-grid"></div>',
     ].join('');
