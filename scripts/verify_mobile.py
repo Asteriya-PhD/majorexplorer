@@ -5,7 +5,8 @@ verify_mobile.py — 校验 mobile 双轨:
   2) 每个 slug 在 manifest 和文件系统中都在
   3) 5 个 dock page + index.html 都存在
   4) PWA 资源 (manifest.json, sw.js, icon-192/512) 都存在
-  5) 每个 major HTML 必含 5 个章节 (一/二/三/四/五)
+  5) 每个 major HTML 必含 11 个章节 (一/二/三/四/五/六/七/八/九/十/十一)
+  6) 关键结构: stats-strip / hero-heart / wish-modal / salary P50 表头
 """
 import json
 import sys
@@ -62,24 +63,80 @@ if missing:
 if extra:
     print(f"  ❌ 磁盘有但 manifest 没: {sorted(extra)[:5]}...")
 
-# 6) 每篇 5 章节检查
-print(f"\n[5] 每篇 5 章节 (一/二/三/四/五):")
-ok5 = 0
-err5 = []
+# 6) 每篇 11 章节检查
+print(f"\n[5] 每篇 11 章节 (一~十一):")
+section_nums = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一"]
+ok11 = 0
+err11 = []
 for s in slugs[:30]:  # 抽 30 个抽样
     f = majors_dir / f"{s}.html"
     if not f.exists():
         continue
     text = f.read_text(encoding="utf-8")
-    miss = [n for n in "一二三四五" if f"art-num\">{n}<" not in text]
+    miss = [n for n in section_nums if f"art-num\">{n}<" not in text]
     if miss:
-        err5.append((s, miss))
+        err11.append((s, miss))
     else:
-        ok5 += 1
-print(f"  抽样 30: {ok5}/30 通过")
-if err5:
-    for s, m in err5[:5]:
+        ok11 += 1
+print(f"  抽样 30: {ok11}/30 通过")
+if err11:
+    for s, m in err11[:5]:
         print(f"    ❌ {s}: 缺 {m}")
+
+# 7) 关键结构检查
+print(f"\n[6] 关键结构 (抽样 10):")
+structure_checks = [
+    ('class="stats-strip"', "stats-strip B 主题色块"),
+    ('class="hero-heart"', "hero-heart 右上角手浮"),
+    ('id="wish-modal"', "wish-modal 模态框"),
+    ('id="star-row"', "5 星评分行"),
+    ('id="wish-remove"', "移除心愿单按钮"),
+    ('class="sal-table"', "salary 表格"),
+    ('class="sal-th-cell is-p50">P50', "salary P50 中位列"),
+    ('class="xk-list"', "xuanke 选科段"),
+    ('class="ds-list"', "deep_study 段"),
+    ('class="emp-list"', "employment 段"),
+    ('class="co-list"', "companies 段"),
+    ('class="fit-pair"', "fit 杂志风双段"),
+    ('class="pit-grid"', "pitfalls 杂志风列表"),
+    ('class="pull-list"', "学长学姐说列表"),
+]
+ok_struct = 0
+err_struct = []
+for s in slugs[:10]:
+    f = majors_dir / f"{s}.html"
+    if not f.exists():
+        continue
+    text = f.read_text(encoding="utf-8")
+    miss = [desc for marker, desc in structure_checks if marker not in text]
+    if miss:
+        err_struct.append((s, miss))
+    else:
+        ok_struct += 1
+print(f"  抽样 10: {ok_struct}/10 通过")
+if err_struct:
+    for s, m in err_struct[:5]:
+        print(f"    ❌ {s}: 缺 {m}")
+
+# 8) JSON 字面量泄露检查
+print(f"\n[7] JSON 字面量泄露检查 (抽样 30):")
+leak_markers = ["'directions':", "'yes':", "'myth':", "'foundations':", "'skills':"]
+ok_no_leak = 0
+err_leak = []
+for s in slugs[:30]:
+    f = majors_dir / f"{s}.html"
+    if not f.exists():
+        continue
+    text = f.read_text(encoding="utf-8")
+    leaks = [m for m in leak_markers if m in text]
+    if leaks:
+        err_leak.append((s, leaks))
+    else:
+        ok_no_leak += 1
+print(f"  抽样 30: {ok_no_leak}/30 通过 (无泄露)")
+if err_leak:
+    for s, m in err_leak[:5]:
+        print(f"    ❌ {s}: {m}")
 
 print()
 print("=" * 60)

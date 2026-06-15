@@ -40,6 +40,149 @@
   .top-btn .heart-on { color: var(--accent); }
   .top-btn .heart-off { color: var(--muted-2); }
 
+  /* hero 右上角手浮爱心 */
+  .hero { position: relative; }
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 200ms, background 200ms;
+  }
+  .hero-heart:active { transform: scale(0.9); background: rgba(255,255,255,0.95); }
+  .hero-heart .heart-off { color: var(--muted-2); font-size: 1.125rem; line-height: 1; }
+  .hero-heart .heart-on { color: var(--accent); font-size: 1.125rem; line-height: 1; }
+
+  /* 爱心手浮按钮增强 (心愿单打分入口) */
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 200ms, box-shadow 200ms;
+  }
+  .hero-heart:active { transform: scale(0.94); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+  .hero-heart.is-on { background: var(--accent); border-color: var(--accent); }
+  .hero-heart.is-on .heart-off, .hero-heart.is-on .heart-on { color: #FBF8F1; }
+  .hero-heart.is-on .heart-label { color: #FBF8F1; }
+  .heart-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase;
+  }
+
+  /* 心愿打分模态框 */
+  .wish-modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .wish-modal[hidden] { display: none; }
+  .wish-modal-bg {
+    position: absolute; inset: 0;
+    background: rgba(20, 20, 18, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 240ms ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .wish-modal-card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 420px;
+    background: var(--bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 24px 24px 28px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.16);
+    animation: slideUp 280ms cubic-bezier(0.2, 0.9, 0.3, 1.05);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .wish-modal-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .wish-modal-sub {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--muted); margin-bottom: 18px;
+  }
+  .star-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .star-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; padding: 0;
+    font-size: 32px; color: var(--line); cursor: pointer;
+    transition: transform 120ms, color 120ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .star-btn span { display: block; line-height: 1; }
+  .star-btn:active { transform: scale(0.85); }
+  .star-btn.is-on { color: #E8A53A; }
+  .star-hint {
+    text-align: center;
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); margin-bottom: 14px;
+    min-height: 16px;
+  }
+  .wish-tags-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .wish-tag {
+    padding: 6px 14px;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 600;
+    color: var(--theme-deep); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 24px;
+    cursor: pointer; transition: all 160ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-tag.is-on {
+    background: var(--theme); color: #FBF8F1; border-color: var(--theme);
+  }
+  .wish-comment {
+    width: 100%;
+    min-height: 64px; max-height: 120px;
+    padding: 10px 12px;
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+  .wish-comment:focus { outline: 0; border-color: var(--theme); }
+  .wish-modal-actions {
+    display: flex; gap: 10px;
+  }
+  .wish-btn {
+    flex: 1; height: 44px;
+    border-radius: 22px; border: 0;
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-btn-cancel { background: var(--bg-soft); color: var(--muted); }
+  .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
+  .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+
   .hero {
     position: relative;
     padding: 32px 24px 36px;
@@ -99,23 +242,250 @@
     background: var(--line-strong);
     border-bottom: 1px solid var(--line);
   }
+  /* === Salary Table · P25/P50/P75 === */
+  .sal-table {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .sal-th, .sal-tr {
+    display: grid;
+    grid-template-columns: 92px 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .sal-th-stage, .sal-stage {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em; line-height: 1.5;
+    padding-top: 6px;
+  }
+  .sal-stage { color: var(--theme-deep); font-size: 0.875rem; }
+  .sal-yoy {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 5px; border-radius: 2px; margin-left: 6px;
+    color: #FBF8F1;
+  }
+  .sal-yoy.up { background: #4C7A4C; }
+  .sal-yoy.down { background: var(--accent); }
+  .sal-th-cell, .sal-cell {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+    text-align: center;
+  }
+  .sal-th-cell.is-p50, .sal-cell.is-p50 { color: var(--theme-deep); font-weight: 700; }
+  .sal-th-cell { padding-top: 6px; }
+  .sal-cell {
+    font-family: var(--font-body); font-size: 0.8125rem; font-weight: 400;
+    color: var(--fg); text-align: left;
+    display: flex; flex-direction: column; gap: 4px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .sal-cell.is-p50 { font-weight: 700; }
+  .sal-cell .approx { color: var(--muted); font-size: 0.75rem; margin-right: 2px; }
+  .sal-cell .sal-cell-num {
+    font-family: var(--font-num); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep);
+  }
+  .sal-cell.is-p50 .sal-cell-num { color: var(--accent-ink); }
+  .sal-cell .sal-cell-unit {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); margin-left: 2px; font-weight: 400;
+  }
+  .sal-cell-bar {
+    display: block; height: 4px;
+    background: var(--bg-soft); border-radius: 1px; overflow: hidden;
+    margin-top: 2px;
+  }
+  .sal-cell-fill {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
+
+  /* === 移除按钮 === */
+  .wish-btn-remove { background: var(--bg-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .wish-btn-remove:active { background: rgba(184,50,58,0.08); }
+  .stats-strip {
+    background: var(--theme);
+    margin: 0 0 14px;
+    padding: 22px 20px 20px;
+    border-radius: 2px;
+    color: var(--bg);
+  }
   .stat-cell {
-    background: var(--bg-soft);
-    padding: 18px 14px;
     text-align: center;
   }
   .stat-cell .n {
     font-family: var(--font-num);
-    font-size: 1.5rem; font-weight: 700;
-    color: var(--theme);
-    line-height: 1; letter-spacing: -0.02em;
+    font-size: 1.875rem; font-weight: 700;
+    color: var(--bg);
+    line-height: 1.05; letter-spacing: -0.01em;
     display: block;
   }
-  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .n .unit { font-size: 0.8125rem; color: var(--theme-soft); font-weight: 500; margin-left: 3px; opacity: 0.85; }
   .stat-cell .l {
-    font-family: var(--font-num); font-size: 0.625rem;
-    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--theme-soft); letter-spacing: 0.18em; text-transform: uppercase;
     margin-top: 6px; display: block;
+    opacity: 0.75;
+  }
+  /* 读研档位高亮 (B 块里也保留色彩对比) */
+  .stat-cell.grad-tier[data-tier="高"] .n { color: #FBF8F1; }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme-soft); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--theme-soft); opacity: 0.7; }
+  .stat-cell.grad-tier .n { font-size: 1.875rem; }
+
+  /* === 选科要求 (xuanke) === */
+  .xk-list { margin-top: 8px; }
+  .xk-row {
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+  .xk-row:first-child { border-top: 0; padding-top: 4px; }
+  .xk-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .xk-num {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+    padding-top: 2px; min-width: 24px;
+  }
+  .xk-info { flex: 1; }
+  .xk-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
+  }
+  .xk-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden;
+    margin-right: 56px;
+  }
+  .xk-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .xk-pct {
+    position: absolute; right: 0; top: -2px;
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em;
+  }
+  .xk-reason {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 深造路径 (deep_study) === */
+  .ds-list { margin-top: 4px; }
+  .ds-row {
+    display: grid; grid-template-columns: 1fr 80px 36px;
+    gap: 10px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .ds-row:first-child { padding-top: 4px; }
+  .ds-row:last-child { border-bottom: 0; }
+  .ds-name {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.4;
+  }
+  .ds-study .ds-name {
+    font-weight: 600; color: var(--theme-deep);
+  }
+  .ds-study .ds-name::before {
+    content: "🎓 ";
+  }
+  .ds-bar {
+    height: 6px; border-radius: 1px; background: var(--bg-soft);
+    overflow: hidden; position: relative;
+  }
+  .ds-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .ds-study .ds-fill {
+    background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
+  }
+  .ds-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  /* === 就业方向 (employment_direction) === */
+  .emp-list { margin-top: 4px; }
+  .emp-row {
+    padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .emp-row:first-child { border-top: 0; padding-top: 4px; }
+  .emp-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
+  }
+  .emp-num {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em; min-width: 24px;
+  }
+  .emp-name {
+    flex: 1;
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep); line-height: 1.3;
+  }
+  .emp-ratio {
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  .emp-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden; margin-bottom: 6px;
+    margin-left: 34px;
+  }
+  .emp-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .emp-desc {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 头部雇主 (top_companies) === */
+  .co-list { margin-top: 4px; }
+  .co-row {
+    display: grid; grid-template-columns: 1fr 70px;
+    gap: 12px; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .co-row:first-child { padding-top: 4px; }
+  .co-row:last-child { border-bottom: 0; }
+  .co-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--fg); line-height: 1.4; margin-bottom: 4px;
+  }
+  .co-tier {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-left: 8px;
+    color: #FBF8F1; vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+  .co-tier-s { background: var(--accent-ink); }
+  .co-tier-a { background: var(--theme); }
+  .co-tier-b { background: var(--muted); }
+  .co-meta {
+    font-family: var(--font-body); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.02em;
+  }
+  .co-meta .dot { color: var(--line); margin: 0 4px; }
+  .co-spark-wrap {
+    display: flex; align-items: center; justify-content: flex-end;
+  }
+  .co-spark {
+    width: 60px; height: 16px;
+    overflow: visible;
+  }
+  .co-spark polyline {
+    fill: none; stroke: var(--theme); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round;
   }
 
   .tags-strip {
@@ -259,56 +629,60 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
-  /* fit 双段 (适合 / 慎入) - mobile 主题色 + emoji */
-  .fit-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-  .fit-col {
-    padding: 10px 12px;
-    border-radius: 2px;
-    font-family: var(--font-body); font-size: 0.875rem;
-    line-height: 1.55;
-  }
-  .fit-yes { background: rgba(74, 69, 100, 0.08); border-left: 3px solid var(--theme); color: var(--fg); }
-  .fit-no  { background: rgba(184, 50, 58, 0.08); border-left: 3px solid var(--accent); color: var(--fg); }
-  .fit-col-head {
+  /* fit 杂志风 — 大字衬线 + 序号 + 列表文章流 */
+  .fit-pair { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 0; }
+  .fit-col { padding: 12px 0 8px; border-top: 1px solid var(--line); }
+  .fit-col:first-child { border-top: 0; padding-top: 6px; }
+  .fit-num {
     font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
-    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
-    margin-bottom: 6px;
-    display: flex; align-items: center; gap: 6px;
+    color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 4px;
   }
-  .fit-emoji { font-size: 0.875rem; }
+  .fit-col.fit-yes .fit-num { color: var(--theme-deep); }
+  .fit-col.fit-no  .fit-num { color: var(--accent); }
+  .fit-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 10px; letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .fit-col.fit-no .fit-title { color: var(--accent-ink); }
   .fit-list { list-style: none; padding: 0; margin: 0; }
   .fit-list li {
-    position: relative; padding-left: 14px; margin: 4px 0;
-    color: var(--fg); font-size: 0.875rem;
+    padding: 8px 0; border-top: 1px dashed var(--line);
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg);
+    position: relative; padding-left: 18px;
   }
+  .fit-list li:first-child { border-top: 0; padding-top: 4px; }
   .fit-list li::before {
-    content: "·"; position: absolute; left: 4px; top: 0;
-    color: var(--muted); font-weight: 700;
+    content: "→"; position: absolute; left: 0; top: 8px;
+    color: var(--theme); font-weight: 700;
   }
+  .fit-list li:first-child::before { top: 4px; }
+  .fit-col.fit-no .fit-list li::before { content: "✗"; color: var(--accent); }
 
-  /* pitfalls (谣言 vs 真相) - mobile 主题色 + emoji */
-  .pitfall-risk { background: rgba(184,50,58,0.04); }
-  .pitfall-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-  .pitfall {
-    border-left: 3px solid var(--accent);
-    padding: 10px 12px;
-    background: var(--card-bg, rgba(255,255,255,0.4));
-    border-radius: 2px;
+  /* pitfalls 杂志风 — 文章流 误区/真相 上下排 */
+  .pit-grid { display: flex; flex-direction: column; gap: 0; padding: 8px 0 4px; }
+  .pit-row {
+    padding: 14px 0; border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
   }
-  .pitfall-myth, .pitfall-reality {
-    font-family: var(--font-body); font-size: 0.875rem;
-    line-height: 1.55; padding: 4px 0;
-  }
-  .pitfall-myth { color: var(--accent-ink); border-bottom: 1px dashed var(--line); padding-bottom: 6px; margin-bottom: 6px; }
-  .pitfall-reality { color: var(--fg); }
-  .pitfall-tag {
-    display: inline-block;
+  .pit-row:first-child { border-top: 0; padding-top: 4px; }
+  .pit-myth-side, .pit-reality-side { display: flex; flex-direction: column; gap: 4px; }
+  .pit-label {
     font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 2px; margin-right: 8px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
   }
-  .pitfall-myth .pitfall-tag { background: var(--accent); color: #FBF8F1; }
-  .pitfall-reality .pitfall-tag { background: var(--theme); color: #FBF8F1; }
+  .pit-reality-side .pit-label { color: var(--theme-deep); }
+  .pit-myth-text {
+    font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700;
+    color: var(--accent-ink); line-height: 1.4;
+  }
+  .pit-reality-text {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); line-height: 1.65;
+  }
 
   /* stat-cell 读研档位 (高/中/低) */
   .stat-cell.grad-tier .n { font-size: 1rem; }
@@ -443,12 +817,14 @@
   <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
   <div class="top-crumb">{{TITLE}} · {{MOE_CODE}}</div>
   <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
-  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
-    <span id="heart-ico" class="heart-off">♡</span>
-  </a>
 </header>
 
 <section class="hero">
+  <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
+    <span class="heart-bg"></span>
+    <span id="heart-ico" class="heart-off">♡</span>
+    <span class="heart-label" id="heart-label">收藏</span>
+  </button>
   <div class="hero-crumb"><span class="rule"></span>{{CATEGORY}} · {{MOE_CODE}}</div>
   <h1 class="hero-title">{{TITLE}}</h1>
   <div class="hero-sub">{{DEGREE}}<span class="dot">·</span>{{YEARS}} 年<span class="dot">·</span>{{ADMISSION}}</div>
@@ -490,13 +866,36 @@
   <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
   <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
   <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+
+<!-- 心愿打分模态框 -->
+<div class="wish-modal" id="wish-modal" hidden>
+  <div class="wish-modal-bg" data-close="1"></div>
+  <div class="wish-modal-card" role="dialog" aria-labelledby="wish-modal-title">
+    <h3 class="wish-modal-title" id="wish-modal-title">给 {{TITLE}} 打分</h3>
+    <p class="wish-modal-sub">1-5 星, 后续可在心愿单查看排序</p>
+    <div class="star-row" id="star-row" role="radiogroup" aria-label="评分">
+      <button class="star-btn" data-star="1" aria-label="1 星"><span>★</span></button>
+      <button class="star-btn" data-star="2" aria-label="2 星"><span>★</span></button>
+      <button class="star-btn" data-star="3" aria-label="3 星"><span>★</span></button>
+      <button class="star-btn" data-star="4" aria-label="4 星"><span>★</span></button>
+      <button class="star-btn" data-star="5" aria-label="5 星"><span>★</span></button>
+    </div>
+    <div class="star-hint" id="star-hint">点击星星选择评分</div>
+    <textarea class="wish-comment" id="wish-comment" placeholder="备注 (选填, 例: 看完想再读读课程)"></textarea>
+    <div class="wish-modal-actions">
+      <button class="wish-btn wish-btn-cancel" data-close="1">取消</button>
+      <button class="wish-btn wish-btn-remove" id="wish-remove" hidden>移除出心愿单</button>
+      <button class="wish-btn wish-btn-save" id="wish-save" disabled>保存到心愿单</button>
+    </div>
+  </div>
+</div>
   <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
 </nav>
 
+<script>window.__SLUG__ = "{{SLUG}}"; window.__TITLE__ = "{{TITLE}}";</script>
 <script src="../js/loader.js"></script>
 <script src="../js/dock.js"></script>
 <script src="../js/detail.js"></script>
-<script>window.__SLUG__ = "{{SLUG}}";</script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
