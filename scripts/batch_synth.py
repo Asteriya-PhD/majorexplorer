@@ -362,8 +362,18 @@ def save(data: dict, slug: str, root: Path) -> Path:
     """写 JSON 到 curated/, 更新 manifest."""
     out = root / "skills/gaokao-major-explorer/data/curated" / f"{slug}.json"
     out.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-    # 更新 manifest
+    # 更新 manifest — 注入 discipline + sub_discipline (从 hierarchy 推)
+    # D.1: 根因修复 — 之前 56 精品缺 discipline 字段, commit c07ed0d 后又可能复发
     try:
+        from fix_manifest_discipline import build_title_to_discipline, lookup_title  # noqa: E402
+        hier_p = root / "public/data/discipline_hierarchy.json"
+        if hier_p.exists():
+            hier = json.loads(hier_p.read_text(encoding="utf-8"))
+            title_map = build_title_to_discipline(hier)
+            hit = lookup_title(data.get("title", ""), title_map)
+            if hit:
+                data.setdefault("discipline", hit[0])
+                data.setdefault("sub_discipline", hit[1])
         upsert_manifest_minimal(
             root=root,
             slug=slug,
@@ -375,6 +385,16 @@ def save(data: dict, slug: str, root: Path) -> Path:
             tags=data.get("tags", []),
             data_source=data.get("data_source", ""),
         )
+        # 显式 inject discipline/sub_discipline 到 manifest entries (upsert_manifest_minimal 不传这两个 kwarg)
+        for mp in [root / "public/data/manifest.json", root / "skills/gaokao-major-explorer/data/curated/manifest.json"]:
+            if not mp.exists():
+                continue
+            md = json.loads(mp.read_text(encoding="utf-8"))
+            for me in md.get("majors", []):
+                if me.get("slug") == slug and data.get("discipline"):
+                    me["discipline"] = data["discipline"]
+                    me["sub_discipline"] = data.get("sub_discipline", "")
+            mp.write_text(json.dumps(md, ensure_ascii=False, indent=2), encoding="utf-8")
     except Exception as e:
         print(f"  [manifest] warn: {e}")
     return out
