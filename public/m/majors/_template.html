@@ -259,6 +259,55 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
+  /* fit 双段 (适合 / 别勉强) */
+  .fit-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .fit-col {
+    padding: 10px 12px;
+    border-radius: 2px;
+    font-family: var(--font-body); font-size: 0.875rem;
+    line-height: 1.55;
+  }
+  .fit-yes { background: rgba(76, 122, 76, 0.10); border-left: 3px solid #4C7A4C; color: var(--fg); }
+  .fit-no  { background: rgba(184, 120, 50, 0.10); border-left: 3px solid #B87832; color: var(--fg); }
+  .fit-col-head {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    position: relative; padding-left: 14px; margin: 4px 0;
+    color: var(--fg); font-size: 0.875rem;
+  }
+  .fit-list li::before {
+    content: "·"; position: absolute; left: 4px; top: 0;
+    color: var(--muted); font-weight: 700;
+  }
+
+  /* pitfalls (误区 vs 真相) */
+  .pitfall-risk { background: rgba(184,50,58,0.04); }
+  .pitfall-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .pitfall {
+    border-left: 3px solid var(--accent);
+    padding: 10px 12px;
+    background: var(--card-bg, rgba(255,255,255,0.4));
+    border-radius: 2px;
+  }
+  .pitfall-myth, .pitfall-reality {
+    font-family: var(--font-body); font-size: 0.875rem;
+    line-height: 1.55; padding: 4px 0;
+  }
+  .pitfall-myth { color: var(--accent-ink); border-bottom: 1px dashed var(--line); padding-bottom: 6px; margin-bottom: 6px; }
+  .pitfall-reality { color: var(--fg); }
+  .pitfall-tag {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-right: 6px;
+    letter-spacing: 0.1em;
+  }
+  .pitfall-myth .pitfall-tag { background: var(--accent); color: #FBF8F1; }
+  .pitfall-reality .pitfall-tag { background: #4C7A4C; color: #FBF8F1; }
+
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
