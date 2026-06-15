@@ -1,0 +1,64 @@
+/* ─────────────────────────────────────────────
+   Topbar — 3 变体
+   v1: wordmark + ⌕ (默认, home/catalog/recs/wishlist/me)
+   v2: ‹ back + crumb + ↗ share + ♥ heart (detail)
+   v3: ✕ cancel + 中空 (search)
+   ───────────────────────────────────────────── */
+
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--topbar-h);
+  display: grid;
+  grid-template-columns: 1fr var(--notch-w) 1fr;
+  align-items: center;
+  padding: 0 18px;
+  background: rgba(245,242,234,0.92);
+  backdrop-filter: saturate(120%) blur(8px);
+  -webkit-backdrop-filter: saturate(120%) blur(8px);
+  border-bottom: 1px solid transparent;
+}
+.topbar.scrolled { border-bottom-color: var(--line); }
+.top-left  { justify-self: start; display: inline-flex; align-items: center; }
+.top-right { justify-self: end;   display: inline-flex; align-items: center; }
+
+/* ─── v2 detail: 6 列 ─── */
+.topbar.is-detail {
+  grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+}
+.topbar.is-detail .top-left, .topbar.is-detail .top-right { display: contents; }
+.top-btn {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 44px;
+  font-family: var(--font-heading); font-size: 1.125rem;
+  color: var(--fg-soft);
+  -webkit-tap-highlight-color: transparent;
+}
+.top-btn .heart-on { color: var(--accent); }
+.top-crumb {
+  font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+  text-align: center;
+  grid-column: 2 / 6;
+  opacity: 0; transition: opacity 200ms;
+  pointer-events: none;
+}
+.topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+
+/* ─── v3 search: cancel + notch + 空 ─── */
+.topbar.is-search {
+  grid-template-columns: auto var(--notch-w) 1fr;
+}
+.top-cancel {
+  justify-self: start;
+  display: inline-flex; align-items: center;
+  font-family: var(--font-body);
+  font-size: 0.9375rem; font-weight: 400;
+  color: var(--accent-ink);
+  min-height: 44px; padding-right: 12px;
+  -webkit-tap-highlight-color: transparent;
+}
+.top-cancel .ico {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  margin-right: 4px; line-height: 1;
+}

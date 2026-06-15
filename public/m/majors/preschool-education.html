@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5C7C4A">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
+<title>学前教育 · Major Explorer</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/topbar.css">
+<link rel="stylesheet" href="../css/dock.css">
+<style>
+  :root {
+    --theme:       #5C7C4A;
+    --theme-deep:  #3D5530;
+    --theme-soft:  #E8F0E0;
+    --theme-gold:  #B5934A;
+  }
+  .topbar.is-detail {
+    grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+  }
+  .top-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    font-family: var(--font-heading); font-size: 1.125rem;
+    color: var(--fg-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-crumb {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+    text-align: center;
+    grid-column: 2 / 6;
+    opacity: 0; transition: opacity 200ms;
+    pointer-events: none;
+  }
+  .topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+  .top-btn .heart-on { color: var(--accent); }
+  .top-btn .heart-off { color: var(--muted-2); }
+
+  .hero {
+    position: relative;
+    padding: 32px 24px 36px;
+    background:
+      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%),
+      linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #F5F2EA;
+    overflow: hidden;
+    border-bottom: 0;
+  }
+  .hero::before {
+    content: "学";
+    position: absolute;
+    right: -8%; bottom: -8%;
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 50vw, 16rem);
+    font-weight: 700; line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(245,242,234,0.06);
+    pointer-events: none; user-select: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-crumb {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--theme-gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-crumb .rule { flex: 0 0 24px; height: 1px; background: var(--theme-gold); }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-weight: 700; line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #FBF8F1;
+  }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: rgba(245,242,234,0.72);
+    margin: 14px 0 0; letter-spacing: 0.04em;
+  }
+  .hero-sub .dot { color: var(--theme-gold); margin: 0 8px; }
+  .hero-tagline {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem; line-height: 1.55;
+    color: rgba(245,242,234,0.92);
+    margin: 22px 0 0; font-weight: 400;
+    border-left: 2px solid var(--theme-gold);
+    padding-left: 12px;
+  }
+
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat-cell {
+    background: var(--bg-soft);
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .stat-cell .n {
+    font-family: var(--font-num);
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--theme);
+    line-height: 1; letter-spacing: -0.02em;
+    display: block;
+  }
+  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .l {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 6px; display: block;
+  }
+
+  .tags-strip {
+    padding: 18px 20px 12px;
+    background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    padding: 4px 9px;
+    background: var(--theme-soft);
+    color: var(--theme-deep);
+    border-radius: 2px;
+  }
+
+  .article { padding: 8px 24px 24px; background: var(--bg); }
+  .art-sec {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .art-sec:last-of-type { border-bottom: 0; }
+  .art-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .art-num {
+    font-family: var(--font-num);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--theme);
+    letter-spacing: 0.18em;
+    border: 1px solid var(--theme);
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .art-title {
+    font-family: var(--font-heading);
+    font-size: 1.625rem; font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .art-body p {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--fg-soft);
+    margin: 0 0 16px;
+  }
+  .art-body p strong { color: var(--fg); font-weight: 600; }
+  .art-body p em {
+    color: var(--theme); font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 60%);
+    padding: 0 2px;
+  }
+
+  .pull {
+    margin: 28px -8px;
+    padding: 22px 18px 22px 24px;
+    border-left: 3px solid var(--theme-gold);
+    background: var(--bg-paper);
+    font-family: var(--font-heading);
+    font-size: 1.25rem; line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull .by {
+    display: block; margin-top: 12px;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .course-list {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .course-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .course-yr {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.08em;
+  }
+  .course-names {
+    font-family: var(--font-body); font-size: 0.9375rem; color: var(--fg); line-height: 1.5;
+  }
+  .course-tag {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .sal-rows { margin-top: 4px; }
+  .sal-row {
+    display: grid; grid-template-columns: 90px 1fr 60px;
+    gap: 10px; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sal-row:last-child { border-bottom: 0; }
+  .sal-l { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .sal-bar {
+    height: 6px; border-radius: 1px;
+    background: var(--theme-soft);
+    overflow: hidden; position: relative;
+  }
+  .sal-bar::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 50%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-v {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  .risk {
+    margin: 18px 0;
+    padding: 14px 16px 14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    background: rgba(184,50,58,0.04);
+    border-left: 4px solid var(--accent);
+  }
+  .risk-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-body {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg-soft);
+  }
+  .risk-body strong { color: var(--accent-ink); }
+
+  .uni-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .uni-rank {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .uni-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .uni-name .badge {
+    font-family: var(--font-num); font-size: 0.625rem;
+    background: var(--theme); color: #FBF8F1;
+    padding: 1px 5px; border-radius: 2px;
+    margin-left: 6px; vertical-align: 1px;
+  }
+  .uni-score {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme); text-align: right;
+  }
+
+  .footer-cta {
+    margin: 32px 16px 0;
+    padding: 24px 20px;
+    background: linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #FBF8F1;
+    border-radius: 4px;
+  }
+  .footer-cta .lead {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--theme-gold);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-cta h3 {
+    font-family: var(--font-heading); font-size: 1.375rem;
+    font-weight: 700; line-height: 1.2;
+    margin: 0 0 8px; color: #FBF8F1;
+  }
+  .footer-cta p {
+    font-family: var(--font-body); font-size: 0.9375rem; line-height: 1.55;
+    color: rgba(245,242,234,0.85);
+    margin: 0 0 16px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--theme-gold); color: var(--theme-deep);
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; border-radius: 999px; min-height: 44px;
+  }
+  .cta-btn .arrow { font-family: var(--font-num); font-weight: 400; }
+  .cta-btn.on .ico { color: var(--accent); }
+
+  .footer-meta {
+    margin-top: 28px;
+    padding: 20px 24px 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  }
+  .footer-meta .mark {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .footer-meta .mark .dot { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topbar is-detail">
+  <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
+  <div class="top-crumb">学前教育 · 040401</div>
+  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
+    <span id="heart-ico" class="heart-off">♡</span>
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-crumb"><span class="rule"></span>教育学 · 教育学类 · 040401</div>
+  <h1 class="hero-title">学前教育</h1>
+  <div class="hero-sub">教育学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">「学前教育不是哄孩子，而是在孩子大脑发育的黄金窗口期，做最科学、最温柔的干预。」</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><span class="n">3<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
+  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+</div>
+
+<div class="tags-strip" id="tags-strip">
+  <span class="tag">师范</span>
+<span class="tag">教师资格证</span>
+<span class="tag">多才多艺</span>
+<span class="tag">稳定</span>
+<span class="tag">文理兼收</span>
+<span class="tag">高实践</span>
+<span class="tag">考编友好</span>
+<span class="tag">耐心考验</span>
+</div>
+
+<article class="article" id="article">
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">一</span>
+        <h2 class="art-title">这个专业到底学什么</h2>
+      </div>
+      <div class="art-body">
+        <p>{'directions': [{'name': '方向 1', 'desc': '学前教育专业的核心是「懂孩子 + 会设计 + 有技能」。'}, {'name': '方向 2', 'desc': '前 2 年以理论为主：学前教育学、儿童发展心理学、学前卫生学、中外学前教育史——这些课让你理解 0-6 岁儿童的身体、认'}, {'name': '方向 3', 'desc': '大二开始接触「幼儿园课程与活动设计」「学前儿童游戏理论与指导」，学习如何把理论转化为教案。'}, {'name': '方向 4', 'desc': '大三进入真正的技能爆发期：(1) 艺术技能模块——钢琴（儿童歌曲伴奏）、舞蹈（幼儿舞蹈创编）、美术（儿童画/手工/玩教具'}, {'name': '方向 5', 'desc': '(2) 实践模块——幼儿园见习、实习、教育研习，累计不少于 18 周，直接进班级带娃。'}], 'foundations': ['学科基础', '核心理论', '方法论'], 'skills': ['逻辑分析', '文献阅读', '独立研究', '专业写作']}</p>
+        <p>学前教育不是「带小孩玩」，而是「研究 0-6 岁儿童发展规律并设计科学教育方案」的专业学科。它融合儿童心理学、教育学、艺术技能（钢琴/舞蹈/美术）与卫生保健，毕业生主要进入幼儿园、早教机构、儿童出版与教育产品行业。教育学学士 + 教师资格证是标配，考编入体制内是主流路径，稳定但薪资天花板有限。</p>
+      </div>
+      <div class="risk">
+        <div class="risk-head">⚠ 读之前先想清</div>
+        <div class="risk-body">
+          <strong>适合谁。</strong>{'yes': ['对学科基础有兴趣', '愿意长期学习投入', '对行业有合理预期'], 'no': ['只想立刻高薪', '对学科核心内容无兴趣']}
+        </div>
+      </div>
+      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '毕业 = 自动高薪', 'reality': '行业核心岗位需持证或读研 3-5 年'}<br>• {'myth': '本专业就是行业全部', 'reality': '专业侧重学科基础, 实际工作中需持续学习'}</div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">二</span>
+        <h2 class="art-title">本科 4 年学的课</h2>
+      </div>
+      <div class="art-body">
+        <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
+      </div>
+      <div class="course-list">
+        <div class="course-row">
+          <div class="course-yr">大一</div>
+          <div class="course-names">大学英语 (I-IV) · 大学语文/写作 · 高等数学 (基础) · 思想政治理论 (思修/史纲/马原/毛概) · 体育 (I-IV) · 计算机基础 · 形势与政策</div>
+          <div class="course-tag">大一</div>
+        </div><div class="course-row">
+          <div class="course-yr">大二</div>
+          <div class="course-names">学前教育学 · 儿童发展心理学 (0-6 岁) · 学前卫生学 · 幼儿园课程与活动设计 · 学前教育研究方法 · 中外学前教育史 · 学前儿童游戏理论与指导 · 幼儿园班级管理 · 教育心理学</div>
+          <div class="course-tag">大二</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三</div>
+          <div class="course-names">华东师范大学 · 学前特殊教育 (融合教育方向) · 北京师范大学 · 学前教育评价与质量监测 · 南京师范大学 · 儿童文学与绘本创作 · 浙江师范大学 · 幼儿园 STEM 教育实践 · 中华女子学院 · 0-3 岁婴幼儿照护与早期发展 · 钢琴基础与儿童歌曲伴奏 · 舞蹈基础与幼儿舞蹈创编 · 美术基础与儿童画创作 · 手工制作与玩教具设计 · 声乐基础与儿童歌唱</div>
+          <div class="course-tag">大三</div>
+        </div><div class="course-row">
+          <div class="course-yr">大四</div>
+          <div class="course-names">教育见习 (一学期 8 次) · 教育实习 (中学 / 小学 8-12 周) · 微格教学实训 · 班主任工作实务 · 毕业论文 / 毕业设计</div>
+          <div class="course-tag">大四</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
+      </div>
+      <div class="sal-rows">
+        <div class="sal-row">
+          <div class="sal-l">10年+ (持证/资深)</div>
+          <div class="sal-bar" style="--w: 100%;"></div>
+          <div class="sal-v">18%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">5年经验</div>
+          <div class="sal-bar" style="--w: 50%;"></div>
+          <div class="sal-v">9%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">3年经验</div>
+          <div class="sal-bar" style="--w: 28%;"></div>
+          <div class="sal-v">5%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">应届生 (一线)</div>
+          <div class="sal-bar" style="--w: 17%;"></div>
+          <div class="sal-v">3%</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
+      </div>
+      <div class="pull">
+        "本科学前, 毕业到公办幼儿园 (招教考试), 一年 3-5 万 + 寒暑假 + 五险一金, 编制内是真的稳, 但 0-6 岁儿童照顾比想象耗体力, 每天 7:30-17:30。"
+        <span class="by">— 某省属师范大学学前教育 2021 届 · 幼儿园老师 · 4 年</span>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">五</span>
+        <h2 class="art-title">头部院校参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+      </div>
+      <div class="uni-row">
+          <div class="uni-rank">01</div>
+          <div class="uni-name">北京师范大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">02</div>
+          <div class="uni-name">华东师范大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">03</div>
+          <div class="uni-name">南京师范大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">04</div>
+          <div class="uni-name">东北师范大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">05</div>
+          <div class="uni-name">浙江师范大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">06</div>
+          <div class="uni-name">华中师范大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">湖南师范大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">08</div>
+          <div class="uni-name">中华女子学院</div>
+          <div class="uni-score">—</div>
+        </div>
+    </section>
+</article>
+
+<div class="footer-cta">
+  <div class="lead">⌖ 决定了吗</div>
+  <h3>把学前教育加入心愿单</h3>
+  <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
+  <a class="cta-btn" id="cta-btn" href="javascript:void(0)">
+    <span class="ico" id="cta-ico">♡</span>
+    <span id="cta-text">加入心愿单</span>
+  </a>
+</div>
+
+<footer class="footer-meta">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026 · 湖北</div>
+  <div>资料源自教育部 / 软科 2025 / 麦可思 2024 / 校友访谈</div>
+  <div style="margin-top:6px;">分数仅供参考 · 录取以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="../index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="../js/loader.js"></script>
+<script src="../js/dock.js"></script>
+<script src="../js/detail.js"></script>
+<script>window.__SLUG__ = "preschool-education";</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

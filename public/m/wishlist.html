@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>心愿单 · Major Explorer</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/dock.css">
+<style>
+  .hero { padding: 26px 24px 22px; }
+  .hero::before { content: "心愿"; font-size: clamp(10rem, 50vw, 15rem); }
+  .hero-title .punct { color: var(--accent); }
+
+  .filter-bar {
+    position: sticky; top: var(--topbar-h); z-index: 40;
+    padding: 12px 20px;
+    display: flex; gap: 8px; overflow-x: auto;
+    background: rgba(245,242,234,0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .wishes { padding: 16px 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .wish {
+    position: relative;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    border-left: 4px solid var(--theme, var(--accent));
+  }
+  .wish::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(
+      ellipse 65% 100% at 100% 50%,
+      var(--theme, var(--accent)) 0%,
+      transparent 65%
+    );
+    opacity: 0.06; pointer-events: none;
+  }
+  .wish > * { position: relative; z-index: 1; }
+
+  .wish-head {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 12px; padding: 14px 14px 8px;
+    align-items: baseline;
+  }
+  .wish-cat {
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 600;
+    color: var(--theme, var(--accent));
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .wish-cat .star { color: var(--accent); margin-left: 4px; }
+  .wish-title {
+    font-family: var(--font-heading);
+    font-size: 1.4375rem; font-weight: 700; color: var(--fg);
+    line-height: 1.05; letter-spacing: -0.02em;
+  }
+  .wish-x {
+    color: var(--muted-2); font-size: 0.875rem;
+    padding: 4px 6px; cursor: pointer;
+  }
+  .wish-x:hover { color: var(--accent); }
+
+  .wish-quote {
+    padding: 0 14px 14px;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 0.9375rem; line-height: 1.5;
+    color: var(--fg-soft);
+    border-left: 2px solid var(--theme, var(--accent));
+    margin: 0 14px 14px;
+    padding-left: 12px;
+  }
+  .wish-quote.empty {
+    color: var(--muted-2); font-style: normal; font-size: 0.8125rem;
+  }
+
+  .empty {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-family: var(--font-body);
+  }
+  .empty h3 {
+    font-family: var(--font-heading); font-size: 1.25rem; color: var(--fg);
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="top-left">
+    <div class="wordmark">
+      <span class="dot"></span>
+      <span class="stack">
+        <span class="l1">Major</span>
+        <span class="l2">Explorer</span>
+      </span>
+    </div>
+  </div>
+  <div class="top-right">
+    <a class="search-icon" href="search.html" aria-label="搜索">⌕</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow"><span class="rule"></span>心愿单</div>
+  <h1 class="hero-title">想学的<span class="punct">。</span></h1>
+</section>
+
+<div class="filter-bar" id="filter-bar">
+  <button class="filter on" data-cat="all">全部</button>
+  <button class="filter" data-cat="国家战略">国家战略</button>
+  <button class="filter" data-cat="医学">医学</button>
+  <button class="filter" data-cat="工科">工科</button>
+  <button class="filter" data-cat="管理">管理</button>
+</div>
+
+<div class="wishes" id="wishes">
+  <div class="empty">
+    <h3>还没有收藏</h3>
+    <div>进精品详情点 ♥, 收藏的专业会出现在这里.</div>
+  </div>
+</div>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab active" data-tab="wishlist" href="wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="js/loader.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/wishlist.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

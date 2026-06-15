@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4A4564">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
+<title>经济学 · Major Explorer</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/topbar.css">
+<link rel="stylesheet" href="../css/dock.css">
+<style>
+  :root {
+    --theme:       #4A4564;
+    --theme-deep:  #2E2945;
+    --theme-soft:  #ECEAF2;
+    --theme-gold:  #B5934A;
+  }
+  .topbar.is-detail {
+    grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+  }
+  .top-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    font-family: var(--font-heading); font-size: 1.125rem;
+    color: var(--fg-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-crumb {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+    text-align: center;
+    grid-column: 2 / 6;
+    opacity: 0; transition: opacity 200ms;
+    pointer-events: none;
+  }
+  .topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+  .top-btn .heart-on { color: var(--accent); }
+  .top-btn .heart-off { color: var(--muted-2); }
+
+  .hero {
+    position: relative;
+    padding: 32px 24px 36px;
+    background:
+      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%),
+      linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #F5F2EA;
+    overflow: hidden;
+    border-bottom: 0;
+  }
+  .hero::before {
+    content: "经";
+    position: absolute;
+    right: -8%; bottom: -8%;
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 50vw, 16rem);
+    font-weight: 700; line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(245,242,234,0.06);
+    pointer-events: none; user-select: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-crumb {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--theme-gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-crumb .rule { flex: 0 0 24px; height: 1px; background: var(--theme-gold); }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-weight: 700; line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #FBF8F1;
+  }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: rgba(245,242,234,0.72);
+    margin: 14px 0 0; letter-spacing: 0.04em;
+  }
+  .hero-sub .dot { color: var(--theme-gold); margin: 0 8px; }
+  .hero-tagline {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem; line-height: 1.55;
+    color: rgba(245,242,234,0.92);
+    margin: 22px 0 0; font-weight: 400;
+    border-left: 2px solid var(--theme-gold);
+    padding-left: 12px;
+  }
+
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat-cell {
+    background: var(--bg-soft);
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .stat-cell .n {
+    font-family: var(--font-num);
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--theme);
+    line-height: 1; letter-spacing: -0.02em;
+    display: block;
+  }
+  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .l {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 6px; display: block;
+  }
+
+  .tags-strip {
+    padding: 18px 20px 12px;
+    background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    padding: 4px 9px;
+    background: var(--theme-soft);
+    color: var(--theme-deep);
+    border-radius: 2px;
+  }
+
+  .article { padding: 8px 24px 24px; background: var(--bg); }
+  .art-sec {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .art-sec:last-of-type { border-bottom: 0; }
+  .art-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .art-num {
+    font-family: var(--font-num);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--theme);
+    letter-spacing: 0.18em;
+    border: 1px solid var(--theme);
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .art-title {
+    font-family: var(--font-heading);
+    font-size: 1.625rem; font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .art-body p {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--fg-soft);
+    margin: 0 0 16px;
+  }
+  .art-body p strong { color: var(--fg); font-weight: 600; }
+  .art-body p em {
+    color: var(--theme); font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 60%);
+    padding: 0 2px;
+  }
+
+  .pull {
+    margin: 28px -8px;
+    padding: 22px 18px 22px 24px;
+    border-left: 3px solid var(--theme-gold);
+    background: var(--bg-paper);
+    font-family: var(--font-heading);
+    font-size: 1.25rem; line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull .by {
+    display: block; margin-top: 12px;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .course-list {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .course-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .course-yr {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.08em;
+  }
+  .course-names {
+    font-family: var(--font-body); font-size: 0.9375rem; color: var(--fg); line-height: 1.5;
+  }
+  .course-tag {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .sal-rows { margin-top: 4px; }
+  .sal-row {
+    display: grid; grid-template-columns: 90px 1fr 60px;
+    gap: 10px; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sal-row:last-child { border-bottom: 0; }
+  .sal-l { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .sal-bar {
+    height: 6px; border-radius: 1px;
+    background: var(--theme-soft);
+    overflow: hidden; position: relative;
+  }
+  .sal-bar::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 50%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-v {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  .risk {
+    margin: 18px 0;
+    padding: 14px 16px 14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    background: rgba(184,50,58,0.04);
+    border-left: 4px solid var(--accent);
+  }
+  .risk-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-body {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg-soft);
+  }
+  .risk-body strong { color: var(--accent-ink); }
+
+  .uni-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .uni-rank {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .uni-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .uni-name .badge {
+    font-family: var(--font-num); font-size: 0.625rem;
+    background: var(--theme); color: #FBF8F1;
+    padding: 1px 5px; border-radius: 2px;
+    margin-left: 6px; vertical-align: 1px;
+  }
+  .uni-score {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme); text-align: right;
+  }
+
+  .footer-cta {
+    margin: 32px 16px 0;
+    padding: 24px 20px;
+    background: linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #FBF8F1;
+    border-radius: 4px;
+  }
+  .footer-cta .lead {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--theme-gold);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-cta h3 {
+    font-family: var(--font-heading); font-size: 1.375rem;
+    font-weight: 700; line-height: 1.2;
+    margin: 0 0 8px; color: #FBF8F1;
+  }
+  .footer-cta p {
+    font-family: var(--font-body); font-size: 0.9375rem; line-height: 1.55;
+    color: rgba(245,242,234,0.85);
+    margin: 0 0 16px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--theme-gold); color: var(--theme-deep);
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; border-radius: 999px; min-height: 44px;
+  }
+  .cta-btn .arrow { font-family: var(--font-num); font-weight: 400; }
+  .cta-btn.on .ico { color: var(--accent); }
+
+  .footer-meta {
+    margin-top: 28px;
+    padding: 20px 24px 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  }
+  .footer-meta .mark {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .footer-meta .mark .dot { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topbar is-detail">
+  <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
+  <div class="top-crumb">经济学 · 020201</div>
+  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
+    <span id="heart-ico" class="heart-off">♡</span>
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-crumb"><span class="rule"></span>经济学 · 经济学类 · 020201</div>
+  <h1 class="hero-title">经济学</h1>
+  <div class="hero-sub">经济学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">—— 经济学 是一门值得深入探索的学科</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><span class="n">8<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
+  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+</div>
+
+<div class="tags-strip" id="tags-strip">
+  <span class="tag">理论扎实</span>
+<span class="tag">万金油</span>
+<span class="tag">名校导向</span>
+<span class="tag">读研率高</span>
+<span class="tag">体制内吃香</span>
+<span class="tag">政策敏感</span>
+</div>
+
+<article class="article" id="article">
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">一</span>
+        <h2 class="art-title">这个专业到底学什么</h2>
+      </div>
+      <div class="art-body">
+        <p>{'foundations': ['微观经济学 (范里安/曼昆)', '宏观经济学 (曼昆/多恩布什)', '高等数学 B (经管)', '线性代数', '概率论与数理统计', '政治经济学 (资本论)', '会计学原理'], 'directions': [{'name': '宏观与政策评估实证专题', 'desc': '北大国发院特色, 偏宏观建模与政策影响评估, 适合走选调与政策研究 (8 学分)'}, {'name': '政治经济学与国民经济学', 'desc': '人大经济学院特色, 马工程体系, 体制内资源最强 (6 学分)'}, {'name': '高级计量与行为实验经济', 'desc': '清华经管特色, 数理 + 行为实验顶尖, 出国读 PhD 友好 (6 学分)'}, {'name': '西方经济学与数量方法', 'desc': '复旦经济学院特色, 数量方法扎实, 校友密度高 (6 学分)'}, {'name': '数量经济与金融计量', 'desc': '上财经济学院特色, 大数据经济分析, 就业导向明确 (6 学分)'}], 'skills': ['Stata/Python/R 实证分析', '计量建模与因果推断', '博弈论与策略思维', '宏观政策评估', '财经数据可视化', '学术论文写作 (实证范式)'], 'bonus': '数学要求中等 (经管版高数 B 即可), 重点是「用模型解释现实」的训练, 不是背公式。建议大一下开始跟导师做课题, 大三必须有 1 篇实证论文雏形。'}</p>
+        <p>经济学用模型解释资源配置与政策影响, 课程比金融更理论, 出口比金融更广。路宽但慢热, 想赚快钱选金融, 想路宽加后劲大选经济, 想体制内高分上岸选经济更对口。</p>
+      </div>
+      <div class="risk">
+        <div class="risk-head">⚠ 读之前先想清</div>
+        <div class="risk-body">
+          <strong>适合谁。</strong>{'yes': ['对「为什么」好奇, 想解释房价/通胀/贫富差距', '能耐住博弈论与计量的公式推导', '接受「本科学经济 ≠ 直接高薪」的慢热路径', '把读研/选调/咨询/出国当主路径', '对体制内与市场化两条出口都持开放'], 'no': ['数学恐惧 + 只想本科就业 + 只想赚快钱', '抱着「万金油 = 啥都能干」幻想, 不愿深耕方向', '把经济学当逃避数学的避风港']}
+        </div>
+      </div>
+      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '经济学等于金融学', 'reality': '经济学偏理论建模, 金融学偏市场应用, 课程差约 30%, 出口差约 20%。想直接做投资就选金融, 想打理论基础再分流才选经济。'}<br>• {'myth': '本科经济能直接进投行', 'reality': '简历被金融/会计硕士碾压已成常态, 必须读研 + 3 段以上券商/四大实习 + CFA 一级, 否则只能去银行/四大/审计起跑线。'}<br>• {'myth': '经济学万金油就能啥都干', 'reality': '万金油 = 啥都「需要再学一点」, 没有核心壁垒。互联网 BA/咨询/投研都要求再加一套技能, 不主动补等于零壁垒。'}<br>• {'myth': '选经济学能逃开数学', 'reality': '大三计量 + 高级宏微观 + 博弈论一样会卡人, 数学弱的同学要么硬补, 要么大一下就分流去偏文的方向。'}<br>• {'myth': '经济学只是市场化专业', 'reality': '经济类是「选调之王」, 约 80% 体制内岗位明确招经济学。35 岁副处 + 户口 + 医疗教育的综合待遇, 实际跑赢多数投行 VP。'}</div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">二</span>
+        <h2 class="art-title">本科 4 年学的课</h2>
+      </div>
+      <div class="art-body">
+        <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
+      </div>
+      <div class="course-list">
+        <div class="course-row">
+          <div class="course-yr">大一</div>
+          <div class="course-names">微观经济学 (范里安/曼昆) · 宏观经济学 (曼昆/多恩布什) · 高等数学 B (经管) · 线性代数 · 概率论与数理统计 · 政治经济学 (资本论) · 会计学原理</div>
+          <div class="course-tag">大一</div>
+        </div><div class="course-row">
+          <div class="course-yr">大二</div>
+          <div class="course-names">计量经济学 (伍德里奇) · 财政学 · 货币银行学 (米什金) · 博弈论与信息经济学 · 产业经济学 / 产业组织 · 发展经济学 · 国际经济学 (克鲁格曼) · 经济思想史 (古典/凯恩斯/新古典)</div>
+          <div class="course-tag">大二</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三</div>
+          <div class="course-names">北大国发院 (NSD) · 宏观 + 政策评估 + 实证专题 · 人大经济学院 · 政治经济学 + 国民经济学 (马工程) · 清华经管 · 高级计量 + 行为经济学 + 实验经济 · 复旦经济学院 · 西方经济学 + 数量方法 + 世经所 · 上财经济学院 · 数量经济 + 金融计量 + 大数据经济分析</div>
+          <div class="course-tag">大三</div>
+        </div><div class="course-row">
+          <div class="course-yr">大四</div>
+          <div class="course-names">商业银行 / 投行 / 基金实习 (8-12 周) · 金融沙盘模拟 · 证券从业 / CFA / FRM 考证辅导 · 毕业论文 + 案例研究 · 模拟交易大赛 + 量化策略实现</div>
+          <div class="course-tag">大四</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
+      </div>
+      <div class="sal-rows">
+        <div class="sal-row">
+          <div class="sal-l">10年+ (持证/资深)</div>
+          <div class="sal-bar" style="--w: 100%;"></div>
+          <div class="sal-v">45%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">5年经验</div>
+          <div class="sal-bar" style="--w: 58%;"></div>
+          <div class="sal-v">26%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">3年经验</div>
+          <div class="sal-bar" style="--w: 33%;"></div>
+          <div class="sal-v">15%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">应届生 (一线)</div>
+          <div class="sal-bar" style="--w: 18%;"></div>
+          <div class="sal-v">8%</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
+      </div>
+      <div class="pull">
+        "本科经济类 + 大厂 (字节 / 阿里) 或券商 / 银行 4 年, 18-35 万/年, 业务 + 行业研究 + 投资策略, 985 + 顶实习是门槛。"
+        <span class="by">— 某 985 高校经济学 2021 届 · 经济类 + 大厂 / 金融</span>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">五</span>
+        <h2 class="art-title">头部院校参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+      </div>
+      <div class="uni-row">
+          <div class="uni-rank">01</div>
+          <div class="uni-name">北京大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">02</div>
+          <div class="uni-name">中国人民大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">03</div>
+          <div class="uni-name">清华大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">04</div>
+          <div class="uni-name">复旦大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">05</div>
+          <div class="uni-name">上海交通大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">06</div>
+          <div class="uni-name">南京大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">浙江大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">08</div>
+          <div class="uni-name">武汉大学</div>
+          <div class="uni-score">—</div>
+        </div>
+    </section>
+</article>
+
+<div class="footer-cta">
+  <div class="lead">⌖ 决定了吗</div>
+  <h3>把经济学加入心愿单</h3>
+  <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
+  <a class="cta-btn" id="cta-btn" href="javascript:void(0)">
+    <span class="ico" id="cta-ico">♡</span>
+    <span id="cta-text">加入心愿单</span>
+  </a>
+</div>
+
+<footer class="footer-meta">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026 · 湖北</div>
+  <div>资料源自教育部 / 软科 2025 / 麦可思 2024 / 校友访谈</div>
+  <div style="margin-top:6px;">分数仅供参考 · 录取以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="../index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="../js/loader.js"></script>
+<script src="../js/dock.js"></script>
+<script src="../js/detail.js"></script>
+<script>window.__SLUG__ = "economics";</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

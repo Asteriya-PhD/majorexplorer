@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8B2424">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
+<title>麻醉学 · Major Explorer</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/topbar.css">
+<link rel="stylesheet" href="../css/dock.css">
+<style>
+  :root {
+    --theme:       #8B2424;
+    --theme-deep:  #5C1818;
+    --theme-soft:  #F0DCDE;
+    --theme-gold:  #B5934A;
+  }
+  .topbar.is-detail {
+    grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+  }
+  .top-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    font-family: var(--font-heading); font-size: 1.125rem;
+    color: var(--fg-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-crumb {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+    text-align: center;
+    grid-column: 2 / 6;
+    opacity: 0; transition: opacity 200ms;
+    pointer-events: none;
+  }
+  .topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+  .top-btn .heart-on { color: var(--accent); }
+  .top-btn .heart-off { color: var(--muted-2); }
+
+  .hero {
+    position: relative;
+    padding: 32px 24px 36px;
+    background:
+      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%),
+      linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #F5F2EA;
+    overflow: hidden;
+    border-bottom: 0;
+  }
+  .hero::before {
+    content: "麻";
+    position: absolute;
+    right: -8%; bottom: -8%;
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 50vw, 16rem);
+    font-weight: 700; line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(245,242,234,0.06);
+    pointer-events: none; user-select: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-crumb {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--theme-gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-crumb .rule { flex: 0 0 24px; height: 1px; background: var(--theme-gold); }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-weight: 700; line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #FBF8F1;
+  }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: rgba(245,242,234,0.72);
+    margin: 14px 0 0; letter-spacing: 0.04em;
+  }
+  .hero-sub .dot { color: var(--theme-gold); margin: 0 8px; }
+  .hero-tagline {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem; line-height: 1.55;
+    color: rgba(245,242,234,0.92);
+    margin: 22px 0 0; font-weight: 400;
+    border-left: 2px solid var(--theme-gold);
+    padding-left: 12px;
+  }
+
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat-cell {
+    background: var(--bg-soft);
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .stat-cell .n {
+    font-family: var(--font-num);
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--theme);
+    line-height: 1; letter-spacing: -0.02em;
+    display: block;
+  }
+  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .l {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 6px; display: block;
+  }
+
+  .tags-strip {
+    padding: 18px 20px 12px;
+    background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    padding: 4px 9px;
+    background: var(--theme-soft);
+    color: var(--theme-deep);
+    border-radius: 2px;
+  }
+
+  .article { padding: 8px 24px 24px; background: var(--bg); }
+  .art-sec {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .art-sec:last-of-type { border-bottom: 0; }
+  .art-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .art-num {
+    font-family: var(--font-num);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--theme);
+    letter-spacing: 0.18em;
+    border: 1px solid var(--theme);
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .art-title {
+    font-family: var(--font-heading);
+    font-size: 1.625rem; font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .art-body p {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--fg-soft);
+    margin: 0 0 16px;
+  }
+  .art-body p strong { color: var(--fg); font-weight: 600; }
+  .art-body p em {
+    color: var(--theme); font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 60%);
+    padding: 0 2px;
+  }
+
+  .pull {
+    margin: 28px -8px;
+    padding: 22px 18px 22px 24px;
+    border-left: 3px solid var(--theme-gold);
+    background: var(--bg-paper);
+    font-family: var(--font-heading);
+    font-size: 1.25rem; line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull .by {
+    display: block; margin-top: 12px;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .course-list {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .course-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .course-yr {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.08em;
+  }
+  .course-names {
+    font-family: var(--font-body); font-size: 0.9375rem; color: var(--fg); line-height: 1.5;
+  }
+  .course-tag {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .sal-rows { margin-top: 4px; }
+  .sal-row {
+    display: grid; grid-template-columns: 90px 1fr 60px;
+    gap: 10px; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sal-row:last-child { border-bottom: 0; }
+  .sal-l { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .sal-bar {
+    height: 6px; border-radius: 1px;
+    background: var(--theme-soft);
+    overflow: hidden; position: relative;
+  }
+  .sal-bar::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 50%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-v {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  .risk {
+    margin: 18px 0;
+    padding: 14px 16px 14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    background: rgba(184,50,58,0.04);
+    border-left: 4px solid var(--accent);
+  }
+  .risk-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-body {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg-soft);
+  }
+  .risk-body strong { color: var(--accent-ink); }
+
+  .uni-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .uni-rank {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .uni-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .uni-name .badge {
+    font-family: var(--font-num); font-size: 0.625rem;
+    background: var(--theme); color: #FBF8F1;
+    padding: 1px 5px; border-radius: 2px;
+    margin-left: 6px; vertical-align: 1px;
+  }
+  .uni-score {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme); text-align: right;
+  }
+
+  .footer-cta {
+    margin: 32px 16px 0;
+    padding: 24px 20px;
+    background: linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #FBF8F1;
+    border-radius: 4px;
+  }
+  .footer-cta .lead {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--theme-gold);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-cta h3 {
+    font-family: var(--font-heading); font-size: 1.375rem;
+    font-weight: 700; line-height: 1.2;
+    margin: 0 0 8px; color: #FBF8F1;
+  }
+  .footer-cta p {
+    font-family: var(--font-body); font-size: 0.9375rem; line-height: 1.55;
+    color: rgba(245,242,234,0.85);
+    margin: 0 0 16px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--theme-gold); color: var(--theme-deep);
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; border-radius: 999px; min-height: 44px;
+  }
+  .cta-btn .arrow { font-family: var(--font-num); font-weight: 400; }
+  .cta-btn.on .ico { color: var(--accent); }
+
+  .footer-meta {
+    margin-top: 28px;
+    padding: 20px 24px 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  }
+  .footer-meta .mark {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .footer-meta .mark .dot { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topbar is-detail">
+  <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
+  <div class="top-crumb">麻醉学 · 101002</div>
+  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
+    <span id="heart-ico" class="heart-off">♡</span>
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-crumb"><span class="rule"></span>医学 · 临床医学类 · 101002</div>
+  <h1 class="hero-title">麻醉学</h1>
+  <div class="hero-sub">医学学士<span class="dot">·</span>5 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">—— 麻醉学 是一门值得深入探索的学科</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><span class="n">6<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
+  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+</div>
+
+<div class="tags-strip" id="tags-strip">
+  <span class="tag">5年制</span>
+<span class="tag">全国紧缺</span>
+<span class="tag">夜班多</span>
+<span class="tag">手术台幕后</span>
+<span class="tag">读研率高</span>
+<span class="tag">无痛守护者</span>
+</div>
+
+<article class="article" id="article">
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">一</span>
+        <h2 class="art-title">这个专业到底学什么</h2>
+      </div>
+      <div class="art-body">
+        <p>{'foundations': ['系统解剖学', '生理学', '生物化学', '病理学', '病理生理学', '药理学', '组织学与胚胎学'], 'directions': [{'name': '麻醉与围术期医学', 'desc': '华西 特色方向, 西南第一, 覆盖术前评估到术中麻醉再到术后镇痛的全流程管理。'}, {'name': '麻醉学 5+3 一体化', 'desc': '协和 特色方向, 专硕与规培合一培养, 八年路径最规范, 规培证与学位同步拿。'}, {'name': '麻醉与疼痛医学', 'desc': '湘雅 特色方向, 慢性疼痛亚专科全国领先, 毕业后可直接对接疼痛门诊岗位。'}, {'name': '麻醉与体外循环', 'desc': '中山 特色方向, 心脏麻醉专修, 主攻体外循环灌注与心脏手术术中管理。'}, {'name': '麻醉与重症医学', 'desc': '同济 特色方向, ICU 双修培养, 适合想兼顾重症监护与麻醉的复合型医生。'}], 'skills': ['麻醉深度调节与术中生命体征监护', '气管插管与动静脉穿刺置管', '麻醉机与多功能监护仪操作', '急危重症抢救与心肺复苏', '术后镇痛与慢性疼痛诊疗', '体外循环灌注技术'], 'bonus': '政策端, 国家卫健委明确将麻醉列为紧缺专业, 三甲医院常年招聘开放, 规培合格后下沉地级市可快速拿编制。趋势上, 麻醉医生正从「幕后」走向「围术期医学」主导者, 亚专科岗位边界持续扩展。'}</p>
+        <p>手术台上的「幕后指挥官」。全国每万人口麻醉医生仅 0.6 人 (欧美 2.5+), 缺口 30 万, 就业近乎 100%。但 5+3+X 起步 + 每台手术 1-6 小时全程紧绷, 不是「轻松好就业」, 而是「紧缺到透支」。</p>
+      </div>
+      <div class="risk">
+        <div class="risk-head">⚠ 读之前先想清</div>
+        <div class="risk-body">
+          <strong>适合谁。</strong>{'yes': ['能扛夜班, 凌晨 3 点急诊手术是常态', '不晕血不晕针, 天天穿刺插管', '反应快, 术中突发低血压 5 秒内给药', '心理强, 能扛术中死亡的精神冲击', '不追求站在台前, 接受 99% 时间背对患者'], 'no': ['晕血晕针手抖, 实习转专业要 3 年', '身体弱扛不住长时间站立与夜班', '想早工作但 5+3+X 是 8-10 年长跑']}
+        </div>
+      </div>
+      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '以为麻醉就是「打一针就走」', 'reality': '实际全程监护, 比外科还累。从诱导到拔管全程盯监护仪, 心率血压血氧麻醉深度等七八个数据同时看, 一到六小时不喝水不上厕所是常态, 中间突发情况要 5 秒内给药处理。'}<br>• {'myth': '以为好就业就能躺', 'reality': '紧缺是因「累 + 钱少 + 猝死率高」, 不是真轻松。全国缺口 30 万的背后, 是 5 个人干 7 个人的活, 节假日手术不休息, 麻醉医生猝死率在医生群体排前列。'}<br>• {'myth': '晕血晕针手抖没关系', 'reality': '实习时才发现, 转专业要 3 年。麻醉天天穿刺插管, 手抖或晕血基本干不了这行, 大三才发现自己不行, 沉没成本极高, 转方向要重修临床课程并从头实习, 代价巨大。'}<br>• {'myth': '以为 5 年本科就能早工作', 'reality': '麻醉是临床医学类, 本科 5 年 + 规培 3 年 + 专培 2-4 年, 实际 5+3+X 是 8-10 年长跑, 28-30 岁才能真正独立上台承担主麻职责。'}<br>• {'myth': '女生慎选是因为性别歧视', 'reality': '手术室辐射 + 长时间站立 + 高频夜班对女性身体负担大, 业内女生约 35-40%, 比例确实比临床低, 这是客观生理差异而非招生歧视, 女生选前需想清楚长期夜班的体力代价。'}</div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">二</span>
+        <h2 class="art-title">本科 4 年学的课</h2>
+      </div>
+      <div class="art-body">
+        <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
+      </div>
+      <div class="course-list">
+        <div class="course-row">
+          <div class="course-yr">大一</div>
+          <div class="course-names">高等数学 C (医学版) · 大学英语 · 思政系列 · 医学伦理学 · 医学心理学 · 医学统计学</div>
+          <div class="course-tag">大一</div>
+        </div><div class="course-row">
+          <div class="course-yr">大二</div>
+          <div class="course-names">系统解剖学 (挂科率 30%) · 组织学与胚胎学 · 生理学 (麻醉核心基础) · 生物化学 · 病理学 · 病理生理学 · 药理学 (500+ 种药, 麻醉用药是重点) · 诊断学 (含检体 + 影像) · 内科学 (麻醉前评估必修) · 外科学 (麻醉配合必修) · 临床麻醉学 (核心) · 麻醉药理学 (核心) · 麻醉设备学 (核心) · 麻醉解剖学 (核心) · 疼痛诊疗学 (核心) · 危重病医学 / ICU (核心)</div>
+          <div class="course-tag">大二</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三</div>
+          <div class="course-names">华西 · 麻醉 + 围术期医学 (西南第一) · 协和 · 麻醉学 5+3 一体化 (规培合一) · 湘雅 · 麻醉 + 疼痛医学 (亚专科) · 中山 · 麻醉 + 体外循环 (心脏麻醉方向) · 同济 · 麻醉 + 重症医学 (ICU 双修)</div>
+          <div class="course-tag">大三</div>
+        </div><div class="course-row">
+          <div class="course-yr">大四</div>
+          <div class="course-names">临床实习 (48 周轮转: 内 / 外 / 妇 / 儿 / 急诊) · 住院医师规范化培训 (规培) · 社区 / 基层医院见习 · OSCE 客观结构化临床考试 · 毕业考核 + 论文答辩</div>
+          <div class="course-tag">大四</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
+      </div>
+      <div class="sal-rows">
+        <div class="sal-row">
+          <div class="sal-l">10年+ (持证/资深)</div>
+          <div class="sal-bar" style="--w: 100%;"></div>
+          <div class="sal-v">32%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">5年经验</div>
+          <div class="sal-bar" style="--w: 56%;"></div>
+          <div class="sal-v">18%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">3年经验</div>
+          <div class="sal-bar" style="--w: 34%;"></div>
+          <div class="sal-v">11%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">应届生 (一线)</div>
+          <div class="sal-bar" style="--w: 19%;"></div>
+          <div class="sal-v">6%</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
+      </div>
+      <div class="pull">
+        "本科医学 + 规培 + 三甲 / 二甲医院 5 年, 8-18 万 + 编, 临床 + 值班 + 论文, 编制 + 5+3 一体化是稳。"
+        <span class="by">— 某 985 医学院 2020 届 · 公立医院 (主治) · 5 年</span>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">五</span>
+        <h2 class="art-title">头部院校参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+      </div>
+      <div class="uni-row">
+          <div class="uni-rank">01</div>
+          <div class="uni-name">四川大学华西医学中心</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">02</div>
+          <div class="uni-name">中南大学湘雅医学院</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">03</div>
+          <div class="uni-name">北京协和医学院</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">04</div>
+          <div class="uni-name">上海交通大学医学院</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">05</div>
+          <div class="uni-name">复旦大学上海医学院</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">06</div>
+          <div class="uni-name">中山大学中山医学院</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">华中科技大学同济医学院</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">08</div>
+          <div class="uni-name">哈尔滨医科大学</div>
+          <div class="uni-score">—</div>
+        </div>
+    </section>
+</article>
+
+<div class="footer-cta">
+  <div class="lead">⌖ 决定了吗</div>
+  <h3>把麻醉学加入心愿单</h3>
+  <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
+  <a class="cta-btn" id="cta-btn" href="javascript:void(0)">
+    <span class="ico" id="cta-ico">♡</span>
+    <span id="cta-text">加入心愿单</span>
+  </a>
+</div>
+
+<footer class="footer-meta">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026 · 湖北</div>
+  <div>资料源自教育部 / 软科 2025 / 麦可思 2024 / 校友访谈</div>
+  <div style="margin-top:6px;">分数仅供参考 · 录取以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="../index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="../js/loader.js"></script>
+<script src="../js/dock.js"></script>
+<script src="../js/detail.js"></script>
+<script>window.__SLUG__ = "anesthesiology";</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

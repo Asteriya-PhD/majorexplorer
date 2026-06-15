@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E5E72">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
+<title>土木工程 · Major Explorer</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/topbar.css">
+<link rel="stylesheet" href="../css/dock.css">
+<style>
+  :root {
+    --theme:       #1E5E72;
+    --theme-deep:  #0F3D4D;
+    --theme-soft:  #DCE8F0;
+    --theme-gold:  #B5934A;
+  }
+  .topbar.is-detail {
+    grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+  }
+  .top-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    font-family: var(--font-heading); font-size: 1.125rem;
+    color: var(--fg-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-crumb {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+    text-align: center;
+    grid-column: 2 / 6;
+    opacity: 0; transition: opacity 200ms;
+    pointer-events: none;
+  }
+  .topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+  .top-btn .heart-on { color: var(--accent); }
+  .top-btn .heart-off { color: var(--muted-2); }
+
+  .hero {
+    position: relative;
+    padding: 32px 24px 36px;
+    background:
+      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%),
+      linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #F5F2EA;
+    overflow: hidden;
+    border-bottom: 0;
+  }
+  .hero::before {
+    content: "土";
+    position: absolute;
+    right: -8%; bottom: -8%;
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 50vw, 16rem);
+    font-weight: 700; line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(245,242,234,0.06);
+    pointer-events: none; user-select: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-crumb {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--theme-gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-crumb .rule { flex: 0 0 24px; height: 1px; background: var(--theme-gold); }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-weight: 700; line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #FBF8F1;
+  }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: rgba(245,242,234,0.72);
+    margin: 14px 0 0; letter-spacing: 0.04em;
+  }
+  .hero-sub .dot { color: var(--theme-gold); margin: 0 8px; }
+  .hero-tagline {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem; line-height: 1.55;
+    color: rgba(245,242,234,0.92);
+    margin: 22px 0 0; font-weight: 400;
+    border-left: 2px solid var(--theme-gold);
+    padding-left: 12px;
+  }
+
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat-cell {
+    background: var(--bg-soft);
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .stat-cell .n {
+    font-family: var(--font-num);
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--theme);
+    line-height: 1; letter-spacing: -0.02em;
+    display: block;
+  }
+  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .l {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 6px; display: block;
+  }
+
+  .tags-strip {
+    padding: 18px 20px 12px;
+    background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    padding: 4px 9px;
+    background: var(--theme-soft);
+    color: var(--theme-deep);
+    border-radius: 2px;
+  }
+
+  .article { padding: 8px 24px 24px; background: var(--bg); }
+  .art-sec {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .art-sec:last-of-type { border-bottom: 0; }
+  .art-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .art-num {
+    font-family: var(--font-num);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--theme);
+    letter-spacing: 0.18em;
+    border: 1px solid var(--theme);
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .art-title {
+    font-family: var(--font-heading);
+    font-size: 1.625rem; font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .art-body p {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--fg-soft);
+    margin: 0 0 16px;
+  }
+  .art-body p strong { color: var(--fg); font-weight: 600; }
+  .art-body p em {
+    color: var(--theme); font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 60%);
+    padding: 0 2px;
+  }
+
+  .pull {
+    margin: 28px -8px;
+    padding: 22px 18px 22px 24px;
+    border-left: 3px solid var(--theme-gold);
+    background: var(--bg-paper);
+    font-family: var(--font-heading);
+    font-size: 1.25rem; line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull .by {
+    display: block; margin-top: 12px;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .course-list {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .course-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .course-yr {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.08em;
+  }
+  .course-names {
+    font-family: var(--font-body); font-size: 0.9375rem; color: var(--fg); line-height: 1.5;
+  }
+  .course-tag {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .sal-rows { margin-top: 4px; }
+  .sal-row {
+    display: grid; grid-template-columns: 90px 1fr 60px;
+    gap: 10px; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sal-row:last-child { border-bottom: 0; }
+  .sal-l { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .sal-bar {
+    height: 6px; border-radius: 1px;
+    background: var(--theme-soft);
+    overflow: hidden; position: relative;
+  }
+  .sal-bar::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 50%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-v {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  .risk {
+    margin: 18px 0;
+    padding: 14px 16px 14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    background: rgba(184,50,58,0.04);
+    border-left: 4px solid var(--accent);
+  }
+  .risk-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-body {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg-soft);
+  }
+  .risk-body strong { color: var(--accent-ink); }
+
+  .uni-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .uni-rank {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .uni-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .uni-name .badge {
+    font-family: var(--font-num); font-size: 0.625rem;
+    background: var(--theme); color: #FBF8F1;
+    padding: 1px 5px; border-radius: 2px;
+    margin-left: 6px; vertical-align: 1px;
+  }
+  .uni-score {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme); text-align: right;
+  }
+
+  .footer-cta {
+    margin: 32px 16px 0;
+    padding: 24px 20px;
+    background: linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #FBF8F1;
+    border-radius: 4px;
+  }
+  .footer-cta .lead {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--theme-gold);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-cta h3 {
+    font-family: var(--font-heading); font-size: 1.375rem;
+    font-weight: 700; line-height: 1.2;
+    margin: 0 0 8px; color: #FBF8F1;
+  }
+  .footer-cta p {
+    font-family: var(--font-body); font-size: 0.9375rem; line-height: 1.55;
+    color: rgba(245,242,234,0.85);
+    margin: 0 0 16px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--theme-gold); color: var(--theme-deep);
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; border-radius: 999px; min-height: 44px;
+  }
+  .cta-btn .arrow { font-family: var(--font-num); font-weight: 400; }
+  .cta-btn.on .ico { color: var(--accent); }
+
+  .footer-meta {
+    margin-top: 28px;
+    padding: 20px 24px 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  }
+  .footer-meta .mark {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .footer-meta .mark .dot { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topbar is-detail">
+  <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
+  <div class="top-crumb">土木工程 · 080810</div>
+  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
+    <span id="heart-ico" class="heart-off">♡</span>
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-crumb"><span class="rule"></span>工学 · 土木类 · 080810</div>
+  <h1 class="hero-title">土木工程</h1>
+  <div class="hero-sub">工学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">—— 土木工程 是一门值得深入探索的学科</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><span class="n">4<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
+  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+</div>
+
+<div class="tags-strip" id="tags-strip">
+  <span class="tag">基建支柱</span>
+<span class="tag">工地实践</span>
+<span class="tag">考证导向</span>
+<span class="tag">就业面广</span>
+<span class="tag">行业波动</span>
+</div>
+
+<article class="article" id="article">
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">一</span>
+        <h2 class="art-title">这个专业到底学什么</h2>
+      </div>
+      <div class="art-body">
+        <p>{'foundations': ['理论力学', '材料力学', '结构力学', '土木工程材料', '工程测量', '混凝土结构设计原理', '钢结构设计原理'], 'directions': [{'name': '建筑工程', 'desc': '同济大学 东南大学 清华 大师级方向, 工业与民用建筑结构设计施工'}, {'name': '桥梁工程', 'desc': '同济大学 桥梁工程与桥梁抗震, 大跨桥梁与桥隧设计'}, {'name': '道路与铁道工程', 'desc': '西南交大 铁道工程与隧道地下工程, 交通土建王牌方向'}, {'name': '岩土与地下工程', 'desc': '河海大学 哈工大 港口航道与寒区施工特色方向'}, {'name': '水利水电工程', 'desc': '河海大学 港口航道工程与水工结构交叉方向'}], 'skills': ['CAD 与 BIM 建模 (Revit / Tekla)', '水准仪 全站仪 GPS 工程测量', 'PKPM 结构设计软件应用', '施工组织设计 + 工程造价', '混凝土 钢结构施工图识图', '工程项目管理与招投标实务'], 'bonus': '中国基建规模全球第一, 就业率常年 90%+。但行业正从「大干快上」转向「存量提质」, 信息化反而推高了 BIM 与智慧工地人才的需求, 转型期对复合型工程师反而是机会。'}</p>
+        <p>土木工程不是「搬砖」, 是力学 + 材料 + 结构 + 施工管理的系统学科。中国基建规模全球第一, 就业率常年 90%+, 但行业正从「大干快上」转向「存量提质」。适合能吃苦、能考证、不排斥工地环境的人。</p>
+      </div>
+      <div class="risk">
+        <div class="risk-head">⚠ 读之前先想清</div>
+        <div class="risk-body">
+          <strong>适合谁。</strong>{'yes': ['能抗工地物理强度, 接受 6 点起床打灰到凌晨的节奏', '能接受远离市区 全年无休或单休的封闭项目生活', '数学物理基础扎实, 学得动力学三座大山', '愿意走考证路线 二建 → 一建 → 注结注岩', '能协调施工队伍 能喝酒能跟工人打交道'], 'no': ['追求光鲜写字楼生活, 排斥工地环境的人', '受不了长期离家 板房宿舍 偏远项目的人', '数学物理薄弱, 学不动理论力学结构力学的人']}
+        </div>
+      </div>
+      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '土木工程是高大上的设计工作', 'reality': '实际上 70% 以上毕业生去了施工单位, 设计院门槛越来越高 (985/211 硕起步), 本科生大多在工地一线做施工员测量员, 想进设计院基本要读研才能敲开省院大门。'}<br>• {'myth': '土木越老越吃香 经验最重要', 'reality': '半对半错。经验值钱, 但行业下行期, 35 岁没有一建证书 + 项目经理经历的容易被优化。考证 + 业绩双线并行才能稳住, 单靠熬年头已经不够, 行业不买老资历的账了。'}<br>• {'myth': '中建三八局年薪 20 万', 'reality': '只有名校 + 好项目才能到, 大部分普通本科应届起薪 5-8 万/年 (中建普通局 6-10 万), 且年终奖正在被取消。别再被十年前的薪资帖子误导, 应届能拿 20 万的凤毛麟角。'}<br>• {'myth': '考个一建就能挂靠赚钱', 'reality': '挂靠违法, 社保联网后已无操作空间。一建必须人证合一到项目, 意味着你人得在工地现场驻场, 考下来也很难脱手变现。务实看待证书价值, 切勿相信培训机构挂靠赚钱的承诺。'}<br>• {'myth': '土木专业好考公', 'reality': '岗位数量确实不少 (住建/交通/自然资源), 但竞争激烈程度不低, 且很多岗位要求 2 年以上基层工作经验, 应届能直接报的岗位相对有限, 别把考公想得太轻松太稳。'}</div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">二</span>
+        <h2 class="art-title">本科 4 年学的课</h2>
+      </div>
+      <div class="art-body">
+        <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
+      </div>
+      <div class="course-list">
+        <div class="course-row">
+          <div class="course-yr">大一</div>
+          <div class="course-names">高等数学 (微积分 + 线性代数 + 概率统计) · 大学物理 (力学 + 电磁学 + 实验) · 理论力学 (静力学 + 运动学 + 动力学) · 材料力学 (拉压弯剪扭 + 应力状态 + 组合变形) · 结构力学 (静定/超静定 + 矩阵位移法 + 动力基础) · 画法几何与工程制图 (CAD + 识图) · 大学英语 + 思政类 + 体育</div>
+          <div class="course-tag">大一</div>
+        </div><div class="course-row">
+          <div class="course-yr">大二</div>
+          <div class="course-names">土木工程材料 (混凝土/钢材/沥青) · 工程测量 (水准仪/全站仪/GPS) · 混凝土结构设计原理 (正截面/斜截面/裂缝) · 钢结构设计原理 (连接/稳定/疲劳) · 土力学与地基基础 (渗流/沉降/承载力) · 房屋建筑学 (建筑构造 + 建筑设计概论) · 土木工程施工技术 (土方/模板/钢筋/混凝土) · 工程项目管理 (进度/成本/合同/安全)</div>
+          <div class="course-tag">大二</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三</div>
+          <div class="course-names">同济大学 · 桥梁工程 + 桥梁抗震 (桥梁方向) · 东南大学 · 大跨空间结构 + 预应力混凝土 (结构方向) · 哈工大 · 寒区混凝土 + 冬期施工技术 (寒区土木) · 河海大学 · 港口航道工程 + 水工结构 (水利土木) · 西南交大 · 铁道工程 + 隧道与地下工程 (交通方向)</div>
+          <div class="course-tag">大三</div>
+        </div><div class="course-row">
+          <div class="course-yr">大四</div>
+          <div class="course-names">专业实习 (8-12 周) · 毕业论文 / 毕业设计 · 学科竞赛 + 创新创业实践 · 案例研习 + 项目实战 · 社会实践 + 志愿服务</div>
+          <div class="course-tag">大四</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
+      </div>
+      <div class="sal-rows">
+        <div class="sal-row">
+          <div class="sal-l">高管/区域总 (10+ 年)</div>
+          <div class="sal-bar" style="--w: 100%;"></div>
+          <div class="sal-v">30%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">10年+ (持证/资深)</div>
+          <div class="sal-bar" style="--w: 67%;"></div>
+          <div class="sal-v">20%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">3年经验</div>
+          <div class="sal-bar" style="--w: 50%;"></div>
+          <div class="sal-v">15%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">5年经验</div>
+          <div class="sal-bar" style="--w: 33%;"></div>
+          <div class="sal-v">10%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">应届生 (一线)</div>
+          <div class="sal-bar" style="--w: 27%;"></div>
+          <div class="sal-v">8%</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
+      </div>
+      <div class="pull">
+        "干土木最真实的就是「工地在哪我在哪」。一年 300 天在项目上, 板房宿舍, 夏天热冬天冷, 每周单休都算恩赐。但说实话, 看着自己参与的大楼封顶, 那种成就感也挺真实的。有证 + 踏实做事, 年薪 20 万还是能拿到的。"
+        <span class="by">— 校友 (院校脱敏) · 知乎 @2025</span>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">五</span>
+        <h2 class="art-title">头部院校参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+      </div>
+      <div class="uni-row">
+          <div class="uni-rank">01</div>
+          <div class="uni-name">同济大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">02</div>
+          <div class="uni-name">东南大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">03</div>
+          <div class="uni-name">清华大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">04</div>
+          <div class="uni-name">哈尔滨工业大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">05</div>
+          <div class="uni-name">浙江大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">06</div>
+          <div class="uni-name">湖南大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">天津大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">08</div>
+          <div class="uni-name">大连理工大学</div>
+          <div class="uni-score">—</div>
+        </div>
+    </section>
+</article>
+
+<div class="footer-cta">
+  <div class="lead">⌖ 决定了吗</div>
+  <h3>把土木工程加入心愿单</h3>
+  <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
+  <a class="cta-btn" id="cta-btn" href="javascript:void(0)">
+    <span class="ico" id="cta-ico">♡</span>
+    <span id="cta-text">加入心愿单</span>
+  </a>
+</div>
+
+<footer class="footer-meta">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026 · 湖北</div>
+  <div>资料源自教育部 / 软科 2025 / 麦可思 2024 / 校友访谈</div>
+  <div style="margin-top:6px;">分数仅供参考 · 录取以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="../index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="../js/loader.js"></script>
+<script src="../js/dock.js"></script>
+<script src="../js/detail.js"></script>
+<script>window.__SLUG__ = "civil-engineering";</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

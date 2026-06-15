@@ -1,0 +1,39 @@
+/* ─────────────────────────────────────────────
+   Bottom Dock — 5 tab 固定
+   ───────────────────────────────────────────── */
+
+.dock {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  height: var(--dock-h);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  background: rgba(251,248,241,0.96);
+  backdrop-filter: saturate(140%) blur(16px);
+  -webkit-backdrop-filter: saturate(140%) blur(16px);
+  border-top: 1px solid var(--line-strong);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+.dock-tab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  color: var(--muted);
+  font-family: var(--font-num);
+  font-size: 0.625rem; font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  min-height: 56px;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.dock-tab .ico {
+  font-family: var(--font-heading);
+  font-size: 1.0625rem; line-height: 1; font-weight: 600;
+  color: inherit;
+}
+.dock-tab.active { color: var(--accent); }
+.dock-tab.active::before {
+  content: ""; position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 28px; height: 2px;
+  background: var(--accent);
+}

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E5E72">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
+<title>物理学 · Major Explorer</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/topbar.css">
+<link rel="stylesheet" href="../css/dock.css">
+<style>
+  :root {
+    --theme:       #1E5E72;
+    --theme-deep:  #0F3D4D;
+    --theme-soft:  #DCE8F0;
+    --theme-gold:  #B5934A;
+  }
+  .topbar.is-detail {
+    grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+  }
+  .top-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    font-family: var(--font-heading); font-size: 1.125rem;
+    color: var(--fg-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-crumb {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+    text-align: center;
+    grid-column: 2 / 6;
+    opacity: 0; transition: opacity 200ms;
+    pointer-events: none;
+  }
+  .topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+  .top-btn .heart-on { color: var(--accent); }
+  .top-btn .heart-off { color: var(--muted-2); }
+
+  .hero {
+    position: relative;
+    padding: 32px 24px 36px;
+    background:
+      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%),
+      linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #F5F2EA;
+    overflow: hidden;
+    border-bottom: 0;
+  }
+  .hero::before {
+    content: "物";
+    position: absolute;
+    right: -8%; bottom: -8%;
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 50vw, 16rem);
+    font-weight: 700; line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(245,242,234,0.06);
+    pointer-events: none; user-select: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-crumb {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--theme-gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-crumb .rule { flex: 0 0 24px; height: 1px; background: var(--theme-gold); }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-weight: 700; line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #FBF8F1;
+  }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: rgba(245,242,234,0.72);
+    margin: 14px 0 0; letter-spacing: 0.04em;
+  }
+  .hero-sub .dot { color: var(--theme-gold); margin: 0 8px; }
+  .hero-tagline {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem; line-height: 1.55;
+    color: rgba(245,242,234,0.92);
+    margin: 22px 0 0; font-weight: 400;
+    border-left: 2px solid var(--theme-gold);
+    padding-left: 12px;
+  }
+
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat-cell {
+    background: var(--bg-soft);
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .stat-cell .n {
+    font-family: var(--font-num);
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--theme);
+    line-height: 1; letter-spacing: -0.02em;
+    display: block;
+  }
+  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .l {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 6px; display: block;
+  }
+
+  .tags-strip {
+    padding: 18px 20px 12px;
+    background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    padding: 4px 9px;
+    background: var(--theme-soft);
+    color: var(--theme-deep);
+    border-radius: 2px;
+  }
+
+  .article { padding: 8px 24px 24px; background: var(--bg); }
+  .art-sec {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .art-sec:last-of-type { border-bottom: 0; }
+  .art-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .art-num {
+    font-family: var(--font-num);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--theme);
+    letter-spacing: 0.18em;
+    border: 1px solid var(--theme);
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .art-title {
+    font-family: var(--font-heading);
+    font-size: 1.625rem; font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .art-body p {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--fg-soft);
+    margin: 0 0 16px;
+  }
+  .art-body p strong { color: var(--fg); font-weight: 600; }
+  .art-body p em {
+    color: var(--theme); font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 60%);
+    padding: 0 2px;
+  }
+
+  .pull {
+    margin: 28px -8px;
+    padding: 22px 18px 22px 24px;
+    border-left: 3px solid var(--theme-gold);
+    background: var(--bg-paper);
+    font-family: var(--font-heading);
+    font-size: 1.25rem; line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull .by {
+    display: block; margin-top: 12px;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .course-list {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .course-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .course-yr {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.08em;
+  }
+  .course-names {
+    font-family: var(--font-body); font-size: 0.9375rem; color: var(--fg); line-height: 1.5;
+  }
+  .course-tag {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .sal-rows { margin-top: 4px; }
+  .sal-row {
+    display: grid; grid-template-columns: 90px 1fr 60px;
+    gap: 10px; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sal-row:last-child { border-bottom: 0; }
+  .sal-l { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .sal-bar {
+    height: 6px; border-radius: 1px;
+    background: var(--theme-soft);
+    overflow: hidden; position: relative;
+  }
+  .sal-bar::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 50%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-v {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  .risk {
+    margin: 18px 0;
+    padding: 14px 16px 14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    background: rgba(184,50,58,0.04);
+    border-left: 4px solid var(--accent);
+  }
+  .risk-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-body {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg-soft);
+  }
+  .risk-body strong { color: var(--accent-ink); }
+
+  .uni-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .uni-rank {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .uni-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .uni-name .badge {
+    font-family: var(--font-num); font-size: 0.625rem;
+    background: var(--theme); color: #FBF8F1;
+    padding: 1px 5px; border-radius: 2px;
+    margin-left: 6px; vertical-align: 1px;
+  }
+  .uni-score {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme); text-align: right;
+  }
+
+  .footer-cta {
+    margin: 32px 16px 0;
+    padding: 24px 20px;
+    background: linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    color: #FBF8F1;
+    border-radius: 4px;
+  }
+  .footer-cta .lead {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--theme-gold);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-cta h3 {
+    font-family: var(--font-heading); font-size: 1.375rem;
+    font-weight: 700; line-height: 1.2;
+    margin: 0 0 8px; color: #FBF8F1;
+  }
+  .footer-cta p {
+    font-family: var(--font-body); font-size: 0.9375rem; line-height: 1.55;
+    color: rgba(245,242,234,0.85);
+    margin: 0 0 16px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--theme-gold); color: var(--theme-deep);
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; border-radius: 999px; min-height: 44px;
+  }
+  .cta-btn .arrow { font-family: var(--font-num); font-weight: 400; }
+  .cta-btn.on .ico { color: var(--accent); }
+
+  .footer-meta {
+    margin-top: 28px;
+    padding: 20px 24px 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  }
+  .footer-meta .mark {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .footer-meta .mark .dot { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topbar is-detail">
+  <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
+  <div class="top-crumb">物理学 · 070702</div>
+  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
+    <span id="heart-ico" class="heart-off">♡</span>
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-crumb"><span class="rule"></span>理学 · 物理学类 · 070702</div>
+  <h1 class="hero-title">物理学</h1>
+  <div class="hero-sub">理学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">上帝说, 让牛顿去吧。于是, 一切有了光。</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><span class="n">6<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
+  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+</div>
+
+<div class="tags-strip" id="tags-strip">
+  <span class="tag">基础学科</span>
+<span class="tag">深造导向</span>
+<span class="tag">数学要求极高</span>
+<span class="tag">四大力学</span>
+<span class="tag">转工科友好</span>
+<span class="tag">科研院所</span>
+</div>
+
+<article class="article" id="article">
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">一</span>
+        <h2 class="art-title">这个专业到底学什么</h2>
+      </div>
+      <div class="art-body">
+        <p>{'foundations': ['高等数学', '线性代数', '数学物理方法', '理论力学', '电动力学', '热力学与统计物理', '量子力学'], 'directions': [{'name': '凝聚态物理', 'desc': '北大物理学院硬核派方向, 高能与天体三足鼎立, 学院路学术出口, 出国与保研路径成熟。'}, {'name': '量子信息', 'desc': '中科大特色方向, 少年班出口, 等离子体物理配套, 出国氛围最浓, 联培通道强。'}, {'name': '工程物理', 'desc': '清华工科导向, 核科学与技术为底盘, 体制内就业强势, 工程物理系出口偏央企与院所。'}, {'name': '半导体物理', 'desc': '复旦表面物理延伸, 上海微电子圈跳板, 走产业友好路线, 张江半导体产业链对接紧密。'}, {'name': '声学与超导', 'desc': '南大六朝古都特色方向, 声学全国第一, 声呐与超导双线并行, 体制内外双通道出口。'}], 'skills': ['四大力学建模与求解', 'Python 与 Matlab 计算物理', '近代物理实验设计与数据分析', '麦克斯韦方程组与场论推导', '量子力学算符与本征值计算', '固体物理能带与晶格分析'], 'bonus': '教育部「强基计划」与「基础学科拔尖学生培养计划 2.0」重点扶持学科, 中科院各所 + 顶尖高校联培通道成熟。本科阶段数学物理方法 + 四大力学是公认劝退关, 大二挂科率常年 30%+, 坚持下来才算入门。'}</p>
+        <p>物理学是所有自然科学的底层语言, 4 年训练的核心是「建模 + 推导 + 实验」三件套。前两年夯实数学物理方法地基, 后两年硬啃四大力学, 本科不是终点, 而是「准研究生」的起点。</p>
+      </div>
+      <div class="risk">
+        <div class="risk-head">⚠ 读之前先想清</div>
+        <div class="risk-body">
+          <strong>适合谁。</strong>{'yes': ['数学好, 能接受大学数学比高中难 3 倍', '喜欢问「为什么」而不是「是什么」', '愿意为一个方程推导一周', '能耐住挂科率 30%+ 的课程强度', '不抗拒继续读研读博这条长路'], 'no': ['看到微积分就想跳的人', '只想本科直接高薪就业', '数学基础薄弱想靠背诵过关']}
+        </div>
+      </div>
+      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '以为物理学 = 高中物理的延伸', 'reality': '实际是数学密集型学科, 复变函数、线性代数、数理方法贯穿全程, 大二挂科率常年 30%+, 需要真做习题与反复推导才能过关, 绝不是背公式能应付的纯记忆型学科。'}<br>• {'myth': '想本科直接高薪就业', 'reality': '物理学本科应届起薪 p50 仅约 12 万/年, 明显低于 CS/EE 同层次岗位; 硕士 p50 约 28 万, 博士 p50 约 40 万, 差距只能靠深造追平。'}<br>• {'myth': '不打算读研却报了物理学', 'reality': '深造率高达 70% (国内读研 55% + 出国 15%), 本科直接就业仅 25%, 不读研 5 年后大概率会后悔专业选择, 转行成本极高, 慎选本科即就业心态。'}<br>• {'myth': '盲目报「物理学 (师范)」想保底', 'reality': '师范方向培养路径偏教学, 4 年后才发现自己其实想做科研时, 转学术出口很窄, 沉没成本极高, 师范保底心态常常两头都抓不住, 入坑前务必三思而后行再做最终决定。'}<br>• {'myth': '觉得「物理转工科很容易」', 'reality': '物理 + AI/EE 跨界确实成立 (字节 AI for Science、华为 2012 实验室都有物理背景), 但需要主动自学编程与领域课程, 不会自动发生。'}</div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">二</span>
+        <h2 class="art-title">本科 4 年学的课</h2>
+      </div>
+      <div class="art-body">
+        <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
+      </div>
+      <div class="course-list">
+        <div class="course-row">
+          <div class="course-yr">大一</div>
+          <div class="course-names">高等数学 A (数学分析) · 线性代数 · 概率论与数理统计 · 大学英语 · 思政系列 · 大学物理 (预修)</div>
+          <div class="course-tag">大一</div>
+        </div><div class="course-row">
+          <div class="course-yr">大二</div>
+          <div class="course-names">数学物理方法 (复变 + 积分变换) · 理论力学 (分析力学, 挂科率 20%) · 电动力学 (麦克斯韦方程组, 挂科率 25%) · 热力学与统计物理 · 量子力学 (挂科率 30%+) · 固体物理 · 近代物理实验 · 计算物理 (Python/Matlab)</div>
+          <div class="course-tag">大二</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三</div>
+          <div class="course-names">北大 · 凝聚态物理 / 高能物理 / 天体物理 (学院路硬核派) · 中科大 · 量子信息 / 等离子体物理 (少年班出口, 出国氛围浓) · 清华 · 工程物理 / 核科学与技术 (工科导向, 体制内就业强) · 复旦 · 表面物理 / 半导体物理 (上海微电子圈跳板) · 南大 · 声学 / 超导 / 声呐 (六朝古都特色方向)</div>
+          <div class="course-tag">大三</div>
+        </div><div class="course-row">
+          <div class="course-yr">大四</div>
+          <div class="course-names">实验室轮转 (8-12 周) · 科研项目实战 (导师制) · 毕业论文 / 毕业设计 · 学术会议汇报 · 暑期学校 + 学科竞赛</div>
+          <div class="course-tag">大四</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
+      </div>
+      <div class="sal-rows">
+        <div class="sal-row">
+          <div class="sal-l">10年+ (持证/资深)</div>
+          <div class="sal-bar" style="--w: 100%;"></div>
+          <div class="sal-v">32%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">5年经验</div>
+          <div class="sal-bar" style="--w: 56%;"></div>
+          <div class="sal-v">18%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">3年经验</div>
+          <div class="sal-bar" style="--w: 34%;"></div>
+          <div class="sal-v">11%</div>
+        </div><div class="sal-row">
+          <div class="sal-l">应届生 (一线)</div>
+          <div class="sal-bar" style="--w: 19%;"></div>
+          <div class="sal-v">6%</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
+      </div>
+      <div class="pull">
+        "本科 + 博士 + 211 高校讲师 5 年, 15-25 万 + 编, 教学 + 科研 + 项目, 副教授是晋升关键, 985 博士是硬门槛。"
+        <span class="by">— 某 985 理科 + 博士 2020 届 · 高校教师 (博士门槛) · 5 年</span>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">五</span>
+        <h2 class="art-title">头部院校参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+      </div>
+      <div class="uni-row">
+          <div class="uni-rank">01</div>
+          <div class="uni-name">北京大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">02</div>
+          <div class="uni-name">中国科学技术大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">03</div>
+          <div class="uni-name">清华大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">04</div>
+          <div class="uni-name">南京大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">05</div>
+          <div class="uni-name">复旦大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">06</div>
+          <div class="uni-name">上海交通大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">浙江大学</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">08</div>
+          <div class="uni-name">华中科技大学</div>
+          <div class="uni-score">—</div>
+        </div>
+    </section>
+</article>
+
+<div class="footer-cta">
+  <div class="lead">⌖ 决定了吗</div>
+  <h3>把物理学加入心愿单</h3>
+  <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
+  <a class="cta-btn" id="cta-btn" href="javascript:void(0)">
+    <span class="ico" id="cta-ico">♡</span>
+    <span id="cta-text">加入心愿单</span>
+  </a>
+</div>
+
+<footer class="footer-meta">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026 · 湖北</div>
+  <div>资料源自教育部 / 软科 2025 / 麦可思 2024 / 校友访谈</div>
+  <div style="margin-top:6px;">分数仅供参考 · 录取以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="../index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="../js/loader.js"></script>
+<script src="../js/dock.js"></script>
+<script src="../js/detail.js"></script>
+<script>window.__SLUG__ = "physics";</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

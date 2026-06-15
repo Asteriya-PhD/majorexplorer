@@ -1,0 +1,93 @@
+/* Major Explorer · Mobile Service Worker
+ * 缓存策略:
+ *   - shell (html/css/js): stale-while-revalidate
+ *   - 数据 (manifest.json, hierarchy): stale-while-revalidate
+ *   - 其他: network-first
+ * 版本号: 改这里强制升级
+ */
+const CACHE_NAME = "m-explorer-v1-20260615";
+const SHELL = [
+  "/m/",
+  "/m/index.html",
+  "/m/catalog.html",
+  "/m/recommendations.html",
+  "/m/search.html",
+  "/m/wishlist.html",
+  "/m/me.html",
+  "/m/manifest.json",
+  "/m/css/base.css",
+  "/m/css/topbar.css",
+  "/m/css/dock.css",
+  "/m/js/loader.js",
+  "/m/js/dock.js",
+  "/m/js/home.js",
+  "/m/js/catalog.js",
+  "/m/js/recs.js",
+  "/m/js/search.js",
+  "/m/js/wishlist.js",
+  "/m/js/me.js",
+  "/m/js/detail.js",
+  "/m/icon-192.png",
+  "/m/icon-512.png",
+];
+const DATA_HOSTS = ["/data/"];
+
+self.addEventListener("install", e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(c => c.addAll(SHELL).catch(() => null))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", e => {
+  const url = new URL(e.request.url);
+  // 仅处理同源 GET
+  if (e.request.method !== "GET") return;
+  if (url.origin !== location.origin) return;
+
+  // 数据 (manifest, hierarchy, strategy): stale-while-revalidate
+  if (DATA_HOSTS.some(h => url.pathname.startsWith(h))) {
+    e.respondWith(staleWhileRevalidate(e.request));
+    return;
+  }
+
+  // shell: stale-while-revalidate
+  if (url.pathname.startsWith("/m/")) {
+    e.respondWith(staleWhileRevalidate(e.request));
+    return;
+  }
+
+  // 其他: network-first
+  e.respondWith(networkFirst(e.request));
+});
+
+async function staleWhileRevalidate(req) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(req);
+  const network = fetch(req).then(r => {
+    if (r && r.status === 200) cache.put(req, r.clone());
+    return r;
+  }).catch(() => cached);
+  return cached || network;
+}
+
+async function networkFirst(req) {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    const r = await fetch(req);
+    if (r && r.status === 200) cache.put(req, r.clone());
+    return r;
+  } catch (e) {
+    const cached = await cache.match(req);
+    return cached || new Response("", { status: 504 });
+  }
+}

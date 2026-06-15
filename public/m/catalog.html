@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>专业目录 · Major Explorer</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/dock.css">
+<style>
+  .hero {
+    padding: 24px 24px 22px;
+  }
+  .hero::before { content: "目录"; font-size: clamp(10rem, 46vw, 14rem); }
+  .hero-title { white-space: nowrap; }
+
+  .search-bar {
+    margin-top: 18px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    min-height: 44px;
+  }
+  .search-bar .ico { color: var(--muted); font-family: var(--font-num); font-size: 1rem; }
+  .search-bar input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg);
+  }
+  .search-bar input::placeholder { color: var(--muted-2); }
+
+  .chapters { padding: 20px 20px 24px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="top-left">
+    <div class="wordmark">
+      <span class="dot"></span>
+      <span class="stack">
+        <span class="l1">Major</span>
+        <span class="l2">Explorer</span>
+      </span>
+    </div>
+  </div>
+  <div class="top-right">
+    <a class="search-icon" href="search.html" aria-label="搜索">⌕</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow"><span class="rule"></span>专业目录 · 13 门类</div>
+  <h1 class="hero-title">十三<span class="punct">门类。</span></h1>
+  <p class="hero-lede">教育部本科专业目录全量下钻 — 92 大类 · 536 专业 · 126 篇精品分析.</p>
+
+  <div class="search-bar">
+    <span class="ico">⌕</span>
+    <input id="catalog-q" type="search" placeholder="搜门类 / 大类 / 专业" autocomplete="off">
+  </div>
+</section>
+
+<div class="chapters" id="chapters">
+  <!-- JS render -->
+</div>
+
+<footer class="footer">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026</div>
+  <div>数据源自教育部 · 软科 · 麦可思 · 阳光高考</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab active" data-tab="catalog" href="catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="js/loader.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/catalog.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

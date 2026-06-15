@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>搜索 · Major Explorer</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/dock.css">
+<style>
+  .topbar.is-search {
+    grid-template-columns: auto var(--notch-w) 1fr;
+  }
+  .top-cancel {
+    justify-self: start;
+    display: inline-flex; align-items: center;
+    font-family: var(--font-body);
+    font-size: 0.9375rem; font-weight: 400;
+    color: var(--accent-ink);
+    min-height: 44px; padding-right: 12px;
+  }
+  .top-cancel .ico {
+    font-family: var(--font-heading); font-size: 1.25rem; margin-right: 4px; line-height: 1;
+  }
+
+  .search-region {
+    padding: 4px 20px 18px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .search-eyebrow {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--accent); letter-spacing: 0.22em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .search-eyebrow .rule { flex: 0 0 32px; height: 1px; background: var(--accent); }
+  .search-box {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    min-height: 52px;
+    box-shadow: 0 2px 8px rgba(20,17,13,0.04);
+  }
+  .search-box .ico {
+    font-family: var(--font-heading); font-size: 1.3125rem; color: var(--accent); line-height: 1;
+  }
+  .search-box input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600;
+    color: var(--fg); letter-spacing: -0.01em;
+  }
+  .search-box input::placeholder { color: var(--muted-2); font-weight: 400; }
+  .search-box .clear {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--line-strong); color: var(--bg-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-sans); font-size: 0.6875rem; font-weight: 700;
+    flex-shrink: 0; cursor: pointer;
+  }
+
+  .filter-row {
+    margin-top: 14px;
+    display: flex; gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+
+  .result-section { padding: 20px 20px 6px; }
+  .result-section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .result-section-head .l {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .result-section-head .n {
+    font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted);
+  }
+  .result-section-head .n strong { color: var(--accent); font-weight: 700; }
+
+  .result {
+    display: grid;
+    grid-template-columns: 4px 1fr auto 18px;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    min-height: 64px;
+  }
+  .result::before {
+    content: ""; background: var(--theme, var(--accent));
+    border-radius: 1px; align-self: stretch; margin: 4px 0;
+  }
+  .result-body { min-width: 0; }
+  .result-title {
+    font-family: var(--font-heading); font-size: 1.125rem; font-weight: 700;
+    color: var(--fg); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  .result-title em {
+    font-style: normal; color: var(--accent);
+    background: linear-gradient(transparent 60%, rgba(184,50,58,0.12) 60%);
+    padding: 0 1px;
+  }
+  .result-title .star { color: var(--accent); font-size: 0.75rem; margin-left: 4px; vertical-align: 2px; }
+  .result-cat {
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .result-arrow { font-family: var(--font-num); color: var(--muted-2); }
+
+  .hot-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 20px; }
+  .hot {
+    font-family: var(--font-body); font-size: 0.875rem;
+    padding: 8px 14px;
+    background: #fff; border: 1px solid var(--line);
+    border-radius: 999px; color: var(--fg);
+  }
+  .hot .n {
+    font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted); margin-left: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar is-search">
+  <a class="top-cancel" href="javascript:history.length>1?history.back():location.href='index.html'">
+    <span class="ico">‹</span>返回
+  </a>
+</header>
+
+<div class="search-region">
+  <div class="search-eyebrow"><span class="rule"></span>SEARCH · 搜专业 / 院校</div>
+  <div class="search-box">
+    <span class="ico">⌕</span>
+    <input id="q" type="search" placeholder="金融 / 临床医学 / 武大" autocomplete="off">
+    <span class="clear" id="clear" aria-label="清空">×</span>
+  </div>
+
+  <div class="filter-row" id="filters">
+    <button class="filter on" data-type="all">全部 <span class="n" id="n-all">—</span></button>
+    <button class="filter" data-type="major">专业 <span class="n" id="n-major">—</span></button>
+    <button class="filter" data-type="category">大类 <span class="n" id="n-cat">—</span></button>
+    <button class="filter" data-type="school" disabled>院校 <span class="n" title="后续开放">—</span></button>
+  </div>
+</div>
+
+<div id="results">
+  <!-- JS render -->
+  <div class="hot-list" id="hot">
+    <div class="empty" style="width:100%;">
+      <div style="font-family: var(--font-num); color: var(--muted); font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 8px;">热门搜索</div>
+      <div id="hot-list-inner" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/loader.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/search.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

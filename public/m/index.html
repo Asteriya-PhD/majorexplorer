@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>Major Explorer · 当志愿开始有了形状</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/dock.css">
+<style>
+  /* page-specific */
+  .hero {
+    min-height: calc(100vh - var(--topbar-h) - var(--dock-h));
+    padding: 40px 24px 36px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .hero::before { content: "专业"; font-size: clamp(14rem, 70vw, 22rem); }
+  .hero-statement {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 14vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    color: var(--fg);
+    margin: 38px 0 0;
+  }
+  .hero-statement .line { display: block; }
+  .hero-statement .line + .line { margin-top: 2px; }
+  .hero-statement .punct { color: var(--accent); }
+  .hero-lede {
+    font-family: var(--font-body);
+    font-size: 1rem; line-height: 1.65;
+    color: var(--fg-soft);
+    margin: 28px 0 0;
+    max-width: 22em;
+    border-left: 3px solid var(--accent);
+    padding-left: 14px;
+  }
+  .hero-lede strong { font-weight: 600; color: var(--fg); }
+  .hero-meta {
+    margin-top: auto;
+    padding-top: 36px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 16px;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--fg);
+    color: var(--bg);
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-family: var(--font-heading);
+    font-size: 0.9375rem; font-weight: 600;
+    min-height: 44px;
+  }
+  .hero-cta .arrow { font-family: var(--font-num); font-weight: 400; font-size: 1rem; }
+
+  .strat-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="top-left">
+    <div class="wordmark">
+      <span class="dot"></span>
+      <span class="stack">
+        <span class="l1">Major</span>
+        <span class="l2">Explorer</span>
+      </span>
+    </div>
+  </div>
+  <div class="top-right">
+    <a class="search-icon" href="search.html" aria-label="搜索">⌕</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow"><span class="rule"></span>Vol. 02 · 2026 春</div>
+    <h1 class="hero-statement">
+      <span class="line">当志愿</span>
+      <span class="line">开始有了</span>
+      <span class="line">形状<span class="punct">。</span></span>
+    </h1>
+    <p class="hero-lede">
+      先<strong>专业</strong>, 后志愿。把最热门、最易踩坑的本科专业, 一个一个讲透了 — 写给一无所知的 18 岁高三生。
+    </p>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-stats">
+      <div class="stat"><span class="n">126</span><span class="l">精品</span></div>
+      <div class="stat"><span class="n">13</span><span class="l">门类</span></div>
+      <div class="stat"><span class="n">92</span><span class="l">大类</span></div>
+    </div>
+    <a class="hero-cta" href="#feat">阅读 <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<section class="section" id="feat">
+  <div class="section-head">
+    <div>
+      <div class="section-num">No. 01 / 本日精读</div>
+      <h2 class="section-title">本日<span class="accent">精读</span></h2>
+    </div>
+  </div>
+  <p class="section-lede">每天从 126 篇里随机挑 4 篇推上来 — 报志愿前先看看这些专业到底在学什么、毕业后真的能去哪。</p>
+
+  <div class="feat-list" id="feat-list">
+    <!-- JS render -->
+  </div>
+</section>
+
+<section class="section paper">
+  <div class="section-head">
+    <div>
+      <div class="section-num">No. 02 / 国家战略</div>
+      <h2 class="section-title">重点<span class="accent">支持</span></h2>
+    </div>
+  </div>
+  <p class="section-lede">写进 "十四五" 与 "十五五" 规划的关键学科 — 招生扩、岗位多、政策稳, 但门槛也跟着升.</p>
+
+  <div class="strat-chips" id="strat-chips">
+    <!-- JS render -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-num">No. 03 / 全部门类</div>
+      <h2 class="section-title">十三<span class="accent">门类</span></h2>
+    </div>
+  </div>
+  <p class="section-lede">教育部本科专业目录 13 学科门类 · 92 大类 · 536 专业 · 126 篇精品。点开任一章, 看下属大类与精品.</p>
+
+  <div class="chapters" id="chapters">
+    <!-- JS render -->
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026</div>
+  <div>数据源自教育部 / 软科 / 麦可思 / 阳光高考 / 校友访谈</div>
+  <div style="margin-top:6px;">本站不替代官方文件 · 报名以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab active" data-tab="home" href="index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script src="js/loader.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/home.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>
