@@ -18,6 +18,12 @@ deploy_to_public.py — 把 skills/...curated/*.html 同步到 public/*.html (CF
   python3 scripts/deploy_to_public.py --csv path.csv # 只同步 CSV 列的 slug
   python3 scripts/deploy_to_public.py --slugs a b c  # 单跑几个
   python3 scripts/deploy_to_public.py --dry-run      # 只看会改啥, 不写
+
+═══════════════════════════════════════════════════════════════════
+⚠️  Mobile 双轨 (2026-06-15+):  /m/ 路径独立, 跟本脚本无关.
+    mobile 渲染走  python3 scripts/render_mobile.py  →  public/m/
+    校验走  python3 scripts/verify_mobile.py
+═══════════════════════════════════════════════════════════════════
 """
 import argparse, csv, pathlib, re, sys
 
