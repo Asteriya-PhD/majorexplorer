@@ -15,6 +15,7 @@ TEMPLATE = ROOT / "public/m/majors/_template.html"
 CURATED_DIR = ROOT / "skills/gaokao-major-explorer/data/curated"
 OUT_DIR = ROOT / "public/m/majors"
 MANIFEST = ROOT / "public/data/manifest.json"
+CHSI_MAJORS = ROOT / "public/data/chsi_majors.json"
 
 # 13 theme → 4 色调色板 (主/深/浅/金) — 跟 mock mobile 主题色保持协调
 THEMES = {
@@ -566,7 +567,8 @@ def render_tags_strip(tags):
     return "\n".join(f'<span class="tag">{esc(t)}</span>' for t in tags[:8])
 
 
-def render_one(slug, data, theme_color):
+def render_one(slug, data, theme_color, chsi_sat=None):
+    chsi_sat = chsi_sat or {}
     theme, theme_deep, theme_soft, theme_gold = theme_color
     title = data.get("title", slug)
     category = data.get("category", "")
@@ -656,8 +658,14 @@ def render_one(slug, data, theme_color):
     elif deep_pct > 0:
         grad_tier = f"低 {deep_pct:.0f}%"
 
-    # 满意度 (阳光高考 5 分制, JSON 无字段, 写死 3.5)
-    satisfaction = "3.5"
+    # 满意度 (阳光高考 5 分制, 从 chsi_majors.json 按 sub_discipline + title 查)
+    sub4 = data.get("sub_discipline", "")[:4]  # manifest 存的 4 位
+    bucket = chsi_sat.get(sub4, {})
+    sat_val = bucket.get(title, 0)
+    if sat_val and sat_val > 0:
+        satisfaction = f"{sat_val:.1f}"
+    else:
+        satisfaction = "—"
 
     # tagline
     tagline = hero_quote or ov2.get("lede", "")
@@ -708,6 +716,19 @@ def main():
     slugs = [m["slug"] for m in manifest["majors"]]
     styles = {m["slug"]: m.get("style", "cs") for m in manifest["majors"]}
 
+    # 满意度字典: sub_discipline (4 位 menjia+subclass) → {name: satisfaction}
+    # chsi 的 moe_code 是 6 位 (menjia 2 + subclass 2 + major 2), manifest 只存前 4 位
+    # 故按 sub_discipline(4位) 桶分组, 桶内按 name 精确匹配
+    chsi_sat = {}  # {sub_discipline: {name: satisfaction}}
+    if CHSI_MAJORS.exists():
+        chsi_data = json.loads(CHSI_MAJORS.read_text(encoding="utf-8"))
+        for item in chsi_data:
+            moe = item.get("moe_code", "")
+            if len(moe) < 4:
+                continue
+            sub4 = moe[:4]  # e.g. "0901" for 农学
+            chsi_sat.setdefault(sub4, {})[item["name"]] = item.get("satisfaction", 0)
+
     ok = 0
     skip = 0
     err = 0
@@ -729,7 +750,7 @@ def main():
         style = styles.get(slug, data.get("style", "cs"))
         theme_color = THEMES.get(style, THEMES["cs"])
         try:
-            html = render_one(slug, data, theme_color)
+            html = render_one(slug, data, theme_color, chsi_sat)
             out_path.write_text(html, encoding="utf-8")
             ok += 1
         except Exception as e:
