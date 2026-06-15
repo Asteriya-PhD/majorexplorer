@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8"><title>D. 顶部评分卡</title>
+<style>
+  :root { --theme:#5A4632; --theme-deep:#3D2E20; --theme-soft:#F0E8DA; --bg:#FBF8F1; --ink:#1A1A1A; --muted:#8C8475; --accent:#B8323A; --accent-ink:#7E2024; --rule:rgba(90,70,50,0.18); }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:'PingFang SC','STHeiti',sans-serif;color:var(--ink);padding:0 20px;}
+  .label{font-size:11px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;padding:20px 0 8px;}
+  .head{font-size:13px;color:var(--muted);padding:6px 0 14px;}
+  /* 顶部评分 + 列表 */
+  .sec{padding:16px 0;}
+  .sec-h{font-family:'Songti SC',serif;font-size:20px;font-weight:700;color:var(--theme-deep);margin-bottom:4px;}
+  .sec-sub{font-size:11px;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+  .score-card{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:14px;}
+  .score-cell{background:var(--bg);padding:14px 12px;text-align:center;}
+  .score-cell.is-yes{background:rgba(74,69,100,0.06);}
+  .score-cell.is-no{background:rgba(184,50,58,0.06);}
+  .score-num{font-family:'Songti SC',serif;font-size:32px;font-weight:700;line-height:1;color:var(--theme-deep);}
+  .score-cell.is-no .score-num{color:var(--accent);}
+  .score-lbl{font-size:10px;letter-spacing:0.16em;color:var(--muted);text-transform:uppercase;margin-top:6px;}
+  .fit-list{list-style:none;padding:0;margin:0;}
+  .fit-list li{padding:10px 0;border-top:1px solid var(--rule);font-size:13px;line-height:1.55;}
+  .fit-list li:first-child{border-top:0;}
+  .fit-list li::before{content:attr(data-icon);display:inline-block;width:24px;font-weight:700;}
+  .fit-list li.is-yes::before{color:var(--theme);}
+  .fit-list li.is-no::before{color:var(--accent);}
+  .pit-row{padding:12px 0;border-top:1px solid var(--rule);}
+  .pit-row:first-child{border-top:0;padding-top:4px;}
+  .pit-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .pit-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:0.1em;color:#fff;}
+  .pit-myth-tag{background:var(--accent);}
+  .pit-reality-tag{background:var(--theme);}
+  .pit-num{font-size:10px;font-weight:700;letter-spacing:0.16em;color:var(--muted);text-transform:uppercase;}
+  .pit-myth-text{font-family:'Songti SC',serif;font-size:14px;font-weight:700;color:var(--accent-ink);line-height:1.4;margin-bottom:6px;}
+  .pit-reality-text{font-size:13px;line-height:1.6;color:var(--ink);}
+</style></head><body>
+<div class="label">D · 评分卡+列表 · 数字一上来就看到</div>
+<div class="head">顶部 2 评分 + 列表 · 适合/慎入 量化打分</div>
+
+<div class="sec">
+  <div class="sec-h">什么人适合</div>
+  <div class="sec-sub">Fit Check · Yes / No</div>
+  <div class="score-card">
+    <div class="score-cell is-yes"><div class="score-num">3</div><div class="score-lbl">✓ 适合来</div></div>
+    <div class="score-cell is-no"><div class="score-num">2</div><div class="score-lbl">✗ 慎入</div></div>
+  </div>
+  <ul class="fit-list">
+    <li class="is-yes" data-icon="✓">对学科基础课程 (数学/统计/经济) 有兴趣, 愿意投入长期学习</li>
+    <li class="is-yes" data-icon="✓">能接受 4 年制本硕博长跑, 或愿意持证上岗</li>
+    <li class="is-yes" data-icon="✓">对行业核心岗位的薪资范围有合理预期 (中位数而非上限)</li>
+    <li class="is-no" data-icon="✗">只想本科毕业立刻高薪 (无耐心考证/读研)</li>
+    <li class="is-no" data-icon="✗">对学科核心内容 (如数学/案例分析) 完全无兴趣</li>
+  </ul>
+</div>
+
+<div class="sec">
+  <div class="sec-h">避坑 · 谣言 vs 真相</div>
+  <div class="sec-sub">Pitfalls · 3 个常见误区</div>
+  <div class="pit-row">
+    <div class="pit-meta"><span class="pit-num">误区 01</span><span class="pit-tag pit-myth-tag">❌ 谣言</span></div>
+    <div class="pit-myth-text">毕业 = 自动高薪</div>
+    <div class="pit-meta"><span class="pit-tag pit-reality-tag">✓ 真相</span></div>
+    <div class="pit-reality-text">行业核心岗位需持证或读研 3-5 年, 本科就业与专业相关性较低</div>
+  </div>
+  <div class="pit-row">
+    <div class="pit-meta"><span class="pit-num">误区 02</span><span class="pit-tag pit-myth-tag">❌ 谣言</span></div>
+    <div class="pit-myth-text">本专业就是 X 行业全部</div>
+    <div class="pit-meta"><span class="pit-tag pit-reality-tag">✓ 真相</span></div>
+    <div class="pit-reality-text">专业侧重学科基础, 实际工作中需持续学习行业最新动态</div>
+  </div>
+</div>
+</body></html>
