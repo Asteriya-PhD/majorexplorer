@@ -36,12 +36,14 @@
     '    <a class="brand" href="/">' +
     '      Major Explorer<span class="sub">2026 高考 · 湖北 · 先专业, 后志愿</span>' +
     '    </a>' +
-    '    <nav class="nav-links" aria-label="主导航">' +
-    '      <a href="/" class="' + (active === 'home' ? 'active' : '') + '">首页</a>' +
-    '      <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">精品专业</a>' +
-    '      <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">专业目录</a>' +
-    '      <a href="/preferences.html" class="' + (active === 'preferences' ? 'active' : '') + '">填偏好</a>' +
-    '    </nav>' +
+    '    <div class="topbar-right">' +
+    '      <nav class="nav-links" aria-label="主导航">' +
+    '        <a href="/" class="' + (active === 'home' ? 'active' : '') + '">首页</a>' +
+    '        <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">精品专业</a>' +
+    '        <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">专业目录</a>' +
+    '        <a href="/preferences.html" class="' + (active === 'preferences' ? 'active' : '') + '">填偏好</a>' +
+    '      </nav>' +
+    '    </div>' +
     '  </div>' +
     '</header>';
 
@@ -68,18 +70,16 @@
   function syncWishlist() {
     var list = (window.WishlistStore && window.WishlistStore.getAll) ? window.WishlistStore.getAll() : [];
     var count = list.length || 0;
-    var topbar = document.querySelector('.topbar');
-    if (!topbar) return;
-    var container = topbar.querySelector('.container');
-    if (!container) return;
-    // 移除旧的 chip, 创建新的
-    var old = container.querySelector('.topbar-wishlist-chip');
+    var right = document.querySelector('.topbar .topbar-right');
+    if (!right) return;
+    // 移除旧的 chip, 创建新的 (放到 .topbar-right 末尾, 跟 nav 同行)
+    var old = right.querySelector('.topbar-wishlist-chip');
     if (old) old.remove();
     var chip = document.createElement('a');
     chip.href = '/wishlist.html';
     chip.className = 'topbar-wishlist-chip';
     chip.innerHTML = '🎒 心愿单 <strong>' + count + '</strong>/6 →';
-    chip.style.cssText = 'margin-left: auto; padding: 6px 14px; border: 1.5px solid var(--accent); border-radius: 999px; color: var(--accent); text-decoration: none; font-size: 0.8125rem; font-weight: 500; white-space: nowrap; transition: all 0.2s;';
-    container.appendChild(chip);
+    chip.style.cssText = 'padding: 6px 14px; border: 1.5px solid var(--accent); border-radius: 999px; color: var(--accent); text-decoration: none; font-size: 0.8125rem; font-weight: 500; white-space: nowrap; transition: all 0.2s;';
+    right.appendChild(chip);
   }
 })();

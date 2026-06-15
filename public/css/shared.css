@@ -75,14 +75,16 @@ h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height
   border-bottom: 1px solid var(--line);
 }
 .topbar .container {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center;
   padding-top: 14px; padding-bottom: 14px; gap: 12px;
+  max-width: none;  /* 顶栏跨满 viewport, 中间留大空 */
 }
 .topbar .brand {
   font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700;
   letter-spacing: -0.01em;
 }
 .topbar .brand .sub { color: var(--muted); font-weight: 400; font-size: 0.8125rem; margin-left: 8px; }
+.topbar .topbar-right { display: flex; align-items: center; gap: 24px; margin-left: auto; }
 .topbar .nav-links { display: flex; gap: 18px; align-items: center; }
 .topbar .nav-links a { font-size: 0.875rem; color: var(--muted); }
 .topbar .nav-links a:hover, .topbar .nav-links a.active { color: var(--fg); opacity: 1; }

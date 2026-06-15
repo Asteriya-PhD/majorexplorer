@@ -282,11 +282,9 @@
 .ms-shell.compact .ms-send { width: 36px; height: 36px; font-size: 1rem; }
 
 .ms-chips {
-  display: flex; flex-wrap: nowrap; gap: 8px;
-  margin-top: 16px; justify-content: center;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  max-height: 56px; opacity: 1;
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 22px; justify-content: center;
+  max-height: 200px; opacity: 1;
   transition: max-height 240ms ease, opacity 180ms ease, margin-top 180ms ease;
 }
 .ms-chips::-webkit-scrollbar { display: none; }
