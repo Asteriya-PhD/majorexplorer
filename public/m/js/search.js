@@ -95,7 +95,8 @@
   }
   function esc(s) { return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"})[c]); }
 
-  // 初始计数 (放在 render("") 之后, 覆盖默认 "—")
+  // 初始渲染 + 计数
+  render("");
   const nM = M.manifest.majors.length;
   const nC = (M.hierarchy?.disciplines || []).reduce((a, d) => a + (d.sub || []).length, 0);
   if ($("#n-major")) $("#n-major").textContent = nM;
