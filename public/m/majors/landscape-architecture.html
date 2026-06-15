@@ -40,6 +40,149 @@
   .top-btn .heart-on { color: var(--accent); }
   .top-btn .heart-off { color: var(--muted-2); }
 
+  /* hero 右上角手浮爱心 */
+  .hero { position: relative; }
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 200ms, background 200ms;
+  }
+  .hero-heart:active { transform: scale(0.9); background: rgba(255,255,255,0.95); }
+  .hero-heart .heart-off { color: var(--muted-2); font-size: 1.125rem; line-height: 1; }
+  .hero-heart .heart-on { color: var(--accent); font-size: 1.125rem; line-height: 1; }
+
+  /* 爱心手浮按钮增强 (心愿单打分入口) */
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 200ms, box-shadow 200ms;
+  }
+  .hero-heart:active { transform: scale(0.94); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+  .hero-heart.is-on { background: var(--accent); border-color: var(--accent); }
+  .hero-heart.is-on .heart-off, .hero-heart.is-on .heart-on { color: #FBF8F1; }
+  .hero-heart.is-on .heart-label { color: #FBF8F1; }
+  .heart-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase;
+  }
+
+  /* 心愿打分模态框 */
+  .wish-modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .wish-modal[hidden] { display: none; }
+  .wish-modal-bg {
+    position: absolute; inset: 0;
+    background: rgba(20, 20, 18, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 240ms ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .wish-modal-card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 420px;
+    background: var(--bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 24px 24px 28px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.16);
+    animation: slideUp 280ms cubic-bezier(0.2, 0.9, 0.3, 1.05);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .wish-modal-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .wish-modal-sub {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--muted); margin-bottom: 18px;
+  }
+  .star-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .star-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; padding: 0;
+    font-size: 32px; color: var(--line); cursor: pointer;
+    transition: transform 120ms, color 120ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .star-btn span { display: block; line-height: 1; }
+  .star-btn:active { transform: scale(0.85); }
+  .star-btn.is-on { color: #E8A53A; }
+  .star-hint {
+    text-align: center;
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); margin-bottom: 14px;
+    min-height: 16px;
+  }
+  .wish-tags-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .wish-tag {
+    padding: 6px 14px;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 600;
+    color: var(--theme-deep); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 24px;
+    cursor: pointer; transition: all 160ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-tag.is-on {
+    background: var(--theme); color: #FBF8F1; border-color: var(--theme);
+  }
+  .wish-comment {
+    width: 100%;
+    min-height: 64px; max-height: 120px;
+    padding: 10px 12px;
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+  .wish-comment:focus { outline: 0; border-color: var(--theme); }
+  .wish-modal-actions {
+    display: flex; gap: 10px;
+  }
+  .wish-btn {
+    flex: 1; height: 44px;
+    border-radius: 22px; border: 0;
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-btn-cancel { background: var(--bg-soft); color: var(--muted); }
+  .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
+  .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+
   .hero {
     position: relative;
     padding: 32px 24px 36px;
@@ -99,23 +242,250 @@
     background: var(--line-strong);
     border-bottom: 1px solid var(--line);
   }
+  /* === Salary Table · P25/P50/P75 === */
+  .sal-table {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .sal-th, .sal-tr {
+    display: grid;
+    grid-template-columns: 92px 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .sal-th-stage, .sal-stage {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em; line-height: 1.5;
+    padding-top: 6px;
+  }
+  .sal-stage { color: var(--theme-deep); font-size: 0.875rem; }
+  .sal-yoy {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 5px; border-radius: 2px; margin-left: 6px;
+    color: #FBF8F1;
+  }
+  .sal-yoy.up { background: #4C7A4C; }
+  .sal-yoy.down { background: var(--accent); }
+  .sal-th-cell, .sal-cell {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+    text-align: center;
+  }
+  .sal-th-cell.is-p50, .sal-cell.is-p50 { color: var(--theme-deep); font-weight: 700; }
+  .sal-th-cell { padding-top: 6px; }
+  .sal-cell {
+    font-family: var(--font-body); font-size: 0.8125rem; font-weight: 400;
+    color: var(--fg); text-align: left;
+    display: flex; flex-direction: column; gap: 4px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .sal-cell.is-p50 { font-weight: 700; }
+  .sal-cell .approx { color: var(--muted); font-size: 0.75rem; margin-right: 2px; }
+  .sal-cell .sal-cell-num {
+    font-family: var(--font-num); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep);
+  }
+  .sal-cell.is-p50 .sal-cell-num { color: var(--accent-ink); }
+  .sal-cell .sal-cell-unit {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); margin-left: 2px; font-weight: 400;
+  }
+  .sal-cell-bar {
+    display: block; height: 4px;
+    background: var(--bg-soft); border-radius: 1px; overflow: hidden;
+    margin-top: 2px;
+  }
+  .sal-cell-fill {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
+
+  /* === 移除按钮 === */
+  .wish-btn-remove { background: var(--bg-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .wish-btn-remove:active { background: rgba(184,50,58,0.08); }
+  .stats-strip {
+    background: var(--theme);
+    margin: 0 0 14px;
+    padding: 22px 20px 20px;
+    border-radius: 2px;
+    color: var(--bg);
+  }
   .stat-cell {
-    background: var(--bg-soft);
-    padding: 18px 14px;
     text-align: center;
   }
   .stat-cell .n {
     font-family: var(--font-num);
-    font-size: 1.5rem; font-weight: 700;
-    color: var(--theme);
-    line-height: 1; letter-spacing: -0.02em;
+    font-size: 1.875rem; font-weight: 700;
+    color: var(--bg);
+    line-height: 1.05; letter-spacing: -0.01em;
     display: block;
   }
-  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .n .unit { font-size: 0.8125rem; color: var(--theme-soft); font-weight: 500; margin-left: 3px; opacity: 0.85; }
   .stat-cell .l {
-    font-family: var(--font-num); font-size: 0.625rem;
-    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--theme-soft); letter-spacing: 0.18em; text-transform: uppercase;
     margin-top: 6px; display: block;
+    opacity: 0.75;
+  }
+  /* 读研档位高亮 (B 块里也保留色彩对比) */
+  .stat-cell.grad-tier[data-tier="高"] .n { color: #FBF8F1; }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme-soft); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--theme-soft); opacity: 0.7; }
+  .stat-cell.grad-tier .n { font-size: 1.875rem; }
+
+  /* === 选科要求 (xuanke) === */
+  .xk-list { margin-top: 8px; }
+  .xk-row {
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+  .xk-row:first-child { border-top: 0; padding-top: 4px; }
+  .xk-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .xk-num {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+    padding-top: 2px; min-width: 24px;
+  }
+  .xk-info { flex: 1; }
+  .xk-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
+  }
+  .xk-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden;
+    margin-right: 56px;
+  }
+  .xk-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .xk-pct {
+    position: absolute; right: 0; top: -2px;
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em;
+  }
+  .xk-reason {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 深造路径 (deep_study) === */
+  .ds-list { margin-top: 4px; }
+  .ds-row {
+    display: grid; grid-template-columns: 1fr 80px 36px;
+    gap: 10px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .ds-row:first-child { padding-top: 4px; }
+  .ds-row:last-child { border-bottom: 0; }
+  .ds-name {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.4;
+  }
+  .ds-study .ds-name {
+    font-weight: 600; color: var(--theme-deep);
+  }
+  .ds-study .ds-name::before {
+    content: "🎓 ";
+  }
+  .ds-bar {
+    height: 6px; border-radius: 1px; background: var(--bg-soft);
+    overflow: hidden; position: relative;
+  }
+  .ds-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .ds-study .ds-fill {
+    background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
+  }
+  .ds-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  /* === 就业方向 (employment_direction) === */
+  .emp-list { margin-top: 4px; }
+  .emp-row {
+    padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .emp-row:first-child { border-top: 0; padding-top: 4px; }
+  .emp-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
+  }
+  .emp-num {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em; min-width: 24px;
+  }
+  .emp-name {
+    flex: 1;
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep); line-height: 1.3;
+  }
+  .emp-ratio {
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  .emp-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden; margin-bottom: 6px;
+    margin-left: 34px;
+  }
+  .emp-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .emp-desc {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 头部雇主 (top_companies) === */
+  .co-list { margin-top: 4px; }
+  .co-row {
+    display: grid; grid-template-columns: 1fr 70px;
+    gap: 12px; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .co-row:first-child { padding-top: 4px; }
+  .co-row:last-child { border-bottom: 0; }
+  .co-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--fg); line-height: 1.4; margin-bottom: 4px;
+  }
+  .co-tier {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-left: 8px;
+    color: #FBF8F1; vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+  .co-tier-s { background: var(--accent-ink); }
+  .co-tier-a { background: var(--theme); }
+  .co-tier-b { background: var(--muted); }
+  .co-meta {
+    font-family: var(--font-body); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.02em;
+  }
+  .co-meta .dot { color: var(--line); margin: 0 4px; }
+  .co-spark-wrap {
+    display: flex; align-items: center; justify-content: flex-end;
+  }
+  .co-spark {
+    width: 60px; height: 16px;
+    overflow: visible;
+  }
+  .co-spark polyline {
+    fill: none; stroke: var(--theme); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round;
   }
 
   .tags-strip {
@@ -259,6 +629,115 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
+  /* fit 杂志风 — 大字衬线 + 序号 + 列表文章流 */
+  .fit-pair { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 0; }
+  .fit-col { padding: 12px 0 8px; border-top: 1px solid var(--line); }
+  .fit-col:first-child { border-top: 0; padding-top: 6px; }
+  .fit-num {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .fit-col.fit-yes .fit-num { color: var(--theme-deep); }
+  .fit-col.fit-no  .fit-num { color: var(--accent); }
+  .fit-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 10px; letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .fit-col.fit-no .fit-title { color: var(--accent-ink); }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    padding: 8px 0; border-top: 1px dashed var(--line);
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg);
+    position: relative; padding-left: 18px;
+  }
+  .fit-list li:first-child { border-top: 0; padding-top: 4px; }
+  .fit-list li::before {
+    content: "→"; position: absolute; left: 0; top: 8px;
+    color: var(--theme); font-weight: 700;
+  }
+  .fit-list li:first-child::before { top: 4px; }
+  .fit-col.fit-no .fit-list li::before { content: "✗"; color: var(--accent); }
+
+  /* pitfalls 杂志风 — 文章流 误区/真相 上下排 */
+  .pit-grid { display: flex; flex-direction: column; gap: 0; padding: 8px 0 4px; }
+  .pit-row {
+    padding: 14px 0; border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pit-row:first-child { border-top: 0; padding-top: 4px; }
+  .pit-myth-side, .pit-reality-side { display: flex; flex-direction: column; gap: 4px; }
+  .pit-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pit-reality-side .pit-label { color: var(--theme-deep); }
+  .pit-myth-text {
+    font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700;
+    color: var(--accent-ink); line-height: 1.4;
+  }
+  .pit-reality-text {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); line-height: 1.65;
+  }
+
+  /* stat-cell 读研档位 (高/中/低) */
+  .stat-cell.grad-tier .n { font-size: 1rem; }
+  .stat-cell.grad-tier[data-tier="高"] .n { color: var(--accent-ink); }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--muted); }
+
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -338,12 +817,14 @@
   <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
   <div class="top-crumb">园林 · 090905</div>
   <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
-  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
-    <span id="heart-ico" class="heart-off">♡</span>
-  </a>
 </header>
 
 <section class="hero">
+  <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
+    <span class="heart-bg"></span>
+    <span id="heart-ico" class="heart-off">♡</span>
+    <span class="heart-label" id="heart-label">收藏</span>
+  </button>
   <div class="hero-crumb"><span class="rule"></span>农学 · 园林类 · 090905</div>
   <h1 class="hero-title">园林</h1>
   <div class="hero-sub">农学学士 / 工学学士 (看院校)<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
@@ -352,8 +833,8 @@
 
 <div class="stats-strip">
   <div class="stat-cell"><span class="n">5<span class="unit">万</span></span><span class="l">入行中位</span></div>
-  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
-  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+  <div class="stat-cell grad-tier" data-tier="高 58%"><span class="n">高 58%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell"><span class="n">3.5<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
 
 <div class="tags-strip" id="tags-strip">
@@ -369,23 +850,36 @@
   <section class="art-sec">
       <div class="art-head">
         <span class="art-num">一</span>
-        <h2 class="art-title">这个专业到底学什么</h2>
+        <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p>{'foundations': ['素描与色彩', '三大构成 (平面/色彩/立体)', '建筑制图与透视', '园林树木学 (200+ 园林植物辨识)', '园林花卉学', '园林设计初步 (手绘 + 电脑制图)', '生态学基础 (含城市生态)'], 'directions': [{'name': '园林规划与设计', 'desc': '城市公园、居住区景观与广场设计, 是设计院与房企景观部的主战场。'}, {'name': '风景园林规划', 'desc': '风景区、国家公园与区域生态规划, 同济风景园林规划全国第一。'}, {'name': '园林工程与技术', 'desc': '施工图、工程预算与施工现场配合, 园林上市公司主力方向。'}, {'name': '园林植物应用', 'desc': '植物配置、苗木繁育与植物造景, 北林与南林两校最正统。'}, {'name': '园林历史与遗产保护', 'desc': '江南古典园林研究, 东南大学遗产保护方向全国最强。'}], 'skills': ['手绘与电脑制图 (CAD/PS/SU/Rhino)', '园林植物辨识 (200+ 树种花卉)', '施工图绘制与工程预算', '项目汇报与方案汇报能力', '现场配合与工程组织能力'], 'bonus': '「公园城市」「口袋公园」「城市更新」连续三年写入住建部工作要点, 国土空间规划体系下园林与规划口径进一步打通; 房企景观部 (龙湖/万科/华润/中海) 仍是对口大出口, 设计院国际公司 (AECOM/SWA) 985 硕士起招, 风景园林硕士学历加权明显。'}</p>
-        <p>园林是设计学与农学的交叉 — 用植物、山水与建筑缝合城市与自然, 出口在设计院、房企景观部与规划院, 起薪 6-9 万, 5-10 年经验能到 20-40 万, 是稳定的「设计+」专业。</p>
+        <p class="lede">园林是设计学与农学的交叉 — 用植物、山水与建筑缝合城市与自然, 出口在设计院、房企景观部与规划院, 起薪 6-9 万, 5-10 年经验能到 20-40 万, 是稳定的「设计+」专业。</p>
+        <div class="dir-list"><div class="dir-card"><div class="dir-num">01</div><div class="dir-body"><div class="dir-name">园林规划与设计</div><div class="dir-desc">城市公园、居住区景观与广场设计, 是设计院与房企景观部的主战场。</div></div></div><div class="dir-card"><div class="dir-num">02</div><div class="dir-body"><div class="dir-name">风景园林规划</div><div class="dir-desc">风景区、国家公园与区域生态规划, 同济风景园林规划全国第一。</div></div></div><div class="dir-card"><div class="dir-num">03</div><div class="dir-body"><div class="dir-name">园林工程与技术</div><div class="dir-desc">施工图、工程预算与施工现场配合, 园林上市公司主力方向。</div></div></div><div class="dir-card"><div class="dir-num">04</div><div class="dir-body"><div class="dir-name">园林植物应用</div><div class="dir-desc">植物配置、苗木繁育与植物造景, 北林与南林两校最正统。</div></div></div><div class="dir-card"><div class="dir-num">05</div><div class="dir-body"><div class="dir-name">园林历史与遗产保护</div><div class="dir-desc">江南古典园林研究, 东南大学遗产保护方向全国最强。</div></div></div></div><div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">学什么底子</div><div class="what-tags"><span class="tag-mini">素描与色彩</span><span class="tag-mini">三大构成 (平面/色彩/立体)</span><span class="tag-mini">建筑制图与透视</span><span class="tag-mini">园林树木学 (200+ 园林植物辨识)</span><span class="tag-mini">园林花卉学</span><span class="tag-mini">园林设计初步 (手绘 + 电脑制图)</span><span class="tag-mini">生态学基础 (含城市生态)</span></div></div><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">手绘与电脑制图 (CAD/PS/SU/Rhino)</span><span class="tag-mini">园林植物辨识 (200+ 树种花卉)</span><span class="tag-mini">施工图绘制与工程预算</span><span class="tag-mini">项目汇报与方案汇报能力</span><span class="tag-mini">现场配合与工程组织能力</span></div></div></div>
       </div>
-      <div class="risk">
-        <div class="risk-head">⚠ 读之前先想清</div>
-        <div class="risk-body">
-          <strong>适合谁。</strong>{'yes': ['对画图、植物与空间美学三件事都有持续热情', '能接受前 5 年加班、改图与跑工地', '愿意花 4 年练手绘与电脑制图', '目标设计院、房企景观部或规划院', '接受 35 岁前 8-15 万、35 岁后 20-40 万的成长曲线'], 'no': ['把园林等同于「种花种草」的体力活', '完全不能接受设计院加班与投标通宵', '美术与手绘零基础且不打算练的人']}
-        </div>
-      </div>
-      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '园林就是种花的', 'reality': '错。园林是「设计 + 植物 + 工程」, 本科生 50% 课程是设计与制图, 不是下地种花; 真正的「种花」是园艺与林学。'}<br>• {'myth': '园林和建筑是一个专业', 'reality': '半对。建筑学多为 5 年制, 园林以 4 年制为主, 课程 50% 重合 (设计与美术), 区别是建筑做室内与建筑本身, 园林做室外空间。'}<br>• {'myth': '园林比林学好就业', 'reality': '部分对。设计院与房企出口比林学多, 起薪高 30-50%, 但加班严重, 设计院投标前一晚通宵改图是常态, 性价比见仁见智。'}<br>• {'myth': '园林能进一线设计院高薪', 'reality': '部分对。AECOM、SWA、易亚源境、棕榈 5 年经验 25-40 万, 但一线设计院 80% 招硕士且 985 起点, 本科直接进很难。'}<br>• {'myth': '园林考公岗位多', 'reality': '错。园林 (农学学士) 公务员岗位极少, 多数要「城乡规划/风景园林」工学学士, 园林本科生考公基本只能报「不限专业」, 竞争激烈。'}</div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
         <span class="art-num">二</span>
+        <h2 class="art-title">什么人适合</h2>
+      </div>
+      <div class="art-body">
+        <p>在决定之前, 先想清楚自己是哪种人.</p>
+      </div>
+      <div class="fit-pair"><div class="fit-col fit-yes"><div class="fit-num">Y · YES</div><div class="fit-title">🌱 适合来读</div><ul class="fit-list"><li>对画图、植物与空间美学三件事都有持续热情</li><li>能接受前 5 年加班、改图与跑工地</li><li>愿意花 4 年练手绘与电脑制图</li><li>目标设计院、房企景观部或规划院</li><li>接受 35 岁前 8-15 万、35 岁后 20-40 万的成长曲线</li></ul></div><div class="fit-col fit-no"><div class="fit-num">N · NO</div><div class="fit-title">⛔ 慎入</div><ul class="fit-list"><li>把园林等同于「种花种草」的体力活</li><li>完全不能接受设计院加班与投标通宵</li><li>美术与手绘零基础且不打算练的人</li></ul></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">避坑指南</h2>
+      </div>
+      <div class="art-body">
+        <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
+      </div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">园林就是种花的</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">错。园林是「设计 + 植物 + 工程」, 本科生 50% 课程是设计与制图, 不是下地种花; 真正的「种花」是园艺与林学。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">园林和建筑是一个专业</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">半对。建筑学多为 5 年制, 园林以 4 年制为主, 课程 50% 重合 (设计与美术), 区别是建筑做室内与建筑本身, 园林做室外空间。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">园林比林学好就业</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">部分对。设计院与房企出口比林学多, 起薪高 30-50%, 但加班严重, 设计院投标前一晚通宵改图是常态, 性价比见仁见智。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">园林能进一线设计院高薪</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">部分对。AECOM、SWA、易亚源境、棕榈 5 年经验 25-40 万, 但一线设计院 80% 招硕士且 985 起点, 本科直接进很难。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">园林考公岗位多</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">错。园林 (农学学士) 公务员岗位极少, 多数要「城乡规划/风景园林」工学学士, 园林本科生考公基本只能报「不限专业」, 竞争激烈。</div></div></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
         <h2 class="art-title">本科 4 年学的课</h2>
       </div>
       <div class="art-body">
@@ -394,11 +888,11 @@
       <div class="course-list">
         <div class="course-row">
           <div class="course-yr">大一</div>
-          <div class="course-names">大学英语 (I-IV) · 思想政治理论 (思修/史纲/马原/毛概/习思想) · 体育 (I-IV) · 高等数学 (B 类, 微积分) · 建筑制图 + 透视 · 素描 + 色彩 (美术基础) · 三大构成 (平面/色彩/立体) · 计算机辅助设计 (CAD/PS/SU/Rhino) · 形势与政策 + 创业基础</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 大学英语 (I-IV) · 思想政治理论 (思修/史纲/马原/毛概/习思想) · 体育 (I-IV) · <strong style="color:var(--accent);">★</strong> 高等数学 (B 类, 微积分) · 建筑制图 + 透视 · <strong style="color:var(--accent);">★</strong> 素描 + 色彩 (美术基础) · 三大构成 (平面/色彩/立体) · 计算机辅助设计 (CAD/PS/SU/Rhino) · <strong style="color:var(--accent);">★</strong> 形势与政策 + 创业基础</div>
           <div class="course-tag">大一</div>
         </div><div class="course-row">
           <div class="course-yr">大二</div>
-          <div class="course-names">园林树木学 (200+ 园林植物辨识) · 园林花卉学 · 园林设计初步 (手绘 + 电脑制图) · 园林规划与设计 (城市公园/居住区) · 风景园林规划 (风景区/国家公园) · 园林工程 (施工图/预算/施工组织) · 园林植物造景 (植物群落配置) · 中外园林史 · 生态学基础 (含城市生态)</div>
+          <div class="course-names">园林树木学 (200+ 园林植物辨识) · 园林花卉学 · 园林设计初步 (手绘 + 电脑制图) · 园林规划与设计 (城市公园/居住区) · 风景园林规划 (风景区/国家公园) · 园林工程 (施工图/预算/施工组织) · 园林植物造景 (植物群落配置) · 中外园林史 · <strong style="color:var(--accent);">★</strong> 生态学基础 (含城市生态)</div>
           <div class="course-tag">大二</div>
         </div><div class="course-row">
           <div class="course-yr">大三</div>
@@ -406,60 +900,15 @@
           <div class="course-tag">大三</div>
         </div><div class="course-row">
           <div class="course-yr">大四</div>
-          <div class="course-names">专业实习 (8-12 周) · 毕业论文 / 毕业设计 · 学科竞赛 + 创新创业实践 · 案例研习 + 项目实战 · 社会实践 + 志愿服务</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 专业实习 (8-12 周) · <strong style="color:var(--accent);">★</strong> 毕业论文 / 毕业设计 · <strong style="color:var(--accent);">★</strong> 学科竞赛 + 创新创业实践 · <strong style="color:var(--accent);">★</strong> 案例研习 + 项目实战 · 社会实践 + 志愿服务</div>
           <div class="course-tag">大四</div>
         </div>
       </div>
     </section>
   <section class="art-sec">
       <div class="art-head">
-        <span class="art-num">三</span>
-        <h2 class="art-title">毕业后真的能拿多少</h2>
-      </div>
-      <div class="art-body">
-        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
-      </div>
-      <div class="sal-rows">
-        <div class="sal-row">
-          <div class="sal-l">10年+ (持证/资深)</div>
-          <div class="sal-bar" style="--w: 100%;"></div>
-          <div class="sal-v">28%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">3年经验</div>
-          <div class="sal-bar" style="--w: 54%;"></div>
-          <div class="sal-v">15%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">5年经验</div>
-          <div class="sal-bar" style="--w: 32%;"></div>
-          <div class="sal-v">9%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">应届生 (一线)</div>
-          <div class="sal-bar" style="--w: 29%;"></div>
-          <div class="sal-v">8%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">应届 (0-2 年)</div>
-          <div class="sal-bar" style="--w: 18%;"></div>
-          <div class="sal-v">5%</div>
-        </div>
-      </div>
-    </section>
-  <section class="art-sec">
-      <div class="art-head">
-        <span class="art-num">四</span>
-        <h2 class="art-title">学长学姐说</h2>
-      </div>
-      <div class="art-body">
-        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
-      </div>
-      <div class="pull">
-        "本科北林园林, 大二开始接设计院实习, 真正爱上园林。园林是「想赚快钱就别来」专业 — 4 年毕业 7.5 万, 比 CS 低一半, 加班还严重。但 5 年后做主创设计师能到 25-40 万, 没有 35 岁焦虑, 越老越值钱。设计院通宵改图是常态, 真心喜欢画图 + 喜欢植物 + 不怕加班, 园林是好选择。"
-        <span class="by">— 校友 (院校脱敏) · 知乎 @2025</span>
-      </div>
-    </section>
-  <section class="art-sec">
-      <div class="art-head">
         <span class="art-num">五</span>
-        <h2 class="art-title">头部院校参考</h2>
+        <h2 class="art-title">院校分布</h2>
       </div>
       <div class="art-body">
         <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
@@ -498,6 +947,109 @@
           <div class="uni-score">—</div>
         </div>
     </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">六</span>
+        <h2 class="art-title">头部雇主参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
+      </div>
+      <div class="co-list">
+        <div class="co-row"><div class="co-info"><div class="co-name">先正达集团 (Syngenta)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">校招 50-100 人<span class="dot">·</span>20-40 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,11.3 37.5,6.8 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中粮集团 (COFCO)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">校招 100-200 人<span class="dot">·</span>12-20 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">AECOM (易商国际设计)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,7.0 25.0,8.0 37.5,6.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">SWA Group (美国景观设计事务所)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,10.2 12.5,14.0 25.0,2.7 37.5,5.4 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">易亚源境 (易亚艺境)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,2.4 25.0,5.5 37.5,5.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">棕榈设计 (棕榈股份)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,3.1 25.0,1.6 37.5,1.6 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">东方园林 / 铁汉生态<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,10.0 12.5,14.0 25.0,11.0 37.5,4.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">龙湖/万科/华润/中海 (房企景观部)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,13.3 25.0,1.3 37.5,0.0 50.0,1.3" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国城市规划设计研究院 (中规院)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,13.0 12.5,10.0 25.0,14.0 37.5,0.0 50.0,1.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">省/市规划院 / 园林设计院<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,9.3 25.0,14.0 37.5,4.7 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国农业银行 (农金岗) (landscape-architecture)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 50-100 人<span class="dot">·</span>10-15 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">农业农村部 (公务员) (landscape-architecture)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">公考竞争激烈<span class="dot">·</span>8-15 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,7.8 50.0,0.0" /></svg></div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">七</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>P25/P50/P75 = 25/50/75 百分位. ≈ 表示估算值. ↗/↘ = 3 年变化.</p>
+      </div>
+      <div class="sal-table">
+        <div class="sal-th">
+          <div class="sal-th-stage">阶段</div>
+          <div class="sal-th-cell">P25</div>
+          <div class="sal-th-cell is-p50">P50 中位</div>
+          <div class="sal-th-cell">P75 高位</div>
+        </div>
+        <div class="sal-tr">
+          <div class="sal-stage">应届 (0-2 年)<span class="sal-yoy up">↗ 2%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">5.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">7.5</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:15%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">应届生 (一线)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:29%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">5年经验<span class="sal-yoy up">↗ 4%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">9.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:31%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">3年经验<span class="sal-yoy up">↗ 8%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:54%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:49%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:44%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">10年+ (持证/资深)<span class="sal-yoy up">↗ 4%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">45.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">八</span>
+        <h2 class="art-title">主流就业方向</h2>
+      </div>
+      <div class="art-body">
+        <p>8 大就业方向及占比.</p>
+      </div>
+      <div class="emp-list">
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">农业农村部 / 公务员</div><div class="emp-ratio">20%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:20.0%;"></div></div><div class="emp-desc">农业农村部 / 省市农业农村厅 / 乡村振兴局 | 公考/选调, 稳定 8-15 万/年, 党员 + 农学背景优势大</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">农业科研院所</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc">中国农科院 / 各省农科院 / 农业大学 | 985 硕博是门槛, 研究员 15-30 万/年, 学科带头人 50-100 万</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">种业 / 农业生物技术</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc">隆平高科 / 登海种业 / 先正达 / 拜耳中国 / 北大荒垦丰 | 985 + 生物技术, 应届 12-25 万/年, 育种专家 30-60 万</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">现代农业 / 智慧农业</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc">极飞科技 / 大疆农业 / 托普云农 / 京东农场 | 985 + 农学 + 编程复合, 应届 15-25 万/年, 智慧农业红利</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">食品 / 农产品加工</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">中粮 / 伊利 / 蒙牛 / 双汇 / 海大 / 温氏 | 985 + 食品 / 农学, 应届 12-20 万/年, 500 强稳定</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">园林 / 园艺 / 景观设计</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc">东方园林 / 棕榈设计 / 各地园林局 / 花卉企业 | 985 + 园林设计, 应届 12-20 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">继续深造 (农学硕博)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">中国农大 / 南京农大 / 华中农大 / 海外 Wageningen | 本科就业面窄, 头部科研院所 / 高校教师硕博是门槛</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">自主创业 / 家庭农场</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc">新型农业经营主体 / 合作社 / 家庭农场 / 农业 MCN | 高风险, 头部新农人年收入 30-200 万, 国家政策红利</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">九</span>
+        <h2 class="art-title">深造与就业路径分布</h2>
+      </div>
+      <div class="art-body">
+        <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
+      </div>
+      <div class="ds-list">
+        <div class="ds-row ds-study"><div class="ds-name">考研 (风景园林/城市规划/建筑学)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">38%</div></div><div class="ds-row"><div class="ds-name">直接就业 (设计院/房企/园林公司/规划院)</div><div class="ds-bar"><div class="ds-fill" style="--w:92%;"></div></div><div class="ds-pct">35%</div></div><div class="ds-row ds-study"><div class="ds-name">保研 (985 风景园林方向直博/硕博连读)</div><div class="ds-bar"><div class="ds-fill" style="--w:32%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row ds-study"><div class="ds-name">跨专业考研 (建筑/城市规划/环境设计/艺术设计)</div><div class="ds-bar"><div class="ds-fill" style="--w:21%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">出国留学 (哈佛 GSD/宾大/AA/代尔夫特 景观全球顶尖)</div><div class="ds-bar"><div class="ds-fill" style="--w:13%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">考公务员/选调生 (自然资源系统, 985 定向)</div><div class="ds-bar"><div class="ds-fill" style="--w:5%;"></div></div><div class="ds-pct">2%</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
+      </div>
+      <div class="pull-list">
+        <div class="pull">"本科北林园林, 大二开始接设计院实习, 真正爱上园林。园林是「想赚快钱就别来」专业 — 4 年毕业 7.5 万, 比 CS 低一半, 加班还严重。但 5 年后做主创设计师能到 25-40 万, 没有 35 岁焦虑, 越老越值钱。设计院通宵改图是常态, 真心喜欢画图 + 喜欢植物 + 不怕加班, 园林是好选择。"<span class="by">— 校友 (院校脱敏) · 知乎 @2025</span></div><div class="pull">"本科东南园林, 毕业进龙湖做景观设计。年薪 22 万 + 年终奖, 1/3 时间在办公室画图, 2/3 跑工地。园林在房企是「核心岗」 — 居住区景观决定楼盘品质, 龙湖景观在业内有口皆碑, 园林毕业生在房企很受重视。985 园林 + 设计能力强 + 懂植物, 房企甲方是真对口。"<span class="by">— 校友 (院校脱敏) · 校友访谈 @上海</span></div><div class="pull">"本科同济园林, 毕业进易亚源境做住宅景观。第一年年薪 8 万, 现在 8 年经验 35 万 + 项目奖金。设计院加班是真的加班 (投标前一晚通宵改图是常态), 但易亚的住宅景观全国第一 (龙湖/万科/中海一半景观出自易亚), 5 年后做主创能到 30-50 万, 10 年后做合伙人百万年薪不是梦。真心喜欢设计就来, 想朝九晚五慎选。"<span class="by">— 校友 (院校脱敏) · 校友访谈 @上海</span></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十一</span>
+        <h2 class="art-title">高考选科要求</h2>
+      </div>
+      <div class="art-body">
+        <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
+      </div>
+      <div class="xk-list">
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:75%;"></div><span class="xk-pct">75%</span></div></div></div><div class="xk-reason">传统理科组合, 医学/工科/农学/部分理学专业必选, 覆盖最广。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 生物 (再选化学或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:14%;"></div><span class="xk-pct">14%</span></div></div></div><div class="xk-reason">医学/生物/医技/部分农学方向可报, 化学弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">医学/药学/护理/部分农学方向, 物理弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价/中外合作)</div><div class="xk-bar"><div class="xk-fill" style="--w:3%;"></div><span class="xk-pct">3%</span></div></div></div><div class="xk-reason">极少数综合评价/中外合作专业, 工科/医学通常不适用。</div></div>
+      </div>
+    </section>
 </article>
 
 <div class="footer-cta">
@@ -521,13 +1073,36 @@
   <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
   <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
   <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+
+<!-- 心愿打分模态框 -->
+<div class="wish-modal" id="wish-modal" hidden>
+  <div class="wish-modal-bg" data-close="1"></div>
+  <div class="wish-modal-card" role="dialog" aria-labelledby="wish-modal-title">
+    <h3 class="wish-modal-title" id="wish-modal-title">给 园林 打分</h3>
+    <p class="wish-modal-sub">1-5 星, 后续可在心愿单查看排序</p>
+    <div class="star-row" id="star-row" role="radiogroup" aria-label="评分">
+      <button class="star-btn" data-star="1" aria-label="1 星"><span>★</span></button>
+      <button class="star-btn" data-star="2" aria-label="2 星"><span>★</span></button>
+      <button class="star-btn" data-star="3" aria-label="3 星"><span>★</span></button>
+      <button class="star-btn" data-star="4" aria-label="4 星"><span>★</span></button>
+      <button class="star-btn" data-star="5" aria-label="5 星"><span>★</span></button>
+    </div>
+    <div class="star-hint" id="star-hint">点击星星选择评分</div>
+    <textarea class="wish-comment" id="wish-comment" placeholder="备注 (选填, 例: 看完想再读读课程)"></textarea>
+    <div class="wish-modal-actions">
+      <button class="wish-btn wish-btn-cancel" data-close="1">取消</button>
+      <button class="wish-btn wish-btn-remove" id="wish-remove" hidden>移除出心愿单</button>
+      <button class="wish-btn wish-btn-save" id="wish-save" disabled>保存到心愿单</button>
+    </div>
+  </div>
+</div>
   <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
 </nav>
 
+<script>window.__SLUG__ = "landscape-architecture"; window.__TITLE__ = "园林";</script>
 <script src="../js/loader.js"></script>
 <script src="../js/dock.js"></script>
 <script src="../js/detail.js"></script>
-<script>window.__SLUG__ = "landscape-architecture";</script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));

@@ -40,6 +40,149 @@
   .top-btn .heart-on { color: var(--accent); }
   .top-btn .heart-off { color: var(--muted-2); }
 
+  /* hero 右上角手浮爱心 */
+  .hero { position: relative; }
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 200ms, background 200ms;
+  }
+  .hero-heart:active { transform: scale(0.9); background: rgba(255,255,255,0.95); }
+  .hero-heart .heart-off { color: var(--muted-2); font-size: 1.125rem; line-height: 1; }
+  .hero-heart .heart-on { color: var(--accent); font-size: 1.125rem; line-height: 1; }
+
+  /* 爱心手浮按钮增强 (心愿单打分入口) */
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 200ms, box-shadow 200ms;
+  }
+  .hero-heart:active { transform: scale(0.94); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+  .hero-heart.is-on { background: var(--accent); border-color: var(--accent); }
+  .hero-heart.is-on .heart-off, .hero-heart.is-on .heart-on { color: #FBF8F1; }
+  .hero-heart.is-on .heart-label { color: #FBF8F1; }
+  .heart-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase;
+  }
+
+  /* 心愿打分模态框 */
+  .wish-modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .wish-modal[hidden] { display: none; }
+  .wish-modal-bg {
+    position: absolute; inset: 0;
+    background: rgba(20, 20, 18, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 240ms ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .wish-modal-card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 420px;
+    background: var(--bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 24px 24px 28px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.16);
+    animation: slideUp 280ms cubic-bezier(0.2, 0.9, 0.3, 1.05);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .wish-modal-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .wish-modal-sub {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--muted); margin-bottom: 18px;
+  }
+  .star-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .star-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; padding: 0;
+    font-size: 32px; color: var(--line); cursor: pointer;
+    transition: transform 120ms, color 120ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .star-btn span { display: block; line-height: 1; }
+  .star-btn:active { transform: scale(0.85); }
+  .star-btn.is-on { color: #E8A53A; }
+  .star-hint {
+    text-align: center;
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); margin-bottom: 14px;
+    min-height: 16px;
+  }
+  .wish-tags-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .wish-tag {
+    padding: 6px 14px;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 600;
+    color: var(--theme-deep); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 24px;
+    cursor: pointer; transition: all 160ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-tag.is-on {
+    background: var(--theme); color: #FBF8F1; border-color: var(--theme);
+  }
+  .wish-comment {
+    width: 100%;
+    min-height: 64px; max-height: 120px;
+    padding: 10px 12px;
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+  .wish-comment:focus { outline: 0; border-color: var(--theme); }
+  .wish-modal-actions {
+    display: flex; gap: 10px;
+  }
+  .wish-btn {
+    flex: 1; height: 44px;
+    border-radius: 22px; border: 0;
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-btn-cancel { background: var(--bg-soft); color: var(--muted); }
+  .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
+  .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+
   .hero {
     position: relative;
     padding: 32px 24px 36px;
@@ -99,23 +242,250 @@
     background: var(--line-strong);
     border-bottom: 1px solid var(--line);
   }
+  /* === Salary Table · P25/P50/P75 === */
+  .sal-table {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .sal-th, .sal-tr {
+    display: grid;
+    grid-template-columns: 92px 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .sal-th-stage, .sal-stage {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em; line-height: 1.5;
+    padding-top: 6px;
+  }
+  .sal-stage { color: var(--theme-deep); font-size: 0.875rem; }
+  .sal-yoy {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 5px; border-radius: 2px; margin-left: 6px;
+    color: #FBF8F1;
+  }
+  .sal-yoy.up { background: #4C7A4C; }
+  .sal-yoy.down { background: var(--accent); }
+  .sal-th-cell, .sal-cell {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+    text-align: center;
+  }
+  .sal-th-cell.is-p50, .sal-cell.is-p50 { color: var(--theme-deep); font-weight: 700; }
+  .sal-th-cell { padding-top: 6px; }
+  .sal-cell {
+    font-family: var(--font-body); font-size: 0.8125rem; font-weight: 400;
+    color: var(--fg); text-align: left;
+    display: flex; flex-direction: column; gap: 4px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .sal-cell.is-p50 { font-weight: 700; }
+  .sal-cell .approx { color: var(--muted); font-size: 0.75rem; margin-right: 2px; }
+  .sal-cell .sal-cell-num {
+    font-family: var(--font-num); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep);
+  }
+  .sal-cell.is-p50 .sal-cell-num { color: var(--accent-ink); }
+  .sal-cell .sal-cell-unit {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); margin-left: 2px; font-weight: 400;
+  }
+  .sal-cell-bar {
+    display: block; height: 4px;
+    background: var(--bg-soft); border-radius: 1px; overflow: hidden;
+    margin-top: 2px;
+  }
+  .sal-cell-fill {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
+
+  /* === 移除按钮 === */
+  .wish-btn-remove { background: var(--bg-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .wish-btn-remove:active { background: rgba(184,50,58,0.08); }
+  .stats-strip {
+    background: var(--theme);
+    margin: 0 0 14px;
+    padding: 22px 20px 20px;
+    border-radius: 2px;
+    color: var(--bg);
+  }
   .stat-cell {
-    background: var(--bg-soft);
-    padding: 18px 14px;
     text-align: center;
   }
   .stat-cell .n {
     font-family: var(--font-num);
-    font-size: 1.5rem; font-weight: 700;
-    color: var(--theme);
-    line-height: 1; letter-spacing: -0.02em;
+    font-size: 1.875rem; font-weight: 700;
+    color: var(--bg);
+    line-height: 1.05; letter-spacing: -0.01em;
     display: block;
   }
-  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .n .unit { font-size: 0.8125rem; color: var(--theme-soft); font-weight: 500; margin-left: 3px; opacity: 0.85; }
   .stat-cell .l {
-    font-family: var(--font-num); font-size: 0.625rem;
-    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--theme-soft); letter-spacing: 0.18em; text-transform: uppercase;
     margin-top: 6px; display: block;
+    opacity: 0.75;
+  }
+  /* 读研档位高亮 (B 块里也保留色彩对比) */
+  .stat-cell.grad-tier[data-tier="高"] .n { color: #FBF8F1; }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme-soft); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--theme-soft); opacity: 0.7; }
+  .stat-cell.grad-tier .n { font-size: 1.875rem; }
+
+  /* === 选科要求 (xuanke) === */
+  .xk-list { margin-top: 8px; }
+  .xk-row {
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+  .xk-row:first-child { border-top: 0; padding-top: 4px; }
+  .xk-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .xk-num {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+    padding-top: 2px; min-width: 24px;
+  }
+  .xk-info { flex: 1; }
+  .xk-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
+  }
+  .xk-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden;
+    margin-right: 56px;
+  }
+  .xk-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .xk-pct {
+    position: absolute; right: 0; top: -2px;
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em;
+  }
+  .xk-reason {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 深造路径 (deep_study) === */
+  .ds-list { margin-top: 4px; }
+  .ds-row {
+    display: grid; grid-template-columns: 1fr 80px 36px;
+    gap: 10px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .ds-row:first-child { padding-top: 4px; }
+  .ds-row:last-child { border-bottom: 0; }
+  .ds-name {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.4;
+  }
+  .ds-study .ds-name {
+    font-weight: 600; color: var(--theme-deep);
+  }
+  .ds-study .ds-name::before {
+    content: "🎓 ";
+  }
+  .ds-bar {
+    height: 6px; border-radius: 1px; background: var(--bg-soft);
+    overflow: hidden; position: relative;
+  }
+  .ds-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .ds-study .ds-fill {
+    background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
+  }
+  .ds-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  /* === 就业方向 (employment_direction) === */
+  .emp-list { margin-top: 4px; }
+  .emp-row {
+    padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .emp-row:first-child { border-top: 0; padding-top: 4px; }
+  .emp-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
+  }
+  .emp-num {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em; min-width: 24px;
+  }
+  .emp-name {
+    flex: 1;
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep); line-height: 1.3;
+  }
+  .emp-ratio {
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  .emp-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden; margin-bottom: 6px;
+    margin-left: 34px;
+  }
+  .emp-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .emp-desc {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 头部雇主 (top_companies) === */
+  .co-list { margin-top: 4px; }
+  .co-row {
+    display: grid; grid-template-columns: 1fr 70px;
+    gap: 12px; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .co-row:first-child { padding-top: 4px; }
+  .co-row:last-child { border-bottom: 0; }
+  .co-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--fg); line-height: 1.4; margin-bottom: 4px;
+  }
+  .co-tier {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-left: 8px;
+    color: #FBF8F1; vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+  .co-tier-s { background: var(--accent-ink); }
+  .co-tier-a { background: var(--theme); }
+  .co-tier-b { background: var(--muted); }
+  .co-meta {
+    font-family: var(--font-body); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.02em;
+  }
+  .co-meta .dot { color: var(--line); margin: 0 4px; }
+  .co-spark-wrap {
+    display: flex; align-items: center; justify-content: flex-end;
+  }
+  .co-spark {
+    width: 60px; height: 16px;
+    overflow: visible;
+  }
+  .co-spark polyline {
+    fill: none; stroke: var(--theme); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round;
   }
 
   .tags-strip {
@@ -259,6 +629,115 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
+  /* fit 杂志风 — 大字衬线 + 序号 + 列表文章流 */
+  .fit-pair { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 0; }
+  .fit-col { padding: 12px 0 8px; border-top: 1px solid var(--line); }
+  .fit-col:first-child { border-top: 0; padding-top: 6px; }
+  .fit-num {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .fit-col.fit-yes .fit-num { color: var(--theme-deep); }
+  .fit-col.fit-no  .fit-num { color: var(--accent); }
+  .fit-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 10px; letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .fit-col.fit-no .fit-title { color: var(--accent-ink); }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    padding: 8px 0; border-top: 1px dashed var(--line);
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg);
+    position: relative; padding-left: 18px;
+  }
+  .fit-list li:first-child { border-top: 0; padding-top: 4px; }
+  .fit-list li::before {
+    content: "→"; position: absolute; left: 0; top: 8px;
+    color: var(--theme); font-weight: 700;
+  }
+  .fit-list li:first-child::before { top: 4px; }
+  .fit-col.fit-no .fit-list li::before { content: "✗"; color: var(--accent); }
+
+  /* pitfalls 杂志风 — 文章流 误区/真相 上下排 */
+  .pit-grid { display: flex; flex-direction: column; gap: 0; padding: 8px 0 4px; }
+  .pit-row {
+    padding: 14px 0; border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pit-row:first-child { border-top: 0; padding-top: 4px; }
+  .pit-myth-side, .pit-reality-side { display: flex; flex-direction: column; gap: 4px; }
+  .pit-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pit-reality-side .pit-label { color: var(--theme-deep); }
+  .pit-myth-text {
+    font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700;
+    color: var(--accent-ink); line-height: 1.4;
+  }
+  .pit-reality-text {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); line-height: 1.65;
+  }
+
+  /* stat-cell 读研档位 (高/中/低) */
+  .stat-cell.grad-tier .n { font-size: 1rem; }
+  .stat-cell.grad-tier[data-tier="高"] .n { color: var(--accent-ink); }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--muted); }
+
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -338,12 +817,14 @@
   <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
   <div class="top-crumb">汉语言文学 · 050501</div>
   <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
-  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
-    <span id="heart-ico" class="heart-off">♡</span>
-  </a>
 </header>
 
 <section class="hero">
+  <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
+    <span class="heart-bg"></span>
+    <span id="heart-ico" class="heart-off">♡</span>
+    <span class="heart-label" id="heart-label">收藏</span>
+  </button>
   <div class="hero-crumb"><span class="rule"></span>文学 · 中国语言文学类 · 050501</div>
   <h1 class="hero-title">汉语言文学</h1>
   <div class="hero-sub">文学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
@@ -352,8 +833,8 @@
 
 <div class="stats-strip">
   <div class="stat-cell"><span class="n">5<span class="unit">万</span></span><span class="l">入行中位</span></div>
-  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
-  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+  <div class="stat-cell grad-tier" data-tier="中 20%"><span class="n">中 20%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell"><span class="n">3.5<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
 
 <div class="tags-strip" id="tags-strip">
@@ -369,23 +850,36 @@
   <section class="art-sec">
       <div class="art-head">
         <span class="art-num">一</span>
-        <h2 class="art-title">这个专业到底学什么</h2>
+        <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p>{'foundations': ['现代汉语 (语音词汇语法文字)', '古代汉语 (通论 + 文选)', '中国古代文学史 (先秦到元明清)', '中国现当代文学史', '外国文学史 (欧美 + 俄苏 + 东方)', '文学理论 (含美学导论)', '语言学概论'], 'directions': [{'name': '师范方向', 'desc': '语文教学论 + 班级管理 + 一学期教育实习, 北京师范大学特色, 是公费师范主力通道。'}, {'name': '现当代文学与比较文学', 'desc': '全英课程多, 复旦大学的招牌方向, 培养文学评论与跨文化研究能力。'}, {'name': '古典文献学与训诂学', 'desc': '啃《说文解字》《左传》选段, 南京大学全国第一, 文史功底扎实的硬核路线。'}, {'name': '文艺学与西方文论', 'desc': '美学 + 西方文论 + 文学批评方法, 华东师大为沪上重镇, 偏理论思辨。'}, {'name': '应用语言学与方言研究', 'desc': '对外汉语教学 + 粤语方言田野调查, 中山大学南方特色, 偏语言学应用。'}], 'skills': ['学术写作 (毕业论文 8000-15000 字)', '应用文写作 (公文 + 策划案 + 媒体稿)', '文献检索与训诂 (《说文解字》《文心雕龙》)', '文学批评与文本细读 (中外经典 200+ 部)', '普通话与口语表达 (师范方向必备)', '基础数据处理 (语料库 + 方言田野工具)'], 'bonus': '中文系几乎不碰数学和实验, 但课外阅读量极大, 4 年要读 200+ 部文学经典。师范方向必考教师资格证, 应届通过率约 35%。'}</p>
-        <p>汉语言文学不是「学写文章」, 它研究汉语的形音义规律 + 中国古今文学作品 + 文学理论。就业面极广 (语文教师 / 公务员 / 编辑 / 出版社), 是中国大学最古老的专业之一, 也是体制内友好的「万金油」。</p>
+        <p class="lede">汉语言文学不是「学写文章」, 它研究汉语的形音义规律 + 中国古今文学作品 + 文学理论。就业面极广 (语文教师 / 公务员 / 编辑 / 出版社), 是中国大学最古老的专业之一, 也是体制内友好的「万金油」。</p>
+        <div class="dir-list"><div class="dir-card"><div class="dir-num">01</div><div class="dir-body"><div class="dir-name">师范方向</div><div class="dir-desc">语文教学论 + 班级管理 + 一学期教育实习, 北京师范大学特色, 是公费师范主力通道。</div></div></div><div class="dir-card"><div class="dir-num">02</div><div class="dir-body"><div class="dir-name">现当代文学与比较文学</div><div class="dir-desc">全英课程多, 复旦大学的招牌方向, 培养文学评论与跨文化研究能力。</div></div></div><div class="dir-card"><div class="dir-num">03</div><div class="dir-body"><div class="dir-name">古典文献学与训诂学</div><div class="dir-desc">啃《说文解字》《左传》选段, 南京大学全国第一, 文史功底扎实的硬核路线。</div></div></div><div class="dir-card"><div class="dir-num">04</div><div class="dir-body"><div class="dir-name">文艺学与西方文论</div><div class="dir-desc">美学 + 西方文论 + 文学批评方法, 华东师大为沪上重镇, 偏理论思辨。</div></div></div><div class="dir-card"><div class="dir-num">05</div><div class="dir-body"><div class="dir-name">应用语言学与方言研究</div><div class="dir-desc">对外汉语教学 + 粤语方言田野调查, 中山大学南方特色, 偏语言学应用。</div></div></div></div><div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">学什么底子</div><div class="what-tags"><span class="tag-mini">现代汉语 (语音词汇语法文字)</span><span class="tag-mini">古代汉语 (通论 + 文选)</span><span class="tag-mini">中国古代文学史 (先秦到元明清)</span><span class="tag-mini">中国现当代文学史</span><span class="tag-mini">外国文学史 (欧美 + 俄苏 + 东方)</span><span class="tag-mini">文学理论 (含美学导论)</span><span class="tag-mini">语言学概论</span></div></div><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">学术写作 (毕业论文 8000-15000 字)</span><span class="tag-mini">应用文写作 (公文 + 策划案 + 媒体稿)</span><span class="tag-mini">文献检索与训诂 (《说文解字》《文心雕龙》)</span><span class="tag-mini">文学批评与文本细读 (中外经典 200+ 部)</span><span class="tag-mini">普通话与口语表达 (师范方向必备)</span><span class="tag-mini">基础数据处理 (语料库 + 方言田野工具)</span></div></div></div>
       </div>
-      <div class="risk">
-        <div class="risk-head">⚠ 读之前先想清</div>
-        <div class="risk-body">
-          <strong>适合谁。</strong>{'yes': ['喜欢读书, 能坐冷板凳, 文字功底扎实', '愿意花一学期啃《文心雕龙》繁体原文', '目标进体制内, 把汉语言当考公跳板', '未来想当中小学语文老师 (师范方向)', '对文学评论或古典文献有学术兴趣'], 'no': ['期望一毕业就高薪, 文科本科起薪中下', '数学或逻辑思维极强, 想做定量研究', '性格极其外向, 讨厌长时间阅读和写作']}
-        </div>
-      </div>
-      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '汉语言等于当作家', 'reality': '本科目标是培养研究者, 不是培养作家。真正靠写作吃饭的人往往不是中文系毕业的, 把中文系当作家摇篮是误判。'}<br>• {'myth': '学完就能做记者', 'reality': '现在媒体校招普遍要求新传专业, 中文系进传统媒体只能做编辑岗, 想跑一线采编要补新传背景。'}<br>• {'myth': '汉语言好找工作', 'reality': '万金油等于万能但低薪, 多数岗位不限专业, 文科生都能投, 直接对垒历史、哲学、新闻等专业竞争。'}<br>• {'myth': '读研就有好出路', 'reality': '文学硕士 70% 仍是考公、进中学或进出版社, 学术道路要读到博士且能进高校才算稳定, 硕士学历溢价有限。'}<br>• {'myth': '考公岗位好考', 'reality': '岗位多但报名人数也多, 2024 国考汉语言相关岗位报录比普遍 50:1 以上, 别以为对口就容易上岸。'}</div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
         <span class="art-num">二</span>
+        <h2 class="art-title">什么人适合</h2>
+      </div>
+      <div class="art-body">
+        <p>在决定之前, 先想清楚自己是哪种人.</p>
+      </div>
+      <div class="fit-pair"><div class="fit-col fit-yes"><div class="fit-num">Y · YES</div><div class="fit-title">🌱 适合来读</div><ul class="fit-list"><li>喜欢读书, 能坐冷板凳, 文字功底扎实</li><li>愿意花一学期啃《文心雕龙》繁体原文</li><li>目标进体制内, 把汉语言当考公跳板</li><li>未来想当中小学语文老师 (师范方向)</li><li>对文学评论或古典文献有学术兴趣</li></ul></div><div class="fit-col fit-no"><div class="fit-num">N · NO</div><div class="fit-title">⛔ 慎入</div><ul class="fit-list"><li>期望一毕业就高薪, 文科本科起薪中下</li><li>数学或逻辑思维极强, 想做定量研究</li><li>性格极其外向, 讨厌长时间阅读和写作</li></ul></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">避坑指南</h2>
+      </div>
+      <div class="art-body">
+        <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
+      </div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">汉语言等于当作家</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">本科目标是培养研究者, 不是培养作家。真正靠写作吃饭的人往往不是中文系毕业的, 把中文系当作家摇篮是误判。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">学完就能做记者</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">现在媒体校招普遍要求新传专业, 中文系进传统媒体只能做编辑岗, 想跑一线采编要补新传背景。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">汉语言好找工作</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">万金油等于万能但低薪, 多数岗位不限专业, 文科生都能投, 直接对垒历史、哲学、新闻等专业竞争。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">读研就有好出路</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">文学硕士 70% 仍是考公、进中学或进出版社, 学术道路要读到博士且能进高校才算稳定, 硕士学历溢价有限。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">考公岗位好考</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">岗位多但报名人数也多, 2024 国考汉语言相关岗位报录比普遍 50:1 以上, 别以为对口就容易上岸。</div></div></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
         <h2 class="art-title">本科 4 年学的课</h2>
       </div>
       <div class="art-body">
@@ -394,68 +888,27 @@
       <div class="course-list">
         <div class="course-row">
           <div class="course-yr">大一</div>
-          <div class="course-names">大学英语 (综合/阅读/听力) · 思想政治理论 (马原/毛概/思修/近代史) · 计算机应用基础 · 大学语文 / 应用写作 · 高等数学 (文科数学, 部分院校) · 体育 · 形势与政策</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 大学英语 (综合/阅读/听力) · 思想政治理论 (马原/毛概/思修/近代史) · <strong style="color:var(--accent);">★</strong> 计算机应用基础 · <strong style="color:var(--accent);">★</strong> 大学语文 / 应用写作 · <strong style="color:var(--accent);">★</strong> 高等数学 (文科数学, 部分院校) · 体育 · 形势与政策</div>
           <div class="course-tag">大一</div>
         </div><div class="course-row">
           <div class="course-yr">大二</div>
-          <div class="course-names">现代汉语 (语音/词汇/语法/文字) · 古代汉语 (通论 + 文选) · 中国古代文学史 (先秦-元明清) · 中国现当代文学史 · 外国文学史 (欧美+俄苏+东方) · 文学理论 (含美学导论) · 基础写作 + 应用文写作 · 语言学概论</div>
+          <div class="course-names">现代汉语 (语音/词汇/语法/文字) · 古代汉语 (通论 + 文选) · 中国古代文学史 (先秦-元明清) · 中国现当代文学史 · 外国文学史 (欧美+俄苏+东方) · <strong style="color:var(--accent);">★</strong> 文学理论 (含美学导论) · <strong style="color:var(--accent);">★</strong> 基础写作 + 应用文写作 · 语言学概论</div>
           <div class="course-tag">大二</div>
         </div><div class="course-row">
           <div class="course-yr">大三</div>
-          <div class="course-names">北京师范大学 · 师范方向 (语文教学论 + 班级管理 + 1 学期教育实习) · 复旦大学 · 现当代文学 + 比较文学 (全英课程多) · 南京大学 · 古典文献学 + 训诂学 (全国第一) · 华东师范大学 · 文艺学 + 西方文论 (沪上重镇) · 中山大学 · 应用语言学 + 粤语方言研究 (南方特色)</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 北京师范大学 · 师范方向 (语文教学论 + 班级管理 + 1 学期教育实习) · 复旦大学 · 现当代文学 + 比较文学 (全英课程多) · 南京大学 · 古典文献学 + 训诂学 (全国第一) · 华东师范大学 · 文艺学 + 西方文论 (沪上重镇) · 中山大学 · 应用语言学 + 粤语方言研究 (南方特色)</div>
           <div class="course-tag">大三</div>
         </div><div class="course-row">
           <div class="course-yr">大四</div>
-          <div class="course-names">田野调查 + 文学采风 · 编辑出版实习 (杂志 / 出版社) · 新闻单位 / 媒体实习 · 毕业论文 / 毕业创作 · 学术会议 + 工作坊</div>
+          <div class="course-names">田野调查 + 文学采风 · <strong style="color:var(--accent);">★</strong> 编辑出版实习 (杂志 / 出版社) · <strong style="color:var(--accent);">★</strong> 新闻单位 / 媒体实习 · <strong style="color:var(--accent);">★</strong> 毕业论文 / 毕业创作 · 学术会议 + 工作坊</div>
           <div class="course-tag">大四</div>
         </div>
       </div>
     </section>
   <section class="art-sec">
       <div class="art-head">
-        <span class="art-num">三</span>
-        <h2 class="art-title">毕业后真的能拿多少</h2>
-      </div>
-      <div class="art-body">
-        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
-      </div>
-      <div class="sal-rows">
-        <div class="sal-row">
-          <div class="sal-l">10年+ (持证/资深)</div>
-          <div class="sal-bar" style="--w: 100%;"></div>
-          <div class="sal-v">28%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">5年经验</div>
-          <div class="sal-bar" style="--w: 54%;"></div>
-          <div class="sal-v">15%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">3年经验</div>
-          <div class="sal-bar" style="--w: 32%;"></div>
-          <div class="sal-v">9%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">应届生 (一线)</div>
-          <div class="sal-bar" style="--w: 18%;"></div>
-          <div class="sal-v">5%</div>
-        </div>
-      </div>
-    </section>
-  <section class="art-sec">
-      <div class="art-head">
-        <span class="art-num">四</span>
-        <h2 class="art-title">学长学姐说</h2>
-      </div>
-      <div class="art-body">
-        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
-      </div>
-      <div class="pull">
-        "本科汉语言, 北京一家文学出版社编辑岗, 8-15 万/年 + 五险一金, 选题策划 + 文字编辑 + 作者维护 三件事并行, 名社门槛硕士起。"
-        <span class="by">— 某 985 高校中文系 2021 届 · 出版社编辑 · 4 年</span>
-      </div>
-    </section>
-  <section class="art-sec">
-      <div class="art-head">
         <span class="art-num">五</span>
-        <h2 class="art-title">头部院校参考</h2>
+        <h2 class="art-title">院校分布</h2>
       </div>
       <div class="art-body">
         <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
@@ -494,6 +947,104 @@
           <div class="uni-score">—</div>
         </div>
     </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">六</span>
+        <h2 class="art-title">头部雇主参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
+      </div>
+      <div class="co-list">
+        <div class="co-row"><div class="co-info"><div class="co-name">字节跳动 / 腾讯 (内容运营 / 编辑)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">校招 200-500 人<span class="dot">·</span>35-60 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.7 25.0,6.6 37.5,8.2 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">教育部直属 6 校 (公费师范定向)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,9.2 12.5,14.0 25.0,4.3 37.5,8.6 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">人民教育出版社 / 商务印书馆<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,9.1 25.0,4.9 37.5,9.1 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中央/省级 公务员 (国考省考)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,12.5 25.0,10.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">各省重点中学 (深圳/北京/上海)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,7.0 25.0,9.7 37.5,2.7 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">新华社 / 人民日报社 (记者编辑)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,2.2 25.0,5.9 37.5,5.9 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">磨铁 / 中信 / 后浪 (民营出版)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,11.3 25.0,8.1 37.5,8.6 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">互联网公司品牌 / 文案 / PR<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,7.0 25.0,0.8 37.5,0.8 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">新东方 / 学而思 (语文教培)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,8.9 25.0,4.5 37.5,3.8 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">对外汉语教学 (新东方汉语/孔子学院)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,12.3 25.0,2.2 37.5,0.0 50.0,0.6" /></svg></div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">七</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>P25/P50/P75 = 25/50/75 百分位. ≈ 表示估算值. ↗/↘ = 3 年变化.</p>
+      </div>
+      <div class="sal-table">
+        <div class="sal-th">
+          <div class="sal-th-stage">阶段</div>
+          <div class="sal-th-cell">P25</div>
+          <div class="sal-th-cell is-p50">P50 中位</div>
+          <div class="sal-th-cell">P75 高位</div>
+        </div>
+        <div class="sal-tr">
+          <div class="sal-stage">应届生 (一线)<span class="sal-yoy up">↗ 3%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">5.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">13.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">3年经验<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">9.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:31%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:29%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">5年经验<span class="sal-yoy up">↗ 8%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:54%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:56%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">38.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:51%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">10年+ (持证/资深)<span class="sal-yoy up">↗ 10%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">45.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">75.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">八</span>
+        <h2 class="art-title">主流就业方向</h2>
+      </div>
+      <div class="art-body">
+        <p>8 大就业方向及占比.</p>
+      </div>
+      <div class="emp-list">
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">出版 / 媒体行业</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc">人民文学出版社 / 商务印书馆 / 三联 / 广西师大 | 985 + 学科编辑能力, 应届 10-18 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">语文 / 文学教师</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc">省市重点中学 / 国际学校中文教师 | 985 + 教师资格证 + 学科教学, 8-15 万/年 + 寒暑</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">内容运营 / 自媒体</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc">字节 / 网易 / 知乎 / 公众号 / 视频号大 V | 985 + 写作 + 平台运营, 应届 15-25 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">文化 / 文旅 / 文创</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">故宫 / 国博 / 各省博物馆 / 文旅集团 | 985 + 文博 / 文旅复合, 应届 12-20 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">继续深造 (文学硕博)</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc">北大中文 / 复旦中文 / 南大中文 / 海外比较文学 PhD | 本科就业泛, 头部高校教师 / 出版社编辑硕博是门槛</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">公务员 / 党政机关</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">宣传部 / 文旅局 / 广电局 / 党校 | 公考/选调 + 党员优势, 稳定 8-15 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">互联网产品 / 用户研究</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc">字节 / 阿里 / 美团产品 / UX / 用户研究 | 985 + 文科 + 复合, 应届 20-30 万/年, 用户洞察强</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">编剧 / 影视 / 文化公司</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc">正午阳光 / 华策影视 / 柠萌影业 / 文化公司 | 985 + 剧本创作能力, 应届 12-25 万, 头部编剧 50-200 万/部</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">九</span>
+        <h2 class="art-title">深造与就业路径分布</h2>
+      </div>
+      <div class="art-body">
+        <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
+      </div>
+      <div class="ds-list">
+        <div class="ds-row"><div class="ds-name">中小学语文教师 (编制)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">35%</div></div><div class="ds-row ds-study"><div class="ds-name">继续深造 (中文硕博)</div><div class="ds-bar"><div class="ds-fill" style="--w:57%;"></div></div><div class="ds-pct">20%</div></div><div class="ds-row"><div class="ds-name">出版社 / 文学杂志编辑</div><div class="ds-bar"><div class="ds-fill" style="--w:51%;"></div></div><div class="ds-pct">18%</div></div><div class="ds-row"><div class="ds-name">新媒体 / 内容运营</div><div class="ds-bar"><div class="ds-fill" style="--w:43%;"></div></div><div class="ds-pct">15%</div></div><div class="ds-row"><div class="ds-name">文化 / 文旅 / 文创</div><div class="ds-bar"><div class="ds-fill" style="--w:34%;"></div></div><div class="ds-pct">12%</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
+      </div>
+      <div class="pull-list">
+        <div class="pull">"本科汉语言, 北京一家文学出版社编辑岗, 8-15 万/年 + 五险一金, 选题策划 + 文字编辑 + 作者维护 三件事并行, 名社门槛硕士起。"<span class="by">— 某 985 高校中文系 2021 届 · 出版社编辑 · 4 年</span></div><div class="pull">"中文 + 教师资格证 + 公办高中编, 4-7 万/年 + 寒暑假 + 编制, 高考语文是核心 KPI, 名师工作室 + 学科带头人 是上升路径。"<span class="by">— 某 211 师范大学汉语言文学 2020 届 · 高中语文教师 · 5 年</span></div><div class="pull">"中文系毕业进互联网内容运营, 公众号 / 短视频 文案策划, 12-20 万/年, 写作能力是真正壁垒, 但行业 '内容+算法' 双轨能力要求高。"<span class="by">— 某 985 高校中文系 2022 届 · 新媒体内容运营 · 3 年</span></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十一</span>
+        <h2 class="art-title">高考选科要求</h2>
+      </div>
+      <div class="art-body">
+        <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
+      </div>
+      <div class="xk-list">
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">历史 + 政治 + 地理 (传统文综, 95% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">文学 / 历史 / 哲学 / 新闻 / 法学等文科专业主流组合, 历史 + 政治是核心, 地理为再选。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 政治 + 物理 (跨界文理)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">新闻传播 / 网络与新媒体 等数字方向, 物理 + 文科是跨界优势。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">历史 + 地理 + 化学 (文偏理)</div><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason">文物保护 / 考古 / 文学方向, 化学是文物分析必备。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (中外合作 / 综合评价)</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">极少数中外合作专业 / 综合评价招生不限选科。</div></div>
+      </div>
+    </section>
 </article>
 
 <div class="footer-cta">
@@ -517,13 +1068,36 @@
   <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
   <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
   <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+
+<!-- 心愿打分模态框 -->
+<div class="wish-modal" id="wish-modal" hidden>
+  <div class="wish-modal-bg" data-close="1"></div>
+  <div class="wish-modal-card" role="dialog" aria-labelledby="wish-modal-title">
+    <h3 class="wish-modal-title" id="wish-modal-title">给 汉语言文学 打分</h3>
+    <p class="wish-modal-sub">1-5 星, 后续可在心愿单查看排序</p>
+    <div class="star-row" id="star-row" role="radiogroup" aria-label="评分">
+      <button class="star-btn" data-star="1" aria-label="1 星"><span>★</span></button>
+      <button class="star-btn" data-star="2" aria-label="2 星"><span>★</span></button>
+      <button class="star-btn" data-star="3" aria-label="3 星"><span>★</span></button>
+      <button class="star-btn" data-star="4" aria-label="4 星"><span>★</span></button>
+      <button class="star-btn" data-star="5" aria-label="5 星"><span>★</span></button>
+    </div>
+    <div class="star-hint" id="star-hint">点击星星选择评分</div>
+    <textarea class="wish-comment" id="wish-comment" placeholder="备注 (选填, 例: 看完想再读读课程)"></textarea>
+    <div class="wish-modal-actions">
+      <button class="wish-btn wish-btn-cancel" data-close="1">取消</button>
+      <button class="wish-btn wish-btn-remove" id="wish-remove" hidden>移除出心愿单</button>
+      <button class="wish-btn wish-btn-save" id="wish-save" disabled>保存到心愿单</button>
+    </div>
+  </div>
+</div>
   <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
 </nav>
 
+<script>window.__SLUG__ = "chinese-language-literature"; window.__TITLE__ = "汉语言文学";</script>
 <script src="../js/loader.js"></script>
 <script src="../js/dock.js"></script>
 <script src="../js/detail.js"></script>
-<script>window.__SLUG__ = "chinese-language-literature";</script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));

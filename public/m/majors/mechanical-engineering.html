@@ -40,6 +40,149 @@
   .top-btn .heart-on { color: var(--accent); }
   .top-btn .heart-off { color: var(--muted-2); }
 
+  /* hero 右上角手浮爱心 */
+  .hero { position: relative; }
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 200ms, background 200ms;
+  }
+  .hero-heart:active { transform: scale(0.9); background: rgba(255,255,255,0.95); }
+  .hero-heart .heart-off { color: var(--muted-2); font-size: 1.125rem; line-height: 1; }
+  .hero-heart .heart-on { color: var(--accent); font-size: 1.125rem; line-height: 1; }
+
+  /* 爱心手浮按钮增强 (心愿单打分入口) */
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 200ms, box-shadow 200ms;
+  }
+  .hero-heart:active { transform: scale(0.94); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+  .hero-heart.is-on { background: var(--accent); border-color: var(--accent); }
+  .hero-heart.is-on .heart-off, .hero-heart.is-on .heart-on { color: #FBF8F1; }
+  .hero-heart.is-on .heart-label { color: #FBF8F1; }
+  .heart-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase;
+  }
+
+  /* 心愿打分模态框 */
+  .wish-modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .wish-modal[hidden] { display: none; }
+  .wish-modal-bg {
+    position: absolute; inset: 0;
+    background: rgba(20, 20, 18, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 240ms ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .wish-modal-card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 420px;
+    background: var(--bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 24px 24px 28px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.16);
+    animation: slideUp 280ms cubic-bezier(0.2, 0.9, 0.3, 1.05);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .wish-modal-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .wish-modal-sub {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--muted); margin-bottom: 18px;
+  }
+  .star-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .star-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; padding: 0;
+    font-size: 32px; color: var(--line); cursor: pointer;
+    transition: transform 120ms, color 120ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .star-btn span { display: block; line-height: 1; }
+  .star-btn:active { transform: scale(0.85); }
+  .star-btn.is-on { color: #E8A53A; }
+  .star-hint {
+    text-align: center;
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); margin-bottom: 14px;
+    min-height: 16px;
+  }
+  .wish-tags-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .wish-tag {
+    padding: 6px 14px;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 600;
+    color: var(--theme-deep); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 24px;
+    cursor: pointer; transition: all 160ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-tag.is-on {
+    background: var(--theme); color: #FBF8F1; border-color: var(--theme);
+  }
+  .wish-comment {
+    width: 100%;
+    min-height: 64px; max-height: 120px;
+    padding: 10px 12px;
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+  .wish-comment:focus { outline: 0; border-color: var(--theme); }
+  .wish-modal-actions {
+    display: flex; gap: 10px;
+  }
+  .wish-btn {
+    flex: 1; height: 44px;
+    border-radius: 22px; border: 0;
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-btn-cancel { background: var(--bg-soft); color: var(--muted); }
+  .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
+  .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+
   .hero {
     position: relative;
     padding: 32px 24px 36px;
@@ -99,23 +242,250 @@
     background: var(--line-strong);
     border-bottom: 1px solid var(--line);
   }
+  /* === Salary Table · P25/P50/P75 === */
+  .sal-table {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .sal-th, .sal-tr {
+    display: grid;
+    grid-template-columns: 92px 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .sal-th-stage, .sal-stage {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em; line-height: 1.5;
+    padding-top: 6px;
+  }
+  .sal-stage { color: var(--theme-deep); font-size: 0.875rem; }
+  .sal-yoy {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 5px; border-radius: 2px; margin-left: 6px;
+    color: #FBF8F1;
+  }
+  .sal-yoy.up { background: #4C7A4C; }
+  .sal-yoy.down { background: var(--accent); }
+  .sal-th-cell, .sal-cell {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+    text-align: center;
+  }
+  .sal-th-cell.is-p50, .sal-cell.is-p50 { color: var(--theme-deep); font-weight: 700; }
+  .sal-th-cell { padding-top: 6px; }
+  .sal-cell {
+    font-family: var(--font-body); font-size: 0.8125rem; font-weight: 400;
+    color: var(--fg); text-align: left;
+    display: flex; flex-direction: column; gap: 4px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .sal-cell.is-p50 { font-weight: 700; }
+  .sal-cell .approx { color: var(--muted); font-size: 0.75rem; margin-right: 2px; }
+  .sal-cell .sal-cell-num {
+    font-family: var(--font-num); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep);
+  }
+  .sal-cell.is-p50 .sal-cell-num { color: var(--accent-ink); }
+  .sal-cell .sal-cell-unit {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); margin-left: 2px; font-weight: 400;
+  }
+  .sal-cell-bar {
+    display: block; height: 4px;
+    background: var(--bg-soft); border-radius: 1px; overflow: hidden;
+    margin-top: 2px;
+  }
+  .sal-cell-fill {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
+
+  /* === 移除按钮 === */
+  .wish-btn-remove { background: var(--bg-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .wish-btn-remove:active { background: rgba(184,50,58,0.08); }
+  .stats-strip {
+    background: var(--theme);
+    margin: 0 0 14px;
+    padding: 22px 20px 20px;
+    border-radius: 2px;
+    color: var(--bg);
+  }
   .stat-cell {
-    background: var(--bg-soft);
-    padding: 18px 14px;
     text-align: center;
   }
   .stat-cell .n {
     font-family: var(--font-num);
-    font-size: 1.5rem; font-weight: 700;
-    color: var(--theme);
-    line-height: 1; letter-spacing: -0.02em;
+    font-size: 1.875rem; font-weight: 700;
+    color: var(--bg);
+    line-height: 1.05; letter-spacing: -0.01em;
     display: block;
   }
-  .stat-cell .n .unit { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-left: 2px; }
+  .stat-cell .n .unit { font-size: 0.8125rem; color: var(--theme-soft); font-weight: 500; margin-left: 3px; opacity: 0.85; }
   .stat-cell .l {
-    font-family: var(--font-num); font-size: 0.625rem;
-    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--theme-soft); letter-spacing: 0.18em; text-transform: uppercase;
     margin-top: 6px; display: block;
+    opacity: 0.75;
+  }
+  /* 读研档位高亮 (B 块里也保留色彩对比) */
+  .stat-cell.grad-tier[data-tier="高"] .n { color: #FBF8F1; }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme-soft); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--theme-soft); opacity: 0.7; }
+  .stat-cell.grad-tier .n { font-size: 1.875rem; }
+
+  /* === 选科要求 (xuanke) === */
+  .xk-list { margin-top: 8px; }
+  .xk-row {
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+  .xk-row:first-child { border-top: 0; padding-top: 4px; }
+  .xk-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .xk-num {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+    padding-top: 2px; min-width: 24px;
+  }
+  .xk-info { flex: 1; }
+  .xk-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
+  }
+  .xk-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden;
+    margin-right: 56px;
+  }
+  .xk-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .xk-pct {
+    position: absolute; right: 0; top: -2px;
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em;
+  }
+  .xk-reason {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 深造路径 (deep_study) === */
+  .ds-list { margin-top: 4px; }
+  .ds-row {
+    display: grid; grid-template-columns: 1fr 80px 36px;
+    gap: 10px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .ds-row:first-child { padding-top: 4px; }
+  .ds-row:last-child { border-bottom: 0; }
+  .ds-name {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.4;
+  }
+  .ds-study .ds-name {
+    font-weight: 600; color: var(--theme-deep);
+  }
+  .ds-study .ds-name::before {
+    content: "🎓 ";
+  }
+  .ds-bar {
+    height: 6px; border-radius: 1px; background: var(--bg-soft);
+    overflow: hidden; position: relative;
+  }
+  .ds-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .ds-study .ds-fill {
+    background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
+  }
+  .ds-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  /* === 就业方向 (employment_direction) === */
+  .emp-list { margin-top: 4px; }
+  .emp-row {
+    padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .emp-row:first-child { border-top: 0; padding-top: 4px; }
+  .emp-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
+  }
+  .emp-num {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em; min-width: 24px;
+  }
+  .emp-name {
+    flex: 1;
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep); line-height: 1.3;
+  }
+  .emp-ratio {
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  .emp-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden; margin-bottom: 6px;
+    margin-left: 34px;
+  }
+  .emp-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+  }
+  .emp-desc {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 头部雇主 (top_companies) === */
+  .co-list { margin-top: 4px; }
+  .co-row {
+    display: grid; grid-template-columns: 1fr 70px;
+    gap: 12px; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .co-row:first-child { padding-top: 4px; }
+  .co-row:last-child { border-bottom: 0; }
+  .co-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--fg); line-height: 1.4; margin-bottom: 4px;
+  }
+  .co-tier {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-left: 8px;
+    color: #FBF8F1; vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+  .co-tier-s { background: var(--accent-ink); }
+  .co-tier-a { background: var(--theme); }
+  .co-tier-b { background: var(--muted); }
+  .co-meta {
+    font-family: var(--font-body); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.02em;
+  }
+  .co-meta .dot { color: var(--line); margin: 0 4px; }
+  .co-spark-wrap {
+    display: flex; align-items: center; justify-content: flex-end;
+  }
+  .co-spark {
+    width: 60px; height: 16px;
+    overflow: visible;
+  }
+  .co-spark polyline {
+    fill: none; stroke: var(--theme); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round;
   }
 
   .tags-strip {
@@ -259,6 +629,115 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
+  /* fit 杂志风 — 大字衬线 + 序号 + 列表文章流 */
+  .fit-pair { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 0; }
+  .fit-col { padding: 12px 0 8px; border-top: 1px solid var(--line); }
+  .fit-col:first-child { border-top: 0; padding-top: 6px; }
+  .fit-num {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .fit-col.fit-yes .fit-num { color: var(--theme-deep); }
+  .fit-col.fit-no  .fit-num { color: var(--accent); }
+  .fit-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 10px; letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .fit-col.fit-no .fit-title { color: var(--accent-ink); }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    padding: 8px 0; border-top: 1px dashed var(--line);
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg);
+    position: relative; padding-left: 18px;
+  }
+  .fit-list li:first-child { border-top: 0; padding-top: 4px; }
+  .fit-list li::before {
+    content: "→"; position: absolute; left: 0; top: 8px;
+    color: var(--theme); font-weight: 700;
+  }
+  .fit-list li:first-child::before { top: 4px; }
+  .fit-col.fit-no .fit-list li::before { content: "✗"; color: var(--accent); }
+
+  /* pitfalls 杂志风 — 文章流 误区/真相 上下排 */
+  .pit-grid { display: flex; flex-direction: column; gap: 0; padding: 8px 0 4px; }
+  .pit-row {
+    padding: 14px 0; border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pit-row:first-child { border-top: 0; padding-top: 4px; }
+  .pit-myth-side, .pit-reality-side { display: flex; flex-direction: column; gap: 4px; }
+  .pit-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pit-reality-side .pit-label { color: var(--theme-deep); }
+  .pit-myth-text {
+    font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700;
+    color: var(--accent-ink); line-height: 1.4;
+  }
+  .pit-reality-text {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); line-height: 1.65;
+  }
+
+  /* stat-cell 读研档位 (高/中/低) */
+  .stat-cell.grad-tier .n { font-size: 1rem; }
+  .stat-cell.grad-tier[data-tier="高"] .n { color: var(--accent-ink); }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--muted); }
+
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -338,12 +817,14 @@
   <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
   <div class="top-crumb">机械工程 · 080803</div>
   <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
-  <a class="top-btn" id="heart-btn" href="javascript:void(0)" aria-label="收藏">
-    <span id="heart-ico" class="heart-off">♡</span>
-  </a>
 </header>
 
 <section class="hero">
+  <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
+    <span class="heart-bg"></span>
+    <span id="heart-ico" class="heart-off">♡</span>
+    <span class="heart-label" id="heart-label">收藏</span>
+  </button>
   <div class="hero-crumb"><span class="rule"></span>工学 · 机械类 · 080803</div>
   <h1 class="hero-title">机械工程</h1>
   <div class="hero-sub">工学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
@@ -352,8 +833,8 @@
 
 <div class="stats-strip">
   <div class="stat-cell"><span class="n">6<span class="unit">万</span></span><span class="l">入行中位</span></div>
-  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
-  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+  <div class="stat-cell grad-tier" data-tier="高 40%"><span class="n">高 40%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell"><span class="n">3.5<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
 
 <div class="tags-strip" id="tags-strip">
@@ -368,23 +849,36 @@
   <section class="art-sec">
       <div class="art-head">
         <span class="art-num">一</span>
-        <h2 class="art-title">这个专业到底学什么</h2>
+        <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p>{'foundations': ['高等数学', '理论力学', '材料力学', '工程制图与 CAD', '机械原理', '机械设计', '工程材料'], 'directions': [{'name': '智能制造与微纳米制造', 'desc': '以上海交大智能装备方向为代表, 面向精密加工与智能产线, 含金工实习 + 数控产线实训'}, {'name': '快速原型与先进成形技术', 'desc': '西安交大传统强项, 聚焦 3D 打印、增材制造与先进成形工艺, 对接航空航天与汽车'}, {'name': '机器人与空间机构学', 'desc': '哈工大国防背景特色, 工业机器人本体设计、空间机构、航天机械结构是主战场'}, {'name': '数控技术与数字制造装备', 'desc': '华中科技大学数控方向国内第一, 覆盖 G/M 代码、车铣复合与五轴加工中心'}, {'name': '微机电系统与精密机械', 'desc': '清华大学精密装备方向, 面向 MEMS、半导体设备与精密仪器, 学历门槛高'}], 'skills': ['SolidWorks/UG/CATIA 三维建模', 'ANSYS 有限元分析', '数控 G 代码 M 代码编程', 'MATLAB Python 仿真与数据分析', 'PLC 与单片机控制系统', '液压气压回路设计'], 'bonus': '国家「中国制造 2025」与「工业母机」专项持续加码, 新能源车、半导体设备、工业机器人三大方向对机械 + 自动化复合人才缺口巨大, 行业 5-10 年仍是上升期。'}</p>
-        <p>机械工程是力学 + 设计 + 制造 + 自动化 + 控制的系统学科, 中国制造业大国背景下就业率常年 95%+, 行业正从传统机械向智能装备、机器人和新能源转型。前期需要力学 + 制图 + 制造三件套打基础, 后期按方向分流, 适合能画图、能下车间、能沉心做技术的人。</p>
+        <p class="lede">机械工程是力学 + 设计 + 制造 + 自动化 + 控制的系统学科, 中国制造业大国背景下就业率常年 95%+, 行业正从传统机械向智能装备、机器人和新能源转型。前期需要力学 + 制图 + 制造三件套打基础, 后期按方向分流, 适合能画图、能下车间、能沉心做技术的人。</p>
+        <div class="dir-list"><div class="dir-card"><div class="dir-num">01</div><div class="dir-body"><div class="dir-name">智能制造与微纳米制造</div><div class="dir-desc">以上海交大智能装备方向为代表, 面向精密加工与智能产线, 含金工实习 + 数控产线实训</div></div></div><div class="dir-card"><div class="dir-num">02</div><div class="dir-body"><div class="dir-name">快速原型与先进成形技术</div><div class="dir-desc">西安交大传统强项, 聚焦 3D 打印、增材制造与先进成形工艺, 对接航空航天与汽车</div></div></div><div class="dir-card"><div class="dir-num">03</div><div class="dir-body"><div class="dir-name">机器人与空间机构学</div><div class="dir-desc">哈工大国防背景特色, 工业机器人本体设计、空间机构、航天机械结构是主战场</div></div></div><div class="dir-card"><div class="dir-num">04</div><div class="dir-body"><div class="dir-name">数控技术与数字制造装备</div><div class="dir-desc">华中科技大学数控方向国内第一, 覆盖 G/M 代码、车铣复合与五轴加工中心</div></div></div><div class="dir-card"><div class="dir-num">05</div><div class="dir-body"><div class="dir-name">微机电系统与精密机械</div><div class="dir-desc">清华大学精密装备方向, 面向 MEMS、半导体设备与精密仪器, 学历门槛高</div></div></div></div><div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">学什么底子</div><div class="what-tags"><span class="tag-mini">高等数学</span><span class="tag-mini">理论力学</span><span class="tag-mini">材料力学</span><span class="tag-mini">工程制图与 CAD</span><span class="tag-mini">机械原理</span><span class="tag-mini">机械设计</span><span class="tag-mini">工程材料</span></div></div><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">SolidWorks/UG/CATIA 三维建模</span><span class="tag-mini">ANSYS 有限元分析</span><span class="tag-mini">数控 G 代码 M 代码编程</span><span class="tag-mini">MATLAB Python 仿真与数据分析</span><span class="tag-mini">PLC 与单片机控制系统</span><span class="tag-mini">液压气压回路设计</span></div></div></div>
       </div>
-      <div class="risk">
-        <div class="risk-head">⚠ 读之前先想清</div>
-        <div class="risk-body">
-          <strong>适合谁。</strong>{'yes': ['物理成绩中等以上, 力学基础扎实', '能接受工厂与车间的金工实习环境', '有耐心画图建模, 不抗拒 CAD 与三维制图', '对齿轮、连杆、轴承等机械传动有天然兴趣', '能沉下心做技术, 接受 35 岁后才是黄金期'], 'no': ['追求短期高薪或纯办公室软件岗', '完全不能接受车间油污、噪音与出差', '物理与力学基础薄弱, 看到受力分析就头疼']}
-        </div>
-      </div>
-      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '机械工程是夕阳专业', 'reality': '传统机械是, 但智能装备、工业机器人、新能源汽车、半导体设备、航空航天都是机械 + 自动化的延伸, 行业缺口极大, 头部车企与机器人公司校招热度连年上升。'}<br>• {'myth': '本科毕业就能进研究所设计机床', 'reality': '大部分本科生去的是制造企业车间、设备维护、工艺岗或销售岗, 设计院与研究所设计岗基本要硕士及以上, 这是行业普遍规则, 不是个例。'}<br>• {'myth': '机械毕业起薪高, 月薪过万', 'reality': '应届本科普遍 6-10 万/年, 真正能拿到 15 万+ 的多为 985 硕或进 BYD、宁德时代等热门岗。前 3 年是沉淀期, 35 岁后才是真正的薪资黄金期。'}<br>• {'myth': '机械越老越吃香, 不用读研', 'reality': '经验值钱, 但头部车企、半导体设备、机器人公司研发岗基本卡硕士及以上, 不读研上限较低, 这是行业天花板决定的现实。'}<br>• {'myth': '学机械不用学编程', 'reality': 'SolidWorks、UG、CATIA 是基操, MATLAB、Python 做仿真和数据分析, 数控编程 G 代码 M 代码是机械 + 自动化复合岗的入场券, 不会编程正在被淘汰。'}</div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
         <span class="art-num">二</span>
+        <h2 class="art-title">什么人适合</h2>
+      </div>
+      <div class="art-body">
+        <p>在决定之前, 先想清楚自己是哪种人.</p>
+      </div>
+      <div class="fit-pair"><div class="fit-col fit-yes"><div class="fit-num">Y · YES</div><div class="fit-title">🌱 适合来读</div><ul class="fit-list"><li>物理成绩中等以上, 力学基础扎实</li><li>能接受工厂与车间的金工实习环境</li><li>有耐心画图建模, 不抗拒 CAD 与三维制图</li><li>对齿轮、连杆、轴承等机械传动有天然兴趣</li><li>能沉下心做技术, 接受 35 岁后才是黄金期</li></ul></div><div class="fit-col fit-no"><div class="fit-num">N · NO</div><div class="fit-title">⛔ 慎入</div><ul class="fit-list"><li>追求短期高薪或纯办公室软件岗</li><li>完全不能接受车间油污、噪音与出差</li><li>物理与力学基础薄弱, 看到受力分析就头疼</li></ul></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">避坑指南</h2>
+      </div>
+      <div class="art-body">
+        <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
+      </div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">机械工程是夕阳专业</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">传统机械是, 但智能装备、工业机器人、新能源汽车、半导体设备、航空航天都是机械 + 自动化的延伸, 行业缺口极大, 头部车企与机器人公司校招热度连年上升。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">本科毕业就能进研究所设计机床</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">大部分本科生去的是制造企业车间、设备维护、工艺岗或销售岗, 设计院与研究所设计岗基本要硕士及以上, 这是行业普遍规则, 不是个例。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">机械毕业起薪高, 月薪过万</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">应届本科普遍 6-10 万/年, 真正能拿到 15 万+ 的多为 985 硕或进 BYD、宁德时代等热门岗。前 3 年是沉淀期, 35 岁后才是真正的薪资黄金期。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">机械越老越吃香, 不用读研</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">经验值钱, 但头部车企、半导体设备、机器人公司研发岗基本卡硕士及以上, 不读研上限较低, 这是行业天花板决定的现实。</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">学机械不用学编程</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">SolidWorks、UG、CATIA 是基操, MATLAB、Python 做仿真和数据分析, 数控编程 G 代码 M 代码是机械 + 自动化复合岗的入场券, 不会编程正在被淘汰。</div></div></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
         <h2 class="art-title">本科 4 年学的课</h2>
       </div>
       <div class="art-body">
@@ -393,11 +887,11 @@
       <div class="course-list">
         <div class="course-row">
           <div class="course-yr">大一</div>
-          <div class="course-names">高等数学 (微积分 + 线性代数 + 概率统计) · 大学物理 (力学 + 电磁学 + 热学 + 实验) · 理论力学 (静力学 + 运动学 + 动力学) · 材料力学 (拉压弯剪扭 + 应力状态分析) · 工程制图与 CAD (画法几何 + 三维建模) · 工程材料 (金属材料 + 热处理) · 互换性与技术测量 (公差配合 + 几何精度) · 大学英语 + 思政类 + 体育</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 高等数学 (微积分 + 线性代数 + 概率统计) · 大学物理 (力学 + 电磁学 + 热学 + 实验) · 理论力学 (静力学 + 运动学 + 动力学) · 材料力学 (拉压弯剪扭 + 应力状态分析) · 工程制图与 CAD (画法几何 + 三维建模) · 工程材料 (金属材料 + 热处理) · 互换性与技术测量 (公差配合 + 几何精度) · <strong style="color:var(--accent);">★</strong> 大学英语 + 思政类 + 体育</div>
           <div class="course-tag">大一</div>
         </div><div class="course-row">
           <div class="course-yr">大二</div>
-          <div class="course-names">机械原理 (机构学 + 凸轮 + 齿轮 + 连杆) · 机械设计 (零件设计 + 轴承 + 联轴器) · 机械制造技术基础 (切削加工 + 工艺规程) · 数控加工与编程 (G 代码 + 数控车铣) · 液压与气压传动 (液压元件 + 回路设计) · 机械控制工程 (PID + 控制系统) · 机电一体化 (传感器 + PLC + 驱动器) · 单片机原理与接口技术 · 有限元分析基础 (ANSYS/ABAQUS)</div>
+          <div class="course-names">机械原理 (机构学 + 凸轮 + 齿轮 + 连杆) · 机械设计 (零件设计 + 轴承 + 联轴器) · <strong style="color:var(--accent);">★</strong> 机械制造技术基础 (切削加工 + 工艺规程) · <strong style="color:var(--accent);">★</strong> 数控加工与编程 (G 代码 + 数控车铣) · 液压与气压传动 (液压元件 + 回路设计) · 机械控制工程 (PID + 控制系统) · 机电一体化 (传感器 + PLC + 驱动器) · 单片机原理与接口技术 · <strong style="color:var(--accent);">★</strong> 有限元分析基础 (ANSYS/ABAQUS)</div>
           <div class="course-tag">大二</div>
         </div><div class="course-row">
           <div class="course-yr">大三</div>
@@ -405,60 +899,15 @@
           <div class="course-tag">大三</div>
         </div><div class="course-row">
           <div class="course-yr">大四</div>
-          <div class="course-names">专业实习 (8-12 周) · 毕业论文 / 毕业设计 · 学科竞赛 + 创新创业实践 · 案例研习 + 项目实战 · 社会实践 + 志愿服务</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 专业实习 (8-12 周) · <strong style="color:var(--accent);">★</strong> 毕业论文 / 毕业设计 · <strong style="color:var(--accent);">★</strong> 学科竞赛 + 创新创业实践 · <strong style="color:var(--accent);">★</strong> 案例研习 + 项目实战 · 社会实践 + 志愿服务</div>
           <div class="course-tag">大四</div>
         </div>
       </div>
     </section>
   <section class="art-sec">
       <div class="art-head">
-        <span class="art-num">三</span>
-        <h2 class="art-title">毕业后真的能拿多少</h2>
-      </div>
-      <div class="art-body">
-        <p>头部太亮、中部太挤、尾部不香 — 看完分布再决定要不要押这个赛道.</p>
-      </div>
-      <div class="sal-rows">
-        <div class="sal-row">
-          <div class="sal-l">10年+ (持证/资深)</div>
-          <div class="sal-bar" style="--w: 100%;"></div>
-          <div class="sal-v">25%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">3年经验</div>
-          <div class="sal-bar" style="--w: 60%;"></div>
-          <div class="sal-v">15%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">应届 (0-2 年, 985 硕)</div>
-          <div class="sal-bar" style="--w: 56%;"></div>
-          <div class="sal-v">14%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">5年经验</div>
-          <div class="sal-bar" style="--w: 56%;"></div>
-          <div class="sal-v">14%</div>
-        </div><div class="sal-row">
-          <div class="sal-l">应届生 (一线)</div>
-          <div class="sal-bar" style="--w: 32%;"></div>
-          <div class="sal-v">8%</div>
-        </div>
-      </div>
-    </section>
-  <section class="art-sec">
-      <div class="art-head">
-        <span class="art-num">四</span>
-        <h2 class="art-title">学长学姐说</h2>
-      </div>
-      <div class="art-body">
-        <p>选专业之前, 听听真正读过的人是后悔还是庆幸.</p>
-      </div>
-      <div class="pull">
-        "机械本科毕业直接进车企是最务实的路径, 但前 3 年是真辛苦 — 出差、加班、改图是常态。但选对了赛道 (新能源), 3 年后薪资跳一档很常见。SolidWorks + 有限元是吃饭的家伙, 必须练扎实。"
-        <span class="by">— 校友 (院校脱敏) · 校友访谈 @深圳</span>
-      </div>
-    </section>
-  <section class="art-sec">
-      <div class="art-head">
         <span class="art-num">五</span>
-        <h2 class="art-title">头部院校参考</h2>
+        <h2 class="art-title">院校分布</h2>
       </div>
       <div class="art-body">
         <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
@@ -497,6 +946,109 @@
           <div class="uni-score">—</div>
         </div>
     </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">六</span>
+        <h2 class="art-title">头部雇主参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
+      </div>
+      <div class="co-list">
+        <div class="co-row"><div class="co-info"><div class="co-name">中国航天科技集团 (CASC)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">校招 500-1000 人<span class="dot">·</span>18-35 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,10.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国建筑集团 (CSCEC)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">校招 2000-5000 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,11.7 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">比亚迪 (BYD)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,12.0 25.0,11.3 37.5,0.0 50.0,4.7" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国第一汽车集团 (一汽)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,9.1 25.0,0.0 37.5,3.3 50.0,2.5" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">上海汽车集团 (上汽)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,13.5 25.0,5.7 37.5,7.8 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">三一重工<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,8.0 25.0,9.0 37.5,7.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">徐工集团<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,13.0 25.0,9.0 37.5,7.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中船集团 (中船工业/中船重工)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,5.8 25.0,9.2 37.5,6.3 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国航发 (航发集团)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,9.7 25.0,7.5 37.5,3.2 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">宁德时代 (CATL)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,5.6 25.0,5.6 37.5,6.7 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">博世 (Bosch 中国)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,12.4 25.0,10.4 37.5,3.1 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">汇川技术<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,10.3 12.5,14.0 25.0,6.6 37.5,9.6 50.0,0.0" /></svg></div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">七</span>
+        <h2 class="art-title">毕业后真的能拿多少</h2>
+      </div>
+      <div class="art-body">
+        <p>P25/P50/P75 = 25/50/75 百分位. ≈ 表示估算值. ↗/↘ = 3 年变化.</p>
+      </div>
+      <div class="sal-table">
+        <div class="sal-th">
+          <div class="sal-th-stage">阶段</div>
+          <div class="sal-th-cell">P25</div>
+          <div class="sal-th-cell is-p50">P50 中位</div>
+          <div class="sal-th-cell">P75 高位</div>
+        </div>
+        <div class="sal-tr">
+          <div class="sal-stage">应届 (0-2 年, 本科)<span class="sal-yoy up">↗ 3%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">6.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:24%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">9.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">13.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">应届生 (一线)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">应届 (0-2 年, 985 硕)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:56%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:50%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:47%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">5年经验<span class="sal-yoy up">↗ 4%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:56%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:55%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">32.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:53%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">3年经验<span class="sal-yoy up">↗ 8%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:60%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:55%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:58%;"></span></span></div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">八</span>
+        <h2 class="art-title">主流就业方向</h2>
+      </div>
+      <div class="art-body">
+        <p>8 大就业方向及占比.</p>
+      </div>
+      <div class="emp-list">
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">互联网产品设计 (UI/UX/交互)</div><div class="emp-ratio">22%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:22.0%;"></div></div><div class="emp-desc">字节 / 阿里 / 腾讯 / 美团 / 小红书 / 滴滴 | 985 + 作品集 + 顶实习, 应届 25-40 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">智能硬件 / IoT 设计</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc">华为 / 大疆 / 小米 / OPPO / vivo / 蔚来 / 小鹏 | 985 工科 + 设计复合, 应届 18-30 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">汽车 / 交通工具设计</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc">比亚迪 / 蔚来 / 小鹏 / 理想 / 上汽 / 一汽红旗 | 985 工业设计 + 汽车设计, 应届 18-30 万/年, 自主品牌红利</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">家居 / 家电设计</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">美的 / 海尔 / 格力 / 欧派 / 顾家家居 / 全友 | 985 + 设计, 应届 12-20 万/年, 实体产业稳健</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">设计咨询 / 品牌策略</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc">IDEO / Frog / 洛可可 / 班墨 / 华为 UCD 中心 | 985 + 战略思维, 应届 20-35 万/年, 资深总监 50-100 万</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">继续深造 (设计学硕博)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">清华美院 / 中央美院 / 国美 / 同济 / 国外 RCA / Pratt / Parsons | 本科就业实践强, 头部设计研究 / 高校教师硕博是门槛</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">公务员 / 事业单位 (设计院)</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc">工信部 / 各地设计院 / 文旅集团 / 博物馆 | 公考/选调, 稳定 8-15 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">自由设计师 / 设计工作室</div><div class="emp-ratio">7%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:7.0%;"></div></div><div class="emp-desc">独立设计师品牌 / 设计工作室 / 设计自媒体 | 高风险, 头部独立工作室年收入 50-300 万</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">九</span>
+        <h2 class="art-title">深造与就业路径分布</h2>
+      </div>
+      <div class="art-body">
+        <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
+      </div>
+      <div class="ds-list">
+        <div class="ds-row"><div class="ds-name">直接就业 (车企/装备/机器人/外企)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">50%</div></div><div class="ds-row ds-study"><div class="ds-name">考研 (本校/跨考机械/车辆/自动化)</div><div class="ds-bar"><div class="ds-fill" style="--w:56%;"></div></div><div class="ds-pct">28%</div></div><div class="ds-row ds-study"><div class="ds-name">保研 (985/211 机械硕)</div><div class="ds-bar"><div class="ds-fill" style="--w:24%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row"><div class="ds-name">考公/进研究所/选调</div><div class="ds-bar"><div class="ds-fill" style="--w:14%;"></div></div><div class="ds-pct">7%</div></div><div class="ds-row"><div class="ds-name">出国 (美/德/日机械方向)</div><div class="ds-bar"><div class="ds-fill" style="--w:6%;"></div></div><div class="ds-pct">3%</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
+      </div>
+      <div class="pull-list">
+        <div class="pull">"机械本科毕业直接进车企是最务实的路径, 但前 3 年是真辛苦 — 出差、加班、改图是常态。但选对了赛道 (新能源), 3 年后薪资跳一档很常见。SolidWorks + 有限元是吃饭的家伙, 必须练扎实。"<span class="by">— 校友 (院校脱敏) · 校友访谈 @深圳</span></div><div class="pull">"考研是为了不做车间工人, 想去研发岗。但现实是, 机械硕士的研发岗也基本是项目执行, 不是想象中的「科学家」。宁德的薪资在机械里算中上, 但锂电厂工作强度非常大, 项目紧的时候 996 是常态。"<span class="by">— 校友 (院校脱敏) · 知乎 @2025</span></div><div class="pull">"干了 4 年汽车工艺, 工厂一线的枯燥远超预期。后来自学 PLC + 机器人编程, 转入机器人方案岗, 薪资涨了 60%。机械行业最大的机会是「机械 + 自动化 + 编程」的复合人才, 纯机械正在被挤压。"<span class="by">— 校友 (院校脱敏) · 小红书 @2025</span></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十一</span>
+        <h2 class="art-title">高考选科要求</h2>
+      </div>
+      <div class="art-body">
+        <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
+      </div>
+      <div class="xk-list">
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:75%;"></div><span class="xk-pct">75%</span></div></div></div><div class="xk-reason">传统理科组合, 医学/工科/农学/部分理学专业必选, 覆盖最广。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 生物 (再选化学或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:14%;"></div><span class="xk-pct">14%</span></div></div></div><div class="xk-reason">医学/生物/医技/部分农学方向可报, 化学弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">医学/药学/护理/部分农学方向, 物理弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价/中外合作)</div><div class="xk-bar"><div class="xk-fill" style="--w:3%;"></div><span class="xk-pct">3%</span></div></div></div><div class="xk-reason">极少数综合评价/中外合作专业, 工科/医学通常不适用。</div></div>
+      </div>
+    </section>
 </article>
 
 <div class="footer-cta">
@@ -520,13 +1072,36 @@
   <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
   <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
   <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+
+<!-- 心愿打分模态框 -->
+<div class="wish-modal" id="wish-modal" hidden>
+  <div class="wish-modal-bg" data-close="1"></div>
+  <div class="wish-modal-card" role="dialog" aria-labelledby="wish-modal-title">
+    <h3 class="wish-modal-title" id="wish-modal-title">给 机械工程 打分</h3>
+    <p class="wish-modal-sub">1-5 星, 后续可在心愿单查看排序</p>
+    <div class="star-row" id="star-row" role="radiogroup" aria-label="评分">
+      <button class="star-btn" data-star="1" aria-label="1 星"><span>★</span></button>
+      <button class="star-btn" data-star="2" aria-label="2 星"><span>★</span></button>
+      <button class="star-btn" data-star="3" aria-label="3 星"><span>★</span></button>
+      <button class="star-btn" data-star="4" aria-label="4 星"><span>★</span></button>
+      <button class="star-btn" data-star="5" aria-label="5 星"><span>★</span></button>
+    </div>
+    <div class="star-hint" id="star-hint">点击星星选择评分</div>
+    <textarea class="wish-comment" id="wish-comment" placeholder="备注 (选填, 例: 看完想再读读课程)"></textarea>
+    <div class="wish-modal-actions">
+      <button class="wish-btn wish-btn-cancel" data-close="1">取消</button>
+      <button class="wish-btn wish-btn-remove" id="wish-remove" hidden>移除出心愿单</button>
+      <button class="wish-btn wish-btn-save" id="wish-save" disabled>保存到心愿单</button>
+    </div>
+  </div>
+</div>
   <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
 </nav>
 
+<script>window.__SLUG__ = "mechanical-engineering"; window.__TITLE__ = "机械工程";</script>
 <script src="../js/loader.js"></script>
 <script src="../js/dock.js"></script>
 <script src="../js/detail.js"></script>
-<script>window.__SLUG__ = "mechanical-engineering";</script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
