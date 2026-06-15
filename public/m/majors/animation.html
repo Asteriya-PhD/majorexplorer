@@ -259,7 +259,7 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
-  /* fit 双段 (适合 / 别勉强) */
+  /* fit 双段 (适合 / 慎入) - mobile 主题色 + emoji */
   .fit-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
   .fit-col {
     padding: 10px 12px;
@@ -267,13 +267,15 @@
     font-family: var(--font-body); font-size: 0.875rem;
     line-height: 1.55;
   }
-  .fit-yes { background: rgba(76, 122, 76, 0.10); border-left: 3px solid #4C7A4C; color: var(--fg); }
-  .fit-no  { background: rgba(184, 120, 50, 0.10); border-left: 3px solid #B87832; color: var(--fg); }
+  .fit-yes { background: rgba(74, 69, 100, 0.08); border-left: 3px solid var(--theme); color: var(--fg); }
+  .fit-no  { background: rgba(184, 50, 58, 0.08); border-left: 3px solid var(--accent); color: var(--fg); }
   .fit-col-head {
     font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
     margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
   }
+  .fit-emoji { font-size: 0.875rem; }
   .fit-list { list-style: none; padding: 0; margin: 0; }
   .fit-list li {
     position: relative; padding-left: 14px; margin: 4px 0;
@@ -284,7 +286,7 @@
     color: var(--muted); font-weight: 700;
   }
 
-  /* pitfalls (误区 vs 真相) */
+  /* pitfalls (谣言 vs 真相) - mobile 主题色 + emoji */
   .pitfall-risk { background: rgba(184,50,58,0.04); }
   .pitfall-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
   .pitfall {
@@ -301,12 +303,18 @@
   .pitfall-reality { color: var(--fg); }
   .pitfall-tag {
     display: inline-block;
-    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
-    padding: 1px 6px; border-radius: 2px; margin-right: 6px;
-    letter-spacing: 0.1em;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 2px; margin-right: 8px;
+    letter-spacing: 0.06em;
   }
   .pitfall-myth .pitfall-tag { background: var(--accent); color: #FBF8F1; }
-  .pitfall-reality .pitfall-tag { background: #4C7A4C; color: #FBF8F1; }
+  .pitfall-reality .pitfall-tag { background: var(--theme); color: #FBF8F1; }
+
+  /* stat-cell 读研档位 (高/中/低) */
+  .stat-cell.grad-tier .n { font-size: 1rem; }
+  .stat-cell.grad-tier[data-tier="高"] .n { color: var(--accent-ink); }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--muted); }
 
   /* directions (方向卡片) */
   .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
@@ -449,8 +457,8 @@
 
 <div class="stats-strip">
   <div class="stat-cell"><span class="n">5<span class="unit">万</span></span><span class="l">入行中位</span></div>
-  <div class="stat-cell"><span class="n">—<span class="unit">%</span></span><span class="l">读研率</span></div>
-  <div class="stat-cell"><span class="n">7.0<span class="unit">/10</span></span><span class="l">满意度</span></div>
+  <div class="stat-cell grad-tier" data-tier="中"><span class="n">中</span><span class="l">深造需求</span></div>
+  <div class="stat-cell"><span class="n">3.5<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
 
 <div class="tags-strip" id="tags-strip">
@@ -472,8 +480,8 @@
         <p class="lede">动画是「让画动起来讲故事」, 二维手绘、三维 CG、定格与实验动画交叉, 是「美术 + 故事 + 技术」的复合。本科起薪 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 校招 15-25 万, 头部游戏 (米哈游/腾讯天美) 动画师校招 18-30 万, 是国漫崛起 + 影视风口 + AI 时代三重叠加的风口专业。</p>
         <div class="dir-list"><div class="dir-card"><div class="dir-num">01</div><div class="dir-body"><div class="dir-name">二维动画</div><div class="dir-desc">传统手绘 + 数字二维, 对应《大鱼海棠》《罗小黑战记》等国产与日式 TV 动画风格。</div></div></div><div class="dir-card"><div class="dir-num">02</div><div class="dir-body"><div class="dir-name">三维动画</div><div class="dir-desc">CG 角色与场景建模、绑定、动画、渲染全流程, 追光/原力/Base Media 等头部公司主赛道。</div></div></div><div class="dir-card"><div class="dir-num">03</div><div class="dir-body"><div class="dir-name">定格动画</div><div class="dir-desc">黏土、偶、实拍合成方向, 对应阿德曼《小羊肖恩》与中国偶动画传统。</div></div></div><div class="dir-card"><div class="dir-num">04</div><div class="dir-body"><div class="dir-name">实验动画</div><div class="dir-desc">实验短片与独立动画方向, 主攻双年展与独立影展艺术表达路径。</div></div></div><div class="dir-card"><div class="dir-num">05</div><div class="dir-body"><div class="dir-name">影视特效</div><div class="dir-desc">VFX 合成与动捕方向, 服务于影视后期与头部视效公司业务。</div></div></div><div class="dir-card"><div class="dir-num">06</div><div class="dir-body"><div class="dir-name">游戏动画</div><div class="dir-desc">游戏内角色与怪物动画、特效, 对应米哈游/腾讯天美/网易雷火等头部公司。</div></div></div></div><div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">学什么底子</div><div class="what-tags"><span class="tag-mini">动漫造型基础</span><span class="tag-mini">动漫运动规律</span><span class="tag-mini">中外动画史</span><span class="tag-mini">动画概论</span><span class="tag-mini">分镜脚本</span><span class="tag-mini">数字图像处理</span><span class="tag-mini">二维动画软件</span></div></div><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">二维软件 (Animate CC/TVPaint/Clip Studio Paint)</span><span class="tag-mini">三维软件 (Maya/Blender/C4D/ZBrush/Substance)</span><span class="tag-mini">动画规律 (12 原则 + 力学 + 表情 + 口型 + 表演)</span><span class="tag-mini">绑定与特效 (Houdini/Nuke)</span><span class="tag-mini">AI 动画工具 (Stable Diffusion/Runway/Sora/Kling)</span><span class="tag-mini">数字图像处理 (PS/AI)</span></div></div></div>
       </div>
-      <div class="risk"><div class="risk-head">⚠ 读之前先想清 · 适合谁</div><div class="fit-grid"><div class="fit-col fit-yes"><div class="fit-col-head">✓ 适合来</div><ul class="fit-list"><li>对让角色活过来、用画面讲故事有持续热情的人。</li><li>能接受熬夜画稿与项目节点高强度节奏, 愿意在 9105/9106 中成长的人。</li><li>愿意前 5 年在动画公司或游戏公司做动画师, 之后走导演/总监路线。</li><li>对国漫崛起有信念, 看好追光/原力/光线彩条屋/米哈游等头部公司。</li><li>乐于持续学习新工具, 把 AI 动画工具当作效率放大器。</li></ul></div><div class="fit-col fit-no"><div class="fit-col-head">✗ 别勉强</div><ul class="fit-list"><li>把动画等同于学画画, 只想做静态美术而不愿接触动起来讲故事。</li><li>不能接受熬夜做项目、节点期高强度加班, 动画影视游戏加班是常态。</li><li>数学、物理或编程思维极差却想做三维动画, 绑定/特效/物理都需逻辑。</li></ul></div></div></div>
-      <div class="risk pitfall-risk"><div class="risk-head">⚠ 容易踩的坑 · 误区 vs 真相</div><div class="pitfall-list"><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>动画就是学画画, 工资低</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>严重低估。动画校招 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万。动画是艺术类里起薪高 + 国漫崛起风口的专业之一。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>动画毕业 = 流水线画师</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>错。动画的核心是画面 + 故事 + 表演, 头部 5% 动画师走的是动画导演 + 创意总监 + 独立动画人, 不是流水线画师。AI 时代 (2024 起) 只会画画的画师正在被淘汰, 懂故事 + 懂表演 + 懂技术的全能动画师反而更值钱。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>动画和数媒/视传/影视一个专业</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>严重错。动画偏二维/三维/定格 + 故事 + 表演, 出口在影视/动画/游戏公司; 数媒偏影视 + 游戏 + 交互 + VR/AR, 视传偏品牌 + UX/UI, 影视摄影与制作偏影视摄影/导演, 选错方向后悔 4 年。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>动画进大厂容易, 应届 30 万+</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>部分对。北电/中传/国美/央美/清美等头部 5 院校, 校招进追光/原力/光线彩条屋 15-25 万, 校招进米哈游/腾讯天美动画师 18-30 万是真实的; 但普通院校动画校招进小公司起薪 5-7 万, 差距 2-3 倍。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>动画不需要编程</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>严重错。2024 年起 985 动画学生必会三维软件 (Maya/Blender/C4D)、绑定特效 (Houdini/Nuke)、AI 工具 (Stable Diffusion/Runway/Sora/Kling) 与 Python 入门写绑定/工具脚本, 不会三维的动画毕业生 5 年后会被淘汰。</div></div></div></div>
+      <div class="risk"><div class="risk-head">🧭 读之前先想清 · 谁适合</div><div class="fit-grid"><div class="fit-col fit-yes"><div class="fit-col-head"><span class="fit-emoji">🌱</span> 适合来</div><ul class="fit-list"><li>对让角色活过来、用画面讲故事有持续热情的人。</li><li>能接受熬夜画稿与项目节点高强度节奏, 愿意在 9105/9106 中成长的人。</li><li>愿意前 5 年在动画公司或游戏公司做动画师, 之后走导演/总监路线。</li><li>对国漫崛起有信念, 看好追光/原力/光线彩条屋/米哈游等头部公司。</li><li>乐于持续学习新工具, 把 AI 动画工具当作效率放大器。</li></ul></div><div class="fit-col fit-no"><div class="fit-col-head"><span class="fit-emoji">⛔️</span> 慎入</div><ul class="fit-list"><li>把动画等同于学画画, 只想做静态美术而不愿接触动起来讲故事。</li><li>不能接受熬夜做项目、节点期高强度加班, 动画影视游戏加班是常态。</li><li>数学、物理或编程思维极差却想做三维动画, 绑定/特效/物理都需逻辑。</li></ul></div></div></div>
+      <div class="risk pitfall-risk"><div class="risk-head">⚡ 避坑 · 谣言 vs 真相</div><div class="pitfall-list"><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">❌ 谣言</span>动画就是学画画, 工资低</div><div class="pitfall-reality"><span class="pitfall-tag">✓ 真相</span>严重低估。动画校招 6-12 万, 头部动画公司 (追光/原力/光线彩条屋) 15-25 万, 头部游戏公司动画师 18-30 万, 5 年后资深 30-60 万, 10 年后能到 50-100 万。动画是艺术类里起薪高 + 国漫崛起风口的专业之一。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">❌ 谣言</span>动画毕业 = 流水线画师</div><div class="pitfall-reality"><span class="pitfall-tag">✓ 真相</span>错。动画的核心是画面 + 故事 + 表演, 头部 5% 动画师走的是动画导演 + 创意总监 + 独立动画人, 不是流水线画师。AI 时代 (2024 起) 只会画画的画师正在被淘汰, 懂故事 + 懂表演 + 懂技术的全能动画师反而更值钱。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">❌ 谣言</span>动画和数媒/视传/影视一个专业</div><div class="pitfall-reality"><span class="pitfall-tag">✓ 真相</span>严重错。动画偏二维/三维/定格 + 故事 + 表演, 出口在影视/动画/游戏公司; 数媒偏影视 + 游戏 + 交互 + VR/AR, 视传偏品牌 + UX/UI, 影视摄影与制作偏影视摄影/导演, 选错方向后悔 4 年。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">❌ 谣言</span>动画进大厂容易, 应届 30 万+</div><div class="pitfall-reality"><span class="pitfall-tag">✓ 真相</span>部分对。北电/中传/国美/央美/清美等头部 5 院校, 校招进追光/原力/光线彩条屋 15-25 万, 校招进米哈游/腾讯天美动画师 18-30 万是真实的; 但普通院校动画校招进小公司起薪 5-7 万, 差距 2-3 倍。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">❌ 谣言</span>动画不需要编程</div><div class="pitfall-reality"><span class="pitfall-tag">✓ 真相</span>严重错。2024 年起 985 动画学生必会三维软件 (Maya/Blender/C4D)、绑定特效 (Houdini/Nuke)、AI 工具 (Stable Diffusion/Runway/Sora/Kling) 与 Python 入门写绑定/工具脚本, 不会三维的动画毕业生 5 年后会被淘汰。</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
