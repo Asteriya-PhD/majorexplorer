@@ -1,4 +1,9 @@
-/* search.js — 搜专业 / 大类 */
+/* search.js — 搜专业 / 大类
+ *
+ * 专业匹配: 复用 PC MajorSearch.search() (SYNONYMS 词典 + 子串/同义词打分)
+ * 大类匹配: 保持 mobile 自己的 hierarchy 遍历
+ * UI: 保持 mobile 分段 + 大类 + filter 计数
+ */
 (async () => {
   try {
     await M.init();
@@ -6,8 +11,12 @@
     console.error("[search.js] M.init failed", e);
     return;
   }
+  // 确保 PC MajorSearch manifest 已加载 (PC 内部 lazy load)
+  if (window.MajorSearch && MajorSearch.loadManifest) {
+    await MajorSearch.loadManifest();
+  }
+
   const $ = sel => document.querySelector(sel);
-  const $$ = sel => document.querySelectorAll(sel);
   const q = $("#q");
   const clear = $("#clear");
   const filters = $("#filters");
@@ -15,6 +24,25 @@
   if (!results) { console.warn("[search.js] #results not found"); return; }
 
   let activeType = "all";
+
+  // 大类搜索 (mobile 独有的 hierarchy 遍历)
+  function searchCategories(query) {
+    const f = query.toLowerCase();
+    return (M.hierarchy?.disciplines || []).flatMap(d =>
+      (d.sub || []).filter(s => s.name.toLowerCase().includes(f)).map(s => ({...s, parent: d.name, code: d.code}))
+    );
+  }
+
+  // 把 PC MajorSearch.search 结果格式补齐 (补 discipline/style/theme)
+  function mapMajor(matched) {
+    const full = M.manifestBySlug[matched.slug];
+    return {
+      ...matched,
+      // PC result 已有 slug/title/style/category/tags/score
+      // mobile UI 还需要 theme (styleColor) + 链接
+      _full: full,
+    };
+  }
 
   function render(query, type) {
     const f = (query || "").trim().toLowerCase();
@@ -31,22 +59,27 @@
       `;
       return;
     }
-    // 搜专业 (title + tags + category + sub_discipline + menjia_name 多字段)
-    const majors = M.manifest.majors.filter(m => {
-      if (m.title.toLowerCase().includes(f)) return true;
-      if ((m.tags || []).some(t => t.toLowerCase().includes(f))) return true;
-      if ((m.category || "").toLowerCase().includes(f)) return true;
-      if ((m.sub_discipline || "").toLowerCase().includes(f)) return true;
-      if ((m.menjia_name || "").toLowerCase().includes(f)) return true;
-      return false;
-    });
-    // 搜大类
-    const cats = (M.hierarchy?.disciplines || []).flatMap(d =>
-      (d.sub || []).filter(s => s.name.toLowerCase().includes(f)).map(s => ({...s, parent: d.name, code: d.code}))
-    );
+    // ── 专业匹配: 复用 PC MajorSearch.search (SYNONYMS 词典 + 子串打分) ──
+    let majors = [];
+    if (window.MajorSearch && typeof MajorSearch.search === "function") {
+      const pcResults = MajorSearch.search(query);
+      majors = pcResults.map(mapMajor).filter(m => m._full).slice(0, 20);
+    } else {
+      // 兜底: 5 字段子串 (PC 不可用时)
+      majors = M.manifest.majors.filter(m => {
+        return (m.title || "").toLowerCase().includes(f)
+          || (m.tags || []).some(t => t.toLowerCase().includes(f))
+          || (m.category || "").toLowerCase().includes(f)
+          || (m.sub_discipline || "").toLowerCase().includes(f)
+          || (m.menjia_name || "").toLowerCase().includes(f);
+      }).slice(0, 20).map(m => mapMajor(m));
+    }
+    // ── 大类匹配: mobile 独有 ──
+    const cats = searchCategories(query);
+
     const sections = [];
     if ((type === "all" || type === "major") && majors.length) {
-      sections.push({label: "专业", items: majors.slice(0, 20).map(m => ({
+      sections.push({label: "专业", items: majors.map(m => ({
         title: highlight(m.title, f),
         cat: m.category,
         star: true,
@@ -63,7 +96,6 @@
         theme: "#5A4632",
       }))});
     }
-    // 院校 — 后续开
     if (!sections.length) {
       results.innerHTML = `<div class="hot-list"><div style="width:100%; text-align:center; padding: 40px 0; color: var(--muted); font-family: var(--font-body);">没找到 "<strong>${esc(query)}</strong>" 相关结果. 试试 "金融" / "临床" / "法学".</div></div>`;
       return;
@@ -101,7 +133,6 @@
   function esc(s) { return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"})[c]); }
 
   // 初始渲染 + 计数
-  // URL ?q= 参数 → 自动填充 + 渲染 (从 catalog 跳转过来)
   const urlQ = new URLSearchParams(location.search).get("q") || "";
   if (urlQ && q) {
     q.value = urlQ;

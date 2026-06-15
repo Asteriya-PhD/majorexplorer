@@ -61,14 +61,11 @@ const M = (window.MobileData = {
   },
 
   // ───── helpers ─────
+  // 主题色: 单一来源 manifest.theme_color.primary (Step 2.1 注入), fallback 默认深紫
   styleColor(style) {
-    const map = {
-      finance: "#4A4564", business: "#5A4632", law: "#3A3A3A",
-      gongan: "#1E3A5F", administration: "#5C5C8A", education: "#5C7C4A",
-      humanities: "#6B4F35", arts: "#8B3A62", sci: "#1E5E72",
-      eng: "#5B5B47", cs: "#1E5E72", medicine: "#8B2424", agri: "#6B7A3F",
-    };
-    return map[style] || "#4A4564";
+    if (!this.manifest || !this.manifest.majors) return "#4A4564";
+    const m = this.manifest.majors.find(x => x.style === style);
+    return (m && m.theme_color && m.theme_color.primary) || "#4A4564";
   },
 
   ghost(title) {

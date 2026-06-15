@@ -1,33 +1,31 @@
-/* wishlist.js — 心愿单 (localStorage) · 适配 {slug, rating, tag, comment, addedAt} schema */
+/* wishlist.js — 心愿单 (mobile UI) · 复用 PC WishlistStore (gk.wishlist.v1)
+ *
+ * 数据流:
+ *   - 读:  window.WishlistStore.all()        → array of {slug, title, style, score, rating, tag, comment, addedAt}
+ *   - 写:  WishlistStore.upsert({slug, ...}) / WishlistStore.remove(slug)
+ *   - 兼容: PC data via M.manifestBySlug[slug] 补 title/style/category 等展示字段
+ */
 (async () => {
   await M.init();
-  const KEY = "m.wishlist.v1";
+  // 兜底: PC WishlistStore 可能没加载 (来自 6 个 dock HTML <script> 注入)
+  if (window.WishlistStore && WishlistStore.migrate) {
+    const mig = WishlistStore.migrate();
+    if (mig.migrated > 0) console.log("[wishlist.js] migrated " + mig.migrated);
+  }
   const root = document.getElementById("wishes");
   const bar = document.getElementById("filter-bar");
   if (!root) return;
 
-  function load() {
-    try {
-      const v = JSON.parse(localStorage.getItem(KEY) || "[]");
-      return Array.isArray(v) ? v : [];
-    } catch { return []; }
-  }
-  function save(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
-  // 兼容旧 string[] 格式
-  function normalize(arr) {
-    return arr.map(it => typeof it === "string"
-      ? { slug: it, rating: 0, tag: "", comment: "", addedAt: 0 }
-      : it);
-  }
-  function lookup(slug) { return M.manifestBySlug[slug]; }
-
   // 排序: 评分降序, 然后按 addedAt 降序
   function sortedWishes() {
-    return normalize(load())
-      .map(w => ({ ...w, major: lookup(w.slug) }))
+    const items = (window.WishlistStore ? WishlistStore.all() : []);
+    return items
+      .map(w => ({ ...w, major: M.manifestBySlug[w.slug] }))
       .filter(w => w.major)
       .sort((a, b) => {
-        if (b.rating !== a.rating) return (b.rating || 0) - (a.rating || 0);
+        const ra = a.rating || a.score || 0;
+        const rb = b.rating || b.score || 0;
+        if (rb !== ra) return rb - ra;
         return (b.addedAt || 0) - (a.addedAt || 0);
       });
   }
@@ -60,7 +58,7 @@
 
     root.innerHTML = sorted.map(w => {
       const m = w.major;
-      const rating = w.rating || 0;
+      const rating = w.rating || w.score || 0;
       const tag = w.tag || "";
       const comment = w.comment || "";
       const hasMeta = rating || tag || comment;
@@ -87,7 +85,7 @@
       el.addEventListener("click", e => {
         e.preventDefault();
         const s = el.dataset.rm;
-        save(normalize(load()).filter(w => w.slug !== s));
+        if (window.WishlistStore) WishlistStore.remove(s);
         render();
       });
     });
@@ -103,5 +101,11 @@
       });
     });
   }
+
+  // 监听 PC WishlistStore 的变更事件 (跨页同步, 同页多组件同步)
+  if (window.WishlistStore && WishlistStore.subscribe) {
+    WishlistStore.subscribe(() => render());
+  }
+
   render();
 })();

@@ -8,14 +8,20 @@
  *   [
  *     {
  *       slug: "computer-science",
- *       title: "计算机科学与技术",
- *       style: "cs",                      // 主题色 / 徽章
- *       category: "工学 · 计算机类",       // 分类
- *       score: 5,                          // 1..5
+ *       title: "计算机科学与技术",          // 可选 (旧 mobile 数据迁移可能缺)
+ *       style: "cs",                      // 主题色 / 徽章, 可选
+ *       category: "工学 · 计算机类",       // 分类, 可选
+ *       score: 5,                          // 1..5 (PC recommender 用)
+ *       rating: 5,                         // 1..5 (mobile UI 用, 同 score 同步)
+ *       tag: "冲",                         // mobile 标签, 可选
+ *       comment: "...",                    // mobile 备注, 可选
  *       addedAt: "2026-06-12T08:23:14Z"    // ISO 时间戳
  *     },
  *     ...
  *   ]
+ *
+ * 兼容: mobile 旧数据 (key "m.wishlist.v1", schema {slug, rating, tag, comment, addedAt})
+ *       通过 migrate() 一次性迁到 gk.wishlist.v1,迁移完删除旧 key。
  *
  * 同时广播 storage / custom event 让 chip 实时更新。
  * ==================================================================== */
@@ -112,14 +118,22 @@
      * 已存在 → 更新 score
      * 不存在 + 未满 → push
      * 不存在 + 已满 → 返回 false
+     *
+     * 可选 extras: rating (1-5 同 score 同步), tag (string), comment (string)
+     *  - rating 用于 mobile UI 5 星显示 (与 score 同步存双份)
+     *  - tag/comment 是 mobile UI 字段
      */
-    upsert({ slug, title, style, category, score }) {
-      if (!slug || !title) return { ok: false, reason: "missing slug/title" };
+    upsert({ slug, title, style, category, score, rating, tag, comment }) {
+      if (!slug) return { ok: false, reason: "missing slug" };
       const items = _read();
       const idx = items.findIndex((x) => x.slug === slug);
-      const cleanScore = _clamp(score);
+      const cleanScore = _clamp(score != null ? score : rating);
       if (idx >= 0) {
         items[idx].score = cleanScore;
+        if (rating !== undefined) items[idx].rating = _clamp(rating);
+        else if (items[idx].rating == null) items[idx].rating = cleanScore;
+        if (tag !== undefined) items[idx].tag = tag;
+        if (comment !== undefined) items[idx].comment = comment;
         if (style) items[idx].style = style;
         if (category) items[idx].category = category;
         if (title) items[idx].title = title;
@@ -131,14 +145,58 @@
       }
       items.push({
         slug,
-        title,
+        title: title || "",
         style: style || "humanities",
         category: category || "",
         score: cleanScore,
+        rating: rating !== undefined ? _clamp(rating) : cleanScore,
+        tag: tag || "",
+        comment: comment || "",
         addedAt: new Date().toISOString(),
       });
       _write(items);
       return { ok: true, added: true };
+    },
+
+    /** 从 mobile 旧 localStorage key 一次性迁移数据
+     *  - old schema: {slug, rating, tag?, comment?, addedAt?}
+     *  - new schema (gk.wishlist.v1): 含 score (同 rating), title/style/category 缺失
+     *  - 迁移后删除 old key (幂等: 已删过则 noop)
+     *  - 失败 try/catch, 不阻塞主流程
+     */
+    migrate() {
+      const OLD_KEY = "m.wishlist.v1";
+      try {
+        const raw = typeof localStorage === "undefined" ? null : localStorage.getItem(OLD_KEY);
+        if (!raw) return { migrated: 0, source: null };
+        const old = JSON.parse(raw);
+        if (!Array.isArray(old) || old.length === 0) {
+          localStorage.removeItem(OLD_KEY);
+          return { migrated: 0, source: "empty" };
+        }
+        const cur = _read();
+        const slugs = new Set(cur.map((x) => x.slug));
+        let n = 0;
+        for (const item of old) {
+          const slug = typeof item === "string" ? item : item && item.slug;
+          if (!slug || slugs.has(slug)) continue;
+          const rating = (item && typeof item.rating === "number") ? item.rating : 3;
+          // 不带 title/style/category, render 时由 manifest lookup 补
+          this.upsert({
+            slug,
+            rating,
+            tag: item && item.tag,
+            comment: item && item.comment,
+          });
+          slugs.add(slug);
+          n++;
+        }
+        localStorage.removeItem(OLD_KEY);
+        return { migrated: n, source: OLD_KEY };
+      } catch (e) {
+        console.warn("[wishlist] migrate failed", e);
+        return { migrated: 0, source: null, error: String(e && e.message || e) };
+      }
     },
 
     /** 删除 slug */
