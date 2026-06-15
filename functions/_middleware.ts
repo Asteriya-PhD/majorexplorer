@@ -7,10 +7,9 @@
  *   3) query string 不含 ?desktop=1
  *
  * 桌面访问保持原样. 用户主动加 ?desktop=1 可强制桌面版.
- * PagesFunction 类型由 CF Pages Functions 自动注入, 不需 import.
  */
 
-export const onRequest: PagesFunction = async (context) => {
+export async function onRequest(context) {
   const { request, next } = context;
   const url = new URL(request.url);
 
@@ -40,5 +39,8 @@ export const onRequest: PagesFunction = async (context) => {
   }
   // 5) 移动端 → 302 到 /m/<原路径>
   const target = "/m" + (url.pathname === "/" ? "/" : url.pathname) + url.search;
-  return Response.redirect(target, 302);
-};
+  return new Response(null, {
+    status: 302,
+    headers: { Location: target },
+  });
+}
