@@ -1,11 +1,11 @@
 /* Major Explorer · Mobile Service Worker
- * 缓存策略:
- *   - shell (html/css/js): stale-while-revalidate
+ * 缓存策略 (修复 dock tab "Response served by service worker has redirections"):
+ *   - HTML 文档 (text/html, navigation): network-first, 不缓存 (让 CF middleware 处理 302)
+ *   - 静态资源 (CSS/JS/PNG/JPG/WOFF): stale-while-revalidate
  *   - 数据 (manifest.json, hierarchy): stale-while-revalidate
- *   - 其他: network-first
  * 版本号: 改这里强制升级
  */
-const CACHE_NAME = "m-explorer-v1-20260615";
+const CACHE_NAME = "m-explorer-v2-20260615";
 const SHELL = [
   "/m/",
   "/m/index.html",
@@ -60,7 +60,17 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  // shell: stale-while-revalidate
+  // HTML 文档请求 (navigation 或 text/html): network-first, 不缓存
+  // 这样 CF Pages middleware 的 302 redirect 才能正常工作, 不被 sw 拦截
+  const isHTML =
+    e.request.mode === "navigate" ||
+    (e.request.headers.get("accept") || "").includes("text/html");
+  if (isHTML) {
+    e.respondWith(networkFirst(e.request));
+    return;
+  }
+
+  // 静态资源 (CSS/JS/PNG/JPG/WOFF 等): stale-while-revalidate
   if (url.pathname.startsWith("/m/")) {
     e.respondWith(staleWhileRevalidate(e.request));
     return;
@@ -74,7 +84,8 @@ async function staleWhileRevalidate(req) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(req);
   const network = fetch(req).then(r => {
-    if (r && r.status === 200) cache.put(req, r.clone());
+    // 不缓存 3xx redirect / 4xx 5xx error
+    if (r && r.ok) cache.put(req, r.clone());
     return r;
   }).catch(() => cached);
   return cached || network;
@@ -84,7 +95,14 @@ async function networkFirst(req) {
   const cache = await caches.open(CACHE_NAME);
   try {
     const r = await fetch(req);
-    if (r && r.status === 200) cache.put(req, r.clone());
+    // HTML 不缓存, 这里只 cache 静态资源成功响应
+    if (r && r.ok) {
+      const ct = r.headers.get("content-type") || "";
+      // 不缓存 HTML 文档, 防止 redirect response 被缓存
+      if (!ct.includes("text/html")) {
+        cache.put(req, r.clone());
+      }
+    }
     return r;
   } catch (e) {
     const cached = await cache.match(req);
