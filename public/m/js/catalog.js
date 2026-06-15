@@ -1,4 +1,4 @@
-/* catalog.js — 13 章节 accordion + 搜索过滤 */
+/* catalog.js — 13 章节 accordion + 搜索过滤 + URL hash 展开 + sub-row 跳 search */
 (async () => {
   await M.init();
   const root = document.getElementById("chapters");
@@ -27,10 +27,11 @@
         const name = s.name;
         const match = !f || name.toLowerCase().includes(f);
         if (!match) return "";
-        return `<a class="sub-row" href="#"><span class="sub-name">${name}</span><span class="sub-count">${cnt}</span></a>`;
+        // 跳到 search.html?q=大类名, 让用户看到该大类的具体专业
+        return `<a class="sub-row" href="search.html?q=${encodeURIComponent(name)}"><span class="sub-name">${name}</span><span class="sub-count">${cnt}</span></a>`;
       }).join("") || `<div class="sub-row"><span class="sub-name" style="color:var(--muted)">暂无下属大类</span></a></div>`;
       return `
-        <div class="chapter" data-ghost="${d.name.slice(0,1)}" style="--theme: var(${ck});">
+        <div class="chapter" data-code="${d.code}" data-ghost="${d.name.slice(0,1)}" style="--theme: var(${ck});">
           <div class="chapter-head" data-toggle>
             <div class="chapter-meta">
               <div class="chapter-num">No. ${d.code}</div>
@@ -50,9 +51,23 @@
       `;
     }).join("");
 
-    // 默认展开 No.04 教育学 (跟 mock 一致)
-    const edu = root.querySelectorAll(".chapter")[3];
-    if (edu) edu.classList.add("open");
+    // URL hash 自动展开 (#d=XX → 展开对应门类; #q=大类名 → 过滤)
+    const hash = location.hash || "";
+    const mCode = hash.match(/[#&]d=([0-9]+)/);
+    const mQuery = hash.match(/[#&]q=([^&]+)/);
+    if (mCode) {
+      const target = root.querySelector(`.chapter[data-code="${mCode[1]}"]`);
+      if (target) {
+        target.classList.add("open");
+        setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+      }
+    } else if (mQuery) {
+      if (q) { q.value = decodeURIComponent(mQuery[1]); q.dispatchEvent(new Event("input")); }
+    } else {
+      // 默认展开 No.04 教育学 (跟 mock 一致)
+      const edu = root.querySelectorAll(".chapter")[3];
+      if (edu) edu.classList.add("open");
+    }
 
     // 展开 / 折叠
     root.querySelectorAll("[data-toggle]").forEach(h => {

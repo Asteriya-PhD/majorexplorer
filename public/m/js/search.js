@@ -31,10 +31,15 @@
       `;
       return;
     }
-    // 搜专业
-    const majors = M.manifest.majors.filter(m =>
-      m.title.toLowerCase().includes(f) || (m.tags || []).some(t => t.toLowerCase().includes(f))
-    );
+    // 搜专业 (title + tags + category + sub_discipline + menjia_name 多字段)
+    const majors = M.manifest.majors.filter(m => {
+      if (m.title.toLowerCase().includes(f)) return true;
+      if ((m.tags || []).some(t => t.toLowerCase().includes(f))) return true;
+      if ((m.category || "").toLowerCase().includes(f)) return true;
+      if ((m.sub_discipline || "").toLowerCase().includes(f)) return true;
+      if ((m.menjia_name || "").toLowerCase().includes(f)) return true;
+      return false;
+    });
     // 搜大类
     const cats = (M.hierarchy?.disciplines || []).flatMap(d =>
       (d.sub || []).filter(s => s.name.toLowerCase().includes(f)).map(s => ({...s, parent: d.name, code: d.code}))
@@ -96,7 +101,15 @@
   function esc(s) { return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"})[c]); }
 
   // 初始渲染 + 计数
-  render("");
+  // URL ?q= 参数 → 自动填充 + 渲染 (从 catalog 跳转过来)
+  const urlQ = new URLSearchParams(location.search).get("q") || "";
+  if (urlQ && q) {
+    q.value = urlQ;
+    if (clear) clear.style.display = "flex";
+    render(urlQ, activeType);
+  } else {
+    render("");
+  }
   const nM = M.manifest.majors.length;
   const nC = (M.hierarchy?.disciplines || []).reduce((a, d) => a + (d.sub || []).length, 0);
   if ($("#n-major")) $("#n-major").textContent = nM;
