@@ -259,6 +259,103 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
+  /* fit 双段 (适合 / 别勉强) */
+  .fit-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .fit-col {
+    padding: 10px 12px;
+    border-radius: 2px;
+    font-family: var(--font-body); font-size: 0.875rem;
+    line-height: 1.55;
+  }
+  .fit-yes { background: rgba(76, 122, 76, 0.10); border-left: 3px solid #4C7A4C; color: var(--fg); }
+  .fit-no  { background: rgba(184, 120, 50, 0.10); border-left: 3px solid #B87832; color: var(--fg); }
+  .fit-col-head {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    position: relative; padding-left: 14px; margin: 4px 0;
+    color: var(--fg); font-size: 0.875rem;
+  }
+  .fit-list li::before {
+    content: "·"; position: absolute; left: 4px; top: 0;
+    color: var(--muted); font-weight: 700;
+  }
+
+  /* pitfalls (误区 vs 真相) */
+  .pitfall-risk { background: rgba(184,50,58,0.04); }
+  .pitfall-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .pitfall {
+    border-left: 3px solid var(--accent);
+    padding: 10px 12px;
+    background: var(--card-bg, rgba(255,255,255,0.4));
+    border-radius: 2px;
+  }
+  .pitfall-myth, .pitfall-reality {
+    font-family: var(--font-body); font-size: 0.875rem;
+    line-height: 1.55; padding: 4px 0;
+  }
+  .pitfall-myth { color: var(--accent-ink); border-bottom: 1px dashed var(--line); padding-bottom: 6px; margin-bottom: 6px; }
+  .pitfall-reality { color: var(--fg); }
+  .pitfall-tag {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-right: 6px;
+    letter-spacing: 0.1em;
+  }
+  .pitfall-myth .pitfall-tag { background: var(--accent); color: #FBF8F1; }
+  .pitfall-reality .pitfall-tag { background: #4C7A4C; color: #FBF8F1; }
+
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -372,16 +469,11 @@
         <h2 class="art-title">这个专业到底学什么</h2>
       </div>
       <div class="art-body">
-        <p>{'foundations': ['系统解剖学', '生理学', '生物化学', '病理学', '病理生理学', '药理学', '组织学与胚胎学'], 'directions': [{'name': '麻醉与围术期医学', 'desc': '华西 特色方向, 西南第一, 覆盖术前评估到术中麻醉再到术后镇痛的全流程管理。'}, {'name': '麻醉学 5+3 一体化', 'desc': '协和 特色方向, 专硕与规培合一培养, 八年路径最规范, 规培证与学位同步拿。'}, {'name': '麻醉与疼痛医学', 'desc': '湘雅 特色方向, 慢性疼痛亚专科全国领先, 毕业后可直接对接疼痛门诊岗位。'}, {'name': '麻醉与体外循环', 'desc': '中山 特色方向, 心脏麻醉专修, 主攻体外循环灌注与心脏手术术中管理。'}, {'name': '麻醉与重症医学', 'desc': '同济 特色方向, ICU 双修培养, 适合想兼顾重症监护与麻醉的复合型医生。'}], 'skills': ['麻醉深度调节与术中生命体征监护', '气管插管与动静脉穿刺置管', '麻醉机与多功能监护仪操作', '急危重症抢救与心肺复苏', '术后镇痛与慢性疼痛诊疗', '体外循环灌注技术'], 'bonus': '政策端, 国家卫健委明确将麻醉列为紧缺专业, 三甲医院常年招聘开放, 规培合格后下沉地级市可快速拿编制。趋势上, 麻醉医生正从「幕后」走向「围术期医学」主导者, 亚专科岗位边界持续扩展。'}</p>
-        <p>手术台上的「幕后指挥官」。全国每万人口麻醉医生仅 0.6 人 (欧美 2.5+), 缺口 30 万, 就业近乎 100%。但 5+3+X 起步 + 每台手术 1-6 小时全程紧绷, 不是「轻松好就业」, 而是「紧缺到透支」。</p>
+        <p class="lede">手术台上的「幕后指挥官」。全国每万人口麻醉医生仅 0.6 人 (欧美 2.5+), 缺口 30 万, 就业近乎 100%。但 5+3+X 起步 + 每台手术 1-6 小时全程紧绷, 不是「轻松好就业」, 而是「紧缺到透支」。</p>
+        <div class="dir-list"><div class="dir-card"><div class="dir-num">01</div><div class="dir-body"><div class="dir-name">麻醉与围术期医学</div><div class="dir-desc">华西 特色方向, 西南第一, 覆盖术前评估到术中麻醉再到术后镇痛的全流程管理。</div></div></div><div class="dir-card"><div class="dir-num">02</div><div class="dir-body"><div class="dir-name">麻醉学 5+3 一体化</div><div class="dir-desc">协和 特色方向, 专硕与规培合一培养, 八年路径最规范, 规培证与学位同步拿。</div></div></div><div class="dir-card"><div class="dir-num">03</div><div class="dir-body"><div class="dir-name">麻醉与疼痛医学</div><div class="dir-desc">湘雅 特色方向, 慢性疼痛亚专科全国领先, 毕业后可直接对接疼痛门诊岗位。</div></div></div><div class="dir-card"><div class="dir-num">04</div><div class="dir-body"><div class="dir-name">麻醉与体外循环</div><div class="dir-desc">中山 特色方向, 心脏麻醉专修, 主攻体外循环灌注与心脏手术术中管理。</div></div></div><div class="dir-card"><div class="dir-num">05</div><div class="dir-body"><div class="dir-name">麻醉与重症医学</div><div class="dir-desc">同济 特色方向, ICU 双修培养, 适合想兼顾重症监护与麻醉的复合型医生。</div></div></div></div><div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">学什么底子</div><div class="what-tags"><span class="tag-mini">系统解剖学</span><span class="tag-mini">生理学</span><span class="tag-mini">生物化学</span><span class="tag-mini">病理学</span><span class="tag-mini">病理生理学</span><span class="tag-mini">药理学</span><span class="tag-mini">组织学与胚胎学</span></div></div><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">麻醉深度调节与术中生命体征监护</span><span class="tag-mini">气管插管与动静脉穿刺置管</span><span class="tag-mini">麻醉机与多功能监护仪操作</span><span class="tag-mini">急危重症抢救与心肺复苏</span><span class="tag-mini">术后镇痛与慢性疼痛诊疗</span><span class="tag-mini">体外循环灌注技术</span></div></div></div>
       </div>
-      <div class="risk">
-        <div class="risk-head">⚠ 读之前先想清</div>
-        <div class="risk-body">
-          <strong>适合谁。</strong>{'yes': ['能扛夜班, 凌晨 3 点急诊手术是常态', '不晕血不晕针, 天天穿刺插管', '反应快, 术中突发低血压 5 秒内给药', '心理强, 能扛术中死亡的精神冲击', '不追求站在台前, 接受 99% 时间背对患者'], 'no': ['晕血晕针手抖, 实习转专业要 3 年', '身体弱扛不住长时间站立与夜班', '想早工作但 5+3+X 是 8-10 年长跑']}
-        </div>
-      </div>
-      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': '以为麻醉就是「打一针就走」', 'reality': '实际全程监护, 比外科还累。从诱导到拔管全程盯监护仪, 心率血压血氧麻醉深度等七八个数据同时看, 一到六小时不喝水不上厕所是常态, 中间突发情况要 5 秒内给药处理。'}<br>• {'myth': '以为好就业就能躺', 'reality': '紧缺是因「累 + 钱少 + 猝死率高」, 不是真轻松。全国缺口 30 万的背后, 是 5 个人干 7 个人的活, 节假日手术不休息, 麻醉医生猝死率在医生群体排前列。'}<br>• {'myth': '晕血晕针手抖没关系', 'reality': '实习时才发现, 转专业要 3 年。麻醉天天穿刺插管, 手抖或晕血基本干不了这行, 大三才发现自己不行, 沉没成本极高, 转方向要重修临床课程并从头实习, 代价巨大。'}<br>• {'myth': '以为 5 年本科就能早工作', 'reality': '麻醉是临床医学类, 本科 5 年 + 规培 3 年 + 专培 2-4 年, 实际 5+3+X 是 8-10 年长跑, 28-30 岁才能真正独立上台承担主麻职责。'}<br>• {'myth': '女生慎选是因为性别歧视', 'reality': '手术室辐射 + 长时间站立 + 高频夜班对女性身体负担大, 业内女生约 35-40%, 比例确实比临床低, 这是客观生理差异而非招生歧视, 女生选前需想清楚长期夜班的体力代价。'}</div></div>
+      <div class="risk"><div class="risk-head">⚠ 读之前先想清 · 适合谁</div><div class="fit-grid"><div class="fit-col fit-yes"><div class="fit-col-head">✓ 适合来</div><ul class="fit-list"><li>能扛夜班, 凌晨 3 点急诊手术是常态</li><li>不晕血不晕针, 天天穿刺插管</li><li>反应快, 术中突发低血压 5 秒内给药</li><li>心理强, 能扛术中死亡的精神冲击</li><li>不追求站在台前, 接受 99% 时间背对患者</li></ul></div><div class="fit-col fit-no"><div class="fit-col-head">✗ 别勉强</div><ul class="fit-list"><li>晕血晕针手抖, 实习转专业要 3 年</li><li>身体弱扛不住长时间站立与夜班</li><li>想早工作但 5+3+X 是 8-10 年长跑</li></ul></div></div></div>
+      <div class="risk pitfall-risk"><div class="risk-head">⚠ 容易踩的坑 · 误区 vs 真相</div><div class="pitfall-list"><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>以为麻醉就是「打一针就走」</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>实际全程监护, 比外科还累。从诱导到拔管全程盯监护仪, 心率血压血氧麻醉深度等七八个数据同时看, 一到六小时不喝水不上厕所是常态, 中间突发情况要 5 秒内给药处理。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>以为好就业就能躺</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>紧缺是因「累 + 钱少 + 猝死率高」, 不是真轻松。全国缺口 30 万的背后, 是 5 个人干 7 个人的活, 节假日手术不休息, 麻醉医生猝死率在医生群体排前列。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>晕血晕针手抖没关系</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>实习时才发现, 转专业要 3 年。麻醉天天穿刺插管, 手抖或晕血基本干不了这行, 大三才发现自己不行, 沉没成本极高, 转方向要重修临床课程并从头实习, 代价巨大。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>以为 5 年本科就能早工作</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>麻醉是临床医学类, 本科 5 年 + 规培 3 年 + 专培 2-4 年, 实际 5+3+X 是 8-10 年长跑, 28-30 岁才能真正独立上台承担主麻职责。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>女生慎选是因为性别歧视</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>手术室辐射 + 长时间站立 + 高频夜班对女性身体负担大, 业内女生约 35-40%, 比例确实比临床低, 这是客观生理差异而非招生歧视, 女生选前需想清楚长期夜班的体力代价。</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">

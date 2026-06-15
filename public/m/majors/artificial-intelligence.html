@@ -259,6 +259,103 @@
   }
   .risk-body strong { color: var(--accent-ink); }
 
+  /* fit 双段 (适合 / 别勉强) */
+  .fit-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .fit-col {
+    padding: 10px 12px;
+    border-radius: 2px;
+    font-family: var(--font-body); font-size: 0.875rem;
+    line-height: 1.55;
+  }
+  .fit-yes { background: rgba(76, 122, 76, 0.10); border-left: 3px solid #4C7A4C; color: var(--fg); }
+  .fit-no  { background: rgba(184, 120, 50, 0.10); border-left: 3px solid #B87832; color: var(--fg); }
+  .fit-col-head {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    position: relative; padding-left: 14px; margin: 4px 0;
+    color: var(--fg); font-size: 0.875rem;
+  }
+  .fit-list li::before {
+    content: "·"; position: absolute; left: 4px; top: 0;
+    color: var(--muted); font-weight: 700;
+  }
+
+  /* pitfalls (误区 vs 真相) */
+  .pitfall-risk { background: rgba(184,50,58,0.04); }
+  .pitfall-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .pitfall {
+    border-left: 3px solid var(--accent);
+    padding: 10px 12px;
+    background: var(--card-bg, rgba(255,255,255,0.4));
+    border-radius: 2px;
+  }
+  .pitfall-myth, .pitfall-reality {
+    font-family: var(--font-body); font-size: 0.875rem;
+    line-height: 1.55; padding: 4px 0;
+  }
+  .pitfall-myth { color: var(--accent-ink); border-bottom: 1px dashed var(--line); padding-bottom: 6px; margin-bottom: 6px; }
+  .pitfall-reality { color: var(--fg); }
+  .pitfall-tag {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-right: 6px;
+    letter-spacing: 0.1em;
+  }
+  .pitfall-myth .pitfall-tag { background: var(--accent); color: #FBF8F1; }
+  .pitfall-reality .pitfall-tag { background: #4C7A4C; color: #FBF8F1; }
+
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -372,16 +469,11 @@
         <h2 class="art-title">这个专业到底学什么</h2>
       </div>
       <div class="art-body">
-        <p>{'foundations': ['高等数学 A', '线性代数', '概率论与数理统计', '程序设计基础', '数据结构与算法', '计算机组成原理与操作系统', '离散数学'], 'directions': [{'name': '智能机器人与具身智能', 'desc': '清华大学 特色方向, 把大模型塞进机器人身体, 服务工业和家庭场景。'}, {'name': '机器学习理论与数据挖掘', 'desc': '南京大学 LAMDA 学派, 偏学术, 是周志华带出来的算法理论高地。'}, {'name': '智能图像理解与雷达信号 AI', 'desc': '西安电子科技大学 特色, 电子信息底座加 AI, 服务国防和工业视觉。'}, {'name': '医学影像 AI 与智慧医疗', 'desc': '上海交通大学 特色, AI 加医疗影像诊断, 走卓越人才试点班路线。'}, {'name': '脑机接口与神经形态计算', 'desc': '浙江大学 特色, AI 加脑科学交叉, 押注下一代人机交互。'}], 'skills': ['PyTorch 与 TensorFlow 深度学习框架', 'Transformer 与大模型微调', 'Kaggle 与天池竞赛实操', '顶会论文复现', 'CUDA 与 GPU 算子优化', 'OpenCV 与 YOLO 视觉部署'], 'bonus': '大模型与多模态在 2025 年起成为头部院校选修课, 但课堂教的是 2018 年的 CNN, 真正落地靠自学。核心铁律: 数学占 50%, 编程占 30%, 业务场景占 20%, 缺一项就掉队。'}</p>
-        <p>AI 等于数学加算法加算力加数据。应届生年薪 28.7 万领跑全行业, 大模型算法岗月薪 6.8 万, 顶尖 AI 科学家月薪 13 万。但课程硬核, 60% 算法岗要求硕博, 35 岁危机加算力瓶颈加赛道饱和三把刀同时悬着。</p>
+        <p class="lede">AI 等于数学加算法加算力加数据。应届生年薪 28.7 万领跑全行业, 大模型算法岗月薪 6.8 万, 顶尖 AI 科学家月薪 13 万。但课程硬核, 60% 算法岗要求硕博, 35 岁危机加算力瓶颈加赛道饱和三把刀同时悬着。</p>
+        <div class="dir-list"><div class="dir-card"><div class="dir-num">01</div><div class="dir-body"><div class="dir-name">智能机器人与具身智能</div><div class="dir-desc">清华大学 特色方向, 把大模型塞进机器人身体, 服务工业和家庭场景。</div></div></div><div class="dir-card"><div class="dir-num">02</div><div class="dir-body"><div class="dir-name">机器学习理论与数据挖掘</div><div class="dir-desc">南京大学 LAMDA 学派, 偏学术, 是周志华带出来的算法理论高地。</div></div></div><div class="dir-card"><div class="dir-num">03</div><div class="dir-body"><div class="dir-name">智能图像理解与雷达信号 AI</div><div class="dir-desc">西安电子科技大学 特色, 电子信息底座加 AI, 服务国防和工业视觉。</div></div></div><div class="dir-card"><div class="dir-num">04</div><div class="dir-body"><div class="dir-name">医学影像 AI 与智慧医疗</div><div class="dir-desc">上海交通大学 特色, AI 加医疗影像诊断, 走卓越人才试点班路线。</div></div></div><div class="dir-card"><div class="dir-num">05</div><div class="dir-body"><div class="dir-name">脑机接口与神经形态计算</div><div class="dir-desc">浙江大学 特色, AI 加脑科学交叉, 押注下一代人机交互。</div></div></div></div><div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">学什么底子</div><div class="what-tags"><span class="tag-mini">高等数学 A</span><span class="tag-mini">线性代数</span><span class="tag-mini">概率论与数理统计</span><span class="tag-mini">程序设计基础</span><span class="tag-mini">数据结构与算法</span><span class="tag-mini">计算机组成原理与操作系统</span><span class="tag-mini">离散数学</span></div></div><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">PyTorch 与 TensorFlow 深度学习框架</span><span class="tag-mini">Transformer 与大模型微调</span><span class="tag-mini">Kaggle 与天池竞赛实操</span><span class="tag-mini">顶会论文复现</span><span class="tag-mini">CUDA 与 GPU 算子优化</span><span class="tag-mini">OpenCV 与 YOLO 视觉部署</span></div></div></div>
       </div>
-      <div class="risk">
-        <div class="risk-head">⚠ 读之前先想清</div>
-        <div class="risk-body">
-          <strong>适合谁。</strong>{'yes': ['数学不反感, 大一线代听不懂后面就别想了', '能接受自学 60% 以上, 课堂内容远落后业界', '能顶住算力焦虑, 没 GPU 集群只能调小模型', '心理素质强, 论文 10 次有 9 次跑不通', '能熬 35 岁危机, 算法岗 5 年就换代一轮'], 'no': ['只想稳定躺平拿高薪, 2025 年算法岗投录比已 200 比 1', '数学一碰就头疼, AI 5 门数学是后续所有核心课的前置', '讨厌自学, 课堂教的是 2018 年的 CNN, 现在是 LLM 与 Agent']}
-        </div>
-      </div>
-      <div class="risk"><div class="risk-head">⚠ 容易踩的坑</div><div class="risk-body">• {'myth': 'AI 等于调包侠', 'reality': '培训班 6 个月能教你跑通 YOLOv8, 但大厂面试必问反向传播推导加损失函数数学性质, 没数学底子一题就卡。真正能拿高薪的 AI 工程师, 都能手推梯度下降与 Transformer 注意力机制的完整公式链。'}<br>• {'myth': '本科直接进大厂算法岗', 'reality': '2025 算法岗 60% 要求硕博, 本科 985 也只能去 AI 产品或数据标注岗, 真正的算法岗留给博士加顶会论文的人。本科想突围, 必须靠 Kaggle 银牌加顶会 workshop 加一年大厂实习三件套硬拼。'}<br>• {'myth': '数学学不学都行', 'reality': '大错。高数线代概率优化 5 门课是大三所有 AI 核心课的前置, 缺一全盘崩, 后续连 Transformer 的 QKV 矩阵推导都看不懂。AI 课程的数学占比高达 50%, 是后期所有模型创新的根。'}<br>• {'myth': 'AI 永远高薪', 'reality': '2024 末开始, 推理优化与 AI Infra 岗涨薪 36%, 但传统推荐算法岗实际在降薪, 赛道分化已经非常明显。选对细分方向, 应届起薪能差出 20 万, 选错就只能卷数据标注与模型微调。'}<br>• {'myth': 'AI 等于 ChatGPT', 'reality': '大模型只是 AI 一支, 还有机器人自动驾驶 AI for Science 具身智能等细分赛道, 选错方向 3 年白学。每个赛道的工具链与论文体系完全不同, 转方向的沉没成本极高。'}</div></div>
+      <div class="risk"><div class="risk-head">⚠ 读之前先想清 · 适合谁</div><div class="fit-grid"><div class="fit-col fit-yes"><div class="fit-col-head">✓ 适合来</div><ul class="fit-list"><li>数学不反感, 大一线代听不懂后面就别想了</li><li>能接受自学 60% 以上, 课堂内容远落后业界</li><li>能顶住算力焦虑, 没 GPU 集群只能调小模型</li><li>心理素质强, 论文 10 次有 9 次跑不通</li><li>能熬 35 岁危机, 算法岗 5 年就换代一轮</li></ul></div><div class="fit-col fit-no"><div class="fit-col-head">✗ 别勉强</div><ul class="fit-list"><li>只想稳定躺平拿高薪, 2025 年算法岗投录比已 200 比 1</li><li>数学一碰就头疼, AI 5 门数学是后续所有核心课的前置</li><li>讨厌自学, 课堂教的是 2018 年的 CNN, 现在是 LLM 与 Agent</li></ul></div></div></div>
+      <div class="risk pitfall-risk"><div class="risk-head">⚠ 容易踩的坑 · 误区 vs 真相</div><div class="pitfall-list"><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>AI 等于调包侠</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>培训班 6 个月能教你跑通 YOLOv8, 但大厂面试必问反向传播推导加损失函数数学性质, 没数学底子一题就卡。真正能拿高薪的 AI 工程师, 都能手推梯度下降与 Transformer 注意力机制的完整公式链。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>本科直接进大厂算法岗</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>2025 算法岗 60% 要求硕博, 本科 985 也只能去 AI 产品或数据标注岗, 真正的算法岗留给博士加顶会论文的人。本科想突围, 必须靠 Kaggle 银牌加顶会 workshop 加一年大厂实习三件套硬拼。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>数学学不学都行</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>大错。高数线代概率优化 5 门课是大三所有 AI 核心课的前置, 缺一全盘崩, 后续连 Transformer 的 QKV 矩阵推导都看不懂。AI 课程的数学占比高达 50%, 是后期所有模型创新的根。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>AI 永远高薪</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>2024 末开始, 推理优化与 AI Infra 岗涨薪 36%, 但传统推荐算法岗实际在降薪, 赛道分化已经非常明显。选对细分方向, 应届起薪能差出 20 万, 选错就只能卷数据标注与模型微调。</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>AI 等于 ChatGPT</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>大模型只是 AI 一支, 还有机器人自动驾驶 AI for Science 具身智能等细分赛道, 选错方向 3 年白学。每个赛道的工具链与论文体系完全不同, 转方向的沉没成本极高。</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">

@@ -308,6 +308,54 @@
   .pitfall-myth .pitfall-tag { background: var(--accent); color: #FBF8F1; }
   .pitfall-reality .pitfall-tag { background: #4C7A4C; color: #FBF8F1; }
 
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -423,8 +471,8 @@
         <h2 class="art-title">这个专业到底学什么</h2>
       </div>
       <div class="art-body">
-        <p>{'directions': [{'name': '方向 1', 'desc': '经济法是法学门类下的核心二级学科,聚焦国家对市场经济的宏观调控与微观监管法律规范,涵盖商法、公司法、证券法、金融法、竞争'}, {'name': '方向 2', 'desc': '它既是市场经济运行的&quot;制度底座&quot;,也是连接法律与经济、金融、管理的交叉学科。'}, {'name': '方向 3', 'desc': '毕业生主要进入律师事务所(尤其非诉与商事诉讼业务)、金融机构法务合规岗、政府监管机关(市场监管/金融监管/财政税务)、大'}, {'name': '方向 4', 'desc': '在数字经济、平台监管、数据合规、ESG等新兴领域,经济法人才需求持续增长,是法学专业中就业出口最宽、复合度最高的方向之一'}], 'foundations': ['学科基础', '核心理论', '方法论'], 'skills': ['逻辑分析', '文献阅读', '独立研究', '专业写作']}</p>
-        <p>经济法是法学门类下的核心二级学科,聚焦国家对市场经济的宏观调控与微观监管法律规范,涵盖商法、公司法、证券法、金融法、竞争法(反垄断/反不正当竞争)、财税法、消费者权益保护法、对外贸易法等多个子方向。它既是市场经济运行的&quot;制度底座&quot;,也是连接法律与经济、金融、管理的交叉学科。毕业生主要进入律师事务所(尤其非诉与商事诉讼业务)、金融机构法务合规岗、政府监管机关(市场监管/金融监管/财政税务)、大型企业</p>
+        <p class="lede">经济法是法学门类下的核心二级学科,聚焦国家对市场经济的宏观调控与微观监管法律规范,涵盖商法、公司法、证券法、金融法、竞争法(反垄断/反不正当竞争)、财税法、消费者权益保护法、对外贸易法等多个子方向。它既是市场经济运行的&quot;制度底座&quot;,也是连接法律与经济、金融、管理的交叉学科。毕业生主要进入律师事务所(尤其非诉与商事诉讼业务)、金融机构法务合规岗、政府监管机关(市场监管/金融监管/财政税务)、大型企业</p>
+        <div class="dir-list"><div class="dir-card"><div class="dir-num">01</div><div class="dir-body"><div class="dir-name">方向 1</div><div class="dir-desc">经济法是法学门类下的核心二级学科,聚焦国家对市场经济的宏观调控与微观监管法律规范,涵盖商法、公司法、证券法、金融法、竞争</div></div></div><div class="dir-card"><div class="dir-num">02</div><div class="dir-body"><div class="dir-name">方向 2</div><div class="dir-desc">它既是市场经济运行的&quot;制度底座&quot;,也是连接法律与经济、金融、管理的交叉学科。</div></div></div><div class="dir-card"><div class="dir-num">03</div><div class="dir-body"><div class="dir-name">方向 3</div><div class="dir-desc">毕业生主要进入律师事务所(尤其非诉与商事诉讼业务)、金融机构法务合规岗、政府监管机关(市场监管/金融监管/财政税务)、大</div></div></div><div class="dir-card"><div class="dir-num">04</div><div class="dir-body"><div class="dir-name">方向 4</div><div class="dir-desc">在数字经济、平台监管、数据合规、ESG等新兴领域,经济法人才需求持续增长,是法学专业中就业出口最宽、复合度最高的方向之一</div></div></div></div><div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">学什么底子</div><div class="what-tags"><span class="tag-mini">学科基础</span><span class="tag-mini">核心理论</span><span class="tag-mini">方法论</span></div></div><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">逻辑分析</span><span class="tag-mini">文献阅读</span><span class="tag-mini">独立研究</span><span class="tag-mini">专业写作</span></div></div></div>
       </div>
       <div class="risk"><div class="risk-head">⚠ 读之前先想清 · 适合谁</div><div class="fit-grid"><div class="fit-col fit-yes"><div class="fit-col-head">✓ 适合来</div><ul class="fit-list"><li>对学科基础课程 (数学/统计/经济) 有兴趣, 愿意投入长期学习</li><li>能接受 4 年制本硕博长跑, 或愿意持证上岗</li><li>对行业核心岗位的薪资范围有合理预期 (中位数而非上限)</li></ul></div><div class="fit-col fit-no"><div class="fit-col-head">✗ 别勉强</div><ul class="fit-list"><li>只想本科毕业立刻高薪 (无耐心考证/读研)</li><li>对学科核心内容 (如数学/案例分析) 完全无兴趣</li></ul></div></div></div>
       <div class="risk pitfall-risk"><div class="risk-head">⚠ 容易踩的坑 · 误区 vs 真相</div><div class="pitfall-list"><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>毕业 = 自动高薪</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>行业核心岗位需持证或读研 3-5 年, 本科就业与专业相关性较低</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>本专业就是 X 行业全部</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>专业侧重学科基础, 实际工作中需持续学习行业最新动态</div></div><div class="pitfall"><div class="pitfall-myth"><span class="pitfall-tag">误区</span>不考证/不读研也能进头部</div><div class="pitfall-reality"><span class="pitfall-tag">真相</span>头部岗位 (如精算师/CFA/四大事务所) 持证是硬门槛</div></div></div></div>
@@ -440,11 +488,11 @@
       <div class="course-list">
         <div class="course-row">
           <div class="course-yr">大一</div>
-          <div class="course-names">中国法制史 · 中国法制史 · 中国法制史 · 法理学 · 宪法学 · 中国法制史 · 法律职业伦理</div>
+          <div class="course-names">中国法制史 · 经济法总论 · 金融法基础 · 法理学 · 宪法学 · 金融法基础 2 · 法律职业伦理</div>
           <div class="course-tag">大一</div>
         </div><div class="course-row">
           <div class="course-yr">大二</div>
-          <div class="course-names">刑法总论 · 刑法总论 · 刑法总论 · 民法总论 · 刑法总论 · 行政法与行政诉讼法 · 商法基础</div>
+          <div class="course-names">刑法总论 · 刑事诉讼法 · 刑事诉讼法 2 · 民法总论 · 刑事诉讼法 2 3 · 行政法与行政诉讼法 · 商法基础</div>
           <div class="course-tag">大二</div>
         </div><div class="course-row">
           <div class="course-yr">大三</div>
