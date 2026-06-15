@@ -9,9 +9,9 @@
 <!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 <!-- Wishlist UI: 共享 store + helpers (顶部 chip / 右下 FAB / 12 主题卡 / 搜专业) -->
-<link rel="preload" href="../../js/wishlist-store.js" as="script">
-<link rel="preload" href="../../js/ui-helpers.js" as="script">
-<link rel="preload" href="../../js/major-search.js" as="script">
+<link rel="preload" href="/js/wishlist-store.js" as="script">
+<link rel="preload" href="/js/ui-helpers.js" as="script">
+<link rel="preload" href="/js/major-search.js" as="script">
 
 <title>商法专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="商法是法学门类下聚焦商事主体设立、交易规则、公司治理、证券金融、破产清算等领域的应用型核心方向，培养兼具法律逻辑与商业思维的复合型法律人才，是企业法务、律所商事团队、资本市场合规业务的核心储备专业。商">
@@ -951,6 +951,14 @@ footer .data-source { color: #78716C; }
           <div class="course"><span class="course-name">人大法学院 · 民商法与知识产权</span><span class="course-credit">3 学分</span></div>
           <div class="course"><span class="course-name">政法大 · 刑事辩护与司法制度</span><span class="course-credit">3 学分</span></div>
         </div>
+        <div class="curriculum-block fade-upfade-up visible"><div class="curriculum-title">实践教学环节</div>
+          <div class="course"><span class="course-name">模拟法庭实训</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">法律诊所 (公益诉讼)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">律所实习 (8-12 周)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">毕业实习 + 毕业论文</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">法律文书写作实战</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">案例研习 + 模拟仲裁</span><span class="course-credit">3 学分</span></div>
+        </div>
     </div>
   </div>
 </section>
@@ -1157,32 +1165,42 @@ footer .data-source { color: #78716C; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">商事律师 (非诉/并购/IPO)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:35%"></div></div>
-          <div class="direction-pct">35%</div>
+          <div class="direction-name">律师/律师事务所</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
+          <div class="direction-pct">22%</div>
         </div>
         <div class="direction">
           <div class="direction-name">公司法务</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
-          <div class="direction-pct">25%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">投行/PE/VC 法务</div>
+          <div class="direction-name">政府机关/司法机关</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
           <div class="direction-pct">15%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">证券从业 (投行/资管)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
+          <div class="direction-name">继续深造/读研</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">证监会/金融监管局</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
+          <div class="direction-name">法务咨询/合规</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">券商合规风控</div>
+          <div class="direction-name">公检法司基层</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">证券/金融监管</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
+          <div class="direction-pct">5%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">知识产权/专利代理</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
           <div class="direction-pct">5%</div>
         </div>
@@ -1415,9 +1433,9 @@ footer .data-source { color: #78716C; }
 
 
 <!-- Wishlist UI: 共享 store + helpers + 本页 chip/FAB 启动 + 搜专业 chat -->
-<script src="../../js/wishlist-store.js"></script>
-<script src="../../js/ui-helpers.js"></script>
-<script src="../../js/major-search.js"></script>
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/major-search.js"></script>
 <script>
 (function () {
   "use strict";
