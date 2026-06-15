@@ -7,9 +7,8 @@
  *   3) query string 不含 ?desktop=1
  *
  * 桌面访问保持原样. 用户主动加 ?desktop=1 可强制桌面版.
+ * PagesFunction 类型由 CF Pages Functions 自动注入, 不需 import.
  */
-
-import type { PagesFunction } from "@cloudflare/workers-types";
 
 export const onRequest: PagesFunction = async (context) => {
   const { request, next } = context;
