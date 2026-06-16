@@ -1,0 +1,92 @@
+====================================================================================================
+基准对比 (与 law / public-order 同 style 对照)
+====================================================================================================
+
+📐 基准 law (style=law)
+    top_keys             24
+    ov_keys              3
+    salary_type          数字表
+    salary_keys          3
+    alumni_n             3
+    schools_n            10
+    companies_n          7
+    employment_n         5
+    curriculum_blocks    3
+    curriculum_courses   20
+    summary_len          125
+
+📐 基准 public-order (style=gongan)
+    top_keys             24
+    ov_keys              4
+    salary_type          数字表
+    salary_keys          3
+    alumni_n             2
+    schools_n            10
+    companies_n          6
+    employment_n         8
+    curriculum_blocks    3
+    curriculum_courses   29
+    summary_len          105
+
+====================================================================================================
+12 篇待审 (按 style 选对应基准)
+====================================================================================================
+slug                           style    salary        ov alum sch com emp cur_b cur_n  sum grade  issues
+❌ international-law            law      散文             9    3   8  10   6     3    28  283 FAIL   salary 不一致: 待审=散文 基准=数字表
+❌ economic-law                 law      未知(['entry_average', 'industry_growth', 'one_to_three_years'])   9    3   8  12   6     3    34  285 FAIL   salary 不一致: 待审=未知(['entry_average', 'industry_growth', 'one_to_three_years']) 基准
+❌ criminal-law                 cs       未知(['10年+ (持证/资深)', 'entry_level', 'mid_career'])  10    3   8  12   6     3    26  160 FAIL   salary 不一致: 待审=未知(['10年+ (持证/资深)', 'entry_level', 'mid_career']) 基准=数字表
+❌ civil-law-jurisprudence      law      未知(['entry_monthly_cny', 'note', 'senior_monthly_cny'])  12    3   8  10   6     3    21  189 FAIL   salary 不一致: 待审=未知(['entry_monthly_cny', 'note', 'senior_monthly_cny']) 基准=数字表
+❌ commercial-law               law      数字表            0    2  10   0   0     0     0  144 FAIL   top_keys=19 < 基准 24; ov_keys=0 < 基准 3; 课程数 0 < 8
+❌ administrative-law           law      数字表            5    2   7   5   0     0     0  204 FAIL   课程数 0 < 8
+❌ civil-procedure              law      数字表            5    0   1  10   0     0     0  183 FAIL   alumni 0 < 2; schools 1 < 4; 课程数 0 < 8
+❌ criminal-procedure           law      数字表            0    2   7   0   0     0     0  316 FAIL   top_keys=20 < 基准 24; ov_keys=0 < 基准 3; 课程数 0 < 8
+❌ prison-studies               gongan   未知(['entry_3y', 'entry_5y', 'by_city'])  11    3   7   5   5     3    13  199 FAIL   salary 不一致: 待审=未知(['entry_3y', 'entry_5y', 'by_city']) 基准=数字表
+❌ drug-control                 gongan   散文            10    4   7   6   0     3    18  202 FAIL   salary 不一致: 待审=散文 基准=数字表
+❌ criminology                  gongan   散文            12    3   8   8   0     4    34  260 FAIL   salary 不一致: 待审=散文 基准=数字表
+❌ foreign-police               gongan   未知(['growth_path', 'monthly_estimate_cny', 'monthly_note'])  11    3   7   6   0     4    26  299 FAIL   salary 不一致: 待审=未知(['growth_path', 'monthly_estimate_cny', 'monthly_note']) 基准=数字
+
+====================================================================================================
+FAIL 总数: 12/12
+====================================================================================================
+
+❌ international-law
+    - salary 不一致: 待审=散文 基准=数字表
+
+❌ economic-law
+    - salary 不一致: 待审=未知(['entry_average', 'industry_growth', 'one_to_three_years']) 基准=数字表
+
+❌ criminal-law
+    - salary 不一致: 待审=未知(['10年+ (持证/资深)', 'entry_level', 'mid_career']) 基准=数字表
+
+❌ civil-law-jurisprudence
+    - salary 不一致: 待审=未知(['entry_monthly_cny', 'note', 'senior_monthly_cny']) 基准=数字表
+
+❌ commercial-law
+    - top_keys=19 < 基准 24
+    - ov_keys=0 < 基准 3
+    - 课程数 0 < 8
+
+❌ administrative-law
+    - 课程数 0 < 8
+
+❌ civil-procedure
+    - alumni 0 < 2
+    - schools 1 < 4
+    - 课程数 0 < 8
+
+❌ criminal-procedure
+    - top_keys=20 < 基准 24
+    - ov_keys=0 < 基准 3
+    - 课程数 0 < 8
+
+❌ prison-studies
+    - salary 不一致: 待审=未知(['entry_3y', 'entry_5y', 'by_city']) 基准=数字表
+
+❌ drug-control
+    - salary 不一致: 待审=散文 基准=数字表
+
+❌ criminology
+    - salary 不一致: 待审=散文 基准=数字表
+
+❌ foreign-police
+    - salary 不一致: 待审=未知(['growth_path', 'monthly_estimate_cny', 'monthly_note']) 基准=数字表

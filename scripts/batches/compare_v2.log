@@ -1,0 +1,92 @@
+====================================================================================================
+基准对比 (与 law / public-order 同 style 对照)
+====================================================================================================
+
+📐 基准 law (style=law)
+    top_keys             24
+    ov_keys              3
+    salary_type          数字表
+    salary_keys          3
+    alumni_n             3
+    schools_n            10
+    companies_n          7
+    employment_n         5
+    curriculum_blocks    3
+    curriculum_courses   20
+    summary_len          125
+
+📐 基准 public-order (style=gongan)
+    top_keys             24
+    ov_keys              4
+    salary_type          数字表
+    salary_keys          3
+    alumni_n             2
+    schools_n            10
+    companies_n          6
+    employment_n         8
+    curriculum_blocks    3
+    curriculum_courses   29
+    summary_len          105
+
+====================================================================================================
+12 篇待审 (按 style 选对应基准)
+====================================================================================================
+slug                           style    salary        ov alum sch com emp cur_b cur_n  sum grade  issues
+❌ international-law            law      未知(['应届生 (一线)', '3年经验', '5年经验'])   4    3   8  10   6     3    28  283 FAIL   salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+❌ economic-law                 law      未知(['应届生 (一线)', '3年经验', '5年经验'])   4    3   8  10   6     3    40  285 FAIL   salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+✅ criminal-law                 law      数字表            4    3   8  10   6     3    29  160 PASS   
+❌ civil-law-jurisprudence      law      未知(['应届生 (一线)', '3年经验', '5年经验'])   4    1   8  10   6     3    24  189 FAIL   salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表; alumni 1 < 2
+❌ commercial-law               law      数字表            4    1  10   0   0     3     3  144 FAIL   alumni 1 < 2; 课程数 3 < 8
+❌ administrative-law           law      数字表            4    1   7   5   0     3     3  204 FAIL   alumni 1 < 2; 课程数 3 < 8
+❌ civil-procedure              law      数字表            4    1   2  10   0     3     3  183 FAIL   alumni 1 < 2; schools 2 < 4; 课程数 3 < 8
+❌ criminal-procedure           law      数字表            4    1   7   0   0     3     3  316 FAIL   alumni 1 < 2; 课程数 3 < 8
+❌ prison-studies               gongan   未知(['应届生 (一线)', '3年经验', '5年经验'])   4    3   7   5   5     3    13  199 FAIL   salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+❌ drug-control                 gongan   未知(['应届生 (一线)', '3年经验', '5年经验'])   4    1   7   6   0     3    21  202 FAIL   salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表; alumni 1 < 2
+❌ criminology                  gongan   未知(['应届生 (一线)', '5年经验', '10年+ (持证/资深)'])   4    3   1   8   0     3    37  260 FAIL   salary 不一致: 待审=未知(['应届生 (一线)', '5年经验', '10年+ (持证/资深)']) 基准=数字表; schools 1 < 4
+❌ foreign-police               gongan   未知(['应届生 (一线)', '3年经验', '5年经验'])   4    1   7   6   0     3    29  299 FAIL   salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表; alumni 1 < 2
+
+====================================================================================================
+FAIL 总数: 11/12
+====================================================================================================
+
+❌ international-law
+    - salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+
+❌ economic-law
+    - salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+
+❌ civil-law-jurisprudence
+    - salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+    - alumni 1 < 2
+
+❌ commercial-law
+    - alumni 1 < 2
+    - 课程数 3 < 8
+
+❌ administrative-law
+    - alumni 1 < 2
+    - 课程数 3 < 8
+
+❌ civil-procedure
+    - alumni 1 < 2
+    - schools 2 < 4
+    - 课程数 3 < 8
+
+❌ criminal-procedure
+    - alumni 1 < 2
+    - 课程数 3 < 8
+
+❌ prison-studies
+    - salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+
+❌ drug-control
+    - salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+    - alumni 1 < 2
+
+❌ criminology
+    - salary 不一致: 待审=未知(['应届生 (一线)', '5年经验', '10年+ (持证/资深)']) 基准=数字表
+    - schools 1 < 4
+
+❌ foreign-police
+    - salary 不一致: 待审=未知(['应届生 (一线)', '3年经验', '5年经验']) 基准=数字表
+    - alumni 1 < 2
