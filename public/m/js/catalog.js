@@ -12,24 +12,83 @@
   };
   const h = M.hierarchy;
   const disciplines = h?.disciplines || [];
-  // 算每门类精品数
+
+  // hierarchy 真实归属: 哪些 discipline 门类含此 name
+  // (重要: 不能信 manifest.discipline, e.g. 心理学 manifest=07 但 hierarchy 在 04 教育学 心理学类)
+  const hierNamesByCode = {};
+  for (const d of disciplines) {
+    const set = new Set();
+    for (const s of (d.sub || [])) for (const n of (s.majors || [])) set.add(n);
+    hierNamesByCode[d.code] = set;
+  }
+  // 每个 manifest 精品的真实归属门类 (按 hierarchy name 优先, fallback manifest.discipline)
+  // 注意: 用 slug 而非 title, 避免同 title 多 slug (e.g. 汉语言文学 2 个 slug) 漏数
+  const slugToRealCode = {};
+  for (const m of M.manifest.majors) {
+    let code = m.discipline;
+    for (const d of disciplines) {
+      if (hierNamesByCode[d.code].has(m.title)) { code = d.code; break; }
+    }
+    slugToRealCode[m.slug] = code;
+  }
+  // 章节头精品数: 按 slug 计数 (跟 sub-row 一致)
   const star = {};
   for (const m of M.manifest.majors) {
-    star[m.discipline] = (star[m.discipline] || 0) + 1;
+    const code = slugToRealCode[m.slug] || m.discipline;
+    star[code] = (star[code] || 0) + 1;
   }
 
   function render(filter = "") {
     const f = filter.trim().toLowerCase();
+    // 精品白名单: 126 个 manifest majors (用户原话"只显示已收录")
+    // 用 slug 而不是 title 防漏 (e.g. 汉语言文学 2 个 slug)
+    const curatedSlugs = new Set(M.manifest.majors.map(m => m.slug));
+    // name → slugs[] (一个 name 可能对应多 slug)
+    const nameToSlugs = {};
+    for (const m of M.manifest.majors) {
+      (nameToSlugs[m.title] = nameToSlugs[m.title] || []).push(m.slug);
+    }
+    // 该门类下, 按 slug 集合管理未渲染精品
+    const discSlugs = {};
+    for (const m of M.manifest.majors) {
+      const code = slugToRealCode[m.slug] || m.discipline;
+      (discSlugs[code] = discSlugs[code] || []).push(m.slug);
+    }
     root.innerHTML = disciplines.map(d => {
       const ck = colorKey[d.code] || "--accent";
+      // 该门类下所有 hierarchy 已收录 name 集合
+      const hierNamesInDisc = hierNamesByCode[d.code] || new Set();
+      // 该门类按 slug 跟踪的未渲染精品 (Set 防重复)
+      const remaining = new Set(discSlugs[d.code] || []);
       const subs = (d.sub || []).map(s => {
-        const cnt = (s.majors || []).length;
         const name = s.name;
         const match = !f || name.toLowerCase().includes(f);
         if (!match) return "";
+        // 该 sub-class 下的 majors 是 name 列表 (e.g. ["法学","知识产权","监狱学",...])
+        // 每个 name 查 nameToSlugs, 收集该 sub-class 的所有 curated slugs
+        const slugsHere = [];
+        for (const majorName of (s.majors || [])) {
+          for (const slug of (nameToSlugs[majorName] || [])) {
+            if (remaining.has(slug)) slugsHere.push(slug);
+          }
+        }
+        // 从 remaining 移除已渲染的 slug
+        for (const slug of slugsHere) remaining.delete(slug);
+        if (slugsHere.length === 0) return "";
+        const cnt = slugsHere.length;
         // 跳到 search.html?q=大类名, 让用户看到该大类的具体专业
         return `<a class="sub-row" href="search.html?q=${encodeURIComponent(name)}"><span class="sub-name">${name}</span><span class="sub-count">${cnt}</span></a>`;
-      }).join("") || `<div class="sub-row"><span class="sub-name" style="color:var(--muted)">暂无下属大类</span></a></div>`;
+      }).join("");
+      // 末尾"其他"行: 该门类剩余未匹配 (e.g. 法学 8 个细分法学: 民法/刑法/商法...)
+      // 注意: 0 精品时 sub-class 整条已隐藏, 但"其他"行还要看门类有没有匹配 (e.g. 交叉学科=0 整章不显示)
+      const unmatched = remaining.size;
+      const otherMatch = !f || "其他".includes(f);
+      const otherRow = (unmatched > 0 && otherMatch)
+        ? `<a class="sub-row" href="search.html?q=${encodeURIComponent(d.name)}"><span class="sub-name" style="color:var(--muted)">其他</span><span class="sub-count">${unmatched}</span></a>`
+        : "";
+      const subsHtml = subs + otherRow || `<div class="sub-row"><span class="sub-name" style="color:var(--muted)">暂无下属大类</span></a></div>`;
+      // 整章 0 精品 (header star=0) 时整章隐藏
+      if ((star[d.code] || 0) === 0) return "";
       return `
         <div class="chapter" data-code="${d.code}" data-ghost="${d.name.slice(0,1)}" style="--theme: var(${ck});">
           <div class="chapter-head" data-toggle>
@@ -45,7 +104,7 @@
             <div class="chapter-arrow">›</div>
           </div>
           <div class="chapter-body">
-            <div class="sub-list">${subs}</div>
+            <div class="sub-list">${subsHtml}</div>
           </div>
         </div>
       `;
