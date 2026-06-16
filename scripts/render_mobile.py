@@ -659,7 +659,7 @@ def render_one(slug, data, theme_color, chsi_sat=None):
         grad_tier = f"低 {deep_pct:.0f}%"
 
     # 满意度 (阳光高考 5 分制, 从 chsi_majors.json 按 sub_discipline + title 查)
-    sub4 = data.get("sub_discipline", "")[:4]  # manifest 存的 4 位
+    sub4 = (data.get("sub_discipline") or "")[:4]  # manifest 存的 4 位 (部分缺省)
     bucket = chsi_sat.get(sub4, {})
     sat_val = bucket.get(title, 0)
     if sat_val and sat_val > 0:
