@@ -447,6 +447,7 @@ def main():
     parser.add_argument("--provider", default="m3", choices=["m3", "deepseek", "mimo"])
     parser.add_argument("--no-search", action="store_true", help="跳过 web search (默认跳, 节省时间)")
     parser.add_argument("--audit", choices=["deepseek", "mimo", "m3"], help="合成后跑内容审计 (用哪个 LLM 审)")
+    parser.add_argument("--auto-fix", action="store_true", help="合成后跑字段级污染 auto-fix (mimo, 3 防线 Opt 3)")
     parser.add_argument("--limit", type=int, default=0, help="最多跑 N 篇 (0=全部)")
     args = parser.parse_args()
 
@@ -487,6 +488,20 @@ def main():
         # 保存
         out = save(data, slug, ROOT)
         print(f"  ✅ {out.relative_to(ROOT)} ({time.time()-t0:.0f}s)")
+
+        # 字段级 auto-fix (可选, mimo 字段级 fix, Opt 3 兜底)
+        if args.auto_fix:
+            try:
+                sys.path.insert(0, str(ROOT / "scripts" / "batches"))
+                from auto_fix_pipeline import auto_fix_one, MiMoFixer  # noqa: E402
+                fixer = MiMoFixer()
+                r = auto_fix_one(fixer, slug, force_full=False)
+                n_fixed = len([f for f in r.get("fixed_fields", []) if f.get("status") == "ok"])
+                n_remain = r.get("remaining_strong", 0)
+                print(f"  [auto-fix] {title}: fixed {n_fixed} 字段, 剩 {n_remain} strong")
+            except Exception as e:
+                print(f"  [auto-fix] warn: {type(e).__name__}: {e}")
+
         success.append((slug, title, style))
 
     # 报告

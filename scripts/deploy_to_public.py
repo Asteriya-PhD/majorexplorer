@@ -50,6 +50,7 @@ def main():
     ap.add_argument("--csv", help="CSV with slug,title,style (only sync listed slugs)")
     ap.add_argument("--slugs", nargs="*", help="单跑 slug 列表")
     ap.add_argument("--dry-run", action="store_true", help="只看不写")
+    ap.add_argument("--force", action="store_true", help="强制 rm public/<slug>.html 后重新同步 (避免 CF cache)")
     args = ap.parse_args()
 
     if args.csv:
@@ -75,10 +76,14 @@ def main():
             continue
         src_html = src.read_text(encoding="utf-8")
         new_html, path_n = transform(src_html)
+        # --force: 强制 rm 旧版 (避免 CF Pages 缓存陷阱)
+        if args.force and dst.exists() and not args.dry_run:
+            dst.unlink()
+            print(f"  🗑️  {slug}: --force rm 旧版")
         # 同 vs 不同
         if dst.exists():
             dst_html = dst.read_text(encoding="utf-8")
-            if dst_html == new_html:
+            if dst_html == new_html and not args.force:
                 total_identical += 1
                 continue  # 无需同步
         # 写

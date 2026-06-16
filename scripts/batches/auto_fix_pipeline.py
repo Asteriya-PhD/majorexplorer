@@ -22,46 +22,71 @@ from contam_dict import detect_contamination  # noqa: E402
 CUR = ROOT / "skills/gaokao-major-explorer/data/curated"
 
 
-# ── 字段级 fix 模板 ──
+# ── MiMo 客户端 (字段级 fix 用, 比 m3 简洁快速) ──
+class MiMoFixer:
+    def __init__(self):
+        import urllib.request, urllib.error
+        self.api_key = os.environ.get("MIMO_API_KEY", "")
+        self.base_url = os.environ.get("MIMO_BASE_URL", "https://api.xiaomimimo.com/v1")
+        self.model = os.environ.get("MIMO_MODEL", "mimo-v2-flash")
+
+    def fix(self, prompt: str) -> dict:
+        import urllib.request as _ur
+        import json as _json
+        body = {
+            "model": self.model,
+            "max_completion_tokens": 8000,
+            "temperature": 0.3,
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        req = _ur.Request(
+            f"{self.base_url}/chat/completions",
+            data=_json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
+            method="POST",
+        )
+        try:
+            with _ur.urlopen(req, timeout=120) as resp:
+                payload = _json.loads(resp.read().decode("utf-8"))
+        except Exception as e:
+            return {"error": f"mimo 调用失败: {e}"}
+        text = payload.get("choices", [{}])[0].get("message", {}).get("content", "")
+        m = re.search(r"\{.*\}", text, re.DOTALL)
+        if not m:
+            return {"error": f"mimo 非 JSON: {text[:200]}"}
+        try:
+            return _json.loads(m.group(0))
+        except Exception as e:
+            return {"error": f"JSON parse: {e}: {text[:200]}"}
+
+
+# ── 字段级 fix 模板 (mimo 用的) ──
 FIX_FIELD_PROMPT = """你是中国高考专业内容修复员. 重新生成 "{title}" 专业 ({style}) 的 "{field}" 字段.
 
-【当前内容 (有污染)】:
+【当前内容 (有污染, 必须替换)】:
 {current}
 
-【污染词 (必须避免)】: {forbidden}
+【污染词 (严禁出现)】: {forbidden}
 
-【修复要求】:
-- 严格属于 "{title}" 专业, 不是其他专业
-- 内容要具体 (e.g. 课程名/公司名/技术术语/具体场景)
-- 长度/数量保持一致 (e.g. 5 条 employment_direction, 3 条 pitfalls)
-- 真实可信, 不确定的字段填 "数据待补"
+【修复要求 - 严格遵守】:
+1. 严格属于 "{title}" 专业, 不是任何其他专业
+2. 必须用真实的公司名/岗位/技术术语/具体场景
+3. 避免泛化模板 ("行业头部" "Top 10" "央企国企" "咨询审计")
+4. 长度/数量与原内容一致 (e.g. 5-7 条 employment_direction, 3 条 pitfalls)
+5. 不确定的字段填 "数据待补"
 
-【输出严格 JSON 格式, 字段名 = {field}】:
-只输出 JSON, 不要 markdown.
+【输出严格 JSON 格式, 字段名 = {field}】: 只输出 JSON, 不要 markdown.
 """
 
 
-def fix_field(client: M3Client, slug: str, title: str, style: str, field: str, current, forbidden: list) -> dict:
-    """字段级 fix: 用 m3 重写一个字段."""
+def fix_field(fixer, title: str, style: str, field: str, current, forbidden: list) -> dict:
+    """字段级 fix: 用 mimo 重写一个字段."""
     prompt = FIX_FIELD_PROMPT.format(
         title=title, style=style, field=field,
         current=json.dumps(current, ensure_ascii=False, indent=2)[:4000],
         forbidden=", ".join(forbidden[:10]),
     )
-    payload = client._call({
-        "model": client.model,
-        "max_tokens": 16000,
-        "temperature": 0.3,
-        "messages": [{"role": "user", "content": prompt}],
-    })
-    text = client._extract_text(payload)
-    m = re.search(r"\{.*\}", text, re.DOTALL)
-    if not m:
-        return {"error": f"非 JSON: {text[:200]}"}
-    try:
-        return json.loads(m.group(0))
-    except Exception as e:
-        return {"error": f"JSON parse: {e}: {text[:200]}"}
+    return fixer.fix(prompt)
 
 
 def get_field(data: dict, field: str):
@@ -88,7 +113,7 @@ def set_field(data: dict, field: str, value):
     return data
 
 
-def auto_fix_one(client: M3Client, slug: str, force_full: bool = False, max_rounds: int = 3) -> dict:
+def auto_fix_one(fixer, slug: str, force_full: bool = False, max_rounds: int = 3) -> dict:
     """单 major 自动 fix 流程: 多轮检测+fix 直到无 strong 污染."""
     p = CUR / f"{slug}.json"
     if not p.exists():
@@ -111,7 +136,7 @@ def auto_fix_one(client: M3Client, slug: str, force_full: bool = False, max_roun
             current = get_field(data, field)
             if current is None:
                 continue
-            result = fix_field(client, slug, title, style, field, current, hits)
+            result = fix_field(fixer, title, style, field, current, hits)
             if "error" in result:
                 round_fixed.append({"field": field, "status": "fail", "error": result["error"]})
                 continue
@@ -126,7 +151,6 @@ def auto_fix_one(client: M3Client, slug: str, force_full: bool = False, max_roun
                 round_fixed.append({"field": field, "status": "ok", "new": str(new_val)[:100]})
         all_fixed.extend(round_fixed)
         if not any(f["status"] == "ok" for f in round_fixed):
-            # 这一轮没修任何字段, 退出避免无限循环
             break
 
     # 3) 写回
@@ -165,12 +189,12 @@ def main():
         print("❌ no input")
         return
 
-    print(f"🔧 字段级 auto-fix pipeline: {len(pairs)} 篇")
-    client = M3Client(enable_thinking=True)
+    print(f"🔧 字段级 auto-fix pipeline: {len(pairs)} 篇 (mimo 字段级 fix)")
+    fixer = MiMoFixer()
     results = []
     for i, (slug, title) in enumerate(pairs, 1):
         try:
-            r = auto_fix_one(client, slug, force_full=args.force)
+            r = auto_fix_one(fixer, slug, force_full=args.force)
         except Exception as e:
             r = {"slug": slug, "error": f"{type(e).__name__}: {e}"}
         status = r.get("status", "fixed")

@@ -3733,6 +3733,9 @@ def normalize_major(data: dict, title: str = "", slug: str = "") -> dict:
 if __name__ == "__main__":
     import sys
     import csv as _csv
+    if "--skip-normalize" in sys.argv:
+        print("⏭️  --skip-normalize: 跳过 normalize, 保留原 JSON 不动 (硬编码/手工修改不被覆盖)")
+        sys.exit(0)
     cur = pathlib.Path("/Users/zhewenliu/Claude/gaokao-hubei-mvp/skills/gaokao-major-explorer/data/curated")
     # 用法:
     #   python normalize.py                     # Batch 1 默认 12 slug
