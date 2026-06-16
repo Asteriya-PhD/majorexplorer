@@ -11,10 +11,53 @@
  *       每校显示 top_major[0] 作为代表专业 + 校名 + 城市 + score
  */
 (async () => {
-  // 选科 chip / 偏好星 / 偏好 seg 交互 (复用 mobile 自己的 UI 控件)
+  // 选科 chip — 3+1+2 严格约束 (湖北新高考)
+  //   物理 OR 历史 二选一 (互斥)
+  //   化学/生物/地理/政治 4 选 ≤2
+  //   总数 ≤3; 选满后第 4 门 auto-off 最早选的 (按 DOM 顺序)
+  const FIRST_CHOICE = ["物理", "历史"];
+  const MAX_PICKS = 3;
+  function refreshPickDisabled() {
+    const onChips = Array.from(document.querySelectorAll("#pick-chips .chip.on"));
+    const onFirst = onChips.find(c => FIRST_CHOICE.includes(c.dataset.pick));
+    document.querySelectorAll("#pick-chips .chip").forEach(c => {
+      const p = c.dataset.pick;
+      const isOn = c.classList.contains("on");
+      // 互斥: 物理/历史 已选 1 个,另 1 个 disabled
+      const isFirstOther = FIRST_CHOICE.includes(p) && onFirst && onFirst !== c;
+      // 满 3 门: 未选的 disabled
+      const isFull = onChips.length >= MAX_PICKS && !isOn;
+      c.classList.toggle("disabled", isFirstOther || isFull);
+    });
+  }
   document.querySelectorAll("#pick-chips .chip").forEach(c => {
-    c.addEventListener("click", () => c.classList.toggle("on"));
+    c.addEventListener("click", () => {
+      const pick = c.dataset.pick;
+      const wasOn = c.classList.contains("on");
+      if (wasOn) {
+        c.classList.remove("on");
+        refreshPickDisabled();
+        return;
+      }
+      // 物理/历史 互斥
+      if (FIRST_CHOICE.includes(pick)) {
+        FIRST_CHOICE.forEach(p => {
+          if (p !== pick) {
+            const other = document.querySelector(`#pick-chips .chip[data-pick="${p}"]`);
+            if (other) other.classList.remove("on");
+          }
+        });
+      }
+      // 总数 ≤ 3 — 满了就 auto-off 最早选的
+      const currentOn = Array.from(document.querySelectorAll("#pick-chips .chip.on"));
+      if (currentOn.length >= MAX_PICKS) {
+        currentOn[0].classList.remove("on");
+      }
+      c.classList.add("on");
+      refreshPickDisabled();
+    });
   });
+  refreshPickDisabled();
   const pt = document.getElementById("pref-toggle");
   if (pt) pt.addEventListener("click", () => document.getElementById("pref-panel").classList.toggle("open"));
   document.querySelectorAll(".pref-stars").forEach(g => {
@@ -75,6 +118,11 @@
   function tierColor(name) { return tierColors[name] || "#B8323A"; }
 
   // ─── 用户输入收集 ───
+  // pref-stars: major 5★ 强化 interests 权重; city 5★ 推武汉 (湖北 MVP 默认)
+  function getPrefStar(prefKey) {
+    const on = document.querySelector(`.pref-stars[data-pref="${prefKey}"] .pref-star.on`);
+    return on ? parseInt(on.dataset.v, 10) || 0 : 0;
+  }
   function collectUser() {
     const score = +scoreInput.value || 0;
     if (!score) return null;
@@ -85,14 +133,22 @@
     const mode = modeMap[segBtn && segBtn.dataset.v] || "均衡";
     // interests: 从 WishlistStore 取 (用户收藏), 评分 = rating (1-5)
     const wishes = (window.WishlistStore ? WishlistStore.all() : []);
+    const majorStar = getPrefStar("major");
+    // major star > 0 时 interests 整体加权 (1.0 → 1.32, 5★ → 1.6)
+    const majorWeight = majorStar > 0 ? (1.2 + majorStar * 0.08) : 1;
     const interests = wishes
       .filter(w => w.rating || w.score)
       .map(w => ({
         major: w.title || (M.manifestBySlug[w.slug] && M.manifestBySlug[w.slug].title) || w.slug,
-        score: w.rating || w.score,
+        score: Math.min(5, (w.rating || w.score) * majorWeight),
         style: w.style,
       }));
-    return { score, type: "物理类", xuanke, interests, cities: [], mode };
+    // cities: 湖北 MVP 默认武汉; city star 0 = 不加重, >0 加权
+    const cityStar = getPrefStar("city");
+    const cities = cityStar > 0
+      ? [{ city: "武汉", score: cityStar }]
+      : [];
+    return { score, type: "物理类", xuanke, interests, cities, mode };
   }
 
   // ─── PC Recommender 调用 + 渲染 ───
@@ -154,6 +210,17 @@
   document.getElementById("run").addEventListener("click", async () => {
     const user = collectUser();
     if (!user) { alert("先填分数"); return; }
+    // 4 wishlist min check (D8: 改在 click 时校验, UI 主动引导)
+    if (window.WishlistStore && !WishlistStore.isReady()) {
+      const n = WishlistStore.count();
+      const out = document.getElementById("results");
+      out.innerHTML = `<div class="empty">
+        <h3>还差 ${4 - n} 个收藏</h3>
+        <div>推荐至少需要 4 个已收藏专业, 当前 ${n} 个。<br>
+        <a href="wishlist.html" style="color:var(--accent);">先去收藏几个 →</a></div>
+      </div>`;
+      return;
+    }
     const out = document.getElementById("results");
     out.innerHTML = `<div class="loading">加载数据 + 跑算法… (3-5 秒)</div>`;
     try {
