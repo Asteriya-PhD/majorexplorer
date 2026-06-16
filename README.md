@@ -28,6 +28,9 @@
 - ✅ 2024 + 2025 湖北真实投档表 + 一分一段表
 - ✅ LLM 按需生成 (SCF 后端, 可选)
 - ✅ 心愿单 + 智能推荐 + 搜专业
+- ✅ PC + Mobile 双轨 (H 阶段对齐: PC 反馈 + 搜索报告, 移动端 dock 5 tab)
+- ✅ Cloudflare Web Analytics 接入 (2026-06-12, Core Web Vitals 监控)
+- ✅ 反馈 + 未收录报告闭环 (G 阶段, GH Issue 自动归档)
 - ✅ 纯公益, 不变现
 - ✅ License: **AGPL-3.0** (允许自用, 禁止商用)
 - ✅ 部署: Cloudflare Pages 海外, 国内优选 IP 30-100ms
@@ -105,4 +108,4 @@ CDN + DNS: Cloudflare
 
 ---
 
-最后更新: 2026-06-12 · 部署 v2 (ADR-016 ~ 019)
+最后更新: 2026-06-16 · H 阶段 PC 对齐 + 反馈闭环 + CLS 优化 (ADR-020)

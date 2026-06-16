@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<title>搜索专业 · Major Explorer</title>
+<meta name="description" content="按名字 / 学科门类搜索 126 个精品专业。找不到想看的? 告诉我们, 收齐了我们优先做。">
+<link rel="canonical" href="https://majorexplorer.com/search.html">
+<meta property="og:title" content="搜专业 · Major Explorer">
+<meta property="og:description" content="按名字 / 学科门类搜索 126 个精品专业。">
+<meta property="og:image" content="https://majorexplorer.com/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://majorexplorer.com/search.html">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+  /* ── search-region (PC 端, 跟 mobile 同形, 大字号版) ── */
+  .search-region {
+    padding: 56px 0 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .search-region .container { max-width: 880px; }
+  .search-eyebrow {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--accent); letter-spacing: 0.22em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .search-eyebrow .rule { flex: 0 0 32px; height: 1px; background: var(--accent); }
+  .search-eyebrow .count {
+    margin-left: auto; color: var(--muted);
+    font-family: var(--font-num); font-size: 0.75rem;
+  }
+  .search-eyebrow .count strong { color: var(--accent); font-weight: 700; }
+
+  .search-box {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    min-height: 60px;
+    box-shadow: 0 2px 8px rgba(20,17,13,0.04);
+    transition: all 200ms;
+  }
+  .search-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(184,50,58,0.10), 0 4px 14px rgba(20,17,13,0.08);
+  }
+  .search-box .ico {
+    font-family: var(--font-heading); font-size: 1.5rem; color: var(--accent); line-height: 1;
+  }
+  .search-box input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    font-family: var(--font-heading); font-size: 1.375rem; font-weight: 600;
+    color: var(--fg); letter-spacing: -0.01em;
+  }
+  .search-box input::placeholder { color: var(--muted-2); font-weight: 400; }
+  .search-box .clear {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--line-strong); color: var(--bg-soft);
+    display: none; align-items: center; justify-content: center;
+    font-family: var(--font-sans); font-size: 0.75rem; font-weight: 700;
+    flex-shrink: 0; cursor: pointer;
+  }
+  .search-box .clear.on { display: flex; }
+  .search-box .clear:hover { background: var(--accent); color: #fff; }
+
+  .filter-row {
+    margin-top: 16px;
+    display: flex; gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px;
+    background: #fff; border: 1px solid var(--line);
+    border-radius: 999px; color: var(--fg-soft);
+    font-family: var(--font-body); font-size: 0.875rem;
+    cursor: pointer; transition: all 160ms;
+  }
+  .filter.on { color: #FBF8F1; background: var(--fg); border-color: var(--fg); font-weight: 600; }
+  .filter[disabled] { opacity: 0.4; cursor: not-allowed; }
+  .filter .n {
+    font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted);
+  }
+  .filter.on .n { color: var(--gold); }
+  .filter .star { color: var(--accent); font-size: 0.75rem; }
+
+  /* ── 结果区 (跟 PC recommendations 风格统一) ── */
+  .results-region { padding: 40px 0 80px; min-height: 480px; }
+  .results-region .container { max-width: 880px; }
+  .result-section { margin-bottom: 40px; }
+  .result-section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding-bottom: 12px; margin-bottom: 8px;
+    border-bottom: 2px solid var(--fg);
+  }
+  .result-section-head[data-cat="大类"] { border-bottom-color: var(--theme-finance); }
+  .result-section-head .l {
+    font-family: var(--font-heading);
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--fg);
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .result-section-head .l .tag {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .result-section-head .n {
+    font-family: var(--font-num); font-size: 0.75rem; color: var(--muted);
+  }
+  .result-section-head .n strong { color: var(--accent); font-weight: 700; }
+
+  .result {
+    display: grid;
+    grid-template-columns: 4px 1fr auto;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    transition: all 160ms;
+  }
+  .result:hover { background: var(--bg-soft); padding-left: 8px; padding-right: 8px; margin: 0 -8px; }
+  .result::before {
+    content: ""; background: var(--theme, var(--accent));
+    border-radius: 1px; align-self: stretch; margin: 4px 0;
+  }
+  .result-body { min-width: 0; }
+  .result-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--fg); line-height: 1.25; letter-spacing: -0.01em;
+  }
+  .result-title em {
+    font-style: normal; color: var(--accent);
+    background: linear-gradient(transparent 60%, rgba(184,50,58,0.12) 60%);
+    padding: 0 2px;
+  }
+  .result-title .star { color: var(--accent); font-size: 0.875rem; margin-left: 6px; vertical-align: 2px; }
+  .result-cat {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .result-arrow {
+    font-family: var(--font-num); color: var(--muted-2); font-size: 1.125rem;
+    transition: transform 160ms;
+  }
+  .result:hover .result-arrow { color: var(--accent); transform: translateX(4px); }
+
+  /* ── 热门搜索 + 0 命中 card (PC 大字号版) ── */
+  .hot-list {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    padding: 0;
+  }
+  .hot {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    padding: 9px 16px;
+    background: #fff; border: 1px solid var(--line);
+    border-radius: 999px; color: var(--fg);
+    transition: all 160ms; cursor: pointer;
+  }
+  .hot:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+  .hot-region {
+    padding: 24px 0 0;
+  }
+  .hot-region .label {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .no-result-report {
+    margin: 24px 0;
+    padding: 32px 28px;
+    background: linear-gradient(180deg, #FAFAF7 0%, #F2EDE0 100%);
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    text-align: center;
+  }
+  .no-result-report .nrr-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem; font-weight: 600;
+    color: var(--fg);
+    margin-bottom: 8px;
+  }
+  .no-result-report .nrr-title strong { color: var(--accent); font-weight: 700; }
+  .no-result-report .nrr-desc {
+    font-family: var(--font-body);
+    font-size: 0.9375rem; color: var(--muted);
+    margin-bottom: 18px;
+    line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto;
+  }
+  .no-result-report .nrr-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--accent);
+    color: #FAFAF7;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--font-heading);
+    font-size: 1rem; font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms;
+    min-width: 220px;
+  }
+  .no-result-report .nrr-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(184,50,58,0.3); }
+  .no-result-report .nrr-btn:disabled { cursor: default; }
+  .no-result-report .nrr-btn.loading { opacity: 0.7; }
+  .no-result-report .nrr-btn.sent { background: #5C7C4A; }
+  .no-result-report .nrr-btn.failed { background: #8B2424; }
+  .no-result-report .nrr-fallback {
+    margin-top: 14px;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+  .no-result-report .nrr-fallback a { color: var(--accent); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="search-region">
+  <div class="container">
+    <div class="search-eyebrow">
+      <span class="rule"></span>SEARCH · 搜专业 / 大类
+      <span class="count">共 <strong id="n-all">—</strong> 条结果</span>
+    </div>
+    <div class="search-box">
+      <span class="ico">⌕</span>
+      <input id="q" type="search" placeholder="金融 / 临床医学 / 武大" autocomplete="off" autofocus>
+      <span class="clear" id="clear" aria-label="清空">×</span>
+    </div>
+
+    <div class="filter-row" id="filters">
+      <button class="filter on" data-type="all">全部 <span class="n" id="n-all-btn">—</span></button>
+      <button class="filter" data-type="major">专业 <span class="n" id="n-major">—</span></button>
+      <button class="filter" data-type="category">大类 <span class="n" id="n-cat">—</span></button>
+      <button class="filter" disabled title="后续开放">院校 <span class="n">—</span></button>
+    </div>
+
+    <div class="hot-region" id="hot-region" hidden>
+      <div class="label">热门搜索</div>
+      <div class="hot-list" id="hot-list-inner"></div>
+    </div>
+  </div>
+</div>
+
+<div class="results-region">
+  <div class="container" id="results">
+    <!-- JS render -->
+  </div>
+</div>
+
+<!-- 复用 PC topbar (left brand + right nav + 心愿单 chip) + 反馈按钮 -->
+<script src="/js/topbar.js"></script>
+
+<!-- 复用 PC 算法层 (顺序敏感: data-loader → recommender → major-search → wishlist-store) -->
+<script src="/js/data-loader.js"></script>
+<script src="/js/recommender.js"></script>
+<script src="/js/major-search.js"></script>
+<script src="/js/wishlist-store.js"></script>
+
+<!-- search.html 自己的逻辑 (PC 大字号版, 跟 mobile search.js 类似但 source="pc") -->
+<script src="/js/pc-search.js"></script>
+</body>
+</html>

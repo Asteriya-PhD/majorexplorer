@@ -1,5 +1,5 @@
 # Wrangler config for Cloudflare Pages
-# 作用: 绑 D1 database (Hybrid Pipeline synth-jobs 队列)
+# 作用: 绑 D1 database (Hybrid Pipeline synth-jobs 队列) + KV (rate limit)
 # 注: 仅 Pages 配置 (无 [main] / 无 [build]), 避免 commit 8b48acb 提到的 Workers 误判
 
 name = "majorexplorer"
@@ -12,3 +12,11 @@ compatibility_date = "2026-06-12"
 binding = "DB"
 database_name = "synth-jobs"
 database_id = "c74a412b-6587-48e5-ae2e-b2cde43acdc7"
+
+# KV binding — H 阶段 rate limit (H 阶段起 6-16 上线, H12 暂不立即启用)
+# report.js 在运行时检查 env.RATE_LIMIT_KV 是否存在, 存在则走 KV, 否则 fallback in-memory.
+# 创建 namespace: npx wrangler kv namespace create RATE_LIMIT_KV
+# 部署后用 env.RATE_LIMIT_KV 访问, key 格式 `ip:<addr>`, TTL 60s 自动过期.
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "<RUN: npx wrangler kv namespace create RATE_LIMIT_KV → 把 id 填这里>"

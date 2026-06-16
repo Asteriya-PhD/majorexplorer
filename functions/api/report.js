@@ -9,22 +9,27 @@
 //   {ok: false, error: "..."} + HTTP 4xx/5xx
 //
 // 安全 / 防滥用:
-//   - 60s 1 次 / IP (in-memory Map, CF cold start 时会重置, 起步可接受)
+//   - 60s 1 次 / IP
+//     - 优先: CF KV (env.RATE_LIMIT_KV 绑定时, H 阶段升级), key=ip:<ip>, TTL=60s
+//     - 兜底: 进程内 Map (cold start 重置, 起步可接受)
+//     - 失败: KV 异常 → fail open (放行), 避免锁死所有用户
 //   - 长度校验: name ≤ 50, text ≤ 1000
 //   - 不收 PII, 只存 type/name/text/source/ua/uuid/ts
 //
 // 凭据:
 //   env.GITHUB_TOKEN (server 端, 来自 `wrangler pages secret put` 或 dashboard)
 //   env.GITHUB_REPO (可选, 默认 Asteriya-PhD/majorexplorer)
+//   env.RATE_LIMIT_KV (H 阶段, CF Pages 绑 KV namespace, 自动 TTL 60s 过期)
 
 const REPO_DEFAULT = "Asteriya-PhD/majorexplorer";
 const RATE_LIMIT_MS = 60_000;
+const RATE_LIMIT_TTL_S = 60;  // KV 过期时间 (秒)
 const MAX_RL_ENTRIES = 1000;
 
-// 进程内 rate limit (per IP)
+// 进程内 rate limit (per IP) — 兜底, KV 未绑定或异常时启用
 const _rl = new Map();
 
-function rateLimited(ip) {
+function rateLimitedInMemory(ip) {
   const now = Date.now();
   const last = _rl.get(ip);
   if (last && now - last < RATE_LIMIT_MS) return true;
@@ -35,6 +40,36 @@ function rateLimited(ip) {
     for (const [k, t] of _rl) if (t < cutoff) _rl.delete(k);
   }
   return false;
+}
+
+// KV-based rate limit (env.RATE_LIMIT_KV 绑定时, H 阶段升级)
+// 返回 true = 限流命中, false = 放行
+// 异常时 fail open (放行), 避免 KV 故障锁死用户
+async function rateLimitedKV(kv, ip) {
+  try {
+    const key = `ip:${ip}`;
+    const last = await kv.get(key);
+    const now = Date.now();
+    if (last) {
+      const ts = parseInt(last, 10);
+      if (Number.isFinite(ts) && now - ts < RATE_LIMIT_MS) {
+        return true;  // 限流命中
+      }
+    }
+    await kv.put(key, String(now), { expirationTtl: RATE_LIMIT_TTL_S });
+    return false;  // 放行
+  } catch (e) {
+    console.warn("[report.js] KV rate limit error, failing open:", String(e && e.message || e).slice(0, 200));
+    return false;  // fail open
+  }
+}
+
+// 统一入口: 优先 KV, 兜底 in-memory
+async function rateLimited(env, ip) {
+  if (env && env.RATE_LIMIT_KV) {
+    return await rateLimitedKV(env.RATE_LIMIT_KV, ip);
+  }
+  return rateLimitedInMemory(ip);
 }
 
 function json(obj, status = 200, extra = {}) {
@@ -116,7 +151,7 @@ export async function onRequestPost(ctx) {
   const ip = request.headers.get("cf-connecting-ip")
     || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
     || "anon";
-  if (rateLimited(ip)) {
+  if (await rateLimited(env, ip)) {
     return json(
       { ok: false, error: "请求太频繁, 1 分钟后再试" },
       429,

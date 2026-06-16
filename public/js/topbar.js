@@ -1,6 +1,8 @@
 /* topbar.js — 全站固定顶部导航 (主页 / 126 精品详情 / 工具页通用)
    渲染位置: <body> 第一个子元素. 自动高亮当前页. 自动同步心愿单计数.
-   依赖: shared.css (.topbar 样式) + window.WishlistStore (可选, 没加载也不报错)
+   反馈入口: 顶栏右上"反馈"按钮, 弹 modal → POST /api/report (source="pc")
+   依赖: shared.css (.topbar / .topbar-feedback / .feedback-modal 样式)
+         + window.WishlistStore (可选, 没加载也不报错)
 */
 (function () {
   'use strict';
@@ -43,9 +45,25 @@
     '        <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">专业目录</a>' +
     '        <a href="/preferences.html" class="' + (active === 'preferences' ? 'active' : '') + '">填偏好</a>' +
     '      </nav>' +
+    '      <button class="topbar-feedback" id="topbar-feedback-btn" type="button" aria-label="提个反馈 / 报告问题">反馈</button>' +
     '    </div>' +
     '  </div>' +
     '</header>';
+
+  // 反馈 modal HTML (复用 mobile 模式, source="pc" — 跟 G 阶段闭环对齐)
+  var modalHtml = '' +
+    '<div class="feedback-modal" id="topbar-feedback-modal" hidden>' +
+    '  <div class="feedback-modal-bg" id="topbar-feedback-modal-bg"></div>' +
+    '  <div class="feedback-modal-card">' +
+    '    <div class="feedback-modal-head">提个反馈 / 报告问题</div>' +
+    '    <div class="feedback-modal-hint">写多少都行, 不写也能发 (1 分钟限 1 次)</div>' +
+    '    <textarea class="feedback-modal-textarea" id="topbar-feedback-text" placeholder="哪儿不好? 想看啥? 校准/选科/算法哪不对? — 一句话就够"></textarea>' +
+    '    <div class="feedback-modal-actions">' +
+    '      <button class="fb-btn fb-cancel" id="topbar-fb-cancel" type="button">取消</button>' +
+    '      <button class="fb-btn fb-send" id="topbar-fb-send" type="button">发送</button>' +
+    '    </div>' +
+    '  </div>' +
+    '</div>';
 
   // 注入到 body 第一个子元素位置 (直接 <header>, 不加 wrapper div, 让 sticky 正常 work)
   var body = document.body;
@@ -57,6 +75,8 @@
 
   function mount() {
     body.insertAdjacentHTML('afterbegin', html);
+    // 注入反馈 modal 到 body 末尾 (跟 mobile me.html 一致)
+    body.insertAdjacentHTML('beforeend', modalHtml);
     // 隐藏页面原有的 .wl-chip (顶部右上浮动) — 已被新 topbar 取代
     var oldChips = document.querySelectorAll('a.wl-chip');
     oldChips.forEach(function (c) { c.style.display = 'none'; });
@@ -64,6 +84,59 @@
     syncWishlist();
     if (window.WishlistStore && window.WishlistStore.subscribe) {
       window.WishlistStore.subscribe(syncWishlist);
+    }
+    // 反馈按钮 + modal 事件绑定
+    bindFeedback();
+  }
+
+  // ── 反馈 modal 事件 (→ /api/report type: feedback, source: "pc") ──
+  function bindFeedback() {
+    var fbBtn = document.getElementById("topbar-feedback-btn");
+    var fbModal = document.getElementById("topbar-feedback-modal");
+    var fbBg = document.getElementById("topbar-feedback-modal-bg");
+    var fbCancel = document.getElementById("topbar-fb-cancel");
+    var fbSend = document.getElementById("topbar-fb-send");
+    var fbText = document.getElementById("topbar-feedback-text");
+    if (!fbBtn || !fbModal) return;
+    function openFb() { fbModal.hidden = false; if (fbText) { fbText.value = ""; fbText.focus(); } }
+    function closeFb() { fbModal.hidden = true; }
+    fbBtn.addEventListener("click", openFb);
+    if (fbBg) fbBg.addEventListener("click", closeFb);
+    if (fbCancel) fbCancel.addEventListener("click", closeFb);
+    // ESC 关
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !fbModal.hidden) closeFb();
+    });
+    if (fbSend) {
+      fbSend.addEventListener("click", async () => {
+        var text = (fbText.value || "").trim();
+        fbSend.disabled = true; fbText.disabled = true; fbCancel.disabled = true;
+        var oldText = fbSend.textContent;
+        fbSend.textContent = "发送中...";
+        try {
+          var r = await fetch("/api/report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "feedback", text: text, source: "pc" }),
+          });
+          var d = await r.json().catch(function () { return {}; });
+          if (r.ok && d.ok) {
+            fbSend.textContent = "✓ 已收到, 谢谢!";
+            fbSend.classList.add("sent");
+            setTimeout(closeFb, 1400);
+          } else {
+            throw new Error(d.error || ("HTTP " + r.status));
+          }
+        } catch (e) {
+          fbSend.textContent = "✕ 失败, 邮件 major.explorer.feedback@gmail.com";
+          fbSend.classList.add("failed");
+          fbSend.disabled = false; fbText.disabled = false; fbCancel.disabled = false;
+          console.error("[topbar.js] feedback failed", e);
+          setTimeout(function () {
+            fbSend.textContent = oldText; fbSend.classList.remove("failed");
+          }, 3000);
+        }
+      });
     }
   }
 

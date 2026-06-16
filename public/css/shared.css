@@ -197,6 +197,112 @@ h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height
 .theme-badge.gongan { background: var(--theme-gongan); }
 .theme-badge.business { background: var(--theme-business); }
 
+/* ── 详情页 hero CLS 优化 (H.5, 2026-06-16)
+   Web Analytics 显示 header.hero > .container CLS=0.417/0.465,
+   主因 hero 内 4 行 stats + 标题 + 标签 + tagline 字体 async load (Source Han Serif)
+   → 字体 swap 后整段下移 → layout shift.
+   修法: 给 .hero 加 min-height 占位, 即使字体 swap 高度不变.
+   PC: 480px (跟 hero 内容 padding-top 100px + 内容 ~280px + padding-bottom 80px = 460~500)
+   Mobile: 520px (mobile 字号更大, 内容更挤)
+   已有 min-height (eg 720px) 的页面 (agronomy / fine-arts / cross-border-ecommerce) 不受影响.
+   ─────────────────────────────────────────────────────────── */
+.hero { min-height: 480px; }
+@media (max-width: 600px) { .hero { min-height: 520px; } }
+
+/* ── 顶栏"反馈"按钮 (H 阶段, 跟 G 阶段 mobile modal 对齐) ── */
+.topbar-feedback {
+  display: inline-flex; align-items: center;
+  padding: 7px 16px;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-family: var(--font-heading);
+  font-size: 0.875rem; font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 180ms;
+  white-space: nowrap;
+}
+.topbar-feedback:hover { background: var(--accent); color: #FAFAF7; transform: translateY(-1px); }
+
+/* ── 反馈 modal (复用 mobile G 阶段模式, PC 大字号版) ── */
+.feedback-modal {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+.feedback-modal[hidden] { display: none; }
+.feedback-modal-bg {
+  position: absolute; inset: 0;
+  background: rgba(20, 20, 18, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.feedback-modal-card {
+  position: relative;
+  width: min(480px, calc(100vw - 32px));
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 24px 24px 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  animation: fb-fade-in 220ms ease-out;
+}
+@keyframes fb-fade-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.feedback-modal-head {
+  font-family: var(--font-heading);
+  font-size: 1.25rem; font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 4px;
+}
+.feedback-modal-hint {
+  font-family: var(--font-body);
+  font-size: 0.8125rem; color: var(--muted);
+  margin-bottom: 14px;
+}
+.feedback-modal-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 0.9375rem; color: var(--fg);
+  line-height: 1.55;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.feedback-modal-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184, 50, 58, 0.10);
+}
+.feedback-modal-textarea:disabled { background: var(--bg-soft); color: var(--muted); }
+.feedback-modal-actions {
+  display: flex; gap: 10px; margin-top: 14px;
+}
+.fb-btn {
+  flex: 1;
+  padding: 11px 18px;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font-heading);
+  font-size: 0.9375rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms;
+}
+.fb-btn:hover { transform: translateY(-1px); }
+.fb-btn:disabled { cursor: default; opacity: 0.6; transform: none; }
+.fb-cancel { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.fb-cancel:hover { color: var(--fg); }
+.fb-send { background: var(--accent); color: #FAFAF7; }
+.fb-send:hover { background: #A0292F; }
+.fb-send.sent { background: #5C7C4A; }
+.fb-send.failed { background: #8B2424; }
+
 /* ── Form controls (preferences page) ─────── */
 .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
 .form-row label { font-size: 0.8125rem; color: var(--muted); font-weight: 500; }
