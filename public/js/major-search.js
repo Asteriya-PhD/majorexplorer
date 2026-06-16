@@ -351,47 +351,6 @@
   display: inline-block; margin-top: 8px;
   font-size: 0.8125rem; color: #B8323A; font-weight: 600;
 }
-.ms-synth-cta {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  margin-top: 14px; flex-wrap: wrap;
-}
-.ms-synth-email {
-  appearance: none; border: 1px solid #BFB9AB; border-radius: 999px;
-  padding: 8px 14px; font-size: 0.8125rem; background: #fff;
-  color: #14110D; outline: none; min-width: 220px; transition: border-color 0.15s;
-}
-.ms-synth-email:focus { border-color: #B8323A; }
-.ms-synth-email::placeholder { color: #BFB9AB; }
-.ms-synth-btn {
-  appearance: none; border: 0; cursor: pointer;
-  padding: 10px 20px; border-radius: 999px;
-  background: linear-gradient(135deg, #B8323A 0%, #8B2329 100%);
-  color: #fff; font-size: 0.9375rem; font-weight: 600;
-  letter-spacing: 0.02em; box-shadow: 0 2px 8px rgba(184, 50, 58, 0.25);
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.ms-synth-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(184, 50, 58, 0.35);
-}
-.ms-synth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.ms-synth-hint {
-  font-size: 0.75rem; color: #94A3B8; font-weight: 400;
-}
-.ms-synth-progress {
-  margin-top: 12px; padding: 10px 16px;
-  background: #FAF7F2; border-radius: 8px;
-  font-size: 0.8125rem; color: #6F6A60;
-}
-.ms-synth-bar {
-  height: 4px; background: #E8E0D4; border-radius: 2px;
-  overflow: hidden; margin-bottom: 6px;
-}
-.ms-synth-bar-fill {
-  height: 100%; background: linear-gradient(90deg, #B8323A, #E89097);
-  transition: width 0.4s ease;
-}
-.ms-synth-msg { font-weight: 500; color: #14110D; }
 `;
 
   function _injectStyle() {
@@ -452,40 +411,16 @@
     function _render(list, query) {
       results.innerHTML = "";
       if (list.length === 0) {
-        // ── 改造: 现场按需生成 CTA + 邮箱通知 (Hybrid 5-20min) ──
+        // ── H 阶段: 删除"现场合成" CTA, 只保留 0 命中提示 + 浏览入口 ──
+        // 报告路径: 用户在 /search.html 0 命中点"报告给我们" (走 /api/report → GH Issue)
+        // 反馈路径: 顶栏右上"反馈"按钮 (走 /api/report → GH Issue)
         results.innerHTML =
           '<div class="ms-empty">' +
           '  没找到匹配「<strong>' + _escapeHtml(query) + '</strong>」的精品样板。' +
-          '  <br>要不要让 AI 现场为你合成一份？约 5-20 分钟出报告。' +
-          '  <div class="ms-synth-cta">' +
-          '    <input type="email" class="ms-synth-email" placeholder="邮箱 (可选, 出结果通知)" />' +
-          '    <button type="button" class="ms-synth-btn" data-query="' + _escapeHtml(query) + '">' +
-          '      🪄 现场为我合成' +
-          '    </button>' +
-          '  </div>' +
-          '  <div class="ms-synth-hint" style="text-align:center;margin-top:6px">基于 Web 搜索 + 70 精品样板 · 无需在线等</div>' +
-          '  <div class="ms-synth-progress" hidden></div>' +
-          '  <a class="ms-suggest" href="#majors">浏览已上线的精品样板 →</a>' +
+          '  <br>可以试试 <a class="ms-suggest" href="/search.html?q=' + _escapeHtml(encodeURIComponent(query)) + '">去搜索页告诉我们</a>，' +
+          '  或点顶栏"反馈"提一句。' +
+          '  <a class="ms-suggest" href="#majors" style="margin-left: 8px;">浏览已上线的精品样板 →</a>' +
           '</div>';
-        // 绑定 CTA 按钮 → 调 synth-client
-        const btn = results.querySelector(".ms-synth-btn");
-        const emailInput = results.querySelector(".ms-synth-email");
-        if (btn) {
-          btn.addEventListener("click", () => {
-            const email = emailInput && emailInput.value ? emailInput.value.trim() : "";
-            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-              alert("邮箱格式不对, 留空则不通知");
-              return;
-            }
-            // 同步 email 到 button dataset 给 SynthClient 用
-            if (email) btn.dataset.email = email;
-            if (global.SynthClient && global.SynthClient.start) {
-              global.SynthClient.start(btn.dataset.query, results, email || null);
-            } else {
-              console.warn("SynthClient 未加载, 走 fallback 文案");
-            }
-          });
-        }
       } else {
         list.forEach((r, idx) => {
           const a = document.createElement("a");

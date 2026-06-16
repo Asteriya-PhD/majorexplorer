@@ -21,31 +21,30 @@ CUR = ROOT / "skills/gaokao-major-explorer/data/curated"
 
 UPGRADE_PROMPT = """你是中国高考专业内容升级员. 把 "{title}" 专业 ({style}) 的报告从 6/10 升到 9/10.
 
-【核心问题】
-1. deep_study 用了 3-column (books/cert/skills), 应改为路径分布: 5-7 条毕业去向, 每条带百分比, 加和=100
-2. alumni_quotes 太空, 3 条引用必须各含: 1 个具体课程名 + 1 个项目/论文/竞赛 + 1 个数字/数据
-3. pitfalls 仅 2 条, 应扩到 4-5 条本专业独有
-4. employment_direction 百分比加和不等于 100, 需修正
+【核心问题 - Round 2 深度升级】
+1. alumni_quotes 太模板化: 3 条都遵循"修了X课+做Y项目+拿Z offer", 必须改为 3 个不同角度:
+   · 第 1 条: 课程细节 + 课堂项目 (大几修了什么核心课 + 课设做了什么)
+   · 第 2 条: 实习/竞赛转折 (大几实习/竞赛, 关键决策点, 转折体验)
+   · 第 3 条: 行业观察/反思 (工作 3-5 年后, 对专业的反思/对比/后悔/惊喜)
+2. alumni_quotes 学校必须出现在 top_schools 中, 课程必须出现在 curriculum 中 (数据自洽)
+3. deep_study 与 employment_direction 严重重复 — 改为纯「继续深造」路径:
+   · 国内读研 (具体方向/学校) / 出国读硕/博 / 跨专业考研 / 直接就业 (不要) / 考公/选调 / 创业
+   · 5-6 条, sum=100
+4. curriculum 删重复 (公共必修 + 通用专业核心 重复的课) + 补核心课 (本专业缺的关键课)
+5. lede 重写为「独特洞察」: 不是"X是Y交叉学科", 而是抓住本专业的核心矛盾/反常识点
+6. hero_quote 删除假署名 ("—— 基于教育部XX指南" 等), 改为不署名或真实权威
 
-【真实数据要求 - 这是升 9 分的关键】
-- top_schools: 列出该专业**实际强校** (非通用 985), 如:
-  · 金融科技 → 中央财经大学/对外经济贸易大学/西南财经大学/上海财经大学 (非清北复交)
-  · 临床医学 → 北京协和医学院/上海交通大学医学院/复旦大学上海医学院/中山大学中山医学院/浙江大学医学院
-  · 计算机科学与技术 → 清华大学/上海交通大学/浙江大学/南京大学/哈尔滨工业大学
-  · 数学与应用数学 → 北京大学/复旦大学/中国科学技术大学/南开大学/清华大学
-- alumni_quotes 课程: 用本专业**真实核心课**:
-  · 临床医学 → 病理学/药理学/内科学/外科学/诊断学
-  · 金融科技 → 计量经济学/金融工程/机器学习/Python 数据分析/区块链原理
-  · 计算机 → 数据结构/操作系统/计算机网络/数据库/机器学习
-  · 法学 → 民法/刑法/行政法/民事诉讼法/商法
-  · 数学 → 数学分析/高等代数/概率论/近世代数/实变函数
-- 校友公司: 真实头部企业 (字节/阿里/腾讯/华为/美团/京东/小米/比亚迪/宁德/平安/招行/建行/国寿 等)
+【真实数据要求】
+- top_schools: 列出该专业**实际强校** (非通用 985)
+- alumni 课程: 本专业**真实核心课** (上面 Round 1 已成功, 继续用)
+- alumni 公司: 真实头部企业
 - 就业数据: 应届 8-15万 / 3年 15-25万 / 5年 25-45万 (按 style 调整)
+- hero_quote: 30-50 字短句, 不要用冒号分隔长句, 不要假出处
 
-【输出严格 JSON】:
-{{"deep_study": {{"路径1 (详细描述)": 25, "路径2": 20, ...}}, "alumni_quotes": [{{"year": "2020", "current": "公司 · 岗位", "quote": "我在 XX 大学修了 XX 课 (具体内容), 在 XX 项目 (具体工作), 拿到 XX offer (具体数字)", "source": "XX 大学 2020 届"}}], "pitfalls": [{{"myth": "本专业独有误区1", "reality": "真实情况1 (含具体数据/案例)"}}, ...], "employment_direction": [{{"name": "路径", "dest": "代表公司", "pct": 25, "desc": "具体描述 (应届/3年/5年 薪资)"}}, ...]}}
+【输出严格 JSON 格式】:
+{{"lede": "30-80 字独特洞察, 不是模板定义 (1 句话, 不重复 summary)", "hero_quote": "30-50 字, 无假署名, 无冒号长句", "curriculum": {{"公共必修": [...], "通用专业核心": [...去重, 补缺...], "5 校特色选修": [...]}}, "deep_study": {{"国内读研 (X方向)": 30, "出国读硕": 20, "考公/选调": 15, ...}} (注意: 是深造路径不是就业), "alumni_quotes": [{{"year": "2018", "current": "公司 · 岗位", "quote": "第1条: 大几修了《X课》, 课设做了Y (具体内容). 关键收获: Z", "source": "XX大学 2018届"}}, {{"year": "2020", "current": "公司 · 岗位", "quote": "第2条: 大几在X公司实习, 转折点: Y. 关键决策: Z", "source": "XX大学 2020届"}}, {{"year": "2019", "current": "公司 · 岗位", "quote": "第3条: 工作3-5年, 对专业的反思/对比: Y. 后悔/惊喜: Z", "source": "XX大学 2019届"}}]}}
 
-只输出 JSON, 不要 markdown/解释."""
+只输出 JSON, 不要 markdown."""
 
 # 路径必须稳定 (每次跑出相同结果)
 FIXED_PROMPT_TAIL = "\n【格式】: deep_study 必须是 {{'路径名 (细分)': 百分比}} dict, sum=100. employment_direction 必须是 list of {{name, dest, pct, desc}}, pct sum=100. alumni_quotes 3 条, 每条 year+current+quote+source. pitfalls 4-5 条, 每条 myth+reality. 不允许任何非上述字段. 【只输出 1 个 JSON 对象】:"
@@ -94,15 +93,17 @@ def upgrade_one(fixer, slug):
     new_aq = r.get("alumni_quotes")
     new_pit = r.get("pitfalls")
     new_emp = r.get("employment_direction")
+    new_lede = r.get("lede")
+    new_hero = r.get("hero_quote")
+    new_curr = r.get("curriculum")
 
     changed = []
     if isinstance(new_ds, dict) and new_ds:
-        # 验证 sum ≈ 100
         total = sum(v for v in new_ds.values() if isinstance(v, (int, float)))
         if 90 <= total <= 110:
             d["deep_study"] = new_ds
             changed.append("deep_study")
-    if isinstance(new_aq, list) and len(new_aq) >= 2:
+    if isinstance(new_aq, list) and len(new_aq) >= 3:
         d["alumni_quotes"] = new_aq[:4]
         changed.append("alumni_quotes")
     if isinstance(new_pit, list) and len(new_pit) >= 3:
@@ -114,6 +115,19 @@ def upgrade_one(fixer, slug):
         if 95 <= total <= 105:
             d["employment_direction"] = new_emp
             changed.append("employment_direction")
+    if isinstance(new_lede, str) and 20 <= len(new_lede) <= 200:
+        if "overview_v2" not in d: d["overview_v2"] = {}
+        d["overview_v2"]["lede"] = new_lede
+        changed.append("lede")
+    if isinstance(new_hero, str) and 10 <= len(new_hero) <= 150:
+        # 移除假署名
+        d["hero_quote"] = new_hero
+        changed.append("hero_quote")
+    if isinstance(new_curr, dict) and new_curr:
+        # 必须含 3 个特殊 key
+        if all(k in new_curr for k in ["公共必修", "通用专业核心", "5 校特色选修"]):
+            d["curriculum"] = new_curr
+            changed.append("curriculum")
 
     if changed:
         p.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
