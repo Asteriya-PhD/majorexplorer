@@ -88,8 +88,8 @@ def set_field(data: dict, field: str, value):
     return data
 
 
-def auto_fix_one(client: M3Client, slug: str, force_full: bool = False) -> dict:
-    """单 major 自动 fix 流程: 检测 → fix → 重检测 → 写回."""
+def auto_fix_one(client: M3Client, slug: str, force_full: bool = False, max_rounds: int = 3) -> dict:
+    """单 major 自动 fix 流程: 多轮检测+fix 直到无 strong 污染."""
     p = CUR / f"{slug}.json"
     if not p.exists():
         return {"slug": slug, "error": "json 缺失"}
@@ -97,35 +97,37 @@ def auto_fix_one(client: M3Client, slug: str, force_full: bool = False) -> dict:
     title = data.get("title", slug)
     style = data.get("style", "")
 
-    # 1) 检测
-    issues = detect_contamination(data, title, style)
-    if not issues and not force_full:
-        return {"slug": slug, "title": title, "status": "clean"}
+    all_fixed = []
+    for round_i in range(max_rounds):
+        # 1) 检测
+        issues = detect_contamination(data, title, style)
+        strong_issues = [i for i in issues if i[1] == "strong"]
+        if not strong_issues and not force_full:
+            break
 
-    # 2) 字段级 fix
-    fixed_fields = []
-    for field, level, hits in issues:
-        if level != "strong":
-            continue  # 只修 strong
-        current = get_field(data, field)
-        if current is None:
-            continue
-        # 强词 → 推回 m3
-        result = fix_field(client, slug, title, style, field, current, hits)
-        if "error" in result:
-            fixed_fields.append({"field": field, "status": "fail", "error": result["error"]})
-            continue
-        # 写回
-        new_val = result.get(field)
-        if new_val is None:
-            # 可能是 dict 包了一层, 找第一个 list/dict
-            for v in result.values():
-                if isinstance(v, (list, dict)):
-                    new_val = v
-                    break
-        if new_val is not None:
-            set_field(data, field, new_val)
-            fixed_fields.append({"field": field, "status": "ok", "new": str(new_val)[:100]})
+        # 2) 字段级 fix (只修 strong)
+        round_fixed = []
+        for field, level, hits in strong_issues:
+            current = get_field(data, field)
+            if current is None:
+                continue
+            result = fix_field(client, slug, title, style, field, current, hits)
+            if "error" in result:
+                round_fixed.append({"field": field, "status": "fail", "error": result["error"]})
+                continue
+            new_val = result.get(field)
+            if new_val is None:
+                for v in result.values():
+                    if isinstance(v, (list, dict)):
+                        new_val = v
+                        break
+            if new_val is not None:
+                set_field(data, field, new_val)
+                round_fixed.append({"field": field, "status": "ok", "new": str(new_val)[:100]})
+        all_fixed.extend(round_fixed)
+        if not any(f["status"] == "ok" for f in round_fixed):
+            # 这一轮没修任何字段, 退出避免无限循环
+            break
 
     # 3) 写回
     p.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -135,7 +137,8 @@ def auto_fix_one(client: M3Client, slug: str, force_full: bool = False) -> dict:
     return {
         "slug": slug,
         "title": title,
-        "fixed_fields": fixed_fields,
+        "fixed_fields": all_fixed,
+        "rounds": round_i + 1,
         "remaining_strong": len([i for i in issues_after if i[1] == "strong"]),
     }
 
@@ -155,7 +158,7 @@ def main():
                     pairs.append((row["slug"], row.get("title", "")))
     if args.slugs:
         for s in args.slugs:
-            title = json.loads((CUR / f"{slug}.json").read_text()).get("title", s)
+            title = json.loads((CUR / f"{s}.json").read_text()).get("title", s)
             pairs.append((s, title))
 
     if not pairs:
