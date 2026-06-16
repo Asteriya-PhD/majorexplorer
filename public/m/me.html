@@ -182,7 +182,7 @@
       </div>
     </div>
   </div>
-  <a class="cta-feedback" href="javascript:void(0)" onclick="alert('反馈表单开发中, 暂以邮件沟通')">提个反馈 / 报告问题</a>
+  <button class="cta-feedback" id="feedback-btn" type="button">提个反馈 / 报告问题</button>
 </section>
 
 <section class="section">
@@ -206,6 +206,20 @@
   <a class="dock-tab" data-tab="wishlist" href="wishlist.html"><span class="ico">♡</span>收藏</a>
   <a class="dock-tab active" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
 </nav>
+
+<!-- 反馈 modal -->
+<div class="feedback-modal" id="feedback-modal" hidden>
+  <div class="feedback-modal-bg" id="feedback-modal-bg"></div>
+  <div class="feedback-modal-card">
+    <div class="feedback-modal-head">提个反馈 / 报告问题</div>
+    <div class="feedback-modal-hint">写多少都行, 不写也能发 (1 分钟限 1 次)</div>
+    <textarea class="feedback-modal-textarea" id="feedback-text" placeholder="哪儿不好? 想看啥? 校准/选科/算法哪不对? — 一句话就够"></textarea>
+    <div class="feedback-modal-actions">
+      <button class="fb-btn fb-cancel" id="fb-cancel" type="button">取消</button>
+      <button class="fb-btn fb-send" id="fb-send" type="button">发送</button>
+    </div>
+  </div>
+</div>
 
 <!-- 复用 PC 算法层 (顺序敏感: data-loader → recommender → major-search → wishlist-store) -->
 <script src="../js/data-loader.js"></script>

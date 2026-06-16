@@ -97,7 +97,8 @@
       }))});
     }
     if (!sections.length) {
-      results.innerHTML = `<div class="hot-list"><div style="width:100%; text-align:center; padding: 40px 0; color: var(--muted); font-family: var(--font-body);">没找到 "<strong>${esc(query)}</strong>" 相关结果. 试试 "金融" / "临床" / "法学".</div></div>`;
+      results.innerHTML = renderNoResult(query);
+      bindReportCard(results, query);
       return;
     }
     results.innerHTML = sections.map(s => `
@@ -131,6 +132,49 @@
     return esc(text.slice(0, i)) + "<em>" + esc(text.slice(i, i + q.length)) + "</em>" + esc(text.slice(i + q.length));
   }
   function esc(s) { return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"})[c]); }
+
+  // 0 命中: 显示 "尚未收录「{query}」+ 点击报告" 卡片
+  function renderNoResult(query) {
+    return `
+      <div class="no-result-report" data-q="${esc(query)}">
+        <div class="nrr-title">尚未收录「<strong>${esc(query)}</strong>」</div>
+        <div class="nrr-desc">告诉我们你想看, 收齐了我们优先做。</div>
+        <button class="nrr-btn" type="button">📨 点击报告给我们</button>
+        <div class="nrr-fallback">没反应? 邮件 <a href="mailto:major.explorer.feedback@gmail.com">major.explorer.feedback@gmail.com</a></div>
+      </div>
+    `;
+  }
+  function bindReportCard(root, query) {
+    const card = root.querySelector(".no-result-report");
+    if (!card) return;
+    const btn = card.querySelector(".nrr-btn");
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      btn.textContent = "发送中...";
+      btn.classList.add("loading");
+      try {
+        const r = await fetch("/api/report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "missing-major", name: query, source: "mobile" }),
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          btn.textContent = "✓ 已收到, 谢谢!";
+          btn.classList.remove("loading");
+          btn.classList.add("sent");
+        } else {
+          throw new Error(d.error || `HTTP ${r.status}`);
+        }
+      } catch (e) {
+        btn.textContent = "✕ 发送失败, 用邮件兜底";
+        btn.classList.remove("loading");
+        btn.classList.add("failed");
+        btn.disabled = false;
+        console.error("[search.js] report failed", e);
+      }
+    });
+  }
 
   // 初始渲染 + 计数
   const urlQ = new URLSearchParams(location.search).get("q") || "";

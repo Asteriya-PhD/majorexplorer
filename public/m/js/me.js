@@ -44,4 +44,49 @@
     save(HKEY, []);
     location.reload();
   });
+
+  // ── 反馈 modal (→ /api/report type: feedback) ──
+  const fbBtn = document.getElementById("feedback-btn");
+  const fbModal = document.getElementById("feedback-modal");
+  const fbBg = document.getElementById("feedback-modal-bg");
+  const fbCancel = document.getElementById("fb-cancel");
+  const fbSend = document.getElementById("fb-send");
+  const fbText = document.getElementById("feedback-text");
+  function openFb() { if (fbModal) { fbModal.hidden = false; fbText.value = ""; fbText.focus(); } }
+  function closeFb() { if (fbModal) { fbModal.hidden = true; } }
+  if (fbBtn) fbBtn.addEventListener("click", openFb);
+  if (fbBg) fbBg.addEventListener("click", closeFb);
+  if (fbCancel) fbCancel.addEventListener("click", closeFb);
+  if (fbSend) {
+    fbSend.addEventListener("click", async () => {
+      const text = (fbText.value || "").trim();
+      fbSend.disabled = true; fbText.disabled = true; fbCancel.disabled = true;
+      const oldText = fbSend.textContent;
+      fbSend.textContent = "发送中...";
+      try {
+        const r = await fetch("/api/report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "feedback", text, source: "mobile" }),
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          fbSend.textContent = "✓ 已收到, 谢谢!";
+          fbSend.classList.add("sent");
+          setTimeout(closeFb, 1400);
+        } else {
+          throw new Error(d.error || `HTTP ${r.status}`);
+        }
+      } catch (e) {
+        fbSend.textContent = "✕ 失败, 邮件 major.explorer.feedback@gmail.com";
+        fbSend.classList.add("failed");
+        fbSend.disabled = false; fbText.disabled = false; fbCancel.disabled = false;
+        console.error("[me.js] feedback failed", e);
+        // 3 秒后恢复原状, 让用户重试
+        setTimeout(() => {
+          fbSend.textContent = oldText; fbSend.classList.remove("failed");
+        }, 3000);
+      }
+    });
+  }
 })();
