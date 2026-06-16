@@ -1,0 +1,195 @@
+#!/usr/bin/env python3
+"""
+auto_fix_pipeline.py — 字段级自动 fix 一条龙 (Opt 3).
+
+流程: synth (mimo) → 字段级污染检测 → 字段级 m3 fix → 重检测 → 部署
+
+用法:
+  python3 scripts/batches/auto_fix_pipeline.py --csv scripts/batches/day1_resynth_mimo.csv
+  python3 scripts/batches/auto_fix_pipeline.py --slugs optoelectronic-information-science-engineering
+"""
+import sys, os, json, csv, argparse, re, time, subprocess
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "scf"))
+sys.path.insert(0, str(ROOT / "scripts/batches"))
+
+from synth.llm import M3Client  # noqa: E402
+from contam_dict import detect_contamination  # noqa: E402
+
+CUR = ROOT / "skills/gaokao-major-explorer/data/curated"
+
+
+# ── 字段级 fix 模板 ──
+FIX_FIELD_PROMPT = """你是中国高考专业内容修复员. 重新生成 "{title}" 专业 ({style}) 的 "{field}" 字段.
+
+【当前内容 (有污染)】:
+{current}
+
+【污染词 (必须避免)】: {forbidden}
+
+【修复要求】:
+- 严格属于 "{title}" 专业, 不是其他专业
+- 内容要具体 (e.g. 课程名/公司名/技术术语/具体场景)
+- 长度/数量保持一致 (e.g. 5 条 employment_direction, 3 条 pitfalls)
+- 真实可信, 不确定的字段填 "数据待补"
+
+【输出严格 JSON 格式, 字段名 = {field}】:
+只输出 JSON, 不要 markdown.
+"""
+
+
+def fix_field(client: M3Client, slug: str, title: str, style: str, field: str, current, forbidden: list) -> dict:
+    """字段级 fix: 用 m3 重写一个字段."""
+    prompt = FIX_FIELD_PROMPT.format(
+        title=title, style=style, field=field,
+        current=json.dumps(current, ensure_ascii=False, indent=2)[:4000],
+        forbidden=", ".join(forbidden[:10]),
+    )
+    payload = client._call({
+        "model": client.model,
+        "max_tokens": 16000,
+        "temperature": 0.3,
+        "messages": [{"role": "user", "content": prompt}],
+    })
+    text = client._extract_text(payload)
+    m = re.search(r"\{.*\}", text, re.DOTALL)
+    if not m:
+        return {"error": f"非 JSON: {text[:200]}"}
+    try:
+        return json.loads(m.group(0))
+    except Exception as e:
+        return {"error": f"JSON parse: {e}: {text[:200]}"}
+
+
+def get_field(data: dict, field: str):
+    """从 JSON 拿字段值, 支持 nested paths like overview_v2.pitfalls."""
+    parts = field.split(".")
+    val = data
+    for p in parts:
+        if isinstance(val, dict):
+            val = val.get(p)
+        else:
+            return None
+    return val
+
+
+def set_field(data: dict, field: str, value):
+    """设置字段值, 支持 nested paths."""
+    parts = field.split(".")
+    obj = data
+    for p in parts[:-1]:
+        if p not in obj:
+            obj[p] = {}
+        obj = obj[p]
+    obj[parts[-1]] = value
+    return data
+
+
+def auto_fix_one(client: M3Client, slug: str, force_full: bool = False) -> dict:
+    """单 major 自动 fix 流程: 检测 → fix → 重检测 → 写回."""
+    p = CUR / f"{slug}.json"
+    if not p.exists():
+        return {"slug": slug, "error": "json 缺失"}
+    data = json.loads(p.read_text(encoding="utf-8"))
+    title = data.get("title", slug)
+    style = data.get("style", "")
+
+    # 1) 检测
+    issues = detect_contamination(data, title, style)
+    if not issues and not force_full:
+        return {"slug": slug, "title": title, "status": "clean"}
+
+    # 2) 字段级 fix
+    fixed_fields = []
+    for field, level, hits in issues:
+        if level != "strong":
+            continue  # 只修 strong
+        current = get_field(data, field)
+        if current is None:
+            continue
+        # 强词 → 推回 m3
+        result = fix_field(client, slug, title, style, field, current, hits)
+        if "error" in result:
+            fixed_fields.append({"field": field, "status": "fail", "error": result["error"]})
+            continue
+        # 写回
+        new_val = result.get(field)
+        if new_val is None:
+            # 可能是 dict 包了一层, 找第一个 list/dict
+            for v in result.values():
+                if isinstance(v, (list, dict)):
+                    new_val = v
+                    break
+        if new_val is not None:
+            set_field(data, field, new_val)
+            fixed_fields.append({"field": field, "status": "ok", "new": str(new_val)[:100]})
+
+    # 3) 写回
+    p.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # 4) 重检测
+    issues_after = detect_contamination(data, title, style)
+    return {
+        "slug": slug,
+        "title": title,
+        "fixed_fields": fixed_fields,
+        "remaining_strong": len([i for i in issues_after if i[1] == "strong"]),
+    }
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--csv")
+    ap.add_argument("--slugs", nargs="*")
+    ap.add_argument("--force", action="store_true", help="强制 re-fix (不跳过 clean)")
+    args = ap.parse_args()
+
+    pairs = []
+    if args.csv:
+        with open(args.csv) as f:
+            for row in csv.DictReader(f):
+                if row.get("slug"):
+                    pairs.append((row["slug"], row.get("title", "")))
+    if args.slugs:
+        for s in args.slugs:
+            title = json.loads((CUR / f"{slug}.json").read_text()).get("title", s)
+            pairs.append((s, title))
+
+    if not pairs:
+        print("❌ no input")
+        return
+
+    print(f"🔧 字段级 auto-fix pipeline: {len(pairs)} 篇")
+    client = M3Client(enable_thinking=True)
+    results = []
+    for i, (slug, title) in enumerate(pairs, 1):
+        try:
+            r = auto_fix_one(client, slug, force_full=args.force)
+        except Exception as e:
+            r = {"slug": slug, "error": f"{type(e).__name__}: {e}"}
+        status = r.get("status", "fixed")
+        if status == "clean":
+            print(f"[{i}/{len(pairs)}] ✅ {title}: clean")
+        elif "error" in r:
+            print(f"[{i}/{len(pairs)}] ❌ {title}: {r['error']}")
+        else:
+            n_fixed = len([f for f in r.get("fixed_fields", []) if f.get("status") == "ok"])
+            n_remain = r.get("remaining_strong", 0)
+            print(f"[{i}/{len(pairs)}] 🔧 {title}: fixed {n_fixed} fields, {n_remain} remaining")
+        results.append(r)
+
+    ok = [r for r in results if "error" not in r]
+    clean = [r for r in ok if r.get("status") == "clean"]
+    fixed = [r for r in ok if r.get("status") == "fixed"]
+    print(f"\n{'='*60}")
+    print(f"汇总: {len(ok)}/{len(results)} OK | {len(clean)} clean | {len(fixed)} fixed")
+    if fixed:
+        all_clean = [r for r in fixed if r.get("remaining_strong", 0) == 0]
+        print(f"完全 clean: {len(all_clean)}/{len(fixed)}")
+
+
+if __name__ == "__main__":
+    main()
