@@ -567,8 +567,9 @@ def render_tags_strip(tags):
     return "\n".join(f'<span class="tag">{esc(t)}</span>' for t in tags[:8])
 
 
-def render_one(slug, data, theme_color, chsi_sat=None):
+def render_one(slug, data, theme_color, chsi_sat=None, chsi_fallback=None):
     chsi_sat = chsi_sat or {}
+    chsi_fallback = chsi_fallback or {}
     theme, theme_deep, theme_soft, theme_gold = theme_color
     title = data.get("title", slug)
     category = data.get("category", "")
@@ -662,6 +663,10 @@ def render_one(slug, data, theme_color, chsi_sat=None):
     sub4 = (data.get("sub_discipline") or "")[:4]  # manifest 存的 4 位 (部分缺省)
     bucket = chsi_sat.get(sub4, {})
     sat_val = bucket.get(title, 0)
+    # Fallback: manifest title 与 chsi 不完全一致时, 试共享的父类专名
+    # (e.g. 法学细分 民法/商法/经济法 → chsi 0301 只有"法学"作为公共名)
+    if (not sat_val) and sub4 in chsi_fallback:
+        sat_val = bucket.get(chsi_fallback[sub4], 0)
     if sat_val and sat_val > 0:
         satisfaction = f"{sat_val:.1f}"
     else:
@@ -728,6 +733,15 @@ def main():
                 continue
             sub4 = moe[:4]  # e.g. "0901" for 农学
             chsi_sat.setdefault(sub4, {})[item["name"]] = item.get("satisfaction", 0)
+    # Fallback 表: 当 manifest 专名在 chsi 找不到时, 用父类共享专名
+    # 0301 法学类: 民法/商法/经济法/行政法/诉讼法 → chsi 只有"法学"
+    # 0503 新闻传播学类: 新闻传播学 → chsi 050304 "传播学"
+    chsi_fallback = {
+        "0301": "法学",        # 民法/商法/经济法/行政法/刑事/民事 诉讼法 → 共享"法学"
+        "0401": "教育学",      # 师范教育 (数学/语文/英语 等) chsi 无对应专名 → 用"教育学"近似
+        "0503": "传播学",      # 新闻传播学 chsi 实际是"传播学"
+        "1301": "艺术史论",    # 艺术管理 chsi 实际是"艺术史论"
+    }
 
     ok = 0
     skip = 0
@@ -750,7 +764,7 @@ def main():
         style = styles.get(slug, data.get("style", "cs"))
         theme_color = THEMES.get(style, THEMES["cs"])
         try:
-            html = render_one(slug, data, theme_color, chsi_sat)
+            html = render_one(slug, data, theme_color, chsi_sat, chsi_fallback)
             out_path.write_text(html, encoding="utf-8")
             ok += 1
         except Exception as e:
