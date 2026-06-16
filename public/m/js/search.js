@@ -52,7 +52,7 @@
           <div style="width:100%;">
             <div style="font-family: var(--font-num); color: var(--muted); font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 8px;">热门搜索</div>
             <div style="display:flex; flex-wrap:wrap; gap:8px;">
-              ${["人工智能","临床医学","金融","计算机","法学","教育","心理学","会计"].map(t => `<a class="hot" href="javascript:void(0)" onclick="document.getElementById('q').value='${t}'; document.getElementById('q').dispatchEvent(new Event('input'));">${t}</a>`).join("")}
+              ${["人工智能","临床医学","金融","计算机","法学","教育","心理学","会计"].map(t => `<a class="hot" href="#" onclick="document.getElementById('q').value='${t}'; document.getElementById('q').dispatchEvent(new Event('input'));">${t}</a>`).join("")}
             </div>
           </div>
         </div>
