@@ -100,6 +100,30 @@
   }
   .pref-star.on { background: var(--accent); color: #FBF8F1; border-color: var(--accent); }
 
+  /* 城市/专业 偏好 (PC 同款 list + star) */
+  .pref-row-stack { grid-template-columns: 1fr; }
+  .pl-sub { font-family: var(--font-body); font-size: 0.6875rem; color: var(--muted); font-weight: 400; margin-left: 4px; }
+  .city-input-row { display: flex; gap: 8px; margin-top: 6px; }
+  .city-input { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; font-family: var(--font-body); font-size: 0.875rem; background: #fff; color: var(--fg); }
+  .city-add-btn { padding: 8px 14px; background: var(--fg); color: #FBF8F1; border: none; border-radius: 4px; font-family: var(--font-body); font-size: 0.875rem; font-weight: 600; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .city-add-btn:active { opacity: 0.85; }
+  .city-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .city-list:empty::before { content: "还没选城市 (下方输入或下拉添加)"; display: block; padding: 12px; background: var(--bg-soft); border-radius: 4px; color: var(--muted); font-size: 0.8125rem; text-align: center; }
+  .city-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #fff; border: 1px solid var(--line); border-radius: 4px; font-size: 0.8125rem; }
+  .city-item .city-name { font-family: var(--font-heading); font-weight: 600; min-width: 60px; color: var(--fg); }
+  .city-item .city-stars { flex: 1; display: inline-flex; gap: 3px; }
+  .city-item .city-stars button { width: 22px; height: 22px; font-size: 0.75rem; background: transparent; border: 1px solid var(--line); border-radius: 2px; color: var(--muted); cursor: pointer; padding: 0; -webkit-tap-highlight-color: transparent; }
+  .city-item .city-stars button.on { background: var(--accent); color: #FBF8F1; border-color: var(--accent); }
+  .city-item .del-city { color: var(--muted); background: none; border: none; font-size: 1rem; padding: 4px 6px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .city-item .del-city:active { color: var(--accent); }
+  .wishlist-summary { display: flex; flex-wrap: wrap; gap: 6px; }
+  .wishlist-summary .ws-item { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; background: var(--bg-soft); border-radius: 999px; font-size: 0.75rem; color: var(--fg); }
+  .wishlist-summary .ws-item .ws-name { font-weight: 600; }
+  .wishlist-summary .ws-item .ws-rating { color: var(--accent); font-size: 0.6875rem; }
+  .wishlist-summary .ws-empty { padding: 10px 12px; background: var(--bg-soft); border-radius: 4px; color: var(--accent); font-size: 0.8125rem; text-align: center; width: 100%; }
+  .wishlist-summary .ws-empty a { color: var(--accent); font-weight: 600; text-decoration: underline; }
+
+
   .seg {
     display: inline-flex; border: 1px solid var(--line); border-radius: 999px;
     overflow: hidden; background: #fff;
@@ -254,25 +278,25 @@
   </div>
 
   <div class="pref-panel" id="pref-panel">
-    <div class="pref-row">
-      <span class="pl">城市偏好</span>
-      <span class="pref-stars" data-pref="city">
-        <span class="pref-star" data-v="1">1</span>
-        <span class="pref-star" data-v="2">2</span>
-        <span class="pref-star on" data-v="3">3</span>
-        <span class="pref-star" data-v="4">4</span>
-        <span class="pref-star" data-v="5">5</span>
-      </span>
+    <div class="pref-row pref-row-stack">
+      <span class="pl">想去哪座城市 <span class="pl-sub">(最多 3 个 · 1-5★ 优先级)</span></span>
+      <div class="city-input-row">
+        <input type="text" id="city-input" placeholder="输入或下拉选城市" list="city-suggest" class="city-input">
+        <button type="button" class="city-add-btn" id="add-city">+ 添加</button>
+      </div>
+      <datalist id="city-suggest">
+        <option value="武汉"><option value="上海"><option value="北京"><option value="广州"><option value="深圳">
+        <option value="南京"><option value="杭州"><option value="成都"><option value="西安"><option value="天津">
+        <option value="重庆"><option value="苏州"><option value="厦门"><option value="长沙"><option value="合肥">
+        <option value="济南"><option value="青岛"><option value="宁波"><option value="大连"><option value="沈阳">
+        <option value="郑州"><option value="福州"><option value="黄石"><option value="宜昌"><option value="襄阳">
+        <option value="荆州"><option value="十堰">
+      </datalist>
+      <div class="city-list" id="city-list"></div>
     </div>
     <div class="pref-row">
-      <span class="pl">专业偏好</span>
-      <span class="pref-stars" data-pref="major">
-        <span class="pref-star" data-v="1">1</span>
-        <span class="pref-star" data-v="2">2</span>
-        <span class="pref-star" data-v="3">3</span>
-        <span class="pref-star on" data-v="4">4</span>
-        <span class="pref-star" data-v="5">5</span>
-      </span>
+      <span class="pl">收藏专业</span>
+      <div class="wishlist-summary" id="wishlist-summary"></div>
     </div>
     <div class="pref-row">
       <span class="pl">院校 vs 专业</span>

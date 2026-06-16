@@ -117,12 +117,88 @@
   };
   function tierColor(name) { return tierColors[name] || "#B8323A"; }
 
-  // ─── 用户输入收集 ───
-  // pref-stars: major 5★ 强化 interests 权重; city 5★ 推武汉 (湖北 MVP 默认)
-  function getPrefStar(prefKey) {
-    const on = document.querySelector(`.pref-stars[data-pref="${prefKey}"] .pref-star.on`);
-    return on ? parseInt(on.dataset.v, 10) || 0 : 0;
+  // ─── 城市/收藏 UI (与 PC preferences.html 同步: list + 每项 1-5★ + ✕) ───
+  // 城市 state: 内存数组 [{city, score}], 默认 [{武汉, 5}], 同步到 localStorage
+  const CITY_KEY = "recs.cities.v1";
+  let cities = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(CITY_KEY) || "null");
+    cities = Array.isArray(saved) && saved.length ? saved : [{ city: "武汉", score: 5 }];
+  } catch (e) {
+    cities = [{ city: "武汉", score: 5 }];
   }
+  const cityList = document.getElementById("city-list");
+  const cityInput = document.getElementById("city-input");
+  const cityAddBtn = document.getElementById("add-city");
+
+  function renderCities() {
+    if (!cityList) return;
+    cityList.innerHTML = cities.map((c, idx) => {
+      const stars = [1, 2, 3, 4, 5].map(v => `<button data-v="${v}" class="${v <= c.score ? "on" : ""}">★</button>`).join("");
+      return `<div class="city-item" data-idx="${idx}">
+        <span class="city-name">${esc(c.city)}</span>
+        <span class="city-stars">${stars}</span>
+        <button class="del-city" type="button" aria-label="删除 ${esc(c.city)}">✕</button>
+      </div>`;
+    }).join("");
+    localStorage.setItem(CITY_KEY, JSON.stringify(cities));
+  }
+  function addCity(name) {
+    name = (name || "").trim();
+    if (!name) return;
+    if (cities.length >= 3) { alert("最多 3 个城市"); return; }
+    if (cities.some(c => c.city === name)) { alert("已添加过 " + name); return; }
+    cities.push({ city: name, score: 4 });
+    renderCities();
+  }
+  if (cityAddBtn) {
+    cityAddBtn.addEventListener("click", () => {
+      addCity(cityInput && cityInput.value);
+      if (cityInput) { cityInput.value = ""; cityInput.focus(); }
+    });
+  }
+  if (cityInput) {
+    cityInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); cityAddBtn && cityAddBtn.click(); }
+    });
+  }
+  if (cityList) {
+    cityList.addEventListener("click", (e) => {
+      const item = e.target.closest(".city-item");
+      if (!item) return;
+      const idx = parseInt(item.dataset.idx, 10);
+      if (e.target.classList.contains("del-city")) {
+        cities.splice(idx, 1);
+        if (cities.length === 0) cities = [{ city: "武汉", score: 5 }]; // 兜底
+        renderCities();
+      } else if (e.target.tagName === "BUTTON" && e.target.dataset.v) {
+        cities[idx].score = parseInt(e.target.dataset.v, 10);
+        renderCities();
+      }
+    });
+  }
+  renderCities();
+
+  // 收藏 summary (实时显示)
+  const wsSummary = document.getElementById("wishlist-summary");
+  function renderWishlistSummary() {
+    if (!wsSummary) return;
+    const items = (window.WishlistStore ? WishlistStore.all() : []);
+    if (items.length === 0) {
+      wsSummary.innerHTML = `<div class="ws-empty">还没有收藏 — <a href="wishlist.html">先去收藏 4 个专业 →</a></div>`;
+      return;
+    }
+    wsSummary.innerHTML = items.map(w => {
+      const title = w.title || (M.manifestBySlug[w.slug] && M.manifestBySlug[w.slug].title) || w.slug;
+      const score = w.rating || w.score || 0;
+      return `<span class="ws-item"><span class="ws-name">${esc(title)}</span><span class="ws-rating">${"★".repeat(score)}</span></span>`;
+    }).join("");
+  }
+  if (window.WishlistStore) WishlistStore.subscribe(renderWishlistSummary);
+  renderWishlistSummary();
+
+  // ─── 用户输入收集 ───
+  // PC preferences 同款: cities 是 [{city, score}], interests 是 wishlist rating 1-5
   function collectUser() {
     const score = +scoreInput.value || 0;
     if (!score) return null;
@@ -131,24 +207,17 @@
     const segBtn = document.querySelector('.seg[data-pref="weight"] button.on');
     const modeMap = { school: "院校优先", balanced: "均衡", major: "专业优先" };
     const mode = modeMap[segBtn && segBtn.dataset.v] || "均衡";
-    // interests: 从 WishlistStore 取 (用户收藏), 评分 = rating (1-5)
+    // interests: wishlist rating 直接作 score (1-5)
     const wishes = (window.WishlistStore ? WishlistStore.all() : []);
-    const majorStar = getPrefStar("major");
-    // major star > 0 时 interests 整体加权 (1.0 → 1.32, 5★ → 1.6)
-    const majorWeight = majorStar > 0 ? (1.2 + majorStar * 0.08) : 1;
     const interests = wishes
       .filter(w => w.rating || w.score)
       .map(w => ({
         major: w.title || (M.manifestBySlug[w.slug] && M.manifestBySlug[w.slug].title) || w.slug,
-        score: Math.min(5, (w.rating || w.score) * majorWeight),
+        score: w.rating || w.score,
         style: w.style,
       }));
-    // cities: 湖北 MVP 默认武汉; city star 0 = 不加重, >0 加权
-    const cityStar = getPrefStar("city");
-    const cities = cityStar > 0
-      ? [{ city: "武汉", score: cityStar }]
-      : [];
-    return { score, type: "物理类", xuanke, interests, cities, mode };
+    // cities: 内存数组 [{city, score}], 没添加就用空 (PC 默认 [{武汉, 5}], mobile 兜底)
+    return { score, type: "物理类", xuanke, interests, cities: cities.length ? cities : [{ city: "武汉", score: 3 }], mode };
   }
 
   // ─── PC Recommender 调用 + 渲染 ───
