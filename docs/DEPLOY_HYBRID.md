@@ -129,7 +129,7 @@ CREATE INDEX IF NOT EXISTS idx_slug_done ON synth_jobs(slug, status);
 ### 步骤 3: 创建 Cloudflare Pages 项目 (你做)
 
 1. https://dash.cloudflare.com → Workers & Pages → Create application → Pages
-2. **Connect to Git** → 选 `Asteriya-PhD/majorexplorer`
+2. **Connect to Git** → 选 `<your-org>/majorexplorer`
 3. Project name: `majorexplorer`
 4. **Build settings**:
    - Build command: **`echo skip`** (静态站, 无需构建)
@@ -206,7 +206,7 @@ for m in "保险" "知识产权" "基础医学" "翻译" "汉语言"; do
 done
 
 # 监控: 看 GH Actions 跑批
-# https://github.com/Asteriya-PhD/majorexplorer/actions/workflows/synth.yml
+# https://github.com/<your-org>/majorexplorer/actions/workflows/synth.yml
 ```
 
 ## 关键文件清单 (本次实施新建)
@@ -245,7 +245,7 @@ done
 | CF Function 10ms CPU 不够 | 极低 | 只做 D1 put, 实测 <5ms |
 | 队列任务死 (LLM 3 轮失败) | 中 | D1 attempts 字段, ≥3 标 dead |
 | GH Action 20min timeout | 极低 | 单篇 synth 实测 5-10min |
-| 仓库改 public 暴露代码 | 已决定 | AGPL-3.0, 教师身份不暴露策略 |
+| 仓库改 public 暴露代码 | 已决定 | AGPL-3.0 |
 | 用户等 5-20min 不耐烦 | 中 | UX 强调"邮箱通知, 无需在线等" + polling |
 
 ## 实施时间表 (1.5 天)

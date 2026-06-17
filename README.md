@@ -61,7 +61,7 @@ gaokao-hubei-mvp/                ← 项目根
 
 ```bash
 # 1. 克隆
-git clone https://github.com/Asteriya-PhD/majorexplorer.git
+git clone https://github.com/<your-org>/majorexplorer.git
 cd majorexplorer
 
 # 2. 本地预览 (纯静态, 无后端)
