@@ -1,6 +1,31 @@
 # gaokao-team-b 项目指引
 
 > 这是 **Major 精品/批量生成** 的项目, 写于 2026-06-17, Day 3 Team B 47 篇验证通过后定型.
+> 2026-06-18 v1.1: 新增 `scripts/smart_audit.py` 智能混合审计 (Layer 1 + 智能 Layer 2), batch 审计 9.3h→2-3h, ¥140→¥40.
+
+---
+
+## 🧠 批量 audit 必用 smart_audit.py (2026-06-18 新增)
+
+**任何 ≥10 篇的 batch audit, 用 `scripts/smart_audit.py` 替代老 `content_audit.py`**.
+
+- 老方法: 全量 277 篇 ~9.3h / ¥140
+- 新方法: 启发式 100% + LLM 智能路由 ~30% → 2-3h / ¥40, 覆盖 95%+ 真实 bug
+
+```bash
+# 1. dry-run 看候选 (5s, 不花钱)
+python3 scripts/smart_audit.py --dry-run
+
+# 2. 真跑 (2-3h, ~¥40)
+python3 scripts/smart_audit.py
+
+# 3. 单篇深审 (用老 content_audit.py)
+python3 scripts/batches/content_audit.py --slugs <slug>:<style>
+```
+
+Layer 2 触发条件 (满足任一): L1 warning / 无历史 / 历史 < 7 / 改过 / 5% 抽样.
+
+详见 `docs/PIPELINE_major_quality.md` "🧠 智能审计路由器" 章节.
 
 ---
 
@@ -36,6 +61,7 @@
    绕过: 手动 `re.sub(r'(src|href)="\.\./\.\./((?:js|css)/[^"]+)"', r'\1="/\2"', src)`
 2. **`scripts/batches/content_audit.py` slug 用文件名**, 不用 JSON 内 slug.
    例: `computational-linguistics.json` → `--slugs computational-linguistics:humanities`
+   **批量 (≥10 篇) 用 `scripts/smart_audit.py` 替代**, 不要全量跑 content_audit.
 3. **m3 audit "字段截断" 是显示 bug**, 数据完整即可, 不要因此改.
 4. **m3 audit 评分主观** (同一篇 ±1 分波动), 取多次 audit 平均.
 5. **CC Write 在某些 worktree 会被 revert**, 启动前用 `echo test > file && cat file` 测试.

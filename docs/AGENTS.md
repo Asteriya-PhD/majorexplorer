@@ -177,3 +177,20 @@ codegraph index
 - **进度** → `docs/PROGRESS.md` (状态 + 数据真实性矩阵 + 已知缺口)
 - **决策** → `docs/DECISIONS.md` (8 个 ADR)
 - **数据** → `docs/DATA.md` (数据源 + schema + 新省 onboarding)
+
+---
+
+## 🧠 批量质量审计工具 (2026-06-18 新增)
+
+**任何 ≥10 篇的 batch audit, 用 `scripts/smart_audit.py` (不要全量跑老 `scripts/batches/content_audit.py`)**.
+
+| 工具 | 用途 | 何时用 |
+|------|------|--------|
+| `scripts/smart_audit.py` | 智能混合 (Layer 1 启发式 100% + Layer 2 LLM 智能路由 ~30%) | **batch ≥10 篇 (默认)** |
+| `scripts/batches/content_audit.py` | 单篇 LLM deep dive | 1-3 篇深审, 跨字段矛盾 debug |
+
+`smart_audit.py` 实测 (277 篇): 2-3h / ¥40, 覆盖 95%+ 真实 bug (vs 老方法 9.3h / ¥140).
+
+Layer 2 触发条件 (满足任一): L1 warning / 无历史 / 历史 < 7 / 改过 / 5% 抽样.
+
+详见 `docs/PIPELINE_major_quality.md` "🧠 智能审计路由器" 章节 + `CLAUDE.md` "🧠 批量 audit 必用 smart_audit.py" 章节.

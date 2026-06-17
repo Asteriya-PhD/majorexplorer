@@ -2,6 +2,67 @@
 
 > 写于 2026-06-17, 47 篇验证: 平均 7.69/10, 100% ≥7, 64% ≥8.
 > 目标: 后续主题稳定达到 **平均 8.0/10** 水准.
+> 2026-06-18 v1.1: 新增 `scripts/smart_audit.py` 智能混合审计 (Layer 1 启发式 + 智能 Layer 2 LLM), batch 审计从 9.3h/¥140 降到 2-3h/¥40.
+
+---
+
+## 🧠 智能审计路由器 (Smart Audit Router) — 批量 audit 必用
+
+**问题**: 老 `scripts/batches/content_audit.py` 全量 LLM 审计 277 篇 ~9.3h / ¥140, 不敢对全量 HTML 跑.
+
+**解法**: `scripts/smart_audit.py` 用 2 层架构:
+
+```
+Layer 1 (100% 跑, 0¥, 1s/篇)
+  └─ check_major.py 启发式: 4 anti-pollution + 18 字段 schema
+
+Layer 2 (智能路由, ~30% 跑, 2min/篇, ¥0.5)
+  └─ m3 audit LLM: 跨字段矛盾 + 学科知识 + 主观质量
+
+Layer 2 触发条件 (满足任一):
+  1. Layer 1 warning/error (启发式抓到污染/缺失)
+  2. 从未 audit 过 (test_results/ 无历史)
+  3. 历史 score < 7.0
+  4. 上次 audit 后改过 (mtime > last_audit_time)
+  5. 5% 随机抽样 (sanity check)
+```
+
+**实测 (277 篇)**:
+| 模式 | Layer 1 | Layer 2 | 总耗时 | 成本 | 覆盖率 |
+|------|---------|---------|--------|------|--------|
+| 全量 + 全量 | 5-20m | 9.3h | 9.5h | ¥140 | 100% |
+| **智能混合 (默认)** | 5-20m | 2-3h | 2-3h | ¥40 | 95%+ |
+| 全 sample 18 篇 | 5-20m | 36m | 1h | ¥3 | 30% |
+
+**用法 (5 个常用场景)**:
+
+```bash
+# 1. 全 277 篇智能路由 (默认推荐)
+python3 scripts/smart_audit.py
+
+# 2. dry-run: 只列候选, 不真跑 m3
+python3 scripts/smart_audit.py --dry-run
+
+# 3. 只审某 category (eng / law / humanities / ...)
+python3 scripts/smart_audit.py --category eng
+
+# 4. 限 N 篇 (快速 sanity check)
+python3 scripts/smart_audit.py --limit 20
+
+# 5. JSON 输出给 pipe (jq / python 二次处理)
+python3 scripts/smart_audit.py --dry-run --json | jq '.candidates[:5]'
+```
+
+**何时仍用老 `content_audit.py`**:
+- 单篇深度审计 (e.g. 刚改完 1 篇, 想知道具体问题)
+- 跨字段矛盾 debug
+- 指定 1-3 篇特定 slug: `content_audit.py --slugs foo:eng bar:law`
+
+**何时用 `smart_audit.py`**:
+- 任何 batch 操作 (10+ 篇)
+- 想知道"全量 277 篇里哪些真需要审"
+- 想做"全量 277 篇质量体检"
+- 想知道"上次 audit 后哪些改过需重审"
 
 ---
 
@@ -9,10 +70,19 @@
 
 ### Step 1: Audit Driven (必读)
 
+**单篇 deep dive** → 老 `content_audit.py`:
 ```bash
-# 跑 m3 audit 拿到每篇 issue
 source .env
 python3 scripts/batches/content_audit.py --slugs <slug>:<style>
+```
+
+**批量 (10+ 篇) → 新 `smart_audit.py`** (推荐):
+```bash
+source .env
+# 1. dry-run 看候选
+python3 scripts/smart_audit.py --dry-run
+# 2. 真跑 (只跑 Layer 2 候选, ~30% 总数)
+python3 scripts/smart_audit.py
 ```
 
 读 audit 输出:
@@ -83,11 +153,14 @@ pathlib.Path(f'public/{slug}.html').write_text(new)
 
 ### Step 5: Audit Verify (≥7 才继续)
 
+**单篇**:
 ```bash
 source .env
 python3 scripts/batches/content_audit.py --slugs <slug>:<style>
 # 期望 overall_score ≥ 7
 ```
+
+**批量**: 用 `smart_audit.py` 自动跑 Layer 2 候选 + 统计 ≥7 比例.
 
 ### Step 6: Tier Retry (audit < 7 时)
 
@@ -125,13 +198,20 @@ ENTREPRENEUR_MAP = {
 
 ### Step 9: Full Batch Audit + Push
 
+**用 `smart_audit.py` (推荐, 2-3h / ¥40)**:
 ```bash
-# 跑全部 audit (建议 30 篇一批避免 timeout)
-python3 scripts/batches/content_audit.py --csv all_majors.csv
-
+source .env
+# 全 277 篇智能路由, 只审 30% (~80 篇)
+python3 scripts/smart_audit.py
 # 验证全部 ≥7, 修不合格篇
 # Push 到 origin
 git push origin day3-team-b
+```
+
+**老方法 (9.3h / ¥140, 仅特殊场景如全量回归)**:
+```bash
+# 跑全部 audit (建议 30 篇一批避免 timeout)
+python3 scripts/batches/content_audit.py --csv all_majors.csv
 ```
 
 ---
