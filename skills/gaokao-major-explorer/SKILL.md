@@ -40,6 +40,41 @@ python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py \
 
 ---
 
+## ⭐ 精品模式必读: Major 质量流水线 (Day 3 Team B 47 篇验证)
+
+**任何 hand-crafted 精品 JSON 工作, 开始前必读:**
+
+📄 **`/Users/zhewenliu/Claude/gaokao-team-b/docs/PIPELINE_major_quality.md`** (项目根 docs/)
+
+**核心 4 条 anti-pollution rules** (任 1 条触发 audit ≤6 分):
+
+1. **lede 模板套话** ❌ "X 是研究...的学科" / "传统机械/材料的同学..." / "AI 翻译时代..." → ✅ "X 的核心是 A+B+C 三栖, 在 P 时代有 Q 优势, 但 R 是最大风险"
+2. **who_fits_no 串台** ❌ 理工科"文本阅读/田野调研" → 删; 人文社科"数学/统计/经济/考证" → 删
+3. **deep_study CS/金融 12%** ❌ 占位 → 用专业真实主流去向
+4. **curriculum 公共必修填专业课** ❌ → 公共必修只放高数/英语/思政/制图
+
+**Tier 1/2/3 retry** (audit < 7 时):
+- Tier 1 (5-10min): 补 weak field
+- Tier 2 (15-20min): 完全重写 + 参考 4 个 P0 优秀案例 (计算语言学/电子科技/卫生法学/文博)
+- Tier 3 (≤45min): flag: irreducible-<Y> 跳过
+
+**P0 优秀参考案例** (复制其 lede/pitfalls/alumni_quotes/employment_direction 结构):
+- `data/curated/computational-linguistics.json` (humanities, 8/10)
+- `data/curated/electronic-science-technology.json` (eng, 8/10)
+- `data/curated/health-law.json` (law, 8/10)
+- `data/curated/cultural-relics-museology.json` (humanities, 8/10)
+
+**已知坑** (避免重复踩):
+1. `scripts/deploy_to_public.py` ROOT 写死 `gaokao-hubei-mvp` — 用手动 re.sub 替换路径
+2. `scripts/batches/content_audit.py` slug 用文件名 — 不用 JSON 内 slug
+3. m3 audit "字段截断" 是显示 bug, 数据完整即可
+4. m3 audit 评分主观 (同篇 ±1 分), 取多次平均
+5. CC Write 在某些 worktree 会被 revert — 启动前用 echo 测试
+6. session merge 工作树残留 → stash 后 merge
+7. C session 留 "自主创业/其他" 占位 + salary string — 合并后必清理
+
+---
+
 ## JSON Schema 完整参考
 
 > 精品/长尾填同一份 schema。**标 `*` 的为必填字段**, 其余可选或用默认值。
