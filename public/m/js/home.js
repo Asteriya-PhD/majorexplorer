@@ -2,6 +2,10 @@
 (async () => {
   await M.init();
 
+  // ───── 动态注入精品专业数 (替换静态 126) ─────
+  const total = M.manifest.majors.length;
+  document.querySelectorAll(".js-mcount").forEach(el => el.textContent = total);
+
   // ───── 本日精读 (4 篇随机) ─────
   const featList = document.getElementById("feat-list");
   if (featList) {

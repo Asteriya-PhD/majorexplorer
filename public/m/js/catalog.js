@@ -1,6 +1,11 @@
 /* catalog.js — 13 章节 accordion + 搜索过滤 + URL hash 展开 + sub-row 跳 search */
 (async () => {
   await M.init();
+
+  // ───── 动态注入精品专业数 (替换静态 126) ─────
+  const total = M.manifest.majors.length;
+  document.querySelectorAll(".js-mcount").forEach(el => el.textContent = total);
+
   const root = document.getElementById("chapters");
   const q = document.getElementById("catalog-q");
   if (!root) return;
