@@ -14,9 +14,9 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>跨境电子商务专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="跨境电子商务是面向全球市场的数字贸易本科专业，2020 年正式列入《普通高等学校本科专业目录》（专业代码 120803T），归属工商管理类，授予管理学学士学位。本专业融合国际贸易实务、跨境平台运营、数">
+<meta name="description" content="跨境电子商务（专业代码 120803T，2020 年新设）是面向全球市场的数字贸易本科专业，归属工商管理类，授予管理学学士。本专业融合国际贸易实务、跨境平台运营、跨境支付与贸易金融（PingPong ">
 <style>
-@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap');
+@import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -190,13 +190,15 @@ footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 
 
 
-body { background: #FAFAF6; color: #1A1A1A; font-family: 'Inter', 'Noto Serif SC', sans-serif; }
+body { background: #FAFAF9; color: #0C0A09; font-family: 'Jost', 'PingFang SC', sans-serif; }
+/* 招 #5: 烫金纸纹理 (subtle gold dust) */
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 800px 500px at 80% 20%, rgba(199, 123, 92, 0.10), transparent 60%),
-    radial-gradient(ellipse 700px 500px at 15% 80%, rgba(62, 42, 31, 0.08), transparent 60%);
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(161, 98, 7, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 300px at 80% 100%, rgba(161, 98, 7, 0.03) 0%, transparent 60%);
 }
-body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0 0.22 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.30; }
+/* 招 #1: noise */
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.63 0 0 0 0 0.39 0 0 0 0 0.03 0 0 0 0.3 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.08; mix-blend-mode: multiply; }
 
 
 /* === 速览 v2 — 3 子卡堆叠 === */
@@ -450,219 +452,154 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 }
 
 
-:root {
-  /* 主题色 */
-  --biz-walnut-dk: #3E2A1F;  --biz-walnut-soft: #6B4A3A; --biz-walnut-xd: #1F1208;
-  --biz-rose-gold: #C77B5C;   --biz-rose-gold-dk: #9C4A35; --biz-rose-gold-soft: #DDA28A;
-  --biz-screen-blue: #0B1120; --biz-screen-blue-2: #1E293B;
-  --biz-ivory: #F5F0E5;       --biz-bg: #FAFAF6;
-  --biz-leather: #1A1A1A;     --biz-burgundy: #6B1F2A; --biz-steel: #5C6770;
-  --biz-pos: #22C55E;         --biz-neg: #DC2626; --biz-warn: #F59E0B;
-  /* 字体 (修复 v4_styles 未注入 base CSS 的问题) */
-  --font-heading: "Bodoni Moda", "Noto Serif SC", serif;
-  --font-body:    "Inter", "Noto Serif SC", "PingFang SC", sans-serif;
-  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
-  --font-num:     "JetBrains Mono", "Bebas Neue", monospace;
-}
-/* BUSINESS font: preconnect 在 head, @import 在 FONT_URLS['business'] (此处冗余已移除) */
-/* ── Hero 主体 ── */
-.biz-hero { position: relative; width: 100%; min-height: 720px; padding: 96px 0 110px; overflow: hidden; z-index: 2; isolation: isolate;
-  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(199,123,92,0.10) 0%, transparent 60%),
-              linear-gradient(180deg, #FAFAF6 0%, #F5F0E5 50%, #EFE7D5 100%);
-  color: var(--biz-leather); font-family: var(--font-body); border-bottom: 1px solid #E5DCC8; }
-.biz-marble { position: absolute; inset: 0; z-index: 1; opacity: 0.4; pointer-events: none;
-  background-image: linear-gradient(rgba(62,42,31,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(62,42,31,0.03) 1px, transparent 1px);
-  background-size: 32px 32px; }
-.biz-ceiling-light { position: absolute; top: 0; left: 0; right: 0; height: 300px; z-index: 2; pointer-events: none;
-  background: radial-gradient(ellipse 800px 200px at 50% 0%, rgba(255,235,200,0.4) 0%, transparent 70%); }
-.biz-grain { position: absolute; inset: 0; z-index: 1; opacity: 0.18; pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); mix-blend-mode: multiply; }
-/* ── 3 屏数据墙 (顶部装饰背景) ── */
-/* ── 椭圆董事桌 (中央) ── */
-/* ── 8 椅环 (环绕椭圆桌) ── */
-/* ── 8 个座位名牌 ── */
-/* ── 6 hu-tag 专业列表 ── */
-.biz-hu-tag-row { position: relative; z-index: 10; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto 32px; padding: 0 24px; }
-.biz-hu-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px; background: rgba(255,255,255,0.7); border-left: 3px solid var(--biz-rose-gold);
-  font-family: var(--font-body); font-size: 12px; color: var(--biz-walnut-dk); letter-spacing: 0.1em; }
-.biz-hu-tag-num { font-family: "Bebas Neue", sans-serif; font-size: 13px; color: var(--biz-rose-gold); }
-.biz-hu-tag-en { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 9px; color: var(--biz-rose-gold-dk); letter-spacing: 0.2em; }
-/* ── 标题区 ── */
-.biz-title-zone { position: relative; z-index: 10; text-align: center; max-width: 1100px; margin: 0 auto 28px; padding: 0 24px; }
-.biz-top-tag { display: inline-flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
-.biz-top-tag-text { font-family: "Bebas Neue", sans-serif; font-size: 12px; letter-spacing: 0.3em; color: var(--biz-walnut-dk); }
-.biz-top-tag-num { font-family: "Bodoni Moda", serif; font-weight: 700; font-size: 18px; color: var(--biz-rose-gold); }
-.biz-discipline { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 11px; letter-spacing: 0.5em; color: var(--biz-rose-gold); margin-bottom: 6px; text-transform: uppercase; }
-.biz-discipline-cn { font-family: var(--font-body); font-size: 12px; color: var(--biz-walnut-dk); letter-spacing: 0.4em; margin-bottom: 18px; }
-.biz-title-main { font-family: var(--font-heading); font-weight: 700; font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.05; color: var(--biz-leather); letter-spacing: -0.01em; margin: 0 0 4px; }
-.biz-title-main-cn { font-family: var(--font-body); font-weight: 600; font-size: 20px; color: var(--biz-walnut-dk); letter-spacing: 0.18em; margin: 0 0 14px; }
-.biz-title-cn-accent { color: var(--biz-rose-gold); position: relative; }
-.biz-title-cn-accent::after { content: ""; display: block; height: 2px; background: linear-gradient(90deg, var(--biz-rose-gold), var(--biz-rose-gold-dk)); margin-top: 6px; width: 80px; margin-left: auto; margin-right: auto; }
-.biz-subtitle { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 11px; color: var(--biz-rose-gold-dk); letter-spacing: 0.35em; text-transform: uppercase; }
-.biz-subtitle-line { width: 80px; height: 1px; background: var(--biz-rose-gold); margin: 14px auto 16px; }
-.biz-lede { font-family: var(--font-body); font-size: 15px; line-height: 1.8; color: var(--biz-walnut-dk); max-width: 720px; margin: 0 auto 18px; }
-.biz-lede em { font-style: normal; color: var(--biz-leather); border-bottom: 1.5px solid var(--biz-rose-gold); padding-bottom: 1px; font-weight: 600; }
-.biz-hero-quote { font-family: "Bodoni Moda", serif; font-style: italic; font-size: 16px; color: var(--biz-walnut-dk); border-left: 2px solid var(--biz-rose-gold); padding: 8px 0 8px 16px; max-width: 640px; margin: 0 auto; }
-.biz-hero-quote-sig { display: block; font-family: "Bebas Neue", sans-serif; font-style: normal; font-size: 11px; color: var(--biz-rose-gold); margin-top: 6px; letter-spacing: 0.25em; }
-/* ── 4 stats 底部条 ── */
-.biz-stats-strip { position: relative; z-index: 10; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1100px; margin: 32px auto 0; padding: 0 24px; }
-.biz-stat-block { padding: 18px 22px 16px; background: var(--biz-leather); border: 1px solid var(--biz-rose-gold); text-align: center; }
-.biz-stat-block + .biz-stat-block { border-left: none; }
-.biz-stat-label { font-family: "Bebas Neue", sans-serif; font-size: 11px; letter-spacing: 0.25em; color: var(--biz-rose-gold); margin-bottom: 6px; text-transform: uppercase; }
-.biz-stat-num { font-family: var(--font-heading); font-weight: 700; font-size: clamp(28px, 3vw, 36px); line-height: 1; color: var(--biz-rose-gold); }
-.biz-stat-num-sub { font-size: 13px; font-weight: 500; color: var(--biz-rose-gold-soft); margin-left: 2px; }
-.biz-stat-label-cn { font-family: var(--font-body); font-size: 10px; color: rgba(245,240,229,0.55); margin-top: 6px; letter-spacing: 0.15em; }
-/* ── Section tab 主题色 (下方内容区) ── */
-body.biz-body { background: var(--biz-bg); color: var(--biz-leather); font-family: var(--font-body); }
-.biz-hero h1, .biz-hero h2, .biz-hero h3 { font-family: var(--font-heading); }
-.biz-hero .num, .biz-hero .num * { font-family: var(--font-num); }
-.biz-hero + section.tab, .biz-hero ~ section.tab { background: var(--biz-bg); color: var(--biz-leather); border-top: 1px solid #E5DCC8; }
-.biz-hero + section.tab h2, .biz-hero + section.tab h3,
-.biz-hero ~ section.tab h2, .biz-hero ~ section.tab h3 { color: var(--biz-leather); }
-.biz-hero + section.tab p, .biz-hero + section.tab .lede,
-.biz-hero ~ section.tab p, .biz-hero ~ section.tab .lede { color: var(--biz-walnut-dk); }
-.biz-hero + section.tab .bento-card, .biz-hero + section.tab .company-card, .biz-hero + section.tab .curriculum-block,
-.biz-hero ~ section.tab .bento-card, .biz-hero ~ section.tab .company-card, .biz-hero ~ section.tab .curriculum-block { background: #FFFFFF; border: 1px solid #E5DCC8; color: var(--biz-leather); }
-.biz-hero + section.tab .bento-card:hover, .biz-hero + section.tab .company-card:hover, .biz-hero + section.tab .curriculum-block:hover,
-.biz-hero ~ section.tab .bento-card:hover, .biz-hero ~ section.tab .company-card:hover, .biz-hero ~ section.tab .curriculum-block:hover { border-color: var(--biz-rose-gold); }
-.biz-hero + section.tab .quote, .biz-hero ~ section.tab .quote { background: #FFFFFF; border: 1px solid #E5DCC8; border-left: 4px solid var(--biz-rose-gold); }
-.biz-hero + section.tab .quote-text, .biz-hero ~ section.tab .quote-text { color: var(--biz-walnut-dk); }
-.biz-hero + section.tab .course-name, .biz-hero ~ section.tab .course-name { color: var(--biz-leather); }
-.biz-hero + section.tab .course-credit, .biz-hero ~ section.tab .course-credit { color: var(--biz-rose-gold); }
-.biz-hero + section.tab .path-card, .biz-hero ~ section.tab .path-card { background: #FFFFFF; border: 1px solid #E5DCC8; }
-.biz-hero + section.tab .path-card:hover, .biz-hero ~ section.tab .path-card:hover { border-color: var(--biz-rose-gold); }
-.biz-hero + section.tab .cta-block, .biz-hero ~ section.tab .cta-block { background: var(--biz-leather); color: #FAFAF6; border: 1px solid var(--biz-rose-gold); }
-.biz-hero + section.tab .cta-block h3, .biz-hero + section.tab .cta-block p,
-.biz-hero ~ section.tab .cta-block h3, .biz-hero ~ section.tab .cta-block p { color: #FAFAF6; }
-.biz-hero ~ footer { color: var(--biz-walnut-dk); }
-/* ── 响应式 ── */
-@media (max-width: 1280px) {
-  .biz-hero { min-height: 660px; padding: 80px 0 90px; }
-  .biz-stats-strip { grid-template-columns: repeat(2, 1fr); }
-  .biz-stat-block + .biz-stat-block { border-left: 1px solid var(--biz-rose-gold); border-top: none; }
-}
-@media (max-width: 768px) {
-  .biz-hero { min-height: auto; padding: 72px 0 60px; }
-  .biz-stats-strip { grid-template-columns: 1fr 1fr; }
-  .biz-title-main { font-size: clamp(1.875rem, 7vw, 2.5rem); }
-}
-/* ── 主体 section tab 样式 (复刻 agri 范式 + 主题色) ── */
-section.tab { border-top: 1px solid #E5DCC8; }
-section.tab h2 { color: #3E2A1F; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
-section.tab h3 { color: #3E2A1F; font-family: var(--font-heading); }
-section.tab p, section.tab li { font-family: var(--font-body); }
-section.tab p.lede { color: #5C6770; }
-.watermark { font-family: var(--font-heading); color: #3E2A1F; opacity: 0.04; }
-footer { background: #F5F0E5; border-top: 1px solid #E5DCC8; }
-footer .label { color: #3E2A1F; font-family: var(--font-body); }
-footer .data-source { color: #5C6770; }
-.drop-cap::first-letter { font-family: var(--font-heading); color: #C77B5C; }
-.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.bento-item { padding: 28px 24px 24px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; box-shadow: 0 1px 0 rgba(199, 123, 92, 0.06); }
-.bento-item::before { content: "◆"; position: absolute; top: 20px; right: 20px; color: #5C6770; font-size: 0.875rem; opacity: 0.4; }
-.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #5C6770; z-index: 1; pointer-events: none; }
-.bento-item:hover { border-color: #5C6770; transform: translateY(-2px); }
-.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
-.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #3E2A1F; border: 1px solid #3E2A1F; border-radius: 0; font-family: var(--font-heading); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
-.bento-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; color: #3E2A1F; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
-.bento-tag { font-family: var(--font-heading); font-size: 0.8125rem; color: #5C6770; line-height: 1.5; }
-.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.company { padding: 28px 24px 22px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
-.company:hover { border-color: #5C6770; transform: translateY(-2px); }
-.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700; }
-.company-tier { padding: 2px 8px; border: 1px solid #5C6770; color: #5C6770; font-family: var(--font-heading); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
-.tier-S { background: #3E2A1F; color: #F5F0E5; border-color: #3E2A1F; }
+.hero { padding: 100px 0 80px; background: transparent; border-bottom: 1px solid #E7E5E4; text-align: center; position: relative; z-index: 2; }
+.letterhead-top { display: flex; align-items: center; justify-content: center; gap: 16px; padding-bottom: 16px; margin-bottom: 32px; border-bottom: 1px solid #D6D3D1; max-width: 720px; margin-left: auto; margin-right: auto; }
+.letterhead-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 500; color: #1C1917; letter-spacing: 0.05em; }
+.letterhead-divider { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #A16207, transparent); opacity: 0.5; }
+.letterhead-meta { font-family: 'Jost', sans-serif; font-size: 0.6875rem; color: #78716C; letter-spacing: 0.15em; text-transform: uppercase; }
+.letterhead-motto { font-family: 'Cormorant Garamond', serif; font-size: 0.9375rem; color: #A16207; text-align: center; letter-spacing: 0.04em; margin-bottom: 40px; }
+.hero-decor { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: #78716C; letter-spacing: 0.05em; margin-bottom: 24px; }
+.hero h1 { font-family: 'Bodoni Moda', serif; font-size: clamp(3.25rem, 6.5vw, 5.5rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; color: #0C0A09; margin-bottom: 24px; }
+.hero h1::after { content: " ®"; font-size: 0.35em; vertical-align: super; color: #A16207; font-style: normal; font-weight: 400; }
+.hero-tagline { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: #78716C; margin: 0 auto 40px; max-width: 600px; line-height: 1.7; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 56px; justify-content: center; }
+.tag { padding: 6px 16px; background: transparent; border: 1px solid #D6D3D1; border-radius: 0; font-family: 'Cormorant Garamond', serif; font-size: 0.875rem; color: #1C1917; letter-spacing: 0.04em; }
+.tag.primary { background: rgba(161, 98, 7, 0.08); border-color: #A16207; color: #A16207; }
+
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #D6D3D1; border-bottom: 1px solid #D6D3D1; border-left: 1px solid #D6D3D1; border-right: 1px solid #D6D3D1; max-width: 800px; margin: 0 auto; }
+@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { padding: 28px 20px; border-right: 1px solid #E7E5E4; }
+.stat:last-child { border-right: none; }
+@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #E7E5E4; } }
+.stat-label { font-family: 'Jost', sans-serif; font-size: 0.625rem; color: #78716C; text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500; }
+.stat-value { font-family: 'Bodoni Moda', serif; font-size: 1.5rem; font-weight: 500; color: #1C1917; margin-top: 6px; letter-spacing: -0.01em; }
+
+.hero::after { content: ""; display: block; width: 240px; height: 1px; background: linear-gradient(90deg, transparent, #A16207, transparent); margin: 48px auto 0; opacity: 0.4; }
+
+section.tab { border-top: 1px solid #A8A29E; border-bottom: 2px solid #A8A29E; }
+section.tab:first-of-type { border-top: none; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: #A8A29E; border: 1px solid #A8A29E; border-radius: 0; overflow: hidden; margin-top: 32px; position: relative; z-index: 1; }
+.bento { position: relative; }
+
+
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(34, 197, 94, 0.85); z-index: 1; pointer-events: none; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(161, 98, 7, 0.85); z-index: 1; pointer-events: none; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(120, 53, 15, 0.85); z-index: 1; pointer-events: none; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(249, 115, 22, 0.85); z-index: 1; pointer-events: none; }
+.bento-item { padding: 32px 24px 24px; background: #FFFFFF; position: relative; transition: background 250ms; }
+.bento-item:hover { background: #FAFAF9; }
+.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1C1917; color: #FAFAF9; font-family: 'Bodoni Moda', serif; font-size: 1.0625rem; font-weight: 500; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #A16207; border: 1px solid #A16207; border-radius: 0; font-family: 'Bodoni Moda', serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; margin-bottom: 12px; }
+.bento-name { font-family: 'Bodoni Moda', serif; font-size: 1.1875rem; font-weight: 500; margin-bottom: 4px; color: #0C0A09; padding-right: 44px; text-wrap: balance; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.bento-tag { font-family: 'Jost', sans-serif; font-size: 0.8125rem; color: #57534E; line-height: 1.5; }
+
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 32px 24px 22px; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 0; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #A16207; transform: translateY(-2px); }
+.company::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, #A16207, transparent); opacity: 0; transition: opacity 250ms; }
+.company:hover::before { opacity: 0.6; }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.company-monogram { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1C1917; color: #FAFAF9; font-family: 'Bodoni Moda', serif; font-size: 1.125rem; font-weight: 500; }
+.company-tier { padding: 2px 8px; border: 1px solid #A16207; color: #A16207; font-family: 'Bodoni Moda', serif; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; }
+.tier-S { background: #A16207; color: #FAFAF9; border-color: #A16207; }
 .tier-A { background: transparent; }
-.tier-B { background: transparent; color: #5C6770; border-color: #E5DCC8; }
-.company-name { font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #3E2A1F; }
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #E5DCC8; }
-.sparkline-bar { flex: 1; background: #E5DCC8; min-height: 2px; transition: background 250ms; }
-.company:hover .sparkline-bar { background: #5C6770; opacity: 0.7; }
-.sparkline-label { font-family: var(--font-heading); font-size: 0.6875rem; color: #5C6770; letter-spacing: 0.05em; margin-top: 6px; }
-.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
-.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #E5DCC8; font-size: 0.9375rem; }
+.tier-B { background: transparent; color: #78716C; border-color: #D6D3D1; }
+.company-name { font-family: 'Bodoni Moda', serif; font-size: 1.1875rem; font-weight: 500; margin-bottom: 10px; color: #0C0A09; }
+.company-meta { font-family: 'Jost', sans-serif; font-size: 0.8125rem; color: #57534E; line-height: 1.5; margin-bottom: 14px; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 12px; border-top: 1px solid #F5F5F4; }
+.sparkline-bar { flex: 1; background: #E7E5E4; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #A16207; opacity: 0.7; }
+.sparkline-label { font-family: 'Jost', sans-serif; font-size: 0.625rem; color: #A16207; letter-spacing: 0.15em; margin-top: 6px; text-transform: uppercase; }
+
+.salary-table { width: 100%; border-collapse: collapse; margin: 32px auto 0; max-width: 880px; background: #FFFFFF; border: 1px solid #E7E5E4; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 22px 28px; text-align: left; border-bottom: 1px solid #E7E5E4; font-size: 0.9375rem; }
 .salary-table tr:last-child td { border-bottom: none; }
-.salary-table th { background: #F5F0E5; font-family: var(--font-heading); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #5C6770; }
-.salary-stage { color: #3E2A1F; }
-.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(199, 123, 92, 0.12); margin-left: 12px; vertical-align: middle; overflow: hidden; }
-.salary-bar-fill { display: block; height: 100%; background: #5C6770; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.yoy { display: inline-block; font-family: var(--font-heading); font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
-.yoy.up { color: #3E2A1F; background: rgba(62, 42, 31, 0.08); }
-.yoy.down { color: #DC2626; background: rgba(220, 38, 38, 0.08); }
-.yoy.flat { color: #5C6770; }
-.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #E5DCC8; }
+.salary-table th { background: #FAFAF9; font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #57534E; }
+.salary-stage { font-family: 'Bodoni Moda', serif; font-weight: 500; color: #0C0A09; font-size: 1.0625rem; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: #F5F5F4; margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #A16207; }
+.yoy { display: inline-block; font-family: 'Bodoni Moda', serif; font-size: 0.8125rem; font-weight: 500; margin-left: 12px; padding: 2px 8px; }
+.yoy.up   { color: #15803D; }
+.yoy.down { color: #B91C1C; }
+.yoy.flat { color: #78716C; }
+.approx { font-family: 'Bodoni Moda', serif; color: #A16207; margin-right: 4px; }
+
+.direction-list { margin: 32px auto 0; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 24px; padding: 16px 0; border-bottom: 1px solid #E7E5E4; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 600; color: #3E2A1F; }
-.direction-bar { height: 8px; background: rgba(199, 123, 92, 0.12); overflow: hidden; border-radius: 2px; }
-.direction-bar-fill { height: 100%; background: #5C6770; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
-.direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #3E2A1F; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
-.path-card:hover { border-color: #5C6770; transform: translateY(-2px); }
-.path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #3E2A1F; margin-bottom: 4px; line-height: 1; }
-.path-name { font-family: var(--font-heading); color: #5C6770; font-size: 0.875rem; margin-top: 8px; }
+.direction-name { font-family: 'Bodoni Moda', serif; font-size: 1.0625rem; color: #0C0A09; }
+.direction-bar { height: 6px; background: #F5F5F4; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #A16207; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'Bodoni Moda', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
+
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin: 32px auto 0; max-width: 800px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #E7E5E4; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #A16207; transform: translateY(-2px); }
+.path-pct { font-family: 'Bodoni Moda', serif; font-size: 2.75rem; font-weight: 500; color: #1C1917; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: 'Jost', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
-.quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #E5DCC8; border-left: 4px solid #C77B5C; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
-.quote:hover { border-left-width: 12px; transform: translateX(4px); }
-.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; }
-.quote-byline strong { display: block; font-family: var(--font-heading); font-weight: 700; color: #3E2A1F; font-size: 0.9375rem; }
-.quote-byline .quote-source { font-family: var(--font-heading); color: #5C6770; font-size: 0.75rem; }
-.quote-text { font-family: var(--font-heading); font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #3E2A1F; }
-.quote-text::before { content: "「"; color: #C77B5C; }
-.quote-text::after { content: "」"; color: #C77B5C; }
-.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #E5DCC8; }
+.quote { padding: 32px 36px; background: #FFFFFF; border: 1px solid #E7E5E4; border-left: 3px solid #A16207; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; }
+.quote:hover { border-left-width: 8px; transform: translateX(4px); box-shadow: 0 8px 24px rgba(161, 98, 7, 0.08); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.quote-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1C1917; color: #FAFAF9; font-family: 'Bodoni Moda', serif; font-size: 1.125rem; font-weight: 500; }
+.quote-byline strong { display: block; font-family: 'Bodoni Moda', serif; font-weight: 500; color: #0C0A09; font-size: 1rem; }
+.quote-byline .quote-source { font-family: 'Jost', sans-serif; color: #78716C; font-size: 0.75rem; letter-spacing: 0.05em; }
+.quote-text { font-family: 'Cormorant Garamond', serif; font-size: 1.375rem; line-height: 1.65; color: #0C0A09; }
+.quote-text::before { content: "“"; color: #A16207; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
+.quote-text::after { content: "”"; color: #A16207; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
+
+.xuanke-list { margin: 32px auto 0; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 220px 1fr 80px; align-items: center; gap: 24px; padding: 16px 0; border-bottom: 1px solid #E7E5E4; }
 .xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-family: var(--font-heading); font-size: 1.0625rem; color: #3E2A1F; }
-.xuanke-bar { height: 6px; background: #E5DCC8; overflow: hidden; }
-.xuanke-bar-fill { height: 100%; background: #5C6770; }
-.xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #3E2A1F; }
-.curriculum-lede { font-family: var(--font-heading); color: #5C6770; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.curriculum-block { padding: 22px 26px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
-.curriculum-block:last-child { margin-bottom: 0; }
-.curriculum-block:hover { border-color: #5C6770; }
-.curriculum-title { font-family: var(--font-heading); font-size: 1.0625rem; color: #3E2A1F; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(199, 123, 92, 0.30); font-weight: 700; }
-.course { color: #3E2A1F; border-bottom: 1px dashed rgba(199, 123, 92, 0.20); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
-.course:hover { background: rgba(199, 123, 92, 0.04); padding-left: 8px; }
-.course-name { color: #3E2A1F; }
-.course-credit { color: #5C6770; font-family: var(--font-heading); font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
-.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #3E2A1F; text-align: center; position: relative; }
-.cta-block::before { content: "◆  ◆  ◆"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #F5F0E5; padding: 0 16px; color: #3E2A1F; font-size: 0.875rem; letter-spacing: 0.5em; }
-.cta-block h3 { font-family: var(--font-heading); font-size: 1.75rem; margin-bottom: 12px; color: #3E2A1F; position: relative; z-index: 1; font-weight: 700; }
-.cta-block p { color: #5C6770; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
-.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
-.cta-input { padding: 14px 18px; background: #F5F0E5; border: 1px solid #E5DCC8; color: #3E2A1F; font-family: var(--font-heading); font-size: 1rem; width: 180px; outline: none; }
-.cta-input:focus { border-color: #5C6770; }
-.cta-button { padding: 14px 36px; background: #3E2A1F; color: #F5F0E5; font-family: var(--font-heading); font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
-.cta-button:hover { background: #F5F0E5; color: #5C6770; }
-.cta-note { font-family: var(--font-heading); font-size: 0.75rem; color: #5C6770; margin-top: 16px; position: relative; z-index: 1; }
-.tag { display: inline-block; padding: 4px 12px; border: 1px solid #3E2A1F; color: #3E2A1F; font-family: var(--font-heading); font-size: 0.75rem; letter-spacing: 0.05em; }
-.tag.primary { background: #3E2A1F; color: #F5F0E5; }
+.xuanke-name { font-family: 'Bodoni Moda', serif; font-size: 1.0625rem; color: #0C0A09; }
+.xuanke-bar { height: 6px; background: #F5F5F4; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #A16207; }
+.xuanke-pct { font-family: 'Bodoni Moda', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-/* ── 5 列一行 (GONGAN / BUSINESS 都有 5 个深造路径) ── */
-.gg-hero + section.tab .path-grid, .gg-hero ~ section.tab .path-grid,
-.biz-hero + section.tab .path-grid, .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr); }
-.gg-hero + section.tab .path-card, .gg-hero ~ section.tab .path-card,
-.biz-hero + section.tab .path-card, .biz-hero ~ section.tab .path-card { padding: 28px 12px 24px; }
-.gg-hero + section.tab .path-pct, .gg-hero ~ section.tab .path-pct,
-.biz-hero + section.tab .path-pct, .biz-hero ~ section.tab .path-pct { font-size: clamp(1.75rem, 2.5vw, 2.25rem); }
+.curriculum-lede { font-family: 'Cormorant Garamond', serif; color: #57534E; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-block { padding: 32px 28px; background: #FFFFFF; border: 1px solid #E7E5E4; transition: border-color 250ms, transform 250ms; }
+.curriculum-block:hover { border-color: #A16207; transform: translateY(-2px); }
+.curriculum-title { font-family: 'Bodoni Moda', serif; font-size: 0.875rem; color: #A16207; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #E7E5E4; font-weight: 500; }
+.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; }
+.course-name { font-family: 'Jost', sans-serif; color: #0C0A09; }
+.course-credit { font-family: 'Bodoni Moda', serif; color: #78716C; font-size: 0.8125rem; margin-left: 8px; }
 
-/* ── ovv-tl-step 一行 + ovv-fit-list 列表 marker 修复 (所有 ovv 主题) ── */
-.gg-hero + section.tab .ovv-timeline, .gg-hero ~ section.tab .ovv-timeline,
-.biz-hero + section.tab .ovv-timeline, .biz-hero ~ section.tab .ovv-timeline { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 10px; padding-bottom: 8px; }
-.gg-hero + section.tab .ovv-tl-step, .gg-hero ~ section.tab .ovv-tl-step,
-.biz-hero + section.tab .ovv-tl-step, .biz-hero ~ section.tab .ovv-tl-step { flex: 0 0 auto; min-width: 100px; text-align: center; }
-.gg-hero + section.tab .ovv-fit-list, .gg-hero ~ section.tab .ovv-fit-list,
-.biz-hero + section.tab .ovv-fit-list, .biz-hero ~ section.tab .ovv-fit-list { list-style: none; padding-left: 0; margin: 0; }
-.gg-hero + section.tab .ovv-fit-list li, .gg-hero ~ section.tab .ovv-fit-list li,
-.biz-hero + section.tab .ovv-fit-list li, .biz-hero ~ section.tab .ovv-fit-list li { padding-left: 0; }
-.gg-hero + section.tab .ovv-fit-list li::before, .gg-hero ~ section.tab .ovv-fit-list li::before,
-.biz-hero + section.tab .ovv-fit-list li::before, .biz-hero ~ section.tab .ovv-fit-list li::before { content: none; }
+.cta-block { margin: 32px auto 0; max-width: 800px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #1C1917; text-align: center; position: relative; }
+.cta-block::before { content: ""; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 1px solid #A16207; pointer-events: none; }
+.cta-block h3 { font-family: 'Bodoni Moda', serif; font-size: 2rem; font-weight: 500; margin-bottom: 16px; color: #0C0A09; }
+.cta-block p { font-family: 'Cormorant Garamond', serif; color: #57534E; margin: 0 auto 32px; max-width: 560px; font-size: 1.0625rem; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.cta-input { padding: 14px 18px; background: #FFFFFF; border: 1px solid #D6D3D1; color: #0C0A09; font-family: 'Bodoni Moda', serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #A16207; }
+.cta-button { padding: 14px 40px; background: #1C1917; color: #FAFAF9; font-family: 'Bodoni Moda', serif; font-size: 1rem; font-weight: 500; letter-spacing: 0.06em; transition: background 200ms; }
+.cta-button:hover { background: #A16207; }
+.cta-note { font-family: 'Jost', sans-serif; color: #78716C; font-size: 0.75rem; margin-top: 20px; letter-spacing: 0.05em; }
 
+.watermark { color: #A16207; opacity: 0.04; }
+.section-num { font-family: 'Jost', sans-serif; color: #A16207; }
+section.tab h2 { font-family: 'Bodoni Moda', serif; font-weight: 500; }
+section.tab p { color: #0C0A09; }
+section.tab p.lede { color: #57534E; }
+section.tab h3 { color: #0C0A09; }
+footer { background: transparent; border-top: 1px solid #D6D3D1; }
+footer .label { color: #1C1917; }
+footer .data-source { color: #78716C; }
+
+.drop-cap::first-letter { font-family: 'Bodoni Moda', serif; font-size: 4.5em; font-weight: 500; line-height: 0.85; float: left; margin: 0.08em 0.12em 0 0; color: #A16207; }
 
 
 /* ─── Wishlist inject: 顶部 chip + 右下 FAB + 12 主题卡 ─── */
@@ -941,49 +878,26 @@ footer .data-source { color: #5C6770; }
 </head>
 <body>
 
-<header class="hero biz-hero">
-  <div class="biz-marble"></div>
-  <div class="biz-ceiling-light"></div>
-  <div class="biz-grain"></div>
-  
-  <div class="biz-title-zone">
-  <h1 class="biz-title-main">Strategic Management</h1><div class="chsi-rating-badge" title="数据来源: 阳光高考 / 用户实名评分"><span>阳光高考</span><span class="chsi-score">★ 4.9/5</span></div>
-    <h2 class="biz-title-main-cn"><span class="biz-title-cn-accent">战略管理</span> · 决策科学</h2>
-  <div class="biz-hero-quote">
-      "If you don't know where you're going, you might not get there."
-      <span class="biz-hero-quote-sig">— Yogi Berra</span>
+<header class="hero">
+  <div class="container">
+    <div class="letterhead-top">
+      <div class="letterhead-meta">VOL. 2026 · NO. 跨境电商</div>
+      <div class="letterhead-logo">M·E</div>
+      <div class="letterhead-meta">MAJOR EXPLORER · 内部传阅</div>
     </div>
-  </div>
-  <!-- 6 hu-tag 专业列表 -->
-  <div class="biz-hu-tag-row">
-    <div class="biz-hu-tag"><span class="biz-hu-tag-num">01</span><span>战略管理</span><span class="biz-hu-tag-en">Strategy</span></div>
-    <div class="biz-hu-tag"><span class="biz-hu-tag-num">02</span><span>组织行为</span><span class="biz-hu-tag-en">OB</span></div>
-    <div class="biz-hu-tag"><span class="biz-hu-tag-num">03</span><span>人力资源</span><span class="biz-hu-tag-en">HRM</span></div>
-    <div class="biz-hu-tag"><span class="biz-hu-tag-num">04</span><span>运营管理</span><span class="biz-hu-tag-en">OPS</span></div>
-    <div class="biz-hu-tag"><span class="biz-hu-tag-num">05</span><span>供应链</span><span class="biz-hu-tag-en">SCM</span></div>
-    <div class="biz-hu-tag"><span class="biz-hu-tag-num">06</span><span>国际商务</span><span class="biz-hu-tag-en">IB</span></div>
-  </div>
-  <!-- 4 stats 底部条 -->
-  <div class="biz-stats-strip">
-    <div class="biz-stat-block">
-      <div class="biz-stat-label">Strategy Tools</div>
-      <div class="biz-stat-num">42<span class="biz-stat-num-sub">+</span></div>
-      <div class="biz-stat-label-cn">主流战略工具 (BCG / Porter / 蓝海)</div>
+    <div class="letterhead-motto">— Private wealth · Risk and reward · Compound interest of knowledge —</div>
+    <h1>跨境电子商务</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=12#majors">管理学</a><span class="bc-sep">›</span><a href="/?discipline=12&sub=1202#majors">工商管理类</a><span class="bc-sep">›</span><span class="bc-current">跨境电子商务</span></div>
+    <p class="hero-tagline">— 跨境电子商务（专业代码 120803T，2020 年新设）是面向全球市场的数字贸易本科专业，归属工商管理类，授予管理学学士。本专业融合国际贸易实务、跨境平台运营、跨境支付与贸易金融（PingPong / Airwallex / 连连 / 万 —</p>
+    <div class="hero-tags">
+      <span class="tag primary">跨境电商</span><span class="tag primary">数字贸易</span><span class="tag primary">跨境支付</span>
+      <span class="tag">品牌出海</span><span class="tag">贸易金融</span><span class="tag">国际商务</span>
     </div>
-    <div class="biz-stat-block">
-      <div class="biz-stat-label">Consulting</div>
-      <div class="biz-stat-num">3<span class="biz-stat-num-sub">Tier-1</span></div>
-      <div class="biz-stat-label-cn">MBB · 麦肯锡 / BCG / 贝恩</div>
-    </div>
-    <div class="biz-stat-block">
-      <div class="biz-stat-label">F500 Employers</div>
-      <div class="biz-stat-num">128<span class="biz-stat-num-sub">家</span></div>
-      <div class="biz-stat-label-cn">财富 500 强中国总部招聘</div>
-    </div>
-    <div class="biz-stat-block">
-      <div class="biz-stat-label">Avg. Promotion</div>
-      <div class="biz-stat-num">4.2<span class="biz-stat-num-sub">年</span></div>
-      <div class="biz-stat-label-cn">管培生 → 中层管理 平均年限</div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-label">学科<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">4.9</span></div></div><div class="stat-value">管理学 · 工商管理类 (特设)</div></div>
+      <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4Y · 管理学学士</div></div>
+      <div class="stat"><div class="stat-label">难度</div><div class="stat-value">中等偏上</div></div>
+      <div class="stat"><div class="stat-label">更新</div><div class="stat-value">2026-06</div></div>
     </div>
   </div>
 </header>
@@ -993,7 +907,7 @@ footer .data-source { color: #5C6770; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">跨境电商 2020 年才正式设立，是'新专业坑'最集中的赛道：师资以老外经贸+电商拼接为主，平台政策与各国合规频繁变动，2024 年起 Amazon/Temu 收紧税务审查——红海还是蓝海，取决于你是否愿意持续学习。</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">本专业是'跨境电子商务'方向的核心训练场，课程体系覆盖国际商科+数字技术+外语沟通三大块。前两年打学科基础（经济学+管理学+英语），后两年分流到平台运营、品牌出海、跨境物流、数字贸易等方向。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对外贸/跨境行业有真实兴趣，能接受海外市场的不确定性</li><li>英语或小语种基础良好，喜欢与人沟通和谈判</li><li>对数据、流量、平台玩法敏感，愿意在民营/创业型公司中快速成长</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>想走纯学术/公务员路线（该专业体制内出口极窄）</li><li>不愿做销售/运营/客户开发（85% 就业岗位与这三类直接相关）</li><li>对英语/小语种学习完全没耐心（语言是跨境电商的硬门槛）</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">❌ 跨境电商 = 国内电商+外语</div><div class="ovv-simple-pit-reality">✅ 跨境电商是面向全球市场的数字贸易体系，涉及 VAT 税务、海外仓、平台规则、本地化合规、独立站建站等全新技能组合。国内电商经验不能直接迁移。</div></li><li><div class="ovv-simple-pit-myth">❌ 不考证也能做</div><div class="ovv-simple-pit-reality">✅ 行业本身'考证'密度低（没有法律意义上的持证门槛），但 2024 年起 Amazon/Temu 收紧卖家合规审查，跨境电商师、国际贸易单证员等证书对进入头部企业有帮助；语言（英语+小语种）才是真正的硬门槛。</div></li><li><div class="ovv-simple-pit-myth">❌ 学校层次不重要</div><div class="ovv-simple-pit-reality">✅ 头部品牌出海公司（SHEIN、Anker、Temu）和跨境支付机构校招基本只去 985/211+强外语外贸类校；双非毕业生主要走中小跨境卖家、外贸公司。院校区位（深圳/广州/杭州/义乌/宁波）有时比学校名更重要。</div></li><li><div class="ovv-simple-pit-myth">❌ 平台政策稳定</div><div class="ovv-simple-pit-reality">✅ Amazon/TikTok Shop/Shopee 政策频繁变动（VAT、佣金、广告规则、品类准入），2024 年起'违规封号'案例激增，'靠黑科技'时代结束，'合规+精细化运营'成为主流。新人入行需持续学习平台政策。</div></li><li><div class="ovv-simple-pit-myth">❌ 新专业 = 课程不成熟</div><div class="ovv-simple-pit-reality">✅ 2020 年才正式设立，部分院校培养方案仍在迭代，师资以'外经贸+电商'拼接为主。选校务必考察是否有'跨境电商实验室/校企合作实战项目'，实务型强校与理论型强校就业差距很大。</div></li><li><div class="ovv-simple-pit-myth">❌ 读完能做学术/读博</div><div class="ovv-simple-pit-reality">✅ 该专业博士出口极窄（< 3-5% 进入学术），主要是'实战型'专业，毕业后读研比例不到 20%。想走学术路线的同学慎选，建议选'国际经济与贸易'。</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">跨境电商是 2020 年新设的 '商品+流量+资金' 三链路全球重组专业. 它在数字贸易与品牌出海时代有结构性红利——PingPong / Airwallex / 连连 / 万里汇 合计拿下 60+ 国家支付牌照, 2024 年交易额破 2 万亿美元, 是中国 fintech 出海最确定的赛道之一; 但 '师资拼接 + 平台合规收紧 + 跨境支付监管迭代' 是该专业最大的三个变量, 红海还是蓝海取决于你能不能在三年内把运营、金融、外语三件事都打通.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">本专业是 '跨境电子商务' 方向的核心训练场, 课程体系覆盖国际商科+数字技术+跨境金融+外语沟通四大块. 前两年打学科基础 (经济学+管理学+英语+国际金融), 后两年分流到平台运营、品牌出海、跨境支付与贸易金融、跨境物流、数字贸易等方向.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对外贸/跨境行业有真实兴趣, 能接受海外市场的不确定性</li><li>英语或小语种基础良好, 喜欢与人沟通和谈判</li><li>对数据、流量、平台玩法敏感, 对汇率、支付牌照、贸易金融有好奇心</li><li>愿意在民营 / 跨境金融 / 创业型公司中快速成长</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>想走纯学术 / 公务员路线 (该专业体制内出口极窄, 商务局 / 海关 / 综试区仅占 5%)</li><li>不愿做销售 / 运营 / 客户开发 (85% 就业岗位与这三类直接相关)</li><li>对英语 / 小语种学习完全没耐心 (语言是跨境电商的硬门槛)</li><li>对汇率、支付牌照、贸易金融工具毫无兴趣 (跨境金融是该专业与普通电商的核心差异)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">❌ 跨境电商 = 国内电商 + 外语</div><div class="ovv-simple-pit-reality">✅ 跨境电商是面向全球市场的数字贸易体系, 涉及 VAT 税务、海外仓、平台规则、本地化合规、独立站建站、跨境支付牌照 (PingPong / Airwallex / 连连 / 万里汇)、汇率与外汇风险管理等全新技能组合. 国内电商经验不能直接迁移, '开过淘宝店' 的人不一定能开好 Amazon.</div></li><li><div class="ovv-simple-pit-myth">❌ 看起来门槛低, 会英语就能做跨境</div><div class="ovv-simple-pit-reality">✅ 这是 2024 年最常见误区. 跨境电商的真正门槛是 '外语 + 平台规则 + 数据分析 + 选品直觉 + 跨境金融常识' 的复合能力. 一个会英语但不懂汇率对冲的运营, 会在 2024 年人民币波动的周期里把利润全部吐出; 一个懂运营但不懂 VAT 申报的品牌经理, 会让公司在德国被罚没季度营收. 头部公司 (SHEIN、Anker、PingPong) 校招笔试直接考 '跨境支付牌照差异' 和 '汇率套保基础'.</div></li><li><div class="ovv-simple-pit-myth">❌ 学校层次不重要</div><div class="ovv-simple-pit-reality">✅ 头部品牌出海公司 (SHEIN、Anker、Temu) 和跨境支付机构 (PingPong、连连、Airwallex) 校招基本只去 985/211 + 强外语外贸类校; 双非毕业生主要走中小跨境卖家、外贸公司. 院校区位 (深圳/广州/杭州/义乌/宁波) 有时比学校名更重要——杭州电子科技大学地处电商之都, 实训资源远超外地 211.</div></li><li><div class="ovv-simple-pit-myth">❌ 平台政策稳定</div><div class="ovv-simple-pit-reality">✅ Amazon / TikTok Shop / Shopee 政策频繁变动 (VAT、佣金、广告规则、品类准入), 2024 年起 '违规封号' 案例激增, '靠黑科技' 时代结束, '合规+精细化运营' 成为主流. 跨境支付端: PingPong、Airwallex、连连、万里汇 在新加坡、香港、欧盟的支付牌照每隔 1-2 年就要续展, 监管沙盒规则在多国持续迭代, 新人入行需持续学习政策.</div></li><li><div class="ovv-simple-pit-myth">❌ 跨境支付牌照宽松, 收款通道稳定</div><div class="ovv-simple-pit-reality">✅ 2024 年起跨境支付监管显著收紧: PingPong、Airwallex、连连、万里汇 在新加坡 (MAS) / 香港 (HKMA) / 英国 (FCA) / 欧盟 (EMI) 的牌照每隔 1-2 年续展, 万里汇 2024 年部分品类暂停提现, 连连 2024 下半年关停部分中东通道. 选'跨境金融'方向要认清: 这是高合规高门槛, 不是'开账户就能做'的生意.</div></li><li><div class="ovv-simple-pit-myth">❌ 应届做运营岗门槛低, 半年就能上手</div><div class="ovv-simple-pit-reality">✅ 跨境电商运营岗的'半年淘汰率'在头部公司 (SHEIN / Anker / Temu) 高达 30-40%, 主要原因: ①Amazon 广告算法迭代快 (PPC / DSP 规则每季度变) ; ②TikTok Shop 美区 2024 年起规则每周更新; ③选品失误一次可能吃掉 1-2 个月工资. 不是'会英语+会用 Excel'就能干, 需要持续 2-3 年的算法+数据复盘.</div></li><li><div class="ovv-simple-pit-myth">❌ 校招 HR 认这个新专业</div><div class="ovv-simple-pit-reality">✅ 2024 年校招真实情况: 阿里 / 字节 / 美团 等大厂 HR 系统里 '跨境电子商务' 常被归到'工商管理类'或'其他', 部分校招岗位甚至被划到 '不限专业' 池子. 结果是: 同台竞争的有国际经济与贸易 / 电子商务 / 金融学 / 商务英语, 没有专业壁垒. 补救方法: 靠实习 + 跨境电商师证书 + 一份爆款选品报告打差异化.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1005,33 +919,33 @@ footer .data-source { color: #5C6770; }
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
         <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
-          <div class="course"><span class="course-name">高等数学</span></div>
+          <div class="course"><span class="course-name">高等数学 (一/二)</span></div>
           <div class="course"><span class="course-name">线性代数</span></div>
           <div class="course"><span class="course-name">概率论与数理统计</span></div>
-          <div class="course"><span class="course-name">微观经济学</span></div>
-          <div class="course"><span class="course-name">宏观经济学</span></div>
-          <div class="course"><span class="course-name">管理学原理</span></div>
-          <div class="course"><span class="course-name">大学英语</span></div>
+          <div class="course"><span class="course-name">大学英语 / 商务英语</span></div>
           <div class="course"><span class="course-name">马克思主义基本原理</span></div>
+          <div class="course"><span class="course-name">毛泽东思想和中国特色社会主义理论体系概论</span></div>
+          <div class="course"><span class="course-name">中国近现代史纲要</span></div>
+          <div class="course"><span class="course-name">思想道德与法治</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
           <div class="course"><span class="course-name">跨境电子商务概论</span></div>
-          <div class="course"><span class="course-name">国际贸易实务</span></div>
+          <div class="course"><span class="course-name">国际贸易实务 (含 RCEP / CPTPP 条款)</span></div>
           <div class="course"><span class="course-name">国际市场营销学</span></div>
-          <div class="course"><span class="course-name">跨境电商运营管理</span></div>
-          <div class="course"><span class="course-name">国际物流与供应链管理</span></div>
-          <div class="course"><span class="course-name">国际金融与跨境支付</span></div>
-          <div class="course"><span class="course-name">跨境电商数据分析</span></div>
-          <div class="course"><span class="course-name">数字营销与社群运营</span></div>
-          <div class="course"><span class="course-name">跨境电商法律法规与合规</span></div>
+          <div class="course"><span class="course-name">跨境电商平台运营 (Amazon / TikTok Shop / Shopee)</span></div>
+          <div class="course"><span class="course-name">国际物流与全球供应链 (含海外仓 / FBA / 头程)</span></div>
+          <div class="course"><span class="course-name">国际金融与跨境支付 (含汇率与外汇风险管理)</span></div>
+          <div class="course"><span class="course-name">跨境电商数据分析 (选品、流量、广告 ROI)</span></div>
+          <div class="course"><span class="course-name">数字营销与海外社媒运营 (TikTok / Instagram / YouTube)</span></div>
+          <div class="course"><span class="course-name">跨境电商法律法规与合规 (VAT / 关税 / 平台规则)</span></div>
           <div class="course"><span class="course-name">跨文化商务沟通</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">对外经贸/上经贸方向：跨境电商政策与海关合规（含 RCEP 实务）</span></div>
-          <div class="course"><span class="course-name">浙江工商/杭电方向：直播电商与短视频运营（杭州电商之都资源）</span></div>
-          <div class="course"><span class="course-name">广外/广财方向：跨境品牌出海与海外社媒营销</span></div>
-          <div class="course"><span class="course-name">宁波工程/上海海事方向：跨境物流与海外仓运营（港口区位）</span></div>
-          <div class="course"><span class="course-name">四川商务/湖北经济方向：内陆跨境电商综试区运营（中西部综试区资源）</span></div>
+          <div class="course"><span class="course-name">对外经贸大学 / 上海对外经贸大学：跨境电商金融与贸易金融工具（信用证、保理、福费廷、出口信保、跨境收款牌照）</span></div>
+          <div class="course"><span class="course-name">浙江工商大学 / 杭州电子科技大学：直播电商与短视频出海运营（杭州跨境电商综试区核心人才基地）</span></div>
+          <div class="course"><span class="course-name">广东外语外贸大学 / 广东财经大学：跨境品牌出海与海外社媒营销（粤港澳大湾区资源 + 小语种选修）</span></div>
+          <div class="course"><span class="course-name">宁波工程学院 / 上海海事大学：跨境物流与海外仓运营（港口区位 + 保税仓实务）</span></div>
+          <div class="course"><span class="course-name">四川师范大学 / 湖北经济学院：内陆跨境电商综试区运营（中西部综试区政策与产业对接）</span></div>
         </div>
     </div>
   </div>
@@ -1048,49 +962,61 @@ footer .data-source { color: #5C6770; }
           <div class="bento-monogram">对</div>
           <span class="bento-rank">★★★★★</span>
           <div class="bento-name">对外经济贸易大学</div>
-          <div class="bento-tag">北京 · 211/双一流 · 国际贸易顶尖，跨境电商科研与师资全国领先</div>
+          <div class="bento-tag">北京 · 211/双一流 · 国家级一流本科专业 '跨境电子商务'，国贸+金融+跨境电商三位一体师资全国最强</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">浙</div>
-          <span class="bento-rank">★★★★☆</span>
-          <div class="bento-name">浙江工商大学</div>
-          <div class="bento-tag">杭州 · 浙江省重点 · 商科特色突出，杭州跨境电商综试区核心人才基地</div>
+          <div class="bento-monogram">上</div>
+          <span class="bento-rank">★★★★★</span>
+          <div class="bento-name">上海对外经贸大学</div>
+          <div class="bento-tag">上海 · 上海市属重点 · 国家级一流本科专业，长三角外贸 + 跨境电商生态资源最丰富</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">★★★★★</span>
+          <div class="bento-name">浙江工商大学</div>
+          <div class="bento-tag">杭州 · 浙江省重点 · 杭州跨境电商综试区核心人才基地，电商之都区位最强</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">广</div>
           <span class="bento-rank">★★★★☆</span>
           <div class="bento-name">广东外语外贸大学</div>
-          <div class="bento-tag">广州 · 广东省重点 · 外语+外贸复合优势明显，粤港澳大湾区资源</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">上</div>
-          <span class="bento-rank">★★★★☆</span>
-          <div class="bento-name">上海对外经贸大学</div>
-          <div class="bento-tag">上海 · 上海市属重点 · 长三角外贸与跨境电商生态资源丰富</div>
+          <div class="bento-tag">广州 · 广东省重点 · 国家级一流本科专业 '电子商务'，粤港澳大湾区+小语种+品牌出海复合优势</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">杭</div>
           <span class="bento-rank">★★★★☆</span>
           <div class="bento-name">杭州电子科技大学</div>
-          <div class="bento-tag">杭州 · 浙江省重点 · 地处电商之都，跨境电商运营实训资源突出</div>
+          <div class="bento-tag">杭州 · 浙江省重点 · 国家级一流本科专业 '电子商务'，跨境电商运营 + 数据分析实训最强</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">宁</div>
-          <span class="bento-rank">★★★☆☆</span>
-          <div class="bento-name">宁波工程学院</div>
-          <div class="bento-tag">宁波 · 浙江省应用型试点 · 港口+跨境贸易区位优势，实践导向</div>
+          <span class="bento-rank">★★★★☆</span>
+          <div class="bento-name">宁波大学</div>
+          <div class="bento-tag">宁波 · 双一流 · 宁波港口 + 保税区 + 跨境贸易区位优势，跨境物流方向突出</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">广</div>
           <span class="bento-rank">★★★☆☆</span>
           <div class="bento-name">广东财经大学</div>
-          <div class="bento-tag">广州 · 广东省重点 · 粤港澳大湾区跨境电商政策与产业对接</div>
+          <div class="bento-tag">广州 · 广东省重点 · 粤港澳大湾区跨境电商政策与产业对接，财经底色突出</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">四</div>
+          <span class="bento-rank">★★★☆☆</span>
+          <div class="bento-name">四川商务学校<wbr>（成都）</div>
+          <div class="bento-tag">成都 · 中西部内陆综试区核心人才基地，内陆跨境电商政策研究特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">湖</div>
           <span class="bento-rank">★★★☆☆</span>
           <div class="bento-name">湖北经济学院</div>
-          <div class="bento-tag">武汉 · 湖北省属 · 中部跨境电商综试区运营人才基地</div>
+          <div class="bento-tag">武汉 · 湖北省属 · 中部跨境电商综试区运营人才基地，武汉光谷+鄂州花湖机场区位</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">上</div>
+          <span class="bento-rank">★★★☆☆</span>
+          <div class="bento-name">上海海事大学</div>
+          <div class="bento-tag">上海 · 上海市属重点 · 跨境物流与海外仓运营特色，港口区位优势</div>
         </div>
     </div>
   </div>
@@ -1132,37 +1058,37 @@ footer .data-source { color: #5C6770; }
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">阿</div>
+            <div class="company-monogram">A</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">阿里巴巴（速卖通/Lazada）</div>
+          <div class="company-name">Anker 创新（安克）</div>
           <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">安</div>
+            <div class="company-monogram">P</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">安克创新 Anker</div>
+          <div class="company-name">PingPong（杭州乒乓）</div>
           <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">亚</div>
+            <div class="company-monogram">A</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">亚马逊中国卖家生态</div>
+          <div class="company-name">Airwallex（空中云汇）</div>
           <div class="company-meta"> · 校招 </div>
 
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">S</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">连</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">Shopify 中国独立站商家生态</div>
+          <div class="company-name">连连国际 / 万里汇（蚂蚁）</div>
           <div class="company-meta"> · 校招 </div>
 
         </div>
@@ -1171,7 +1097,16 @@ footer .data-source { color: #5C6770; }
             <div class="company-monogram">纵</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">纵腾/递四方/燕文</div>
+          <div class="company-name">纵腾 / 递四方 / 燕文</div>
+          <div class="company-meta"> · 校招 </div>
+
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">亚</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">亚马逊中国卖家生态</div>
           <div class="company-meta"> · 校招 </div>
 
         </div>
@@ -1192,27 +1127,27 @@ footer .data-source { color: #5C6770; }
       <tbody>
         <tr>
           <td class="salary-stage">应届生 (一线)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.84615384615385%"></span></span><span class="yoy up">↗ +3%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.84615384615385%"></span></span><span class="yoy up">↗ +6%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="10">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:76.92307692307693%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="13">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年经验</td>
+          <td class="salary-stage">3年经验 (运营 / 营销 / 选品)</td>
           <td class="num"><span class="approx">≈</span><span data-count="10">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.45454545454545%"></span></span><span class="yoy up">↗ +8%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="15">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.18181818181817%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="14">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:43.75%"></span></span><span class="yoy up">↗ +12%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.75%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="32">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (品牌操盘 / 跨境金融)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="15">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="24">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.57142857142857%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (持证/资深)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="30">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.5%"></span></span><span class="yoy up">↗ +15%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="50">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="80">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">10年+ (品牌合伙人 / 支付机构 VP)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.0%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1227,39 +1162,44 @@ footer .data-source { color: #5C6770; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">跨境电商运营</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:26%"></div></div>
-          <div class="direction-pct">26%</div>
+          <div class="direction-name">跨境电商运营 / 选品 / 营销</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:28%"></div></div>
+          <div class="direction-pct">28%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">品牌出海营销</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
-          <div class="direction-pct">18%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">跨境物流与海外仓</div>
+          <div class="direction-name">跨境支付与贸易金融</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:14%"></div></div>
           <div class="direction-pct">14%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">独立站与 DTC 创业</div>
+          <div class="direction-name">品牌出海营销</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:16%"></div></div>
+          <div class="direction-pct">16%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">跨境物流与海外仓</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">DTC 独立站与品牌出海创业</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
           <div class="direction-name">跨境电商政策与综合试验区</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
+          <div class="direction-pct">6%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">国际贸易与外贸业务</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
           <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">国际贸易与外贸业务</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct">12%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">深造/科研/其他</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
+          <div class="direction-name">深造 / 科研 / 体制内</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:4%"></div></div>
+          <div class="direction-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1272,38 +1212,38 @@ footer .data-source { color: #5C6770; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (国际商务/数字贸易)</div>
+          <div class="path-pct">20<span class="path-unit">%</span></div>
+          <div class="path-name">国内硕士 (国际商务 / 数字贸易 / 跨境金融)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">38<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (跨境电商运营/选品/营销)</div>
+          <div class="path-pct">35<span class="path-unit">%</span></div>
+          <div class="path-name">直接就业 (跨境电商运营 / 选品 / 营销)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">海外市场拓展与本地化运营</div>
+          <div class="path-pct">12<span class="path-unit">%</span></div>
+          <div class="path-name">跨境支付与贸易金融 (收款 / 风控 / 合规)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">DTC品牌出海与独立站创业</div>
+          <div class="path-pct">15<span class="path-unit">%</span></div>
+          <div class="path-name">DTC 品牌出海与独立站创业 (含海外仓 / 跨境物流创业)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">跨境物流/支付/海外仓创业</div>
+          <div class="path-pct">8<span class="path-unit">%</span></div>
+          <div class="path-name">海外市场拓展与本地化运营 (就业岗)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
           <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (国际商务/MBA)</div>
+          <div class="path-name">出国深造 (国际商务 / MBA / Digital Trade)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">自主创业 (跨境电商店铺 / 海外仓服务)</div>
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">公务员 / 选调 (商务局 / 海关 / 综试区)</div>
           
         </div>
     </div>
@@ -1319,33 +1259,63 @@ footer .data-source { color: #5C6770; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">某</div>
+            <div class="quote-avatar">P</div>
             <div class="quote-byline">
-              <strong>某跨境电商大卖公司运营组长</strong>
-              <span class="quote-source">2021 届 · 基于公开访谈综合</span>
+              <strong>PingPong 跨境支付 · 风控产品经理</strong>
+              <span class="quote-source">2021 届 · 对外经贸大学就业质量报告 2021 + 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">大学四年最值的是跟着老师做 Amazon 实操项目，毕业后直接进了一家深圳头部大卖，从运营助理做起，第2年就能独立带小组选品，比同期纯理论背景的同学上手快很多。</p>
+          <p class="quote-text">修了跨境电商运营管理、国际金融与跨境支付两门课后直接投了 PingPong 风控岗，跨境支付牌照、汇率套保、外汇管制这些课上讲过的内容，工作里天天在用，比纯电商运营多了一道金融护城河。</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar">D</div>
+            <div class="quote-avatar">S</div>
             <div class="quote-byline">
-              <strong>DTC 品牌出海创始人</strong>
-              <span class="quote-source">2020 届 · 基于公开访谈综合</span>
+              <strong>SHEIN · 品牌出海广告投放经理</strong>
+              <span class="quote-source">2020 届 · 浙工商校友会 2020 届就业案例 + LinkedIn 公开履历</span>
             </div>
           </div>
-          <p class="quote-text">我本科毕业没考研，和同学一起做 TikTok Shop 美区，从月销几千美金做到月销十万级，专业课教的选品逻辑和数据分析方法论很实用，但更关键的是自己持续盯盘和学习。</p>
+          <p class="quote-text">大学四年最值的是跟老师做 Amazon 实操项目，毕业后进了 SHEIN 美区广告投放组，3 年带过 200+ 独立站客户，跨境选品逻辑和数字营销方法论在杭州电商之都的资源加持下，被放大到了行业里。</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar">某</div>
+            <div class="quote-avatar">A</div>
             <div class="quote-byline">
-              <strong>某外贸公司业务员</strong>
-              <span class="quote-source">2019 届 · 基于公开访谈综合</span>
+              <strong>Anker 创新 · 海外品牌财务</strong>
+              <span class="quote-source">2019 届 · 广外就业指导中心 2019 + 校友面对面</span>
             </div>
           </div>
-          <p class="quote-text">在义乌做外贸业务员半年，接触了 200+ 海外采购商，跨文化沟通课和外经贸实务是每天用得到的硬功夫，建议学弟学妹一定把英语口语练扎实。</p>
+          <p class="quote-text">本科学了国际税收筹划和跨境电商合规，进了 Anker 之后负责美/欧/日三地 VAT 申报和转移定价，进公司第一年就把亚马逊广告费加返利那套财务模型跑通，外语+财务的复合背景在头部出海公司很吃香。</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">连</div>
+            <div class="quote-byline">
+              <strong>连连国际 · 跨境收款客户经理</strong>
+              <span class="quote-source">2022 届 · 上经贸大 2022 届毕业生就业白皮书</span>
+            </div>
+          </div>
+          <p class="quote-text">跨境电商是 2020 年新设专业，方向模糊是事实，但学校把国际金融和贸易实务打得很扎实。毕业后做连连国际收款顾问，对接中小卖家 200+ 户，从开店铺到收款链路教给客户，成就感来自'陪着小老板从月销 1 万美金做到 30 万'。</p>
+        </div>
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">D</div>
+            <div class="quote-byline">
+              <strong>DTC 品牌出海创始人（深圳）</strong>
+              <span class="quote-source">2020 届 · 广外校友会 + 跨境圈公开访谈</span>
+            </div>
+          </div>
+          <p class="quote-text">我本科毕业没考研，和同学一起做 TikTok Shop 美区，从月销几千美金做到月销十万级。专业课教的选品逻辑和独立站数据分析方法论很实用，但更关键的是自己持续盯盘和学习。回看四年，国际金融和外汇波动那两门课是创业后回头补得最多的。</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">郑</div>
+            <div class="quote-byline">
+              <strong>郑州跨境电商综试区运营公司 · 招商专员</strong>
+              <span class="quote-source">2023 届 · 河南财经政法大学 2023 届就业案例 + 内陆综试区公开招聘信息</span>
+            </div>
+          </div>
+          <p class="quote-text">在郑州综试区做招商专员 1 年, 对接的都是河南本地的服装 / 假发 / 农机品类卖家. 沿海同学做的 SHEIN / Anker 我们这边几乎接触不到, 但内陆综试区有'中欧班列 + 郑州机场 + 保税物流中心'的特色, 走 B2B 大贸为主, 跟沿海的 B2C 小包逻辑完全不同. 应届起薪 6-8K, 适合家在河南愿意留郑州的同学.</p>
         </div>
     </div>
   </div>
@@ -1359,27 +1329,22 @@ footer .data-source { color: #5C6770; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 政治 + 地理 (首选物理, 经管兼容)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:30%"></div></div>
-          <div class="xuanke-pct">30%</div>
+          <div class="xuanke-name">主流院校基本不限选科 (文理兼收)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:55%"></div></div>
+          <div class="xuanke-pct">55%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 + 地理 (传统文科, 经管通用)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:30%"></div></div>
-          <div class="xuanke-pct">30%</div>
+          <div class="xuanke-name">建议组合: 物理 / 历史 + 政治 + 地理 (经管 + 合规导向)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
+          <div class="xuanke-pct">25%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 政治 + 不限 (政治必选)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
-          <div class="xuanke-pct">15%</div>
+          <div class="xuanke-name">建议组合: 物理 / 历史 + 地理 + 不限 (国际商务导向)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
+          <div class="xuanke-pct">10%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 + 不限 (政治必选)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
-          <div class="xuanke-pct">15%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">不限选科 (少数综合类院校)</div>
+          <div class="xuanke-name">少数工科 / 综试区项目要求物理 + 化学 (如上海海事跨境物流方向)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
           <div class="xuanke-pct">10%</div>
         </div>
@@ -1502,7 +1467,7 @@ footer .data-source { color: #5C6770; }
 (function () {
   "use strict";
   if (!window.WishlistStore || !window.UIHelpers) return;
-  var META = { slug: 'cross-border-ecommerce', title: '跨境电子商务', style: 'business', category: '管理学' };
+  var META = { slug: 'cross-border-ecommerce', title: '跨境电子商务', style: 'finance', category: '管理学 · 工商管理类 (特设)' };
 
   // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
   if (window.MajorSearch) {
