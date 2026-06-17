@@ -16,6 +16,9 @@
 <title>信用管理专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="信用管理是面向个人与企业信用信息采集、评估、监控与应用的交叉应用经济学学科，聚焦征信体系运作、信用风险量化与监管合规，培养能在金融机构、征信机构、监管部门和金融科技平台从事信用分析、风险计量与数据建模">
   <!-- SEO: canonical + Open Graph -->
+  <meta property="og:url" content="https://majorexplorer.com/credit-management.html">
+
+  <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="信用管理专业介绍 2026 高考 | Major Explorer">
@@ -1415,6 +1418,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

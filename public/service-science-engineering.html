@@ -15,6 +15,15 @@
 
 <title>服务科学与工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="服务科学与工程是 4 年制 管理+IT+数据 交叉工科专业, 培养服务系统建模+产品设计+数据决策复合人才. 核心课: 运筹学/数据结构/数据库系统/服务运营管理/服务系统建模与仿真. 头部校: 清华">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/service-science-engineering.html">
+  <meta property="og:url" content="https://majorexplorer.com/service-science-engineering.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="服务科学与工程专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="服务科学与工程是 4 年制 管理+IT+数据 交叉工科专业, 培养服务系统建模+产品设计+数据决策复合人才. 核心课: 运筹学/数据结构/数据库系统/服务运营管理/服务系统建模与仿真. 头部校: 清华">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -1460,6 +1469,10 @@ footer .data-source { color: #94A3B8; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1621,5 +1634,6 @@ footer .data-source { color: #94A3B8; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

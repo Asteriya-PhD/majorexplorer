@@ -15,6 +15,15 @@
 
 <title>城市地下空间工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="土木工程的「向下」升级版, 核心是「地下工程 + 岩土 + 盾构 + 城市更新」四栖, 「地铁 + 综合管廊 + 城市更新 + 深基坑 + TOD」是城市更新风口下持续 10 年的基建大赛道, 但「土">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="城市地下空间工程专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="土木工程的「向下」升级版, 核心是「地下工程 + 岩土 + 盾构 + 城市更新」四栖, 「地铁 + 综合管廊 + 城市更新 + 深基坑 + TOD」是城市更新风口下持续 10 年的基建大赛道, 但「土">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1570,6 +1579,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1731,5 +1744,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

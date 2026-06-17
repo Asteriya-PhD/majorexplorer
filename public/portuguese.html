@@ -15,6 +15,15 @@
 
 <title>葡萄牙语专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="全球 2.5 亿使用者的小语种, 主战场是巴西 (2 亿人口) + 葡语非洲 (安哥拉/莫桑比克/佛得角) + 澳门, 「葡语 + 巴西市场 + 非洲项目」是三大黄金出口, 真正的稀缺是「懂巴西经济/">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="葡萄牙语专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="全球 2.5 亿使用者的小语种, 主战场是巴西 (2 亿人口) + 葡语非洲 (安哥拉/莫桑比克/佛得角) + 澳门, 「葡语 + 巴西市场 + 非洲项目」是三大黄金出口, 真正的稀缺是「懂巴西经济/">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -1413,6 +1422,10 @@ footer .data-source { color: #6B5D3F; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1574,5 +1587,6 @@ footer .data-source { color: #6B5D3F; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

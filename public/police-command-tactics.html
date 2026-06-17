@@ -15,6 +15,15 @@
 
 <title>警务指挥与战术专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="公安学门类下的警务实战特设专业, 核心是「公安学 + 战术学 + 指挥决策」三栖训练, 毕业生主进公安特警/巡特警/反恐/大型活动安保/维稳处突, 不是「军警剧里的指挥官」, 而是「能跑现场 + 能决">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="警务指挥与战术专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="公安学门类下的警务实战特设专业, 核心是「公安学 + 战术学 + 指挥决策」三栖训练, 毕业生主进公安特警/巡特警/反恐/大型活动安保/维稳处突, 不是「军警剧里的指挥官」, 而是「能跑现场 + 能决">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
 
@@ -1701,6 +1710,10 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1862,5 +1875,6 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

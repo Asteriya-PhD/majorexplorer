@@ -16,6 +16,9 @@
 <title>供应链管理专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="供应链管理是面向现代产业体系的复合型管理类专业，横跨管理学、经济学、运筹学与信息技术，聚焦企业从原材料采购、生产制造、仓储物流到终端交付及逆向回收的全链路价值创造。本科阶段强调系统思维、运筹优化、ER">
   <!-- SEO: canonical + Open Graph -->
+  <meta property="og:url" content="https://majorexplorer.com/supply-chain-management.html">
+
+  <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="供应链管理专业介绍 2026 高考 | Major Explorer">
@@ -1423,6 +1426,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

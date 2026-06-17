@@ -15,6 +15,15 @@
 
 <title>柔性电子学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="电子科学与技术的柔性化升级版, 核心是「柔性显示 + 印刷电子 + 可穿戴 + 电子皮肤」四栖, 2024-2026 显示/可穿戴/AR-VR 风口, 但「交叉学科师资薄弱」「特设专业 vs 电子科技">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="柔性电子学专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="电子科学与技术的柔性化升级版, 核心是「柔性显示 + 印刷电子 + 可穿戴 + 电子皮肤」四栖, 2024-2026 显示/可穿戴/AR-VR 风口, 但「交叉学科师资薄弱」「特设专业 vs 电子科技">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1566,6 +1575,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1727,5 +1740,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

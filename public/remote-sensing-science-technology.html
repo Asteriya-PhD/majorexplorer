@@ -15,6 +15,15 @@
 
 <title>遥感科学与技术专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="对地观测 (卫星/航空/无人机) + 摄影测量 + GIS + 实景三维的硬核交叉学科, 自然资源部 + 国家航天 + 卫星应用新势力 (四维图新/中科星图/航天宏图) + 智慧城市/数字孪生是主流去">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="遥感科学与技术专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="对地观测 (卫星/航空/无人机) + 摄影测量 + GIS + 实景三维的硬核交叉学科, 自然资源部 + 国家航天 + 卫星应用新势力 (四维图新/中科星图/航天宏图) + 智慧城市/数字孪生是主流去">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1571,6 +1580,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1732,5 +1745,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

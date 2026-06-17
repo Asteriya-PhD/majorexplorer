@@ -15,6 +15,15 @@
 
 <title>中国画专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="中国画是美术学下的本土方向, 围绕笔墨、章法、题款与装裱四大基石, 走「传统师承 + 学院科班 + 当代转化」三条路, 适合笔性稳、有耐心坐冷板凳的考生.">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="中国画专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="中国画是美术学下的本土方向, 围绕笔墨、章法、题款与装裱四大基石, 走「传统师承 + 学院科班 + 当代转化」三条路, 适合笔性稳、有耐心坐冷板凳的考生.">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');
 
@@ -1545,6 +1554,10 @@ footer .data-source { color: #999; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1706,5 +1719,6 @@ footer .data-source { color: #999; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

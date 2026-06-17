@@ -17,6 +17,9 @@
 <title>口腔医学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="严谨 · 冷静 · 鸟瞰。口腔医学是 5 年制 口腔 专科, 授予医学学士 可考临床执医 限口腔, 培养口腔医师. 核心课: 口腔解剖生理学/口腔组织病理学/口腔颌面外科学/口腔修复学/">
   <!-- SEO: canonical + Open Graph -->
+  <meta property="og:url" content="https://majorexplorer.com/stomatology.html">
+
+  <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="口腔医学专业介绍 2026 高考 | Major Explorer">
@@ -1189,6 +1192,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
 
     // ECG section flash (招 #8)
     const ecgObs = new IntersectionObserver((entries) => {

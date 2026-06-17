@@ -15,6 +15,15 @@
 
 <title>全球气候变化(地球系统科学方向)专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="全球气候变化(地球系统科学方向)是 4 年制 气候+碳循环+政策+能源 硬核交叉理学专业, 培养气候系统分析+数值模拟+碳核算复合人才. 核心课: 大气物理学/气候动力学/海洋-大气耦合/碳循环科学/">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/global-climate-change.html">
+  <meta property="og:url" content="https://majorexplorer.com/global-climate-change.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="全球气候变化(地球系统科学方向)专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="全球气候变化(地球系统科学方向)是 4 年制 气候+碳循环+政策+能源 硬核交叉理学专业, 培养气候系统分析+数值模拟+碳核算复合人才. 核心课: 大气物理学/气候动力学/海洋-大气耦合/碳循环科学/">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
@@ -1543,6 +1552,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1704,5 +1717,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

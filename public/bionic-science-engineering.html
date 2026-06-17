@@ -16,6 +16,9 @@
 <title>仿生科学与工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="仿生科学与工程是 4 年制 仿生+工科 交叉工科, 培养仿生工程师. 核心课: 仿生学基础/仿生材料/仿生机械/仿生结构/仿生控制/机器人学/仿生设计/仿生制造/机器学习/工程力学. 头部校: 吉林大">
   <!-- SEO: canonical + Open Graph -->
+  <meta property="og:url" content="https://majorexplorer.com/bionic-science-engineering.html">
+
+  <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="仿生科学与工程专业介绍 2026 高考 | Major Explorer">
@@ -1501,6 +1504,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

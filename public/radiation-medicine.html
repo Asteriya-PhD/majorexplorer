@@ -16,6 +16,15 @@
 
 <title>放射医学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="严谨 · 冷静 · 鸟瞰。放射医学是临床医学下的「影像诊断+影像治疗」亚专业, 走「5+3 规培 + 影像诊断/核医学/放射肿瘤」三条路, 适合喜欢用图像看病 + 不想做外科/儿科的医学">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="放射医学专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="严谨 · 冷静 · 鸟瞰。放射医学是临床医学下的「影像诊断+影像治疗」亚专业, 走「5+3 规培 + 影像诊断/核医学/放射肿瘤」三条路, 适合喜欢用图像看病 + 不想做外科/儿科的医学">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
@@ -1200,6 +1209,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
 
     // ECG section flash (招 #8)
     const ecgObs = new IntersectionObserver((entries) => {
@@ -1373,5 +1386,6 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

@@ -16,6 +16,9 @@
 <title>大数据管理与应用专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="大数据管理与应用是 2016 年教育部新设的跨学科特设专业，授予管理学学士学位，融合管理科学、数据科学、计算机科学三大学科，聚焦'用数据驱动商业决策'。本专业不同于计算机类的大数据技术，更强调数据资产">
   <!-- SEO: canonical + Open Graph -->
+  <meta property="og:url" content="https://majorexplorer.com/big-data-management-application.html">
+
+  <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="大数据管理与应用专业介绍 2026 高考 | Major Explorer">
@@ -1410,6 +1413,10 @@ footer .data-source { color: #5A6A7A; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

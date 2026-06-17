@@ -16,6 +16,9 @@
 <title>金融科技专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="金融科技是金融学+计算机+数据科学的「三栖交叉」专业, 培养智能风控/数字支付/量化投资/监管科技复合人才 — 但「技术深度拼不过CS, 金融深度拼不过金融学」是该专业最大的结构性风险.">
   <!-- SEO: canonical + Open Graph -->
+  <meta property="og:url" content="https://majorexplorer.com/fintech.html">
+
+  <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="金融科技专业介绍 2026 高考 | Major Explorer">
@@ -1492,6 +1495,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
