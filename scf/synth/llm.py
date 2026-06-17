@@ -344,8 +344,9 @@ class M3Client(_AnthropicCompatClient):
             kwargs["tools"] = body["tools"]
         if "tool_choice" in body:
             kwargs["tool_choice"] = body["tool_choice"]
-        # thinking 显式传 (默认 enabled, 显式传更稳)
-        kwargs["thinking"] = {"type": "enabled", "budget_tokens": 4096}
+        # thinking 显式传 (默认 enabled, 显式传更稳) — anthropic SDK 0.46 不接受顶层 thinking, 走 extra_body
+        kwargs.setdefault("extra_body", {})
+        kwargs["extra_body"]["thinking"] = {"type": "enabled", "budget_tokens": 4096}
 
         try:
             msg = self._sdk.messages.create(**kwargs)
