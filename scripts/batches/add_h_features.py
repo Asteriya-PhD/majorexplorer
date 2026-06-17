@@ -1,11 +1,19 @@
-"""add_h_features.py — Day 3 94 篇补 shared.css + topbar.js (H 阶段 features)
+"""add_h_features.py — Day 3 94 篇补 H 阶段 features (shared.css + topbar.js + og: meta)
 - 8 OK 文件已加 (1.txt original 8 dirty files)
 - 86 missing: 39 Team A + 47 Team B
-- 模式: <link shared.css> 插入 <style> 前; <script topbar.js> 插入 </body> 前
+- 模式:
+  - <link shared.css> 插入 <style> 前
+  - <script topbar.js> 插入 </body> 前
+  - og: meta (canonical + og:url/site_name/title/description/type) 注入 <head>
 - 幂等: 已含 features 的不重复插入
+- 集成: deploy_to_public.py 末尾自动调本脚本, 防止 re-render 静默丢失
 """
 import sys
 from pathlib import Path
+
+# 复用 inject_seo 的 og: 注入逻辑
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from inject_seo import inject_seo  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 PUBLIC = ROOT / "public"
@@ -18,7 +26,7 @@ TOPBAR_JS_SCRIPT = '  <script src="/js/topbar.js"></script>'
 
 
 def add_h_features(slug: str) -> tuple[bool, str]:
-    """Add shared.css + topbar.js to public/<slug>.html if missing.
+    """Add shared.css + topbar.js + og: meta to public/<slug>.html if missing.
     Returns (changed, reason)."""
     p = PUBLIC / f"{slug}.html"
     if not p.exists():
@@ -32,8 +40,6 @@ def add_h_features(slug: str) -> tuple[bool, str]:
         idx = text.find("<style>")
         if idx == -1:
             return False, "NO_STYLE_TAG"
-        # Check that we're not inside <body> or just after <title>; just insert before <style>
-        # Insert a newline after for cleanliness
         text = text[:idx] + SHARED_CSS_LINK + "\n" + text[idx:]
         changes.append("+shared.css")
 
@@ -42,12 +48,21 @@ def add_h_features(slug: str) -> tuple[bool, str]:
         idx = text.rfind("</body>")
         if idx == -1:
             return False, "NO_BODY_CLOSE"
-        # Insert with leading newline + 2-space indent
         text = text[:idx] + TOPBAR_JS_SCRIPT + "\n" + text[idx:]
         changes.append("+topbar.js")
 
+    # 写回 shared.css + topbar.js 修改
     if text != original:
         p.write_text(text, encoding="utf-8")
+        original = text  # 更新 reference, 为 og: 步骤准备
+
+    # 3. og: meta (canonical + og:url/site_name/title/description/type)
+    #    inject_seo 内部幂等, 无 og: 时注入, 有则跳过
+    seo_changed, seo_msg = inject_seo(p)
+    if seo_changed:
+        changes.append("+og:meta")
+
+    if changes:
         return True, ", ".join(changes)
     return False, "ALREADY_OK"
 

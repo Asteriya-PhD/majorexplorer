@@ -98,6 +98,27 @@ def main():
     print(f"汇总: 同步 {total_synced} 篇 ({total_paths} 处路径替换) / 已同 {total_identical} / 跳 {total_skipped}")
     if args.dry_run:
         print("⚠️  dry-run 模式, public/ 未写入")
+        return
+
+    # ──────────────────────────────────────────────────────────
+    # 后置 H 阶段 features 注入 (防止下次 re-render 静默丢失)
+    # render_batch.py 生成的 HTML 不带 shared.css / topbar.js / og: meta
+    # 这里自动调 add_h_features.py 补齐, deploy 一次完成
+    # ──────────────────────────────────────────────────────────
+    if total_synced > 0:
+        try:
+            import subprocess
+            print()
+            print("🔧 后置 H 阶段 features 注入 (shared.css + topbar.js)...")
+            r = subprocess.run(
+                ["python3", str(ROOT / "scripts/batches/add_h_features.py")],
+                capture_output=True, text=True, timeout=300
+            )
+            print(r.stdout.strip() if r.stdout else "(无 stdout)")
+            if r.returncode != 0:
+                print(f"⚠️  add_h_features 退出码 {r.returncode}: {r.stderr.strip()[:200]}")
+        except Exception as e:
+            print(f"⚠️  H features 注入失败: {e} (deploy 已完成, 可手动跑 scripts/batches/add_h_features.py)")
 
 
 if __name__ == "__main__":
