@@ -5,7 +5,7 @@
 
 ## 商标归属
 
-**"MajorExplorer"** 商标、Logo、品牌名归原始作者 (`Asteriya-PhD` 仓库所有者) 所有。
+**"MajorExplorer"** 商标、Logo、品牌名归原始作者所有。
 
 ## 允许
 

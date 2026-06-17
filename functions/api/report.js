@@ -18,10 +18,9 @@
 //
 // 凭据:
 //   env.GITHUB_TOKEN (server 端, 来自 `wrangler pages secret put` 或 dashboard)
-//   env.GITHUB_REPO (可选, 默认 Asteriya-PhD/majorexplorer)
+//   env.GITHUB_REPO (必填, 格式: <your-org>/majorexplorer)
 //   env.RATE_LIMIT_KV (H 阶段, CF Pages 绑 KV namespace, 自动 TTL 60s 过期)
 
-const REPO_DEFAULT = "Asteriya-PhD/majorexplorer";
 const RATE_LIMIT_MS = 60_000;
 const RATE_LIMIT_TTL_S = 60;  // KV 过期时间 (秒)
 const MAX_RL_ENTRIES = 1000;
@@ -84,7 +83,10 @@ function json(obj, status = 200, extra = {}) {
 }
 
 async function createIssue(env, payload) {
-  const repo = env.GITHUB_REPO || REPO_DEFAULT;
+  const repo = env.GITHUB_REPO;
+  if (!repo) {
+    return { ok: false, status: 500, detail: "GITHUB_REPO missing on server (set via `wrangler pages secret put GITHUB_REPO`)" };
+  }
   if (!env.GITHUB_TOKEN) {
     return { ok: false, status: 500, detail: "GITHUB_TOKEN missing on server" };
   }
