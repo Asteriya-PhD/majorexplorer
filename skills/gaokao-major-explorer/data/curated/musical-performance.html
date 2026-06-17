@@ -1558,10 +1558,10 @@ footer .data-source { color: #999; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card arts" href="/fine-arts.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
-      <a class="wl-card arts" href="/environmental-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">环境设计</span><span class="wl-hook">室内 + 室外, 设计院</span></a>
-      <a class="wl-card arts" href="/drama-film-tv-literature.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">戏剧影视文学</span><span class="wl-hook">戏剧影视文学</span></a>
+      <a class="wl-card arts" href="/animation.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">动画</span><span class="wl-hook">追光原力, 国漫崛起</span></a>
       <a class="wl-card arts" href="/broadcasting-tv-directing.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">广播电视编导</span><span class="wl-hook">广播电视编导</span></a>
+      <a class="wl-card arts" href="/musicology.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">音乐学</span><span class="wl-hook">音乐学</span></a>
+      <a class="wl-card arts" href="/fine-arts.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1569,7 +1569,7 @@ footer .data-source { color: #999; }
       <a class="wl-card cs" href="/artificial-intelligence.html" data-tag="跨界"><span class="wl-badge">计算机</span><span class="wl-title">人工智能</span><span class="wl-hook">算法堆顶, 博士起步</span></a>
       <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
       <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
-      <a class="wl-card finance" href="/accounting.html" data-tag="跨界"><span class="wl-badge">财经</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
+      <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
     </div>
   </div>
 </section>
@@ -1618,6 +1618,10 @@ footer .data-source { color: #999; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

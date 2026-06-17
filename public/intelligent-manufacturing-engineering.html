@@ -15,6 +15,15 @@
 
 <title>智能制造工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="智能制造工程是 4 年制 机械+AI+自动化 交叉新专业 2020 后首批, 培养智能制造工程师. 核心课: 机械原理/机械设计/制造工艺/工业机器人/工业自动化/工业大数据/工业互联网/数字孪生/工">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/intelligent-manufacturing-engineering.html">
+  <meta property="og:url" content="https://majorexplorer.com/intelligent-manufacturing-engineering.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="智能制造工程专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="智能制造工程是 4 年制 机械+AI+自动化 交叉新专业 2020 后首批, 培养智能制造工程师. 核心课: 机械原理/机械设计/制造工艺/工业机器人/工业自动化/工业大数据/工业互联网/数字孪生/工">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1623,6 +1632,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1784,5 +1797,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

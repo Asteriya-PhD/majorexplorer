@@ -1781,10 +1781,10 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
+      <a class="wl-card gongan" href="/police-intelligence.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">公安情报学</span><span class="wl-hook">公安情报学</span></a>
+      <a class="wl-card gongan" href="/police-management.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">公安管理学</span><span class="wl-hook">公安管理学</span></a>
       <a class="wl-card gongan" href="/criminal-investigation.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">侦查学</span><span class="wl-hook">侦查学</span></a>
       <a class="wl-card gongan" href="/criminology.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">犯罪学</span><span class="wl-hook">犯罪学</span></a>
-      <a class="wl-card gongan" href="/drug-control.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">禁毒学</span><span class="wl-hook">禁毒学</span></a>
-      <a class="wl-card gongan" href="/prison-studies.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">监狱学</span><span class="wl-hook">监狱学</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1841,6 +1841,10 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

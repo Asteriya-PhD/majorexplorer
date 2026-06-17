@@ -15,6 +15,15 @@
 
 <title>经济统计学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="经济学与统计学交叉的「数据+应用」专业, 既不纯经济 (偏宏观/政策) 也不纯统计 (偏数学理论), 而是「经济数据 + 统计方法」的工程化结合, 在量化金融/互联网数据分析/统计局/银行风控风口下,">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="经济统计学专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="经济学与统计学交叉的「数据+应用」专业, 既不纯经济 (偏宏观/政策) 也不纯统计 (偏数学理论), 而是「经济数据 + 统计方法」的工程化结合, 在量化金融/互联网数据分析/统计局/银行风控风口下,">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
@@ -1495,29 +1504,24 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 量化方向最强)</div>
+          <div class="xuanke-name">物理</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
+          <div class="xuanke-pct">50%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">化学/生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
+          <div class="xuanke-pct">8%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
+          <div class="xuanke-pct">60%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">历史</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
           <div class="xuanke-pct">25%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 (再选生物或不限)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
-          <div class="xuanke-pct">18%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">物理 + 不限再选 (覆盖头部经济学)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:24%"></div></div>
-          <div class="xuanke-pct">24%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">历史 + 不限再选 (部分 985 接受)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:16%"></div></div>
-          <div class="xuanke-pct">16%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">不限选科 (综合院校兜底)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:17%"></div></div>
-          <div class="xuanke-pct">17%</div>
         </div>
     </div>
   </div>
@@ -1568,6 +1572,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1729,5 +1737,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

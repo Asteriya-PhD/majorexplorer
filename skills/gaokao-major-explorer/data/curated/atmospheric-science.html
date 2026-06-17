@@ -1014,7 +1014,7 @@ footer .data-source { color: #78716C; }
   <div class="container" style="padding-top: 64px;">
     <div class="hero-decor" style="color: #C73E1D;">§ 01 · 大气科学 · 基础学科</div>
     <h1 class="display" style="font-family: 'EB Garamond', serif; color: #1F1B12; font-weight: 500;">大气科学</h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=07#majors">理学</a><span class="bc-sep">›</span><a href="/?discipline=07&sub=0707#majors">大气科学类</a><span class="bc-sep">›</span><span class="bc-current">大气科学</span></div>
+<div class="discipline-breadcrumb"><a href="/?discipline=07#majors">理学</a><span class="bc-sep">›</span><a href="/?discipline=07&sub=0706#majors">地质学类</a><span class="bc-sep">›</span><span class="bc-current">大气科学</span></div>
     <p class="hero-tagline" style="color: #786A4F; font-style: italic; max-width: 720px;">大气科学 = 物理 + 数学 + 算天气。4 年学完「大气物理学 + 动力气象学 + 数值天气预报 + 卫星气象」四大硬骨头, 应届主流出口是省/市气象局编制 (稳定但起薪 8-12 万) 和民航空管局 (总包 15-22 万), 60% 以上的毕业生选择读研 (中科院大气所/北</p>
     <div class="hero-tags">
       <span class="tag primary">冷门基础学科</span><span class="tag primary">气象局对口</span><span class="tag primary">民航空管</span>
@@ -1594,10 +1594,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
+      <a class="wl-card sci" href="/mathematics.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">数学与应用数学</span><span class="wl-hook">万金油基础 + 深造率高</span></a>
+      <a class="wl-card sci" href="/environmental-science.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">环境科学</span><span class="wl-hook">环境科学</span></a>
+      <a class="wl-card sci" href="/environmental-ecological-engineering.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">环境生态工程</span><span class="wl-hook">环境生态工程</span></a>
       <a class="wl-card sci" href="/ocean-science.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">海洋科学</span><span class="wl-hook">海洋科学</span></a>
-      <a class="wl-card sci" href="/physics.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">物理学</span><span class="wl-hook">四大力学, 转工科友好</span></a>
-      <a class="wl-card sci" href="/biological-sciences.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">生物科学</span><span class="wl-hook">生物科学</span></a>
-      <a class="wl-card sci" href="/chemistry.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">化学</span><span class="wl-hook">天坑之首, 深造导向</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1654,6 +1654,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

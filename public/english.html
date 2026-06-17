@@ -14,19 +14,14 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>英语专业介绍 2026 高考 | Major Explorer</title>
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="英语专业介绍 2026 高考 | Major Explorer">
-    <meta property="og:description" content="英语不是「会说话就行」— 是语言学 + 文学 + 翻译学 + 跨文化交际的系统训练。毕业生超 10 万/年, 但高端翻译/同传缺口仍在。就业面极广, 但「英语+专业」复合人才才值钱。">
-    <meta property="og:image" content="https://majorexplorer.pages.dev/og_hei/education.png">
-    <meta property="og:url" content="https://majorexplorer.pages.dev/english.html">
-    <meta property="og:site_name" content="Major Explorer">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="英语专业介绍 2026 高考 | Major Explorer">
-    <meta name="twitter:description" content="英语不是「会说话就行」— 是语言学 + 文学 + 翻译学 + 跨文化交际的系统训练。毕业生超 10 万/年, 但高端翻译/同传缺口仍在。就业面极广, 但「英语+专业」复合人才才值钱。">
-    <meta name="twitter:image" content="https://majorexplorer.pages.dev/og_hei/education.png">
 <meta name="description" content="英语不是「会说话就行」— 是语言学 + 文学 + 翻译学 + 跨文化交际的系统训练。毕业生超 10 万/年, 但高端翻译/同传缺口仍在。就业面极广, 但「英语+专业」复合人才才值钱。">
   <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/english.html">
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="英语专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="英语不是「会说话就行」— 是语言学 + 文学 + 翻译学 + 跨文化交际的系统训练。毕业生超 10 万/年, 但高端翻译/同传缺口仍在。就业面极广, 但「英语+专业」复合人才才值钱。">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
 
 <link rel="stylesheet" href="/css/shared.css">
 <style>
@@ -1585,10 +1580,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
+      <a class="wl-card education" href="/chinese-international-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">汉语国际教育</span><span class="wl-hook">汉语国际教育</span></a>
       <a class="wl-card education" href="/art-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">艺术教育</span><span class="wl-hook">艺术教育</span></a>
-      <a class="wl-card education" href="/industrial-design.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">工业设计</span><span class="wl-hook">汽车/手机/家电设计</span></a>
-      <a class="wl-card education" href="/education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">师范教育 (数学/语文/英语 等)</span><span class="wl-hook">稳定 + 寒暑假 + 入编</span></a>
-      <a class="wl-card education" href="/preschool-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">学前教育</span><span class="wl-hook">学前教育</span></a>
+      <a class="wl-card education" href="/journalism-communication.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">新闻传播学</span><span class="wl-hook">新媒体 + 短视频, 内卷</span></a>
+      <a class="wl-card education" href="/humanities-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">人文教育</span><span class="wl-hook">人文教育</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1645,6 +1640,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

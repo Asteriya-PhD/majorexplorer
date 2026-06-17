@@ -14,19 +14,14 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>统计学专业介绍 2026 高考 | Major Explorer</title>
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="统计学专业介绍 2026 高考 | Major Explorer">
-    <meta property="og:description" content="统计学是研究数据收集、整理、分析和推断的学科，核心在于从随机性中提取规律。作为数据科学的基础支柱，统计学融合概率论、数理统计与计算机技术，广泛应用于金融、医疗、互联网、政府统计等领域。2026 年，随着大数据与人工智能的深度渗透，统计学人才...">
-    <meta property="og:image" content="https://majorexplorer.pages.dev/og_hei/sci.png">
-    <meta property="og:url" content="https://majorexplorer.pages.dev/statistics.html">
-    <meta property="og:site_name" content="Major Explorer">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="统计学专业介绍 2026 高考 | Major Explorer">
-    <meta name="twitter:description" content="统计学是研究数据收集、整理、分析和推断的学科，核心在于从随机性中提取规律。作为数据科学的基础支柱，统计学融合概率论、数理统计与计算机技术，广泛应用于金融、医疗、互联网、政府统计等领域。2026 年，随着大数据与人工智能的深度渗透，统计学人才...">
-    <meta name="twitter:image" content="https://majorexplorer.pages.dev/og_hei/sci.png">
 <meta name="description" content="统计学是研究数据收集、整理、分析和推断的学科，核心在于从随机性中提取规律。作为数据科学的基础支柱，统计学融合概率论、数理统计与计算机技术，广泛应用于金融、医疗、互联网、政府统计等领域。2026 年，随">
   <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/statistics.html">
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="统计学专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="统计学是研究数据收集、整理、分析和推断的学科，核心在于从随机性中提取规律。作为数据科学的基础支柱，统计学融合概率论、数理统计与计算机技术，广泛应用于金融、医疗、互联网、政府统计等领域。2026 年，随">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
 
 <link rel="stylesheet" href="/css/shared.css">
 <style>
@@ -1589,10 +1584,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card sci" href="/geography.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">地理科学</span><span class="wl-hook">地理科学</span></a>
-      <a class="wl-card sci" href="/chemistry.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">化学</span><span class="wl-hook">天坑之首, 深造导向</span></a>
-      <a class="wl-card sci" href="/ocean-science.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">海洋科学</span><span class="wl-hook">海洋科学</span></a>
       <a class="wl-card sci" href="/mathematics.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">数学与应用数学</span><span class="wl-hook">万金油基础 + 深造率高</span></a>
+      <a class="wl-card sci" href="/chemical-biology.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">化学生物学</span><span class="wl-hook">化学生物学</span></a>
+      <a class="wl-card sci" href="/chemistry.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">化学</span><span class="wl-hook">天坑之首, 深造导向</span></a>
+      <a class="wl-card sci" href="/biological-sciences.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">生物科学</span><span class="wl-hook">生物科学</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1649,6 +1644,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

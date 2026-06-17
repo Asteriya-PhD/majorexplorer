@@ -1016,7 +1016,7 @@ footer .data-source { color: #78716C; }
   <div class="container" style="padding-top: 64px;">
     <div class="hero-decor" style="color: #FF6B35;">▶ 城乡规划 · 制造业基础</div>
     <h1 class="display" style="font-family: 'Inter', sans-serif; color: #1A1F2E; font-weight: 800; letter-spacing: -0.03em;">城乡规划</h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=08#majors">工学</a><span class="bc-sep">›</span><a href="/?discipline=08&sub=0826#majors">建筑类</a><span class="bc-sep">›</span><span class="bc-current">城乡规划</span></div>
+<div class="discipline-breadcrumb"><a href="/?discipline=08#majors">工学</a><span class="bc-sep">›</span><a href="/?discipline=08&sub=0828#majors">0828</a><span class="bc-sep">›</span><span class="bc-current">城乡规划</span></div>
     <p class="hero-tagline" style="color: #5C6373; max-width: 720px;">城乡规划是工学门类下建筑类五年制专业，培养能统筹城市/乡镇/社区空间布局的「城市总设计师」。从城市设计到国土空间规划，从 CAD/SketchUp 到 GIS/大数据分析，横跨工程、地理、社会、经济多学科。就业以规划设计院、自然资源与规划局公务员、地产开发为主，老八校与非老八校的</p>
     <div class="hero-tags">
       <span class="tag primary">五年制</span><span class="tag primary">设计院主力</span><span class="tag primary">注册规划师</span>
@@ -1537,10 +1537,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card eng" href="/integrated-circuit-design.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">集成电路设计与集成系统</span><span class="wl-hook">卡脖子的芯片设计</span></a>
-      <a class="wl-card eng" href="/chemical-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">化学工程与工艺</span><span class="wl-hook">流程工业, 万华中石化</span></a>
-      <a class="wl-card eng" href="/microelectronics.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">微电子科学与工程</span><span class="wl-hook">芯片设计, 高薪风口</span></a>
       <a class="wl-card eng" href="/mechanical-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">机械工程</span><span class="wl-hook">制造业脊梁, 越老越香</span></a>
+      <a class="wl-card eng" href="/bionic-science-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">仿生科学与工程</span><span class="wl-hook">仿生科学与工程</span></a>
+      <a class="wl-card eng" href="/mechatronic-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">机械电子工程</span><span class="wl-hook">机械电子工程</span></a>
+      <a class="wl-card eng" href="/intelligent-marine-equipment.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智能海洋装备</span><span class="wl-hook">智能海洋装备</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1597,6 +1597,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

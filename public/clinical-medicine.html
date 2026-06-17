@@ -1079,24 +1079,36 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">9%</div>
-          <div class="path-name">国内 985 硕博</div>
+          <div class="path-pct">38%</div>
+          <div class="path-name">规培/专培 (含5+3一体化并轨专硕)</div>
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">3%</div>
-          <div class="path-name">海外硕博</div>
+          <div class="path-pct">18%</div>
+          <div class="path-name">二级医院/县医院/社区 (本科直接就业)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">12%</div>
+          <div class="path-name">三甲医院 (硕士起步)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">15%</div>
+          <div class="path-name">继续深造 (5+3/8年制/考研)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">8%</div>
+          <div class="path-name">医药/器械企业 (MSL/CRA/PM)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">4%</div>
+          <div class="path-name">公务员/卫健委/CDC</div>
         </div>
         <div class="path-card fade-up" data-delay="160">
           <div class="path-pct">3%</div>
-          <div class="path-name">选调公务员/事业编</div>
+          <div class="path-name">民营医院/医美/口腔</div>
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">1%</div>
-          <div class="path-name">跨行/其他</div>
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">84%</div>
-          <div class="path-name">直接就业 (企业/医院/科研)</div>
+          <div class="path-pct">2%</div>
+          <div class="path-name">跨行 (医学编辑/法医/医学AI/保险)</div>
         </div>
     </div>
   </div>
@@ -1154,19 +1166,24 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name"></div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
+          <div class="xuanke-pct">70%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
+          <div class="xuanke-name">物理 + 化学 (再选可搭配其他)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
+          <div class="xuanke-pct">18%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
+          <div class="xuanke-name">物理 + 生物 + 化学 (同组, 顺序差异)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
+          <div class="xuanke-pct">8%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (少数综合院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
+          <div class="xuanke-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1275,6 +1292,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
 
     // ECG section flash (招 #8)
     const ecgObs = new IntersectionObserver((entries) => {

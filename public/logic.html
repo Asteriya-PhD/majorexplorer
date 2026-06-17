@@ -15,6 +15,15 @@
 
 <title>逻辑学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="哲学门类下设的特设专业, 是国内极少数把「形式证明 + 自然语言论证 + 自动定理证明」三栖放在一起的本科训练. 它不培养工程师, 也不培养纯哲学家 — 应届对口岗位极稀, 但 AI 时代「可解释 A">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="逻辑学专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="哲学门类下设的特设专业, 是国内极少数把「形式证明 + 自然语言论证 + 自动定理证明」三栖放在一起的本科训练. 它不培养工程师, 也不培养纯哲学家 — 应届对口岗位极稀, 但 AI 时代「可解释 A">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -1393,24 +1402,24 @@ footer .data-source { color: #6B5D3F; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">不限选科 (综合院校主流, 哲学门类)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
-          <div class="xuanke-pct">70%</div>
+          <div class="xuanke-name">不限选科</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:75%"></div></div>
+          <div class="xuanke-pct">75%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 + 地理 (传统文科组合)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
-          <div class="xuanke-pct">12%</div>
+          <div class="xuanke-name">物理</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
+          <div class="xuanke-pct">15%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 + 生物 (顶尖 985 倾向)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
-          <div class="xuanke-pct">10%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">物理 + 不限再选 (部分强校兼顾)</div>
+          <div class="xuanke-name">历史/政治</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
           <div class="xuanke-pct">8%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">化学/生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:2%"></div></div>
+          <div class="xuanke-pct">2%</div>
         </div>
     </div>
   </div>
@@ -1461,6 +1470,10 @@ footer .data-source { color: #6B5D3F; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1622,5 +1635,6 @@ footer .data-source { color: #6B5D3F; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

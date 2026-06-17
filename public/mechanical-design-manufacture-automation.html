@@ -15,6 +15,15 @@
 
 <title>机械设计制造及其自动化专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="工科里历史最久、招生最大的「万金油专业」, 制造业根基 + 智能制造升级双重红利, 但传统机加工岗位被自动化替代, 真实对口就业是「结构设计 + 仿真 + 智能产线」三类, 头部 985 硕士才能进研">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/mechanical-design-manufacture-automation.html">
+  <meta property="og:url" content="https://majorexplorer.com/mechanical-design-manufacture-automation.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="机械设计制造及其自动化专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="工科里历史最久、招生最大的「万金油专业」, 制造业根基 + 智能制造升级双重红利, 但传统机加工岗位被自动化替代, 真实对口就业是「结构设计 + 仿真 + 智能产线」三类, 头部 985 硕士才能进研">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1630,6 +1639,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1791,5 +1804,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

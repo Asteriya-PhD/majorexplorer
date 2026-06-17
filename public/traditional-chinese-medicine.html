@@ -17,13 +17,14 @@
 <title>中医学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="严谨 · 冷静 · 鸟瞰。中医学专业培养掌握中医基础理论、临床诊疗技能及现代医学知识的复合型人才。毕业生主要进入各级中医院、综合医院中医科、社区卫生服务中心从事临床工作，也可在高校、科研">
   <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/traditional-chinese-medicine.html">
-  <meta property="og:url" content="https://majorexplorer.com/traditional-chinese-medicine.html">
-  <meta property="og:site_name" content="Major Explorer">
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
   <meta property="og:title" content="中医学专业介绍 2026 高考 | Major Explorer">
   <meta property="og:description" content="严谨 · 冷静 · 鸟瞰。中医学专业培养掌握中医基础理论、临床诊疗技能及现代医学知识的复合型人才。毕业生主要进入各级中医院、综合医院中医科、社区卫生服务中心从事临床工作，也可在高校、科研">
-  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
 
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
@@ -1229,6 +1230,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
 
     // ECG section flash (招 #8)
     const ecgObs = new IntersectionObserver((entries) => {
@@ -1402,5 +1407,6 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

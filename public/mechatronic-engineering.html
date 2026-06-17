@@ -15,6 +15,15 @@
 
 <title>机械电子工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="机械工程和电子工程的「中间学科」, 课程比机械多电类, 比电子多机类, 在工业自动化/智能装备/汽车机电/机器人领域是核心对口专业; 但课程宽口径易学不深, 与自动化/电子专业卡学历鄙视链.">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/mechatronic-engineering.html">
+  <meta property="og:url" content="https://majorexplorer.com/mechatronic-engineering.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="机械电子工程专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="机械工程和电子工程的「中间学科」, 课程比机械多电类, 比电子多机类, 在工业自动化/智能装备/汽车机电/机器人领域是核心对口专业; 但课程宽口径易学不深, 与自动化/电子专业卡学历鄙视链.">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1633,6 +1642,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1794,5 +1807,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

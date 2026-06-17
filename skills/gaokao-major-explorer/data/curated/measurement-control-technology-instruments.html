@@ -1548,24 +1548,24 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">物理</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:100%"></div></div>
-          <div class="xuanke-pct">100%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (材料/半导体方向, 工科主流)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
+          <div class="xuanke-pct">20%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">数学</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:100%"></div></div>
-          <div class="xuanke-pct">100%</div>
+          <div class="xuanke-name">物理 + 化学 (再选不限, 少数材料类院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:7%"></div></div>
+          <div class="xuanke-pct">7%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">化学</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
-          <div class="xuanke-pct">25%</div>
+          <div class="xuanke-name">物理 + 生物 (生物医学仪器方向主流)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:33%"></div></div>
+          <div class="xuanke-pct">33%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">信息技术</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:75%"></div></div>
-          <div class="xuanke-pct">75%</div>
+          <div class="xuanke-name">物理 + 不限再选 (嵌入式/控制/视觉主流)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:40%"></div></div>
+          <div class="xuanke-pct">40%</div>
         </div>
     </div>
   </div>
@@ -1668,6 +1668,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

@@ -15,6 +15,15 @@
 
 <title>食品质量与安全专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="食品全产业链 (生产 + 检测 + 监管 + 标准) 的硬核交叉学科, 蒙牛/伊利/海天/双汇 + 检测认证 (SGS/华测/CTI) + 监管 (市监局) + 特医食品新势力是主流去向, 「食品质量">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="食品质量与安全专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="食品全产业链 (生产 + 检测 + 监管 + 标准) 的硬核交叉学科, 蒙牛/伊利/海天/双汇 + 检测认证 (SGS/华测/CTI) + 监管 (市监局) + 特医食品新势力是主流去向, 「食品质量">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1503,24 +1512,19 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
-          <div class="xuanke-pct">70%</div>
+          <div class="xuanke-name">化学</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:92%"></div></div>
+          <div class="xuanke-pct">92%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 (再选生物或不限)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
-          <div class="xuanke-pct">18%</div>
+          <div class="xuanke-name">生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:75%"></div></div>
+          <div class="xuanke-pct">75%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 生物 + 化学 (同组, 顺序差异)</div>
+          <div class="xuanke-name">物理/不限</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
           <div class="xuanke-pct">8%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">不限选科 (少数综合院校)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
-          <div class="xuanke-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1571,6 +1575,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1732,5 +1740,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

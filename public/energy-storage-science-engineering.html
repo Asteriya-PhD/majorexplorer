@@ -15,6 +15,15 @@
 
 <title>储能科学与工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="储能科学与工程是 4 年制 化学+能源+材料+控制 交叉新专业, 培养储能工程师. 核心课: 电化学/储能材料/储能原理/动力电池/储能电池/氢能与燃料电池/储能系统集成/储能 PCS/BMS/EMS">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/energy-storage-science-engineering.html">
+  <meta property="og:url" content="https://majorexplorer.com/energy-storage-science-engineering.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="储能科学与工程专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="储能科学与工程是 4 年制 化学+能源+材料+控制 交叉新专业, 培养储能工程师. 核心课: 电化学/储能材料/储能原理/动力电池/储能电池/氢能与燃料电池/储能系统集成/储能 PCS/BMS/EMS">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1594,6 +1603,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1755,5 +1768,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

@@ -1036,7 +1036,7 @@ footer .data-source { color: #78716C; }
     <div class="book-recto">
       <div class="recto-corner">CHAPTER I · 专业全貌</div>
       <h1>心理学</h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=07#majors">理学</a><span class="bc-sep">›</span><a href="/?discipline=07&sub=0403#majors">心理学类</a><span class="bc-sep">›</span><span class="bc-current">心理学</span></div>
+<div class="discipline-breadcrumb"><a href="/?discipline=07#majors">理学</a><span class="bc-sep">›</span><a href="/?discipline=07&sub=0711#majors">生物科学类</a><span class="bc-sep">›</span><span class="bc-current">心理学</span></div>
       <p class="hero-tagline">— 心理学不是「学猜心」, 而是用实验 + 统计 + 神经科学方法研究人类行为与心理过程的科学。文理兼收但课程偏理科(统计/实验设计), 本科就业面宽但薪资偏低, 读研是对口就业的共识门槛。 —</p>
       <div class="hero-tags">
         <span class="tag primary">交叉学科</span><span class="tag primary">读研比例高</span><span class="tag primary">咨询师</span>
@@ -1571,8 +1571,8 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card education" href="/art-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">艺术教育</span><span class="wl-hook">艺术教育</span></a>
-      <a class="wl-card education" href="/english.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">英语</span><span class="wl-hook">教学/翻译/考公考编</span></a>
+      <a class="wl-card education" href="/physical-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">体育教育</span><span class="wl-hook">体育教育</span></a>
+      <a class="wl-card education" href="/humanities-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">人文教育</span><span class="wl-hook">人文教育</span></a>
       <a class="wl-card education" href="/applied-psychology.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">应用心理学</span><span class="wl-hook">HCI/UX + 工业组织, 万金油</span></a>
       <a class="wl-card education" href="/primary-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">小学教育</span><span class="wl-hook">小学教育</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
@@ -1631,6 +1631,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

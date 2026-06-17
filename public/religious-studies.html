@@ -15,6 +15,15 @@
 
 <title>宗教学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="哲学门类下设的特设专业, 核心是「宗教哲学 + 比较宗教 + 宗教社会学」三栖训练 — 它不培养牧师/阿訇/和尚, 也不培养宗教心理学, 而是培养「能用学术方法研究宗教现象、理解不同信仰体系的对话者」">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="宗教学专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="哲学门类下设的特设专业, 核心是「宗教哲学 + 比较宗教 + 宗教社会学」三栖训练 — 它不培养牧师/阿訇/和尚, 也不培养宗教心理学, 而是培养「能用学术方法研究宗教现象、理解不同信仰体系的对话者」">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -1370,29 +1379,24 @@ footer .data-source { color: #6B5D3F; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">不限选科 (哲学特设, 多数院校不设限)</div>
+          <div class="xuanke-name">不限选科</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
           <div class="xuanke-pct">70%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 (宗教学强校偏好, 衔接宗教政策)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:13%"></div></div>
-          <div class="xuanke-pct">13%</div>
+          <div class="xuanke-name">历史</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
+          <div class="xuanke-pct">20%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 地理 (综合院校偏好, 覆盖通识课程)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
-          <div class="xuanke-pct">10%</div>
+          <div class="xuanke-name">政治</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
+          <div class="xuanke-pct">8%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 化学 (历史方向, 再选搭配少数)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
-          <div class="xuanke-pct">4%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">历史 + 生物 (历史方向, 再选搭配少数)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:3%"></div></div>
-          <div class="xuanke-pct">3%</div>
+          <div class="xuanke-name">物理/化学/生物</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:2%"></div></div>
+          <div class="xuanke-pct">2%</div>
         </div>
     </div>
   </div>
@@ -1443,6 +1447,10 @@ footer .data-source { color: #6B5D3F; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1604,5 +1612,6 @@ footer .data-source { color: #6B5D3F; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

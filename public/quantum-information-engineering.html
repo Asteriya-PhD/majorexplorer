@@ -15,6 +15,15 @@
 
 <title>量子信息工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="量子信息工程是 4 年制 量子物理+信息+工程 交叉新专业, 培养量子信息工程师. 核心课: 量子力学/量子计算/量子通信/量子密码/量子算法/量子编程/量子精密测量/超导量子比特/离子阱/光量子/线">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/quantum-information-engineering.html">
+  <meta property="og:url" content="https://majorexplorer.com/quantum-information-engineering.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="量子信息工程专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="量子信息工程是 4 年制 量子物理+信息+工程 交叉新专业, 培养量子信息工程师. 核心课: 量子力学/量子计算/量子通信/量子密码/量子算法/量子编程/量子精密测量/超导量子比特/离子阱/光量子/线">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1609,6 +1618,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1770,5 +1783,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

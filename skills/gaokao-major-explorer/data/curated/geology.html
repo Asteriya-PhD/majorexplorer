@@ -1605,17 +1605,17 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card sci" href="/ocean-science.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">海洋科学</span><span class="wl-hook">海洋科学</span></a>
-      <a class="wl-card sci" href="/atmospheric-science.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">大气科学</span><span class="wl-hook">气象局对口, 民航空管</span></a>
+      <a class="wl-card sci" href="/mathematics.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">数学与应用数学</span><span class="wl-hook">万金油基础 + 深造率高</span></a>
+      <a class="wl-card sci" href="/geography.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">地理科学</span><span class="wl-hook">地理科学</span></a>
       <a class="wl-card sci" href="/statistics.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">统计学</span><span class="wl-hook">统计学</span></a>
-      <a class="wl-card sci" href="/astronomy.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">天文学</span><span class="wl-hook">天文学</span></a>
+      <a class="wl-card sci" href="/atmospheric-science.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">大气科学</span><span class="wl-hook">气象局对口, 民航空管</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
       <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
       <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
       <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
-      <a class="wl-card finance" href="/accounting.html" data-tag="跨界"><span class="wl-badge">财经</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
+      <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
       <a class="wl-card cs" href="/artificial-intelligence.html" data-tag="跨界"><span class="wl-badge">计算机</span><span class="wl-title">人工智能</span><span class="wl-hook">算法堆顶, 博士起步</span></a>
     </div>
   </div>
@@ -1665,6 +1665,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

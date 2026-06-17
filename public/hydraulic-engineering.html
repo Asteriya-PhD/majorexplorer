@@ -15,6 +15,15 @@
 
 <title>水利水电工程专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="水利类专业的「越老越值钱」工程师路径, 横跨土木/能源/环境, 毕业生进央企设计院/水电开发公司/施工总承包/水利厅, 抽水蓄能与海外水电是新增长点.">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/hydraulic-engineering.html">
+  <meta property="og:url" content="https://majorexplorer.com/hydraulic-engineering.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="水利水电工程专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="水利类专业的「越老越值钱」工程师路径, 横跨土木/能源/环境, 毕业生进央企设计院/水电开发公司/施工总承包/水利厅, 抽水蓄能与海外水电是新增长点.">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1543,6 +1552,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1704,5 +1717,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

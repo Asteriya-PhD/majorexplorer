@@ -1376,29 +1376,24 @@ footer .data-source { color: #6B5D3F; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">艺考校考 + 省统考</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:95%"></div></div>
-          <div class="xuanke-pct">95%</div>
+          <div class="xuanke-name">不限选科 (艺术类主流, 校考统考录取)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:75%"></div></div>
+          <div class="xuanke-pct">75%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">身高要求</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:90%"></div></div>
-          <div class="xuanke-pct">90%</div>
+          <div class="xuanke-name">历史 + 政治 + 地理 (传统文科, 传媒类偏好)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:13%"></div></div>
+          <div class="xuanke-pct">13%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">声音条件</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:90%"></div></div>
-          <div class="xuanke-pct">90%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (部分综合类大学)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
+          <div class="xuanke-pct">8%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">形象气质</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:85%"></div></div>
-          <div class="xuanke-pct">85%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">文化课成绩</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:100%"></div></div>
-          <div class="xuanke-pct">100%</div>
+          <div class="xuanke-name">历史 + 地理 + 政治 (再选差异组合)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
+          <div class="xuanke-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1501,6 +1496,10 @@ footer .data-source { color: #6B5D3F; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

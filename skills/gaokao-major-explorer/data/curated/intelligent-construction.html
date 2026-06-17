@@ -1446,29 +1446,29 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">物理：高中物理是结构力学与工程力学的基础，建议重点掌握力学与电学模块</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
-          <div class="xuanke-pct">50%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 主流工科)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:58%"></div></div>
+          <div class="xuanke-pct">58%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">数学：高等数学、线性代数、概率统计贯穿机器学习与结构分析全程，强烈建议选修</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
-          <div class="xuanke-pct">50%</div>
+          <div class="xuanke-name">物理 + 化学 (再选生物或不限, 工科通用)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:22%"></div></div>
+          <div class="xuanke-pct">22%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">信息技术：建议有Python或编程基础，对BIM、机器人编程、机器学习课程帮助大</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
-          <div class="xuanke-pct">50%</div>
+          <div class="xuanke-name">物理 + 技术 (新高考省份, 偏智能编程)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
+          <div class="xuanke-pct">10%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">化学/生物：非硬性要求，仅绿色建材与生命建筑方向可能涉及</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
-          <div class="xuanke-pct">50%</div>
+          <div class="xuanke-name">物理 + 生物 (再选化学或不限, 偏绿色建材)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:6%"></div></div>
+          <div class="xuanke-pct">6%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">身体条件：部分高校要求辨色能力正常（涉及现场识图与电控），色盲考生需提前咨询招生章程</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
-          <div class="xuanke-pct">50%</div>
+          <div class="xuanke-name">不限选科 (少数综合院校新设方向)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
+          <div class="xuanke-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1519,6 +1519,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

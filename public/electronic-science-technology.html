@@ -15,6 +15,15 @@
 
 <title>电子科学与技术专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="工科里偏器件物理与底层硬件的「地基学科」, 中美科技博弈下国产化催生高薪岗位, 但需硕博起步才有芯片设计核心岗, 本科多走版图/嵌入式/光电/封装.">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/electronic-science-technology.html">
+  <meta property="og:url" content="https://majorexplorer.com/electronic-science-technology.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="电子科学与技术专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="工科里偏器件物理与底层硬件的「地基学科」, 中美科技博弈下国产化催生高薪岗位, 但需硕博起步才有芯片设计核心岗, 本科多走版图/嵌入式/光电/封装.">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -1611,6 +1620,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1772,5 +1785,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

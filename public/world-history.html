@@ -15,6 +15,15 @@
 
 <title>世界史专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="中国高校罕见的真正全球史学科 (中国史是世界主流, 世界史是小众但国家战略急需), 中国社科院 + 北大/复旦/首都师大 + 区域国别研究院 + 文博/出版/外事 + 数字人文是主流去向, 「世界史 ">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="世界史专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="中国高校罕见的真正全球史学科 (中国史是世界主流, 世界史是小众但国家战略急需), 中国社科院 + 北大/复旦/首都师大 + 区域国别研究院 + 文博/出版/外事 + 数字人文是主流去向, 「世界史 ">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -1397,24 +1406,19 @@ footer .data-source { color: #6B5D3F; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 + 地理 (人文社科经典组合, 文科主流)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:58%"></div></div>
-          <div class="xuanke-pct">58%</div>
+          <div class="xuanke-name">历史</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:95%"></div></div>
+          <div class="xuanke-pct">95%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 (再选地理或不限, 偏政治外交史)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
-          <div class="xuanke-pct">18%</div>
+          <div class="xuanke-name">外语</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:88%"></div></div>
+          <div class="xuanke-pct">88%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 地理 (再选政治或不限, 偏区域地理史)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:14%"></div></div>
-          <div class="xuanke-pct">14%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">不限选科 (少数综合院校, 史学强校仍要求历史)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
-          <div class="xuanke-pct">10%</div>
+          <div class="xuanke-name">不限选科</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
+          <div class="xuanke-pct">12%</div>
         </div>
     </div>
   </div>
@@ -1465,6 +1469,10 @@ footer .data-source { color: #6B5D3F; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1626,5 +1634,6 @@ footer .data-source { color: #6B5D3F; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

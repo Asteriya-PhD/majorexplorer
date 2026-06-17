@@ -15,6 +15,15 @@
 
 <title>土地科学与技术专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="土地科学与技术是 4 年制 国土+规划+GIS+农业+房地产 交叉工科, 培养土地科学人才. 核心课: 土壤学/土地资源学/国土空间规划/土地利用规划/GIS/遥感/土地评估/土地信息系统/不动产估价">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/land-science-technology.html">
+  <meta property="og:url" content="https://majorexplorer.com/land-science-technology.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="土地科学与技术专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="土地科学与技术是 4 年制 国土+规划+GIS+农业+房地产 交叉工科, 培养土地科学人才. 核心课: 土壤学/土地资源学/国土空间规划/土地利用规划/GIS/遥感/土地评估/土地信息系统/不动产估价">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700;900&family=ZCOOL+XiaoWei&display=swap');
 
@@ -1634,6 +1643,10 @@ section.tab { border-top: 1px solid #C5D9A8; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1795,5 +1808,6 @@ section.tab { border-top: 1px solid #C5D9A8; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>

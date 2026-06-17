@@ -14,20 +14,15 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>体育教育专业介绍 2026 高考 | Major Explorer</title>
-  <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/physical-education.html">
-
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="体育教育专业介绍 2026 高考 | Major Explorer">
-    <meta property="og:description" content="体育教育专业培养具备系统体育学、教育学、心理学基础知识，掌握体育教学、运动训练与竞赛组织能力的高素质应用型人才。毕业生主要面向中小学体育教师岗位，也可从事体育培训、健身指导、体育管理等工作。随着&quot;体教融合&quot;与&quot;双减&quot;政策深入推进，中小学体育...">
-    <meta property="og:image" content="https://majorexplorer.pages.dev/og_hei/education.png">
-    <meta property="og:url" content="https://majorexplorer.pages.dev/physical-education.html">
-    <meta property="og:site_name" content="Major Explorer">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="体育教育专业介绍 2026 高考 | Major Explorer">
-    <meta name="twitter:description" content="体育教育专业培养具备系统体育学、教育学、心理学基础知识，掌握体育教学、运动训练与竞赛组织能力的高素质应用型人才。毕业生主要面向中小学体育教师岗位，也可从事体育培训、健身指导、体育管理等工作。随着&quot;体教融合&quot;与&quot;双减&quot;政策深入推进，中小学体育...">
-    <meta name="twitter:image" content="https://majorexplorer.pages.dev/og_hei/education.png">
 <meta name="description" content="体育教育专业培养具备系统体育学、教育学、心理学基础知识，掌握体育教学、运动训练与竞赛组织能力的高素质应用型人才。毕业生主要面向中小学体育教师岗位，也可从事体育培训、健身指导、体育管理等工作。随着"体教">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="体育教育专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="体育教育专业培养具备系统体育学、教育学、心理学基础知识，掌握体育教学、运动训练与竞赛组织能力的高素质应用型人才。毕业生主要面向中小学体育教师岗位，也可从事体育培训、健身指导、体育管理等工作。随着&quot;体教">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:image" content="https://majorexplorer.pages.dev/og-image.png">
+
 <link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
@@ -1633,9 +1628,9 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
+      <a class="wl-card education" href="/chinese-international-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">汉语国际教育</span><span class="wl-hook">汉语国际教育</span></a>
+      <a class="wl-card education" href="/art-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">艺术教育</span><span class="wl-hook">艺术教育</span></a>
       <a class="wl-card education" href="/english.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">英语</span><span class="wl-hook">教学/翻译/考公考编</span></a>
-      <a class="wl-card education" href="/education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">师范教育 (数学/语文/英语 等)</span><span class="wl-hook">稳定 + 寒暑假 + 入编</span></a>
-      <a class="wl-card education" href="/primary-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">小学教育</span><span class="wl-hook">小学教育</span></a>
       <a class="wl-card education" href="/applied-psychology.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">应用心理学</span><span class="wl-hook">HCI/UX + 工业组织, 万金油</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
@@ -1693,6 +1688,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

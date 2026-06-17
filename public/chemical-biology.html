@@ -15,6 +15,15 @@
 
 <title>化学生物学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="化学生物学是'化学 (60-70%) + 生命科学'的硬核交叉, 化学占大头. 核心课: 有机化学/物理化学/生物化学/分子生物学/化学生物学/药物化学/有机合成. 头部校: 北大化院/清华化学/南大">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/chemical-biology.html">
+  <meta property="og:url" content="https://majorexplorer.com/chemical-biology.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="化学生物学专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:description" content="化学生物学是'化学 (60-70%) + 生命科学'的硬核交叉, 化学占大头. 核心课: 有机化学/物理化学/生物化学/分子生物学/化学生物学/药物化学/有机合成. 头部校: 北大化院/清华化学/南大">
+  <meta property="og:type" content="article">
+
+<link rel="stylesheet" href="/css/shared.css">
 <style>
 @import url('https://fonts.loli.net/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
@@ -1467,29 +1476,24 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">高中化学(必修+选择性必修,涉及有机化学基础更佳)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
+          <div class="xuanke-pct">70%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">高中生物(必修1-3,涉及分子与细胞、遗传部分更佳)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
+          <div class="xuanke-name">物理 + 化学 (再选生物或不限)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
+          <div class="xuanke-pct">18%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">高中物理(力学、电磁学、近代物理基础)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
+          <div class="xuanke-name">物理 + 生物 + 化学 (同组, 顺序差异)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
+          <div class="xuanke-pct">8%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">高中数学(函数、概率、向量等,大学阶段要求扎实)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">选科建议(以各省考试院发布为准):物理+化学+生物为最优组合,部分省份物理+化学即可;该专业对化学基础要求最高。</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:0%"></div></div>
-          <div class="xuanke-pct">0%</div>
+          <div class="xuanke-name">不限选科 (少数综合院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
+          <div class="xuanke-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1592,6 +1596,10 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
+    setTimeout(() => {
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
@@ -1753,5 +1761,6 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
+  <script src="/js/topbar.js"></script>
 </body>
 </html>
