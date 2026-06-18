@@ -64,6 +64,7 @@ from collections import defaultdict
 ROOT = Path(__file__).resolve().parents[1]
 CURATED = ROOT / 'skills' / 'gaokao-major-explorer' / 'data' / 'curated'
 TEST_RESULTS = ROOT / 'test_results'
+REGISTRY = ROOT / 'data' / 'audit_registry.json'  # git tracked 单一真相 (2026-06-18 新增)
 
 # 成本估算 (基于 m3 thinking 模式 + 计费)
 M3_COST_PER_AUDIT = 0.5  # ¥
@@ -122,7 +123,23 @@ def load_audit_history():
       }
     }
     """
+    # 2026-06-18 改造: 优先读 data/audit_registry.json (git tracked 单一真相)
+    # fallback: test_results/content_audit_*.json (gitignore, 跨 session 失同步)
     history = {}
+    if REGISTRY.exists():
+        try:
+            reg = json.load(open(REGISTRY))
+            for slug, m in reg.get('majors', {}).items():
+                history[slug] = {
+                    'latest_score': m.get('current_score'),
+                    'latest_ts': int(datetime.fromisoformat(m['last_audit_at'].replace('Z', '+00:00')).timestamp()) if m.get('last_audit_at') else None,
+                    'verdict': m.get('current_verdict'),
+                    'total_audits': m.get('audit_count', 0),
+                    'scores': [h.get('score') for h in m.get('audit_history', []) if h.get('score') is not None],
+                }
+            return history  # registry 是真理, 直接返回
+        except Exception as e:
+            print(f'⚠️  registry 解析失败 ({e}), fallback test_results/')
     files = sorted(TEST_RESULTS.glob('content_audit_*.json'))
     for f in files:
         try:
