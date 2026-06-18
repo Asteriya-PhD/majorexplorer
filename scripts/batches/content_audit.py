@@ -172,6 +172,27 @@ def main():
     out.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n💾 详细报告: {out}")
 
+    # ──────────────────────────────────────────────────────────
+    # 自动 sync 进 data/audit_registry.json (git tracked 单一真相)
+    # 失败不中断: audit 已落盘, registry 是派生视图
+    # ──────────────────────────────────────────────────────────
+    import subprocess
+    reg_script = ROOT / "scripts" / "update_audit_registry.py"
+    if reg_script.exists():
+        try:
+            r = subprocess.run(
+                ["python3", str(reg_script), "--from-file", str(out)],
+                capture_output=True, text=True, timeout=60,
+            )
+            if r.returncode == 0:
+                print(f"🔗 已 sync → data/audit_registry.json: {r.stdout.strip()}")
+            else:
+                print(f"⚠️  update_audit_registry 退出 {r.returncode}: {r.stderr.strip()[:200]}")
+        except Exception as e:
+            print(f"⚠️  registry sync 失败: {e} (audit 报告 {out.name} 已落盘, 可手动 python3 scripts/update_audit_registry.py --from-file {out.name})")
+    else:
+        print(f"⚠️  未找到 {reg_script}, 跳过 registry sync")
+
 
 if __name__ == "__main__":
     main()

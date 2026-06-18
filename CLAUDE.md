@@ -29,6 +29,34 @@ Layer 2 触发条件 (满足任一): L1 warning / 无历史 / 历史 < 7 / 改�
 
 ---
 
+## 📋 强制必读: Audit Registry (单一真相)
+
+**任何 audit 行动后, 必须保证 `data/audit_registry.json` (git tracked) 同步**:
+
+- ✅ **content_audit.py 跑完自动 sync** (新增 2026-06-18): 不再需要手动跑 `update_audit_registry.py`
+- ✅ **smart_audit.py 跑完自动 sync**: Layer 2 m3 结果直接写 registry
+- ⚠️ **手审 / 第三方 audit**: 手动跑 `python3 scripts/update_audit_registry.py --from-file <file>`
+
+📄 **Schema 必读**: `docs/audit_registry_schema.md` (version/字段/stats/totals 完整定义)
+
+```bash
+# 查当前统计 (8+/7-8/6-7/<6 分布)
+python3 scripts/update_audit_registry.py --stats
+
+# 查 <7 待修 (用于 4 篇 polish 决策)
+jq '.majors | to_entries | map(select(.value.current_score < 7)) | map({slug: .key, score: .value.current_score, title: .value.title})' data/audit_registry.json
+
+# 全量重建 (test_results/ → registry, 初始化/Schema 升级时用)
+python3 scripts/update_audit_registry.py --rebuild
+```
+
+**核心约束**:
+- registry 是派生视图, 真理性在 `public/data/manifest.json` (major 列表) + `test_results/content_audit_*.json` (审计原始)
+- git tracked → 跨 session 同步, 任何 agent 行动前先 `git pull`
+- smart_audit.py 路由决策依赖 registry, 漏登记 = 重复审计浪费 ¥
+
+---
+
 ## ⚠️ 强制必读: Major 精品质量流水线
 
 **任何写/改/批量生成 major JSON 的任务, 开始前必读:**
