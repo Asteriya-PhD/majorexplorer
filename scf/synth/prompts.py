@@ -10,16 +10,54 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-SCHEMA_DOC = (ROOT / "docs" / "SYNTH_SCHEMA.md").read_text(encoding="utf-8")
 
+# Day 7 Session 3: SCHEMA_DOC 改为 lazy + try/except (避免 docs/SYNTH_SCHEMA.md
+# 缺失时 import 直接崩). 默认 fallback 是从 TEMPLATE.json 拼出的基础 schema 描述.
+_FALLBACK_SCHEMA_DOC = """\
+# Major JSON Schema (synthesized fallback)
 
-# ── 1. synthesize (主合成 prompt, 在 llm.py 已经硬编码) ──
-# 这里只暴露辅助函数, 避免 prompt 分散两处
+## 必填顶层字段
+- title (str): 专业中文名
+- slug (str): URL-safe kebab-case
+- style (str): 13 选 1: cs / eng / medicine / education / finance / law / humanities / sci / administration / agri / arts / gongan / business
+- category (str): "学科门类 · 专业类"
+- degree (str): e.g. "工学学士"
+- duration_years (int): 4 或 5
+- tags (list[str]): ≥4 个
+- summary (str): 50-200 字
+- hero_quote (str): ≤200 字
+- curriculum (dict): 3 块:
+  - "公共必修 (所有院校都开)": list[{name, credit}]
+  - "通用专业核心 (≈ 80% 院校覆盖)": list[{name, credit}]
+  - "5 校特色选修 (按方向分流)": list[{name, credit}]
+- top_schools (list[dict]): ≥5, 每所 {name, rank, tag (含城市·特色)}
+- salary (dict): 每阶段 {p25, p50, p75, yoy} (数字, 万/年)
+- employment_direction (list[dict]): ≥5, 每项 {name, pct, desc, dest}, pct 合计 ≈100
+- alumni_quotes (list[dict]): ≥2, 每条 {year, current, school, source, quote}
+- deep_study (dict): 5-7 路径 {path: pct}, 合计 ≈100
+- xuanke_req_list (list[dict]): ≥3, 每项 {name (必含 "首选"), pct}, 物理/历史 不可共存
+- overview_v2 (dict): {lede (≤100 字), what_you_learn, who_fits_yes (≥3), who_fits_no (≥3), pitfalls (≥5 条 myth/reality dict)}
+- data_source (str)
+- difficulty (str): 1-5 颗 ★
+
+## 反幻觉硬规则 (Day 5 加)
+1. xuanke_req_list 每项 name 必含 "首选" 二字, 物理和历史不可共存
+2. 应届生 salary.p50 ≤ 20 万 (麦可思 2024: 本科平均 7.26 万)
+3. overview_v2.who_fits_no: 理工科禁人文本语词 (文本阅读/田野调研/历史/语文)
+4. deep_study 禁占位 "跨学科就业 (CS/数据/金融)" / "国内博士 (学术研究)"
+5. curriculum 公共必修只放高数/英语/思政/物理/化学/制图/体育, 专业课放通用核心
+"""
 
 
 def load_schema_doc() -> str:
-    """返回 docs/SYNTH_SCHEMA.md 内容, 注入到 LLM prompt."""
-    return SCHEMA_DOC
+    """返回 docs/SYNTH_SCHEMA.md 内容, 注入到 LLM prompt.
+
+    缺失时 fallback 到内置 SCHEMA_DOC (从 TEMPLATE.json + Day 5 硬规则拼成).
+    """
+    p = ROOT / "docs" / "SYNTH_SCHEMA.md"
+    if p.exists():
+        return p.read_text(encoding="utf-8")
+    return _FALLBACK_SCHEMA_DOC
 
 
 def load_sample_for_style(root: Path, style: str) -> dict:

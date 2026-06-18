@@ -1,9 +1,10 @@
-# Major 精品质量流水线 v1.2 (Day 3 Team B 经验总结)
+# Major 精品质量流水线 v1.4 (Day 7 在线按需合成上线)
 
 > 写于 2026-06-17, 47 篇验证: 平均 7.69/10, 100% ≥7, 64% ≥8.
 > 目标: 后续主题稳定达到 **平均 8.0/10** 水准.
 > 2026-06-18 v1.1: 新增 `scripts/smart_audit.py` 智能混合审计 (Layer 1 启发式 + 智能 Layer 2 LLM), batch 审计从 9.3h/¥140 降到 2-3h/¥40.
 > 2026-06-18 v1.2: 新增 m3 audit 升级套路 (修 audit 5-6 硬伤 > 追主观波动), E 阶段 7 篇 7→8/10 验证 3 audit iterations 7.14→7.43→8.00.
+> 2026-06-19 v1.4: 新增 §"在线按需合成 SOP" (CF Pages Function + D1 + GH Action + 跨 provider fallback + rate limit + 失败死信上报), 用户搜未收录专业一键 🔄 实时生成. Session 1-2 实测成功, 端到端验证待 Session 3 Playwright.
 
 ---
 
@@ -396,5 +397,95 @@ python3 scripts/check_major.py --fixtures scripts/smoke_fixtures
 2. 切换 LLM provider (Claude → GPT / Gemini / DeepSeek)
 3. 1 个季度回归 1 次 (防止 prompt drift)
 4. 用户报告"奇怪薪资/选科" 时第一时间
+
+---
+
+## 🆕 v1.4: 在线按需合成 SOP (Day 7 上线)
+
+> 触发: 用户搜未收录专业 → 前端"🔄 实时生成"按钮 → 异步合成 → 90s 内出 HTML
+> 上下文: 用户覆盖率从 365/868 (42%) → 100% (用户搜任何专业都能立刻看到内容)
+
+### 7 大组件 (3 后端 + 2 worker + 1 D1 + 1 manifest)
+
+| 角色 | 路径 | 状态 |
+|---|---|---|
+| POST 入队 | `functions/api/synth/generate.ts` | ✅ 已实装, +60s/IP rate limit |
+| GET 状态 | `functions/api/synth/status.ts` | ✅ 已实装 |
+| 动态 fallback | `functions/api/synth/[[slug]].ts` | ✅ 已实装 (CF Pages rebuild 间隙保护) |
+| D1 客户端 | `functions/api/_synth/d1.ts` | ✅ 已实装 |
+| D1 schema | `migrations/0001_init.sql` | ✅ `synth_jobs` 表 + 2 索引 |
+| Worker 7 步 | `scripts/synth_trigger.py` | ✅ 实装 + 跨 provider fallback (m3 → deepseek) |
+| 队列拉取 | `scripts/synth_queue_worker.py` | ✅ 实装 + dead 时 GH Issue 上报 |
+| GH Action cron | `.github/workflows/synth.yml` | ✅ `*/1`, 20min timeout |
+| Wrangler D1 binding | `wrangler.toml:12-16` | ✅ `database_name="synth-jobs"` |
+
+### 用户流程 (端到端 ~90 秒)
+
+```
+0s  用户搜「翻译」 → 命中 0 → 渲染 no-result 卡片 (含 2 CTA)
+2s  点「🔄 实时生成这篇」 → POST /api/synth/generate {title, source}
+3s  入队成功 → 返 {run_id, status='queued', status_url}
+5s  前端开始轮询 GET /api/synth/status?run_id=xxx (3s 间隔, 4 段进度)
+   - queued/init → 「正在准备」
+   - search/route_style/synthesize → 「正在生成内容」
+   - render → 「正在渲染页面」
+   - manifest → 「正在发布」
+65s GH Action cron pickup → run_synth → 7 步流水线 → mark_done
+70s 前端轮询 status=done → 跳 /translation.html
+```
+
+### 5 道质量把控
+
+| 层 | 工具 | 作用 |
+|---|---|---|
+| 1 | `functions/api/synth/generate.ts` 校验 | body / slug / style 白名单 / email 格式 |
+| 2 | rate limit (60s/IP) | 防用户刷 slug |
+| 3 | `scf/synth/validator.py:validate` | 18 字段 schema 完整性 |
+| 4 | `scf/synth/llm.py:get_client_with_fallback` | m3 fail 自动降级 deepseek |
+| 5 | `scripts/smart_audit.py` (后续可挂) | 已生成 major 的 m3 audit 复检 |
+
+### 4 道失败降级
+
+1. **LLM 全失败** → 退到 MockLLM (空数据但 HTML 渲染不崩)
+2. **attempts=3 全死信** → `report_dead_to_github()` 自动 createIssue 标签 `synth-dead`/`auto`
+3. **前端 status=failed/dead** → 显示错误 + "📨 报告给我们" 链接 (走 `/api/report`)
+4. **CF Pages rebuild 间隙** → `[[slug]].ts` 动态 serve `public/<slug>.html` + 202 fallback
+
+### 关键修复 (Session 1 必做)
+
+| 修复 | 文件 | 旧行为 → 新行为 |
+|---|---|---|
+| 路径转换 | `scf/synth/render_bridge.py:render_html` | 写 public 时不做 re.sub, 死链 → 跑 `../../js/ → /js/` + `../../css/ → /css/` |
+| 3 inject | 同上 | 不跑 inject → 跑 inject_og + inject_seo + inject_jsonld, 然后从 curated 重新 sync 到 public |
+
+### Smoke Fixture (5 篇陷阱 prompt)
+
+参考本文件 §🧪 (上方), 新增 5 篇在线合成专用 fixture:
+
+```bash
+# 端到端 1 篇 (skip-search, 单轮)
+python3 scripts/synth_trigger.py --title "翻译" --slug translation --style humanities --skip-search --max-retries 1
+
+# 端到端 5 篇
+python3 scripts/synth_trigger.py --batch synth_smoke.txt --skip-search
+```
+
+### 已知坑
+
+1. **`docs/SYNTH_SCHEMA.md` 缺失** (历史 bug) → `scf/synth/prompts.py:load_schema_doc` 加 lazy + fallback (内嵌 schema doc), 不再 import 时崩
+2. **`mimo` HTTP 429 频繁** (Day 2 batch1 验证) → fallback 链只保 m3 → deepseek, mimo 不入主链
+3. **CF Pages Function 默认 30s timeout** → 7 步 pipeline 放在 GH Action 跑, Function 只入队 + 状态查 (毫秒级)
+4. **跨 session 进程内 rate limit 重置** → 当前 in-memory Map, 多实例部署时需补 KV (Plan H12 暂不启用)
+
+### 验收标准
+
+| 指标 | 目标 | 最低 |
+|---|---|---|
+| 入队成功率 (除 rate limit) | 99% | 95% |
+| 端到端成功率 (queued → done) | 85% | 75% |
+| 平均耗时 | 90s | 120s |
+| 单次成本 | ¥1.5 | ¥2.5 |
+| 死链率 (../../js/) | 0% | ≤1% |
+| rate limit 触发率 | <5% | <10% |
 
 ---
