@@ -143,6 +143,53 @@ def mark_failed(d1: D1, run_id: str, error: str, dead: bool = False) -> None:
     )
 
 
+# ── GH Issue 上报 (attempts 满 3 死信时调用) ──
+def report_dead_to_github(title: str, slug: str, run_id: str, error: str) -> bool:
+    """attempts=3 全失败时, 创建 GH Issue 让运营巡检 (Session 2 Task 4 加).
+
+    需要 GITHUB_TOKEN + GITHUB_REPO env (来自 GH Action secret).
+    Fail open: 网络/token 错不抛, 仅 print warning.
+    """
+    gh_token = os.environ.get("GITHUB_TOKEN", "").strip()
+    gh_repo = os.environ.get("GITHUB_REPO", "").strip()
+    if not gh_token or not gh_repo:
+        print(f"  [report-dead] GITHUB_TOKEN/GITHUB_REPO 未设, 跳过 GH Issue 上报")
+        return False
+    try:
+        safe_error = error[:300].replace("\n", " ")
+        body = json.dumps({
+            "title": f"[synth-dead] {title} ({slug})",
+            "labels": ["synth-dead", "auto"],
+            "body": (
+                f"## Synth Dead Alert\n\n"
+                f"- **Title**: {title}\n"
+                f"- **Slug**: `{slug}`\n"
+                f"- **Run ID**: `{run_id}`\n"
+                f"- **Attempts**: 3 (全失败)\n"
+                f"- **Last Error**: `{safe_error}`\n\n"
+                f"---\n由 `synth_queue_worker.py` 自动生成."
+            ),
+        }, ensure_ascii=False)
+        req = urllib.request.Request(
+            f"https://api.github.com/repos/{gh_repo}/issues",
+            data=body.encode("utf-8"),
+            headers={
+                "Authorization": f"Bearer {gh_token}",
+                "Accept": "application/vnd.github+json",
+                "Content-Type": "application/json",
+                "User-Agent": "synth-queue-worker/1.0",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+            print(f"  [report-dead] ✓ GH Issue #{payload.get('number')}: {payload.get('html_url')}")
+            return True
+    except Exception as e:
+        print(f"  [report-dead] ✗ GH Issue 创建失败: {type(e).__name__}: {str(e)[:200]}")
+        return False
+
+
 # ── 调 scf/synth worker (复用 7 步 pipeline) ──
 def run_synth(run_id: str, title: str, slug: str, style: str | None,
               d1: D1, env: dict) -> dict:
@@ -270,6 +317,8 @@ def main():
             mark_failed(d1, run_id, err, dead=dead)
             if dead:
                 print(f"💀 run_id={run_id} attempts 满 3 标 dead, 不再重试")
+                # 自动上报 GH Issue (运营巡检用)
+                report_dead_to_github(title=title, slug=slug, run_id=run_id, error=err)
 
         processed += 1
 

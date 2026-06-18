@@ -29,7 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from scf.synth.llm import get_client, RetryableError, PermanentError
+from scf.synth.llm import get_client, get_client_with_fallback, RetryableError, PermanentError
 from scf.synth.mock_llm import get_llm_client, MockLLM
 from scf.synth.search import search_multi, queries_for_major, format_for_prompt
 from scf.synth.prompts import (
@@ -69,15 +69,18 @@ def synth_one(
     slug = slug or slugify(title)
     summary: dict = {"title": title, "slug": slug, "steps": []}
 
-    # ── 0. LLM 客户端 (auto-fallback: DeepSeek → Anthropic → Mock) ──
+    # ── 0. LLM 客户端 (auto-fallback: m3 → deepseek) ──
     try:
-        llm = get_llm_client(root=ROOT)
-    except (PermanentError, RetryableError) as e:
-        summary["error"] = f"LLM 客户端初始化失败: {e}"
-        return summary
+        llm, used_provider = get_client_with_fallback(chain=("m3", "deepseek"))
+    except PermanentError as e:
+        # 全失败, 退到 mock
+        print(f"  ⚠️  所有 provider fail ({e}), 退到 MockLLM")
+        llm = get_llm_client(root=ROOT)  # fallback to mock
+        used_provider = "mock"
     llm_type = "MockLLM" if isinstance(llm, MockLLM) else type(llm).__name__
     summary["llm"] = llm_type
-    print(f"🤖 LLM 客户端就绪 ({llm_type})")
+    summary["llm_provider"] = used_provider
+    print(f"🤖 LLM 客户端就绪 ({llm_type} via {used_provider})")
 
     # ── 1. validate_is_major ──
     try:

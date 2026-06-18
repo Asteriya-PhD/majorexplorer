@@ -34,6 +34,24 @@ const VALID_STYLES = new Set([
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// ── Rate limit (同 report.js 模式, 60s/IP, in-memory fallback) ──
+// Session 2 Task 5: 防用户刷不同 slug 刷爆 GH Action 队列
+const RATE_LIMIT_MS = 60_000;
+const RATE_LIMIT_MAX_ENTRIES = 1000;
+const _rl = new Map<string, number>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const last = _rl.get(ip);
+  if (last && now - last < RATE_LIMIT_MS) return true;
+  _rl.set(ip, now);
+  if (_rl.size > RATE_LIMIT_MAX_ENTRIES) {
+    const cutoff = now - 120_000;
+    for (const [k, t] of _rl) if (t < cutoff) _rl.delete(k);
+  }
+  return false;
+}
+
 function json(body: unknown, init: ResponseInit = {}): Response {
   return new Response(JSON.stringify(body), {
     ...init,
@@ -100,6 +118,17 @@ export const onRequest: PagesFunction<D1Env> = async ({ request, env }) => {
   const email = (body.email ?? "").trim() || null;
   if (email && !EMAIL_RE.test(email)) {
     return json({ ok: false, error: "email 格式错误" }, { status: 400 });
+  }
+
+  // ── 1.5 Rate limit (60s/IP) ──
+  const ip = request.headers.get("cf-connecting-ip")
+    || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || "anon";
+  if (rateLimited(ip)) {
+    return json(
+      { ok: false, error: "请求太频繁, 1 分钟后再试" },
+      { status: 429, headers: { "Retry-After": "60" } }
+    );
   }
 
   // ── 2. 去重: 同 slug 已 done → 直接返 output_url ──

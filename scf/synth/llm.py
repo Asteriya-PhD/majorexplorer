@@ -438,6 +438,48 @@ def get_client(enable_thinking: bool = False):
         raise PermanentError(f"未知 LLM_PROVIDER: {provider!r} (可选: m3 / deepseek)")
 
 
+def get_client_with_fallback(chain=("m3", "deepseek"), enable_thinking: bool = False):
+    """
+    跨 provider fallback 链 (Day 7 Session 2 加).
+
+    链顺序: m3 (质量优先) → deepseek (便宜备选).
+    单 provider fail 时自动降级下一个, 全部失败抛 PermanentError.
+
+    Returns:
+        (client, used_provider) 元组 — used_provider 用于写入 summary / D1.
+
+    Args:
+        chain: 顺序尝试的 provider 列表. 默认 ("m3", "deepseek").
+        enable_thinking: m3 专属, 是否开 thinking 模式.
+
+    Raises:
+        PermanentError: 所有 provider 都不通 (key 缺失 / 永久错误).
+    """
+    last_err = None
+    for provider in chain:
+        try:
+            if provider == "m3":
+                client = M3Client(enable_thinking=enable_thinking)
+            elif provider == "deepseek":
+                client = DeepSeekClient()
+            else:
+                raise PermanentError(f"未知 provider: {provider!r} (chain 仅支持 m3 / deepseek)")
+            print(f"  [llm] provider {provider} 就绪")
+            return client, provider
+        except PermanentError as e:
+            # 永久错误 (key 缺失 / 配置错) → 立即降级下一个
+            last_err = e
+            print(f"  [llm] provider {provider} permanent fail, fallback: {e}")
+            continue
+        except RetryableError as e:
+            # 暂时错误 (网络 / 限流) → 也降级下一个
+            last_err = e
+            print(f"  [llm] provider {provider} retryable fail, fallback: {e}")
+            continue
+    # 全部失败
+    raise PermanentError(f"所有 provider ({', '.join(chain)}) 均失败: {last_err}")
+
+
 # ─────────────────────────────────────────────────────────────
 # m3 → curated schema 转换器 (Post-process 兼容层)
 # ─────────────────────────────────────────────────────────────
