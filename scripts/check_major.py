@@ -113,6 +113,24 @@ POLLUTION_RULES = {
         'severity': 'CRITICAL',
         'msg': 'alumni_quotes 必须 ≥2 条 (有 year/current/quote 字段, quote 含具体细节); 推荐 ≥3 条'
     },
+    # ✅ Day 5 Batch 4 新增 (2026-06-18, 防 LLM 幻觉"物理+历史+政治"):
+    'xuanke 3+1+2 首选冲突 (物理+历史 同现)': {
+        'patterns': [],
+        'field': 'xuanke_req_list',
+        'check_xuanke_conflict': True,
+        'severity': 'CRITICAL',
+        'msg': '3+1+2 模式下 物理/历史 是 2 选 1 首选科目, 不能在同一选项中同时出现. '
+               '正确写法: "首选物理 + 化学" / "首选物理 + 再选不限" / "首选历史 + 再选不限" / "首选政治 + 再选不限" 等.'
+    },
+    # ✅ Day 5 Batch 4 新增 (2026-06-18, 防 LLM 虚高薪资):
+    '薪资 应届生 P50 虚高 (>20 万)': {
+        'patterns': [],
+        'field': 'salary',
+        'check_salary_p50_threshold': True,
+        'severity': 'WARNING',
+        'msg': '应届生 P50 应 ≤ 20 万 (麦可思 2024: 本科平均 7.26 万, 顶级头部 ≈ 14-20 万). '
+               '超过说明 LLM 虚高, 校准到 13 套 style 模板 (fix_xuanke_salary_batch.py).'
+    },
 }
 
 SCI_STYLES = {'eng', 'cs', 'sci', 'medicine', 'agri'}
@@ -189,6 +207,39 @@ def check_major(slug):
             if string_keys:
                 warnings.append(f'[WARNING] {rule_name}: {string_keys} 是 string → {rule["msg"]}')
 
+        # ✅ Day 5 Batch 4: 选科 3+1+2 首选冲突检查 (物理 + 历史 同现)
+        if rule.get('check_xuanke_conflict') and isinstance(obj, list):
+            conflicts = []
+            for xk in obj:
+                if not isinstance(xk, dict):
+                    continue
+                name = xk.get('name', '')
+                # "物理" AND "历史" both in name = 首选冲突
+                if '物理' in name and '历史' in name:
+                    conflicts.append(name)
+            if conflicts:
+                msg = f'[{rule["severity"]}] {rule_name}: 「{conflicts[0]}」 等 {len(conflicts)} 处 → {rule["msg"]}'
+                if rule['severity'] == 'CRITICAL':
+                    errors.append(msg)
+                else:
+                    warnings.append(msg)
+
+        # ✅ Day 5 Batch 4: 薪资 应届生 P50 虚高阈值 (>20 万)
+        if rule.get('check_salary_p50_threshold') and isinstance(obj, dict):
+            inflated = []
+            for stage, vals in obj.items():
+                if not isinstance(vals, dict):
+                    continue
+                p50 = vals.get('p50', 0)
+                if not isinstance(p50, (int, float)) or p50 <= 20:
+                    continue
+                # 只检查 应届生 / 0-2 年 等应届阶段
+                if any(k in stage for k in ['应届', '0-2', '0-1', 'fresh']):
+                    inflated.append(f'{stage} P50={p50}万')
+            if inflated:
+                msg = f'[{rule["severity"]}] {rule_name}: {", ".join(inflated)} → {rule["msg"]}'
+                warnings.append(msg)
+
     # 3. curriculum 公共必修专业课检查
     curriculum = d.get('curriculum', {})
     public = curriculum.get('公共必修 (所有院校都开)', [])
@@ -239,7 +290,13 @@ def main():
         sys.exit(1)
 
     if sys.argv[1] == '--all':
-        slugs = sorted([p.stem for p in CURATED.glob('*.json')])
+        # 过滤: manifest.json (注册表), TEMPLATE (空模板), *.demo/*-demo (演示), *.bak (备份)
+        slugs = sorted([
+            p.stem for p in CURATED.glob('*.json')
+            if p.stem not in ('manifest', 'TEMPLATE')
+            and not p.stem.endswith('-demo')
+            and not p.stem.endswith('.demo')
+        ])
     elif sys.argv[1] == '--staged':
         import subprocess
         result = subprocess.run(['git', 'diff', '--cached', '--name-only'],

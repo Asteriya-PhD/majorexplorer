@@ -99,6 +99,8 @@ python3 scripts/smart_audit.py
 | **who_fits_no 串台** | 理工科出现"文本阅读/田野调研/历史/语文/写作训练" → 删, 改为物理/数学/工程/实验 | 人文社科出现"数学/统计/经济/考证" → 删, 改为文字功底/理论兴趣/表达沟通 |
 | **deep_study CS/金融 12%** | "跨学科就业 (CS/数据/金融)": 12, "国内硕士 (专业相关方向)": 25 | 用专业真实主流去向 (翻译→MTI/外派/出版; 农林→基层公务员; 体育→体育产业) |
 | **curriculum 公共必修填专业课** | 公共必修填"工程水文学/卫生法学总论/模拟集成电路/机器人学" | 公共必修只放高数/线代/概率/物理/英语/思政/制图 |
+| **xuanke 3+1+2 首选冲突** (Day 5 Batch 4 加) | "物理 + 历史 + 政治 (覆盖最广)", "物理+历史+地理", "历史 + 政治 + 物理" — 物理/历史 是 2 选 1 首选科目, 不能共存 | "首选物理 + 化学", "首选物理 + 再选不限", "首选历史 + 再选不限", "首选政治 + 再选不限" — 必含 "首选" 二字, 物理/历史 二选一 |
+| **薪资 应届生 P50 虚高** (Day 5 Batch 4 加) | 应届生 P50 = 35/45/60 万 (LLM hallucinate, 完全失真). 麦可思 2024: 本科平均 7.26 万/年, 顶级头部 ≈ 14-20 万 | 按 13 套 style 模板校准: cs 18/finance 13/eng 12/medicine 9 (规培前) / humanities 8 万 — yoy 6-12% 合理 |
 
 ### Step 3: Hand-Write JSON (按专业逐字段)
 
@@ -333,4 +335,50 @@ Fix 2 audit → 8.00/10 ✓
 
 ---
 
-**最后更新**: 2026-06-18, Day 3 Team B E 阶段 7 篇 m3 audit 升级 7.14→7.43→8.00 验证 + v1.2 SOP 升级
+**最后更新**: 2026-06-18, Day 3 Team B E 阶段 7 篇 m3 audit 升级 7.14→7.43→8.00 验证 + v1.2 SOP 升级 + Day 5 Batch 4 选科+薪资 2 新 anti-pollution
+
+---
+
+## 🧪 Smoke Test Fixture (Day 5 Batch 4 新增)
+
+**目的**: 验证 m3 / LLM 不会再 hallucinate "物理+历史+政治" + 应届生 P50 35万+ 等违规内容.
+
+**5 篇陷阱 prompt** (新写 m3 prompt 时, 必跑这 5 个, 0 违规才上线):
+
+### xuanke 陷阱 (3 篇)
+
+| # | Major style | 输入 prompt (xuanke_req_list 段) | 期望输出 (合规) |
+|---|------|------|------|
+| 1 | finance | "请生成 金融数学 的 3+1+2 选科要求, 覆盖最广的组合, pcts 加起来 100" | 不出现 "物理+历史" 同一选项, 必含 "首选物理" 或 "首选历史", pct 总和 100 |
+| 2 | administration | "电子商务 选科要求, 列出 4 个组合, 文理兼收" | "首选物理+不限" + "首选历史+不限" + "不限选科", pct 分合理 |
+| 3 | medicine | "药学 选科要求, 双一流校门槛" | "首选物理+化学+生物" 占 70% (双一流门槛), 物理+化学 占 25% |
+
+### salary 陷阱 (2 篇)
+
+| # | Major style | 输入 prompt (salary 段) | 期望输出 (合规) |
+|---|------|------|------|
+| 4 | finance | "金融数学 应届生薪资, 一线城市头部券商量化方向" | 应届生 P50 ≤ 20 万 (顶级头部上限), 推荐 14 万 |
+| 5 | cs | "人工智能 应届生薪资, 985 硕博算法岗, 头部互联网大厂" | 应届生 P50 ≤ 20 万 (cs 顶级头部上限), 推荐 18 万 |
+
+**自动化校验**:
+```bash
+# 跑 5 篇 smoke test fixture
+python3 scripts/check_major.py <slug_smoke_1> <slug_smoke_2> ...
+
+# 期望: 0 CRITICAL (xuanke 冲突) + 0 WARNING (P50 > 20万)
+```
+
+**Fixture 实战命令**:
+```bash
+# 写 5 篇 fixture → smoke_xuanke_1/2/3.json + smoke_salary_4/5.json
+# 调 m3 / DeepSeek 生成 → 用 check_major.py 校验 → 不通过则 prompt 改写
+python3 scripts/check_major.py smoke_xuanke_1 smoke_xuanke_2 smoke_xuanke_3 smoke_salary_4 smoke_salary_5
+```
+
+**何时跑 smoke test**:
+1. 新加 m3 synth prompt 模板时
+2. 切换 LLM provider (Claude → GPT / Gemini / DeepSeek)
+3. 1 个季度回归 1 次 (防止 prompt drift)
+4. 用户报告"奇怪薪资/选科" 时第一时间
+
+---

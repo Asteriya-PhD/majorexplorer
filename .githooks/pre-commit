@@ -47,21 +47,18 @@ fi
 # 2. L1 启发式: git staged major JSON 4 anti-pollution + schema
 # ─────────────────────────────────────────────
 echo ""
-echo -e "${BLUE}[2/3] L1 启发式 (check_major.py --staged, 4 anti-pollution rules + schema)${NC}"
+echo -e "${BLUE}[2/3] L1 启发式 (check_major.py --staged, 6 anti-pollution rules + schema)${NC}"
 # 只在有 staged .json 时跑 (避免空跑)
 STAGED_JSON=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "curated/.*\.json$" | grep -v "manifest.json" || true)
 if [ -n "$STAGED_JSON" ]; then
-  if python3 scripts/check_major.py --staged 2>&1 | tail -20; then
-    # check_major exit 0 = 全过, exit 1 = 有失败
-    if [ $? -eq 0 ]; then
-      echo -e "${GREEN}  ✅ L1 全过${NC}"
-    else
-      echo -e "${RED}  ❌ L1 有失败 (见上方错误)${NC}"
-      echo -e "${YELLOW}     修法: 修 staged JSON 后重 commit${NC}"
-      failed=1
-    fi
+  # ✅ Day 5 Batch 4 fix: PIPESTATUS 拿 check_major.py 的真实 exit, 不被 tail 0 掩盖
+  python3 scripts/check_major.py --staged 2>&1 | tail -30
+  L1_EXIT=${PIPESTATUS[0]}
+  if [ "$L1_EXIT" -eq 0 ]; then
+    echo -e "${GREEN}  ✅ L1 全过 (含 6 anti-pollution: lede/who_fits_no/deep_study/curriculum/xuanke_3plus1plus2/salary_p50)${NC}"
   else
-    echo -e "${RED}  ❌ check_major.py 异常${NC}"
+    echo -e "${RED}  ❌ L1 有失败 (见上方错误, exit=$L1_EXIT)${NC}"
+    echo -e "${YELLOW}     修法: 修 staged JSON 后重 commit${NC}"
     failed=1
   fi
 else
