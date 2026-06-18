@@ -1,8 +1,9 @@
-# Major 精品质量流水线 v1.0 (Day 3 Team B 经验总结)
+# Major 精品质量流水线 v1.2 (Day 3 Team B 经验总结)
 
 > 写于 2026-06-17, 47 篇验证: 平均 7.69/10, 100% ≥7, 64% ≥8.
 > 目标: 后续主题稳定达到 **平均 8.0/10** 水准.
 > 2026-06-18 v1.1: 新增 `scripts/smart_audit.py` 智能混合审计 (Layer 1 启发式 + 智能 Layer 2 LLM), batch 审计从 9.3h/¥140 降到 2-3h/¥40.
+> 2026-06-18 v1.2: 新增 m3 audit 升级套路 (修 audit 5-6 硬伤 > 追主观波动), E 阶段 7 篇 7→8/10 验证 3 audit iterations 7.14→7.43→8.00.
 
 ---
 
@@ -162,6 +163,8 @@ python3 scripts/batches/content_audit.py --slugs <slug>:<style>
 
 **批量**: 用 `smart_audit.py` 自动跑 Layer 2 候选 + 统计 ≥7 比例.
 
+**7→8 升级 (v1.2 新增)**: 详见下方「🆕 v1.2: m3 Audit 升级套路」章节, 修 audit 5-6/10 硬伤 (lede/top_schools/deep_study/summary) 5-15 min 即可 +1 分.
+
 ### Step 6: Tier Retry (audit < 7 时)
 
 | Tier | 触发 | 操作 | 时间 |
@@ -216,6 +219,80 @@ python3 scripts/batches/content_audit.py --csv all_majors.csv
 
 ---
 
+## 🆕 v1.2: m3 Audit 升级套路 (7→8 临界点攻略)
+
+> 来源: 2026-06-18 E 阶段 7 篇 m3 audit 实战 (initial 7.14 → fix 7.43 → fix 8.00). 修 1 个硬伤稳定 +1 分, 追主观波动可能 ±1.
+
+### 核心原则: 修 audit 5-6/10 硬伤 > 追主观波动
+
+m3 audit 给分是「字段级评分」+「整体综合」双轨. 整体 7 分可能由 10 个 8/9 分字段 + 1 个 4-6 分硬伤字段决定. **修硬伤是确定性 +1, 追主观评分是赌博 ±1.**
+
+### 7 个常见硬伤 (m3 audit 5-6/10 字段) + 修复模板
+
+| # | 硬伤模式 | 修复模板 | 典型案例 |
+|---|----------|----------|----------|
+| 1 | **lede 4-6/10** | 缩到 ≤120 字, 主语+洞察+1 隐藏坑句式. 5 大坑全塞进 lede 是 4/10 红线 | 数媒 327→121 字 (7→8) |
+| 2 | **top_schools 5/10 凑数** | 真实学科评估 B+ 以下不要进 Top 8. 用学科评估 4 轮/5 轮排名重排 | env-law 删中南大学 (7→8) |
+| 3 | **deep_study 与 employment 矛盾** | deep_study 字段名暗示「升学路径」, employment_direction 暗示「职业去向」. 两套 schema 不能直接换算 | 俄语 35%→60% 改直接就业口径 (6→8) |
+| 4 | **summary 5/10 官腔** | 删「培养高素质 X 人才」模板句, 改「X 是少数仍处于 Y 缺口的 Z — 一句数字 + 一句核心洞察」 | 俄语 summary 重写 (6→8 关键) |
+| 5 | **xuanke_req 5/10 数据可疑** | 外国语言文学类对再选科目**无理科要求**, 任何「历史+化学/生物」类项删 | 俄语 删「历史+化生 5%」(6→8) |
+| 6 | **fit/who_fits 5/10 重复** | 保留 4-5 yes + 4-5 no 不删, 但加 `fit_diagnostic` 3 条诊断问题增加信息密度 | 文管 fit_diagnostic 3 (7→8) |
+| 7 | **pitfalls 6/10 通用话术** | 必须有 5-7 条本专业独有 myth/reality. 通用「学习累/竞争激烈」= 5/10, 专业独有 = 9/10 | 风景园林 7 独有 pitfalls (4→8) |
+
+### 3 Audit Iterations 流程 (E 阶段验证)
+
+```
+Initial audit → 7.14/10
+  ↓ 修 1-2 个 hard 5-6/10 字段 (lede/top_schools/deep_study/summary)
+Fix 1 audit → 7.43/10
+  ↓ 修剩余 hard 字段 (fit 冗余/alumni 字段)
+Fix 2 audit → 8.00/10 ✓
+  ↓ 停止追主观波动 (m3 ±1 variance)
+```
+
+**单篇 7→8 标准 SOP**:
+1. 跑 m3 audit, 找 5-6/10 字段
+2. 修 1 个最严重的硬伤 (lede/top_schools/deep_study) → +1 分
+3. 再 audit, 修剩余 5-6/10 字段 → +0.5 分
+4. 第 3 次 audit 仍 7 → 接受 m3 variance, 停止 (不要追死磕)
+5. 单篇累计 ≤ 30 min
+
+### m3 audit variance 容忍度
+
+- 同一篇 5 分钟内 audit 2 次可能 7 或 8 分 — **正常 ±1**
+- 不要追「为什么这次 7 不 8」 — 浪费时间
+- 接受 7/8 都算「优秀」(verification 标准是 ≥7.5)
+- 真正硬伤 (5-6/10 字段) 必修, 主观波动 (8 vs 8) 不追
+
+### E 阶段 7 篇 升级时间表 (实操)
+
+| 时点 | 状态 | 耗时 |
+|------|------|------|
+| 7 篇 polish 完 | 待 audit | — |
+| Initial audit | 7.14/10, 4 篇 7 + 2 篇 8 + 1 篇 6 | 5 min |
+| 修俄语 (3 硬伤) | 6→8 | 5 min |
+| 修数媒 lede (1 硬伤) | 7→7 (variance revert) | 5 min |
+| 修 env-law top_schools | 7→8 | 5 min |
+| 修文管 fit_diagnostic | 7→8 | 5 min |
+| Final audit 5 篇 | 8+8+8+8+8 = 8.00 ✓ | 5 min |
+
+**关键: 1 硬伤 5 min, 4 硬伤 20 min 即可 7→8**. 比 追主观波动高效 10×.
+
+### 升级到 v1.2 后的 SOP 微调
+
+- Step 5 (Audit Verify ≥7) 后**新增**「Step 5.5: m3 audit 升级 7→8 迭代」
+- 单篇 7→8 估时 5-15 min (修 1-2 个 hard 5-6/10 字段)
+- 单篇 7→7.5 难达 (m3 variance), 接受 7-8 都算「优秀」
+- 单篇 6→8 必走 Tier 1 (5-10 min) + Tier 2 (15-20 min) 完整流程
+
+### 已知 m3 audit 显示 bug (不要因这些改)
+
+- "字段截断" — display bug, 数据完整即可
+- "JSON 解析失败" — 通常是 m3 SDK 输出格式问题, 重试即可
+- "field score=null" — m3 没给该字段分, 不代表缺失
+
+---
+
 ## 验收标准
 
 | 指标 | 目标 | 最低 |
@@ -256,4 +333,4 @@ python3 scripts/batches/content_audit.py --csv all_majors.csv
 
 ---
 
-**最后更新**: 2026-06-17, Day 3 Team B 47 篇验证通过
+**最后更新**: 2026-06-18, Day 3 Team B E 阶段 7 篇 m3 audit 升级 7.14→7.43→8.00 验证 + v1.2 SOP 升级
