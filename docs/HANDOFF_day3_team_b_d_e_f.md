@@ -10,40 +10,34 @@
 - **累计精品**: 47 (Day 3 Team B 跨学科) + 8 (Tier 2 polish) = **55 篇 ≥7/10**
 - **m3 avg 7.69/10**, 100% ≥7, 64% ≥8
 
-## D 阶段: m3 audit variance 二次确认 (估时 1-2h)
+## D 阶段: m3 audit variance 二次确认 ✅ 完工 (2026-06-18)
 
-**目标**: 47+8 = 55 篇 m3 audit 二次确认, 排除 variance 后真实 ≤7/10 篇数
+**目标**: 47+8 = 55 篇 m3 audit 二次确认, 排除 variance 后真实 ≤7/10 篇数. ✅ **估时 1-2h 实测 30 min** (3 worker 并行, 57s/篇).
 
-```bash
-# 1. 跑全量 audit
-source .env
-python3 scripts/batches/content_audit.py --csv scripts/batches/day3_team_b.csv 2>&1 | tee test_results/day3_v2_audit.log
+**D1 全 55 篇 (3 worker 并行 csv 拆批)**: 平均 7.61/10, ≥7 49/51 = 96%, ≥8 30/51 = 59%
 
-# 2. 找 ≤7/10 篇
-cat test_results/day3_v2_audit.log | grep "7/10\|6/10\|5/10" | head -20
+**D2 二次 audit 22 篇 ≤7 (3 worker 并行 --slugs)**: 22 篇中:
+- 🔴 **P0 真 ≤7 (avg<7)**: **3 篇必修**
+  - `landscape-architecture2` (风景园林): D1=4 D2=4 avg=4.0 — **最差, 必修**
+  - `russian` (俄语): D1=6 D2=7 avg=6.5
+  - `environmental-resource-protection-law` (环境与资源保护法学): D1=7 D2=6 avg=6.5
+- 🟡 **P1 稳定 7 (推荐 polish)**: **4 篇**
+  - `advertising` (广告学): 7/7 stable
+  - `cultural-industry-management` (文化产业管理): 7/7 stable
+  - `digital-media-technology` (数字媒体技术): 7/7 stable
+  - `engineering-mechanics` (工程力学): 7/7 stable
+- 🟢 **variance (D1=7 D2=8)**: 13 篇 (可不修, m3 ±1 误判)
+- ✅ **≥7.5 (skip)**: 44 篇
 
-# 3. 二次 audit 确认 (排除 variance)
-python3 scripts/batches/content_audit.py --slugs intelligent-marine-equipment:eng food-hygiene-nutrition:eng ...
+**关键发现**:
+1. 之前 HANDOFF 估的 11 篇 polish → 实际只需 **7 篇** (3 P0 + 4 P1)
+2. **风景园林 4/10 是 outlier**, 985 误标 (sub-style 实际不是 agri) fix 后还是 4 分, 必修深度 polish
+3. 13 篇 D1=7 D2=8 是 m3 variance, 不必修
+4. 风景园林 sub-style 实际是 `architecture` 不是 `agri`, 可能影响 audit 打分
 
-# 4. 列出真正需要修的篇 (avg < 7 OR 2 次 audit 都 < 7)
-```
-
-**已知 ≤7/10 候选 (从最新 audit)**:
-- intelligent-marine-equipment 7/10 (eng)
-- intelligent-transportation 7/10 (eng)
-- industrial-intelligence 7/10 (eng)
-- food-hygiene-nutrition 7/10 (eng)
-- smart-agriculture 7→8 ✅ (已修, 跳过)
-- international-journalism-communication 7/10 (humanities)
-- digital-economy 7/10 (finance)
-- cross-border-ecommerce 7→9 ✅ (已修, 跳过)
-- public-relations 7/10 (humanities)
-- cultural-industry-management 7/10 (humanities)
-- world-history 7/10 (humanities)
-- food-quality-safety 7/10 (eng)
-- integrated-chinese-western-medicine 7/10 (medicine)
-
-**估 8-11 篇真 ≤7/10** (扣掉已修的 smart-agriculture, cross-border-ecommerce, bionic, ophthalmology, smart-agriculture, rural-regional-development, service-science, cyber-information-law, remote-sensing, global-climate).
+**E 阶段 polish 候选 (7 篇, 估 2.5-3.5h)**:
+- P0 (3 篇, 必修, 估 1.5-2h): landscape-architecture2, russian, environmental-resource-protection-law
+- P1 (4 篇, 推荐, 估 1-1.5h): advertising, cultural-industry-management, digital-media-technology, engineering-mechanics
 
 ## E 阶段: 11 篇剩余 polish (估时 3-4h)
 
