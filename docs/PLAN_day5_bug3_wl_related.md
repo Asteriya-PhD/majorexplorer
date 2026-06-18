@@ -6,16 +6,26 @@
 
 ---
 
-## 📊 现状 (2026-06-18 排查)
+## 📊 现状 (2026-06-18 排查, 3 层细化)
 
-| 项目 | 数量 |
-|------|------|
-| 总库 majors | 338 (337 curated + 1 demo) |
-| 有 `.wl-related` CSS | 336/338 (99%) — design 残留 |
-| 有 `<section class="wl-related">` body 渲染 | **168/338 (50%)** |
-| 缺 wl-related body | **170/338 (50%)** |
-| 有 `/majors.html` 返回链接 | **0/338 (0%)** |
-| 有 `<footer>` 块 | 100% (但只有"权威数据源", 无跳转) |
+### Bug 3 分层
+
+| 层级 | 问题 | 数量 | 严重度 | 备注 |
+|------|------|------|--------|------|
+| **L1** | `<section class="wl-related">` body 渲染缺失 | **170/338 (50%)** | 🟡 中 | 用户感知最强: "页面结束就死胡同" |
+| **L2** | `href="/majors.html"` 硬链缺失 | **338/338 (100%)** | 🟢 低 | 多数有 `/#majors` 锚链替代 (回主页), 体验 OK 但路径绕 |
+| **L3** | 完全无任何 nav 链接 (`/majors` `/wishlist` 都没有) | **~10-20/338 (估)** | 🔴 高 | 真死链, 用户看完页面无任何出口 |
+| **CSS 残留** | `.wl-related` CSS 出现但无 body | 336/338 (99%) | - | design 残留, body 缺失才生效 |
+
+### 5 个样本验证 (2026-06-18)
+
+| Major | wl-related body | 返链 |
+|-------|----------------|------|
+| electronic-science-technology | ❌ 缺 | `/#majors` + `/wishlist.html` ✓ |
+| environmental-ecological-engineering | ❌ 缺 | `/#majors` + `/wishlist.html` ✓ |
+| applied-linguistics | ❌ 缺 | `/?discipline=05#majors` + `/?discipline=05&sub=0502#majors` + `/#majors` + `/wishlist.html` ✓✓ |
+| radiation-medicine | ❌ 缺 | **❌ 完全无 nav (死链)** |
+| intelligent-engineering-creative-design | ❌ 缺 | **❌ 完全无 nav (死链)** |
 
 ### 缺 wl-related 的 170 篇分布
 
@@ -24,40 +34,51 @@
 
 ---
 
-## 🎯 修复目标
+## 🎯 修复目标 (分层, L1+L3 必做, L2 选做)
 
-| 指标 | 目标 |
-|------|------|
-| wl-related body 渲染 | 338/338 (100%) |
-| /majors.html 返回链接 | 338/338 (100%) |
-| Footer 跳转 (返回主页/相关/心愿单) | 338/338 (100%) |
+| 指标 | 之前 | 之后 (L1+L3) | 之后 (L1+L2+L3) |
+|------|------|---------------|-------------------|
+| wl-related body 渲染 | 168/338 (50%) | 338/338 (100%) | 338/338 (100%) |
+| /majors.html 直链 (L2) | 0/338 (0%) | 0/338 (0%) | 338/338 (100%) |
+| 完全无 nav 链接 (L3) | ~10-20/338 (估) | **0/338 (0%)** | 0/338 (0%) |
+| 至少 1 个返链 (L1+L3 覆盖) | 320/338 (95% 估) | 338/338 (100%) | 338/338 (100%) |
+
+**L1+L3 必做**: 修底部"12 张相关 major 卡" + footer 加 "返回 /majors.html" 链 → 解决"页面结束就死胡同" + L3 死链
+**L2 选做**: 把现有 `/#majors` 锚链统一升级为 `href="/majors.html"` 直链 (体验提升微, 可后置)
 
 ---
 
-## 🛠️ 流水线 5 步
+## 🛠️ 流水线 6 步 (L1+L3 必做, L2 选做)
 
 ```
-1. Render Script 实现 wl-related 模板
+1. Render Script 实现 wl-related 模板 (L1)
    - v4_styles/render.py: line ~1100 (footer 前) 加 wl-related body
    - v4_medicine.py: 同位置
-   - 模板: 12 张同门类相关 major 卡 + 「返回 /majors.html」CTA
+   - 模板: 12 张同门类相关 major 卡 + 「返回 /majors.html」CTA + 「去心愿单」CTA
 
 2. 数据查找逻辑
    - 读 data.style + data.category (e.g., arts + 戏剧与影视)
    - 找同 category 11 个其他 major (排除自己)
    - 按 mcount 倒序 / 学科评估排序
+   - 不足 11 个就跨门类补 (e.g., 1304 美术学 跨到 1303 戏剧影视)
 
-3. Re-render 全部 338 majors
+3. Footer 加 "返回 /majors.html" CTA (L3 必做 + L2 选做)
+   - 现有 170 篇 缺 wl-related, footer 也无任何跳转
+   - 改 render script: 统一在 footer 加 <a href="/majors.html">返回专业目录</a>
+   - 同时保留 #majors 锚链 (双重保障)
+
+4. Re-render 全部 338 majors
    - python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py --data ... --style ... --output ...
    - 4 worker 并行 × 85 majors ≈ 30 min
 
-4. 部署 (手动 re.sub 绕过 ROOT bug)
+5. 部署 (手动 re.sub 绕过 ROOT bug)
    - 178 篇 → public/<slug>.html (相对路径 → /绝对)
 
-5. 验证
-   - 全部 338 HTML 检查 <section class="wl-related"> 存在
-   - 全部 338 HTML 检查 <a href="/majors.html"> 存在
-   - m3 audit 抽样 5 篇 (bug 1+2 已修 batch 中)
+6. 验证 (3 层检查)
+   - L1: 全部 338 HTML 检查 <section class="wl-related"> 存在
+   - L2: 全部 338 HTML 检查 <a href="/majors.html"> 存在 (选做)
+   - L3: 全部 338 HTML 检查 至少 1 个 nav link (防 L3 死链回归)
+   - m3 audit 抽样 5 篇
 ```
 
 ---
@@ -123,13 +144,14 @@ git push origin main
 
 ---
 
-## 📊 Bug 3 完成后覆盖率
+## 📊 Bug 3 完成后覆盖率 (L1+L3 必做, L2 选做)
 
-| 指标 | 之前 | 之后 |
-|------|------|------|
-| wl-related 渲染 | 168/338 (50%) | 338/338 (100%) |
-| /majors.html 返回 | 0/338 (0%) | 338/338 (100%) |
-| 完整底部导航 | 0/338 (0%) | 338/338 (100%) |
+| 指标 | 之前 | 之后 (L1+L3) | 之后 (L1+L2+L3) |
+|------|------|---------------|------------------|
+| wl-related 渲染 (L1) | 168/338 (50%) | 338/338 (100%) | 338/338 (100%) |
+| /majors.html 直链 (L2) | 0/338 (0%) | 0/338 (0%) | 338/338 (100%) |
+| 完全无 nav 死链 (L3) | ~10-20/338 (估) | **0/338 (0%)** | 0/338 (0%) |
+| 至少 1 个返链 | 320/338 (95% 估) | 338/338 (100%) | 338/338 (100%) |
 
 ---
 
