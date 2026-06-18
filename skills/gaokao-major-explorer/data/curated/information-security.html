@@ -1181,7 +1181,14 @@ footer .data-source { color: #94A3B8; }
           </div>
           <div class="company-name">中国移动 / 中国电信 / 中国联通 / 中国银联 (运营商安全)</div>
           <div class="company-meta">★★★ · 校招 安全运维 15-30 万/年, 资深 35-70 万, 央企稳定 + 户口</div>
-
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:60.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
@@ -1190,7 +1197,14 @@ footer .data-source { color: #94A3B8; }
           </div>
           <div class="company-name">中国电子科技 / 中国电科 / 中国网安 (CETC 旗下)</div>
           <div class="company-meta">★★★ · 校招 安全研发 15-30 万/年, 资深 35-70 万, 央企稳定 + 户口</div>
-
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
@@ -1538,10 +1552,6 @@ footer .data-source { color: #94A3B8; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
-    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
-    setTimeout(() => {
-      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
-    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
