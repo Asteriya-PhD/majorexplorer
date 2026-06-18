@@ -69,6 +69,8 @@ class MiMoClient:
 3. xuanke name 必须是具体科目 (物理/化学/生物/历史/地理/政治/不限)
 4. overview_v2 只用 4 段: lede, what_you_learn, who_fits_yes, who_fits_no, pitfalls
 5. alumni_quotes 不要 P8/P9/VP/CTO/CEO 高帽
+6. 【3+1+2 硬规则】xuanke_req_list 的每项 name **必含 "首选" 二字** (e.g. "首选物理 + 化学", "首选物理 + 再选不限", "首选历史 + 再选不限", "首选政治 + 再选不限"), 物理 和 历史 是 2 选 1 首选科目不能在同一选项里同时出现, 所有 pct 总和 = 100
+7. 【薪资 应届生 P50 硬规则】"应届生" 阶段 P50 必须 ≤ 20 万 (麦可思 2024: 本科平均 7.26 万, 顶级头部 ≈ 14-20 万). 13 套 style 模板参考: cs 18 / finance 13 / eng 12 / medicine 9 (规培前) / humanities 8 万. yoy 6-12% 合理
 
 【TEMPLATE】
 {_json.dumps(template, ensure_ascii=False, indent=2)}
@@ -137,6 +139,8 @@ PROMPT_HEADER = """你是中国高考专业深度分析师, 要为 "{title}" 合
 7. deep_study 用 **百分比路径分布** 格式: 5-7 个路径, 路径名=方向细分 (如 "国内硕士 (通信与信息系统/信号处理)"), 百分比加起来 ≈ 100. 示例 (JSON 字典, key 是路径名 string, value 是 0-100 int):
    双花括号"国内硕士 (通信与信息系统/信号处理)": 28, "直接就业 (华为/运营商)": 55双花括号
    **不要** 用 books/certification/skills 3 列格式!
+8. 【3+1+2 硬规则】xuanke_req_list 的每项 name **必含 "首选" 二字** (e.g. "首选物理 + 化学", "首选物理 + 再选不限", "首选历史 + 再选不限", "首选政治 + 再选不限"), 物理 和 历史 是 2 选 1 首选科目不能在同一选项里同时出现, 所有 pct 之和 = 100
+9. 【薪资 应届生 P50 硬规则】"应届生" 阶段 P50 必须 ≤ 20 万 (麦可思 2024: 本科平均 7.26 万, 顶级头部 ≈ 14-20 万). 13 套 style 模板: cs 18 / finance 13 / eng 12 / medicine 9 (规培前) / humanities 8 万, yoy 6-12% 合理
 
 【style = {style}】(必须用这个 style, 决定整篇视觉)
 

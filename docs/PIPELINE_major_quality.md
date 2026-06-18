@@ -370,10 +370,26 @@ python3 scripts/check_major.py <slug_smoke_1> <slug_smoke_2> ...
 
 **Fixture 实战命令**:
 ```bash
-# 写 5 篇 fixture → smoke_xuanke_1/2/3.json + smoke_salary_4/5.json
-# 调 m3 / DeepSeek 生成 → 用 check_major.py 校验 → 不通过则 prompt 改写
-python3 scripts/check_major.py smoke_xuanke_1 smoke_xuanke_2 smoke_xuanke_3 smoke_salary_4 smoke_salary_5
+# 方式 1: 一键跑全部 5 篇 (推荐)
+bash scripts/run_smoke.sh
+
+# 方式 2: 直接调 check_major 的 --fixtures 分支
+python3 scripts/check_major.py --fixtures scripts/smoke_fixtures
+
+# 调 m3 / DeepSeek 生成新 fixture 时, 用同 --fixtures 校验, 不通过则改 prompt
 ```
+
+**5 篇 fixture 详解** (Day 5 防踩加固 v1.3 完工, 2026-06-18):
+
+| # | 文件 | 类别 | 期望结果 | 验证规则 |
+|---|------|------|---------|---------|
+| 1 | `smoke_xuanke_1_finance_BAD.json` | xuanke 陷阱 | ❌ CRITICAL | 3+1+2 物历同现 (3 处) |
+| 2 | `smoke_xuanke_2_admin_GOOD.json` | xuanke 合规 | ✓ 通过 | 首选物理/历史 + 再选不限, 4 组合 pct=100 |
+| 3 | `smoke_xuanke_3_medicine_GOOD.json` | xuanke 合规 | ✓ 通过 | 物化绑定 70% + 物化 25% + 不限 5% |
+| 4 | `smoke_salary_4_finance_BAD.json` | salary 陷阱 | ⚠️ WARNING | 应届 P50=35万虚高 |
+| 5 | `smoke_salary_5_cs_GOOD.json` | salary 合规 | ✓ 通过 | 应届 P50=18万 (cs 顶级头部上限) |
+
+**实测结果** (2026-06-18, scripts/run_smoke.sh): 1 ❌ CRITICAL (xuanke #1) + 1 ⚠️ WARNING (salary #4) + 3 ✓ 通过. 0 false positive.
 
 **何时跑 smoke test**:
 1. 新加 m3 synth prompt 模板时

@@ -9,6 +9,7 @@ check_major.py — Major 精品质量硬门禁 (Day 3 Team B 47 篇验证)
   python3 scripts/check_major.py <slug>           # 检查单个 major
   python3 scripts/check_major.py --all          # 检查 public/ 所有 major
   python3 scripts/check_major.py --staged       # 检查 git staged 但未 commit 的 JSON
+  python3 scripts/check_major.py --fixtures <dir>  # 检查 smoke fixtures 目录所有 JSON (Day 5)
 """
 import json
 import sys
@@ -285,6 +286,7 @@ def check_major(slug):
 
 
 def main():
+    global CURATED  # --fixtures 分支需要覆盖
     if len(sys.argv) < 2:
         print(__doc__)
         sys.exit(1)
@@ -307,6 +309,20 @@ def main():
                 slug = pathlib.Path(f).stem
                 if slug not in slugs:
                     slugs.append(slug)
+    elif sys.argv[1] == '--fixtures':
+        # Day 5 新增: 检查 smoke_fixtures 目录所有 JSON
+        # 用法: check_major.py --fixtures scripts/smoke_fixtures
+        if len(sys.argv) < 3:
+            print("用法: python3 scripts/check_major.py --fixtures <dir>")
+            sys.exit(1)
+        fixtures_dir = pathlib.Path(sys.argv[2])
+        if not fixtures_dir.is_absolute():
+            fixtures_dir = ROOT / fixtures_dir
+        if not fixtures_dir.exists():
+            print(f"❌ fixtures 目录不存在: {fixtures_dir}")
+            sys.exit(1)
+        slugs = sorted([p.stem for p in fixtures_dir.glob('*.json')])
+        CURATED = fixtures_dir  # 覆盖 CURATED path 以便 check_major 能找到文件
     else:
         slugs = sys.argv[1:]
 
