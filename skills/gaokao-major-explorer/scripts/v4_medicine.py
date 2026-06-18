@@ -35,7 +35,8 @@ try:
         render_related_themes_section as _wl_related,
         build_wishlist_init_js as _wl_init,
     )
-    _WL_MANIFEST = Path(__file__).resolve().parent.parent / "data" / "curated" / "manifest.json"
+    # ✅ Day 5 Bug 3 fix (2026-06-18): 同 v4_styles/render.py — 改指 public/data/manifest.json (365 majors)
+    _WL_MANIFEST = Path(__file__).resolve().parents[3] / "public" / "data" / "manifest.json"
 except Exception:
     _WL_STYLE = ""; _WL_HEAD = ""; _wl_related = lambda *a, **k: ""; _wl_init = lambda *a, **k: ""; _WL_MANIFEST = None
 
@@ -336,6 +337,11 @@ footer { padding: 64px 0 48px; text-align: center; border-top: 1px solid #E2E8F0
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 footer .label { color: #475569; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.15em; }
 footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-width: 600px; }
+/* ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 footer-nav */
+.footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 16px; margin: 0 0 28px 0; padding: 0; }
+.footer-nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(12, 74, 110, 0.2); border-radius: 999px; color: #0C4A6E; font-family: 'IBM Plex Mono', monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: all 180ms ease-out; }
+.footer-nav-link:hover { background: rgba(12, 74, 110, 0.08); border-color: #0C4A6E; transform: translateY(-1px); }
+@media (max-width: 600px) { .footer-nav { gap: 8px 10px; margin-bottom: 20px; } .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; } }
 
 /* ── 数字滚动关键帧 (招 #3) ── */
 @keyframes countUp { from { opacity: 0.3; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -869,6 +875,12 @@ def render_v4_medicine(data: dict) -> str:
 {_wl_related(slug, _WL_MANIFEST) if _WL_MANIFEST else ""}
 <footer>
   <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
     <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
     <div class="data-source">数据源: {data_source}</div>
   </div>

@@ -874,6 +874,37 @@ footer .data-source { color: #6B5D3F; }
 }
 .hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
 
+
+/* ── footer 底部导航 (L3 dead-link 兜底 + L2 /majors.html 直链) ── */
+.footer-nav {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 16px; margin: 0 0 28px 0; padding: 0;
+}
+.footer-nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.8125rem; font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  backdrop-filter: blur(4px);
+}
+.footer-nav-link:hover {
+  background: rgba(184, 50, 58, 0.08);
+  border-color: rgba(184, 50, 58, 0.3);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .footer-nav { gap: 8px 10px; margin-bottom: 20px; }
+  .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1413,7 +1444,7 @@ footer .data-source { color: #6B5D3F; }
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「汉语言文学」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「汉语言」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
@@ -1445,10 +1476,10 @@ footer .data-source { color: #6B5D3F; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card humanities" href="/german.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">德语</span><span class="wl-hook">德语</span></a>
-      <a class="wl-card humanities" href="/translation-interpreting.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">翻译</span><span class="wl-hook">翻译</span></a>
-      <a class="wl-card humanities" href="/religious-studies.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">宗教学</span><span class="wl-hook">宗教学</span></a>
-      <a class="wl-card humanities" href="/french.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">法语</span><span class="wl-hook">法语</span></a>
+      <a class="wl-card humanities" href="/spanish.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">西班牙语</span><span class="wl-hook">西班牙语</span></a>
+      <a class="wl-card humanities" href="/translation.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">翻译</span><span class="wl-hook">翻译</span></a>
+      <a class="wl-card humanities" href="/diplomacy.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">外交学</span><span class="wl-hook">外交学</span></a>
+      <a class="wl-card humanities" href="/sign-language-interpreting.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">手语翻译</span><span class="wl-hook">手语翻译</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1463,6 +1494,12 @@ footer .data-source { color: #6B5D3F; }
 
 <footer>
   <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 北大/南大/复旦/北师大/北语培养方案 + 2024-2025 国考中文大类/出版社/NLP 校招样本 + 校友访谈 @ 北京/南京/上海/广州)</div>
   </div>

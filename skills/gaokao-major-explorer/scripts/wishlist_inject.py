@@ -367,11 +367,97 @@ STYLE_LABEL = {
 
 
 def render_related_themes_section(slug: str, manifest_path: str | Path) -> str:
-    """生成 心意框 CTA + 12 主题卡 section. manifest_path 是 manifest.json 绝对路径."""
-    manifest = _load_manifest(manifest_path)
-    picks = _pick_related(slug, manifest)
+    """生成 心意框 CTA + 12 主题卡 section. manifest_path 是 manifest.json 绝对路径.
+
+    ✅ Day 5 Bug 3 fix (2026-06-18): 当 _pick_related 返回空 (slug 不在 manifest 或
+    manifest 缺数据) 时, 仍渲染一个最小 fallback section (wishlist CTA + 返回链接),
+    保证"页面结束就死胡同"问题 100% 兜底. 旧行为是返回 "", 170/338 页底部没有任何出口.
+    """
+    try:
+        manifest = _load_manifest(manifest_path)
+        picks = _pick_related(slug, manifest)
+    except Exception:
+        manifest, picks = {}, []
+
+    current = manifest.get(slug, {})
+    cur_title = current.get("title", "这个专业")
+
+    # ── Fallback 1: manifest 没该 slug (新专业未入册) ──
+    if not picks and not current:
+        return f"""
+<!-- 心意框 fallback (slug 不在 manifest: {slug}) -->
+<section class="wl-decide" id="wl-decide">
+  <div class="container">
+    <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
+    <h2 class="wl-decide-title">「{cur_title}」<br>是你愿意学 4 年的方向吗?</h2>
+    <div class="wl-decide-grid">
+      <button class="wl-decide-card primary" data-act="add">
+        <span class="wl-decide-emoji">🌟</span>
+        <span class="wl-decide-h">心仪 · 加入心愿单</span>
+        <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
+      </button>
+      <a class="wl-decide-card" href="/majors.html">
+        <span class="wl-decide-emoji">📚</span>
+        <span class="wl-decide-h">返回专业目录</span>
+        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
+<section class="wl-related" id="wl-related">
+  <div class="container">
+    <div class="wl-eyebrow">More to explore</div>
+    <h2>没找到想看的? 搜一下别的专业</h2>
+    <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
+    <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+    <div class="wl-cta-bar">
+      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+  </div>
+</section>
+"""
+
+    # ── Fallback 2: slug 在 manifest 但 _pick_related 找不到相关 (极少见) ──
     if not picks:
-        return ""
+        return f"""
+<!-- 心意框 (slug 在 manifest 但无相关推荐: {slug}) -->
+<section class="wl-decide" id="wl-decide">
+  <div class="container">
+    <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
+    <h2 class="wl-decide-title">「{cur_title}」<br>是你愿意学 4 年的方向吗?</h2>
+    <div class="wl-decide-grid">
+      <button class="wl-decide-card primary" data-act="add">
+        <span class="wl-decide-emoji">🌟</span>
+        <span class="wl-decide-h">心仪 · 加入心愿单</span>
+        <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
+      </button>
+      <a class="wl-decide-card" href="/majors.html">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方浏览全部 365 个精品专业</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="wl-related" id="wl-related">
+  <div class="container">
+    <div class="wl-eyebrow">More to explore</div>
+    <h2>没找到想看的? 搜一下别的专业</h2>
+    <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中.</p>
+    <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+    <div class="wl-cta-bar">
+      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+  </div>
+</section>
+"""
 
     current = manifest.get(slug, {})
     cur_title = current.get("title", "这个专业")

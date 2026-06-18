@@ -1002,6 +1002,37 @@ footer .data-source { color: #78716C; }
 }
 .hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
 
+
+/* ── footer 底部导航 (L3 dead-link 兜底 + L2 /majors.html 直链) ── */
+.footer-nav {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 16px; margin: 0 0 28px 0; padding: 0;
+}
+.footer-nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.8125rem; font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  backdrop-filter: blur(4px);
+}
+.footer-nav-link:hover {
+  background: rgba(184, 50, 58, 0.08);
+  border-color: rgba(184, 50, 58, 0.3);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .footer-nav { gap: 8px 10px; margin-bottom: 20px; }
+  .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1014,6 +1045,7 @@ footer .data-source { color: #78716C; }
   <div class="container" style="padding-top: 64px;">
     <div class="hero-decor" style="color: #C73E1D;">§ 01 · 应用化学 · 基础学科</div>
     <h1 class="display" style="font-family: 'EB Garamond', serif; color: #1F1B12; font-weight: 500;">应用化学</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=07#majors">理学</a><span class="bc-sep">›</span><a href="/?discipline=07&sub=工学类#majors">工学类</a><span class="bc-sep">›</span><span class="bc-current">应用化学</span></div>
     <p class="hero-tagline" style="color: #786A4F; font-style: italic; max-width: 720px;">理学门类下的「化学底子+工程应用」双轨专业, 比化学专业更吃工程, 比化学工程更吃基础研究, 在新能源/电池/医药中间体风口下, 头部岗位 (锂电电解液/正极材料/医药 CDMO) 应届起薪 15-25 万, 但化学通才口径让「岗位画像」远比 CS/电子更模糊.</p>
     <div class="hero-tags">
       <span class="tag primary">四大化学</span><span class="tag primary">精细化学品</span><span class="tag primary">新能源材料</span>
@@ -1300,39 +1332,39 @@ footer .data-source { color: #78716C; }
       <tbody>
         <tr>
           <td class="salary-stage">应届生 (锂电/新能源材料/医药 CDMO)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:48.0%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="25">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:48.0%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">应届生 (电子化学品/检测/精细化工)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="10">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.45454545454545%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="15">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.18181818181817%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.45454545454545%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.18181818181817%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">应届生 (大化工/化工厂工艺)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="8">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +2%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +2%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (中级研发/工艺工程师)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.0%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="40">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.0%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">5年经验 (资深研发/项目负责人)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="30">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="45">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.28571428571429%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="70">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="45" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.28571428571429%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">10年+ (技术专家/研发总监)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="50">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:38.46153846153847%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="80">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.53846153846154%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="130">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:38.46153846153847%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.53846153846154%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="130" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1494,32 +1526,90 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">化学</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:85%"></div></div>
-          <div class="xuanke-pct">85%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
+          <div class="xuanke-pct">70%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:75%"></div></div>
-          <div class="xuanke-pct">75%</div>
+          <div class="xuanke-name">物理 + 化学 (再选生物或不限)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
+          <div class="xuanke-pct">18%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">生物</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
-          <div class="xuanke-pct">25%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">不限选科</div>
+          <div class="xuanke-name">物理 + 生物 + 化学 (同组, 顺序差异)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
           <div class="xuanke-pct">8%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (少数综合院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
+          <div class="xuanke-pct">4%</div>
         </div>
     </div>
   </div>
 </section>
 
 
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
+<section class="wl-decide" id="wl-decide">
+  <div class="container">
+    <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
+    <h2 class="wl-decide-title">「应用化学」<br>是你愿意学 4 年的方向吗?</h2>
+    <div class="wl-decide-grid">
+      <button class="wl-decide-card primary" data-act="add">
+        <span class="wl-decide-emoji">🌟</span>
+        <span class="wl-decide-h">心仪 · 加入心愿单</span>
+        <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
+      </button>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="wl-related" id="wl-related">
+  <div class="container">
+    <div class="wl-eyebrow">More to explore</div>
+    <h2>没找到想看的? 搜一下别的专业</h2>
+    <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
+    <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
+    <div class="wl-cta-bar">
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
+      <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card sci" href="/biological-sciences.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">生物科学</span><span class="wl-hook">生物科学</span></a>
+      <a class="wl-card sci" href="/environmental-ecological-engineering.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">环境生态工程</span><span class="wl-hook">环境生态工程</span></a>
+      <a class="wl-card sci" href="/physics.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">物理学</span><span class="wl-hook">四大力学, 转工科友好</span></a>
+      <a class="wl-card sci" href="/chemical-biology.html" data-tag="同主题"><span class="wl-badge">理科</span><span class="wl-title">化学生物学</span><span class="wl-hook">化学生物学</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
+      <a class="wl-card education" href="/psychology.html" data-tag="跨界"><span class="wl-badge">教育</span><span class="wl-title">心理学</span><span class="wl-hook">用户研究 + 认知神经科学</span></a>
+      <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 北大/南大/中科大/天大应化培养方案 + 2024-2025 宁德/药明康德/江化微校招 offer 墙 + 校友访谈 @ 上海/宁德/天津)</div>
   </div>
@@ -1562,10 +1652,6 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
-    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
-    setTimeout(() => {
-      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
-    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

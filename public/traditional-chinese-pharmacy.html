@@ -310,6 +310,11 @@ footer { padding: 64px 0 48px; text-align: center; border-top: 1px solid #E2E8F0
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 footer .label { color: #475569; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.15em; }
 footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-width: 600px; }
+/* ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 footer-nav */
+.footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 16px; margin: 0 0 28px 0; padding: 0; }
+.footer-nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(12, 74, 110, 0.2); border-radius: 999px; color: #0C4A6E; font-family: 'IBM Plex Mono', monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: all 180ms ease-out; }
+.footer-nav-link:hover { background: rgba(12, 74, 110, 0.08); border-color: #0C4A6E; transform: translateY(-1px); }
+@media (max-width: 600px) { .footer-nav { gap: 8px 10px; margin-bottom: 20px; } .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; } }
 
 /* ── 数字滚动关键帧 (招 #3) ── */
 @keyframes countUp { from { opacity: 0.3; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -535,119 +540,6 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 .wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
 .wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
-
-/* ⭐ 标题旁国家战略徽章 */
-.strategy-badge {
-  display: inline-block; margin-left: 14px;
-  font-family: 'Songti SC', 'SimSun', '宋体', serif;
-  font-size: 0.75rem; color: #B8323A;
-  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
-  border: 1px solid rgba(184,50,58,0.3);
-  padding: 4px 12px; border-radius: 4px;
-  letter-spacing: 0.08em; font-weight: 600;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
-.strategy-fit-card {
-  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
-  border: 1px solid rgba(184,50,58,0.2);
-  border-radius: 8px;
-  padding: 18px 22px; margin: 0 0 24px 0;
-}
-.strategy-fit-header {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.strategy-fit-icon { font-size: 1.1rem; }
-.strategy-fit-title {
-  font-weight: 600; color: #B8323A;
-  font-family: 'Songti SC', 'SimSun', serif;
-  font-size: 1rem; letter-spacing: 0.05em;
-}
-.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
-.strategy-fit-list {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
-}
-.strategy-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 7px 14px; background: white;
-  border: 1px solid rgba(184,50,58,0.3);
-  border-radius: 6px; text-decoration: none;
-  color: #1A1A1A; font-size: 0.8125rem;
-  transition: all 0.2s;
-}
-.strategy-link:hover {
-  background: rgba(184,50,58,0.06);
-  border-color: #B8323A; transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
-}
-.strategy-link-name { font-weight: 500; }
-.strategy-link-tier {
-  color: #D97706; font-size: 0.6875rem; font-weight: 500;
-  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
-}
-.strategy-fit-tip {
-  font-size: 0.75rem; color: #8B7355;
-  margin-top: 4px; font-style: italic;
-}
-@media (max-width: 600px) {
-  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
-}
-
-/* 📚 学科定位 breadcrumb(hero 标题下方) */
-.discipline-breadcrumb {
-  max-width: 880px; margin: -16px auto 24px; padding: 0 24px;
-  font-size: 0.875rem; color: var(--c-muted, #6B7280);
-  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
-}
-.discipline-breadcrumb a {
-  color: #2A6F4F; text-decoration: none;
-  border-bottom: 1px dotted rgba(42,111,79,0.4);
-  transition: all 0.2s;
-}
-.discipline-breadcrumb a:hover {
-  background: rgba(42,111,79,0.06);
-  border-bottom-color: #2A6F4F;
-}
-.bc-sep { margin: 0 8px; color: #ccc; }
-.bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
-@media (max-width: 600px) {
-  .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
-}
-
-/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
-.hero-stats .chsi-rating-cell {
-  grid-column: 1 / -1;
-  display: flex; align-items: baseline; gap: 14px;
-  padding: 12px 16px; margin-top: 6px;
-  border-top: 1px dashed currentColor;
-  opacity: 0.92;
-  font-feature-settings: "tnum" 1;
-}
-.hero-stats .chsi-rating-cell .chsi-label {
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 0.625rem; letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.hero-stats .chsi-rating-cell .chsi-score {
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
-  margin-left: auto;
-}
-.hero-stats .chsi-rating-cell .chsi-meta {
-  font-size: 0.6875rem; opacity: 0.7;
-}
-/* law 主题: 印章下方 mini-badge (无 hero-stats) */
-.hero .chsi-rating-badge {
-  display: inline-flex; align-items: baseline; gap: 8px;
-  margin-top: 12px; padding: 6px 14px;
-  border: 1px solid currentColor; border-radius: 4px;
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 0.75rem; opacity: 0.85;
-}
-.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
-
 </style>
 </head>
 <body>
@@ -697,7 +589,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
           <span class="tag">质量控制</span><span class="tag">GMP</span><span class="tag">临床药学</span><span class="tag">科研</span>
         </div>
         <div class="hero-stats">
-          <div class="stat"><div class="stat-label">学科门类<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">4.1</span></div></div><div class="stat-value">医学 · 中药学类</div></div>
+          <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">医学 · 中药学类</div></div>
           <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4年 · 理学学士</div></div>
           <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★★☆</div></div>
           <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
@@ -964,27 +856,27 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       <tbody>
         <tr>
           <td class="salary-stage">应届生 (一线)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:31.818181818181817%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:31.818181818181817%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="13">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.142857142857146%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="13" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.142857142857146%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">5年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.666666666666664%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.333333333333336%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="60">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.666666666666664%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.333333333333336%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">10年+ (持证/资深)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="40">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:30.76923076923077%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="50">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:38.46153846153847%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="130">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:30.76923076923077%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:38.46153846153847%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="130" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1179,10 +1071,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card medicine" href="/forensic-medicine.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">法医学</span><span class="wl-hook">法医学</span></a>
-      <a class="wl-card medicine" href="/medical-laboratory-science.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">医学检验技术</span><span class="wl-hook">医学检验技术</span></a>
-      <a class="wl-card medicine" href="/psychiatry.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">精神医学</span><span class="wl-hook">精神医学</span></a>
-      <a class="wl-card medicine" href="/audiology-speech-rehabilitation.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">听力与言语康复学</span><span class="wl-hook">听力与言语康复学</span></a>
+      <a class="wl-card medicine" href="/clinical-engineering-technology.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">临床工程技术</span><span class="wl-hook">临床工程技术</span></a>
+      <a class="wl-card medicine" href="/nursing.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">护理学</span><span class="wl-hook">护理学</span></a>
+      <a class="wl-card medicine" href="/traditional-chinese-medicine.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">中医学</span><span class="wl-hook">师承制, 越老越值钱</span></a>
+      <a class="wl-card medicine" href="/integrated-chinese-western-medicine.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">中西医临床医学</span><span class="wl-hook">中西医临床医学</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1197,6 +1089,12 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 
 <footer>
   <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
     <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
     <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 行业调研 + 招聘样本)</div>
   </div>

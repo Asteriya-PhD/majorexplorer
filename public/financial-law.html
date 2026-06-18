@@ -888,6 +888,37 @@ footer .data-source { color: #78716C; }
 }
 .hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
 
+
+/* ── footer 底部导航 (L3 dead-link 兜底 + L2 /majors.html 直链) ── */
+.footer-nav {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 16px; margin: 0 0 28px 0; padding: 0;
+}
+.footer-nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.8125rem; font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  backdrop-filter: blur(4px);
+}
+.footer-nav-link:hover {
+  background: rgba(184, 50, 58, 0.08);
+  border-color: rgba(184, 50, 58, 0.3);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .footer-nav { gap: 8px 10px; margin-bottom: 20px; }
+  .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; }
+}
+
 </style>
 </head>
 <body>
@@ -904,6 +935,7 @@ footer .data-source { color: #78716C; }
       </div>
     </div>
     <h1>金融法</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=03#majors">法学</a><span class="bc-sep">›</span><a href="/?discipline=03&sub=0303#majors">社会学类</a><span class="bc-sep">›</span><span class="bc-current">金融法</span></div>
     <p class="hero-tagline">— 金融法是法学门类下薪资分层最极端的细分方向, 红圈所金融证券一年级 associate 25-35 万 vs 普通所 8-12 万, 5 倍差距在 3 年后会拉到 10 倍. 真正的入场券是 985 本硕 + 法考 + 长期律所实习, 「读 —</p>
     <div class="hero-tags">
       <span class="tag primary">金融法</span><span class="tag primary">法学交叉学科</span><span class="tag primary">证券监管</span>
@@ -1227,33 +1259,33 @@ footer .data-source { color: #78716C; }
       <tbody>
         <tr>
           <td class="salary-stage">应届生 (红圈所金融证券一年级)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="25">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="30">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:85.71428571428571%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:85.71428571428571%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">应届生 (普通所/精品所/企业法务)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="8">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="18">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (红圈所三年级/精品所五年级)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="40">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +12%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="60">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="90">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="90" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">5年经验 (红圈所资深/头部券商法务总监)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="60">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="100">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="150">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">10年+ (合伙人/法务负责人)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="100">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:20.0%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="200">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="500">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:20.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="200" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="500" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1475,10 +1507,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card law" href="/civil-law-jurisprudence.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">民法</span><span class="wl-hook">民法</span></a>
-      <a class="wl-card law" href="/sports-law.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">体育法</span><span class="wl-hook">体育法</span></a>
-      <a class="wl-card law" href="/criminal-procedure.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">刑事诉讼法</span><span class="wl-hook">刑事诉讼法</span></a>
-      <a class="wl-card law" href="/law.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card law" href="/cyber-information-law.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">网络与信息法学</span><span class="wl-hook">网络与信息法学</span></a>
+      <a class="wl-card law" href="/environmental-resource-protection-law.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">环境与资源保护法学</span><span class="wl-hook">环境与资源保护法学</span></a>
+      <a class="wl-card law" href="/criminal-law.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">刑事法学</span><span class="wl-hook">刑事法学</span></a>
+      <a class="wl-card law" href="/international-politics.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">国际政治</span><span class="wl-hook">国际政治</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1493,6 +1525,12 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 北大/人大/政法/对外经贸金融法方向培养方案 + 红圈所 2024-2025 校招 offer 墙 + 校友访谈 @ 北京/上海/深圳)</div>
   </div>
@@ -1535,10 +1573,6 @@ footer .data-source { color: #78716C; }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
-    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
-    setTimeout(() => {
-      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
-    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {

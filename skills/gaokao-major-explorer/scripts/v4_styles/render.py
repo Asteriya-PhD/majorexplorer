@@ -20,7 +20,10 @@ try:
         render_related_themes_section as _wl_related,
         build_wishlist_init_js as _wl_init,
     )
-    _WL_MANIFEST = Path(__file__).resolve().parent.parent.parent / "data" / "curated" / "manifest.json"
+    # ✅ Day 5 Bug 3 fix (2026-06-18): 指向 public/data/manifest.json (365 majors),
+    # 旧 path 指向 skills/.../curated/manifest.json (277 majors, 未 sync Day 5 增量)
+    # 导致 acting/film/recording 等 Day 5 新专业 _pick_related 返回空, wl-related 整段缺失.
+    _WL_MANIFEST = Path(__file__).resolve().parents[4] / "public" / "data" / "manifest.json"
 except Exception:
     _WL_STYLE = ""; _WL_HEAD = ""; _wl_related = lambda *a, **k: ""; _wl_init = lambda *a, **k: ""; _WL_MANIFEST = None
 
@@ -109,6 +112,40 @@ DISCIPLINE_CSS = """
 .bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
 @media (max-width: 600px) {
   .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
+}
+"""
+
+
+# ── 🔗 Bug 3 L3 死链兜底 + L2 直链 footer-nav CSS (2026-06-18 Day 5) ──
+FOOTER_NAV_CSS = """
+/* ── footer 底部导航 (L3 dead-link 兜底 + L2 /majors.html 直链) ── */
+.footer-nav {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 16px; margin: 0 0 28px 0; padding: 0;
+}
+.footer-nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.8125rem; font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  backdrop-filter: blur(4px);
+}
+.footer-nav-link:hover {
+  background: rgba(184, 50, 58, 0.08);
+  border-color: rgba(184, 50, 58, 0.3);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .footer-nav { gap: 8px 10px; margin-bottom: 20px; }
+  .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; }
 }
 """
 
@@ -609,6 +646,7 @@ def render_v4(data: dict, style: str) -> str:
 {_WL_STYLE}
 {STRATEGY_CSS}
 {CHSI_CSS}
+{FOOTER_NAV_CSS}
 </style>
 </head>
 <body>
@@ -729,6 +767,12 @@ def render_v4(data: dict, style: str) -> str:
 {_wl_related(slug, _WL_MANIFEST) if _WL_MANIFEST else ""}
 <footer>
   <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: {data_source}</div>
   </div>

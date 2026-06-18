@@ -1093,6 +1093,37 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 }
 .hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
 
+
+/* ── footer 底部导航 (L3 dead-link 兜底 + L2 /majors.html 直链) ── */
+.footer-nav {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 16px; margin: 0 0 28px 0; padding: 0;
+}
+.footer-nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.8125rem; font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  backdrop-filter: blur(4px);
+}
+.footer-nav-link:hover {
+  background: rgba(184, 50, 58, 0.08);
+  border-color: rgba(184, 50, 58, 0.3);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .footer-nav { gap: 8px 10px; margin-bottom: 20px; }
+  .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1479,27 +1510,27 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       <tbody>
         <tr>
           <td class="salary-stage">应届 (0-1 年 / 实习期)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="5">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.55555555555556%"></span></span><span class="yoy flat">→ 0%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:77.77777777777779%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="9">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="5" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.55555555555556%"></span></span><span class="yoy flat">→ 0%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:77.77777777777779%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="9" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">1-3 年 (基层情报员 / 派出所情报民警)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="7">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.84615384615385%"></span></span><span class="yoy up">↗ +3%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="10">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:76.92307692307693%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="13">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.84615384615385%"></span></span><span class="yoy up">↗ +3%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:76.92307692307693%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="13" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3-5 年 (情报主管 / 业务骨干 / 网安组长)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="12">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="16">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.72727272727273%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.72727272727273%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">8-10 年 (情报大队长 / 网安主任 / 处长)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="20">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:52.63157894736842%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:73.68421052631578%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="38">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:52.63157894736842%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:73.68421052631578%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="38" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1731,10 +1762,10 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card gongan" href="/prison-studies.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">监狱学</span><span class="wl-hook">监狱学</span></a>
-      <a class="wl-card gongan" href="/criminology.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">犯罪学</span><span class="wl-hook">犯罪学</span></a>
-      <a class="wl-card gongan" href="/drug-control.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">禁毒学</span><span class="wl-hook">禁毒学</span></a>
-      <a class="wl-card gongan" href="/criminal-investigation.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">侦查学</span><span class="wl-hook">侦查学</span></a>
+      <a class="wl-card gongan" href="/foreign-police.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">涉外警务</span><span class="wl-hook">涉外警务</span></a>
+      <a class="wl-card gongan" href="/public-security-demo.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">公安学类</span><span class="wl-hook">公安学类</span></a>
+      <a class="wl-card gongan" href="/police-management.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">公安管理学</span><span class="wl-hook">公安管理学</span></a>
+      <a class="wl-card gongan" href="/economic-crime-investigation.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">经济犯罪侦查</span><span class="wl-hook">经济犯罪侦查</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1749,6 +1780,12 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 
 <footer>
   <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 综合教育部第四轮学科评估、软科 2025 中国最好学科排名、中国人民公安大学/中国刑事警察学院/中国人民警察大学 2025 年本科培养方案、麦可思 2025 届毕业生半年后就业报告、职友集薪资样本(36848 份公安情报学毕业生数据)、国家公务员局 2025 年公安机关招考职位表、各校 2024-2026 年招生章程、阳光高考 2026 选科数据、知乎/小红书 2017-2024 届校友分享等公开信息。</div>
   </div>
@@ -1791,10 +1828,6 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
-    // Failsafe: 1.5s 后任何仍未触发的 .fade-up 强制可见 (Playwright full-page + 慢 JS)
-    setTimeout(() => {
-      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
-    }, 1500);
   } else {
     document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
     document.querySelectorAll('[data-count]').forEach(el => {
