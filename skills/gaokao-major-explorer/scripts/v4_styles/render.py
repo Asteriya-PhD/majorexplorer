@@ -520,12 +520,14 @@ def render_v4(data: dict, style: str) -> str:
             yoy_html = f'<span class="yoy down">↘ {yoy}%</span>'
         else:
             yoy_html = f'<span class="yoy flat">→ 0%</span>'
+        def _f(v):
+            return '1' if (isinstance(v, float) and v != int(v)) or (isinstance(v, str) and '.' in v) else '0'
         salary_rows.append(
             f'''        <tr>
           <td class="salary-stage">{stage}</td>
-          <td class="num"><span class="approx">≈</span><span data-count="{p25}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p25/max_v*100}%"></span></span>{yoy_html}</td>
-          <td class="num"><span class="approx">≈</span><span data-count="{p50}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p50/max_v*100}%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="{p75}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p75/max_v*100}%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="{p25}" data-float="{_f(p25)}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p25/max_v*100}%"></span></span>{yoy_html}</td>
+          <td class="num"><span class="approx">≈</span><span data-count="{p50}" data-float="{_f(p50)}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p50/max_v*100}%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="{p75}" data-float="{_f(p75)}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p75/max_v*100}%"></span></span></td>
         </tr>'''
         )
     salary_html = "\n".join(salary_rows) if salary_rows else '<tr><td colspan="4">薪资数据待补充</td></tr>'

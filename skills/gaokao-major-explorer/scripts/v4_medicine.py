@@ -589,6 +589,8 @@ def render_v4_medicine(data: dict) -> str:
     ) if top_companies else '<p style="color:#475569">公司数据待补充</p>'
 
     # ── 薪资 (招 #3: 数字滚动) ──
+    def _f(v):
+        return '1' if (isinstance(v, float) and v != int(v)) or (isinstance(v, str) and '.' in v) else '0'
     salary_rows = []
     for stage, vals in salary.items():
         p25, p50, p75 = vals.get("p25", 0), vals.get("p50", 0), vals.get("p75", 0)
@@ -603,9 +605,9 @@ def render_v4_medicine(data: dict) -> str:
         salary_rows.append(
             f'''        <tr>
           <td class="salary-stage">{stage}</td>
-          <td class="num"><span class="approx">≈</span><span data-count="{p25}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p25/max_v*100}%"></span></span>{yoy_html}</td>
-          <td class="num"><span class="approx">≈</span><span data-count="{p50}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p50/max_v*100}%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="{p75}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p75/max_v*100}%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="{p25}" data-float="{_f(p25)}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p25/max_v*100}%"></span></span>{yoy_html}</td>
+          <td class="num"><span class="approx">≈</span><span data-count="{p50}" data-float="{_f(p50)}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p50/max_v*100}%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="{p75}" data-float="{_f(p75)}">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:{p75/max_v*100}%"></span></span></td>
         </tr>'''
         )
     salary_html = "\n".join(salary_rows) if salary_rows else '<tr><td colspan="4" style="color:#475569">薪资数据待补充</td></tr>'
