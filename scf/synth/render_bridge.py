@@ -5,13 +5,16 @@ synth/render_bridge.py — subprocess 调 generate_dashboard.py 写两处产物.
   - 加载 data dict
   - generate_dashboard(data, style) -> html
   - 写 skills/.../curated/<slug>.html (source of truth)
-  - 写 public/<slug>.html (EdgeOne 静态服务)
+  - 写 public/<slug>.html (CF Pages 静态服务)
+    - public 路径写完跑路径转换: ../../js/ → /js/, ../../css/ → /css/
+    - 跑 3 个 inject (inject_og / inject_seo / inject_jsonld)
 
 失败抛 RenderError, 包含 stderr 末尾 500 字符.
 """
 from __future__ import annotations
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -183,7 +186,8 @@ def render_html(data: dict, slug: str, style: str) -> tuple[str, int]:
       1) normalize_for_render (防 LLM 返错 shape)
       2) 把 data 写到临时 JSON
       3) python generate_dashboard.py --data <tmp.json> --style <style> --output <tmp.html>
-      4) 把 html 复制到 curated/<slug>.html + public/<slug>.html
+      4) 写 skills/.../curated/<slug>.html (原始 HTML, ../../js/ 路径)
+      5) 写 public/<slug>.html (跑路径转换 ../../js/ → /js/, 然后跑 3 个 inject)
     """
     data = normalize_for_render(data)
     if not GEN_DASH.exists():
@@ -217,15 +221,56 @@ def render_html(data: dict, slug: str, style: str) -> tuple[str, int]:
         if not os.path.exists(tmp_html):
             raise RenderError(f"generate_dashboard 未输出 {tmp_html}")
 
-        # 4. 读 HTML, 写两处
+        # 4. 读 HTML
         html = Path(tmp_html).read_text(encoding="utf-8")
         CURATED_DIR.mkdir(parents=True, exist_ok=True)
         PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
+
+        # 4a. 写 curated (source of truth, 原始路径)
         curated_path = CURATED_DIR / f"{slug}.html"
-        public_path = PUBLIC_DIR / f"{slug}.html"
         curated_path.write_text(html, encoding="utf-8")
-        public_path.write_text(html, encoding="utf-8")
-        return str(public_path), len(html)
+
+        # 4b. 写 public (跑路径转换 ../../js/ → /js/, ../../css/ → /css/)
+        PUBLIC_PATH_PATTERN = re.compile(r'(src|href)="\.\./\.\./((?:js|css)/[^"]+)"')
+        html_for_public = PUBLIC_PATH_PATTERN.sub(
+            lambda m: f'{m.group(1)}="/{m.group(2)}"', html
+        )
+        public_path = PUBLIC_DIR / f"{slug}.html"
+        public_path.write_text(html_for_public, encoding="utf-8")
+
+        # 4c. 跑 3 个 inject (SEO + OG + JSON-LD) — 直接 inline 调, 防死链
+        for inject_script in ("inject_og.py", "inject_seo.py", "inject_jsonld.py"):
+            inject_path = ROOT / "scripts" / inject_script
+            if not inject_path.exists():
+                print(f"  [inject] {inject_script} 不存在, 跳过")
+                continue
+            try:
+                # 各 inject 接受 --slug <slug> (按需 verify 签名)
+                inject_proc = subprocess.run(
+                    [sys.executable, str(inject_path), "--slug", slug],
+                    capture_output=True, text=True,
+                    cwd=str(ROOT), timeout=30,
+                )
+                if inject_proc.returncode != 0:
+                    err_tail = (inject_proc.stderr or inject_proc.stdout or "")[-200:]
+                    print(f"  [inject] {inject_script} 警告 (rc={inject_proc.returncode}): {err_tail}")
+                else:
+                    print(f"  [inject] {inject_script} ✓")
+            except subprocess.TimeoutExpired:
+                print(f"  [inject] {inject_script} 超时 30s, 跳过")
+            except Exception as e:
+                print(f"  [inject] {inject_script} 失败: {type(e).__name__}: {e}")
+
+        # 4d. 最终同步: inject 改的是 CURATED, 重新 sync 到 PUBLIC (带路径转换)
+        #     保证 CF Pages 拿到的 public/<slug>.html 是最新版 + 路径绝对化
+        if curated_path.exists():
+            final_curated = curated_path.read_text(encoding="utf-8")
+            final_public = PUBLIC_PATH_PATTERN.sub(
+                lambda m: f'{m.group(1)}="/{m.group(2)}"', final_curated
+            )
+            public_path.write_text(final_public, encoding="utf-8")
+            return str(public_path), len(final_public)
+        return str(public_path), len(html_for_public)
     finally:
         for p in (tmp_json, tmp_html):
             try:

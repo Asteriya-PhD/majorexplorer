@@ -222,8 +222,12 @@
     return `
       <div class="no-result-report" data-q="${_esc(query)}">
         <div class="nrr-title">尚未收录「<strong>${_esc(query)}</strong>」</div>
-        <div class="nrr-desc">告诉我们你想看, 收齐了我们优先做。报告会在 GitHub Issue 里归档, 我们会跟踪。</div>
-        <button class="nrr-btn" type="button">📨 点击报告给我们</button>
+        <div class="nrr-desc">试试实时生成 (约 60-120 秒出完整页面), 或告诉我们你想看, 收齐了我们优先做。</div>
+        <div class="nrr-actions">
+          <button class="nrr-synth-btn" type="button">🔄 实时生成这篇</button>
+          <button class="nrr-btn" type="button">📨 报告给我们</button>
+        </div>
+        <div class="nrr-synth-status"></div>
         <div class="nrr-fallback">没反应? 邮件 <a href="mailto:major.explorer.feedback@gmail.com">major.explorer.feedback@gmail.com</a></div>
       </div>
     `;
@@ -256,6 +260,134 @@
         btn.classList.add("failed");
         btn.disabled = false;
         console.error("[pc-search.js] report failed", e);
+      }
+    });
+    // 新增: 实时合成 CTA (mobile 复用同一函数)
+    bindSynthCard(root, query, "pc");
+  }
+
+  // ── 4 段进度映射 (与 worker step 对齐, UI 友好) ──
+  function synthStepName(step) {
+    if (!step) return "排队中";
+    if (step === "init" || step === "validate") return "正在准备";
+    if (step === "search" || step === "route_style" || step === "synthesize") return "正在生成内容";
+    if (step === "render") return "正在渲染页面";
+    if (step === "manifest") return "正在发布";
+    if (step === "complete") return "即将完成";
+    return "处理中";
+  }
+
+  // ── 🔄 实时合成 handler (PC + mobile 共享逻辑) ──
+  async function bindSynthCard(root, query, source) {
+    const card = root.querySelector(".no-result-report");
+    if (!card) return;
+    const btn = card.querySelector(".nrr-synth-btn");
+    const statusEl = card.querySelector(".nrr-synth-status");
+    if (!btn) return;
+
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      const originalLabel = btn.textContent;
+      btn.textContent = "排队中...";
+      statusEl.textContent = "";
+      statusEl.className = "nrr-synth-status";
+
+      try {
+        // 1) POST 入队
+        const r = await fetch("/api/synth/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: query, source }),
+        });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok || !d.ok) {
+          if (r.status === 429) throw new Error("请求太频繁, 请 1 分钟后再试");
+          throw new Error(d.error || `HTTP ${r.status}`);
+        }
+
+        // 2) dedup hit: 同 slug 已 done → 直接跳
+        if (d.deduped && d.status === "done" && d.output_url) {
+          statusEl.textContent = "✅ 已存在, 跳转中...";
+          statusEl.classList.add("ok");
+          setTimeout(() => { location.href = d.output_url; }, 600);
+          return;
+        }
+
+        // 3) 轮询 status (3s 间隔, 最长 5min = 100 次)
+        const runId = d.run_id;
+        statusEl.textContent = "⏳ 正在准备, 预计 60-120 秒";
+        statusEl.classList.add("running");
+        btn.textContent = "正在合成...";
+
+        let attempts = 0;
+        const poll = setInterval(async () => {
+          attempts++;
+          try {
+            const sr = await fetch(`/api/synth/status?run_id=${runId}`);
+            const s = await sr.json().catch(() => ({}));
+            if (!sr.ok) {
+              if (attempts > 3) {
+                clearInterval(poll);
+                throw new Error(`状态查询失败 (HTTP ${sr.status})`);
+              }
+              return;
+            }
+            if (s.status === "done" && s.output_url) {
+              clearInterval(poll);
+              statusEl.textContent = "✅ 合成完成, 跳转中...";
+              statusEl.classList.remove("running");
+              statusEl.classList.add("ok");
+              setTimeout(() => { location.href = s.output_url; }, 600);
+              return;
+            }
+            if (s.status === "failed" || s.status === "dead") {
+              clearInterval(poll);
+              statusEl.innerHTML = `❌ 合成失败: ${_esc(s.error || "未知错误")}. <a href="#" class="nrr-report-link">📨 报告给我们</a>`;
+              statusEl.classList.remove("running");
+              statusEl.classList.add("failed");
+              btn.disabled = false;
+              btn.textContent = originalLabel;
+              return;
+            }
+            // queued / running → 4 段进度
+            statusEl.textContent = `⏳ ${synthStepName(s.step)} (第 ${attempts} 次查询)`;
+          } catch (pollErr) {
+            console.error("[pc-search.js] poll error", pollErr);
+          }
+          if (attempts > 100) {
+            clearInterval(poll);
+            statusEl.textContent = "⏰ 超时 (5min), 请刷新重试";
+            statusEl.classList.remove("running");
+            statusEl.classList.add("failed");
+            btn.disabled = false;
+            btn.textContent = originalLabel;
+          }
+        }, 3000);
+      } catch (e) {
+        statusEl.innerHTML = `❌ ${_esc(e.message || "提交失败")}. <a href="#" class="nrr-report-link">📨 报告给我们</a>`;
+        statusEl.classList.add("failed");
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+        console.error("[pc-search.js] synth failed", e);
+      }
+
+      // 失败 fallback: 引导用户走 GH Issue 上报
+      const reportLink = statusEl.querySelector(".nrr-report-link");
+      if (reportLink) {
+        reportLink.addEventListener("click", async (ev) => {
+          ev.preventDefault();
+          const rr = await fetch("/api/report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "missing-major", name: query, source }),
+          });
+          const rd = await rr.json().catch(() => ({}));
+          if (rr.ok && rd.ok) {
+            statusEl.innerHTML = "✅ 已上报, 我们会跟进";
+            statusEl.classList.remove("failed");
+            statusEl.classList.add("ok");
+          }
+        });
       }
     });
   }
