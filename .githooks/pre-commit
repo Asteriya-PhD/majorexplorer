@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+# pre-commit hook — 自动拦截 manifest drift + schema 漏 + L1 启发式错误
+#
+# 触发: 每次 `git commit` (commit-msg 之前)
+# 阻断条件 (任一失败):
+#   1. curated/*.json 缺 discipline/sub_discipline/menjia/theme_color
+#   2. git staged 有 major JSON L1 错误 (anti-pollution 4 rules / schema 漂移)
+#   3. public/data/manifest.json 跟 curated/ 漂移 (新 major 没进 manifest)
+#
+# 绕过: `git commit --no-verify` (不推荐)
+# 安装: 见 scripts/install-hooks.sh (首次配置: `git config core.hooksPath .githooks`)
+#
+# 性能: 3 检查 < 5s, 0¥ 0 API
+
+set -e
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo -e "${BLUE}🔒 pre-commit 钩子启动${NC}"
+
+failed=0
+warn_only=0
+
+# ─────────────────────────────────────────────
+# 1. backfill 检查: curated/ 缺 5 字段
+# ─────────────────────────────────────────────
+echo ""
+echo -e "${BLUE}[1/3] 检查 curated/ 5 字段 (discipline/sub_discipline/menjia_moe/menjia_name/theme_color)${NC}"
+if python3 scripts/backfill_manifest_fields.py --check 2>&1 | tail -10; then
+  if python3 scripts/backfill_manifest_fields.py --check --json 2>/dev/null | python3 -c "import sys, json; d=json.load(sys.stdin); sys.exit(0 if d['needs_count']==0 else 1)" 2>/dev/null; then
+    echo -e "${GREEN}  ✅ 5 字段 100% 填全${NC}"
+  else
+    echo -e "${RED}  ❌ 有 major 缺 5 字段${NC}"
+    echo -e "${YELLOW}     修法: python3 scripts/backfill_manifest_fields.py --apply${NC}"
+    failed=1
+  fi
+fi
+
+# ─────────────────────────────────────────────
+# 2. L1 启发式: git staged major JSON 4 anti-pollution + schema
+# ─────────────────────────────────────────────
+echo ""
+echo -e "${BLUE}[2/3] L1 启发式 (check_major.py --staged, 4 anti-pollution rules + schema)${NC}"
+# 只在有 staged .json 时跑 (避免空跑)
+STAGED_JSON=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "curated/.*\.json$" | grep -v "manifest.json" || true)
+if [ -n "$STAGED_JSON" ]; then
+  if python3 scripts/check_major.py --staged 2>&1 | tail -20; then
+    # check_major exit 0 = 全过, exit 1 = 有失败
+    if [ $? -eq 0 ]; then
+      echo -e "${GREEN}  ✅ L1 全过${NC}"
+    else
+      echo -e "${RED}  ❌ L1 有失败 (见上方错误)${NC}"
+      echo -e "${YELLOW}     修法: 修 staged JSON 后重 commit${NC}"
+      failed=1
+    fi
+  else
+    echo -e "${RED}  ❌ check_major.py 异常${NC}"
+    failed=1
+  fi
+else
+  echo -e "${YELLOW}  ⏭️  无 staged major JSON, 跳过 L1${NC}"
+fi
+
+# ─────────────────────────────────────────────
+# 3. manifest drift 检查: curated/ 新增没进 manifest
+# ─────────────────────────────────────────────
+echo ""
+echo -e "${BLUE}[3/3] 检查 manifest 漂移 (curated/ vs public/data/manifest.json)${NC}"
+if python3 scripts/rebuild_manifest.py --check 2>&1 | tail -5 | grep -q "✅ 完全一致"; then
+  echo -e "${GREEN}  ✅ manifest 完全同步${NC}"
+elif python3 scripts/rebuild_manifest.py --check 2>&1 | tail -10 | grep -qE "(新增|移除) \("; then
+  echo -e "${RED}  ❌ manifest 有漂移 (见 rebuild_manifest.py --check 顶部)${NC}"
+  echo -e "${YELLOW}     修法: python3 scripts/rebuild_manifest.py (写入后 git add public/data/manifest.json 重 commit)${NC}"
+  failed=1
+else
+  echo -e "${YELLOW}  ⚠️  manifest check 异常, 请手动跑 python3 scripts/rebuild_manifest.py --check${NC}"
+  warn_only=1
+fi
+
+# ─────────────────────────────────────────────
+# 总结
+# ─────────────────────────────────────────────
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ $failed -eq 0 ]; then
+  if [ $warn_only -eq 1 ]; then
+    echo -e "${YELLOW}⚠️  pre-commit 有 warning (不阻断)${NC}"
+  else
+    echo -e "${GREEN}✅ pre-commit 3 检查全过${NC}"
+  fi
+  echo -e "${GREEN}   继续 commit...${NC}"
+  exit 0
+else
+  echo -e "${RED}❌ pre-commit 阻断 commit${NC}"
+  echo ""
+  echo -e "${YELLOW}选项:${NC}"
+  echo -e "  1. 修上面的错误再 commit (推荐)"
+  echo -e "  2. ${RED}绕过: git commit --no-verify${NC} (不推荐, 会带 schema bug 进 git)"
+  exit 1
+fi
