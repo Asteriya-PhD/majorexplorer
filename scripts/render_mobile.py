@@ -42,16 +42,13 @@ def esc(s):
 
 # 章节渲染器
 def render_curriculum(curriculum):
-    """curriculum = {公共必修, 通用专业核心, 5 校特色选修, 实践教学环节}.
+    """curriculum 支持 2 套 schema + 1 套通用 prefix match:
+    - Schema A (409 篇): {公共必修 (...), 通用专业核心 (...), 5 校特色选修 (...), 实践教学环节 (...)}
+    - Schema B (18 篇):  {core_courses, foundation_courses, practice_labs, 特色课}
+    - Schema C (21 篇): 中文自定义 keys (智能车辆/储能/法医/口腔 等, 用 prefix match)
     自动给硬课关键词加 ★ 标记"""
-    if not curriculum:
+    if not curriculum or not isinstance(curriculum, dict):
         return ""
-    year_map = {
-        "公共必修": "大一",
-        "通用专业核心": "大二",
-        "5 校特色选修": "大三",
-        "实践教学环节": "大四",
-    }
     star_keywords = ["硬课", "必修", "考证", "实务", "实习", "竞赛", "法考", "司法考试",
                      "数学", "统计", "概率", "线性代数", "微积分", "编程", "算法", "英语",
                      "毕业", "论文", "实战", "前沿", "导论", "基础", "总论", "训练",
@@ -63,23 +60,102 @@ def render_curriculum(curriculum):
             return '<strong style="color:var(--accent);">★</strong> ' + esc(name)
         return esc(name)
 
+    def extract_items(v):
+        if isinstance(v, list):
+            if not v:
+                return [], ""
+            if isinstance(v[0], dict):
+                names = [it.get("course", it.get("name", str(it))) for it in v]
+                return names, v[0].get("tag", "")
+            return [str(it) for it in v], ""
+        return [], ""
+
+    # 1) Schema B: 标准英文 keys
+    schema_b_map = [
+        ("foundation_courses", "公共基础"),
+        ("core_courses", "专业核心"),
+        ("practice_labs", "实践环节"),
+        ("特色课", "特色"),
+    ]
+    # 2) Schema A prefix match: 公共必修, 通用专业核心, 5 校特色选修, 实践教学环节
+    # 3) Schema C prefix match: 中文自定义 keys 归类到 4 个桶
+    bucket_keywords = [
+        ("公共", "公共基础"),    # 公共必修 / 公共基础 / 公共基础课程 / 通识教育 / public_basics
+        ("基础", "学科基础"),    # 基础医学 / 学科基础 / discipline_basics
+        ("核心", "专业核心"),    # 通用专业核心 / 核心课程 / core_major
+        ("方向", "方向选修"),    # 5 校特色选修 / 方向选修模块 / electives
+        ("特色", "特色"),        # 特色课
+        ("实践", "实践环节"),    # 实践教学环节 / 实习实践 / practice_labs
+        ("临床", "临床医学"),    # 临床医学课程 / 临床医学
+    ]
+
+    # Schema B: 先查标准英文 keys
     rows = []
-    for key, label in year_map.items():
-        items = curriculum.get(key, [])
+    used_keys = set()
+    for key, label in schema_b_map:
+        if key in curriculum:
+            items, tag = extract_items(curriculum[key])
+            if items:
+                names_html = " · ".join(render_name(n) for n in items)
+                rows.append(f'''<div class="course-row">
+          <div class="course-yr">{esc(label)}</div>
+          <div class="course-names">{names_html}</div>
+          <div class="course-tag">{esc(tag or label)}</div>
+        </div>''')
+                used_keys.add(key)
+
+    # Schema A/C: 用 prefix match 把剩余 keys 归到 4 个桶
+    buckets = {
+        "公共基础": [],
+        "专业核心": [],
+        "方向选修": [],
+        "实践环节": [],
+        "学科基础": [],
+        "特色": [],
+        "临床医学": [],
+    }
+    bucket_label_map = {
+        "公共基础": "大一 公共",
+        "学科基础": "大二 学科",
+        "专业核心": "大三 核心",
+        "方向选修": "大三 方向",
+        "实践环节": "大四 实践",
+        "特色": "特色",
+        "临床医学": "临床",
+    }
+    # 排序: 保留 JSON 原始顺序
+    raw_keys = [k for k in curriculum.keys() if k not in used_keys]
+    for key in raw_keys:
+        val = curriculum[key]
+        if not val:
+            continue
+        # 找到匹配桶
+        matched_bucket = None
+        for kw, bname in bucket_keywords:
+            if kw in key:
+                matched_bucket = bname
+                break
+        if matched_bucket:
+            items, _ = extract_items(val)
+            if items:
+                buckets[matched_bucket].extend(items)
+
+    # 按顺序输出 (公共基础 → 学科基础 → 专业核心 → 方向选修 → 实践环节 → 特色 → 临床)
+    output_order = ["公共基础", "学科基础", "专业核心", "方向选修", "实践环节", "特色", "临床医学"]
+    for bname in output_order:
+        items = buckets.get(bname, [])
         if not items:
             continue
-        if isinstance(items[0], dict):
-            names_list = [it.get("course", it.get("name", str(it))) for it in items]
-            tag = items[0].get("tag", label)
-        else:
-            names_list = [str(it) for it in items]
-            tag = label
-        names_html = " · ".join(render_name(n) for n in names_list)
+        names_html = " · ".join(render_name(n) for n in items)
+        label = bucket_label_map[bname]
         rows.append(f'''<div class="course-row">
           <div class="course-yr">{esc(label)}</div>
           <div class="course-names">{names_html}</div>
-          <div class="course-tag">{esc(tag)}</div>
+          <div class="course-tag">{esc(bname)}</div>
         </div>''')
+
+    if not rows:
+        return ""
     return f'''<section class="art-sec">
       <div class="art-head">
         <span class="art-num">四</span>
