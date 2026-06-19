@@ -159,7 +159,7 @@ footer .data-source { color: #2A4A75; }
 .direction-bar { height: 8px; background: rgba(212, 175, 55, 0.12); overflow: hidden; border-radius: 2px; }
 .direction-bar-fill { height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
 .direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #2A4A75; transform: translateY(-2px); }
 .path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #0F1F33; margin-bottom: 4px; line-height: 1; }
@@ -182,7 +182,7 @@ footer .data-source { color: #2A4A75; }
 .xuanke-bar-fill { height: 100%; background: #2A4A75; }
 .xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
 .curriculum-lede { font-family: var(--font-heading); color: #2A4A75; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 22px 26px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
 .curriculum-block:last-child { margin-bottom: 0; }
 .curriculum-block:hover { border-color: #2A4A75; }
@@ -352,7 +352,7 @@ footer .data-source { color: #2A4A75; }
 .gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); line-height: 1.65; }
 /* ── 强制 .path-grid 5 列一行 (高 specificity) ── */
 body.gg-body .gg-hero + section.tab .path-grid, body.gg-body .gg-hero ~ section.tab .path-grid,
-body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important; gap: 10px !important; }
 body.gg-body .gg-hero + section.tab .path-card, body.gg-body .gg-hero ~ section.tab .path-card,
 body.biz-body .biz-hero + section.tab .path-card, body.biz-body .biz-hero ~ section.tab .path-card { padding: 24px 8px 20px !important; }
 body.gg-body .gg-hero + section.tab .path-pct, body.gg-body .gg-hero ~ section.tab .path-pct,

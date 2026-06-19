@@ -12,6 +12,8 @@
   grid-template-columns: 1fr var(--notch-w) 1fr;
   align-items: center;
   padding: 0 18px;
+  /* 避免 iPhone Dynamic Island 遮 wordmark (Android/桌面 env() 返 0 → 无 padding) */
+  padding-top: max(0px, env(safe-area-inset-top));
   background: rgba(245,242,234,0.92);
   backdrop-filter: saturate(120%) blur(8px);
   -webkit-backdrop-filter: saturate(120%) blur(8px);

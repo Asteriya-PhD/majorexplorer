@@ -151,7 +151,7 @@ footer .data-source { color: #5C6770; }
 .direction-bar { height: 8px; background: rgba(199, 123, 92, 0.12); overflow: hidden; border-radius: 2px; }
 .direction-bar-fill { height: 100%; background: #5C6770; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
 .direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #3E2A1F; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #5C6770; transform: translateY(-2px); }
 .path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #3E2A1F; margin-bottom: 4px; line-height: 1; }
@@ -174,7 +174,7 @@ footer .data-source { color: #5C6770; }
 .xuanke-bar-fill { height: 100%; background: #5C6770; }
 .xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #3E2A1F; }
 .curriculum-lede { font-family: var(--font-heading); color: #5C6770; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 22px 26px; background: #FFFFFF; border: 1px solid #E5DCC8; border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
 .curriculum-block:last-child { margin-bottom: 0; }
 .curriculum-block:hover { border-color: #5C6770; }
@@ -198,7 +198,7 @@ footer .data-source { color: #5C6770; }
 
 /* ── 5 列一行 (GONGAN / BUSINESS 都有 5 个深造路径) ── */
 .gg-hero + section.tab .path-grid, .gg-hero ~ section.tab .path-grid,
-.biz-hero + section.tab .path-grid, .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr); }
+.biz-hero + section.tab .path-grid, .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 .gg-hero + section.tab .path-card, .gg-hero ~ section.tab .path-card,
 .biz-hero + section.tab .path-card, .biz-hero ~ section.tab .path-card { padding: 28px 12px 24px; }
 .gg-hero + section.tab .path-pct, .gg-hero ~ section.tab .path-pct,

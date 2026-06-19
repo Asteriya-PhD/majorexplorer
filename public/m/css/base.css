@@ -33,7 +33,10 @@
 
   /* layout */
   --topbar-h:  60px;
-  --notch-w:   130px;
+  /* iPhone notch / Dynamic Island 自适应 (Day 1 responsive overhaul 2026-06-20):
+     Android / 桌面 / iPad: env() 返 0 → 0px gap (was 130px ghost gap);
+     iPhone with Dynamic Island: ~50px; iPhone with old notch: ~30px */
+  --notch-w:   max(0px, env(safe-area-inset-top));
   --dock-h:    76px;
 
   /* 12 门类色 (供 chapter / chip 用) */
@@ -553,3 +556,29 @@ a { color: inherit; text-decoration: none; }
 .fb-send { background: var(--accent); color: #FBF8F1; }
 .fb-send.sent { background: #5C7C4A; }
 .fb-send.failed { background: #8B2424; }
+
+/* ──────────────────────────────────────────────────────────
+   Responsive breakpoints (Day 1 responsive overhaul 2026-06-20)
+   移动端 base 是 360-414px 设计, 平板 / 小桌面渐进放大
+   桌面端 (≥1024) 仍保持 mobile UX (大字报 + bottom dock),
+   仅放大字号 + 容器 + 部分 grid 2/3 列
+   ────────────────────────────────────────────────────────── */
+
+/* 平板 (iPad portrait 768, Android tablet 600+) */
+@media (min-width: 600px) {
+  .container { max-width: 540px; padding: 0 32px; }
+  .stats-strip { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feat-grid { grid-template-columns: repeat(2, 1fr); }
+  .chapter { padding: 64px 0 40px; }
+  .hero { padding: 64px 0 48px; }
+  /* hero h1 略放大 */
+  .hero h1 { font-size: clamp(3rem, 7vw, 4rem); }
+}
+
+/* 小桌面 / iPad landscape (1024+) */
+@media (min-width: 1024px) {
+  .container { max-width: 720px; padding: 0 40px; }
+  .feat-grid { grid-template-columns: repeat(3, 1fr); }
+  .hero { min-height: 60vh; }
+  body { font-size: 1.0625rem; } /* 略放大 */
+}
