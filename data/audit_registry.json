@@ -1,19 +1,19 @@
 {
   "version": "1.0",
-  "updated_at": "2026-06-19T12:01:11.758884",
+  "updated_at": "2026-06-19T12:45:53.677080",
   "totals": {
     "majors": 418,
-    "audited": 406,
+    "audited": 419,
     "never_audited": 12,
     "external_audited": 4
   },
   "stats": {
-    "audited_3+": 0,
-    "audited_once": 0,
-    "currently_8+": 240,
-    "currently_7-8": 166,
-    "currently_6-7": 0,
-    "currently_below_6": 0
+    "audited_3+": 135,
+    "audited_once": 199,
+    "currently_8+": 238,
+    "currently_7-8": 160,
+    "currently_6-7": 8,
+    "currently_below_6": 1
   },
   "majors": {
     "optoelectronic-information-science-engineering": {
@@ -62557,6 +62557,75 @@
             }
           ],
           "fix_suggestion": "1) lede 砍到 80-100 字, 只留「独特定位+三大隐藏特征」; 2) 区分「就业去向分布」和「深造路径分布」两个维度, 深造路径应单独列出 (读研/直接就业/创业/出国 比例); 3) 补全 curriculum 占位符, top_schools 中武汉/沈阳/广州需核实是否真实开设, 否则替换为其他确认开设院校.",
+          "error": null
+        }
+      ]
+    },
+    "smart-construction-transportation": {
+      "title": "smart-construction-transportation",
+      "style": "",
+      "discipline": "",
+      "audit_count": 1,
+      "current_score": 7,
+      "current_verdict": "合格",
+      "last_audit_at": "2026-06-19T04:45:53+00:00",
+      "tier_history": [],
+      "audit_history": [
+        {
+          "slug": "smart-construction-transportation",
+          "title": "智能建造与智慧交通",
+          "date": "2026-06-19T04:45:53+00:00",
+          "timestamp": 1781844353,
+          "source_file": "content_audit_1781844353.json",
+          "score": 7,
+          "verdict": "合格",
+          "highlights": [
+            "top_schools 选择精准, 六所学校全是该领域真强校 (东南/同济/哈工大/西南交大/北京交大/长安大学), 无清北复交凑数, 且每所标注的特色方向 (寒区结构、轨道交通信号、智慧公路) 与专业高度匹配",
+            "salary 字段做了清晰的赛道分层 (央企设计院 vs 智慧交通算法), 数字区间符合实际, p75 顶端 90 万对应'互联网大厂 P7+ + 央企子企业负责人'的描述真实可验证"
+          ],
+          "issues": [
+            {
+              "field": "lede",
+              "score": 6,
+              "issue": "前 100 字仍遵循'X 是面向 Y 战略的交叉专业, 融合 A、B、C, 培养能 Z 的复合型人才'的万能公式, 缺乏独特洞察 (例如没有点出'土木下行期 vs 智慧交通上行期'的赛道分化, 或'BIM 工程师 vs 自动驾驶算法'薪资剪刀差这类只有这个专业才有的视角)"
+            },
+            {
+              "field": "salary",
+              "score": 7,
+              "issue": "顶层 salary 数字本身合理, 但 top_companies 中八家公司 salary 全部写成'详见公司招聘公告', 完全无信息量, 应至少给出中建/华为车 BU/百度 Apollo 的应届生打包区间"
+            },
+            {
+              "field": "curriculum",
+              "score": 7,
+              "issue": "课程高度贴题 (BIM/装配式/车路协同/V2X 都到位), 但缺少该专业传统工科底座课: 工程力学/结构力学、土木工程材料、工程测量、自动控制原理、传感器与物联网基础 — 对一个挂着'土木类'的专业, 学生不应只学 Python 不学力学"
+            },
+            {
+              "field": "top_schools",
+              "score": 9,
+              "issue": "几乎无问题, 是这份报告最大亮点; 唯一小瑕疵: 缺少清华土木/同济交通方向或北航智能交通方向的对比说明, 但不影响整体质量"
+            },
+            {
+              "field": "top_companies",
+              "score": 3,
+              "issue": "严重失真: 八家公司 tier 全部为 B、headcount 全部为 ★★、sparkline 全部为 [3,3,3,3,3] — 这种'全 B 全 2 全平'的数据对决策毫无价值, 华为车 BU 与海信网络科技的招聘体量、薪资水平、热度趋势显然不可能一致"
+            },
+            {
+              "field": "employment_direction",
+              "score": 8,
+              "issue": "可见六条路径百分比合计 100% (28+22+15+13+10+12), 数据自洽, 公司名具体, '招聘极少 <200 人/年''国考竞争比 50:1+'这类细节是真实洞察, 唯一小问题: '深造 12%'未注明是国内读研还是出国, 对这个交叉专业两者比例差异巨大"
+            },
+            {
+              "field": "alumni_quotes",
+              "score": 5,
+              "issue": "JSON 截断未看到 alumni_quotes 字段, 但从可见结构推断, 应包含至少 2 条带具体课程/项目/公司细节的引言, 否则容易沦为'这个专业前景广阔'空话"
+            },
+            {
+              "field": "pitfalls",
+              "score": 5,
+              "issue": "JSON 截断未看到 pitfalls 字段, 该专业的特有坑 (e.g. 课程广而不深导致就业时被计算机/土木单一方向学生双向碾压、BIM 岗天花板低、车路协同落地慢导致岗位少) 必须出现, 不能写'学习累、需自律'等通用坑"
+            }
+          ],
+          "fix_suggestion": "保留核心优势 (院校选择、薪资分层、就业去向), 重点修复 top_companies — 必须按公司实际给出差异化 tier、headcount、sparkline 趋势和打包薪资; 补充工程力学/控制原理/物联网等传统底座课; 在 lede 中加入'BIM vs 算法薪资剪刀差'或'土木下行 vs 智慧交通上行'这类独有洞察。",
           "error": null
         }
       ]
