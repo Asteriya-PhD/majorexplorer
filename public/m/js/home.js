@@ -25,19 +25,25 @@
       return out;
     }
     const feats = pick(all, 4);
-    featList.innerHTML = feats.map(m => `
+    featList.innerHTML = feats.map(m => {
+      const tags = (m.tags || []).slice(0, 3);
+      const discNum = m.discipline ? `No. ${m.discipline}` : "";
+      return `
       <a class="feat" href="majors/${m.slug}.html" style="--theme: ${M.styleColor(m.style)};">
         <div class="feat-body">
-          <div class="feat-cat">${m.category}<span class="star">★</span></div>
+          <div class="feat-meta">
+            <span class="feat-cat">${m.category || "—"}<span class="star">★</span></span>
+            <span class="feat-disc">${discNum}</span>
+          </div>
           <h3 class="feat-title">${m.title}</h3>
-          <p class="feat-lede">${(m.tags || []).slice(0, 3).join(" · ")}</p>
           <div class="feat-tags">
-            ${(m.tags || []).slice(0, 3).map(t => `<span class="feat-tag">${t}</span>`).join("")}
+            ${tags.map(t => `<span class="feat-tag">${t}</span>`).join("")}
           </div>
         </div>
         <div class="feat-arrow">→</div>
       </a>
-    `).join("");
+    `;
+    }).join("");
   }
 
   // ───── 国家战略 chip ─────
