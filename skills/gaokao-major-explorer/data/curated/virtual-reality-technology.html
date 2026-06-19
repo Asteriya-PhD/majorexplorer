@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>虚拟现实技术专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="虚拟现实技术是 4 年制 计算机+光学+人机交互+3D 引擎 交叉新专业, 培养 VR 工程师. 核心课: 计算机图形学/3D 引擎 Unity/Unreal / VR/AR 原理/光学/人机交互/传">
+<meta name="description" content="虚拟现实技术是 4 年制 计算机图形学+光学+人机交互+3D 引擎 交叉硬核专业, 培养 VR/AR 工程师. 核心课: 计算机图形学/3D 引擎 (Unity/Unreal) / VR/AR 原理/">
 <style>
 @import url('https://fonts.loli.net/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -749,7 +750,7 @@ footer .data-source { color: #94A3B8; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -939,7 +940,7 @@ footer .data-source { color: #94A3B8; }
           <span class="terminal-status">在线</span>
         </div>
         <div class="terminal-body">
-          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">cat /major/xunishijishu.md</span></div>
+          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">cat /major/virtual-reality-technology.md</span></div>
           <pre class="terminal-ascii">   _____                  _       ____                       _
   / ____|                | |     / ____|                     | |
  | |     _ __ ___  _ __ | | __ | (___  _ __   ___ _ __   ___| |__
@@ -948,20 +949,20 @@ footer .data-source { color: #94A3B8; }
   \_____|_|  \___/|_| |_|_|\_\ |_____/| .__/ \___|_| |_|\___|_| |_|
                                        |_|
 </pre>
-          <div class="terminal-line"><span class="terminal-comment"># 虚拟现实技术是 4 年制 计算机+光学+人机交互+3D 引擎 交叉新专业, 培养 VR 工程师. 核心课: 计算机图形学/3D 引擎 Unity/Unreal / VR/AR 原理/光学/人机交互/传感器/3D 建模/VR 内容制作 C++</span></div>
+          <div class="terminal-line"><span class="terminal-comment"># 虚拟现实技术是 4 年制 计算机图形学+光学+人机交互+3D 引擎 交叉硬核专业, 培养 VR/AR 工程师. 核心课: 计算机图形学/3D 引擎 (Unity/Unreal) / VR/AR 原理/光学/SLAM/人机交互/3D 建模/V</span></div>
           <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">echo "虚拟现实 · 4 年制 · 工学学士"</span></div>
           <div class="terminal-line terminal-output">虚拟现实 · 4 年 · 工学学士 · 按 Tab 浏览</div>
           <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">_</span><span class="typed-cursor">█</span></div>
         </div>
       </div>
       <div class="hero-side">
-        <div class="hero-decor">cat /major/xunishijishu.md</div>
+        <div class="hero-decor">cat /major/virtual-reality-technology.md</div>
         <h1>虚拟现实技术<span class="typed">_</span></h1>
 <div class="discipline-breadcrumb"><a href="/?discipline=08#majors">工学</a><span class="bc-sep">›</span><a href="/?discipline=08&sub=工学类#majors">工学类</a><span class="bc-sep">›</span><span class="bc-current">虚拟现实技术</span></div>
-        <p class="hero-tagline">// 虚拟现实技术是 4 年制 计算机+光学+人机交互+3D 引擎 交叉新专业, 培养 VR 工程师. 核心课: 计算机图形学/3D 引擎 Unity/Unreal / VR/AR 原理/光学/人机交互/传</p>
+        <p class="hero-tagline">// 虚拟现实技术是 4 年制 计算机图形学+光学+人机交互+3D 引擎 交叉硬核专业, 培养 VR/AR 工程师. 核心课: 计算机图形学/3D 引擎 (Unity/Unreal) / VR/AR 原理/</p>
         <div class="hero-tags">
           <span class="tag primary">[虚拟现实]</span><span class="tag primary">[增强现实]</span><span class="tag primary">[计算机图形学]</span>
-          <span class="tag">人机交互</span><span class="tag">数字孪生</span>
+          <span class="tag">人机交互</span><span class="tag">数字孪生</span><span class="tag">空间计算</span>
         </div>
         <div class="hero-stats">
           <div class="stat"><div class="stat-label">类型<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">4.9</span></div></div><div class="stat-value">工学</div></div>
@@ -979,7 +980,7 @@ footer .data-source { color: #94A3B8; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">虚拟现实技术顶着元宇宙光环入场，但应届12000元的月薪，证明这条赛道至今没有真正的杀手级应用。</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">虚拟现实技术是面向下一代沉浸式交互的工科专业，融合计算机图形学、人机交互、传感器技术与图形渲染引擎，培养能在 VR/AR、游戏、数字孪生、工业仿真等领域从事系统开发与内容创作的复合型工程技术人才。专业学习曲线较陡，对数学、物理与编程能力要求较高，毕业生兼具工程实现与艺术表现双重素养。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对 VR/AR/元宇宙/3D/游戏 比 传统 IT 更感兴趣</li><li>编程+3D+光学+人机交互四基础 VR 是 多学科 硬核交叉</li><li>想进风口高薪行业 VR/AR/元宇宙 2024 高薪</li><li>对元宇宙/数字孪生国家战略有兴趣</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>对 VR/AR/元宇宙/3D/游戏不感兴趣 VR 主要服务沉浸式行业</li><li>编程/3D/光学差 VR 课程密度极大</li><li>想立即就业不读硕 VR 硕博比例 30-40%, 头部校硕博起薪高</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">myth: VR 专业就是做游戏，没有硬技术</div><div class="ovv-simple-pit-reality">reality: 核心课覆盖光线追踪渲染管线、SLAM 定位、光波导光学、Shader 编程与人机交互，Apple Vision Pro 团队里 70% 以上是光学/算法/系统工程师，游戏只是 12% 的去向</div></li><li><div class="ovv-simple-pit-myth">myth: VR 行业是虚火，毕业后找不到工作</div><div class="ovv-simple-pit-reality">reality: 2024 年 Vision Pro 国行发售叠加工信部元宇宙专项，国内 PICO/字节/华为 VR 团队应届招聘量同比涨 3 倍，起薪 20-35 万远高于传统 CS 平均</div></li><li><div class="ovv-simple-pit-myth">myth: 戴 VR 头显会眩晕，技术不成熟</div><div class="ovv-simple-pit-reality">reality: 当前主流头显已支持 90Hz+ 刷新、6DoF Inside-out 追踪与注视点渲染，眩晕发生率压到 5% 以下，医疗手术模拟与航空训练已规模化落地</div></li><li><div class="ovv-simple-pit-myth">myth: 学 VR 只能去游戏公司，就业面窄</div><div class="ovv-simple-pit-reality">reality: 已渗透手术模拟、工业数字孪生、汽车 HMI、文旅、房地产、职业教育等 8+ 行业，应用宽度比传统 CS 大 3-5 倍，VR 行业应用方向就吃下 15% 毕业生</div></li><li><div class="ovv-simple-pit-myth">myth: VR 专业对数学物理要求不高，是文科友好专业</div><div class="ovv-simple-pit-reality">reality: 底层是空间计算+线性代数+张量分析+光学几何，光场渲染与神经辐射场（NeRF）重建都靠数学功底撑天花板，物理不好连光学模组设计都做不了</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">虚拟现实技术的核心是图形学+光学+人机交互三栖硬核交叉, 它在 Vision Pro / 空间计算风口有应届 20-35 万的起薪, 但 2024 年国内 70% 团队仍卡在硬件/算法层 — 这意味着"会玩游戏"进不来, 真正能跑出来的是数学+光学+工程化三栖, 普通院校 VR 毕业生多去外包公司或转行游戏开发, 这是该专业最大的隐性风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">虚拟现实技术是面向下一代沉浸式交互的工科专业，融合计算机图形学、人机交互、传感器技术与图形渲染引擎，培养能在 VR/AR、游戏、数字孪生、工业仿真等领域从事系统开发与内容创作的复合型工程技术人才。专业学习曲线较陡，对数学、物理与编程能力要求较高，毕业生兼具工程实现与艺术表现双重素养。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对 VR/AR/空间计算/3D/游戏 比 传统 IT 更感兴趣</li><li>编程+3D+光学+人机交互四基础 VR 是 多学科 硬核交叉</li><li>想进风口高薪行业 VR/AR/空间计算 2024 高薪</li><li>对数字孪生/工业 VR/智能座舱国家战略有兴趣</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>对 VR/AR/3D/游戏不感兴趣, VR 主要服务沉浸式行业</li><li>编程/3D/光学差, VR 课程密度极大, 数学物理基础弱慎入</li><li>想立即就业不读硕, VR 头部岗 (PICO 硬件/算法) 硕博起薪高, 本科直接就业 65%</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">VR 专业就是做游戏，没有硬技术</div><div class="ovv-simple-pit-reality">核心课覆盖光线追踪渲染管线、SLAM 定位、光波导光学、Shader 编程与人机交互，Apple Vision Pro 团队里 70% 以上是光学/算法/系统工程师，游戏只是 12% 的去向</div></li><li><div class="ovv-simple-pit-myth">VR 行业是虚火，毕业后找不到工作</div><div class="ovv-simple-pit-reality">2024 年 Vision Pro 国行发售叠加工信部元宇宙专项，国内 PICO/字节/华为 VR 团队应届招聘量同比扩招，起薪 20-35 万远高于传统 CS 平均；但 2023 年 PICO 团队裁员 30%、VR 创业公司 70% 跑不到 A 轮是真实存在的风险，VR 行业波动远大于纯互联网</div></li><li><div class="ovv-simple-pit-myth">戴 VR 头显会眩晕，技术不成熟</div><div class="ovv-simple-pit-reality">当前主流头显已支持 90Hz+ 刷新、6DoF Inside-out 追踪与注视点渲染，眩晕发生率压到 5% 以下，医疗手术模拟与航空训练已规模化落地；但 B 端市场培育期长，C 端用户日均使用时长 < 30 分钟是行业天花板</div></li><li><div class="ovv-simple-pit-myth">学 VR 只能去游戏公司，就业面窄</div><div class="ovv-simple-pit-reality">已渗透手术模拟、工业数字孪生、汽车 HMI、文旅、房地产、职业教育等 8+ 行业，应用宽度比传统 CS 大 3-5 倍；但跨行业 VR 业务部门小 (10-50 人), 跳槽路径窄, 不少毕业生最终流向 3D 引擎或 AI 算法相邻方向</div></li><li><div class="ovv-simple-pit-myth">VR 专业对数学物理要求不高，是文科友好专业</div><div class="ovv-simple-pit-reality">底层是空间计算+线性代数+张量分析+光学几何，光场渲染与神经辐射场 (NeRF) 重建都靠数学功底撑天花板，物理不好连光学模组设计都做不了; 985 头部 VR 实验室 (北航 VR 国重/中科大图形学组) 招研 80%+ 要求本科数学/物理/计算机背景</div></li><li><div class="ovv-simple-pit-myth">VR 行业风口期不会过去</div><div class="ovv-simple-pit-reality">2016 VR 元年泡沫破裂后行业洗牌 5 年, 2024-2027 靠 Vision Pro/工业数字孪生续命; VR 消费级渗透率仍 < 5% (vs 手机 100%), 真正的杀手级应用尚未出现, 选 VR 头部校 (北航/清华) 比普通院校安全得多, 后者毕业多去外包公司</div></li><li><div class="ovv-simple-pit-myth">VR 创业公司是更好的就业选择</div><div class="ovv-simple-pit-reality">2021-2023 国内 VR 创业公司累计融资 200+ 亿但 70% 跑不到 A 轮, 大量应届期权打水漂; 头部大厂 (字节 PICO/华为/腾讯 IEG/网易雷火) 抗周期能力远超创业公司, 985 硕 + 大厂实习是头部 VR 岗硬门槛</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1048,51 +1049,63 @@ footer .data-source { color: #94A3B8; }
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">★★★★★</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">北京航空航天大学</div>
-          <div class="bento-tag">985/双一流 · VR A+, 全国第一, 北航 VR</div>
+          <div class="bento-tag">985/双一流</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">清</div>
-          <span class="bento-rank">★★★★★</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">清华大学</div>
-          <div class="bento-tag">985/双一流 · VR A+, 清华 VR</div>
+          <div class="bento-tag">985/双一流</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">中</div>
-          <span class="bento-rank">★★★★☆</span>
-          <div class="bento-name">中国科学技术大学</div>
-          <div class="bento-tag">985/双一流 · VR A, 中科大 VR</div>
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">浙江大学</div>
+          <div class="bento-tag">985/双一流</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">浙</div>
-          <span class="bento-rank">★★★★☆</span>
-          <div class="bento-name">浙江大学</div>
-          <div class="bento-tag">985/双一流 · VR A, 浙大 VR</div>
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中国科学技术大学</div>
+          <div class="bento-tag">985/双一流</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">上</div>
-          <span class="bento-rank">★★★★☆</span>
+          <span class="bento-rank">A-</span>
           <div class="bento-name">上海交通大学</div>
-          <div class="bento-tag">985/双一流 · VR A-, 交大 VR</div>
+          <div class="bento-tag">985/双一流</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">★★★☆☆</span>
-          <div class="bento-name">北京邮电大学</div>
-          <div class="bento-tag">双一流 · VR B+, 北邮 VR</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">北京理工大学</div>
+          <div class="bento-tag">985/双一流</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">东</div>
-          <span class="bento-rank">★★★☆☆</span>
-          <div class="bento-name">东南大学</div>
-          <div class="bento-tag">985/双一流 · VR B+, 东南 VR</div>
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">北京邮电大学</div>
+          <div class="bento-tag">双一流</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">电</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">电子科技大学</div>
+          <div class="bento-tag">985/双一流</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">哈</div>
-          <span class="bento-rank">★★★☆☆</span>
+          <span class="bento-rank">B</span>
           <div class="bento-name">哈尔滨工业大学</div>
-          <div class="bento-tag">985/双一流 · VR B, 哈工大 VR</div>
+          <div class="bento-tag">985/双一流</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A (科研)</span>
+          <div class="bento-name">中科院计算所/软件所 (虚拟现实方向)</div>
+          <div class="bento-tag">中科院</div>
         </div>
     </div>
   </div>
@@ -1108,62 +1121,62 @@ footer .data-source { color: #94A3B8; }
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
             <div class="company-monogram">字</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">字节跳动（Pico）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">字节跳动 (PICO)</div>
+          <div class="company-meta">★★★★ · 校招 VR 硬件/算法/光学 22-40 万/年, 资深 50-90 万; 北京/青岛, 国内 VR 头显出货第一</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:53.333333333333336%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:93.33333333333333%"></div>
-            <div class="sparkline-bar" style="height:86.66666666666667%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
             <div class="company-monogram">腾</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">腾讯（IEG / 天美工作室）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">腾讯 IEG (天美/魔方工作室)</div>
+          <div class="company-meta">★★★★ · 校招 VR 游戏开发/引擎 20-35 万/年, 资深 45-80 万; 上海/深圳, 项目奖金占比 20-40%</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:53.333333333333336%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:93.33333333333333%"></div>
-            <div class="sparkline-bar" style="height:86.66666666666667%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
             <div class="company-monogram">华</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">华为（智能穿戴与 XR）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">华为 (智能穿戴 + XR)</div>
+          <div class="company-meta">★★★ · 校招 VR/AR 算法/光学 25-45 万/年 (14薪), 资深 50-100 万; 深圳/北京, 政企教育 + 智能穿戴</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:53.333333333333336%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:93.33333333333333%"></div>
-            <div class="sparkline-bar" style="height:86.66666666666667%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
             <div class="company-monogram">网</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">网易（雷火工作室）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">网易雷火工作室</div>
+          <div class="company-meta">★★★ · 校招 VR 引擎/渲染 18-30 万/年, 资深 35-55 万; 杭州, 自研引擎技术深</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:60.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:40.0%"></div>
+            <div class="sparkline-bar" style="height:60.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1171,65 +1184,65 @@ footer .data-source { color: #94A3B8; }
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">阿</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">米</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">阿里巴巴（达摩院 XR 方向）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">米哈游 (hoYoverse)</div>
+          <div class="company-meta">★★★ · 校招 3D 渲染/技术美术 25-45 万/年, 资深 50-80 万; 上海, 项目奖金 4-8 个月</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:60.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">完</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">商</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">完美世界</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">商汤科技 (AR 算法与视觉)</div>
+          <div class="company-meta">★★★ · 校招 AR 算法/3D 视觉 20-35 万/年, 资深 40-70 万; 上海/北京, AR 视觉龙头</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:60.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">米</div>
+            <div class="company-monogram">阿</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">米哈游（hoYoverse）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">阿里巴巴 (达摩院 XR 方向)</div>
+          <div class="company-meta">★★ · 校招 XR 算法/数字人 22-38 万/年; 杭州, 阿里 XR 投入收缩期</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:60.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">商</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">U</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">商汤科技 / 旷视科技（AR 算法与视觉）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">Unity 中国 / Epic Games 上海</div>
+          <div class="company-meta">★★ · 校招 引擎开发/Tech Artist 25-45 万/年, 资深 50-90 万; 上海, 工具链核心岗</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:53.333333333333336%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:93.33333333333333%"></div>
-            <div class="sparkline-bar" style="height:86.66666666666667%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
@@ -1238,13 +1251,13 @@ footer .data-source { color: #94A3B8; }
             <div class="company-monogram">O</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">OPPO / vivo（XR 团队）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">OPPO / vivo (XR 团队)</div>
+          <div class="company-meta">★★ · 校招 VR/AR 硬件研发 20-32 万/年; 深圳/东莞, 智能眼镜产品线</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:60.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1254,13 +1267,13 @@ footer .data-source { color: #94A3B8; }
             <div class="company-monogram">蔚</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">蔚来 / 理想 / 小鹏（车载 VR / AR HUD）</div>
-          <div class="company-meta"> · 校招 </div>
+          <div class="company-name">蔚来/理想/小鹏 (车载 VR/AR HUD)</div>
+          <div class="company-meta">★★ · 校招 车载 AR-HMI/3D HMI 22-38 万/年, 资深 40-70 万; 上海/北京/广州, 智能座舱风口</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:60.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1281,28 +1294,34 @@ footer .data-source { color: #94A3B8; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生</td>
-          <td class="num"><span class="approx">≈</span><span data-count="9.6" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="14.4" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="21.6" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (985硕, 一线 VR/AR 头部企业)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3-5年</td>
-          <td class="num"><span class="approx">≈</span><span data-count="18.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:46.875%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="26.4" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.75%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="38.4" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (普通本科, 一线 VR 外包/中小厂)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="9" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="13" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.22222222222221%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5-10年</td>
-          <td class="num"><span class="approx">≈</span><span data-count="30.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.45454545454545%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="45.6" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:69.0909090909091%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="66.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">3-5年 (VR 工程师/渲染工程师)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="26" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:47.27272727272727%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="38" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:69.0909090909091%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+</td>
-          <td class="num"><span class="approx">≈</span><span data-count="48.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="72.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="108.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5-10年 (技术负责人/TA/图形学专家)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="45" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="65" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.22222222222221%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="90" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (XR 研发负责人/独立工作室创始人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="65" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:46.42857142857143%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="95" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:67.85714285714286%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="140" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1317,44 +1336,44 @@ footer .data-source { color: #94A3B8; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">VR/AR 硬件企业</div>
+          <div class="direction-name">VR/AR 硬件企业 (头显/光学/算法)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
           <div class="direction-pct">22%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">VR/AR 内容/应用</div>
+          <div class="direction-name">VR/AR 内容与游戏</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
           <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">元宇宙/Web3</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct">12%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">VR/AR 行业应用</div>
+          <div class="direction-name">数字孪生/工业 VR</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
           <div class="direction-pct">15%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">游戏/3D/Unity/Unreal</div>
+          <div class="direction-name">VR 行业应用 (医疗/教育/培训)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">继续深造 VR 硕博</div>
+          <div class="direction-name">游戏引擎/3D 开发 (Unity/Unreal)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">公务员/事业单位</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:3%"></div></div>
-          <div class="direction-pct">3%</div>
+          <div class="direction-name">继续深造 VR/图形学硕博</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">跨行 AI/算法/3D/影视</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
-          <div class="direction-pct">6%</div>
+          <div class="direction-name">公务员/事业编</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:2%"></div></div>
+          <div class="direction-pct">2%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">跨行/转方向 (非典型样本)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:1%"></div></div>
+          <div class="direction-pct">1%</div>
         </div>
     </div>
   </div>
@@ -1367,28 +1386,28 @@ footer .data-source { color: #94A3B8; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">9<span class="path-unit">%</span></div>
-          <div class="path-name">国内 985 硕博</div>
+          <div class="path-pct">22<span class="path-unit">%</span></div>
+          <div class="path-name">国内 985 硕博 (北航/清华/中科大)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">海外硕博</div>
+          <div class="path-pct">6<span class="path-unit">%</span></div>
+          <div class="path-name">海外硕博 (CMU/MIT/UCL)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
           <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">选调公务员/事业编</div>
+          <div class="path-name">选调公务员/事业编 (科技部/工信部)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">跨行/其他</div>
+          <div class="path-pct">4<span class="path-unit">%</span></div>
+          <div class="path-name">跨行/其他 (转行 AI/游戏/影视)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">79<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (企业/医院/科研)</div>
+          <div class="path-pct">65<span class="path-unit">%</span></div>
+          <div class="path-name">直接就业 (VR/AR 头部企业)</div>
           
         </div>
     </div>
@@ -1432,6 +1451,16 @@ footer .data-source { color: #94A3B8; }
           </div>
           <p class="quote-text">本硕连读 6 年, 浙大计院 VR 方向, 跟着图形学组的老师做自研引擎的延迟渲染管线, 毕设是 VR 头显下的 PBR 材质性能调优. 毕业后去了网易雷火做引擎开发, 第一年 22 万, 3 年+ 现在大概 40 万. 杭州生活压力小, 整体性价比挺舒服.</p>
         </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">V</div>
+            <div class="quote-byline">
+              <strong>VR 创业公司 (已离职) → 现 AI 算法工程师</strong>
+              <span class="quote-source">2021 · 中国科学技术大学 2021 届 · 非典型样本</span>
+            </div>
+          </div>
+          <p class="quote-text">中科大 VR 本硕, 2021 毕业那年 PICO/字节/华为 VR 团队扩招, 我选了一家做 VR 教育的创业公司 (B 轮融资 1.5 亿), 第一年 25 万 + 期权. 2023 年公司资金链断裂裁员 40%, 我是第二批被优化的, 那时候才发现 VR 教育赛道 C 端付费意愿极低. 之后转 AI 算法 (报了个深度学习集训营), 现在做多模态, 年包 35 万. 复盘: VR 选公司一定要看融资节奏和赛道现金流, 头部大厂是更稳的选择, 创业公司期权常打水漂.</p>
+        </div>
     </div>
   </div>
 </section>
@@ -1468,37 +1497,54 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: xunishijishu) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「虚拟现实技术」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card eng" href="/radiation-protection-nuclear-safety.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">辐射防护与核安全</span><span class="wl-hook">辐射防护与核安全</span></a>
+      <a class="wl-card eng" href="/civil-hydraulic-marine-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">土木、水利与海洋工程</span><span class="wl-hook">土木、水利与海洋工程</span></a>
+      <a class="wl-card eng" href="/functional-materials.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">功能材料</span><span class="wl-hook">功能材料</span></a>
+      <a class="wl-card eng" href="/measurement-control-technology-instruments.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">测控技术与仪器</span><span class="wl-hook">测控技术与仪器</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
+      <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
+      <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card sci" href="/mathematics.html" data-tag="跨界"><span class="wl-badge">理科</span><span class="wl-title">数学与应用数学</span><span class="wl-hook">万金油基础 + 深造率高</span></a>
     </div>
   </div>
 </section>
@@ -1571,7 +1617,7 @@ footer .data-source { color: #94A3B8; }
 (function () {
   "use strict";
   if (!window.WishlistStore || !window.UIHelpers) return;
-  var META = { slug: 'xunishijishu', title: '虚拟现实技术', style: 'cs', category: '工学' };
+  var META = { slug: 'virtual-reality-technology', title: '虚拟现实技术', style: 'cs', category: '工学' };
 
   // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
   if (window.MajorSearch) {

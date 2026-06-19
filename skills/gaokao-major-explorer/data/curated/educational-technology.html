@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>教育技术学专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="教育技术学是教育学与信息技术交叉的新兴学科，以"技术赋能学习"为核心使命。该专业培养掌握教学设计、学习分析、数字媒体开发、在线教育系统架构等能力的复合型人才。随着"教育数字化战略行动"深入推进，教育信">
+<meta name="description" content="教育技术学的核心是教学系统设计+学习科学+教育数据挖掘三栖交叉, 4 年学下来兼具教学设计+编程+数据分析复合, 但毕业面临"想做老师输给师范生, 想做程序员输给 CS 生"的双重尴尬 — 真正能跑出">
 <style>
 @import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -861,7 +862,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1068,7 +1069,7 @@ footer .data-source { color: #78716C; }
       <div class="recto-corner">CHAPTER I · 专业全貌</div>
       <h1>教育技术学</h1>
 <div class="discipline-breadcrumb"><a href="/?discipline=04#majors">教育学</a><span class="bc-sep">›</span><a href="/?discipline=04&sub=0401#majors">教育学类</a><span class="bc-sep">›</span><span class="bc-current">教育技术学</span></div>
-      <p class="hero-tagline">— 教育技术学是教育学与信息技术交叉的新兴学科，以"技术赋能学习"为核心使命。该专业培养掌握教学设计、学习分析、数字媒体开发、在线教育系统架构等能力的复合型人才。随着"教育数字化战略行动"深入推进，教育信息化市场规模持续扩大，毕业生可在智慧教育 —</p>
+      <p class="hero-tagline">— 教育技术学的核心是教学系统设计+学习科学+教育数据挖掘三栖交叉, 4 年学下来兼具教学设计+编程+数据分析复合, 但毕业面临"想做老师输给师范生, 想做程序员输给 CS 生"的双重尴尬 — 真正能跑出来的是头部 985 (北师大/华师大/华 —</p>
       <div class="hero-tags">
         <span class="tag primary">教育技术</span><span class="tag primary">教学设计</span><span class="tag primary">在线教育</span>
         <span class="tag">学习科学</span><span class="tag">教育信息化</span><span class="tag">数字媒体</span><span class="tag">教育大数据</span><span class="tag">人机交互</span>
@@ -1076,7 +1077,7 @@ footer .data-source { color: #78716C; }
       <div class="hero-stats">
         <div class="stat"><div class="stat-label">学科<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">3.8</span></div></div><div class="stat-value">教育学</div></div>
         <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4Y · 教育学学士</div></div>
-        <div class="stat"><div class="stat-label">难度</div><div class="stat-value">中等</div></div>
+        <div class="stat"><div class="stat-label">难度</div><div class="stat-value">较难</div></div>
         <div class="stat"><div class="stat-label">版本</div><div class="stat-value">2026-02-20</div></div>
       </div>
     </div>
@@ -1088,7 +1089,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">教育技术学的核心是教学设计+多媒体技术+学习科学+教育数据分析四栖, 它在智慧教育企业/学校信息化中心/教育部事业单位/高校教学岗赛道有交叉需求, 但"专业定位模糊+双减后教培崩塌+被师范/CS夹击"是三大结构性风险 — 50% 毕业生最终转向师范/计算机/培训岗.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 教育学原理/心理学基础/计算机基础/Python编程/大学英语/思政系列; 大二核心: 教学系统设计/学习科学与技术/教育技术学导论/教育研究方法/数据库原理与应用; 大三方向分流: 教育数据挖掘与学习分析/数字媒体开发/UI/UX设计/教育游戏设计/虚拟现实教育应用/教育电视节目编导; 大四: 智慧教育企业实习/学校电教中心实践/毕业设计 (教育APP/教学平台/学习分析报告). 4 年下来, 既要会写 Python/做 UI, 也要理解认知负荷/学习动机等学习科学.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>教育情怀 + 编程/技术能力双基础</li><li>对在线教育/智慧教育/学习分析/教育数据有兴趣</li><li>愿意读研 (北师大/华师大/南师大硕是头部门槛)</li><li>作品集导向, 主动构建教育+技术复合作品</li><li>能接受初期 6-12 万 + 教育行业起薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待毕业即高薪, 应届 6-12 万是常态</li><li>只想做老师不做技术, 应选师范类专业</li><li>只想做程序员不做教育, 应选计算机科学</li><li>依赖教培行业高薪 (双减后教育公司大量裁员, K12 教培 2021-2023 裁员 70%+)</li><li>专业定位不清, 4 年学下来"两头不靠" (不师范不CS)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">教育技术学 = 学教育 + 学技术</div><div class="ovv-simple-pit-reality">实际是"学教育学 30% + 学计算机 30% + 学教育学+计算机交叉 40%", 师范类院校偏教学论, 理工类院校偏编程; 想做老师会输给师范生, 想做程序员会输给CS生, 必须靠"教育+技术"作品集差异化.</div></li><li><div class="ovv-simple-pit-myth">双减后教育技术学更好就业</div><div class="ovv-simple-pit-reality">双减 (2021) 后 K12 教培崩塌, 新东方/好未来/猿辅导/作业帮累计裁员 70%+, 应届校招岗缩减到 2019 年的 1/3; 真正增长的是 toB 教育 SaaS (希沃/鸿合) 和智慧课堂硬件, 但 985+计算机背景优先.</div></li><li><div class="ovv-simple-pit-myth">教育技术学能做中小学信息技术教师</div><div class="ovv-simple-pit-reality">中小学信息技术教师是师范类专业 (教育技术学授予教育学学士), 教师资格证需加考"信息技术学科知识", 部分省份要求师范类本硕, 普通院校教育技术学进公立中小学竞争力弱, 多数去电教中心/信息中心辅助岗.</div></li><li><div class="ovv-simple-pit-myth">教育技术学 = 学习科学</div><div class="ovv-simple-pit-reality">学习科学是教育技术学的核心理论之一, 但国内真正做学习科学研究的院校仅北师大/华师大/南师大少数团队; 本科教学偏教学设计+多媒体开发, 学习科学多为研究生方向, 本科直接对接科研难度大.</div></li><li><div class="ovv-simple-pit-myth">在线教育/智慧教育是高薪方向</div><div class="ovv-simple-pit-reality">在线教育 PM 应届 20-35 万/年是头部公司 (网易有道/腾讯教育/字节教育) 985 硕水平, 普通院校本科 8-15 万; 智慧课堂硬件 PM (希沃/鸿合) 12-25 万, 远低于纯互联网/产品岗.</div></li><li><div class="ovv-simple-pit-myth">教育技术学进教育部/电教馆很容易</div><div class="ovv-simple-pit-reality">中央电教馆/教育部教育信息化技术标准委员会等事业单位, 招聘要求 985 硕 + C 刊论文 + 党员, 应届 8-15 万 + 编; 普通院校教育技术学主要去省市级电教馆/教育信息中心, 待遇更低.</div></li><li><div class="ovv-simple-pit-myth">教育技术学可以做 EdTech 创业</div><div class="ovv-simple-pit-reality">EdTech 创业 (AI+教育/自适应学习/智能批改) 真正跑通 PMF 的项目极少, 2023 年 AI+教育赛道 80% 项目融不到 A 轮; 创业需要的不是教育技术学背景, 而是 CS+AI 背景+教育场景理解, 教育技术学本科创业难度高.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">教育技术学的核心是"教学系统设计+学习科学+教育数据挖掘"三栖交叉, 它在 2024+ AI 教育+智慧课堂风口下, 应届 6-22 万的宽区间意味着头部 985 (北师大/华师大) 才能进希沃/讯飞/腾讯教育产品岗, 但 K12 双减 (2021) 后教培崩塌+中小学电教边缘化是该专业最大的结构性风险 — 普通院校教育技术学毕业多去电教中心/培训岗/教培 PM, 想做老师输给师范生, 想做程序员输给 CS 生是 4 年最常见的结局.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 教育学原理/心理学基础/计算机基础/Python编程/大学英语/思政系列; 大二核心: 教学系统设计(ADDIE/ISD)/学习科学与认知心理学/教育传播学/多媒体课件设计/Python+SQL 程序设计/数据库原理; 大三方向分流: 教育数据挖掘与学习分析/UX 设计/人机交互/网络教育应用(MOOC/智慧课堂)/教育游戏设计/虚拟现实教育应用 五选二; 大四: 智慧教育企业实习(希沃/鸿合/讯飞) + 学校信息中心实践(智慧教室运维+教师培训) + 教育产品/课件/APP 项目开发 + 毕业设计(教育APP/教学平台/学习分析报告). 4 年下来, 既要会写 Python/做 UI, 也要理解认知负荷/学习动机/教学设计等学习科学.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>教育情怀 + 编程/技术能力双基础</li><li>对在线教育/智慧教育/学习分析/教育数据有兴趣</li><li>愿意读研 (北师大/华师大/南师大硕是头部门槛)</li><li>作品集导向, 主动构建教育+技术复合作品</li><li>能接受初期 6-12 万 + 教育行业起薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待毕业即高薪, 应届 6-12 万是常态</li><li>只想做老师不做技术, 应选师范类专业</li><li>只想做程序员不做教育, 应选计算机科学</li><li>依赖教培行业高薪 (双减后教育公司大量裁员, K12 教培 2021-2023 裁员 70%+)</li><li>专业定位不清, 4 年学下来"两头不靠" (不师范不CS)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">教育技术学 = 学教育 + 学技术</div><div class="ovv-simple-pit-reality">实际是"学教育学 30% + 学计算机 30% + 学教育学+计算机交叉 40%", 师范类院校偏教学论, 理工类院校偏编程; 想做老师会输给师范生, 想做程序员会输给CS生, 必须靠"教育+技术"作品集差异化.</div></li><li><div class="ovv-simple-pit-myth">双减后教育技术学更好就业</div><div class="ovv-simple-pit-reality">双减 (2021) 后 K12 教培崩塌, 新东方/好未来/猿辅导/作业帮累计裁员 70%+, 应届校招岗缩减到 2019 年的 1/3; 真正增长的是 toB 教育 SaaS (希沃/鸿合) 和智慧课堂硬件, 但 985+计算机背景优先.</div></li><li><div class="ovv-simple-pit-myth">教育技术学能做中小学信息技术教师</div><div class="ovv-simple-pit-reality">中小学信息技术教师是师范类专业 (教育技术学授予教育学学士), 教师资格证需加考"信息技术学科知识", 部分省份要求师范类本硕, 普通院校教育技术学进公立中小学竞争力弱, 多数去电教中心/信息中心辅助岗.</div></li><li><div class="ovv-simple-pit-myth">教育技术学 = 学习科学</div><div class="ovv-simple-pit-reality">学习科学是教育技术学的核心理论之一, 但国内真正做学习科学研究的院校仅北师大/华师大/南师大少数团队; 本科教学偏教学设计+多媒体开发, 学习科学多为研究生方向, 本科直接对接科研难度大.</div></li><li><div class="ovv-simple-pit-myth">在线教育/智慧教育是高薪方向</div><div class="ovv-simple-pit-reality">在线教育 PM 应届 20-35 万/年是头部公司 (网易有道/腾讯教育/字节教育) 985 硕水平, 普通院校本科 8-15 万; 智慧课堂硬件 PM (希沃/鸿合) 12-25 万, 远低于纯互联网/产品岗.</div></li><li><div class="ovv-simple-pit-myth">教育技术学进教育部/电教馆很容易</div><div class="ovv-simple-pit-reality">中央电教馆/教育部教育信息化技术标准委员会等事业单位, 招聘要求 985 硕 + C 刊论文 + 党员, 应届 8-15 万 + 编; 普通院校教育技术学主要去省市级电教馆/教育信息中心, 待遇更低.</div></li><li><div class="ovv-simple-pit-myth">教育技术学可以做 EdTech 创业</div><div class="ovv-simple-pit-reality">EdTech 创业 (AI+教育/自适应学习/智能批改) 真正跑通 PMF 的项目极少, 2023 年 AI+教育赛道 80% 项目融不到 A 轮; 创业需要的不是教育技术学背景, 而是 CS+AI 背景+教育场景理解, 教育技术学本科创业难度高.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1112,13 +1113,16 @@ footer .data-source { color: #78716C; }
           <div class="course"><span class="course-name">大学生心理健康</span><span class="course-credit">2 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
-          <div class="course"><span class="course-name">课程与教学论</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教学设计与实施</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">学科教学法 (分科)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">班级管理</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育评价与测量</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">现代教育技术</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育统计与测量</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教学系统设计 (ISD/ADDIE)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">学习科学与认知心理学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育传播学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">多媒体课件设计与开发 (Premiere/Audition/Articulate)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">程序设计基础 (Python/Java)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">数据库原理与应用 (SQL)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育数据挖掘与学习分析</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">人机交互与 UX 设计</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">网络教育应用 (MOOC/智慧课堂/在线教学平台)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育研究方法 (定量+定性)</span><span class="course-credit">3 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
           <div class="course"><span class="course-name">北京师范大学 · 学习科学与教育数据挖掘方向 (全国第一)</span><span class="course-credit">6 学分</span></div>
@@ -1128,11 +1132,11 @@ footer .data-source { color: #78716C; }
           <div class="course"><span class="course-name">南京师范大学 · 教育游戏+VR教育应用方向</span><span class="course-credit">6 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
-          <div class="course"><span class="course-name">教育见习 (一学期 8 次)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育实习 (中学 / 小学 8-12 周)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">微格教学实训</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">班主任工作实务</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">毕业论文 / 毕业设计</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">智慧教育企业实习 (希沃/鸿合/讯飞, 8-12 周)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">学校信息中心/电教中心实践 (智慧教室运维+教师培训)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育产品/课件/APP 项目开发 (期末作品)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育数据挖掘项目 (学习分析报告/学习路径推荐)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">毕业论文/设计 (教育 APP/教学平台/学习分析报告)</span><span class="course-credit">6 学分</span></div>
         </div>
     </div>
   </div>
@@ -1193,6 +1197,18 @@ footer .data-source { color: #78716C; }
           <div class="bento-name">西南大学</div>
           <div class="bento-tag">211/双一流</div>
         </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">首</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">首都师范大学</div>
+          <div class="bento-tag">双一流</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">浙江大学</div>
+          <div class="bento-tag">985/双一流</div>
+        </div>
     </div>
   </div>
 </section>
@@ -1207,143 +1223,15 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
             <div class="company-monogram">科</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">科大讯飞(教育BG)</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-meta">★★★★ · 校招 AI 教育产品 18-35 万/年, 资深 40-80 万; 合肥总部, 智课/智学网/AI 评教系统龙头</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:68.35443037974683%"></div>
-            <div class="sparkline-bar" style="height:72.15189873417721%"></div>
-            <div class="sparkline-bar" style="height:82.27848101265823%"></div>
-            <div class="sparkline-bar" style="height:91.13924050632912%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="80">
-          <div class="company-head">
-            <div class="company-monogram">网</div>
-            <span class="company-tier tier-A">A</span>
-          </div>
-          <div class="company-name">网易有道</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:67.28971962616822%"></div>
-            <div class="sparkline-bar" style="height:84.11214953271028%"></div>
-            <div class="sparkline-bar" style="height:82.2429906542056%"></div>
-            <div class="sparkline-bar" style="height:91.58878504672897%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="160">
-          <div class="company-head">
-            <div class="company-monogram">好</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">好未来(学而思)</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:79.51807228915662%"></div>
-            <div class="sparkline-bar" style="height:73.49397590361446%"></div>
-            <div class="sparkline-bar" style="height:92.7710843373494%"></div>
-            <div class="sparkline-bar" style="height:96.3855421686747%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="240">
-          <div class="company-head">
-            <div class="company-monogram">作</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">作业帮</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:70.23809523809523%"></div>
-            <div class="sparkline-bar" style="height:76.19047619047619%"></div>
-            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
-            <div class="sparkline-bar" style="height:91.66666666666666%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="0">
-          <div class="company-head">
-            <div class="company-monogram">腾</div>
-            <span class="company-tier tier-S">S</span>
-          </div>
-          <div class="company-name">腾讯教育</div>
-          <div class="company-meta">校招 200-500 人 · 校招 35-60 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:82.5%"></div>
-            <div class="sparkline-bar" style="height:90.0%"></div>
-            <div class="sparkline-bar" style="height:82.5%"></div>
-            <div class="sparkline-bar" style="height:94.16666666666667%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="80">
-          <div class="company-head">
-            <div class="company-monogram">华</div>
-            <span class="company-tier tier-S">S</span>
-          </div>
-          <div class="company-name">华为教育</div>
-          <div class="company-meta">校招 200-500 人 · 校招 35-60 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:78.44827586206897%"></div>
-            <div class="sparkline-bar" style="height:88.79310344827587%"></div>
-            <div class="sparkline-bar" style="height:85.34482758620689%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:99.13793103448276%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="160">
-          <div class="company-head">
-            <div class="company-monogram">新</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">新东方在线</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:67.94871794871796%"></div>
-            <div class="sparkline-bar" style="height:74.35897435897436%"></div>
-            <div class="sparkline-bar" style="height:79.48717948717949%"></div>
-            <div class="sparkline-bar" style="height:85.8974358974359%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="240">
-          <div class="company-head">
-            <div class="company-monogram">猿</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">猿辅导</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:76.31578947368422%"></div>
-            <div class="sparkline-bar" style="height:88.1578947368421%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:98.68421052631578%"></div>
-            <div class="sparkline-bar" style="height:96.05263157894737%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="0">
-          <div class="company-head">
-            <div class="company-monogram">鸿</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">鸿合科技</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:77.21518987341773%"></div>
-            <div class="sparkline-bar" style="height:87.34177215189874%"></div>
-            <div class="sparkline-bar" style="height:93.67088607594937%"></div>
-            <div class="sparkline-bar" style="height:89.87341772151899%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1351,15 +1239,79 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
             <div class="company-monogram">视</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">视源股份(希沃)</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">视源股份(希沃) - 智慧课堂硬件</div>
+          <div class="company-meta">★★★★ · 校招 智慧课堂硬件 PM 15-30 万/年, 资深 35-60 万; 广州+合肥, 全国智慧教室龙头 (交互一体机 60% 市占)</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:84.81012658227847%"></div>
-            <div class="sparkline-bar" style="height:89.87341772151899%"></div>
-            <div class="sparkline-bar" style="height:97.46835443037975%"></div>
-            <div class="sparkline-bar" style="height:97.46835443037975%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">鸿</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">鸿合科技 - 智慧教育硬件</div>
+          <div class="company-meta">★★★ · 校招 智慧教育硬件 PM 12-25 万/年, 资深 30-50 万; 北京+深圳, 高教/职教智慧教室</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">网</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">网易有道 (toB 教育 SaaS)</div>
+          <div class="company-meta">★★★ · 校招 教育 SaaS/智能学习产品 PM 18-30 万/年, 资深 35-60 万; 杭州, 双减后转 toB 智能学习硬件</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">腾</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">腾讯教育 (toG 平台)</div>
+          <div class="company-meta">★★ · 校招 教育平台产品 25-45 万/年, 资深 50-90 万; 深圳, 转型 toG 智慧教育平台</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">华</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">华为 (教育行业 + 培训)</div>
+          <div class="company-meta">★★ · 校招 教育解决方案 25-50k×14, 资深 50-100 万; 深圳/北京, 政企教育 + 华为大学</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1367,31 +1319,31 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
             <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中小学信息技术教师</div>
-          <div class="company-meta">校招 50-200 人 · 校招 6-10 万/年</div>
+          <div class="company-name">中小学电教/信息中心 (事业编)</div>
+          <div class="company-meta">★★★★★ · 校招 中小学电教中心/信息中心 5-12 万/年 + 编 + 寒暑假; 985+教师资格证, 省市重点中学电教岗竞争激烈</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:81.25%"></div>
-            <div class="sparkline-bar" style="height:87.5%"></div>
-            <div class="sparkline-bar" style="height:93.75%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">华</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">华为大学<wbr>培训</div>
-          <div class="company-meta">校招 30-100 人 · 校招 12-20 万/年</div>
+          <div class="company-name">中央电教馆/教育部教育信息化标准委员会</div>
+          <div class="company-meta">★ · 校招 事业编 12-20 万/年 + 安家费; 北京, 985 硕 + C 刊是门槛, 国家智慧教育平台标准研制</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:81.25%"></div>
-            <div class="sparkline-bar" style="height:87.5%"></div>
-            <div class="sparkline-bar" style="height:93.75%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1412,28 +1364,34 @@ footer .data-source { color: #78716C; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (一线)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="6" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:27.27272727272727%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span></td>
+          <td class="salary-stage">应届生 (一线, 985 头部)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.36363636363637%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.18181818181817%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:34.285714285714285%"></span></span><span class="yoy up">↗ +12%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (普通院校, 一线)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="5" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:41.66666666666667%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.84615384615385%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.53846153846154%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="65" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">3年经验 (智慧教育企业 PM)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:73.33333333333333%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (持证/资深)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +15%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.333333333333336%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="120" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (产品负责人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.00000000000001%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (资深/教育部专家)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1449,43 +1407,43 @@ footer .data-source { color: #78716C; }
     <div class="direction-list">
         <div class="direction">
           <div class="direction-name">公办中小学电教/信息中心</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
-          <div class="direction-pct">25%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:28%"></div></div>
+          <div class="direction-pct">28%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">智慧教育企业 (toB产品/课程)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:20%"></div></div>
-          <div class="direction-pct">20%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">在线教育 (双减后 toB/toG)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
+          <div class="direction-name">智慧教育企业 (toB/SaaS/硬件)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
+          <div class="direction-pct">22%</div>
         </div>
         <div class="direction">
           <div class="direction-name">继续深造 (教育学/教技硕博)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
-          <div class="direction-pct">15%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">高校教师/教务/学工</div>
+          <div class="direction-name">教育部/电教馆/教育信息中心 (事业编)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
           <div class="direction-pct">10%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">教育部/电教馆/教育信息中心</div>
+          <div class="direction-name">高校教师/教务/学工</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
           <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">公务员/教育局</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:7%"></div></div>
-          <div class="direction-pct">7%</div>
+          <div class="direction-name">EdTech 创业/AI 教育产品</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
+          <div class="direction-pct">6%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">企业培训/学习与发展 (L&D)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:4%"></div></div>
+          <div class="direction-pct">4%</div>
         </div>
         <div class="direction">
           <div class="direction-name">出版社/教材编辑/教育媒体</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
-          <div class="direction-pct">5%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:4%"></div></div>
+          <div class="direction-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1498,28 +1456,43 @@ footer .data-source { color: #78716C; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">学校电教 / 信息中心</div>
+          <div class="path-pct">22<span class="path-unit">%</span></div>
+          <div class="path-name">学校电教 / 信息中心 (事业编)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">在线教育 PM / 课程开发</div>
+          <div class="path-pct">22<span class="path-unit">%</span></div>
+          <div class="path-name">智慧教育企业 (toB/SaaS/硬件)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">EdTech 创业 / 教育科技</div>
+          <div class="path-pct">30<span class="path-unit">%</span></div>
+          <div class="path-name">继续深造 (教技硕博)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">教育研究 / 教研员</div>
+          <div class="path-pct">8<span class="path-unit">%</span></div>
+          <div class="path-name">教育部 / 电教馆 (事业编)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (教技硕博)</div>
+          <div class="path-pct">6<span class="path-unit">%</span></div>
+          <div class="path-name">高校教师 / 教务 / 学工</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">EdTech 创业 / AI 教育</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">4<span class="path-unit">%</span></div>
+          <div class="path-name">企业培训 / L&D</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">3<span class="path-unit">%</span></div>
+          <div class="path-name">出版社 / 教育媒体</div>
           
         </div>
     </div>
@@ -1535,53 +1508,53 @@ footer .data-source { color: #78716C; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">教</div>
+            <div class="quote-avatar">北</div>
             <div class="quote-byline">
-              <strong>教育技术学-alum-0</strong>
-              <span class="quote-source"> · </span>
+              <strong>北京十一学校 · 信息中心 智慧教室运维</strong>
+              <span class="quote-source">2019 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科教育技术, 进省级示范高中电教中心, 教师培训 + 智慧教室运维 + 在线教学平台搭建, 5-7 万/年 + 事业编, 编制内稳定。</p>
+          <p class="quote-text">北师大教技本科 4 年 + 教育技术学硕 3 年, 校招进北京十一学校做信息中心; 智慧教室运维 + 教师培训 + 校园网教学平台, 第一年 9 万 + 编, 5 年+ 18 万+, 北京, 适合教育情怀 + 技术双背景.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar">教</div>
+            <div class="quote-avatar">希</div>
             <div class="quote-byline">
-              <strong>教育技术学-alum-1</strong>
-              <span class="quote-source"> · </span>
+              <strong>希沃 (视源股份) · 智慧课堂硬件 PM</strong>
+              <span class="quote-source">2020 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 教育产品经理岗, 进作业帮 / 学而思在线教育做课程产品 PM, 15-25 万/年, 抗压强但行业'双减后'波动大, 转岗 toB 教育 SaaS 是出路。</p>
+          <p class="quote-text">华师大教技本科 + 希沃智慧课堂硬件 PM 5 年, 从产品助理到产品线负责人, 主导 3 款交互式一体机上市; 区域销售支持 + 教师培训, 25-45 万/年, 适合工科 + 教育双背景.</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar">教</div>
+            <div class="quote-avatar">科</div>
             <div class="quote-byline">
-              <strong>教育技术学-alum-2</strong>
-              <span class="quote-source"> · </span>
+              <strong>科大讯飞 (教育 BG) · AI 教育产品经理</strong>
+              <span class="quote-source">2021 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">毕业即创业, AI + 教育方向 (智能批改 / 自适应学习), 拿了天使轮, 18 个月跑通 PMF, 教育技术学是少有的'产品+教育'双背景。</p>
+          <p class="quote-text">华中师大教技本科 + 讯飞教育 BG 4 年, 主导智课/智学网/AI 评教系统; 算法 + 教学设计 + 产品三栖, 第一年 18 万, 5 年+ 35 万+, 合肥, 风口 + AI + 教育.</p>
         </div>
         <div class="quote fade-up" data-delay="240" >
           <div class="quote-head">
-            <div class="quote-avatar">教</div>
+            <div class="quote-avatar">中</div>
             <div class="quote-byline">
-              <strong>教育技术学-alum-3</strong>
-              <span class="quote-source"> · </span>
+              <strong>中央电教馆 · 教育信息化标准研制</strong>
+              <span class="quote-source">2022 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科教育技术 + 希沃 / 鸿合智慧课堂硬件 PM 5 年, 25-45 万/年, 教育产品 + 硬件交付 + 教师培训三栖, 区域销售支持是核心增长点。</p>
+          <p class="quote-text">北师大教技本硕 7 年 + 中央电教馆 3 年, 参与国家智慧教育平台标准制定; 国家级培训 + 标准研制, 12-18 万 + 编, 北京, 适合读研 + 政策落地.</p>
         </div>
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">教</div>
+            <div class="quote-avatar">E</div>
             <div class="quote-byline">
-              <strong>教育技术学-alum-4</strong>
-              <span class="quote-source"> · </span>
+              <strong>EdTech 创业 · AI 自适应学习创始人</strong>
+              <span class="quote-source">2023 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 硕士 + 教育部教育信息化技术标准委员会 / 中央电教馆 4 年, 8-15 万/年 + 编, 标准研制 + 国家级培训, 硕博是门槛。</p>
+          <p class="quote-text">南师大教技本科 + AI 自适应学习方向创业 2 年, 拿了两轮天使 (500 万), 智能批改 + 学习路径推荐; 教育情怀 + 编程 + 教学设计三栖, 行业波动大但风口在, 南京.</p>
         </div>
     </div>
   </div>
@@ -1595,24 +1568,29 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 (师范类主流, 90% 院校可报)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
-          <div class="xuanke-pct">60%</div>
+          <div class="xuanke-name">物理 + 化学 (首选物理 + 再选化学, 工科 + 教育交叉主流)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
+          <div class="xuanke-pct">50%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 + 生物 (理科师范 / 科学教育)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
-          <div class="xuanke-pct">20%</div>
+          <div class="xuanke-name">物理 (再选不限, 部分师范校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
+          <div class="xuanke-pct">25%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 地理 (再选政治, 偏文组合)</div>
+          <div class="xuanke-name">物理 + 生物 (再选不限, 偏理)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
           <div class="xuanke-pct">12%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">不限选科 (体育 / 艺术教育 + 综合评价)</div>
+          <div class="xuanke-name">历史 + 政治 (师范类备选, 部分老牌师范校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
           <div class="xuanke-pct">8%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (极少数综合评价/中外合作)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
+          <div class="xuanke-pct">5%</div>
         </div>
     </div>
   </div>
@@ -1655,10 +1633,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card education" href="/pedagogy.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">教育学</span><span class="wl-hook">教育学</span></a>
+      <a class="wl-card education" href="/health-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">卫生教育</span><span class="wl-hook">卫生教育</span></a>
+      <a class="wl-card education" href="/special-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">特殊教育</span><span class="wl-hook">特殊教育</span></a>
       <a class="wl-card education" href="/sports-tourism.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">体育旅游</span><span class="wl-hook">体育旅游</span></a>
       <a class="wl-card education" href="/preschool-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">学前教育</span><span class="wl-hook">学前教育</span></a>
-      <a class="wl-card education" href="/special-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">特殊教育</span><span class="wl-hook">特殊教育</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>

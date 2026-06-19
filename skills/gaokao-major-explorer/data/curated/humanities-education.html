@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>人文教育专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="人文教育专业是一门融合哲学、历史、文学、艺术与社会学的跨学科教育学专业，旨在培养兼具深厚人文底蕴与现代教育理念的复合型人才。该专业强调"以文化人"，学生不仅系统学习中外文明经典、教育哲学、课程与教学论">
+<meta name="description" content="人文教育是师范体系中唯一以"人"为方法论的专业 — 语文/历史/政治/英语/思政教师都在教"某门学科",但人文教育教的是"如何用哲学/史学/文学/艺术/美学的方法理解人,并把这种理解翻译成可教的内容"">
 <style>
 @import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -861,7 +862,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1068,7 +1069,7 @@ footer .data-source { color: #78716C; }
       <div class="recto-corner">CHAPTER I · 专业全貌</div>
       <h1>人文教育</h1>
 <div class="discipline-breadcrumb"><a href="/?discipline=04#majors">教育学</a><span class="bc-sep">›</span><a href="/?discipline=04&sub=0401#majors">教育学类</a><span class="bc-sep">›</span><span class="bc-current">人文教育</span></div>
-      <p class="hero-tagline">— 人文教育专业是一门融合哲学、历史、文学、艺术与社会学的跨学科教育学专业，旨在培养兼具深厚人文底蕴与现代教育理念的复合型人才。该专业强调"以文化人"，学生不仅系统学习中外文明经典、教育哲学、课程与教学论，还需掌握人文课程开发、跨学科项目式学习 —</p>
+      <p class="hero-tagline">— 人文教育是师范体系中唯一以"人"为方法论的专业 — 语文/历史/政治/英语/思政教师都在教"某门学科",但人文教育教的是"如何用哲学/史学/文学/艺术/美学的方法理解人,并把这种理解翻译成可教的内容"。换句话说, 中文系培养能讲《论语》的人 —</p>
       <div class="hero-tags">
         <span class="tag primary">人文素养</span><span class="tag primary">通识教育</span><span class="tag primary">跨学科</span>
         <span class="tag">师范教育</span><span class="tag">文化传承</span><span class="tag">批判性思维</span><span class="tag">课程设计</span><span class="tag">教育哲学</span>
@@ -1112,13 +1113,21 @@ footer .data-source { color: #78716C; }
           <div class="course"><span class="course-name">大学生心理健康</span><span class="course-credit">2 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
-          <div class="course"><span class="course-name">课程与教学论</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教学设计与实施</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">学科教学法 (分科)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">班级管理</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育评价与测量</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">现代教育技术</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育统计与测量</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">中外文明经典导读 (《论语》《理想国》《道德经》《圣经》《柏拉图对话》等原典)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中国哲学 (先秦诸子/魏晋玄学/宋明理学/现代新儒家)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">西方哲学 (古希腊/中世纪/近代德国古典哲学/现象学/分析哲学)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">史学概论 (历史学的学科方法论与中外史学史)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">文学概论 (文学理论/文学批评/文学史基本问题)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">艺术概论 (视觉艺术/音乐/戏剧/舞蹈/电影的艺术语言)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">美学 (审美经验/艺术哲学/生活美学, 含中国美学与西方美学两大脉络)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育哲学 (儒家/道家/苏格拉底/杜威/赫尔巴特/当代人文主义教育流派)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">中国文化概论 + 外国文化概论 (文化学基础)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中国通史 + 世界通史 (人文基础, 通史贯通)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">中国文学经典导读 + 外国文学经典导读</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">人文课程开发与跨学科 PBL 设计 (Project-Based Learning)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">语文学科教学法/历史学科教学法/政治学科教学法 (分科三选一)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育研究方法 (含教育测量与评价, 合并原教育评价与测量 + 教育统计与测量)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">课程与教学论 (人文课程专门版)</span><span class="course-credit">3 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
           <div class="course"><span class="course-name">北京师范大学 · 人文教育+语文课程论方向 (全国第一)</span><span class="course-credit">6 学分</span></div>
@@ -1146,52 +1155,46 @@ footer .data-source { color: #78716C; }
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">北</div>
-          <span class="bento-rank">1</span>
-          <div class="bento-name">北京师范大学</div>
-          <div class="bento-tag">学科评估 A+</div>
+          <div class="bento-monogram">河</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">河南大学</div>
+          <div class="bento-tag">开封 · 双一流, 人文教育 (040110) 专业全国第一, 教育部人文教育专业教学指导委员会主任委员单位</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">华</div>
-          <span class="bento-rank">2</span>
-          <div class="bento-name">华东师范大学</div>
-          <div class="bento-tag">学科评估 A+</div>
+          <div class="bento-monogram">海</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">海南师范大学</div>
+          <div class="bento-tag">海口 · 省属重点, 人文教育 + 海洋文化特色, 教育部人文教育专业教学指导委员会副主任委员单位</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">东</div>
-          <span class="bento-rank">3</span>
-          <div class="bento-name">东北师范大学</div>
-          <div class="bento-tag">学科评估 A</div>
+          <div class="bento-monogram">齐</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">齐齐哈尔大学</div>
+          <div class="bento-tag">齐齐哈尔 · 省属, 人文教育 + 东北地方文化特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">南</div>
-          <span class="bento-rank">4</span>
-          <div class="bento-name">南京师范大学</div>
-          <div class="bento-tag">学科评估 A-</div>
+          <div class="bento-monogram">曲</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">曲阜师范大学</div>
+          <div class="bento-tag">曲阜 · 省属, 人文教育 + 儒家文化传承, 山东省人文教育核心</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">华</div>
-          <span class="bento-rank">5</span>
-          <div class="bento-name">华中师范大学</div>
-          <div class="bento-tag">学科评估 A</div>
+          <div class="bento-monogram">赣</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">赣南师范大学</div>
+          <div class="bento-tag">赣州 · 省属, 人文教育 + 中央苏区文化教育特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">首</div>
-          <span class="bento-rank">6</span>
-          <div class="bento-name">首都师范大学</div>
-          <div class="bento-tag">学科评估 B+</div>
+          <div class="bento-monogram">贵</div>
+          <span class="bento-rank">B</span>
+          <div class="bento-name">贵州民族大学</div>
+          <div class="bento-tag">贵阳 · 省属, 人文教育 + 民族文化教育特色, 西部人文教育核心</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">湖</div>
-          <span class="bento-rank">7</span>
-          <div class="bento-name">湖南师范大学</div>
-          <div class="bento-tag">学科评估 B+</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">浙</div>
-          <span class="bento-rank">8</span>
-          <div class="bento-name">浙江师范大学</div>
-          <div class="bento-tag">学科评估 B+</div>
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A+/A</span>
+          <div class="bento-name">北师大/华师大/华中师大/南师大/东北师大 (师范强校, 方向关联)</div>
+          <div class="bento-tag">北京/上海/武汉/南京/长春, 教育学 (一级学科) A+/A, 备注: 该排名是教育学一级学科口径, 不直接等于人文教育 (040110) 二级方向排名, 北师大/华师大/华中师大/南师大/东北师大均设有跨学科人文教育方向</div>
         </div>
     </div>
   </div>
@@ -1348,28 +1351,40 @@ footer .data-source { color: #78716C; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (一线)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="4" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.36363636363637%"></span></span><span class="yoy up">↗ +3%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="6" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="11" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
-        </tr>
-        <tr>
-          <td class="salary-stage">3年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:43.75%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="11" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.75%"></span></span></td>
+          <td class="salary-stage">应届生 (北京/上海有编新教师)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.28571428571429%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (省会/地级市在编)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="6" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:46.15384615384615%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="9" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:69.23076923076923%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="13" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (持证/资深)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (县城/乡镇在编)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="5" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3年经验 (中级职称)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">5年经验 (骨干教师)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="13" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:43.333333333333336%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (特级教师/教研员/学科带头人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.666666666666664%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.333333333333336%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1471,43 +1486,43 @@ footer .data-source { color: #78716C; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">人</div>
+            <div class="quote-avatar">某</div>
             <div class="quote-byline">
-              <strong>人文教育-alum-0</strong>
-              <span class="quote-source"> · </span>
+              <strong>某地级市重点高中 · 文综教师 (在编)</strong>
+              <span class="quote-source">2020 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科人文教育 + 编, 在地级市高中教 政治 / 历史 / 地理 跨学科, 4-6 万/年 + 寒暑假, 跨学科教师是教改方向, 但教研难度大。</p>
+          <p class="quote-text">华中师大人文教育 + 编, 在地级市高中教 政治/历史/地理 跨学科文综, 第一年 5 万, 5 年+ 9 万 + 寒暑假, 跨学科教师是教改方向, 适合稳定 + 教育情怀.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar">人</div>
+            <div class="quote-avatar">上</div>
             <div class="quote-byline">
-              <strong>人文教育-alum-1</strong>
-              <span class="quote-source"> · </span>
+              <strong>上海某国际学校 · 通识教育导师</strong>
+              <span class="quote-source">2022 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科人文教育 + 国际学校 通识 / 大学先修课 ChatGPT 时代后通识需求反而上升, 12-20 万/年, 文史哲 + 教学双背景是稀缺组合。</p>
+          <p class="quote-text">华师大人文教育 + 国际学校通识/大学先修课 2 年; IB MYP/PYP 教学法 + 文史哲跨学科, 应届 14 万, 3 年+ 22 万, 上海, 适合英文好 + 文史哲强.</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar">人</div>
+            <div class="quote-avatar">中</div>
             <div class="quote-byline">
-              <strong>人文教育-alum-2</strong>
-              <span class="quote-source"> · </span>
+              <strong>中国教育报 · 教育媒体编辑</strong>
+              <span class="quote-source">2021 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 中国教育报 / 教育在线 / 知名教育自媒体 编辑, 6-12 万/年, 跨学科背景是入门券, 教育政策解读 + 报告写作是核心能力。</p>
+          <p class="quote-text">北师大人文教育 + 中国教育报教育政策编辑 2 年; 政策解读 + 报告写作 + 跨学科背景, 应届 8 万, 3 年+ 12 万, 北京, 适合文字功底好 + 教育政策兴趣.</p>
         </div>
         <div class="quote fade-up" data-delay="240" >
           <div class="quote-head">
-            <div class="quote-avatar">人</div>
+            <div class="quote-avatar">某</div>
             <div class="quote-byline">
-              <strong>人文教育-alum-3</strong>
-              <span class="quote-source"> · </span>
+              <strong>某省教育研究院 · 文综教研员 (在编)</strong>
+              <span class="quote-source">2019 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科人文 + 教育硕士 + 省级教研院文综教研员 6 年, 8-13 万 + 编, 政策落地 + 课程开发 + 跨学科教研, 硕博是门槛。</p>
+          <p class="quote-text">南师大课程与教学论硕 + 省级教研院文综教研员 4 年; 政策落地 + 课程开发 + 跨学科教研, 应届 9 万, 5 年+ 15 万 + 编, 南京, 硕博是门槛.</p>
         </div>
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
@@ -1531,24 +1546,29 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 (师范类主流, 90% 院校可报)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
-          <div class="xuanke-pct">60%</div>
-        </div>
-        <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 + 生物 (理科师范 / 科学教育)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
-          <div class="xuanke-pct">20%</div>
+          <div class="xuanke-name">历史 + 政治 (师范文综, 60% 院校可报)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:45%"></div></div>
+          <div class="xuanke-pct">45%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">历史 + 地理 (再选政治, 偏文组合)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:22%"></div></div>
+          <div class="xuanke-pct">22%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">历史 + 政治 + 地理 (文综三选, 12% 院校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
           <div class="xuanke-pct">12%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">不限选科 (体育 / 艺术教育 + 综合评价)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
-          <div class="xuanke-pct">8%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (理科教育方向, 跨学科复合)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
+          <div class="xuanke-pct">12%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (综合评价/艺考)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:9%"></div></div>
+          <div class="xuanke-pct">9%</div>
         </div>
     </div>
   </div>
@@ -1591,10 +1611,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card education" href="/science-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">科学教育</span><span class="wl-hook">科学教育</span></a>
-      <a class="wl-card education" href="/martial-arts-traditional-sports.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">武术与民族传统体育</span><span class="wl-hook">武术与民族传统体育</span></a>
-      <a class="wl-card education" href="/educational-technology.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">教育技术学</span><span class="wl-hook">教育技术学</span></a>
-      <a class="wl-card education" href="/ice-snow-sports.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">冰雪运动</span><span class="wl-hook">冰雪运动</span></a>
+      <a class="wl-card education" href="/sports-training.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">运动训练</span><span class="wl-hook">运动训练</span></a>
+      <a class="wl-card education" href="/intelligent-sports-engineering.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">智能体育工程</span><span class="wl-hook">智能体育工程</span></a>
+      <a class="wl-card education" href="/health-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">卫生教育</span><span class="wl-hook">卫生教育</span></a>
+      <a class="wl-card education" href="/primary-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">小学教育</span><span class="wl-hook">小学教育</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>

@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -731,7 +732,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -938,7 +939,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">保险学的核心是风险理论+精算+保险法+财产/人寿保险+保险资管五栖, 它在寿险/财险/再保险/精算/核保核赔赛道有稳定需求, 但"行业名声压力大+精算师门槛极高+营销岗占比 50%+头部岗位 985 硕"是四大结构性风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 B (微积分+线性代数)/概率论与数理统计/微观经济学/宏观经济学/金融学原理/大学英语/思政系列; 大二核心: 保险学原理/人身保险/财产保险/会计学原理/Python 或 R; 大三方向分流: 精算学基础 (利息理论+生命表)/风险管理/保险法/社会保险/保险公司经营管理/投资学 (保险资金运用)/计量经济学; 大四: 保险公司/再保险/精算咨询实习 8-12 周 + 毕业论文. 4 年下来, 既要能搭建精算模型/计算准备金/评估偿付能力, 也要懂保险产品定价/核保核赔流程/保险法合规.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学/统计功底扎实 (微积分/线代/概率论是核心), 风险理论/精算需要</li><li>能熬过精算师考试 (SOA/CAS 5-8 年, 通过率 < 30%; 中国精算师 < 15%)</li><li>对保险/风险管理/精算有真兴趣, 不排斥金融服务业</li><li>愿意读研 (央财/上财/对外经贸/西财硕是头部门槛)</li><li>能接受初期 6-12 万 + 保险公司基层 (核保/理赔/营销)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学弱, 风险理论/精算根本学不下去</li><li>不能接受长周期考试 (精算师 5-8 年考证)</li><li>期待毕业即高薪, 营销岗压力大收入波动</li><li>排斥保险营销 (毕业生 50% 实际从营销起步)</li><li>追求"金融"光环, 应选金融学/金融工程</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">保险学 = 卖保险</div><div class="ovv-simple-pit-reality">保险学是金融学分支, 核心是精算定价/核保核赔/保险资管, 营销只是保险产业链最末端; 但普通院校保险学毕业生 50% 实际从营销起步, 因精算/核保岗位基本只招 985 硕+SOA/CAS 通过若干门.</div></li><li><div class="ovv-simple-pit-myth">精算师年薪百万, 越老越吃香</div><div class="ovv-simple-pit-reality">中国精算师持证人约 1500 人 (2024), 应届通过率 < 15%, 全科通过需 5-8 年; 持证人年薪 50-150 万是头部 (中国人寿/平安/太保/泰康), 普通中小保险公司总精算师年薪 30-80 万, 中位数远低于头部券商投行.</div></li><li><div class="ovv-simple-pit-myth">保险 = 财险车险</div><div class="ovv-simple-pit-reality">保险涵盖财产险 (车险/企业财产/责任险) + 人身险 (寿险/健康险/意外险) + 再保险 + 巨灾保险 + 互联网保险 + 保险资管多个赛道; 健康险 (2024 保费 9000 亿) 和巨灾保险增速最快, 车险因车险综合改革利润率压缩.</div></li><li><div class="ovv-simple-pit-myth">保险学可以做银行/券商/基金</div><div class="ovv-simple-pit-reality">保险学毕业生进银行/券商/基金总部比例远低于金融学, 因银行校招偏好金融学/经济学; 保险学真正对口的是保险公司精算/核保/理赔/资管, 跨行进入投行/PE/VC 需要 985 硕+CFA+顶实习三重门槛.</div></li><li><div class="ovv-simple-pit-myth">保险行业稳定, 不会裁员</div><div class="ovv-simple-pit-reality">2023-2024 年保险业代理人改革清虚, 寿险营销员从 2019 年 900 万峰值降至 2024 年 290 万 (缩水 67%), 银保监对销售资质要求趋严; 内勤岗位相对稳定但晋升慢, 精算/核保/资管等核心岗竞争加剧.</div></li><li><div class="ovv-simple-pit-myth">保险学不考数学</div><div class="ovv-simple-pit-reality">精算方向数学要求极高 (微积分/线代/概率论/随机过程/利息理论全要学), 风险建模依赖 Excel/VBA/Python/R/SAS; 数学弱 + 排斥建模 = 保险学=营销岗, 数学强 + 持证 = 精算师, 二者收入差距 5-10 倍.</div></li><li><div class="ovv-simple-pit-myth">国际保险与再保险方向容易出国</div><div class="ovv-simple-pit-reality">对外经贸大学国际保险与再保险方向是少数, 全英文教学, 但真正进跨国再保险 (瑞再/慕再/韦莱韬悦 WTW/怡安 AON) 国内代表处的应届生基本只招 985 硕+海外交换+英语流利, 普通院校该方向毕业生仍主要走国内保险公司.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">保险学的核心是风险理论+精算+保险法+财产/人寿保险+保险资管五栖, 它在寿险/财险/再保险/精算/核保核赔赛道有稳定需求, 但"行业名声压力大+精算师门槛极高+营销岗占比 50%+头部岗位 985 硕"是四大结构性风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 B (微积分+线性代数)/概率论与数理统计/微观经济学/宏观经济学/金融学原理/大学英语/思政系列; 大二核心: 保险学原理/人身保险/财产保险/会计学原理/Python 或 R; 大三方向分流: 精算学基础 (利息理论+生命表)/风险管理/保险法/社会保险/保险公司经营管理/投资学 (保险资金运用)/计量经济学; 大四: 保险公司/再保险/精算咨询实习 8-12 周 + 毕业论文. 4 年下来, 既要能搭建精算模型/计算准备金/评估偿付能力, 也要懂保险产品定价/核保核赔流程/保险法合规.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学/统计功底扎实 (微积分/线代/概率论是核心), 风险理论/精算需要</li><li>能熬过精算师考试 (SOA/CAS 5-8 年, 通过率 < 30%; 中国精算师 < 15%)</li><li>对保险/风险管理/精算有真兴趣, 不排斥金融服务业</li><li>愿意读研 (央财/上财/对外经贸/西财硕是头部门槛)</li><li>能接受初期 6-12 万 + 保险公司基层 (核保/理赔/营销)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学弱, 风险理论/精算根本学不下去</li><li>不能接受长周期备考 (精算师 5-8 年逐步通过)</li><li>期待毕业即高薪, 营销岗压力大收入波动</li><li>排斥保险营销 (毕业生 50% 实际从营销起步)</li><li>追求"金融"光环, 应选金融学/金融工程</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">保险学 = 卖保险</div><div class="ovv-simple-pit-reality">保险学是金融学分支, 核心是精算定价/核保核赔/保险资管, 营销只是保险产业链最末端; 但普通院校保险学毕业生 50% 实际从营销起步, 因精算/核保岗位基本只招 985 硕+SOA/CAS 通过若干门.</div></li><li><div class="ovv-simple-pit-myth">精算师年薪百万, 越老越吃香</div><div class="ovv-simple-pit-reality">中国精算师持证人约 1500 人 (2024), 应届通过率 < 15%, 全科通过需 5-8 年; 持证人年薪 50-150 万是头部 (中国人寿/平安/太保/泰康), 普通中小保险公司总精算师年薪 30-80 万, 中位数远低于头部券商投行.</div></li><li><div class="ovv-simple-pit-myth">保险 = 财险车险</div><div class="ovv-simple-pit-reality">保险涵盖财产险 (车险/企业财产/责任险) + 人身险 (寿险/健康险/意外险) + 再保险 + 巨灾保险 + 互联网保险 + 保险资管多个赛道; 健康险 (2024 保费 9000 亿) 和巨灾保险增速最快, 车险因车险综合改革利润率压缩.</div></li><li><div class="ovv-simple-pit-myth">保险学可以做银行/券商/基金</div><div class="ovv-simple-pit-reality">保险学毕业生进银行/券商/基金总部比例远低于金融学, 因银行校招偏好金融学/经济学; 保险学真正对口的是保险公司精算/核保/理赔/资管, 跨行进入投行/PE/VC 需要 985 硕+CFA+顶实习三重门槛.</div></li><li><div class="ovv-simple-pit-myth">保险行业稳定, 不会裁员</div><div class="ovv-simple-pit-reality">2023-2024 年保险业代理人改革清虚, 寿险营销员从 2019 年 900 万峰值降至 2024 年 290 万 (缩水 67%), 银保监对销售资质要求趋严; 内勤岗位相对稳定但晋升慢, 精算/核保/资管等核心岗竞争加剧.</div></li><li><div class="ovv-simple-pit-myth">保险学不考数学</div><div class="ovv-simple-pit-reality">精算方向数学要求极高 (微积分/线代/概率论/随机过程/利息理论全要学), 风险建模依赖 Excel/VBA/Python/R/SAS; 数学弱 + 排斥建模 = 保险学=营销岗, 数学强 + 持证 = 精算师, 二者收入差距 5-10 倍.</div></li><li><div class="ovv-simple-pit-myth">国际保险与再保险方向容易出国</div><div class="ovv-simple-pit-reality">对外经贸大学国际保险与再保险方向是少数, 全英文教学, 但真正进跨国再保险 (瑞再/慕再/韦莱韬悦 WTW/怡安 AON) 国内代表处的应届生基本只招 985 硕+海外交换+英语流利, 普通院校该方向毕业生仍主要走国内保险公司.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -979,11 +980,11 @@ footer .data-source { color: #78716C; }
           <div class="course"><span class="course-name">对外经济贸易大学 · 国际保险与再保险方向 (全英文)</span><span class="course-credit">5 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
-          <div class="course"><span class="course-name">商业银行 / 投行 / 基金实习 (8-12 周)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">金融沙盘模拟</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">证券从业 / CFA / FRM 考证辅导</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">毕业论文 + 案例研究</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">模拟交易大赛 + 量化策略实现</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">头部寿险/财险公司精算部实习 (中国人寿/平安/PICC, 8-12 周, 准备金评估/产品定价)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">再保险经纪公司实习 (中再集团/瑞再/韦莱韬悦 WTW, 国际再保业务)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">保险科技/互联网保险产品 PM 实习 (水滴/蚂蚁保险/微保, 健康险/医疗险产品设计)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">SOA 北美精算师 / 中国精算师 考证辅导 (VEE 课程对接 + Exam P/IFM/ATAM/LTAM 考前集训)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">毕业论文/设计 (精算定价/偿付能力/巨灾保险/再保险结构设计)</span><span class="course-credit">6 学分</span></div>
         </div>
     </div>
   </div>
@@ -1070,21 +1071,21 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">广</div>
-          <span class="bento-rank">★★★☆☆</span>
+          <span class="bento-rank">B</span>
           <div class="bento-name">广东金融学院</div>
-          <div class="bento-tag">广东 · 省属,保险学强校</div>
+          <div class="bento-tag">省属, 保险学强校, 粤港澳大湾区金融就业</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">西</div>
-          <span class="bento-rank">★★★☆☆</span>
+          <span class="bento-rank">B</span>
           <div class="bento-name">西安财经大学</div>
-          <div class="bento-tag">陕西 · 省属,保险学</div>
+          <div class="bento-tag">省属, 保险学, 西部金融人才基地</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">南</div>
-          <span class="bento-rank">★★★☆☆</span>
+          <span class="bento-rank">B</span>
           <div class="bento-name">南京审计大学</div>
-          <div class="bento-tag">江苏 · 省属,保险与审计</div>
+          <div class="bento-tag">省属, 保险与审计交叉, 金融监管输送</div>
         </div>
     </div>
   </div>
@@ -1326,18 +1327,18 @@ footer .data-source { color: #78716C; }
     <div class="direction-list">
         <div class="direction">
           <div class="direction-name">寿险公司 (中国人寿/平安/太保/新华/泰康)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
-          <div class="direction-pct">22%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
+          <div class="direction-pct">25%</div>
         </div>
         <div class="direction">
           <div class="direction-name">财险公司 (人保/PICC/平安产险/太保产险)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
-          <div class="direction-pct">18%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:20%"></div></div>
+          <div class="direction-pct">20%</div>
         </div>
         <div class="direction">
           <div class="direction-name">保险资管/资金运用</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
           <div class="direction-name">再保险/经纪公司 (瑞再/慕再/韦莱韬悦WTW)</div>
@@ -1355,14 +1356,14 @@ footer .data-source { color: #78716C; }
           <div class="direction-pct">10%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">银保监/金融监管局/保险业协会</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
+          <div class="direction-name">金融监管局/保险业协会</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
+          <div class="direction-pct">6%</div>
         </div>
         <div class="direction">
           <div class="direction-name">保险营销/银保渠道</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:9%"></div></div>
-          <div class="direction-pct">9%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:4%"></div></div>
+          <div class="direction-pct">4%</div>
         </div>
     </div>
   </div>
@@ -1375,28 +1376,38 @@ footer .data-source { color: #78716C; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">大厂商业 / 数据分析</div>
+          <div class="path-pct">30<span class="path-unit">%</span></div>
+          <div class="path-name">寿险公司 (精算/核保/理赔/培训)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">30<span class="path-unit">%</span></div>
-          <div class="path-name">银行 / 券商 / 基金总部</div>
+          <div class="path-pct">18<span class="path-unit">%</span></div>
+          <div class="path-name">财险公司 (车险/企业财产/责任险核保理赔)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">公务员 / 体制内</div>
+          <div class="path-pct">12<span class="path-unit">%</span></div>
+          <div class="path-name">保险资管 (国寿资产/平安资产/泰康资产)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">四大会计师事务所</div>
+          <div class="path-pct">8<span class="path-unit">%</span></div>
+          <div class="path-name">再保险/经纪 (瑞再/慕再/韦莱韬悦)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">15<span class="path-unit">%</span></div>
+          <div class="path-name">继续深造 (央财/上财/对外经贸/西财精算或金融硕)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="80">
           <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (经管硕博 / MBA)</div>
+          <div class="path-name">保险科技 (水滴/蚂蚁保险/微保/慧择)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">7<span class="path-unit">%</span></div>
+          <div class="path-name">金融监管局/保险业协会 (公务员)</div>
           
         </div>
     </div>
@@ -1412,53 +1423,53 @@ footer .data-source { color: #78716C; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">保</div>
+            <div class="quote-avatar">中</div>
             <div class="quote-byline">
-              <strong>保险学-alum-0</strong>
-              <span class="quote-source"> · </span>
+              <strong>中国平安人寿 · 精算部 高级精算师</strong>
+              <span class="quote-source">2019 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科经济类 + 大厂 (字节 / 阿里) 或券商 / 银行 4 年, 18-35 万/年, 业务 + 行业研究 + 投资策略, 985 + 顶实习是门槛。</p>
+          <p class="quote-text">南开保险本硕 6 年 + 平安人寿精算部 4 年; SOA 北美精算师过 7 门 + 中国精算师通过, 准备金评估/产品定价, 第一年 14 万, 5 年+ 30 万, 深圳.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar">保</div>
+            <div class="quote-avatar">中</div>
             <div class="quote-byline">
-              <strong>保险学-alum-1</strong>
-              <span class="quote-source"> · </span>
+              <strong>中国人保 (PICC) · 车险核保经理</strong>
+              <span class="quote-source">2020 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 公考进省 / 市政府 (发改委 / 财政厅 / 商务局) 4 年, 6-12 万 + 编, 政策研究 + 调研 + 产业规划, 副科 / 正科是 10 年门槛。</p>
+          <p class="quote-text">央财保险学 + 中国人保车险部 3 年; 车险核保/费率厘定/再保对接, 应届 10 万, 3 年+ 18 万, 北京, 适合稳定 + 业务复合.</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar">保</div>
+            <div class="quote-avatar">中</div>
             <div class="quote-byline">
-              <strong>保险学-alum-2</strong>
-              <span class="quote-source"> · </span>
+              <strong>中国人寿资产管理公司 · 投资经理</strong>
+              <span class="quote-source">2021 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科经济 + 国内 (北大 / 人大 / 清华 五道口) 或海外硕博 (LSE / Chicago / MIT), 头部投行 / 高校 / 央行门槛。</p>
+          <p class="quote-text">西财保险硕 + 国寿资产 3 年; 保险资金运用/固收+权益+另类投资, 应届 18 万, 5 年+ 50 万 + Carry, 北京, 985/211 硕 + CFA 优先.</p>
         </div>
         <div class="quote fade-up" data-delay="240" >
           <div class="quote-head">
-            <div class="quote-avatar">保</div>
+            <div class="quote-avatar">韦</div>
             <div class="quote-byline">
-              <strong>保险学-alum-3</strong>
-              <span class="quote-source"> · </span>
+              <strong>韦莱韬悦 (WTW) · 再保险经纪</strong>
+              <span class="quote-source">2022 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科经济 + 字节战投 / 美团战投 4 年, 35-70 万 + 期权, 战投 + 行业研究 + 投后, 985 + 顶互联网战投实习是金门槛。</p>
+          <p class="quote-text">对外经贸国际保险与再保险全英文方向 + 韦莱韬悦 2 年; 跨国再保/保险经纪, 全英文环境, 应届 18 万, 5 年+ 50 万, 上海/北京, 985 硕 + 海外交换优先.</p>
         </div>
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">保</div>
+            <div class="quote-avatar">水</div>
             <div class="quote-byline">
-              <strong>保险学-alum-4</strong>
-              <span class="quote-source"> · </span>
+              <strong>水滴公司 (水滴保) · 保险产品 PM</strong>
+              <span class="quote-source">2023 届 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">本科经济 + 四大 (PwC / EY) 审计 2-3 年 → 中信 / 中金 CFO 部门 2 年, 25-50 万/年, CPA + 审计 + 金融跳槽是黄金路径。</p>
+          <p class="quote-text">上财保险学 + 水滴保产品 PM 2 年; 健康险/医疗险产品设计+精算定价, 应届 15 万, 3 年+ 28 万, 北京, 保险科技风口+产品复合.</p>
         </div>
     </div>
   </div>
@@ -1532,10 +1543,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card finance" href="/credit-management.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">信用管理</span><span class="wl-hook">信用管理</span></a>
-      <a class="wl-card finance" href="/supply-chain-management.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">供应链管理</span><span class="wl-hook">供应链管理</span></a>
       <a class="wl-card finance" href="/finance-math.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">金融数学</span><span class="wl-hook">金融数学</span></a>
-      <a class="wl-card finance" href="/resources-environmental-economics.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">资源与环境经济学</span><span class="wl-hook">资源与环境经济学</span></a>
+      <a class="wl-card finance" href="/investment-studies.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">投资学</span><span class="wl-hook">投资学</span></a>
+      <a class="wl-card finance" href="/cross-border-ecommerce.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">跨境电子商务</span><span class="wl-hook">跨境电子商务</span></a>
+      <a class="wl-card finance" href="/national-economy-management.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">国民经济管理</span><span class="wl-hook">国民经济管理</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>

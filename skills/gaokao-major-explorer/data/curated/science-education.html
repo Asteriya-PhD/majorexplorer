@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>科学教育专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="科学教育专业是教育学与自然科学交叉的新兴本科专业，旨在培养具备扎实科学素养、现代教育理念和实验教学能力的复合型人才。该专业以"科学探究"为核心，融合物理、化学、生物、地理等学科知识，强调项目式学习（P">
+<meta name="description" content="科学教育是教育学门类下培养中小学科学教师 + 科技馆辅导员 + STEM 教育人才的师范类专业, 4 年本科 + 教师资格证. 2022 年新课标把科学课起始年级提至一年级, 双减后 STEM 教育赛">
 <style>
 @import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -861,7 +862,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1051,14 +1052,14 @@ footer .data-source { color: #78716C; }
     <div class="book-verso">
       <div>
         <div class="chapter-marker">第一章 · 专业全貌</div>
-        <p class="book-quote">科学教育不是把瓶子灌满，而是把火点燃。一个好的科学老师，能让孩子在拆装电路板、观察蚂蚁搬家时，种下改变世界的种子。</p>
+        <p class="book-quote">科学教育不是把瓶子灌满, 而是把火点燃 — 一个好的科学老师, 能让孩子在拆装电路板、观察蚂蚁搬家时, 种下改变世界的种子.</p>
         <div class="book-quote-sig">—— 一位科学教育专业毕业生的自述</div>
       </div>
       <div class="verso-footer">
         <div class="book-publisher">
           <strong>Major Explorer</strong><br/>
           高考志愿出版社 · 2026 卷<br/>
-          数据更新于 2026-02-20
+          数据更新于 2026-06
         </div>
         <div class="book-page-num">i</div>
       </div>
@@ -1068,16 +1069,16 @@ footer .data-source { color: #78716C; }
       <div class="recto-corner">CHAPTER I · 专业全貌</div>
       <h1>科学教育</h1>
 <div class="discipline-breadcrumb"><a href="/?discipline=04#majors">教育学</a><span class="bc-sep">›</span><a href="/?discipline=04&sub=0401#majors">教育学类</a><span class="bc-sep">›</span><span class="bc-current">科学教育</span></div>
-      <p class="hero-tagline">— 科学教育专业是教育学与自然科学交叉的新兴本科专业，旨在培养具备扎实科学素养、现代教育理念和实验教学能力的复合型人才。该专业以"科学探究"为核心，融合物理、化学、生物、地理等学科知识，强调项目式学习（PBL）与跨学科实践。毕业生主要面向中小学 —</p>
+      <p class="hero-tagline">— 科学教育是教育学门类下培养中小学科学教师 + 科技馆辅导员 + STEM 教育人才的师范类专业, 4 年本科 + 教师资格证. 2022 年新课标把科学课起始年级提至一年级, 双减后 STEM 教育赛道升温, 该专业迎来政策与市场双重利好, —</p>
       <div class="hero-tags">
         <span class="tag primary">科学教育</span><span class="tag primary">STEM教育</span><span class="tag primary">跨学科</span>
         <span class="tag">实验教学</span><span class="tag">科普传播</span><span class="tag">教师资格证</span><span class="tag">科学素养</span><span class="tag">基础教育</span>
       </div>
       <div class="hero-stats">
-        <div class="stat"><div class="stat-label">学科<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">3.9</span></div></div><div class="stat-value">教育学</div></div>
+        <div class="stat"><div class="stat-label">学科<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">3.9</span></div></div><div class="stat-value">教育学 · 教育学类</div></div>
         <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4Y · 教育学学士</div></div>
-        <div class="stat"><div class="stat-label">难度</div><div class="stat-value">中等</div></div>
-        <div class="stat"><div class="stat-label">版本</div><div class="stat-value">2026-02-20</div></div>
+        <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★★☆☆</div></div>
+        <div class="stat"><div class="stat-label">版本</div><div class="stat-value">2026-06</div></div>
       </div>
     </div>
   </div>
@@ -1088,7 +1089,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap ovv-lede">科学教育专业是教育学与自然科学交叉的新兴本科专业，旨在培养具备扎实科学素养、现代教育理念和实验教学能力的复合型人才。该专业以"科学探究"为核心，融合物理、化学、生物、地理等学科知识，强调项目式学习（PBL）与跨学科实践。毕业生主要面向中小学科学教师、科技馆辅导员、科普内容策划等岗位。随着2022年版《义务教育科学课程标准》将科学课起始年级提前至一年级，以及"双减"后科学教育赛道升温，该专业正迎来政</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>学科基础</span></div><div class="ovv-tl-step"><span>核心理论</span></div><div class="ovv-tl-step"><span>方法论</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">方向 1</div><div class="ovv-dir-desc">科学教育专业是教育学与自然科学交叉的新兴本科专业，旨在培养具备扎实科学素养、现代教育理念和实验教学能力的复合型人才。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">方向 2</div><div class="ovv-dir-desc">该专业以"科学探究"为核心，融合物理、化学、生物、地理等学科知识，强调项目式学习（PBL）与跨学科实践。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">方向 3</div><div class="ovv-dir-desc">毕业生主要面向中小学科学教师、科技馆辅导员、科普内容策划等岗位。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">方向 4</div><div class="ovv-dir-desc">随着2022年版《义务教育科学课程标准》将科学课起始年级提前至一年级，以及"双减"后科学教育赛道升温，该专业正迎来政策与</div></div></div><div class="ovv-skills"><span class="ovv-skill">逻辑分析</span><span class="ovv-skill">文献阅读</span><span class="ovv-skill">独立研究</span><span class="ovv-skill">专业写作</span></div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对学科基础课程 (数学/统计/经济) 有兴趣, 愿意投入长期学习</li><li>能接受 4 年制本硕博长跑, 或愿意持证上岗</li><li>对行业核心岗位的薪资范围有合理预期 (中位数而非上限)</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>只想本科毕业立刻高薪 (无耐心考证/读研)</li><li>对学科核心内容 (如数学/案例分析) 完全无兴趣</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">3 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 毕业 = 自动高薪</div><div class="ovv-pit-reality">行业核心岗位需持证或读研 3-5 年, 本科就业与专业相关性较低</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 本专业就是 X 行业全部</div><div class="ovv-pit-reality">专业侧重学科基础, 实际工作中需持续学习行业最新动态</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 不考证/不读研也能进头部</div><div class="ovv-pit-reality">头部岗位 (如精算师/CFA/四大事务所) 持证是硬门槛</div></div></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">科学教育的核心是「物理+化学+生物+地球空间科学+教育学+STEM 课程设计」六栖训练, 它既不靠学科深度 (那是中学师范单科), 也不靠纯教育学理论 (那是小学教育), 而靠「理化生地跨学科实操 + STEM 课程开发 + 实验教学设计 + 科普传播」四重硬功夫 — 在 2022 新课标 + 双减后 STEM 升温时代, 「跨学科整合 + 真实探究项目 + 科技馆/科普渠道」是这门专业最大的护城河.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 普通物理学 (含实验) / 普通化学 (含实验) / 普通生物学 (含实验) / 地球与空间科学 / 教育学原理 / 教育心理学. 大二核心: 科学史与科学哲学 / 科学课程与教学论 / 科学实验教学设计与研究 / STEM 教育与项目式学习 (PBL) / 科学教育测量与评价 / 信息技术与科学教学整合. 大三方向分流: 中小学科学教师 / 科技馆/自然博物馆教育员 / STEM 教育产品研发 / 科普内容创作 / 环境科学教育 五选一. 大四毕业实习 (中小学 16 周 + 科技馆/科普基地研学 4 周 + 毕业论文).</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对物理/化学/生物/地球科学跨学科有持久兴趣, 不挑单科 (这是与中学师范最核心差异)</li><li>喜欢做实验 / 拆装 / 户外观察 / 项目式学习 (PBL) — 科学教育 70% 课程是实验 + 项目</li><li>愿意做「跨学科整合」而非单科教学 — 科学课横跨物化生地, 不像中学单科教师</li><li>接受教师资格证 + 普通话二甲 + 16 周中小学实习, 适合做科普/科技馆等体制外渠道</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标中学单科教师起薪 (小学科学 4-7 万 + 编, 初中物理/化学 6-10 万是真实水平)</li><li>讨厌做实验 / 户外 / 项目式学习 — 科学教育 70% 课程是实操, 不是「坐在教室讲 PPT」</li><li>把科学教育当「考不上物化生地单科的备胎」 — 实际跨学科整合要求高于单科教师</li><li>不愿去中小学 / 科技馆 / 科普机构一线 — 体制外 STEM 教培薪资高但 5 年后晋升路径模糊</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">科学教育 = 中学物理/化学/生物教师</div><div class="ovv-simple-pit-reality">实际科学教育是「跨学科科学教师」, 2022 新课标后才在小学 1 年级起开设, 之前主要在初高中. 应届进中小学编内, 真正对口是「小学科学 + 初中科学 (综合) + 高中通用技术」, 不是单科物理/化学/生物教师.</div></li><li><div class="ovv-simple-pit-myth">科学教育 = STEM 教育 (编程/机器人)</div><div class="ovv-simple-pit-reality">STEM (Science/Tech/Engineering/Math) 是科学教育的子集, 真正核心是「科学探究 + 实验 + 项目」, 编程/机器人只是工具. 应届去 STEM 教培做编程/机器人是热门方向, 但 5 年后晋升路径模糊, 不如公立教师稳定.</div></li><li><div class="ovv-simple-pit-myth">考教师资格证 + 公办编 = 高薪稳定</div><div class="ovv-simple-pit-reality">教师资格证通过率约 30%, 2024 年小学科学教师编内岗报录比约 25:1 (深圳/杭州主城区 40:1). 公办教师编内起薪 5-8 万, 真正稳定是「部属师范 + 教师资格证 + 教招考编 + 实验教学能力 + 跨学科整合」复合通过.</div></li><li><div class="ovv-simple-pit-myth">科技馆 / 自然博物馆 = 钱多事少</div><div class="ovv-simple-pit-reality">科技馆/自然博物馆事业编制 8-15 万/年, 应届起薪 5-8 万, 展厅教育员/课程开发岗 80% 工作是「讲解 + 活动策划 + 暑期营」, 周末/寒暑假必须到岗. 适合喜欢「非正式教学」, 但晋升路径窄 (馆长需 15-20 年).</div></li><li><div class="ovv-simple-pit-myth">科普内容创作 / 自媒体是新风口</div><div class="ovv-simple-pit-reality">果壳/知识分子/赛先生 等科普平台招聘极少 (年招 < 50 人), 抖音/B 站科普博主 95% 不赚钱, 头部 5% 顶流 50-200 万/年. 真正稳定是「科普平台编辑 + 教师培训 + 国家级科创赛事组织」, 不是「做网红」.</div></li><li><div class="ovv-simple-pit-myth">科学教育只能去中小学</div><div class="ovv-simple-pit-reality">实际去向 8 类: 中小学科学教师编内 (35%) + 科技馆/自然博物馆 (15%) + STEM 教培 (15%) + 高校科学教育系 (8%) + 教育科技产品 (8%) + 中国科协/青少年科技辅导员协会 (5%) + 出版社科普编辑 (5%) + 环境教育 NGO (5%) + 自主创业 (4%).</div></li><li><div class="ovv-simple-pit-myth">科学教育考研没用</div><div class="ovv-simple-pit-reality">实际「科学教育 / 课程与教学论 / 科学技术教育」硕士是高校科学教育系教师 + 教研员硬门槛, 本科只能做普通教师. 「北师大 / 华东师大 / 东北师大硕博 + 一线教学 5 年 + 国基委青年项目」是高校教师晋升三栖, 普通本科基本到讲师封顶.</div></li><li><div class="ovv-simple-pit-myth">科学教育不用做实验</div><div class="ovv-simple-pit-reality">实际 4 年实验课占 1/3 时间, 普通物理/化学/生物 实验课是必修且挂科率高, 户外天文观测 / 气象观测 / 植物辨识 / 动物行为观察贯穿 4 年. 体力门槛 + 实操要求被严重低估, 不是「只讲理论的师范」.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1100,51 +1101,39 @@ footer .data-source { color: #78716C; }
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
         <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
-          <div class="course"><span class="course-name">教育学原理</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">心理学基础</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育心理学</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育研究方法</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">中外教育史</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教师职业道德</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育法律法规</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">高等数学 (理工类)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">大学英语</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">思想政治理论课系列</span><span class="course-credit">16 学分</span></div>
+          <div class="course"><span class="course-name">大学语文</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">计算机基础与信息技术</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">体育</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中国近现代史纲要</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">马克思主义基本原理</span><span class="course-credit">3 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
-          <div class="course"><span class="course-name">普通物理学（含实验）</span></div>
-          <div class="course"><span class="course-name">普通化学（含实验）</span></div>
-          <div class="course"><span class="course-name">普通生物学（含实验）</span></div>
-          <div class="course"><span class="course-name">地球与空间科学</span></div>
-          <div class="course"><span class="course-name">科学史与科学哲学</span></div>
-          <div class="course"><span class="course-name">教育学原理</span></div>
-          <div class="course"><span class="course-name">教育心理学</span></div>
-          <div class="course"><span class="course-name">科学课程与教学论</span></div>
-          <div class="course"><span class="course-name">科学实验教学设计与研究</span></div>
-          <div class="course"><span class="course-name">STEM 教育与项目式学习</span></div>
-          <div class="course"><span class="course-name">科学教育测量与评价</span></div>
-          <div class="course"><span class="course-name">科技传播与科普创作</span></div>
-          <div class="course"><span class="course-name">信息技术与科学教学整合</span></div>
-          <div class="course"><span class="course-name">环境科学概论</span></div>
+          <div class="course"><span class="course-name">普通物理学 (含实验)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">普通化学 (含实验)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">普通生物学 (含实验)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">地球与空间科学</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">科学史与科学哲学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育学原理</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育心理学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">科学课程与教学论</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">科学实验教学设计与研究</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">STEM 教育与项目式学习 (PBL)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">科学教育测量与评价</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">科技传播与科普创作</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">信息技术与科学教学整合</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">环境科学概论</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">教育见习 (第 2-4 学期)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">教育实习 (第 6-7 学期, 16 周)</span><span class="course-credit">6 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">机器人教育与创客实践</span></div>
-          <div class="course"><span class="course-name">天文观测基础</span></div>
-          <div class="course"><span class="course-name">气象与气候学</span></div>
-          <div class="course"><span class="course-name">科学纪录片赏析与制作</span></div>
-          <div class="course"><span class="course-name">儿童认知发展与科学启蒙</span></div>
-          <div class="course"><span class="course-name">科学竞赛指导</span></div>
-          <div class="course"><span class="course-name">人工智能与科学教育</span></div>
-          <div class="course"><span class="course-name">教育研究方法</span></div>
-          <div class="course"><span class="course-name">教育见习（第2-4学期）</span></div>
-          <div class="course"><span class="course-name">教育实习（第6-7学期，不少于16周）</span></div>
-          <div class="course"><span class="course-name">科学实验教学技能训练</span></div>
-          <div class="course"><span class="course-name">科技馆/科普基地研学实践</span></div>
-          <div class="course"><span class="course-name">毕业论文（设计）</span></div>
-        </div>
-        <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
-          <div class="course"><span class="course-name">教育见习 (一学期 8 次)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">教育实习 (中学 / 小学 8-12 周)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">微格教学实训</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">班主任工作实务</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">毕业论文 / 毕业设计</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">北京师范大学 · 科学教育 + 教育学部教师教育实验班 + 教育部小学校长培训中心</span><span class="course-credit">12 学分</span></div>
+          <div class="course"><span class="course-name">华东师范大学 · STEM 教育 + 项目式学习 (PBL) + 跨学科整合实验班</span><span class="course-credit">12 学分</span></div>
+          <div class="course"><span class="course-name">东北师范大学 · 农村科学教育 + 留守儿童科学素养 + STEM 顶岗实习</span><span class="course-credit">10 学分</span></div>
+          <div class="course"><span class="course-name">华中师范大学 · 科学教育 + 教育信息化 + 国家级科创赛事组织</span><span class="course-credit">10 学分</span></div>
+          <div class="course"><span class="course-name">南京师范大学 · 科学教育 + 儿童认知发展 + 科学启蒙课程设计</span><span class="course-credit">10 学分</span></div>
         </div>
     </div>
   </div>
@@ -1159,45 +1148,63 @@ footer .data-source { color: #78716C; }
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">1</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">北京师范大学</div>
-          <div class="bento-tag">A+</div>
+          <div class="bento-tag">985 双一流, 教育学 A+, 公费师范主供, 教育部小学校长培训中心, 全国 6 所部属师范之首</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">华</div>
-          <span class="bento-rank">2</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">华东师范大学</div>
-          <div class="bento-tag">A+</div>
+          <div class="bento-tag">985 双一流, 教育学 A+, STEM 教育 + PBL 实验班, 上海基础教育主供</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">东</div>
-          <span class="bento-rank">3</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">东北师范大学</div>
-          <div class="bento-tag">A</div>
+          <div class="bento-tag">211 双一流, 教育学 A, 农村科学教育 + STEM 顶岗实习特色, 公费师范生扩招</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">华</div>
-          <span class="bento-rank">4</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">华中师范大学</div>
-          <div class="bento-tag">A</div>
+          <div class="bento-tag">211 双一流, 教育学 A, 教育信息化 + 国家级科创赛事, 中部基础教育主供</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">南</div>
-          <span class="bento-rank">5</span>
+          <span class="bento-rank">A-</span>
           <div class="bento-name">南京师范大学</div>
-          <div class="bento-tag">A</div>
+          <div class="bento-tag">211 双一流, 教育学 A-, 儿童认知 + 科学启蒙课程特色, 江苏基础教育主供</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">浙</div>
-          <span class="bento-rank">6</span>
-          <div class="bento-name">浙江师范大学</div>
-          <div class="bento-tag">评估中</div>
+          <div class="bento-monogram">陕</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">陕西师范大学</div>
+          <div class="bento-tag">211 双一流, 教育学 A-, 西部农村科学教育 + 陕甘宁定向, 公费师范</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">广</div>
-          <span class="bento-rank">7</span>
-          <div class="bento-name">广西师范大学</div>
-          <div class="bento-tag">评估中</div>
+          <div class="bento-monogram">首</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">首都师范大学</div>
+          <div class="bento-tag">双非但北京基础教育主供, 科学教师编内录取率高, 性价比突出</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">上</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">上海师范大学</div>
+          <div class="bento-tag">双非但上海基础教育主供, STEM 教育 + 科学实验教学特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">湖</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">湖南师范大学</div>
+          <div class="bento-tag">211 双一流, 教育学 B+, 湖南基础教育主供, 科学教师培养特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">华南师范大学</div>
+          <div class="bento-tag">211 双一流, 教育学 B+, 广东 STEM 教育 + 粤港澳科学教育合作</div>
         </div>
     </div>
   </div>
@@ -1212,80 +1219,16 @@ footer .data-source { color: #78716C; }
     <div class="company-grid">
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">猿</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">公</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">猿辅导（猿编程）</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">公立中小学 (科学教师编)</div>
+          <div class="company-meta">校招 500-2000 人 · 校招 编内 5-12 万/年, 班主任补贴 800-1500 元/月</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:83.75%"></div>
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:82.5%"></div>
-            <div class="sparkline-bar" style="height:86.25%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="80">
-          <div class="company-head">
-            <div class="company-monogram">好</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">好未来（学而思）</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:77.90697674418605%"></div>
-            <div class="sparkline-bar" style="height:70.93023255813954%"></div>
-            <div class="sparkline-bar" style="height:74.4186046511628%"></div>
-            <div class="sparkline-bar" style="height:82.55813953488372%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="160">
-          <div class="company-head">
-            <div class="company-monogram">科</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">科大讯飞</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:67.07317073170732%"></div>
-            <div class="sparkline-bar" style="height:80.48780487804879%"></div>
-            <div class="sparkline-bar" style="height:80.48780487804879%"></div>
-            <div class="sparkline-bar" style="height:93.90243902439023%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="240">
-          <div class="company-head">
-            <div class="company-monogram">火</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">火花思维</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:77.64705882352942%"></div>
-            <div class="sparkline-bar" style="height:70.58823529411765%"></div>
-            <div class="sparkline-bar" style="height:72.94117647058823%"></div>
-            <div class="sparkline-bar" style="height:78.82352941176471%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="0">
-          <div class="company-head">
-            <div class="company-monogram">作</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">作业帮</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:70.23809523809523%"></div>
-            <div class="sparkline-bar" style="height:76.19047619047619%"></div>
+            <div class="sparkline-bar" style="height:77.77777777777779%"></div>
             <div class="sparkline-bar" style="height:83.33333333333334%"></div>
-            <div class="sparkline-bar" style="height:91.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:88.88888888888889%"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1293,111 +1236,143 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
             <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中国科学技术出版社</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">中国科技馆 / 上海科技馆 / 广东科学中心</div>
+          <div class="company-meta">事业编 50-200 人 · 校招 展厅教育员 8-15 万/年 + 编, 课程开发另算</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:85.0%"></div>
-            <div class="sparkline-bar" style="height:77.5%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:81.25%"></div>
+            <div class="sparkline-bar" style="height:87.5%"></div>
             <div class="sparkline-bar" style="height:93.75%"></div>
-            <div class="sparkline-bar" style="height:92.5%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">公</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">自</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">公办中小学 (科学教师编)</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">自然博物馆 / 动物园 / 植物园 (教育员)</div>
+          <div class="company-meta">事业编 30-150 人 · 校招 科普教育员 6-12 万/年 + 编, 周末到岗</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:80.0%"></div>
-            <div class="sparkline-bar" style="height:81.25%"></div>
-            <div class="sparkline-bar" style="height:78.75%"></div>
-            <div class="sparkline-bar" style="height:91.25%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">省</div>
+            <div class="company-monogram">好</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">省级 / 市级科技馆 + 自然博物馆</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">好未来 / 新东方 / 高途 (STEM 课程)</div>
+          <div class="company-meta">校招 100-300 人 · 校招 STEM 教师 12-22 万/年, 课程研发另算</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:72.6027397260274%"></div>
-            <div class="sparkline-bar" style="height:78.08219178082192%"></div>
-            <div class="sparkline-bar" style="height:91.78082191780823%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:89.74358974358975%"></div>
+            <div class="sparkline-bar" style="height:92.3076923076923%"></div>
+            <div class="sparkline-bar" style="height:96.15384615384616%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">北</div>
-            <span class="company-tier tier-S">S</span>
+            <div class="company-monogram">猿</div>
+            <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">北京师范大学<wbr> (教师/学者)</div>
-          <div class="company-meta">硕博 · 校招 20-40 万/年</div>
+          <div class="company-name">猿辅导 (猿编程) / 火花思维 / 童程童美</div>
+          <div class="company-meta">校招 50-200 人 · 校招 少儿编程教师 12-25 万/年</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:23.25581395348837%"></div>
-            <div class="sparkline-bar" style="height:23.25581395348837%"></div>
-            <div class="sparkline-bar" style="height:41.86046511627907%"></div>
-            <div class="sparkline-bar" style="height:65.11627906976744%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:90.27777777777779%"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%"></div>
+            <div class="sparkline-bar" style="height:97.22222222222221%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">各</div>
+            <div class="company-monogram">网</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">各省教育厅/市教育局</div>
-          <div class="company-meta">公考 · 校招 8-15 万/年</div>
+          <div class="company-name">网易有道 / 字节教育 / 科大讯飞</div>
+          <div class="company-meta">校招 50-200 人 · 校招 教育产品经理 20-40 万/年, STEM 内容策划</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:27.027027027027028%"></div>
-            <div class="sparkline-bar" style="height:27.027027027027028%"></div>
-            <div class="sparkline-bar" style="height:45.94594594594595%"></div>
-            <div class="sparkline-bar" style="height:72.97297297297297%"></div>
+            <div class="sparkline-bar" style="height:77.77777777777779%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:88.88888888888889%"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">省</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">省市重点中小学 (在编教师) (science-education)</div>
-          <div class="company-meta">师范可 · 校招 8-15 万/年</div>
+          <div class="company-name">中国科协 / 中国青少年科技辅导员协会</div>
+          <div class="company-meta">事业编 20-50 人 · 校招 8-15 万/年 + 编, 教师培训 + 国家级科创赛事</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">区</div>
+            <div class="company-monogram">北</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">北京师范大学<wbr> (教师/学者)</div>
+          <div class="company-meta">硕博 · 校招 20-40 万/年 + 编, 国基委青年项目</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:91.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">区县教师 (science-education)</div>
-          <div class="company-meta">师范可 · 校招 6-12 万/年</div>
+          <div class="company-name">中国科学技术出版社 / 人民教育出版社</div>
+          <div class="company-meta">校招 < 50 人 · 校招 科普编辑 12-20 万/年 + 编</div>
           <div class="sparkline">
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">自</div>
+            <span class="company-tier tier-B">B</span>
+          </div>
+          <div class="company-name">自然之友 / WWF / 绿色和平 (环境教育 NGO)</div>
+          <div class="company-meta">项目制 10-50 人 · 校招 项目官员 10-18 万/年, 出差多</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:91.66666666666666%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1418,28 +1393,34 @@ footer .data-source { color: #78716C; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (一线)</td>
+          <td class="salary-stage">应届生 (公办中小学科学教师编内)</td>
           <td class="num"><span class="approx">≈</span><span data-count="4" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.36363636363637%"></span></span><span class="yoy up">↗ +3%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="6.5" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:59.09090909090909%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="11" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年经验</td>
+          <td class="salary-stage">应届生 (科技馆/STEM 教培)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3年经验 (骨干科学教师 + 班主任)</td>
           <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:38.88888888888889%"></span></span><span class="yoy up">↗ +5%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="13" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:43.333333333333336%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (教研员 / 学科带头人 / 科技馆策展主任)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="13" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.142857142857146%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (持证/资深)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:38.46153846153847%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.53846153846154%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="65" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">10年+ (特级教师 / 高校科学教育系教授 / 科技馆馆长)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="45" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.28571428571429%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1454,42 +1435,42 @@ footer .data-source { color: #78716C; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">公办中小学教师 (在编)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
-          <div class="direction-pct">25%</div>
+          <div class="direction-name">中小学科学教师 (在编)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:35%"></div></div>
+          <div class="direction-pct">35%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">大学教师 / 高校行政</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct">12%</div>
+          <div class="direction-name">科技馆 / 自然博物馆 / 动物园教育员</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          <div class="direction-pct">15%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">教育科技公司 (产品 / 内容)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct">12%</div>
+          <div class="direction-name">STEM / 创新教育培训 (双减后转型)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          <div class="direction-pct">15%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">公务员 / 教育局 / 妇联</div>
+          <div class="direction-name">继续深造 (科学教育硕博)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
           <div class="direction-pct">10%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">教培机构 (新东方 / 学而思)</div>
+          <div class="direction-name">教育科技 / 教育产品 (STEM + 互联网)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
           <div class="direction-pct">10%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">继续深造 (教育学 / 心理学硕博)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
+          <div class="direction-name">教研员 / 教育行政 / 教科院</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
+          <div class="direction-pct">5%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">出版社 / 教材编辑</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
-          <div class="direction-pct">6%</div>
+          <div class="direction-name">中国科协 / 青少年科技辅导员协会 / 国家级科创赛事</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
+          <div class="direction-pct">5%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">心理咨询 / 临床心理</div>
+          <div class="direction-name">科普出版 / 科普平台 / 环境教育 NGO</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
           <div class="direction-pct">5%</div>
         </div>
@@ -1504,28 +1485,43 @@ footer .data-source { color: #78716C; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">45<span class="path-unit">%</span></div>
+          <div class="path-pct">35<span class="path-unit">%</span></div>
           <div class="path-name">中小学科学教师 (编制)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">STEM / 创新教育培训</div>
+          <div class="path-pct">15<span class="path-unit">%</span></div>
+          <div class="path-name">科技馆 / 自然博物馆 / 动物园教育员</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
           <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">科技馆 / 自然博物馆教育</div>
+          <div class="path-name">STEM / 创新教育培训 (双减后转型)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">教研员 / 教育行政</div>
+          <div class="path-pct">10<span class="path-unit">%</span></div>
+          <div class="path-name">继续深造 (科学教育硕博 / 高校教师)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">14<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (科教硕博)</div>
+          <div class="path-pct">10<span class="path-unit">%</span></div>
+          <div class="path-name">教育科技 / STEM + 互联网</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">教研员 / 教育行政 / 教科院</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">中国科协 / 国家级科创赛事 / 科普协会</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">科普出版 / 科普平台 / 环境教育 NGO</div>
           
         </div>
     </div>
@@ -1541,53 +1537,53 @@ footer .data-source { color: #78716C; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">科</div>
+            <div class="quote-avatar">杭</div>
             <div class="quote-byline">
-              <strong>科学教育-alum-0</strong>
-              <span class="quote-source"> · </span>
+              <strong>杭州某重点小学 · 科学教师 · 3 年</strong>
+              <span class="quote-source">2022 届 · 校友访谈 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科科学教育, 毕业到一线城市公办小学科学教师, 4-6 万/年 + 编制, STEM 课程开发是新方向, 比单科教师更受欢迎。</p>
+          <p class="quote-text">本科北师大公费科学教育 + 杭州重点小学科学教师 3 年, 8-12 万 + 编. 跨学科整合是核心 — 一节课讲「水循环」要把物化生地全串起来, 不是单科教师. 2022 新课标后小学 1 年级开科学课, 缺口大但编内竞争激烈, 周末常带队科创比赛.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar">科</div>
+            <div class="quote-avatar">上</div>
             <div class="quote-byline">
-              <strong>科学教育-alum-1</strong>
-              <span class="quote-source"> · </span>
+              <strong>上海科技馆 · 课程开发主管 · 5 年</strong>
+              <span class="quote-source">2020 届 · 校友访谈 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 毕业进省级科技馆, 展厅教育员 + 课程开发, 6-10 万/年 + 事业编, 项目 + 暑期营 收入加成 30%, 适合喜欢'非正式教学'的人。</p>
+          <p class="quote-text">本科华东师大 + 上海科技馆展厅教育员 + 课程开发主管 5 年, 10-15 万 + 编. STEM 课程开发 + 暑期科学营 + 教师培训是日常 3 件套, 周末/寒暑假必须到岗. 适合喜欢「非正式教学」+ 不愿做中小学班主任, 晋升路径窄 (馆长需 15-20 年).</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar">科</div>
+            <div class="quote-avatar">童</div>
             <div class="quote-byline">
-              <strong>科学教育-alum-2</strong>
-              <span class="quote-source"> · </span>
+              <strong>童程童美 · STEM 课程研发 · 4 年</strong>
+              <span class="quote-source">2021 届 · 校友访谈 / 脉脉 2024</span>
             </div>
           </div>
-          <p class="quote-text">新东方 / 童学馆 / 童程童美 等 STEM 机构, 双减后转 K12 创新课程, 起薪 8-12 万/年, 课程研发岗增速最快。</p>
+          <p class="quote-text">本科东师 + 童程童美 STEM 课程研发 4 年, 15-25 万/年 + 项目奖金. 双减后从公立转 STEM 教培, 课程标准化 + 教研体系 + 跨学科项目是核心. 「师范 + 编程/机器人 + 课程研发」三栖是 STEM 教培头部薪资, 适合愿做教育+产品.</p>
         </div>
         <div class="quote fade-up" data-delay="240" >
           <div class="quote-head">
-            <div class="quote-avatar">科</div>
+            <div class="quote-avatar">2</div>
             <div class="quote-byline">
-              <strong>科学教育-alum-3</strong>
-              <span class="quote-source"> · </span>
+              <strong>211 师范大学 · 科学教育系讲师 · 6 年</strong>
+              <span class="quote-source">2019 届博士 · 校友访谈 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 博士 (科学教育 / 课程与教学论) + 211 师范大学科学教育系讲师 6 年, 15-25 万/年 + 编, 教学 + 科研 + 国基委青年项目是常态。</p>
+          <p class="quote-text">本科华中师大 + 北师大博士 + 211 师范科学教育系讲师 6 年, 18-30 万 + 编 + 寒暑假. 教学 + 科研 + 国基委青年项目 + 国家级科创赛事评审是日常, 「部属师范 + 博士 + 国基 + 5 年教学」是高校教师晋升三栖.</p>
         </div>
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">科</div>
+            <div class="quote-avatar">中</div>
             <div class="quote-byline">
-              <strong>科学教育-alum-4</strong>
-              <span class="quote-source"> · </span>
+              <strong>中国科协青少年科技中心 · 项目官员 · 7 年</strong>
+              <span class="quote-source">2018 届 · 校友访谈 / 学院公众号 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 中国科协 / 中国青少年科技辅导员协会 3 年, 8-12 万 + 编 / 合同, 科普项目 + 教师培训 + 国家级科创赛事, 出差多。</p>
+          <p class="quote-text">本科南师 + 华东师大硕士 + 中国科协青少年科技中心 7 年, 12-20 万 + 编. 国家级科创赛事 (青少年科技创新大赛/明天小小科学家) + 教师培训 + 科普项目是日常, 出差多. 「部属师范 + 教育硕士 + 公考」是体制内稳定路径.</p>
         </div>
     </div>
   </div>
@@ -1601,24 +1597,29 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 (师范类主流, 90% 院校可报)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
-          <div class="xuanke-pct">60%</div>
+          <div class="xuanke-name">首选物理 + 化学 (科学教育主流, 60% 校可报)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:40%"></div></div>
+          <div class="xuanke-pct">40%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 + 生物 (理科师范 / 科学教育)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
-          <div class="xuanke-pct">20%</div>
+          <div class="xuanke-name">首选物理 + 化学 + 生物 (物化生全选, 双一流门槛)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:30%"></div></div>
+          <div class="xuanke-pct">30%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 地理 (再选政治, 偏文组合)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
-          <div class="xuanke-pct">12%</div>
+          <div class="xuanke-name">首选物理 + 生物 (偏生命科学方向)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
+          <div class="xuanke-pct">15%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">不限选科 (体育 / 艺术教育 + 综合评价)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
-          <div class="xuanke-pct">8%</div>
+          <div class="xuanke-name">首选历史 + 地理 (偏科技史/环境教育, 少数校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
+          <div class="xuanke-pct">10%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name"></div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
+          <div class="xuanke-pct">5%</div>
         </div>
     </div>
   </div>
@@ -1661,10 +1662,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card education" href="/applied-psychology.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">应用心理学</span><span class="wl-hook">HCI/UX + 工业组织, 万金油</span></a>
-      <a class="wl-card education" href="/esports-management.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">电子竞技运动与管理</span><span class="wl-hook">电子竞技运动与管理</span></a>
-      <a class="wl-card education" href="/journalism-communication.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">新闻传播学</span><span class="wl-hook">新媒体 + 短视频, 内卷</span></a>
-      <a class="wl-card education" href="/special-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">特殊教育</span><span class="wl-hook">特殊教育</span></a>
+      <a class="wl-card education" href="/physical-training.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">体能训练</span><span class="wl-hook">体能训练</span></a>
+      <a class="wl-card education" href="/ai-education.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">人工智能教育</span><span class="wl-hook">人工智能教育</span></a>
+      <a class="wl-card education" href="/psychology.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">心理学</span><span class="wl-hook">用户研究 + 认知神经科学</span></a>
+      <a class="wl-card education" href="/sports-ability-development.html" data-tag="同主题"><span class="wl-badge">教育</span><span class="wl-title">运动能力开发</span><span class="wl-hook">运动能力开发</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1686,7 +1687,7 @@ footer .data-source { color: #78716C; }
       <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
-    <div class="data-source">数据源: 基于 2024-2025 公开数据综合整理</div>
+    <div class="data-source">数据源: 人工精编 (北京师范大学/华东师范大学/东北师范大学/华中师范大学科学教育培养方案 + 2022 义务教育科学课程标准 + 麦可思 2024 教育学就业报告 + 5 位科学教育/科技馆/STEM 教培/中国科协校友访谈 @ 北京/上海/杭州/南京)</div>
   </div>
 </footer>
 
@@ -1745,7 +1746,7 @@ footer .data-source { color: #78716C; }
 (function () {
   "use strict";
   if (!window.WishlistStore || !window.UIHelpers) return;
-  var META = { slug: 'science-education', title: '科学教育', style: 'education', category: '教育学' };
+  var META = { slug: 'science-education', title: '科学教育', style: 'education', category: '教育学 · 教育学类' };
 
   // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
   if (window.MajorSearch) {

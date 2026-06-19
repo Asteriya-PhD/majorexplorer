@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>财政学专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="财政学是研究政府收支活动及其对经济运行影响的学科，核心涵盖公共财政、税收制度、政府预算、国债管理、财政政策等。作为应用经济学的重要分支，财政学兼具理论深度与政策实操性，毕业生在财税部门、金融机构、大型">
+<meta name="description" content="财政学的核心是政府收支+公共预算+税收制度+地方债务四栖, 它在 2026 地方债务化解+数字财税兴起+国考税务扩招三股力量下, 35% 走税务系统公务员, 25% 走四大税务/企业税务 — 但相比金">
 <style>
 @import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -731,7 +732,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -919,7 +920,7 @@ footer .data-source { color: #78716C; }
     <div class="letterhead-motto">— Private wealth · Risk and reward · Compound interest of knowledge —</div>
     <h1>财政学</h1>
 <div class="discipline-breadcrumb"><a href="/?discipline=02#majors">经济学</a><span class="bc-sep">›</span><a href="/?discipline=02&sub=0202#majors">财政学类</a><span class="bc-sep">›</span><span class="bc-current">财政学</span></div>
-    <p class="hero-tagline">— 财政学是研究政府收支活动及其对经济运行影响的学科，核心涵盖公共财政、税收制度、政府预算、国债管理、财政政策等。作为应用经济学的重要分支，财政学兼具理论深度与政策实操性，毕业生在财税部门、金融机构、大型企业税务岗及会计师事务所中具有独特竞争优 —</p>
+    <p class="hero-tagline">— 财政学的核心是政府收支+公共预算+税收制度+地方债务四栖, 它在 2026 地方债务化解+数字财税兴起+国考税务扩招三股力量下, 35% 走税务系统公务员, 25% 走四大税务/企业税务 — 但相比金融学, 财政学进投行/PE/VC 极少, —</p>
     <div class="hero-tags">
       <span class="tag primary">财政学</span><span class="tag primary">税收学</span><span class="tag primary">公共预算</span>
       <span class="tag">政府债务</span><span class="tag">财税体制</span><span class="tag">宏观经济</span><span class="tag">公考对口</span><span class="tag">经济学</span>
@@ -938,7 +939,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap ovv-lede">财政学是研究政府收支活动及其对经济运行影响的学科，核心涵盖公共财政、税收制度、政府预算、国债管理、财政政策等。作为应用经济学的重要分支，财政学兼具理论深度与政策实操性，毕业生在财税部门、金融机构、大型企业税务岗及会计师事务所中具有独特竞争优势。2026年，随着新一轮财税体制改革深化、地方债务化解推进、数字财税兴起，财政学专业人才需求持续旺盛。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 03</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>学科基础</span></div><div class="ovv-tl-step"><span>核心理论</span></div><div class="ovv-tl-step"><span>方法论</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">方向 1</div><div class="ovv-dir-desc">财政学是研究政府收支活动及其对经济运行影响的学科，核心涵盖公共财政、税收制度、政府预算、国债管理、财政政策等。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">方向 2</div><div class="ovv-dir-desc">作为应用经济学的重要分支，财政学兼具理论深度与政策实操性，毕业生在财税部门、金融机构、大型企业税务岗及会计师事务所中具有</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">方向 3</div><div class="ovv-dir-desc">2026年，随着新一轮财税体制改革深化、地方债务化解推进、数字财税兴起，财政学专业人才需求持续旺盛。</div></div></div><div class="ovv-skills"><span class="ovv-skill">逻辑分析</span><span class="ovv-skill">文献阅读</span><span class="ovv-skill">独立研究</span><span class="ovv-skill">专业写作</span></div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 03</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对学科基础课程 (数学/统计/经济) 有兴趣, 愿意投入长期学习</li><li>能接受 4 年制本硕博长跑, 或愿意持证上岗</li><li>对行业核心岗位的薪资范围有合理预期 (中位数而非上限)</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>只想本科毕业立刻高薪 (无耐心考证/读研)</li><li>对学科核心内容 (如数学/案例分析) 完全无兴趣</li></ul></div></div></div><div class="ovv-card is-orange fade-up"><div class="ovv-card-head"><span class="ovv-card-num">03 / 03</span><h3 class="ovv-card-title">避坑指南</h3><span class="ovv-card-tag">3 个常见误区</span></div><div class="ovv-pits"><div class="ovv-pit"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 毕业 = 自动高薪</div><div class="ovv-pit-reality">行业核心岗位需持证或读研 3-5 年, 本科就业与专业相关性较低</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 本专业就是 X 行业全部</div><div class="ovv-pit-reality">专业侧重学科基础, 实际工作中需持续学习行业最新动态</div></div><div class="ovv-pit"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 不考证/不读研也能进头部</div><div class="ovv-pit-reality">头部岗位 (如精算师/CFA/四大事务所) 持证是硬门槛</div></div></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">财政学的核心是政府收支+公共预算+税收制度+地方债务四栖, 它在 2026 地方债务化解、数字财税兴起、国考税务扩招三股力量下, 35% 走税务系统公务员, 25% 走四大税务/企业税务, 仅头部 985 硕才能进中央财经/高校 — 但「专业定位偏宏观 + 考公竞争激烈 (税务系统 100-300:1) + 金税四期技术替代 + 体制内天花板低 (副科 5-10 年)」是四大结构性风险, 财政学进投行/PE/VC 极少, 想做金融应选金融学, 别误选财政学.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 微观经济学/宏观经济学/高等数学/线性代数/概率论与数理统计/大学英语/思政系列; 大二核心: 财政学/税收学/中国税制/政府与事业单位会计/公共预算管理/国际税收/公共经济学/计量经济学; 大三方向分流: 国债市场与管理/地方财政学/政府采购管理/社会保障学/财政史/行为财政学/数字财税/税务筹划 五选三; 大四: 税务局/财政局实习 (8-12 周) + 政府预算编制沙盘 + 政府会计实操 + 税务稽查+转让定价+金税四期操作实训 + 毕业实习与论文. 4 年下来, 既要能读懂政府预算报告+编制决算, 也要懂中国税制+企业税务管理+地方债务化解.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对政府收支/税收制度/公共预算有真兴趣, 愿意深啃政策文本</li><li>考公意愿强, 税务系统+财政部+地方财政局是主流出口</li><li>愿意读研 (人大/央财/上财/厦大硕是中央财经+高校门槛)</li><li>能接受初期 8-15 万 + 体制内稳定 + 5-10 年副科/正科</li><li>数学/统计基础扎实, 计量经济学+财政数据分析是核心</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待毕业即高薪, 体制内 8-15 万是常态, 市场化 15-30 万需 985 硕+CTA</li><li>不能接受公考竞争 (税务系统 100-300:1, 985 硕加分)</li><li>排斥政府机关/税务局工作, 应选金融学/经济学</li><li>想进大厂/投行/PE/VC, 财政学对口弱, 应选金融学/金融工程</li><li>不能接受体制内晋升慢 (副科 5-10 年, 正科 10-15 年)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">财政学 = 经济学 + 公考</div><div class="ovv-simple-pit-reality">实际是"公共经济学 30% + 税收学 30% + 政府会计 20% + 公共政策 20%"四栖, 偏宏观政策, 不是金融学的镜像版; 财政学毕业生 35% 走税务系统公务员, 30% 走四大/企业税务, 真正对口投行/PE/VC 的极少.</div></li><li><div class="ovv-simple-pit-myth">财政学毕业 = 公务员稳定高薪</div><div class="ovv-simple-pit-reality">国家税务总局/省税务局/区县税务局 应届 8-15 万 + 编, 北京/上海户口加成大; 但税务系统公考竞争 100-300:1, 普通院校财政学主要去区县税务局 (年薪 6-10 万 + 编), 985 硕才能进中央税务总局/直辖市税务局, 体制内天花板低 (副科 5-10 年).</div></li><li><div class="ovv-simple-pit-myth">财政学 = 金融学, 进投行/PE/VC 容易</div><div class="ovv-simple-pit-reality">投行/PE/VC 校招偏好金融学/经济学, 财政学进投行承做岗极少; 财政学真正对口的不是金融岗, 而是税务系统公务员+四大税务部+企业税务管理; 想进投行/PE/VC 应选金融学/金融工程, 财政学是 985 硕 + CFA 顶实习才能跨行.</div></li><li><div class="ovv-simple-pit-myth">金税四期 = 财政学毕业生好就业</div><div class="ovv-simple-pit-reality">金税四期 (2022 启动) 是国家税务总局数字化转型核心工程, 财税+编程+大数据复合岗位需求增长, 但招录规模小 (年 200-500 人), 985+财税+Python/SQL 复合才能进; 普通院校财政学主要还是走传统税务稽查+转让定价+企业税务.</div></li><li><div class="ovv-simple-pit-myth">财政学考公岗位多</div><div class="ovv-simple-pit-reality">财政学/税务专业可报税务局/财政局/审计署/海关/发改委财政金融司, 公考岗位不算少但竞争激烈, 2024 国考税务系统招录约 2 万但报考 200 万+, 平均 100:1, 985 硕+党员+税法基础是上岸关键; 普通院校主要去区县税务局.</div></li><li><div class="ovv-simple-pit-myth">地方债务 = 财政学毕业生风口</div><div class="ovv-simple-pit-reality">2023+ 地方债务化解是财政学风口议题, 但实际招录以政策研究岗为主 (中央财经/地方财政科研所), 应届 8-15 万 + 编, 需 985 硕+党员+C 刊; 普通院校财政学主要还是去税务系统/四大, 地方债务研究是 985 硕+政策研究的窄门.</div></li><li><div class="ovv-simple-pit-myth">财政学 = 体制内 + 钱少</div><div class="ovv-simple-pit-reality">四大税务部 (PwC/DTT/EY/KPMG 转让定价+国际税) 应届 15-30 万, 5 年经理 50-100 万, 是头部 985 财政学主流去向之一; 央企/跨国/互联网税务部 (华为/小米/字节/阿里) 应届 12-20 万, 5 年税务经理 30-50 万; 财政学不是"体制内+钱少", 985 硕+CTA 注税 是金门槛.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -971,30 +972,24 @@ footer .data-source { color: #78716C; }
           <div class="course"><span class="course-name">公共经济学</span></div>
           <div class="course"><span class="course-name">国有资产管理</span></div>
           <div class="course"><span class="course-name">地方财政学</span></div>
+          <div class="course"><span class="course-name">财政计量学 (Stata/R 财政数据分析)</span></div>
+          <div class="course"><span class="course-name">公债管理与国债市场</span></div>
+          <div class="course"><span class="course-name">比较财政学 (OECD 主要国家财税体制比较)</span></div>
+          <div class="course"><span class="course-name">数字财税与金税四期</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">税务筹划</span></div>
-          <div class="course"><span class="course-name">社会保障学</span></div>
-          <div class="course"><span class="course-name">政府采购管理</span></div>
-          <div class="course"><span class="course-name">政府债务管理</span></div>
-          <div class="course"><span class="course-name">行为财政学</span></div>
-          <div class="course"><span class="course-name">数字财税</span></div>
-          <div class="course"><span class="course-name">财政史</span></div>
-          <div class="course"><span class="course-name">审计学</span></div>
-          <div class="course"><span class="course-name">金融学</span></div>
-          <div class="course"><span class="course-name">会计学</span></div>
-          <div class="course"><span class="course-name">财税模拟实验</span></div>
-          <div class="course"><span class="course-name">税收申报实训</span></div>
-          <div class="course"><span class="course-name">财政数据分析</span></div>
-          <div class="course"><span class="course-name">社会调查与统计</span></div>
-          <div class="course"><span class="course-name">毕业实习</span></div>
+          <div class="course"><span class="course-name">中国人民大学 · 财政理论与政策方向 (全国第一, 财政学 A+)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中央财经大学 · 税收学 + 税务筹划方向 (税务人才摇篮)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">上海财经大学 · 公共预算管理 + 政府会计方向 (财政部直属)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中南财经政法大学 · 财政 + 法学复合方向 (财税法/税法)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">厦门大学 · 财政计量 + 经济史方向 (厦大经济学派)</span><span class="course-credit">4 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
-          <div class="course"><span class="course-name">商业银行 / 投行 / 基金实习 (8-12 周)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">金融沙盘模拟</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">证券从业 / CFA / FRM 考证辅导</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">毕业论文 + 案例研究</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">模拟交易大赛 + 量化策略实现</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">税务局/财政局实习 (8-12 周, 国税/省税/区县税务所)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">政府预算编制沙盘模拟 (人大预算工委/财政部预算司)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">政府会计实操 (政府综合财务报告 + 决算 + 绩效评价)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">税务稽查 + 转让定价 + 金税四期操作实训</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">毕业论文 + 财税案例研究</span><span class="course-credit">6 学分</span></div>
         </div>
     </div>
   </div>
@@ -1069,10 +1064,10 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
             <div class="company-monogram">财</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">财政部</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">财政部预算司/税政司</div>
+          <div class="company-meta">校招 5-20 人 (985硕+党员) · 校招 公务员 12-22 万/年+编, 北京; 政策研究核心岗, 招录极少</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:77.27272727272727%"></div>
             <div class="sparkline-bar" style="height:82.95454545454545%"></div>
@@ -1085,10 +1080,10 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
             <div class="company-monogram">国</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">国家税务总局</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">国家税务总局 (国考/选调)</div>
+          <div class="company-meta">国考招录约 2 万人/年 · 校招 事业编/公务员 8-15 万/年+编 (一线 12-20 万), 财政学主战场</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:74.66666666666667%"></div>
             <div class="sparkline-bar" style="height:81.33333333333333%"></div>
@@ -1119,45 +1114,45 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中国工商银行总行</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
+          <div class="company-name">中国移动/中石油/国家电网 (央企税务+财务)</div>
+          <div class="company-meta">校招 100-300 人 · 校招 央企税务+财务 应届 12-20 万, 5年税务经理 30-50 万; 985+CTA 注税</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:71.02803738317756%"></div>
-            <div class="sparkline-bar" style="height:85.04672897196261%"></div>
-            <div class="sparkline-bar" style="height:87.85046728971963%"></div>
-            <div class="sparkline-bar" style="height:86.91588785046729%"></div>
+            <div class="sparkline-bar" style="height:76.38888888888889%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:90.27777777777779%"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">中</div>
+            <div class="company-monogram">华</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中国建设银行总行</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
+          <div class="company-name">华为/小米/字节/阿里 (互联网税务+财务)</div>
+          <div class="company-meta">校招 50-150 人 · 校招 互联网税务+财务 应届 15-25 万, 5年税务经理 35-60 万; 深圳/杭州/北京, 985+CTA</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:67.28971962616822%"></div>
-            <div class="sparkline-bar" style="height:81.30841121495327%"></div>
-            <div class="sparkline-bar" style="height:89.7196261682243%"></div>
-            <div class="sparkline-bar" style="height:85.98130841121495%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">国</div>
-            <span class="company-tier tier-A">A</span>
+            <div class="company-monogram">航</div>
+            <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">国家开发银行</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
+          <div class="company-name">航天信息/税友集团/百望股份 (金税四期/数字财税)</div>
+          <div class="company-meta">校招 50-100 人 · 校招 数字财税工程师 应届 15-30 万, 资深 30-55 万; 985+财税+Python/SQL 复合风口</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:83.50515463917526%"></div>
-            <div class="sparkline-bar" style="height:91.75257731958763%"></div>
-            <div class="sparkline-bar" style="height:86.5979381443299%"></div>
-            <div class="sparkline-bar" style="height:98.96907216494846%"></div>
+            <div class="sparkline-bar" style="height:58.82352941176471%"></div>
+            <div class="sparkline-bar" style="height:73.52941176470588%"></div>
+            <div class="sparkline-bar" style="height:80.88235294117648%"></div>
+            <div class="sparkline-bar" style="height:88.23529411764706%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1278,44 +1273,44 @@ footer .data-source { color: #78716C; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">大厂商业 / 数据分析</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
-          <div class="direction-pct">22%</div>
+          <div class="direction-name">国家税务总局/省市税务局 (国考/选调公务员)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:35%"></div></div>
+          <div class="direction-pct">35%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">银行 / 券商 / 基金总部</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
-          <div class="direction-pct">25%</div>
+          <div class="direction-name">四大税务部 (PwC/DTT/EY/KPMG 税务+转让定价)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">四大会计师事务所</div>
+          <div class="direction-name">企业税务管理 (央企/跨国/互联网 税务部+财务部)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">公务员 / 体制内</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
-          <div class="direction-pct">15%</div>
+          <div class="direction-name">财政部/发改委/地方财政局 (财政公务员)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">继续深造 (经管硕博 / MBA)</div>
+          <div class="direction-name">银行/国企 财务/税务/合规岗</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
           <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">投行 / PE / VC</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
+          <div class="direction-name">继续深造 (财政学/税务硕博, 985 头部门槛)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">企业 CFO 路线 (财务管培)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
-          <div class="direction-pct">5%</div>
+          <div class="direction-name">税务师事务所/财税咨询 (CTA 注税)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:3%"></div></div>
+          <div class="direction-pct">3%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">金融科技 / 互联网金融</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
-          <div class="direction-pct">5%</div>
+          <div class="direction-name">数字财税/金税四期工程师 (体制内+互联网)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:2%"></div></div>
+          <div class="direction-pct">2%</div>
         </div>
     </div>
   </div>
@@ -1328,28 +1323,43 @@ footer .data-source { color: #78716C; }
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">30<span class="path-unit">%</span></div>
-          <div class="path-name">国家税务总局 / 财政局公务员</div>
+          <div class="path-pct">35<span class="path-unit">%</span></div>
+          <div class="path-name">国家税务总局/省税务局 (国考/选调公务员)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">四大税务师 (PwC / DT / EY / KPMG)</div>
+          <div class="path-pct">18<span class="path-unit">%</span></div>
+          <div class="path-name">四大税务部 (PwC/DTT/EY/KPMG 转让定价+国际税)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">企业税务管理 (互联网 / 跨国 / 央企)</div>
+          <div class="path-pct">12<span class="path-unit">%</span></div>
+          <div class="path-name">企业税务管理 (央企/跨国/互联网 税务部)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">财政部门公务员 (财政部 / 发改委)</div>
+          <div class="path-pct">12<span class="path-unit">%</span></div>
+          <div class="path-name">继续深造 (财政学/税务硕博, 985 头部门槛)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (财政税务硕博)</div>
+          <div class="path-pct">10<span class="path-unit">%</span></div>
+          <div class="path-name">财政部/发改委/地方财政局 (财政公务员)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">8<span class="path-unit">%</span></div>
+          <div class="path-name">银行/国企 财务/税务/合规岗</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">3<span class="path-unit">%</span></div>
+          <div class="path-name">税务师事务所/财税咨询 (CTA 注税)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">2<span class="path-unit">%</span></div>
+          <div class="path-name">数字财税/金税四期工程师</div>
           
         </div>
     </div>
@@ -1405,24 +1415,24 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">首选物理 + 再选不限 (覆盖最广)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:50%"></div></div>
-          <div class="xuanke-pct">50%</div>
+          <div class="xuanke-name">首选历史 + 再选政治 (财政学主流, 60% 院校可报)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:45%"></div></div>
+          <div class="xuanke-pct">45%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">首选历史 + 再选不限 (偏文)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:35%"></div></div>
-          <div class="xuanke-pct">35%</div>
+          <div class="xuanke-name">首选物理 + 再选不限 (部分校接受, 35% 院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
+          <div class="xuanke-pct">25%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">首选物理 + 化学 (双一流门槛)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
-          <div class="xuanke-pct">10%</div>
+          <div class="xuanke-name">首选历史 + 再选不限 (含政治/地理, 偏文组合)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
+          <div class="xuanke-pct">20%</div>
         </div>
         <div class="xuanke">
           <div class="xuanke-name">不限选科 (中外合作 / 综合评价)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
-          <div class="xuanke-pct">5%</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
+          <div class="xuanke-pct">10%</div>
         </div>
     </div>
   </div>
@@ -1465,14 +1475,14 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card finance" href="/finance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
-      <a class="wl-card finance" href="/financial-engineering.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">金融工程</span><span class="wl-hook">金融工程</span></a>
-      <a class="wl-card finance" href="/insurance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">保险学</span><span class="wl-hook">保险学</span></a>
-      <a class="wl-card finance" href="/economics-finance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">经济与金融</span><span class="wl-hook">经济与金融</span></a>
+      <a class="wl-card finance" href="/digital-trade.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">数字贸易</span><span class="wl-hook">数字贸易</span></a>
+      <a class="wl-card finance" href="/economics.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">经济学</span><span class="wl-hook">理论扎实, 名校导向</span></a>
+      <a class="wl-card finance" href="/national-economy-management.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">国民经济管理</span><span class="wl-hook">国民经济管理</span></a>
+      <a class="wl-card finance" href="/business-economics.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">商务经济学</span><span class="wl-hook">商务经济学</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
       <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
-      <a class="wl-card eng" href="/mechanical-engineering.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">机械工程</span><span class="wl-hook">制造业脊梁, 越老越香</span></a>
       <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
       <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
       <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>

@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -622,7 +623,7 @@ footer .data-source { color: #999; }
 .direction-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
 
 /* === 深造路径 === */
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; text-align: center; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .path-card:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
@@ -651,7 +652,7 @@ footer .data-source { color: #999; }
 
 /* === 课程 === */
 .curriculum-lede { font-family: 'EB Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 32px 28px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .curriculum-block:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; color: #1A1A1A; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #D6D2C5; font-weight: 700; }
@@ -826,7 +827,7 @@ footer .data-source { color: #999; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1064,7 +1065,7 @@ footer .data-source { color: #999; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">艺术管理的本质是「艺术鉴赏 + 项目管理 + 文化政策理解 + 商业运营」四栖训练, 它不是美术学 (那是创作/绘画/雕塑), 也不是文化产业管理 (那是偏商科/文化政策) — 「硕博是头部美术馆硬门槛 + 文化政策理解比艺术鉴赏更重要 + 行业窄圈 + 应届起薪 8-14 万」是该专业四大结构性现实.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 艺术学概论 / 中外艺术史 / 管理学原理 / 经济学基础 / 大学英语 / 思政系列; 大二核心: 艺术市场概论 / 艺术经纪实务 / 策展理论与实务 / 艺术法规与政策 / 文化创意产业概论 / 项目管理 / 营销学; 大三方向分流: 美术馆运营 / 拍卖行与艺术市场 / 演艺管理 / 文创与文化产业园 / 艺术金融 5 选 1; 大四毕业实习 (美术馆/拍卖行/文创公司 2-3 个月) + 毕业论文/展览策划案. 4 年下来既能策展办活动, 也能做艺术经纪、文创运营.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对艺术/文化/创意产业有持久兴趣, 愿意 5-10 年沉淀</li><li>艺术鉴赏 + 商业运营 + 项目管理 + 沟通协调都能扛 — 艺术管理需要四栖天赋</li><li>接受硕士为头部美术馆/拍卖行硬门槛 (中央美院/清华美院艺术管理硕是行业硬通货)</li><li>对文化政策有好奇心 — 不懂政策做不好美术馆馆长或文创项目负责人</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>本意是想当艺术家 (那是美术学/绘画/设计, 不是艺术管理)</li><li>期待「本科毕业对标金融/CS 起薪 15-25 万」 — 应届起薪 8-14 万</li><li>艺术鉴赏薄弱或商业沟通障碍 (艺术管理是「艺术+商业」, 两栖缺一不可)</li><li>期待「文创就是开咖啡馆+做手作」 — 真正的艺术管理是项目管理+商业运营+政策理解</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">艺术管理 = 美术馆志愿者</div><div class="ovv-simple-pit-reality">艺术管理是「艺术+管理+商业+政策」四栖专业, 不是美术馆讲解员; 头部美术馆 (UCCA/央美美术馆/龙美术馆) 核心岗要求「985 艺术管理硕 + 3-5 年美术馆/拍卖行经验」, 讲解员只是入门级.</div></li><li><div class="ovv-simple-pit-myth">文化产业 5 万亿 = 艺术管理好就业</div><div class="ovv-simple-pit-reality">2024 中国文化产业增加值约 5 万亿是真的, 但分配极不均衡 — 70% 在互联网内容 (短视频/网剧/游戏) 和传统出版, 美术馆/拍卖行/演艺只占 5-8%, 真正对口的美术馆/拍卖行岗位年招 < 2000 人, 头部竞争激烈.</div></li><li><div class="ovv-simple-pit-myth">艺术管理不考研也能进头部美术馆</div><div class="ovv-simple-pit-reality">UCCA/中央美院美术馆/龙美术馆/嘉德/保利核心岗 90%+ 要求「硕士 + 985/海外名校 + 美术馆或拍卖行 2 年+ 实习」; 普通本科简历直接被筛掉, 头部是 985 艺术管理硕的硬通货.</div></li><li><div class="ovv-simple-pit-myth">艺术经纪人 = 明星经纪人</div><div class="ovv-simple-pit-reality">艺术经纪人服务的是艺术家/艺术品/展览项目, 不是明星; 画廊/拍卖行经纪人要求艺术鉴赏 + 市场敏感度 + 藏家关系, 与明星经纪人 (娱乐经纪) 是两条赛道, 不可混同.</div></li><li><div class="ovv-simple-pit-myth">文创 = 网红文创 + IP 周边</div><div class="ovv-simple-pit-reality">文创产业的真实主力是政府文化项目 (博物馆文创/文旅 IP/文化产业园), 网红文创只是冰山一角; 真正能拿到高薪的文创岗是「政府文旅项目策划经理 + 文化产业园运营 + 头部文创公司策划」, 不是淘宝文创小店.</div></li><li><div class="ovv-simple-pit-myth">艺术管理女生适合度比男生高很多</div><div class="ovv-simple-pit-reality">艺术管理岗位男女比例相对均衡 (约 6:4), 不存在显著性别倾斜; 但拍卖行/艺术金融等高强度出差 + 藏家应酬岗位, 实际工作强度不亚于商科, 不是「轻松文艺」.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">艺术管理的核心是「艺术鉴赏 + 项目管理 + 文化政策理解 + 商业运营」四栖, 它不是美术学 (那是创作/绘画), 也不是文化产业管理 (那是偏商科) — 而是培养美术馆/拍卖行/演艺机构/文创公司的「艺术+管理」复合人才; 在国家文化数字化战略 + 文旅融合背景下, 央美/清华美院硕是头部美术馆硬通货, 但「文化政策理解被严重低估 + 行业窄圈 + 硕博才是头部门槛」是该专业三大隐藏特征.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 艺术学概论 / 中外艺术史 / 管理学原理 / 经济学基础 / 大学英语 / 思政系列; 大二核心: 艺术市场概论 / 艺术经纪实务 / 策展理论与实务 / 艺术法规与政策 / 文化创意产业概论 / 项目管理 / 营销学; 大三方向分流: 美术馆运营 / 拍卖行与艺术市场 / 演艺管理 / 文创与文化产业园 / 艺术金融 5 选 1; 大四毕业实习 (美术馆/拍卖行/文创公司 2-3 个月) + 毕业论文/展览策划案. 4 年下来既能策展办活动, 也能做艺术经纪、文创运营.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对艺术/文化/创意产业有持久兴趣, 愿意 5-10 年沉淀</li><li>艺术鉴赏 + 商业运营 + 项目管理 + 沟通协调都能扛 — 艺术管理需要四栖天赋</li><li>接受硕士为头部美术馆/拍卖行硬门槛 (中央美院/清华美院艺术管理硕是行业硬通货)</li><li>对文化政策有好奇心 — 不懂政策做不好美术馆馆长或文创项目负责人</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>本意是想当艺术家 (那是美术学/绘画/设计, 不是艺术管理)</li><li>期待「本科毕业对标金融/CS 起薪 15-25 万」 — 应届起薪 8-14 万</li><li>艺术鉴赏薄弱或商业沟通障碍 (艺术管理是「艺术+商业」, 两栖缺一不可)</li><li>期待「文创就是开咖啡馆+做手作」 — 真正的艺术管理是项目管理+商业运营+政策理解</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">艺术管理 = 美术馆志愿者</div><div class="ovv-simple-pit-reality">艺术管理是「艺术+管理+商业+政策」四栖专业, 不是美术馆讲解员; 头部美术馆 (UCCA/央美美术馆/龙美术馆) 核心岗要求「985 艺术管理硕 + 3-5 年美术馆/拍卖行经验」, 讲解员只是入门级.</div></li><li><div class="ovv-simple-pit-myth">文化产业 5 万亿 = 艺术管理好就业</div><div class="ovv-simple-pit-reality">2024 中国文化产业增加值约 5 万亿是真的, 但分配极不均衡 — 70% 在互联网内容 (短视频/网剧/游戏) 和传统出版, 美术馆/拍卖行/演艺只占 5-8%, 真正对口的美术馆/拍卖行岗位年招 < 2000 人, 头部竞争激烈.</div></li><li><div class="ovv-simple-pit-myth">艺术管理不考研也能进头部美术馆</div><div class="ovv-simple-pit-reality">UCCA/中央美院美术馆/龙美术馆/嘉德/保利核心岗 90%+ 要求「硕士 + 985/海外名校 + 美术馆或拍卖行 2 年+ 实习」; 普通本科简历直接被筛掉, 头部是 985 艺术管理硕的硬通货.</div></li><li><div class="ovv-simple-pit-myth">艺术经纪人 = 明星经纪人</div><div class="ovv-simple-pit-reality">艺术经纪人服务的是艺术家/艺术品/展览项目, 不是明星; 画廊/拍卖行经纪人要求艺术鉴赏 + 市场敏感度 + 藏家关系, 与明星经纪人 (娱乐经纪) 是两条赛道, 不可混同.</div></li><li><div class="ovv-simple-pit-myth">文创 = 网红文创 + IP 周边</div><div class="ovv-simple-pit-reality">文创产业的真实主力是政府文化项目 (博物馆文创/文旅 IP/文化产业园), 网红文创只是冰山一角; 真正能拿到高薪的文创岗是「政府文旅项目策划经理 + 文化产业园运营 + 头部文创公司策划」, 不是淘宝文创小店.</div></li><li><div class="ovv-simple-pit-myth">艺术管理女生适合度比男生高很多</div><div class="ovv-simple-pit-reality">艺术管理岗位男女比例相对均衡 (约 6:4), 不存在显著性别倾斜; 但拍卖行/艺术金融等高强度出差 + 藏家应酬岗位, 实际工作强度不亚于商科, 不是「轻松文艺」.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1562,10 +1563,10 @@ footer .data-source { color: #999; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card arts" href="/public-relations.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">公共关系学</span><span class="wl-hook">公共关系学</span></a>
-      <a class="wl-card arts" href="/drama-film-directing.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">戏剧影视导演</span><span class="wl-hook">戏剧影视导演</span></a>
-      <a class="wl-card arts" href="/cultural-relics-conservation-restoration.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">文物保护与修复</span><span class="wl-hook">文物保护与修复</span></a>
-      <a class="wl-card arts" href="/dance-choreography.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">舞蹈编导</span><span class="wl-hook">舞蹈编导</span></a>
+      <a class="wl-card arts" href="/ceramic-art-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">陶瓷艺术设计</span><span class="wl-hook">陶瓷艺术设计</span></a>
+      <a class="wl-card arts" href="/digital-performance-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">数字演艺设计</span><span class="wl-hook">数字演艺设计</span></a>
+      <a class="wl-card arts" href="/broadcasting-tv-directing.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">广播电视编导</span><span class="wl-hook">广播电视编导</span></a>
+      <a class="wl-card arts" href="/popular-music.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">流行音乐</span><span class="wl-hook">流行音乐</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>

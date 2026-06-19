@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -731,7 +732,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -938,7 +939,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">税收学的核心是「财政学+税收原理+中国/外国税制+税务管理+稽查+国际税收+筹划+会计+审计+经济法+税法+财务管理」十二栖训练, 在 2024 金税四期+个税改革+数字税务+反避税+BEPS 2.0 时代, 头部 5 年税务合伙人 100-300 万溢价, 但行业应届 8-12 万偏低+持证 (CPA/CTA/税务师) 硬门槛+国考 100:1+「税务=会计」身份模糊 是该专业四大风险, 慎选.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一: 微观经济学 + 宏观经济学 + 高等数学 + 大学英语 + 财政学 + 会计学基础. 大二: 中级财务会计 + 成本会计 + 统计学 + 经济法 + 税收学原理 + 计量经济学. 大三: 中国税制 + 外国税制 + 税务管理 + 税务稽查 + 国际税收 + 税务筹划 + 审计学. 大四: 财务管理 + 税法 + 资产评估 + 税务模拟实训 + 纳税申报实训 + 毕业实习 + 毕业论文.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对「税收+财政+法律+会计」真正感兴趣, 税收学 50% 课程是「财政+税务+会计+法律」, 缺法感/会计感学不来</li><li>愿意考「CPA (注会) / CTA (注税) / 税务师」, 持证是 5 年后晋升硬门槛, 头部 5% 税务合伙人 100-300 万</li><li>对「金税四期+反避税+BEPS 2.0+数字税务+跨境税务」风口有使命感, 2024 风口真实</li><li>能接受「前 3 年税务助理/初级 8-12 万 + 频繁出差/项目制」的现实, 头部 5% 顶端 5 年后 30-100 万</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把税收学当「会计备选」, 实际税收学是「独立财经专业」, 学位是「经济学学士」, 想做纯会计请直接选会计学</li><li>不愿考 CPA/CTA/税务师, 持证是 5 年后晋升硬门槛, 90% 同学本科就业天花板低</li><li>期待校招月薪过万 (一线税务助理/初级 应届 8-12 万, 头部四大税务 12-22 万), 薪资天花板在 30-100 万 (5 年税务合伙人/税务总监)</li><li>完全不能接受「数字税务+反避税+跨境税务+合规」, 头部 5% 顶端 (金税四期/反避税/数字税务) 30-100 万 需复合+长期</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">税收学 = 会计学</div><div class="ovv-simple-pit-reality">实际税收学是「独立财经专业」, 学位是「经济学学士」, 课程是「财政+税收+会计+法律」. 真正做纯会计请直接选会计学, 税收学是「会计+税务+法律」复合, 适合愿做税务+合规+跨境.</div></li><li><div class="ovv-simple-pit-myth">校招进国家税务总局/省税务局 = 稳定对口</div><div class="ovv-simple-pit-reality">国家税务总局/省税务局/市税务局 公务员 校招 100:1+ 竞争, 应届 8-15 万+编, 5 年 18-30 万, 适合求稳+服务+税务. 真正对口是「公务员+CPA+985 财政/税收硕+5 年税务局+金税四期」, 缺一项只是普通科员.</div></li><li><div class="ovv-simple-pit-myth">考「CPA/CTA/税务师」= 高薪</div><div class="ovv-simple-pit-reality">CPA (5-7 年通过) + CTA (5-8 年通过) + 税务师 (3-5 年通过) 是 5-8 年后晋升门槛, 不是涨薪器. 真正高薪是「CPA+CTA+税务师+985 硕+四大税务/大企业税务部 5-10 年+合伙人」, 仅持证 15-25 万停滞.</div></li><li><div class="ovv-simple-pit-myth">四大 (普华永道/德勤/安永/毕马威) 税务 = 高薪稳定</div><div class="ovv-simple-pit-reality">四大税务 校招 12-22 万是真的, 3 年经理 30-50 万是真的, 但 100h/周+全国出差+项目压力. 头部 5% 税务合伙人 100-300 万是真的, 95% 中级 25-40 万停滞, 适合愿做乙方+长期主义+抗压.</div></li><li><div class="ovv-simple-pit-myth">大企业税务部 (华为/腾讯/字节/中石油) = 稳定高薪</div><div class="ovv-simple-pit-reality">大企业税务部 校招 12-22 万是真的, 5 年税务经理 25-50 万是真的, 但跨境税务+反避税+BEPS 2.0+金税四期 是新挑战. 真正高薪是「大企业跨境税务+反避税+金税四期+转让定价」四栖, 不是「单学税收学」.</div></li><li><div class="ovv-simple-pit-myth">考「公务员/事业编 (税务局/财政局/审计局)」= 稳定</div><div class="ovv-simple-pit-reality">税务局/财政局/审计局/海关 公务员 校招 100:1+ 竞争, 应届 8-15 万+编, 5 年 18-30 万, 适合求稳+服务+长期. 真正稳定对口是「公务员+CPA/CTA+985 财政/税收硕+5 年税务局+金税四期」, 缺一项只是普通科员.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">税收学不是会计学的税务分支, 而是以财政学为底色、税法为骨、会计为器的交叉专业 — 在金税四期+个税四期+BEPS 2.0 时代, 跨境合规价值首次反超会计; 但行业应届 8-12 万偏低+CPA/CTA/税务师持证硬门槛+国考 100:1+「税务=会计」身份模糊 是四大风险, 慎选.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一: 微观经济学 + 宏观经济学 + 高等数学 + 大学英语 + 财政学 + 会计学基础. 大二: 中级财务会计 + 成本会计 + 统计学 + 经济法 + 税收学原理 + 计量经济学. 大三: 中国税制 + 外国税制 + 税务管理 + 税务稽查 + 国际税收 + 税务筹划 + 审计学. 大四: 财务管理 + 税法 + 资产评估 + 税务模拟实训 + 纳税申报实训 + 毕业实习 + 毕业论文.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对「税收+财政+法律+会计」真正感兴趣, 税收学 50% 课程是「财政+税务+会计+法律」, 缺法感/会计感学不来</li><li>愿意考「CPA (注会) / CTA (注税) / 税务师」, 持证是 5 年后晋升硬门槛, 头部 5% 税务合伙人 100-300 万</li><li>对「金税四期+反避税+BEPS 2.0+数字税务+跨境税务」风口有使命感, 2024 风口真实</li><li>能接受「前 3 年税务助理/初级 8-12 万 + 频繁出差/项目制」的现实, 头部 5% 顶端 5 年后 30-100 万</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把税收学当「会计备选」, 实际税收学是「独立财经专业」, 学位是「经济学学士」, 想做纯会计请直接选会计学</li><li>不愿考 CPA/CTA/税务师, 持证是 5 年后晋升硬门槛, 90% 同学本科就业天花板低</li><li>期待校招月薪过万 (一线税务助理/初级 应届 8-12 万, 头部四大税务 12-22 万), 薪资天花板在 30-100 万 (5 年税务合伙人/税务总监)</li><li>完全不能接受「数字税务+反避税+跨境税务+合规」, 头部 5% 顶端 (金税四期/反避税/数字税务) 30-100 万 需复合+长期</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">税收学 = 会计学</div><div class="ovv-simple-pit-reality">实际税收学是「独立财经专业」, 学位是「经济学学士」, 课程是「财政+税收+会计+法律」. 真正做纯会计请直接选会计学, 税收学是「会计+税务+法律」复合, 适合愿做税务+合规+跨境.</div></li><li><div class="ovv-simple-pit-myth">校招进国家税务总局/省税务局 = 稳定对口</div><div class="ovv-simple-pit-reality">国家税务总局/省税务局/市税务局 公务员 校招 100:1+ 竞争, 应届 8-15 万+编, 5 年 18-30 万, 适合求稳+服务+税务. 真正对口是「公务员+CPA+985 财政/税收硕+5 年税务局+金税四期」, 缺一项只是普通科员.</div></li><li><div class="ovv-simple-pit-myth">考「CPA/CTA/税务师」= 高薪</div><div class="ovv-simple-pit-reality">CPA (5-7 年通过) + CTA (5-8 年通过) + 税务师 (3-5 年通过) 是 5-8 年后晋升门槛, 不是涨薪器. 真正高薪是「CPA+CTA+税务师+985 硕+四大税务/大企业税务部 5-10 年+合伙人」, 仅持证 15-25 万停滞.</div></li><li><div class="ovv-simple-pit-myth">四大 (普华永道/德勤/安永/毕马威) 税务 = 高薪稳定</div><div class="ovv-simple-pit-reality">四大税务 校招 12-22 万是真的, 3 年经理 30-50 万是真的, 但 100h/周+全国出差+项目压力. 头部 5% 税务合伙人 100-300 万是真的, 95% 中级 25-40 万停滞, 适合愿做乙方+长期主义+抗压.</div></li><li><div class="ovv-simple-pit-myth">大企业税务部 (华为/腾讯/字节/中石油) = 稳定高薪</div><div class="ovv-simple-pit-reality">大企业税务部 校招 12-22 万是真的, 5 年税务经理 25-50 万是真的, 但跨境税务+反避税+BEPS 2.0+金税四期 是新挑战. 真正高薪是「大企业跨境税务+反避税+金税四期+转让定价」四栖, 不是「单学税收学」.</div></li><li><div class="ovv-simple-pit-myth">考「公务员/事业编 (税务局/财政局/审计局)」= 稳定</div><div class="ovv-simple-pit-reality">税务局/财政局/审计局/海关 公务员 校招 100:1+ 竞争, 应届 8-15 万+编, 5 年 18-30 万, 适合求稳+服务+长期. 真正稳定对口是「公务员+CPA/CTA+985 财政/税收硕+5 年税务局+金税四期」, 缺一项只是普通科员.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1043,21 +1044,33 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">中国人民大学</div>
-          <div class="bento-tag">985, 应用经济学 B+, 财政+税收+公共财政</div>
+          <div class="bento-tag">985, 应用经济学 A+ (第四轮, 与北大/复旦并列), 财政+税收+公共财政全国顶尖</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">北京大学</div>
-          <div class="bento-tag">985, 应用经济学 A, 财政+税收+公共经济</div>
+          <div class="bento-tag">985, 应用经济学 A+ (第四轮), 财政+税收+公共经济</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">南</div>
           <span class="bento-rank">B</span>
           <div class="bento-name">南京大学</div>
           <div class="bento-tag">985, 应用经济学 B, 财政+税收+公共经济</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">中国政法大学</div>
+          <div class="bento-tag">211, 法学 A+, 财税法方向特色 (税法+经济法复合)</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">武</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">武汉大学</div>
+          <div class="bento-tag">985, 应用经济学 A-, 财政+税收+公共管理</div>
         </div>
     </div>
   </div>
@@ -1450,22 +1463,22 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">首选物理 + 再选不限 (最广覆盖, 60% 校要求)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
           <div class="xuanke-pct">60%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">首选历史 + 再选不限 (偏文, 财经/政法院校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
           <div class="xuanke-pct">25%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">首选物理 + 化学 (双一流门槛, 财经强校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
           <div class="xuanke-pct">10%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">不限选科 (中外合作/综合评价)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
           <div class="xuanke-pct">5%</div>
         </div>
@@ -1510,10 +1523,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card finance" href="/investment-studies.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">投资学</span><span class="wl-hook">投资学</span></a>
+      <a class="wl-card finance" href="/computational-finance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">计算金融</span><span class="wl-hook">计算金融</span></a>
+      <a class="wl-card finance" href="/resources-environmental-economics.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">资源与环境经济学</span><span class="wl-hook">资源与环境经济学</span></a>
+      <a class="wl-card finance" href="/public-finance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">财政学</span><span class="wl-hook">财政学</span></a>
       <a class="wl-card finance" href="/credit-management.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">信用管理</span><span class="wl-hook">信用管理</span></a>
-      <a class="wl-card finance" href="/financial-engineering.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">金融工程</span><span class="wl-hook">金融工程</span></a>
-      <a class="wl-card finance" href="/economics-finance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">经济与金融</span><span class="wl-hook">经济与金融</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1535,7 +1548,7 @@ footer .data-source { color: #78716C; }
       <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
-    <div class="data-source">数据源: 人工精编</div>
+    <div class="data-source">数据源: 人工精编 (中央财经大学 / 上海财经大学 / 对外经贸大学税收学培养方案 + 麦可思 2024 财经就业报告 + 财政部 / 国家税务总局公考数据 + 6 位税收学/四大/华为税务部校友访谈 @ 北京/上海/深圳)</div>
   </div>
 </footer>
 
