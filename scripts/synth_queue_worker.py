@@ -151,9 +151,12 @@ def report_dead_to_github(title: str, slug: str, run_id: str, error: str) -> boo
     Fail open: 网络/token 错不抛, 仅 print warning.
     """
     gh_token = os.environ.get("GITHUB_TOKEN", "").strip()
-    gh_repo = os.environ.get("GITHUB_REPO", "").strip()
+    # 兼容两种命名: GH 拒绝 GITHUB_ 前缀, 用户在 repo secrets 里配为 GH_REPO
+    # CF Pages Function 端仍可用 GITHUB_REPO (没有这个限制)
+    gh_repo = os.environ.get("GH_REPO") or os.environ.get("GITHUB_REPO") or os.environ.get("GITHUB_REPOSITORY") or ""
+    gh_repo = gh_repo.strip()
     if not gh_token or not gh_repo:
-        print(f"  [report-dead] GITHUB_TOKEN/GITHUB_REPO 未设, 跳过 GH Issue 上报")
+        print(f"  [report-dead] GITHUB_TOKEN/GH_REPO 未设, 跳过 GH Issue 上报")
         return False
     try:
         safe_error = error[:300].replace("\n", " ")
