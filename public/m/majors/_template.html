@@ -914,6 +914,7 @@
 <script src="../js/loader.js"></script>
 <script src="../js/dock.js"></script>
 <script src="../js/detail.js"></script>
+<script src="../js/scroll-helpers.js"></script>
 <script>
   // ───── 滚动进度条 (顶部 2px, 主色) ─────
   (() => {
@@ -931,28 +932,6 @@
     }, { passive: true });
     window.addEventListener('resize', update, { passive: true });
     update();
-  })();
-
-  // ───── 回到顶部 FAB (滚动 600px 后显示) ─────
-  (() => {
-    // 动态注入, 避免改 126 个 HTML
-    const fab = document.createElement('button');
-    fab.className = 'scroll-top-fab';
-    fab.setAttribute('aria-label', '回到顶部');
-    fab.innerHTML = '↑';
-    fab.style.cssText = 'position:fixed;right:18px;bottom:calc(var(--dock-h) + 20px);z-index:90;width:42px;height:42px;border-radius:50%;background:var(--theme);color:#FBF8F1;border:0;font-family:var(--font-heading);font-size:1.25rem;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,0.18);opacity:0;transform:translateY(12px);transition:opacity 220ms,transform 220ms;pointer-events:none;-webkit-tap-highlight-color:transparent;';
-    document.body.appendChild(fab);
-    fab.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    let ticking = false;
-    function check() {
-      const show = window.scrollY > 600;
-      fab.style.opacity = show ? '1' : '0';
-      fab.style.transform = show ? 'translateY(0)' : 'translateY(12px)';
-      fab.style.pointerEvents = show ? 'auto' : 'none';
-      ticking = false;
-    }
-    window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(check); ticking = true; } }, { passive: true });
-    check();
   })();
 
   if ('serviceWorker' in navigator) {
