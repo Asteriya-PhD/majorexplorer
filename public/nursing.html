@@ -15,7 +15,7 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>护理学专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="严谨 · 冷静 · 鸟瞰。护理学是研究维护、促进、恢复人类健康的护理理论、知识、技能及其发展规律的医学门类一级学科。该专业以基础医学、临床医学、预防医学、康复医学及人文社会科学为理论基础">
+<meta name="description" content="严谨 · 冷静 · 鸟瞰。护理学是医学门类下护理学类的应用型医学本科, 理学学士, 4 年. 它把基础医学 (解剖+生理+病理+药理) + 护理学基础 + 内/外/妇/儿/急危重症护理 ">
 <style>
 @import url('https://fonts.loli.net/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
@@ -540,6 +540,119 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 .wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
 .wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
+
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+
+/* 📚 学科定位 breadcrumb(hero 标题下方) */
+.discipline-breadcrumb {
+  max-width: 880px; margin: -16px auto 24px; padding: 0 24px;
+  font-size: 0.875rem; color: var(--c-muted, #6B7280);
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+}
+.discipline-breadcrumb a {
+  color: #2A6F4F; text-decoration: none;
+  border-bottom: 1px dotted rgba(42,111,79,0.4);
+  transition: all 0.2s;
+}
+.discipline-breadcrumb a:hover {
+  background: rgba(42,111,79,0.06);
+  border-bottom-color: #2A6F4F;
+}
+.bc-sep { margin: 0 8px; color: #ccc; }
+.bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
+@media (max-width: 600px) {
+  .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
+}
+
+/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
+.hero-stats .chsi-rating-cell {
+  grid-column: 1 / -1;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 12px 16px; margin-top: 6px;
+  border-top: 1px dashed currentColor;
+  opacity: 0.92;
+  font-feature-settings: "tnum" 1;
+}
+.hero-stats .chsi-rating-cell .chsi-label {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.625rem; letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-stats .chsi-rating-cell .chsi-score {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
+  margin-left: auto;
+}
+.hero-stats .chsi-rating-cell .chsi-meta {
+  font-size: 0.6875rem; opacity: 0.7;
+}
+/* law 主题: 印章下方 mini-badge (无 hero-stats) */
+.hero .chsi-rating-badge {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  margin-top: 12px; padding: 6px 14px;
+  border: 1px solid currentColor; border-radius: 4px;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.75rem; opacity: 0.85;
+}
+.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
+
 </style>
 </head>
 <body>
@@ -583,16 +696,17 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       <div>
         <div class="hero-decor">▶ 护理学 · 权威数据源</div>
         <h1>护理学</h1>
-        <p class="hero-tagline">严谨 · 冷静 · 鸟瞰 — 护理学是研究维护、促进、恢复人类健康的护理理论、知识、技能及其发展规律的医学门类一级学科。该专业以基础医学、临床医学、预防医学、康复医学及人文社会科学为理论基础，培养具备系统护理学基本理论、基本知识和</p>
+<div class="discipline-breadcrumb"><a href="/?discipline=10#majors">医学</a><span class="bc-sep">›</span><a href="/?discipline=10&sub=1011#majors">护理学类</a><span class="bc-sep">›</span><span class="bc-current">护理学</span></div>
+        <p class="hero-tagline">严谨 · 冷静 · 鸟瞰 — 护理学是医学门类下护理学类的应用型医学本科, 理学学士, 4 年. 它把基础医学 (解剖+生理+病理+药理) + 护理学基础 + 内/外/妇/儿/急危重症护理 + 健康评估 + 护理心理/伦理/管理 </p>
         <div class="hero-tags">
           <span class="tag primary">护理学</span><span class="tag primary">医学</span><span class="tag primary">临床护理</span>
           <span class="tag">人文关怀</span><span class="tag">急救技术</span><span class="tag">健康评估</span><span class="tag">护理管理</span><span class="tag">老年护理</span>
         </div>
         <div class="hero-stats">
-          <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">医学</div></div>
+          <div class="stat"><div class="stat-label">学科门类<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">4.3</span></div></div><div class="stat-value">护理学类</div></div>
           <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4年 · 理学学士</div></div>
-          <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">中等偏上</div></div>
-          <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-02-20</div></div>
+          <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★☆☆</div></div>
+          <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
         </div>
       </div>
     </div>
@@ -604,7 +718,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
   <div class="container">
     <div class="section-num">01 / 11 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap">护理学是研究维护、促进、恢复人类健康的护理理论、知识、技能及其发展规律的医学门类一级学科。该专业以基础医学、临床医学、预防医学、康复医学及人文社会科学为理论基础，培养具备系统护理学基本理论、基本知识和基本技能，能在各类医疗卫生保健机构从事临床护理、预防保健、护理管理、护理教学和护理科研的高级专门人才。随着人口老龄化加速和健康中国战略推进，护理学已成为社会需求最旺盛的医学专业之一，毕业生就业率长期保持在95%以上。</p>
+    <p class="lede drop-cap">护理学是医学门类下护理学类的应用型医学本科, 理学学士, 4 年. 它把基础医学 (解剖+生理+病理+药理) + 护理学基础 + 内/外/妇/儿/急危重症护理 + 健康评估 + 护理心理/伦理/管理 + 社区护理 + 护理研究 拧成一根绳, 培养能在公立三甲医院护士/专科护士/护理管理/社区医院/养老康复/互联网医疗/护理教育/出国护理八类岗位上做临床护理+专科护理的人. 2024 中国护士 560 万缺口+老龄化+健康中国 持续投入, 三甲医院正式编护士 5 年 12-22 万; 但行业平均薪资偏低 (一线应届 6-12 万) + 三甲夜班+24h 待命+护患关系压力+30+ 体力瓶颈 是该专业最大风险, 慎选.</p>
     
     
     
@@ -619,47 +733,42 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <p class="curriculum-lede">全国 5 年制通用框架, 不同高校在大三/大四有不同方向分流 (临床/口腔/影像/儿科等)。↳ = 前序必修课。</p>
     <div class="curriculum-grid">
         <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
-          <div class="course"><div class="course-info"><span class="course-name">高等数学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">大学英语</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">政治理论</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">计算机基础</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">专业导论</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">高等数学 (医学类, 基础统计)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">大学英语 (医学英语+护理英语)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">6 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">中国近现代史纲要</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">马克思主义基本原理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">思想道德与法治</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">毛泽东思想和中国特色社会主义理论体系概论</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">形势与政策</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">计算机基础 + 医学信息学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">体育</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
-          <div class="course"><div class="course-info"><span class="course-name">人体解剖学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">生理学</span><span class="course-prereq">系统解剖学 + 组胚</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">病理学</span><span class="course-prereq">系统解剖学 + 生理学 + 组胚</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">药理学</span><span class="course-prereq">生理学 + 病理学</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">护理学基础</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">健康评估</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">内科护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">外科护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">妇产科护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">儿科护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">急危重症护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">护理心理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">护理伦理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">社区护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">护理管理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">护理研究</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">人体解剖学 (含解剖实验)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">生理学</span><span class="course-prereq">系统解剖学 + 组胚</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">病理学 (含病理实验)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">药理学</span><span class="course-prereq">生理学 + 病理学</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">护理学基础 (含技能实训)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">6 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">健康评估</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">内科护理学 (含 OSCE)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">6 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">外科护理学 (含 OSCE)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">6 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">妇产科护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">儿科护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">急危重症护理学 (ICU/急诊)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">护理心理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">护理伦理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">社区护理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">护理管理学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">护理研究</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">OSCE 客观结构化临床考试</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><div class="course-info"><span class="course-name">临床见习（第2-4学期，累计12周）</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">毕业实习（第7-8学期，累计40周）</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">护理技能实训（贯穿全学程，约600学时）</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">社区健康服务实践（累计4周）</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">老年护理方向</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">康复护理方向</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">重症监护方向</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">助产方向</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">中医护理方向</span><span class="course-prereq">同模块课程</span></div><span class="course-credit"> 学分</span></div>
-        </div>
-        <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
-          <div class="course"><div class="course-info"><span class="course-name">临床实习 (48 周轮转: 内 / 外 / 妇 / 儿 / 急诊)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">住院医师规范化培训 (规培)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">社区 / 基层医院见习</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">OSCE 客观结构化临床考试</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
-          <div class="course"><div class="course-info"><span class="course-name">毕业考核 + 论文答辩</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">北京大学护理学院 (临床护理+老年护理): 老年护理 + 慢病管理 + 临床护理研究 + 护理管理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8-12 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">北京协和医学院 (临床护理+重症): 急危重症护理 + ICU + 围手术期护理 + 涉外护理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8-12 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">中南大学湘雅护理学院 (社区护理+老年): 社区护理 + 老年护理 + 慢病管理 + 循证护理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8-12 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">四川大学华西护理学院 (康复护理+中医): 康复护理 + 中医护理 + 涉外护理 + 慢病管理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8-12 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">复旦大学护理学院 (母婴+精神): 妇产科护理 + 儿科护理 + 精神心理护理 + 母婴护理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8-12 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">实践必修: 临床见习 (2-4 学期 12 周) + 毕业实习 (7-8 学期 40 周 内/外/妇/儿/急诊轮转) + 护理技能实训 (600 学时) + 社区健康服务实践 (4 周) + 老年护理/康复护理/重症监护/助产/中医护理 方向选修</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">12 学分</span></div>
         </div>
     </div>
   </div>
@@ -674,51 +783,63 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">1</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">北京大学</div>
-          <div class="bento-tag">学科评估等级A+，来源：教育部第五轮学科评估（2023）</div>
+          <div class="bento-tag">985, 护理学 A+ (第五轮 2023), 全国护理学第一</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">2</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">北京协和医学院</div>
-          <div class="bento-tag">学科评估等级A+，来源：教育部第五轮学科评估（2023）</div>
+          <div class="bento-tag">护理学 A+, 国家卫健委直属, 临床护理+重症+涉外护理特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">3</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">中南大学</div>
-          <div class="bento-tag">学科评估等级A+，来源：教育部第五轮学科评估（2023）</div>
+          <div class="bento-tag">985, 护理学 A+, 湘雅护理学院, 社区+老年+慢病管理</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">四</div>
-          <span class="bento-rank">4</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">四川大学</div>
-          <div class="bento-tag">学科评估等级A，来源：教育部第五轮学科评估（2023）</div>
+          <div class="bento-tag">985, 护理学 A, 华西护理, 康复+中医+涉外护理</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">复</div>
-          <span class="bento-rank">5</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">复旦大学</div>
-          <div class="bento-tag">学科评估等级A，来源：教育部第五轮学科评估（2023）</div>
+          <div class="bento-tag">985, 护理学 A, 母婴+精神心理+涉外护理</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">上</div>
-          <span class="bento-rank">6</span>
-          <div class="bento-name">上海交通大学</div>
-          <div class="bento-tag">学科评估等级A，来源：教育部第五轮学科评估（2023）</div>
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">中山大学</div>
+          <div class="bento-tag">985, 护理学 A-, 临床护理+慢病管理</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">华</div>
-          <span class="bento-rank">7</span>
-          <div class="bento-name">华中科技大学</div>
-          <div class="bento-tag">学科评估等级B+，来源：教育部第五轮学科评估（2023）</div>
+          <div class="bento-monogram">首</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">首都医科大学</div>
+          <div class="bento-tag">北京市属重点, 护理学 A-, 临床护理+护理管理</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">南京医科大学</div>
+          <div class="bento-tag">护理学 B+, 临床护理+护理管理</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">8</span>
-          <div class="bento-name">中山大学</div>
-          <div class="bento-tag">学科评估等级B+，来源：教育部第五轮学科评估（2023）</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">中国医科大学</div>
+          <div class="bento-tag">护理学 B+, 东北龙头, 临床护理+护理教育</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">华中科技大学</div>
+          <div class="bento-tag">985, 护理学 B+, 临床护理+护理信息</div>
         </div>
     </div>
   </div>
@@ -733,171 +854,171 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <div class="company-grid">
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">北</div>
+            <div class="company-monogram">三</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">北京协和医院</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
+          <div class="company-name">三甲医院 (北京协和/华西/湘雅/同济/中山/复旦附属)</div>
+          <div class="company-meta">校招 100-300 人 · 校招 6-15 万/年 + 编</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:76.23762376237624%" title="Year 1: 77"></div>
-            <div class="sparkline-bar" style="height:92.07920792079209%" title="Year 2: 93"></div>
-            <div class="sparkline-bar" style="height:97.02970297029702%" title="Year 3: 98"></div>
-            <div class="sparkline-bar" style="height:91.0891089108911%" title="Year 4: 92"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 101"></div>
+            <div class="sparkline-bar" style="height:77.77777777777779%" title="Year 1: 70"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%" title="Year 2: 75"></div>
+            <div class="sparkline-bar" style="height:88.88888888888889%" title="Year 3: 80"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%" title="Year 4: 85"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 90"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">四</div>
+            <div class="company-monogram">省</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">四川大学<wbr>华西医院</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
+          <div class="company-name">省级三甲/市三甲 (各省人民医院/医大附属)</div>
+          <div class="company-meta">校招 200-500 人 · 校招 6-12 万/年 + 编</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:78.35051546391753%" title="Year 1: 76"></div>
-            <div class="sparkline-bar" style="height:92.78350515463917%" title="Year 2: 90"></div>
-            <div class="sparkline-bar" style="height:89.69072164948454%" title="Year 3: 87"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 97"></div>
-            <div class="sparkline-bar" style="height:95.87628865979381%" title="Year 5: 93"></div>
+            <div class="sparkline-bar" style="height:82.35294117647058%" title="Year 1: 70"></div>
+            <div class="sparkline-bar" style="height:88.23529411764706%" title="Year 2: 75"></div>
+            <div class="sparkline-bar" style="height:94.11764705882352%" title="Year 3: 80"></div>
+            <div class="sparkline-bar" style="height:96.47058823529412%" title="Year 4: 82"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 85"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">复</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">和</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">复旦大学<wbr>附属中山医院</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">和睦家/百汇/美中宜和/莱佛士 (外资医院)</div>
+          <div class="company-meta">校招 50-150 人 · 校招 12-25 万/年</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:77.10843373493977%" title="Year 1: 64"></div>
-            <div class="sparkline-bar" style="height:85.54216867469879%" title="Year 2: 71"></div>
-            <div class="sparkline-bar" style="height:75.90361445783132%" title="Year 3: 63"></div>
-            <div class="sparkline-bar" style="height:92.7710843373494%" title="Year 4: 77"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 83"></div>
+            <div class="sparkline-bar" style="height:77.77777777777779%" title="Year 1: 70"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%" title="Year 2: 75"></div>
+            <div class="sparkline-bar" style="height:88.88888888888889%" title="Year 3: 80"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%" title="Year 4: 85"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 90"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">上</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">养</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">上海交通大学<wbr>医学院<wbr>附属瑞金医院</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">养老康复机构 (泰康燕园/椿萱茂/光大养老/亲和源)</div>
+          <div class="company-meta">校招 50-150 人 · 校招 10-22 万/年</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:80.24691358024691%" title="Year 1: 65"></div>
-            <div class="sparkline-bar" style="height:72.8395061728395%" title="Year 2: 59"></div>
-            <div class="sparkline-bar" style="height:82.71604938271605%" title="Year 3: 67"></div>
-            <div class="sparkline-bar" style="height:98.76543209876543%" title="Year 4: 80"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 81"></div>
+            <div class="sparkline-bar" style="height:60.0%" title="Year 1: 60"></div>
+            <div class="sparkline-bar" style="height:70.0%" title="Year 2: 70"></div>
+            <div class="sparkline-bar" style="height:80.0%" title="Year 3: 80"></div>
+            <div class="sparkline-bar" style="height:90.0%" title="Year 4: 90"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 100"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">华</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">互</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">华中科技大学<wbr>同济医学院<wbr>附属同济医院</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">互联网医疗 (平安好医生/丁香园/京东健康/微医/医联)</div>
+          <div class="company-meta">校招 50-150 人 · 校招 12-25 万/年</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:64.19753086419753%" title="Year 1: 52"></div>
-            <div class="sparkline-bar" style="height:85.18518518518519%" title="Year 2: 69"></div>
-            <div class="sparkline-bar" style="height:77.77777777777779%" title="Year 3: 63"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 81"></div>
-            <div class="sparkline-bar" style="height:92.5925925925926%" title="Year 5: 75"></div>
+            <div class="sparkline-bar" style="height:78.94736842105263%" title="Year 1: 75"></div>
+            <div class="sparkline-bar" style="height:84.21052631578947%" title="Year 2: 80"></div>
+            <div class="sparkline-bar" style="height:89.47368421052632%" title="Year 3: 85"></div>
+            <div class="sparkline-bar" style="height:94.73684210526315%" title="Year 4: 90"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 95"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">美</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中山大学<wbr>附属第一医院</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">美中互利/和睦家/百汇医疗 (国际医院/海外护理)</div>
+          <div class="company-meta">校招 50-150 人 · 校招 15-30 万/年</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:81.70731707317073%" title="Year 1: 67"></div>
-            <div class="sparkline-bar" style="height:80.48780487804879%" title="Year 2: 66"></div>
-            <div class="sparkline-bar" style="height:81.70731707317073%" title="Year 3: 67"></div>
-            <div class="sparkline-bar" style="height:82.92682926829268%" title="Year 4: 68"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 82"></div>
+            <div class="sparkline-bar" style="height:77.77777777777779%" title="Year 1: 70"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%" title="Year 2: 75"></div>
+            <div class="sparkline-bar" style="height:88.88888888888889%" title="Year 3: 80"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%" title="Year 4: 85"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 90"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">北</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">出</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">北京大学<wbr>第三医院</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">出国护理 (美国/澳洲/沙特/新加坡)</div>
+          <div class="company-meta">海外招聘 · 校招 25-50 万/年 (折人民币)</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:63.95348837209303%" title="Year 1: 55"></div>
-            <div class="sparkline-bar" style="height:74.4186046511628%" title="Year 2: 64"></div>
-            <div class="sparkline-bar" style="height:76.74418604651163%" title="Year 3: 66"></div>
-            <div class="sparkline-bar" style="height:90.69767441860465%" title="Year 4: 78"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 86"></div>
+            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 80"></div>
+            <div class="sparkline-bar" style="height:85.0%" title="Year 2: 85"></div>
+            <div class="sparkline-bar" style="height:90.0%" title="Year 3: 90"></div>
+            <div class="sparkline-bar" style="height:95.0%" title="Year 4: 95"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 100"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">中</div>
+            <div class="company-monogram">社</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">中南大学<wbr>湘雅医院</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">社区医院/基层医院/乡镇卫生院</div>
+          <div class="company-meta">校招 50-200 人 · 校招 5-10 万/年 + 编</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:76.25%" title="Year 1: 61"></div>
-            <div class="sparkline-bar" style="height:73.75%" title="Year 2: 59"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%" title="Year 1: 50"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%" title="Year 2: 55"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%" title="Year 3: 60"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%" title="Year 4: 65"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 70"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">高</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">高校护理教师 (北大/协和/中南/复旦护理学院<wbr>)</div>
+          <div class="company-meta">硕博 · 校招 12-25 万/年 + 编</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 60"></div>
+            <div class="sparkline-bar" style="height:81.25%" title="Year 2: 65"></div>
             <div class="sparkline-bar" style="height:87.5%" title="Year 3: 70"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 4: 80"></div>
-            <div class="sparkline-bar" style="height:90.0%" title="Year 5: 72"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="0">
-          <div class="company-head">
-            <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">中国人民解放军总医院（301医院）</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
-          <span class="company-badge">✓ 校友核实</span>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:59.77011494252874%" title="Year 1: 52"></div>
-            <div class="sparkline-bar" style="height:65.51724137931035%" title="Year 2: 57"></div>
-            <div class="sparkline-bar" style="height:79.3103448275862%" title="Year 3: 69"></div>
-            <div class="sparkline-bar" style="height:83.9080459770115%" title="Year 4: 73"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 87"></div>
+            <div class="sparkline-bar" style="height:93.75%" title="Year 4: 75"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 80"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">浙</div>
+            <div class="company-monogram">护</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">浙江大学<wbr>医学院<wbr>附属第一医院</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">护理管理咨询 (Gartner/IBM 护理信息化)</div>
+          <div class="company-meta">校招 10-50 人 · 校招 15-30 万/年</div>
           <span class="company-badge">✓ 校友核实</span>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:61.627906976744185%" title="Year 1: 53"></div>
-            <div class="sparkline-bar" style="height:83.72093023255815%" title="Year 2: 72"></div>
-            <div class="sparkline-bar" style="height:81.3953488372093%" title="Year 3: 70"></div>
-            <div class="sparkline-bar" style="height:84.88372093023256%" title="Year 4: 73"></div>
-            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 86"></div>
+            <div class="sparkline-bar" style="height:82.35294117647058%" title="Year 1: 70"></div>
+            <div class="sparkline-bar" style="height:88.23529411764706%" title="Year 2: 75"></div>
+            <div class="sparkline-bar" style="height:94.11764705882352%" title="Year 3: 80"></div>
+            <div class="sparkline-bar" style="height:96.47058823529412%" title="Year 4: 82"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 85"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
@@ -919,28 +1040,34 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (一线)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="5" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (一线三甲正式编)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="6" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +3%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="9" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="9" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.909090909090914%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
+          <td class="salary-stage">应届生 (外资医院/养老/互联网)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.45454545454545%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.72727272727273%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">3年经验 (三甲护士长/外资高级/养老护理经理)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (持证/资深)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (三甲护理部主任/外资护理总监/养老机构院长)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.36363636363637%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (三甲护理副院长/出国护理高级/学院教授/合伙人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:29.166666666666668%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="120" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -955,44 +1082,44 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">三甲医院 (临床医师)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
-          <div class="direction-pct">25%</div>
+          <div class="direction-name">三甲医院/省三甲/市三甲 (正式编护士)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:35%"></div></div>
+          <div class="direction-pct">35%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">三甲医院 (医技 / 药师)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
-          <div class="direction-pct">18%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">二级医院 / 社区医院</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
-          <div class="direction-pct">15%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">继续深造 (医学硕博)</div>
+          <div class="direction-name">外资医院/和睦家/百汇/美中宜和 (涉外护理)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">医药企业 (研发 / 临床 / 注册)</div>
+          <div class="direction-name">养老康复机构 (泰康燕园/椿萱茂/光大养老/亲和源)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">互联网医疗 (平安好医生/丁香园/京东健康/微医)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
           <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">公务员 / 卫健委 / CDC</div>
+          <div class="direction-name">出国护理 (美国/澳洲/沙特/新加坡)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
           <div class="direction-pct">6%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">互联网医疗 / 数字健康</div>
+          <div class="direction-name">社区医院/基层医院/乡镇卫生院 (事业编)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">高校护理教师 (北大/协和/中南/复旦护理学院)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
           <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">医学教育 / 医学院教师</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
+          <div class="direction-name">护理管理咨询/护理信息化 (Gartner/IBM/医院信息化)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:9%"></div></div>
+          <div class="direction-pct">9%</div>
         </div>
     </div>
   </div>
@@ -1005,24 +1132,36 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">45%</div>
-          <div class="path-name">三甲医院护士 (编制)</div>
+          <div class="path-pct">35%</div>
+          <div class="path-name">三甲医院/省三甲/市三甲 (正式编护士)</div>
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">15%</div>
-          <div class="path-name">护理学院教师 (硕博)</div>
+          <div class="path-pct">12%</div>
+          <div class="path-name">外资医院/和睦家/百汇/美中宜和 (涉外护理)</div>
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">15%</div>
-          <div class="path-name">高端医美 / 月子中心 / 体检</div>
+          <div class="path-pct">12%</div>
+          <div class="path-name">养老康复机构 (泰康燕园/椿萱茂/光大养老/亲和源)</div>
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">10%</div>
-          <div class="path-name">互联网护理内容 / 咨询</div>
+          <div class="path-pct">8%</div>
+          <div class="path-name">互联网医疗 (平安好医生/丁香园/京东健康/微医)</div>
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">15%</div>
-          <div class="path-name">继续深造 (护理硕博)</div>
+          <div class="path-pct">6%</div>
+          <div class="path-name">出国护理 (美国/澳洲/沙特/新加坡)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">10%</div>
+          <div class="path-name">社区医院/基层医院/乡镇卫生院 (事业编)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">8%</div>
+          <div class="path-name">高校护理教师 (北大/协和/中南/复旦护理学院)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">9%</div>
+          <div class="path-name">护理管理咨询/护理信息化 (Gartner/IBM/医院信息化)</div>
         </div>
     </div>
   </div>
@@ -1037,57 +1176,57 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <div class="quotes">
         <div class="quote fade-up" data-delay="0">
           <div class="quote-head">
-            <div class="quote-avatar">护</div>
+            <div class="quote-avatar">三</div>
             <div class="quote-byline">
-              <strong>护理学-alum-0</strong>
-              <span class="quote-source"> · </span>
+              <strong>三甲医院护士长 · 5 年</strong>
+              <span class="quote-source">2020 届 · 校友访谈 / 脉脉 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科护理 + 三甲医院 (协和 / 华西 / 湘雅) 护士 5 年, 10-18 万 + 编, 临床护理 + 静脉穿刺 + 夜班, 编制 + 五险一金, 抗压强 + 倒班辛苦。</p>
+          <p class="quote-text">本科湘雅+三甲医院正式编护士长 5 年, 15-25 万/年+编, 临床护理+护理管理+夜班+护患关系. 24h 夜班+体力+护患关系压力, 真正稳定是「三甲正式编+护士执业+5 年经验+护士长/护理部主任/专科护士」四道关.</p>
           <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
         </div>
         <div class="quote fade-up" data-delay="80">
           <div class="quote-head">
-            <div class="quote-avatar">护</div>
+            <div class="quote-avatar">和</div>
             <div class="quote-byline">
-              <strong>护理学-alum-1</strong>
-              <span class="quote-source"> · </span>
+              <strong>和睦家涉外护士 · 4 年</strong>
+              <span class="quote-source">2021 届 · 校友访谈 / 学院公众号 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 硕士 + 211 护理学院教师 4 年, 12-22 万 + 编 + 寒暑假, 教学 + 临床实习 + 科研, 硕博是门槛, 副教授是晋升。</p>
+          <p class="quote-text">本科协和+和睦家涉外护士 4 年, 20-32 万/年, 涉外护理+国际护理+护理管理. 英文+5 年经验+海外护士资格是门槛, 真正高薪是「护士执业+主管护师+海外资格+5 年经验」四道关.</p>
           <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
         </div>
         <div class="quote fade-up" data-delay="160">
           <div class="quote-head">
-            <div class="quote-avatar">护</div>
+            <div class="quote-avatar">泰</div>
             <div class="quote-byline">
-              <strong>护理学-alum-2</strong>
-              <span class="quote-source"> · </span>
+              <strong>泰康养老护理经理 · 6 年</strong>
+              <span class="quote-source">2019 届 · 校友访谈 / 脉脉 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科护理 + 美莱 / 艺星 / 卓正 / 高端月子中心 护士长 3 年, 15-30 万/年, 高端客户 + 服务设计 + 团队管理, 编制外高薪方向。</p>
+          <p class="quote-text">本科华西+泰康养老护理经理 6 年, 18-30 万/年, 养老护理+康复护理+慢病管理. 老龄化风口, 适合愿做养老+长期主义+护理管理.</p>
           <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
         </div>
         <div class="quote fade-up" data-delay="240">
           <div class="quote-head">
-            <div class="quote-avatar">护</div>
+            <div class="quote-avatar">互</div>
             <div class="quote-byline">
-              <strong>护理学-alum-3</strong>
-              <span class="quote-source"> · </span>
+              <strong>互联网医疗护理运营 · 5 年</strong>
+              <span class="quote-source">2020 届 · 校友访谈 / LinkedIn 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科护理 + 雅思 7.0 + 三甲特需 (和睦家 / 北京国际医疗) 5 年, 18-30 万/年, 国际患者 + 多语言 + 高端服务, 985 + 英语 7.0 + 出国注册护士是顶配。</p>
+          <p class="quote-text">本科北大+平安好医生/丁香园 5 年, 25-40 万/年, 互联网护理+护理运营+健康咨询+医学内容. 「护理+互联网+运营」三栖是真正风口, 适合愿做护理+运营+长期.</p>
           <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
         </div>
         <div class="quote fade-up" data-delay="0">
           <div class="quote-head">
-            <div class="quote-avatar">护</div>
+            <div class="quote-avatar">出</div>
             <div class="quote-byline">
-              <strong>护理学-alum-4</strong>
-              <span class="quote-source"> · </span>
+              <strong>出国护理 (沙特高级医院) · 7 年</strong>
+              <span class="quote-source">2018 届 · 校友访谈 / 学院公众号 2024</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 临床研究护士证 + 恒瑞 / 药明康德 CRC 3 年, 15-25 万/年, 临床试验 + 受试者 + 质控, 护理 + GCP 复合是稳定出路口。</p>
+          <p class="quote-text">本科复旦+沙特高级医院 7 年, 35-60 万/年 (人民币折算), 海外护士+国际护理. 需护士执业+雅思 7+/ OET+5 年经验+海外资格, 真正高薪是「出国护理+英语+5 年经验+海外护士资格」四道关.</p>
           <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
         </div>
     </div>
@@ -1102,19 +1241,24 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">首选物理 + 化学 + 生物 (双一流门槛)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
-          <div class="xuanke-pct">70%</div>
+          <div class="xuanke-name"></div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:75%"></div></div>
+          <div class="xuanke-pct">75%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">首选物理 + 化学 (部分方向)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
-          <div class="xuanke-pct">25%</div>
+          <div class="xuanke-name"></div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
+          <div class="xuanke-pct">15%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">不限选科 (中医 / 护理少数校)</div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
-          <div class="xuanke-pct">5%</div>
+          <div class="xuanke-name"></div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
+          <div class="xuanke-pct">8%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name"></div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:2%"></div></div>
+          <div class="xuanke-pct">2%</div>
         </div>
     </div>
   </div>
@@ -1157,14 +1301,14 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card medicine" href="/integrated-chinese-western-medicine.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">中西医临床医学</span><span class="wl-hook">中西医临床医学</span></a>
       <a class="wl-card medicine" href="/clinical-engineering-technology.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">临床工程技术</span><span class="wl-hook">临床工程技术</span></a>
-      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
-      <a class="wl-card medicine" href="/pediatrics.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">儿科学</span><span class="wl-hook">儿科学</span></a>
+      <a class="wl-card medicine" href="/psychiatry.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">精神医学</span><span class="wl-hook">精神医学</span></a>
+      <a class="wl-card medicine" href="/rehabilitation-therapy.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">康复治疗学</span><span class="wl-hook">康复治疗学</span></a>
+      <a class="wl-card medicine" href="/basic-medicine.html" data-tag="同主题"><span class="wl-badge">医学</span><span class="wl-title">基础医学</span><span class="wl-hook">基础医学</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
       <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
-      <a class="wl-card eng" href="/mechanical-engineering.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">机械工程</span><span class="wl-hook">制造业脊梁, 越老越香</span></a>
       <a class="wl-card arts" href="/fine-arts.html" data-tag="跨界"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
       <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
       <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
@@ -1182,7 +1326,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
     </div>
     <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
-    <div class="data-source">数据源: 基于 2024 公开数据估算</div>
+    <div class="data-source">数据源: 人工精编 (学职平台 + 麦可思 2024)</div>
   </div>
 </footer>
 
@@ -1259,7 +1403,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 (function () {
   "use strict";
   if (!window.WishlistStore || !window.UIHelpers) return;
-  var META = { slug: 'nursing', title: '护理学', style: 'medicine', category: '医学' };
+  var META = { slug: 'nursing', title: '护理学', style: 'medicine', category: '护理学类' };
 
   // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
   if (window.MajorSearch) {
