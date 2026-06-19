@@ -17,6 +17,10 @@
     --theme-deep:  #3D3D2E;
     --theme-soft:  #ECECE0;
     --theme-gold:  #B5934A;
+    /* 预定义整段 gradient 字符串 (避免 Chromium 双 var() in linear-gradient 解析 bug) */
+    --gradient-theme:     linear-gradient(180deg, #5B5B47 0%, #3D3D2E 100%);
+    --gradient-theme-h:   linear-gradient(90deg, #5B5B47 0%, #B5934A 100%);
+    --gradient-radial:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%), linear-gradient(180deg, #5B5B47 0%, #3D3D2E 100%);
   }
   .topbar.is-detail {
     grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
@@ -41,7 +45,7 @@
   .top-btn .heart-off { color: var(--muted-2); }
 
   /* hero 右上角手浮爱心 */
-  .hero { position: relative; }
+  .hero.is-detail { position: relative; }
   .hero-heart {
     position: absolute;
     top: -8px; right: 18px;
@@ -111,7 +115,7 @@
     content: ""; display: block;
     height: 100%;
     width: var(--p, 0%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold, var(--gold)) 100%);
+    background: var(--gradient-theme-h);
     box-shadow: 0 0 6px rgba(184,50,58,0.4);
     transition: width 60ms linear;
   }
@@ -198,17 +202,15 @@
   .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
   .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
 
-  .hero {
+  .hero.is-detail {
     position: relative;
     padding: 32px 24px 36px;
-    background:
-      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%),
-      linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    background: var(--gradient-radial);
     color: #F5F2EA;
     overflow: hidden;
     border-bottom: 0;
   }
-  .hero::before {
+  .hero.is-detail::before {
     content: "车";
     position: absolute;
     right: -8%; bottom: -8%;
@@ -219,7 +221,7 @@
     color: rgba(245,242,234,0.06);
     pointer-events: none; user-select: none;
   }
-  .hero > *:not(.hero-heart) { position: relative; z-index: 1; }
+  .hero.is-detail > *:not(.hero-heart) { position: relative; z-index: 1; }
   .hero-crumb {
     font-family: var(--font-num);
     font-size: 0.6875rem; font-weight: 600;
@@ -315,7 +317,7 @@
   }
   .sal-cell-fill {
     display: block; height: 100%;
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
 
@@ -378,7 +380,7 @@
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 0%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .xk-pct {
     position: absolute; right: 0; top: -2px;
@@ -416,7 +418,7 @@
   .ds-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 0%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .ds-study .ds-fill {
     background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
@@ -456,7 +458,7 @@
   .emp-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 0%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .emp-desc {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -617,7 +619,7 @@
   .sal-bar::after {
     content: ""; position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 50%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .sal-v {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
@@ -781,7 +783,7 @@
   .footer-cta {
     margin: 32px 16px 0;
     padding: 24px 20px;
-    background: linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    background: var(--gradient-theme);
     color: #FBF8F1;
     border-radius: 4px;
   }
@@ -837,7 +839,7 @@
 <!-- 滚动进度条 (顶部 2px, 主色) -->
 <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
-<section class="hero">
+<section class="hero is-detail">
   <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
     <span class="heart-bg"></span>
     <span id="heart-ico" class="heart-off">♡</span>
