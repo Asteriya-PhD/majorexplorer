@@ -408,19 +408,143 @@
       return M[style] || style;
     }
 
+    function _synthStepName(step) {
+      if (!step) return "排队中";
+      if (step === "init" || step === "validate") return "正在准备";
+      if (step === "search" || step === "route_style" || step === "synthesize") return "正在生成内容";
+      if (step === "render") return "正在渲染页面";
+      if (step === "manifest") return "正在发布";
+      if (step === "complete") return "即将完成";
+      return "处理中";
+    }
+
+    function _bindDropdownCTA(query) {
+      const card = results.querySelector(".ms-no-result");
+      if (!card) return;
+      const synthBtn = card.querySelector(".ms-synth-btn");
+      const reportBtn = card.querySelector(".ms-report-btn");
+      const statusEl = card.querySelector(".nrr-synth-status");
+
+      if (synthBtn) synthBtn.addEventListener("click", async () => {
+        synthBtn.disabled = true;
+        const originalLabel = synthBtn.textContent;
+        synthBtn.textContent = "排队中...";
+        statusEl.textContent = "";
+        try {
+          const r = await fetch("/api/synth/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: query, source: "pc" }),
+          });
+          const d = await r.json().catch(() => ({}));
+          if (!r.ok || !d.ok) {
+            if (r.status === 429) throw new Error("请求太频繁, 请 1 分钟后再试");
+            throw new Error(d.error || `HTTP ${r.status}`);
+          }
+          if (d.deduped && d.status === "done" && d.output_url) {
+            statusEl.textContent = "✅ 已存在, 跳转中...";
+            setTimeout(() => { location.href = d.output_url; }, 600);
+            return;
+          }
+          const runId = d.run_id;
+          statusEl.textContent = "⏳ 正在准备, 预计 60-120 秒";
+          synthBtn.textContent = "正在合成...";
+          let attempts = 0;
+          const poll = setInterval(async () => {
+            attempts++;
+            try {
+              const sr = await fetch(`/api/synth/status?run_id=${runId}`);
+              const s = await sr.json().catch(() => ({}));
+              if (!sr.ok) {
+                if (attempts > 3) { clearInterval(poll); throw new Error(`状态查询失败 (HTTP ${sr.status})`); }
+                return;
+              }
+              if (s.status === "done" && s.output_url) {
+                clearInterval(poll);
+                statusEl.textContent = "✅ 合成完成, 跳转中...";
+                setTimeout(() => { location.href = s.output_url; }, 600);
+                return;
+              }
+              if (s.status === "failed" || s.status === "dead") {
+                clearInterval(poll);
+                statusEl.textContent = `❌ 合成失败: ${s.error || "未知错误"}`;
+                synthBtn.disabled = false;
+                synthBtn.textContent = originalLabel;
+                return;
+              }
+              statusEl.textContent = `⏳ ${_synthStepName(s.step)} (${attempts})`;
+            } catch (e) { console.error("[major-search] poll error", e); }
+            if (attempts > 100) {
+              clearInterval(poll);
+              statusEl.textContent = "⏰ 超时 (5min)";
+              synthBtn.disabled = false;
+              synthBtn.textContent = originalLabel;
+            }
+          }, 3000);
+        } catch (e) {
+          statusEl.textContent = `❌ ${e.message || "提交失败"}`;
+          synthBtn.disabled = false;
+          synthBtn.textContent = originalLabel;
+          console.error("[major-search] synth failed", e);
+        }
+      });
+
+      if (reportBtn) reportBtn.addEventListener("click", async () => {
+        reportBtn.disabled = true;
+        try {
+          const r = await fetch("/api/report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "missing-major", name: query, source: "pc" }),
+          });
+          const d = await r.json().catch(() => ({}));
+          if (r.ok && d.ok) {
+            statusEl.textContent = "✅ 已上报, 我们会跟进";
+            reportBtn.textContent = "✓ 已收到, 谢谢!";
+          }
+        } catch (e) { console.error("[major-search] report failed", e); }
+      });
+    }
+
     function _render(list, query) {
       results.innerHTML = "";
-      if (list.length === 0) {
-        // ── H 阶段: 删除"现场合成" CTA, 只保留 0 命中提示 + 浏览入口 ──
-        // 报告路径: 用户在 /search.html 0 命中点"报告给我们" (走 /api/report → GH Issue)
-        // 反馈路径: 顶栏右上"反馈"按钮 (走 /api/report → GH Issue)
-        results.innerHTML =
-          '<div class="ms-empty">' +
-          '  没找到匹配「<strong>' + _escapeHtml(query) + '</strong>」的精品样板。' +
-          '  <br>可以试试 <a class="ms-suggest" href="/search.html?q=' + _escapeHtml(encodeURIComponent(query)) + '">去搜索页告诉我们</a>，' +
-          '  或点顶栏"反馈"提一句。' +
-          '  <a class="ms-suggest" href="#majors" style="margin-left: 8px;">浏览已上线的精品样板 →</a>' +
+      // Day 7 fix: 相似命中但无字面匹配也显示 CTA (避免硬匹配误导用户)
+      // 例: 搜「人类学」命中「民族学」(tags 含「文化人类学」) — 应同时提示用户「人类学」未收录可合成
+      const f = (query || "").toLowerCase();
+      const hasExactMatch = list.some((r) => {
+        const t = (r.title || "").toLowerCase();
+        return t === f || t.includes(f);
+      });
+      const showSynthCTA = list.length === 0 || !hasExactMatch;
+
+      // CTA 卡片 (与 pc-search.js 同样功能, 简化版给 dropdown 用)
+      if (showSynthCTA) {
+        const ctaHtml =
+          '<div class="ms-no-result no-result-report" data-q="' + _escapeHtml(query) + '" style="padding:14px 16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#fef9f2,#fff);">' +
+          '  <div style="font-weight:600;font-size:14px;margin-bottom:6px;color:#92400e;">未收录「<strong>' + _escapeHtml(query) + '</strong>」</div>' +
+          '  <div style="font-size:12px;color:#6b5d4f;margin-bottom:10px;line-height:1.5;">约 60-120 秒生成完整页面 (curriculum / salary / alumni 等)</div>' +
+          '  <div class="nrr-actions" style="display:flex;gap:8px;flex-wrap:wrap;">' +
+          '    <button type="button" class="ms-synth-btn nrr-synth-btn" style="flex:1;min-width:120px;padding:8px 14px;background:#1f2937;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;">🔄 实时生成这篇</button>' +
+          '    <button type="button" class="ms-report-btn nrr-btn" style="flex:1;min-width:100px;padding:8px 14px;background:transparent;color:#1f2937;border:1px solid #d4c5b0;border-radius:6px;cursor:pointer;font-size:13px;">📨 报告给我们</button>' +
+          '  </div>' +
+          '  <div class="nrr-synth-status" style="margin-top:8px;font-size:12px;color:#6b5d4f;"></div>' +
           '</div>';
+        results.innerHTML = ctaHtml;
+        // 绑定 CTA handler
+        _bindDropdownCTA(query);
+      }
+
+      if (list.length === 0) {
+        if (!showSynthCTA) {
+          // 已渲染 CTA, 不再重复
+        } else {
+          // 上面已渲染 CTA, 这里只加 "没找到" 提示 + 浏览入口
+          results.insertAdjacentHTML("beforeend",
+            '<div class="ms-empty" style="padding:12px 16px;font-size:12px;color:#6b5d4f;border-top:1px dashed #e5dcc8;">' +
+            '  没找到匹配「<strong>' + _escapeHtml(query) + '</strong>」的精品样板。' +
+            '  <a class="ms-suggest" href="#majors" style="margin-left:4px;color:var(--accent);">浏览已上线的 →</a>' +
+            '</div>');
+        }
       } else {
         list.forEach((r, idx) => {
           const a = document.createElement("a");
