@@ -44,7 +44,7 @@ concurrency:
 jobs:
   drain:
     runs-on: ubuntu-latest
-    timeout-minutes: 20  # 1 篇 synth 最长 ~15min, 留 5min buffer
+    timeout-minutes: 35  # Day 7: m3 retry + deepseek fallback 可能 15-25min, 留 buffer
     permissions:
       contents: write  # 需要 push 触发 CF Pages 重新部署
 

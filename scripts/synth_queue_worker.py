@@ -220,10 +220,10 @@ def run_synth(run_id: str, title: str, slug: str, style: str | None,
     try:
         proc = subprocess.run(
             cmd, env=env, cwd=str(ROOT), capture_output=True, text=True,
-            timeout=900,  # 15min
+            timeout=1800,  # 30min (Day 7 调整: m3 retry + deepseek fallback 可能 15-25min)
         )
     except subprocess.TimeoutExpired as e:
-        raise RuntimeError(f"synth_trigger 超时 15min") from e
+        raise RuntimeError(f"synth_trigger 超时 30min") from e
 
     print(f"  ← rc={proc.returncode}, stdout={len(proc.stdout)}c, stderr={len(proc.stderr)}c")
     if proc.returncode != 0:
