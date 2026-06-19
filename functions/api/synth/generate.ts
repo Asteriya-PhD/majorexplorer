@@ -67,13 +67,20 @@ function json(body: unknown, init: ResponseInit = {}): Response {
 }
 
 function slugify(title: string): string {
-  return title
+  let s = title
     .toLowerCase()
     .replace(/[\s_]+/g, "-")
     .replace(/[^\p{Letter}\p{Number}-]+/gu, "")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 64);
+  // Day 7 fix: 纯中文/emoji slugify 返空 → fallback 用 hex hash (避免 worker subprocess 失败)
+  if (!s) {
+    let h = 0;
+    for (const c of title) h = ((h << 5) - h + c.charCodeAt(0)) | 0;
+    s = "x" + Math.abs(h).toString(36);
+  }
+  return s;
 }
 
 function newRunId(): string {
