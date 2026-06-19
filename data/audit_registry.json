@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updated_at": "2026-06-19T16:40:48.040646",
+  "updated_at": "2026-06-19T17:24:42.750323",
   "totals": {
     "majors": 433,
     "audited": 434,
@@ -10,9 +10,9 @@
   "stats": {
     "audited_3+": 151,
     "audited_once": 184,
-    "currently_8+": 270,
+    "currently_8+": 271,
     "currently_7-8": 151,
-    "currently_6-7": 7,
+    "currently_6-7": 6,
     "currently_below_6": 2
   },
   "majors": {
@@ -25289,10 +25289,10 @@
       "title": "虚拟现实技术",
       "style": "cs",
       "discipline": "08",
-      "audit_count": 4,
-      "current_score": 6,
-      "current_verdict": "可接受",
-      "last_audit_at": "2026-06-19T08:27:46+00:00",
+      "audit_count": 5,
+      "current_score": 8,
+      "current_verdict": "优秀",
+      "last_audit_at": "2026-06-19T09:24:42+00:00",
       "tier_history": [],
       "audit_history": [
         {
@@ -25516,6 +25516,58 @@
             }
           ],
           "fix_suggestion": "1) 统一所有薪资数据, 删掉 lede 里 12000 的极端值或用区间替代; 2) deep_study 的硕博比例上调到 25-30% 以与正文一致, 直接就业下调到 65-70%; 3) 补全缺失的 top_schools 字段, 加入北理工、北邮、电子科大等 VR 强校; 4) employment_direction 去掉重复的\"风口\"标签, 给不同方向更差异化描述; 5) 至少加一条\"非典型\"校友引用 (如转行/被裁/小公司) 避免幸存者偏差。",
+          "error": null
+        },
+        {
+          "slug": "virtual-reality-technology",
+          "title": "虚拟现实技术",
+          "date": "2026-06-19T09:24:42+00:00",
+          "timestamp": 1781861082,
+          "source_file": "content_audit_1781861082.json",
+          "score": 8,
+          "verdict": "优秀",
+          "highlights": [
+            "lede 完全跳脱空话模式, 给出'三栖硬核交叉'定位 + '70%团队卡在硬件/算法层' + '普通院校去外包或转行游戏'的独家洞察, 信息密度极高",
+            "alumni_quotes 四条样本都包含具体技术细节 (pancake光学、畸变校正、PBR延迟渲染管线、Unreal大空间VR多人协作、创业公司B轮1.5亿+裁员40%) 和具体薪资曲线, 极度可信; 第4条非典型样本(转AI)主动暴露赛道风险, 难得"
+          ],
+          "issues": [
+            {
+              "field": "lede",
+              "score": 9,
+              "issue": "没有明显问题, '图形学+光学+人机交互三栖'和'隐性风险在普通院校'两个判断都站得住, 唯一微瑕: '70%团队卡在硬件/算法层'的数据来源未交代"
+            },
+            {
+              "field": "salary",
+              "score": 8,
+              "issue": "整体区间合理, VR硬件22-35万、游戏18-28万、数字孪生18-30万、公务员8-12万均符合行情; 唯一偏激进的是校友'字节PICO第一年32万'对本科应届偏上限, 但其注明是北航本硕6年, 勉强说得通"
+            },
+            {
+              "field": "curriculum",
+              "score": 9,
+              "issue": "课程与VR专业高度匹配, 核心课 (计算机图形学/实时渲染/SLAM/游戏引擎)、特色课 (WebXR/数字孪生/空间计算/力反馈) 全部是VR专业该有的, 没有混入'法理学'这种离谱课程"
+            },
+            {
+              "field": "top_schools",
+              "score": 4,
+              "issue": "JSON中根本没有 top_schools 字段! 只能从 alumni 推断出北航/清华/浙大/中科大, 缺乏正式推荐的院校清单 (遗漏: 北邮/电子科大/上海大学/北京电影学院VR方向/中国传媒大学 等在VR/数字媒体方向有特色的学校)"
+            },
+            {
+              "field": "alumni_quotes",
+              "score": 9,
+              "issue": "质量极高, 每条都有具体课程+具体项目+具体薪资+具体公司, 第4条非典型样本 (VR创业失败转AI) 提供了极有价值的反向案例; 微瑕: 4条全部是985院校, 缺少普通本科/双非院校样本 (与lede中'普通院校VR毕业生去外包'的论断形成证据缺口)"
+            },
+            {
+              "field": "deep_study",
+              "score": 8,
+              "issue": "22+6+3+4+65=100, 加总正确, 直接就业65%对VR这种工科应用型专业合理, 不存在'90%读研'假象; 微瑕: 选调公务员3%+事业编 单独列出却未在 employment_direction 体现, 两份数据存在轻微不一致"
+            },
+            {
+              "field": "pitfalls",
+              "score": 8,
+              "issue": "4条认知误区 (等同游戏开发/门槛低/岗位多/只做C端) 均为VR特有, 没有'学习累/课业重'这种通病; 微瑕: 可补充'以为头显厂商就一定好就业'和'赛道波动大, 2023 PICO裁员/VR教育泡沫破裂'这类行业级坑"
+            }
+          ],
+          "fix_suggestion": "补全 top_schools 字段 (至少6-8所, 加入北邮/电子科大/北影/中传等VR特色校, 区分'图形学强校' vs '内容创作强校' vs '光学硬件强校'), 并在 alumni_quotes 中补充1-2条双非/普通一本样本以印证lede中关于'普通院校风险'的论断。",
           "error": null
         }
       ]
