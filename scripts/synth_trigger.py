@@ -85,17 +85,28 @@ def synth_one(
     # ── 1. validate_is_major ──
     try:
         is_major, normalized = llm.validate_is_major(title)
-        summary["steps"].append({"step": 1, "is_major": is_major, "normalized": normalized})
-        if not is_major:
-            summary["error"] = f"输入不是本科专业: {title!r}"
-            return summary
-        if normalized and normalized != title:
-            print(f"  ℹ️  标准化: {title!r} → {normalized!r}")
-            title = normalized
-            summary["title"] = title
     except RetryableError as e:
-        summary["error"] = f"validate_is_major 失败: {e}"
+        # Day 7 Session 4: m3 validate 也可能 fail (max_tokens/thinking bug)
+        if used_provider == "m3" and ("max_tokens" in str(e) or "thinking" in str(e) or "JSON" in str(e)):
+            print(f"  ⚠️  m3 validate fail ({e}), 降级 deepseek")
+            try:
+                llm, used_provider = get_client_with_fallback(chain=("deepseek",), enable_thinking=False)
+                summary["llm_provider"] = used_provider
+                is_major, normalized = llm.validate_is_major(title)
+            except (RetryableError, PermanentError) as e2:
+                summary["error"] = f"validate_is_major m3→deepseek 都失败: {e2}"
+                return summary
+        else:
+            summary["error"] = f"validate_is_major 失败: {e}"
+            return summary
+    summary["steps"].append({"step": 1, "is_major": is_major, "normalized": normalized})
+    if not is_major:
+        summary["error"] = f"输入不是本科专业: {title!r}"
         return summary
+    if normalized and normalized != title:
+        print(f"  ℹ️  标准化: {title!r} → {normalized!r}")
+        title = normalized
+        summary["title"] = title
     print(f"✅ Step 1: 是本科专业 ({title})")
 
     # ── 2. web search ──
@@ -126,8 +137,20 @@ def synth_one(
             style = llm.route_style(title, brief)
             summary["steps"].append({"step": 3, "style": style})
         except RetryableError as e:
-            print(f"  ⚠️  route_style 失败 fallback to 'cs': {e}")
-            style = "cs"
+            # Day 7 Session 4: m3 route_style 也可能 fail, 降级 deepseek
+            if used_provider == "m3" and ("max_tokens" in str(e) or "thinking" in str(e) or "JSON" in str(e)):
+                print(f"  ⚠️  m3 route_style fail, 降级 deepseek")
+                try:
+                    llm, used_provider = get_client_with_fallback(chain=("deepseek",), enable_thinking=False)
+                    summary["llm_provider"] = used_provider
+                    style = llm.route_style(title, brief)
+                    summary["steps"].append({"step": 3, "style": style, "via": "deepseek"})
+                except (RetryableError, PermanentError) as e2:
+                    print(f"  ⚠️  route_style 双 provider fail ({e2}), fallback to 'cs'")
+                    style = "cs"
+            else:
+                print(f"  ⚠️  route_style 失败 fallback to 'cs': {e}")
+                style = "cs"
     summary["style"] = style
     print(f"✅ Step 3: route_style = {style}")
 
@@ -150,7 +173,29 @@ def synth_one(
                 sample_json=sample, schema_doc=schema_doc,
                 previous_errors=prev_errors, previous_warnings=prev_warnings,
             )
-        except (RetryableError, PermanentError) as e:
+        except RetryableError as e:
+            err_str = str(e)
+            # Day 7 Session 4: m3 thinking 块 max_tokens bug → 自动降级 deepseek
+            # (m3 强制 enabled thinking 4096, server 端 max_tokens 上限 8000 时全占 thinking 无空间给 JSON)
+            if used_provider == "m3" and ("max_tokens" in err_str or "thinking" in err_str):
+                print(f"  ⚠️  m3 thinking/max_tokens fail ({e}), 自动降级 deepseek")
+                try:
+                    llm, used_provider = get_client_with_fallback(chain=("deepseek",), enable_thinking=False)
+                    summary["llm_provider"] = used_provider
+                    # 重试 1 次 (不算 round)
+                    data = llm.synthesize_json(
+                        title=title, style=style,
+                        search_context=search_context,
+                        sample_json=sample, schema_doc=schema_doc,
+                        previous_errors=prev_errors, previous_warnings=prev_warnings,
+                    )
+                except (RetryableError, PermanentError) as e2:
+                    summary["error"] = f"synthesize_json m3→deepseek 都失败: {e2}"
+                    return summary
+            else:
+                summary["error"] = f"synthesize_json 第 {round_i} 轮失败: {e}"
+                return summary
+        except PermanentError as e:
             summary["error"] = f"synthesize_json 第 {round_i} 轮失败: {e}"
             return summary
 
