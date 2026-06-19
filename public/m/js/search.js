@@ -96,12 +96,19 @@
         theme: "#5A4632",
       }))});
     }
+    // Day 7 fix: 相似命中 ≠ 用户搜的专业, 也显示 CTA (避免误导)
+    const hasExactMatch = majors.some((m) => {
+      const t = (m.title || "").toLowerCase();
+      return t === f || t.includes(f) || (m.tags || []).some((tag) => (tag || "").toLowerCase().includes(f));
+    });
+    const noResultHtml = (!sections.length || !hasExactMatch) ? renderNoResult(query) : "";
+
     if (!sections.length) {
-      results.innerHTML = renderNoResult(query);
+      results.innerHTML = noResultHtml;
       bindReportCard(results, query);
       return;
     }
-    results.innerHTML = sections.map(s => `
+    results.innerHTML = noResultHtml + sections.map(s => `
       <div class="result-section">
         <div class="result-section-head">
           <span class="l">${s.label}</span>
@@ -118,6 +125,7 @@
         `).join("")}
       </div>
     `).join("");
+    if (noResultHtml) bindReportCard(results, query);
 
     // 更新 filter 计数
     const nM = majors.length, nC = cats.length;

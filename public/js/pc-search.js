@@ -178,13 +178,21 @@
       }))});
     }
 
+    // Day 7 fix: 即使有相似命中 (如搜「人类学」命中「民族学」), 没字面匹配时也显示 CTA
+    // 避免用户被误导以为搜到了
+    const hasExactMatch = majors.some((m) => {
+      const t = (m.title || "").toLowerCase();
+      return t === f || t.includes(f) || (m.tags || []).some((tag) => (tag || "").toLowerCase().includes(f));
+    });
+    const noResultHtml = (!sections.length || !hasExactMatch) ? renderNoResult(query) : "";
+
     if (!sections.length) {
-      results.innerHTML = renderNoResult(query);
+      results.innerHTML = noResultHtml;
       bindReportCard(results, query);
       updateFilterCounts(0, 0);
       return;
     }
-    results.innerHTML = sections.map((s) => `
+    results.innerHTML = noResultHtml + sections.map((s) => `
       <div class="result-section">
         <div class="result-section-head" data-cat="${_esc(s.label)}">
           <span class="l">${_esc(s.label)} <span class="tag">${_esc(s.label === "专业" ? "精品" : "学科")}</span></span>
@@ -201,6 +209,7 @@
         `).join("")}
       </div>
     `).join("");
+    if (noResultHtml) bindReportCard(results, query);
 
     updateFilterCounts(majors.length, cats.length);
   }
