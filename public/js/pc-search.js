@@ -179,10 +179,10 @@
     }
 
     // Day 7 fix: 即使有相似命中 (如搜「人类学」命中「民族学」), 没字面匹配时也显示 CTA
-    // 避免用户被误导以为搜到了
+    // 避免用户被误导以为搜到了. 只 title 算字面匹配, tags 算相似.
     const hasExactMatch = majors.some((m) => {
       const t = (m.title || "").toLowerCase();
-      return t === f || t.includes(f) || (m.tags || []).some((tag) => (tag || "").toLowerCase().includes(f));
+      return t === f || t.includes(f);
     });
     const noResultHtml = (!sections.length || !hasExactMatch) ? renderNoResult(query) : "";
 

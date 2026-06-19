@@ -97,9 +97,10 @@
       }))});
     }
     // Day 7 fix: 相似命中 ≠ 用户搜的专业, 也显示 CTA (避免误导)
+    // 只 title 算字面匹配, tags 算相似.
     const hasExactMatch = majors.some((m) => {
       const t = (m.title || "").toLowerCase();
-      return t === f || t.includes(f) || (m.tags || []).some((tag) => (tag || "").toLowerCase().includes(f));
+      return t === f || t.includes(f);
     });
     const noResultHtml = (!sections.length || !hasExactMatch) ? renderNoResult(query) : "";
 
