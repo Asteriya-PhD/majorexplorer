@@ -21,6 +21,10 @@ on:
   schedule:
     # 每 1 分钟, 公开仓库 unlimited, 私有 2000min/月
     - cron: "*/1 * * * *"
+  # Day 7 Session 4: 入队后 CF Pages Function 立即触发, 消除 cron 调度延迟 (实测 2-5h)
+  # cron 保留作 fallback (CF dispatch 失败时仍能跑)
+  repository_dispatch:
+    types: [synth-trigger]
   workflow_dispatch:
     inputs:
       slug:

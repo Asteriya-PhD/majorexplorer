@@ -169,6 +169,40 @@ export const onRequest: PagesFunction<D1Env> = async ({ request, env }) => {
   const run_id = newRunId();
   await createJob(env.DB, { run_id, title, slug, style, email });
 
+  // ── 5. 立即触发 GH workflow (repository_dispatch) — 消除 cron 调度延迟 ──
+  //    Day 7 Session 4 架构升级: 用户搜 → 1-3s 触发 worker, 而非 1-3h 等 cron
+  //    fail open: dispatch 失败不阻塞入队, cron 仍作 fallback
+  if (env.GITHUB_TOKEN && env.GITHUB_REPO) {
+    try {
+      const dispatchRes = await fetch(
+        `https://api.github.com/repos/${env.GITHUB_REPO}/dispatches`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "synth-generate/1.0",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            event_type: "synth-trigger",
+            client_payload: { run_id, title, slug },
+          }),
+        }
+      );
+      if (!dispatchRes.ok) {
+        const errText = await dispatchRes.text().catch(() => "");
+        console.warn(
+          `[synth/generate] dispatch ${dispatchRes.status}: ${errText.slice(0, 200)} → fallback to cron`
+        );
+      } else {
+        console.log(`[synth/generate] dispatch OK run_id=${run_id}`);
+      }
+    } catch (e) {
+      console.warn(`[synth/generate] dispatch fail (fallback cron): ${String(e).slice(0, 200)}`);
+    }
+  }
+
   return json({
     ok: true,
     run_id,
