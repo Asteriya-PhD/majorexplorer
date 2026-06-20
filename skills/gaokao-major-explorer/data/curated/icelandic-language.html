@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>冰岛语专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="外国语言文学类下最极小众小语种之一, 国内唯一开设院校北京外国语大学 (招生 5-8 人/届), 主修冰岛语精读 + 北欧研究 + 北极航线 + 中冰合作, 毕业生多走外交部 + 央视 + 中海油北极">
+<meta name="description" content="外国语言文学类下最极小众小语种之一, 国内唯一开设院校北京外国语大学 (年招生 5-8 人), 课程包括冰岛语精读 + 北欧研究 + 古诺尔斯语底子 + 北极研究专题. 毕业生多走外交部欧亚司北欧处 ">
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -731,7 +732,7 @@ footer .data-source { color: #6B5D3F; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -956,7 +957,7 @@ footer .data-source { color: #6B5D3F; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">冰岛语的核心是「冰岛语精读 + 北欧研究 + 北极航线 + 中冰合作」四线并进, 在 2013 中冰自贸协定生效 + 北极航道开通 + 中海油北极合作 + 北欧新能源/地热的 2024-2026 — 应届起薪对极小众小语种高位 (一线 12-20 万), 但「岗位总量 < 50/年 + 冰岛极地生活 + 文化极度隔阂 + 极小众」是该专业四大风险, 「区别于主流小语种」是选专业第一关.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 冰岛语精读 (从拉丁字母开始)/冰岛语听力/冰岛语口语/冰岛语写作/北欧概况/大学英语; 大二核心: 冰岛语高级精读/冰-汉互译/古诺尔斯语/北欧文学/冰岛政治与历史; 大三方向分流: 北极航线翻译 / 中冰合作 / 北欧研究 / 古诺尔斯语文学 四选一; 大四毕业实习 (中海油/外交部/央视/雷克雅未克大学交换) + 毕业论文.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对冰岛/北欧/北极航线/古诺尔斯语文学有强烈兴趣, 接受极小众小语种</li><li>愿意死磕冰岛语 — 北日耳曼语族冰岛支 + 复杂词法 + 古诺尔斯语底子, 公认最难小语种之一</li><li>对北极极地生活 (寒冷/极昼极夜/小社会) + 文化极度隔阂有充分心理准备</li><li>愿意接受雷克雅未克大学交换 (1 年) 作为加分项</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待 4 年本科对标主流外语/主流小语种就业体量 — 冰岛语全国年招生 < 50 人, 岗位总量比主流小语种少 100-500 倍</li><li>对冰岛/北欧/极地生活完全没兴趣 — 冰岛语就业面极窄, 没强烈兴趣很难坚持 4 年</li><li>把冰岛语等同于「英语替身」 — 冰岛语与英语虽同属日耳曼语族, 但冰岛语保留了大量古诺尔斯语特征, 现代英语几乎无法通约</li><li>对北极极地生活 + 文化极度隔阂没准备 — 冰岛人口仅 36 万, 首都雷克雅未克是唯一能见到中国人的城市</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">冰岛语 = 翻译/导游</div><div class="ovv-simple-pit-reality">冰岛翻译/导游岗位几乎为零 (冰岛年接待中国游客 < 5 万), 真正头部岗位是外交部欧亚司北欧处/中海油北极航线/央视驻北欧记者/雷克雅未克大学交换 — 这些岗位要求「冰岛语 + 英语 + 国际关系/海事/能源」综合能力, 纯翻译只是 1/4 能力.</div></li><li><div class="ovv-simple-pit-myth">中海油北极航线 = 高薪派驻</div><div class="ovv-simple-pit-reality">2018 中海油参与北极 LNG 项目 (俄罗斯 Yamal LNG), 但「冰岛语背景」毕业生真正能进入核心派驻岗 < 20 人/年, 多要求 985 硕 + 冰岛语 + 北极航行安全培训; 海事翻译年包 30-50 万, 但需 6-12 月海上海下 + 北极极地风险.</div></li><li><div class="ovv-simple-pit-myth">毕业可进外交部</div><div class="ovv-simple-pit-reality">外交部欧亚司北欧处 是冰岛语毕业生最对口的体制内目标, 但应届门槛极高 (985 硕 + 冰岛语 + 党员 + 国际关系背景), 中国冰岛语毕业生每年 < 50 人, 真正能进入外交部的不到 5 人/年; 应届需「985 硕 + 雷克雅未克大学交换 + 流利冰岛语 + 国际关系」三件套.</div></li><li><div class="ovv-simple-pit-myth">中冰自贸协定 = 就业爆发</div><div class="ovv-simple-pit-reality">2018 中冰自贸协定是中国与欧洲国家第一个双边自贸协定, 但冰岛经济体量极小 (GDP 仅 250 亿美元), 自贸协定对就业实际增量有限; 真正稳定的就业仍是「外交部 + 央视驻北欧记者 + 中海油北极航线 + 北欧研究智库」四条线, 不是「中冰贸易爆发」.</div></li><li><div class="ovv-simple-pit-myth">冰岛语 = 英语替身</div><div class="ovv-simple-pit-reality">冰岛语是北日耳曼语族冰岛支, 与英语虽同属日耳曼语族, 但冰岛语保留了 1000 年前的古诺尔斯语特征 (复杂的格变化 + 拼写与发音脱节 + 极长复合词), 现代英语几乎无法通约; 但冰岛通用英语普及率极高 (90%+), 实际工作场景英语是主要交流语言, 冰岛语主要用于「文学翻译 + 文化研究 + 正式文件」.</div></li><li><div class="ovv-simple-pit-myth">AI 翻译取代冰岛语</div><div class="ovv-simple-pit-reality">AI 翻译对冰岛语效果极差 (训练数据极少, 准确率 < 50%), 在专业场景 (北欧研究/海事翻译/冰岛文学) 仍需人工 — 冰岛语专业的护城河是「冰岛语 + 北欧研究 + 古诺尔斯语底子」三强, AI 翻译短期无法替代.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">冰岛语是国内唯一开设院校 (北外, 年招生 5-8 人) 的极小众小语种, 2014 中冰 FTA 生效后岗位微增但全国年岗位 < 50 个 — 它真正的护城河不是「冰岛语翻译」而是「冰岛语 + 英语 + 国际关系/海事/能源/古诺尔斯语」三合一, 应届一线 8-15 万是常态, 头部外交部/央视 5 年+ 可达 50-80 万, 但「岗位极少 + 冰岛极地生活 + 文化隔阂 + 极小众」是 4 大风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 冰岛语精读 (从拉丁字母开始)/冰岛语听力/冰岛语口语/冰岛语写作/北欧概况/大学英语/思政系列; 大二核心: 冰岛语高级精读/冰-汉互译/古诺尔斯语/北欧文学/冰岛政治与历史; 大三方向分流: 北极航线翻译 / 中冰合作 / 北欧研究 / 古诺尔斯语文学 四选一; 大四毕业实习 (外交部/央视/中冰合资/雷克雅未克大学交换) + 毕业论文.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对冰岛/北欧/北极航线/古诺尔斯语文学有强烈兴趣, 接受极小众小语种</li><li>愿意死磕冰岛语 — 北日耳曼语族冰岛支 + 复杂词法 + 古诺尔斯语底子, 公认最难小语种之一</li><li>对北极极地生活 (寒冷/极昼极夜/小社会) + 文化极度隔阂有充分心理准备</li><li>愿意接受雷克雅未克大学交换 (1 年) 作为加分项</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待 4 年本科对标主流外语/主流小语种就业体量 — 冰岛语全国年招生 < 50 人, 岗位总量比主流小语种少 100-500 倍</li><li>对冰岛/北欧/极地生活完全没兴趣 — 冰岛语就业面极窄, 没强烈兴趣很难坚持 4 年</li><li>把冰岛语等同于「英语替身」 — 冰岛语与英语虽同属日耳曼语族, 但冰岛语保留了大量古诺尔斯语特征, 现代英语几乎无法通约</li><li>对北极极地生活 + 文化极度隔阂没准备 — 冰岛人口仅 36 万, 首都雷克雅未克是唯一能见到中国人的城市</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">冰岛语 = 翻译/导游</div><div class="ovv-simple-pit-reality">冰岛翻译/导游岗位几乎为零 (冰岛年接待中国游客 < 5 万), 真正头部岗位是外交部欧亚司北欧处/中海油北极航线/央视驻北欧记者/雷克雅未克大学交换 — 这些岗位要求「冰岛语 + 英语 + 国际关系/海事/能源」综合能力, 纯翻译只是 1/4 能力.</div></li><li><div class="ovv-simple-pit-myth">中海油北极航线 = 高薪派驻</div><div class="ovv-simple-pit-reality">2018 中海油参与北极 LNG 项目 (俄罗斯 Yamal LNG), 但「冰岛语背景」毕业生真正能进入核心派驻岗 < 20 人/年, 多要求 985 硕 + 冰岛语 + 北极航行安全培训; 海事翻译年包 30-50 万, 但需 6-12 月海上海下 + 北极极地风险.</div></li><li><div class="ovv-simple-pit-myth">毕业可进外交部</div><div class="ovv-simple-pit-reality">外交部欧亚司北欧处 是冰岛语毕业生最对口的体制内目标, 但应届门槛极高 (985 硕 + 冰岛语 + 党员 + 国际关系背景), 中国冰岛语毕业生每年 < 50 人, 真正能进入外交部的不到 5 人/年; 应届需「985 硕 + 雷克雅未克大学交换 + 流利冰岛语 + 国际关系」三件套.</div></li><li><div class="ovv-simple-pit-myth">中冰自贸协定 = 就业爆发</div><div class="ovv-simple-pit-reality">2013 签署 / 2014 年 7 月生效的中冰自贸协定是中国与欧洲国家第一个双边自贸协定, 但冰岛经济体量极小 (GDP 仅 250 亿美元), 自贸协定对就业实际增量有限; 真正稳定的就业仍是「外交部 + 央视驻北欧记者 + 中海油北极航线 + 北欧研究智库」四条线, 不是「中冰贸易爆发」.</div></li><li><div class="ovv-simple-pit-myth">冰岛语 = 英语替身</div><div class="ovv-simple-pit-reality">冰岛语是北日耳曼语族冰岛支, 与英语虽同属日耳曼语族, 但冰岛语保留了 1000 年前的古诺尔斯语特征 (复杂的格变化 + 拼写与发音脱节 + 极长复合词), 现代英语几乎无法通约; 但冰岛通用英语普及率极高 (90%+), 实际工作场景英语是主要交流语言, 冰岛语主要用于「文学翻译 + 文化研究 + 正式文件」.</div></li><li><div class="ovv-simple-pit-myth">AI 翻译取代冰岛语</div><div class="ovv-simple-pit-reality">AI 翻译对冰岛语效果极差 (训练数据极少, 准确率 < 50%), 在专业场景 (北欧研究/海事翻译/冰岛文学) 仍需人工 — 冰岛语专业的护城河是「冰岛语 + 北欧研究 + 古诺尔斯语底子」三强, AI 翻译短期无法替代.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -968,16 +969,18 @@ footer .data-source { color: #6B5D3F; }
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
         <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">大学英语 (I-IV)</span></div>
+          <div class="course"><span class="course-name">思想政治理论课系列 (思修/史纲/马原/毛概)</span></div>
+          <div class="course"><span class="course-name">体育 (I-IV)</span></div>
+          <div class="course"><span class="course-name">计算机基础</span></div>
+          <div class="course"><span class="course-name">大学语文</span></div>
+          <div class="course"><span class="course-name">中国文学史</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (北外唯一开设)</div>
           <div class="course"><span class="course-name">冰岛语精读 (初级/中级/高级)</span></div>
           <div class="course"><span class="course-name">冰岛语听力</span></div>
           <div class="course"><span class="course-name">冰岛语口语</span></div>
           <div class="course"><span class="course-name">冰岛语写作</span></div>
-          <div class="course"><span class="course-name">北欧概况 (冰岛/挪威/瑞典/丹麦/芬兰)</span></div>
-          <div class="course"><span class="course-name">大学英语</span></div>
-          <div class="course"><span class="course-name">思想政治理论课系列</span></div>
-          <div class="course"><span class="course-name">中国文学史</span></div>
-        </div>
-        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
           <div class="course"><span class="course-name">冰-汉互译 (笔译)</span></div>
           <div class="course"><span class="course-name">冰岛语口译基础</span></div>
           <div class="course"><span class="course-name">冰岛语语言学概论</span></div>
@@ -991,12 +994,16 @@ footer .data-source { color: #6B5D3F; }
           <div class="course"><span class="course-name">冰岛地理与社会</span></div>
           <div class="course"><span class="course-name">日耳曼语族语言比较</span></div>
         </div>
-        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">北京外国语大学 (欧洲语言文化学院, 国内唯一): 冰岛语 + 北欧研究 + 古诺尔斯语 + 雷克雅未克大学交换 (国内冰岛语第一)</span></div>
-          <div class="course"><span class="course-name">上海外国语大学 (欧洲语言文化学院, 早期开设): 冰岛语方向 (2018 后停招, 校友网络)</span></div>
-          <div class="course"><span class="course-name">北京大学 (外国语学院, 早期开设): 冰岛语方向 (2010 后停招, 校友网络)</span></div>
-          <div class="course"><span class="course-name">广东外语外贸大学 (西方语言文化学院, 早期开设): 冰岛语方向 (2015 后停招, 校友网络)</span></div>
-          <div class="course"><span class="course-name">教育部公派/留学基金委雷克雅未克大学交换项目: 冰岛语强化 + 北欧研究 (北外学生主要交换通道)</span></div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">已停招 3 所 (校友网络, 2010-2018 期间开设)</div>
+          <div class="course"><span class="course-name">上海外国语大学 (欧洲语言文化学院, 2018 后停招, 校友网络)</span></div>
+          <div class="course"><span class="course-name">北京大学 (外国语学院, 2010 后停招, 校友网络)</span></div>
+          <div class="course"><span class="course-name">广东外语外贸大学 (西方语言文化学院, 2015 后停招, 校友网络)</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">海外交换/深造通道</div>
+          <div class="course"><span class="course-name">教育部公派/留学基金委 雷克雅未克大学交换 (1 年, 北外学生主通道)</span></div>
+          <div class="course"><span class="course-name">雷克雅未克大学 冰岛研究/古诺尔斯语 硕博 (3-5 年)</span></div>
+          <div class="course"><span class="course-name">奥斯陆大学 北欧研究硕博</span></div>
+          <div class="course"><span class="course-name">赫尔辛基大学 北极研究硕博</span></div>
         </div>
     </div>
   </div>
@@ -1012,46 +1019,28 @@ footer .data-source { color: #6B5D3F; }
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">北</div>
           <span class="bento-rank">A+</span>
-          <div class="bento-name">北京外国语大学</div>
-          <div class="bento-tag">北京 · 211, 欧洲语言文化学院, 国内唯一开设冰岛语本科 + 雷克雅未克大学交换</div>
+          <div class="bento-name">北京外国语大学<wbr> (国内唯一供给侧)</div>
+          <div class="bento-tag">北京 · 211, 欧洲语言文化学院, 国内唯一开设冰岛语本科 + 雷克雅未克大学交换主通道</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">上</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">上海外国语大学<wbr> (校友)</div>
-          <div class="bento-tag">上海 · 211, 欧洲语言文化学院, 早期开设冰岛语方向 (2018 后停招, 校友网络)</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">北</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">北京大学<wbr> (校友)</div>
-          <div class="bento-tag">北京 · 985, 外国语学院, 早期开设冰岛语方向 (2010 后停招, 校友网络)</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">广</div>
-          <span class="bento-rank">B</span>
-          <div class="bento-name">广东外语外贸大学<wbr> (校友)</div>
-          <div class="bento-tag">广州 · 双非, 西方语言文化学院, 早期开设冰岛语方向 (2015 后停招, 校友网络)</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">雷</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">雷克雅未克大学<wbr> (冰岛)</div>
-          <div class="bento-tag">冰岛 · 冰岛唯一综合性大学, 北欧研究 + 古诺尔斯语第一, 北外学生交换主要通道</div>
+          <div class="bento-tag">冰岛 · 冰岛唯一综合性大学, 北欧研究 + 古诺尔斯语第一, 北外学生交换主要通道 (海外)</div>
         </div>
-        <div class="bento-item fade-up" data-delay="80">
+        <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">奥</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">奥斯陆大学<wbr> (挪威)</div>
           <div class="bento-tag">挪威 · 北欧研究 + 古诺尔斯语欧洲第二, 北欧研究深造通道</div>
         </div>
-        <div class="bento-item fade-up" data-delay="160">
+        <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">赫</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">赫尔辛基大学<wbr> (芬兰)</div>
           <div class="bento-tag">芬兰 · 北欧研究 + 北极研究, 北极方向深造通道</div>
         </div>
-        <div class="bento-item fade-up" data-delay="240">
+        <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">哥</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">哥本哈根大学<wbr> (丹麦)</div>
@@ -1073,8 +1062,8 @@ footer .data-source { color: #6B5D3F; }
             <div class="company-monogram">外</div>
             <span class="company-tier tier-A+">A+</span>
           </div>
-          <div class="company-name">外交部欧亚司北欧处</div>
-          <div class="company-meta">★ · 校招 公务员 + 外派补贴, 5 年外派可达 50-80 万; 985 硕 + 冰岛语 + 党员 + 国际关系背景</div>
+          <div class="company-name">外交部欧亚司北欧处 / 驻冰岛大使馆</div>
+          <div class="company-meta">★ · 校招 公务员 + 外派补贴, 5 年外派可达 50-80 万; 985 硕 + 冰岛语 + 党员 + 国际关系背景, 应届 < 5 人/年</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1089,8 +1078,8 @@ footer .data-source { color: #6B5D3F; }
             <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中海油北极航线 / Yamal LNG 项目</div>
-          <div class="company-meta">★ · 校招 海事翻译 25-45 万/年 (含北极补贴), 985 硕 + 冰岛语 + 海事背景是门槛, 应届 < 5 人</div>
+          <div class="company-name">中海油北极航线 / Yamal LNG 项目 (俄)</div>
+          <div class="company-meta">★ · 校招 海事翻译 25-45 万/年 (含北极补贴, 3-5 年资深), 985 硕 + 冰岛语 + 海事背景是门槛, 应届 < 5 人</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:75.0%"></div>
@@ -1166,11 +1155,11 @@ footer .data-source { color: #6B5D3F; }
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">外</div>
+            <div class="company-monogram">商</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">外交部驻冰岛大使馆 / 商务部 / 文化和旅游部</div>
-          <div class="company-meta">★ · 校招 公务员/外派补贴, 5 年可达 50-80 万; 985 硕 + 党员 + 冰岛语</div>
+          <div class="company-name">商务部援外司 / 文化和旅游部对外文化交流</div>
+          <div class="company-meta">★ · 校招 公务员/外派补贴, 5 年可达 50-80 万; 985 硕 + 党员 + 冰岛语 + 国际关系背景</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1212,28 +1201,34 @@ footer .data-source { color: #6B5D3F; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (一线)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (一线, 一般岗位)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.333333333333336%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:80.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年经验</td>
+          <td class="salary-stage">应届生 (外交/央视头部)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.72727272727273%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3年经验 (中层翻译/记者)</td>
           <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.5%"></span></span><span class="yoy up">↗ +9%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验</td>
+          <td class="salary-stage">5年经验 (资深翻译/驻外)</td>
           <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.666666666666664%"></span></span><span class="yoy up">↗ +8%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="38" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.33333333333333%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (资深翻译/外派高管/智库首席)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:30.76923076923077%"></span></span><span class="yoy up">↗ +7%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.84615384615385%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="130" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">10年+ (驻外参赞/智库首席/资深海事翻译)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.333333333333336%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="120" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1400,17 +1395,17 @@ footer .data-source { color: #6B5D3F; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 + 地理 (传统文科, 主流组合)</div>
+          <div class="xuanke-name">首选历史 + 政治 + 地理 (传统文科, 主流组合)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:55%"></div></div>
           <div class="xuanke-pct">55%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 地理 (再选政治或化学)</div>
+          <div class="xuanke-name">首选历史 + 地理 (再选政治或化学)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
           <div class="xuanke-pct">20%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">历史 + 政治 (再选地理或生物)</div>
+          <div class="xuanke-name">首选历史 + 政治 (再选地理或生物)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
           <div class="xuanke-pct">15%</div>
         </div>
@@ -1424,37 +1419,54 @@ footer .data-source { color: #6B5D3F; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: icelandic-language) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「冰岛语」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card humanities" href="/russian.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">俄语</span><span class="wl-hook">俄语</span></a>
+      <a class="wl-card humanities" href="/spanish.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">西班牙语</span><span class="wl-hook">西班牙语</span></a>
+      <a class="wl-card humanities" href="/dutch.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">荷兰语</span><span class="wl-hook">荷兰语</span></a>
+      <a class="wl-card humanities" href="/sociolinguistics.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">社会语言学</span><span class="wl-hook">社会语言学</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
+      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card cs" href="/artificial-intelligence.html" data-tag="跨界"><span class="wl-badge">计算机</span><span class="wl-title">人工智能</span><span class="wl-hook">算法堆顶, 博士起步</span></a>
+      <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
     </div>
   </div>
 </section>
