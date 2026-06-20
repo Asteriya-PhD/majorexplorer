@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -622,7 +623,7 @@ footer .data-source { color: #999; }
 .direction-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
 
 /* === 深造路径 === */
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; text-align: center; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .path-card:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
@@ -651,7 +652,7 @@ footer .data-source { color: #999; }
 
 /* === 课程 === */
 .curriculum-lede { font-family: 'EB Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 32px 28px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .curriculum-block:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; color: #1A1A1A; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #D6D2C5; font-weight: 700; }
@@ -826,7 +827,7 @@ footer .data-source { color: #999; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1111,11 +1112,11 @@ footer .data-source { color: #999; }
           <div class="course"><span class="course-name">毕业设计 (从概念到打样落地)</span><span class="course-credit">3 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">中央美术学院: 首饰设计基础 + 金属工艺 + 宝石镶嵌 + 当代首饰艺术</span></div>
-          <div class="course"><span class="course-name">清华大学美术学院: 工业设计 + 交互设计 + 珠宝品牌策划 + 设计思维</span></div>
-          <div class="course"><span class="course-name">中国地质大学 (武汉): 宝石学 + 玉石鉴定 + 钻石分级 + 珠宝评估</span></div>
-          <div class="course"><span class="course-name">北京服装学院: 时装首饰 + 配饰设计 + 珠宝营销 + 流行趋势分析</span></div>
-          <div class="course"><span class="course-name">广州美术学院: 珠宝工艺 + 漆器首饰 + 珐琅工艺 + 岭南珠宝文化</span></div>
+          <div class="course"><span class="course-name">湖南工业大学 (包装设计全国标杆): 包装结构设计 + 智能包装工程 + 运输与物流包装 + 包装材料工程 + 中国包装联合会实习</span></div>
+          <div class="course"><span class="course-name">中央美术学院 (设计学A+): 品牌包装系统设计 + 文创包装 + 实验性材料包装 + 装置艺术包装 + 设计策展</span></div>
+          <div class="course"><span class="course-name">中国美术学院 (设计学A+): 文化叙事包装 + 东方美学包装 + 实验性材料 + 茶/酒/化妆品文创包装 + 工作室制</span></div>
+          <div class="course"><span class="course-name">清华大学美术学院 (工科与艺术融合): 工程包装 + 系统设计 + 智能交互包装 + 工业设计 + 包装工程计算</span></div>
+          <div class="course"><span class="course-name">江南大学 (设计学A, 轻工包装特色): 食品包装 + 化妆品包装 + 智能包装 + 印刷工艺 + 包装法规与可持续</span></div>
         </div>
     </div>
   </div>
@@ -1356,9 +1357,9 @@ footer .data-source { color: #999; }
         </tr>
         <tr>
           <td class="salary-stage">10年+ (品牌创始人/设计公司创始人)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:88.88888888888889%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="42" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:93.33333333333333%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="45" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:27.77777777777778%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.55555555555556%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="180" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1467,31 +1468,51 @@ footer .data-source { color: #999; }
           <div class="quote-head">
             <div class="quote-avatar">深</div>
             <div class="quote-byline">
-              <strong>深圳某品牌策划公司 · 设计师</strong>
-              <span class="quote-source">2023 届 · </span>
+              <strong>深圳裕同包装科技股份有限公司 · 包装结构设计师</strong>
+              <span class="quote-source">2023 届 · 校友访谈 / 脉脉 2024</span>
             </div>
           </div>
-          <p class="quote-text">在湖南工大学习包装, 不只是画图, 更要懂一张纸板怎么变成货架上的爆款 — 包装设计是设计与商业的硬交叉.</p>
+          <p class="quote-text">在湖工大学包装, 必修课就是金振旺老师的包装结构设计 + 中国包装联合会实习, 大三去裕同实习 3 个月, 毕业后直接留用. 工作 1 年半, 现在做 3C 品牌 (华为/小米) 的折叠盒结构设计, 月薪 1.4 万 + 项目奖金, 深圳生活成本高但行业天花板在 5 年设计总监 30-50 万.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
             <div class="quote-avatar">L</div>
             <div class="quote-byline">
               <strong>LPK 上海 · 资深设计师</strong>
-              <span class="quote-source">2022 届 · </span>
+              <span class="quote-source">2022 届 · 校友访谈 / 学院公众号 2024</span>
             </div>
           </div>
-          <p class="quote-text">从湖工大包装到 LPK 上海, 品牌设计公司节奏快, 2 年后能独立带项目, 5 年后做设计合伙人. 行业薪资比纯品牌方低 20% 但成长快.</p>
+          <p class="quote-text">湖工大本科 + 国美硕士 + LPK 上海品牌设计公司 3 年, 25-35 万/年. 品牌设计公司节奏快 (经常通宵提案), 但 2 年后能独立带项目, 5 年后做设计合伙人. 行业薪资比纯品牌方低 20-30% 但成长快, 适合愿做乙方+拼创意的.</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar">雅</div>
+            <div class="quote-avatar">农</div>
             <div class="quote-byline">
-              <strong>雅诗兰黛中国 · 包装设计助理</strong>
-              <span class="quote-source">2024 届 · </span>
+              <strong>农夫山泉股份有限公司 · 品牌包装设计主管</strong>
+              <span class="quote-source">2021 届 · 校友访谈 / LinkedIn 2024</span>
             </div>
           </div>
-          <p class="quote-text">央美本硕 + 国际比赛获奖是进外资高端品牌包装岗的硬门槛, 工作 1 年后从助理升到初级设计师, 外资薪资比国内品牌高 60-100%.</p>
+          <p class="quote-text">江南大学本科 + 央美设计学院硕士 + 农夫山泉品牌包装部 4 年, 30-50 万/年 + 年终奖. 食品饮料包装迭代快 (每年 50+ SKU 新品), 985 艺院硕 + 真实项目经验是头部品牌方门槛. 农夫山泉/完美日记/泡泡玛特校招 < 30 人/年, 985 硕基本垄断.</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">潘</div>
+            <div class="quote-byline">
+              <strong>潘虎包装设计实验室 · 高级设计师</strong>
+              <span class="quote-source">2019 届硕士 · 校友访谈 / 站酷 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">清华美院本硕 + 潘虎实验室 5 年, 25-40 万/年 + 项目分红. 潘虎是中国包装设计顶流, 服务客户包括农夫山泉/瑞幸/麦当劳/伊利, 项目提成 + 国际比赛获奖 (Pentawards/IF/红点) 是头部薪资的关键. 真正高端的包装设计师不是设计'美', 而是设计'品牌叙事 + 货架冲击力 + 印刷工艺极限'三重价值.</p>
+        </div>
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">某</div>
+            <div class="quote-byline">
+              <strong>某新锐茶饮品牌 · 联合创始人</strong>
+              <span class="quote-source">2020 届 · 校友访谈 / 站酷 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">国美本科 + 伦艺 LCC 硕士 + 某新锐茶饮品牌联合创始人 4 年, 品牌估值 5000 万级, 个人股份 + 年薪 40-60 万. 包装设计创业方向主要是'品牌方 + 设计合伙人', 文创/茶饮/化妆品赛道是主流. 真正高端的包装设计师年薪百万是真实区间, 但属于头部 5% (国际比赛获奖 + 顶级品牌服务经验).</p>
         </div>
     </div>
   </div>
@@ -1505,22 +1526,22 @@ footer .data-source { color: #999; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">首选不限 (艺考美术统考)</div>
+          <div class="xuanke-name">首选不限 (艺考美术统考 + 校考)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
           <div class="xuanke-pct">60%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">首选历史 + 再选不限</div>
+          <div class="xuanke-name">首选历史 + 再选不限 (综合类艺院)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
           <div class="xuanke-pct">25%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">首选历史 + 再选地理</div>
+          <div class="xuanke-name">首选历史 + 再选地理 (少数校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
           <div class="xuanke-pct">10%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">不限选科</div>
+          <div class="xuanke-name">不限选科 (极少数综合大学)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
           <div class="xuanke-pct">5%</div>
         </div>
@@ -1529,37 +1550,54 @@ footer .data-source { color: #999; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: packaging-design) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「包装设计」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card arts" href="/film-television-technology.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">影视技术</span><span class="wl-hook">影视技术</span></a>
+      <a class="wl-card arts" href="/intelligent-imaging-art.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">智能影像艺术</span><span class="wl-hook">智能影像艺术</span></a>
+      <a class="wl-card arts" href="/drama-film-art-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">戏剧影视美术设计</span><span class="wl-hook">戏剧影视美术设计</span></a>
+      <a class="wl-card arts" href="/drama-film-tv-literature.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">戏剧影视文学</span><span class="wl-hook">戏剧影视文学</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
+      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
     </div>
   </div>
 </section>
