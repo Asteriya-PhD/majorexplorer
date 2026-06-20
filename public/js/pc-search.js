@@ -178,13 +178,15 @@
       }))});
     }
 
-    // Day 7 fix: 即使有相似命中 (如搜「人类学」命中「民族学」), 没字面匹配时也显示 CTA
-    // 避免用户被误导以为搜到了. 只 title 算字面匹配, tags 算相似.
+    // Day 7 fix v2: 只在有相似 major 命中但无字面匹配时显示 CTA
+    // 例: 搜「人类学」命中「民族学」(major), 没字面 → 显示 CTA
+    // 反例: 搜「地矿类」(纯大类名, 无 major 命中) → 不显示 CTA, 引导用户去 /majors.html
     const hasExactMatch = majors.some((m) => {
       const t = (m.title || "").toLowerCase();
       return t === f || t.includes(f);
     });
-    const noResultHtml = (!sections.length || !hasExactMatch) ? renderNoResult(query) : "";
+    const showCTA = majors.length > 0 && !hasExactMatch;  // 必须有 major 相似命中但无字面才显示
+    const noResultHtml = (!sections.length || showCTA) ? renderNoResult(query) : "";
 
     if (!sections.length) {
       results.innerHTML = noResultHtml;
