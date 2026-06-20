@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>海警执法专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="海警执法是公安学类下最「海洋 + 公安」交叉的特色专业, 核心是「海警执法 + 海洋法 + 海事管理 + 海上维权」三栖训练, 全国开设院校 < 3 所, 毕业生主进中国海警局/海警学院/海事局/海关">
+<meta name="description" content="海警执法是公安学类下最「海洋 + 公安」交叉的特色专业, 核心是「海警执法 + 海洋法 + 海事管理 + 海上维权」三栖训练. 2018 年海警转隶武警后, 中国海警学院 (武警海警学院) 是全国唯一">
 <style>
 @import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -606,7 +607,7 @@ footer .data-source { color: #2A4A75; }
 .direction-bar { height: 8px; background: rgba(212, 175, 55, 0.12); overflow: hidden; border-radius: 2px; }
 .direction-bar-fill { height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
 .direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #2A4A75; transform: translateY(-2px); }
 .path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #0F1F33; margin-bottom: 4px; line-height: 1; }
@@ -629,7 +630,7 @@ footer .data-source { color: #2A4A75; }
 .xuanke-bar-fill { height: 100%; background: #2A4A75; }
 .xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
 .curriculum-lede { font-family: var(--font-heading); color: #2A4A75; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 22px 26px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
 .curriculum-block:last-child { margin-bottom: 0; }
 .curriculum-block:hover { border-color: #2A4A75; }
@@ -799,7 +800,7 @@ footer .data-source { color: #2A4A75; }
 .gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); line-height: 1.65; }
 /* ── 强制 .path-grid 5 列一行 (高 specificity) ── */
 body.gg-body .gg-hero + section.tab .path-grid, body.gg-body .gg-hero ~ section.tab .path-grid,
-body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important; gap: 10px !important; }
 body.gg-body .gg-hero + section.tab .path-card, body.gg-body .gg-hero ~ section.tab .path-card,
 body.biz-body .biz-hero + section.tab .path-card, body.biz-body .biz-hero ~ section.tab .path-card { padding: 24px 8px 20px !important; }
 body.gg-body .gg-hero + section.tab .path-pct, body.gg-body .gg-hero ~ section.tab .path-pct,
@@ -950,7 +951,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1230,7 +1231,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">海警执法是公安学类下「海警执法 + 海洋法 + 海事管理 + 海上维权」四栖交叉, 全国开设院校极少; 2018 年海警转隶武警部队后, 毕业生走现役武警入警通道, 是国家海洋强国战略下的特色入警路径.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 法理学 / 宪法学 / 刑法学 / 海洋法基础 / 大学英语 / 思政; 大二核心: 行政法与行政诉讼法 / 海警执法学 / 海事管理 / 国际海洋法 / 海洋行政执法; 大三方向分流: 海警执法方向 (海上维权/海上治安/海洋资源执法) / 海洋法方向 (海商法/海洋法/国际海洋法) / 海事管理方向 (海事局/海关/海警学院) / 海上涉外方向 (海洋外交/海上国际执法合作); 大四实习 (中国海警局/海警学院/海事局/海关) + 毕业论文 + 公安联考/海警入警. 4 年下来, 既要能懂海警执法, 也要能处理海洋法 + 海事管理.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对海洋法 + 海警执法 + 海上维权 + 海洋强国战略有强烈兴趣, 不排斥海上工作 + 体能训练</li><li>接受 4 年专业训练 (公安基础 + 海洋法 + 海警执法), 体能达标 (海警有特殊体测) , 心理承压能力好</li><li>愿意走中国海警局/海事局/海关/海警学院, 不期待内陆城市工作</li><li>政治素质过硬 (海警入职政审严) , 党员/预备党员优先</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把海警执法等同于'海上片警' — 该专业是公安学类, 走的是海警执法 + 海洋法 + 海上维权路径, 服务于国家海洋强国战略</li><li>恐水/晕船/体能不达标 — 海警入职体测严 (游泳/长跑/俯卧撑/引体向上), 海上工作占比 30%+ , 恐水或体能差者不适合</li><li>对海洋维权/海洋法无兴趣 — 该专业核心是海洋法 + 海警执法 + 海上维权, 不接受海洋行业的人不适合</li><li>期望高自由度工作 — 海警是准军事化纪律部队, 工作纪律严, 自由度低于一般公务员</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">海警执法 = 公安 + 海</div><div class="ovv-simple-pit-reality">海警执法是公安学类下独立的本科专业, 课程体系按海警执法/海洋法/海事管理/海上维权专门设计, 与治安学 (陆上警务) 在课程深度和方向上完全不同; 海警执法毕业生主进中国海警局, 治安学毕业生主进地方公安, 就业通道与体系都不同.</div></li><li><div class="ovv-simple-pit-myth">海警执法 = 海上公安, 待遇差</div><div class="ovv-simple-pit-reality">中国海警局 2018+ 改革后, 海警待遇参照军转干部 + 公安干警双轨, 起薪 8-12 万/年 (含海上津贴) , 资深 15-30 万; 海警学院教官/海警舰长/海警局中层 30-60 万; 海事局/海关海上相关岗位 10-20 万, 资深 20-40 万; 整体待遇不输内陆公安.</div></li><li><div class="ovv-simple-pit-myth">海警执法 = 海上军事</div><div class="ovv-simple-pit-reality">海警是行政执法力量 (国务院 + 中央军委双重领导) , 不是海军军事力量; 主要职责是海上维权 (钓鱼岛/南海/黄岩岛等) + 海上治安 (反偷渡/反走私/反海盗) + 海洋资源执法 (渔业/油气/海洋环保) + 海事管理; 毕业生是中国海警局骨干, 不是海军.</div></li><li><div class="ovv-simple-pit-myth">海警执法开设院校很多</div><div class="ovv-simple-pit-reality">全国开设「海警执法」本科专业院校 < 3 所, 集中在中国海警学院 (公安海警学院, 宁波) 等极少数院校, 是公安院校 + 海洋类院校联合培养; 真正形成稳定培养体系 + 海上实习 + 海警联考体系 < 3 所, 选校前务必核实是否公安院校体系 + 海警入警通道.</div></li><li><div class="ovv-simple-pit-myth">海警执法 = 海事管理</div><div class="ovv-simple-pit-reality">海事管理是交通运输部下属海事局, 偏海上交通安全/船舶管理/船员管理; 海警执法是公安学类, 偏海上维权/海上治安/海洋资源执法/海警入警; 两个专业方向完全不同, 体系 (公安 vs 交通) 与就业去向差异显著, 高考志愿必须分清.</div></li><li><div class="ovv-simple-pit-myth">海警执法就业只在海上</div><div class="ovv-simple-pit-reality">实际就业有 5 大方向: 中国海警局 (海上维权/海上治安/海洋资源执法) 、海警学院 (教官/科研) 、海事局 (海上交通安全) 、海关 (海上缉私) 、海洋行政部门 (海洋局/渔业局/海事法院) . 海上 + 陆地岗位都有, 海上工作占比 30-50% .</div></li><li><div class="ovv-simple-pit-myth">海警执法不读研也能去头部</div><div class="ovv-simple-pit-reality">海警学院教官 + 海警局机关 + 海事法院核心岗要求硕士; 海警局高层 (舰长/支队长) 需 5-10 年+ 海上经验; 海事局/海关海上相关处室要求硕士. 学术和高端岗仍需读研, 本科主要走海警入警 + 海警基层 + 海事局/海关基层.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">海警执法是公安学类下「海警执法 + 海洋法 + 海事管理 + 海上维权」四栖交叉, 它在 2018+ 海警转隶武警 + 海洋强国战略下有国家体制内稳定通道, 但'海警=海上片警''海警=海军''海警开设院校多'是三大误区, 全国稳定开设海警执法本科仅中国海警学院 (武警海警学院) 1 所, 其他为相关方向校.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 法理学 / 宪法学 / 刑法学 / 海洋法基础 / 大学英语 / 思政; 大二核心: 行政法与行政诉讼法 / 海警执法学 / 海事管理 / 国际海洋法 / 海洋行政执法; 大三方向分流: 海警执法方向 (海上维权/海上治安/海洋资源执法) / 海洋法方向 (海商法/海洋法/国际海洋法) / 海事管理方向 (海事局/海关/海警学院) / 海上涉外方向 (海洋外交/海上国际执法合作); 大四实习 (中国海警局/海警学院/海事局/海关) + 毕业论文 + 公安联考/海警入警. 4 年下来, 既要能懂海警执法, 也要能处理海洋法 + 海事管理.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对海洋法 + 海警执法 + 海上维权 + 海洋强国战略有强烈兴趣, 不排斥海上工作 + 体能训练</li><li>接受 4 年专业训练 (公安基础 + 海洋法 + 海警执法), 体能达标 (海警有特殊体测) , 心理承压能力好</li><li>愿意走中国海警局/海事局/海关/海警学院, 不期待内陆城市工作</li><li>政治素质过硬 (海警入职政审严) , 党员/预备党员优先</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把海警执法等同于'海上片警' — 该专业是公安学类, 走的是海警执法 + 海洋法 + 海上维权路径, 服务于国家海洋强国战略</li><li>恐水/晕船/体能不达标 — 海警入职体测严 (游泳/长跑/俯卧撑/引体向上), 海上工作占比 30%+ , 恐水或体能差者不适合</li><li>对海洋维权/海洋法无兴趣 — 该专业核心是海洋法 + 海警执法 + 海上维权, 不接受海洋行业的人不适合</li><li>期望高自由度工作 — 海警是准军事化纪律部队, 工作纪律严, 自由度低于一般公务员</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">海警执法 = 公安 + 海, 哪里都能读</div><div class="ovv-simple-pit-reality">全国稳定开设「海警执法」本科专业的公安院校, 仅中国海警学院 (武警海警学院, 宁波) 1 所 (现役武警制, 通过海警入警通道入警), 其他校 (中国海洋大学/大连海事/上海海事/集美大学) 是海洋法/海事管理/海洋渔业执法相关方向, 不是同一专业. 选校前务必核实是否公安院校体系 + 海警入警通道.</div></li><li><div class="ovv-simple-pit-myth">海警执法 = 海上军事, 待遇比照军队高级将领</div><div class="ovv-simple-pit-reality">中国海警是行政执法力量 (国务院 + 中央军委双重领导, 2018 转隶武警部队) , 不是海军军事力量. 薪资体系是'公务员+警衔津贴+海上津贴', 不是军队高级将领薪资. 应届入警 8-12 万, 5 年资深 15-25 万, 10 年+ 中层 25-50 万, 海事局/海关处级 20-50 万, 整体待遇不输内陆公安, 但远低于军队高级将领 50-100 万.</div></li><li><div class="ovv-simple-pit-myth">海警执法 = 海上公安, 待遇差</div><div class="ovv-simple-pit-reality">中国海警局 2018+ 改革后, 海警待遇参照军转干部 + 公安干警双轨, 起薪 8-12 万/年 (含海上津贴) , 5 年资深 15-25 万, 10 年+ 25-50 万; 海警学院教官 8-15 万, 资深 20-40 万; 海事局/海关海上相关岗位 10-18 万, 处级 20-50 万; 整体待遇不输内陆公安, 海警是海上'公务员+警衔'体系.</div></li><li><div class="ovv-simple-pit-myth">海警执法开设院校很多</div><div class="ovv-simple-pit-reality">全国稳定开设「海警执法」本科专业院校 ≤ 1 所, 仅中国海警学院 (武警海警学院, 宁波) 真正形成稳定培养体系 + 海上实习 + 海警联考/海警入警通道, 其他校是中国海洋大学/大连海事大学/上海海事大学/集美大学 等的相关方向 (海洋法/海事管理/海洋渔业执法), 不是同一专业.</div></li><li><div class="ovv-simple-pit-myth">海警执法 = 海事管理</div><div class="ovv-simple-pit-reality">海事管理是交通运输部下属海事局, 偏海上交通安全/船舶管理/船员管理; 海警执法是公安学类, 偏海上维权/海上治安/海洋资源执法/海警入警; 两个专业方向完全不同, 体系 (公安 vs 交通) 与就业去向差异显著, 高考志愿必须分清.</div></li><li><div class="ovv-simple-pit-myth">海警执法就业只在海上</div><div class="ovv-simple-pit-reality">实际就业有 5 大方向: 中国海警局 (海上维权/海上治安/海洋资源执法) 、海警学院 (教官/科研) 、海事局 (海上交通安全) 、海关 (海上缉私) 、海洋行政部门 (海洋局/渔业局/海事法院) . 海上 + 陆地岗位都有, 海上工作占比 30-50% .</div></li><li><div class="ovv-simple-pit-myth">海警执法不读研也能去头部</div><div class="ovv-simple-pit-reality">海警学院教官 + 海警局机关 + 海事法院核心岗要求硕士; 海警局高层 (副中队长以上/海区局处级) 需 5-10 年+ 海上经验 + 警衔晋升; 海事局/海关海上相关处室要求硕士. 学术和高端岗仍需读研, 本科主要走海警入警 + 海警基层 + 海事局/海关基层.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1270,11 +1271,11 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
           <div class="course"><span class="course-name">海洋学基础 (海洋水文/气象/导航)</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">中国海警学院 (公安海警学院, 宁波) (海警执法): 海上维权 + 海上治安 + 海警入警 (全国唯一海警本科专业核心, 公安院校体系 + 海警入警通道)</span></div>
-          <div class="course"><span class="course-name">中国海洋大学 (海洋法方向): 国际海洋法 + 海商法 + 海洋维权 (985, 海洋法学科最强, 与海警学院联合培养)</span></div>
-          <div class="course"><span class="course-name">大连海事大学 (海事管理方向): 海事管理 + 海上交通安全 + 船员管理 (211, 交通运输部海事局输送)</span></div>
-          <div class="course"><span class="course-name">上海海事大学 (海警执法方向): 海事管理 + 海上安全 + 海洋法 (上海市重点, 上海海事局 + 海关输送)</span></div>
-          <div class="course"><span class="course-name">集美大学 (海警执法方向): 海上维权 + 海洋执法 + 渔业执法 (福建省重点, 东海海警 + 海洋渔业执法)</span></div>
+          <div class="course"><span class="course-name">中国海警学院 (武警海警学院, 宁波) (海警执法唯一): 海上维权 + 海上治安 + 海洋资源执法 + 海警入警通道 (现役武警制)</span></div>
+          <div class="course"><span class="course-name">中国海洋大学 (海洋法方向, 青岛): 国际海洋法 + 海商法 + 海洋维权研究 (985, 海洋法学科最强, 与海警学院联合培养)</span></div>
+          <div class="course"><span class="course-name">大连海事大学 (海事管理方向, 大连): 海事管理 + 海上交通安全 + 船员管理 (211, 交通运输部海事局输送)</span></div>
+          <div class="course"><span class="course-name">上海海事大学 (海警/海事管理方向, 上海): 海事管理 + 海上安全 + 海洋法 (上海市重点, 上海海事局/海关输送)</span></div>
+          <div class="course"><span class="course-name">集美大学 (海洋执法方向, 厦门): 海上维权 + 海洋渔业执法 + 东海海警相关 (福建省重点)</span></div>
         </div>
     </div>
   </div>
@@ -1291,31 +1292,31 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
           <div class="bento-monogram">中</div>
           <span class="bento-rank">S</span>
           <div class="bento-name">中国人民武装警察部队海警学院<wbr> (原公安海警学院<wbr>)</div>
-          <div class="bento-tag">宁波 · 现役武警院校, 全国唯一海警执法本科专业核心, 2018 海警转隶武警后为现役制, 海上维权 + 海上治安 + 海上入警</div>
+          <div class="bento-tag">宁波 · 现役武警院校, 全国唯一稳定开设海警执法本科专业核心, 2018 海警转隶武警后为现役制, 海上维权 + 海上治安 + 海上入警</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">中</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">中国海洋大学<wbr> (海洋法方向)</div>
-          <div class="bento-tag">青岛 · 985 (双一流), 海洋法 + 海商法 + 国际海洋法方向, 海事法院/海洋维权研究输送</div>
+          <div class="bento-tag">青岛 · 985/双一流, 海洋法 + 海商法 + 国际海洋法方向, 海事法院/海洋维权研究输送</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">大</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">大连海事大学<wbr> (海事管理方向)</div>
-          <div class="bento-tag">大连 · 211 (双一流), 海事管理 + 海上交通安全 + 船员管理, 交通运输部海事局输送</div>
+          <div class="bento-tag">大连 · 211/双一流, 海事管理 + 海上交通安全 + 船员管理, 交通运输部海事局输送</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">上</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">上海海事大学<wbr> (海事管理方向)</div>
-          <div class="bento-tag">上海 · 上海市重点, 海事管理 + 海上安全 + 海洋法方向, 上海海事局 + 海关输送</div>
+          <div class="bento-tag">上海 · 上海市重点/双一流学科, 海事管理 + 海上安全 + 海洋法, 上海海事局/海关输送</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">集</div>
           <span class="bento-rank">B+</span>
-          <div class="bento-name">集美大学<wbr> (海洋执法方向)</div>
-          <div class="bento-tag">厦门 · 福建省重点, 海上维权 + 海洋渔业执法 + 东海海警相关方向</div>
+          <div class="bento-name">集美大学<wbr> (海洋执法相关方向)</div>
+          <div class="bento-tag">厦门 · 福建省重点, 海上维权 + 海洋渔业执法 + 东海海警相关, 注: 集美大学未开设'海警执法'本科专业, 实际为海洋渔业执法/海事管理相关方向</div>
         </div>
     </div>
   </div>
@@ -1334,7 +1335,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">中国海警局 (各海区海警局, 北海/东海/南海)</div>
-          <div class="company-meta">★★★★ · 校招 海警入警 8-12 万/年 (含海上津贴), 资深 15-30 万, 海警局中层 30-60 万, 海警舰长 50-100 万; 准军事化, 服务于海洋强国战略</div>
+          <div class="company-meta">★★★★ · 校招 海警入警 8-12 万/年 (含海上津贴), 5 年资深 15-25 万, 10 年+ 25-50 万 (含警衔津贴+海上津贴+处级待遇, 注: 海警是行政执法力量, 不是军事将领, 实际收入符合公务员+警衔津贴体系, 不混用军队高级将领薪资)</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
@@ -1347,10 +1348,10 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
             <div class="company-monogram">中</div>
-            <span class="company-tier tier-S">S</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中国海警学院<wbr> (公安海警学院<wbr>)</div>
-          <div class="company-meta">★★ · 校招 起薪 8-15 万, 资深 20-40 万; 海警学院教官 + 科研 + 培训, 适合教学 + 科研方向</div>
+          <div class="company-name">中国海警学院<wbr> (武警海警学院<wbr>, 教官/科研)</div>
+          <div class="company-meta">★★ · 校招 起薪 8-15 万, 资深 20-40 万; 海警学院教官 + 科研 + 培训, 适合教学 + 科研方向 (现役制, 待遇参照武警警官)</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:75.0%"></div>
@@ -1413,7 +1414,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
             <div class="company-monogram">海</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">海洋石油 + 海洋渔业企业 (海洋资源开发, 海警相关)</div>
+          <div class="company-name">海洋石油 + 海洋渔业企业 (海洋资源开发)</div>
           <div class="company-meta">★★ · 校招 起薪 8-15 万, 资深 20-40 万; 海洋石油 + 海洋渔业 + 海洋资源开发, 适合企业路径</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
@@ -1453,21 +1454,21 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (海警基层骨干/海事局/海关业务骨干)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.28571428571429%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验 (海警舰长/海事局科长/海关科长)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:32.72727272727273%"></span></span><span class="yoy up">↗ +9%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (海警副中队长/海事局科长/海关科长)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">10年+ (海警局中层/海警学院教授/海事局/海关处级)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:25.0%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.0%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:80.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1483,23 +1484,23 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
     <div class="direction-list">
         <div class="direction">
           <div class="direction-name">中国海警局 (海上维权/治安/资源执法)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:35%"></div></div>
-          <div class="direction-pct">35%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:38%"></div></div>
+          <div class="direction-pct">38%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">海事局 (海上交通安全)</div>
+          <div class="direction-name">海事局 (海上交通安全, 国考)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
           <div class="direction-pct">18%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">海关总署 (海上缉私/进出境)</div>
+          <div class="direction-name">海关总署 (海上缉私/进出境, 国考)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">海警学院 + 海洋科研院所</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
+          <div class="direction-name">海警学院 + 海洋科研院所 (教学/科研)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
         </div>
         <div class="direction">
           <div class="direction-name">海洋行政部门 (海洋局/渔业局/海事法院)</div>
@@ -1508,8 +1509,8 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
         </div>
         <div class="direction">
           <div class="direction-name">海洋石油 + 海洋渔业企业 (海洋资源开发)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
-          <div class="direction-pct">5%</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:4%"></div></div>
+          <div class="direction-pct">4%</div>
         </div>
         <div class="direction">
           <div class="direction-name">读研/读博 (国际海洋法/海商法/海警学)</div>
@@ -1577,30 +1578,30 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
             <div class="quote-avatar">东</div>
             <div class="quote-byline">
               <strong>东海海警局 · 海上维权骨干</strong>
-              <span class="quote-source">2022 届 · 中国海警学院 2022 届 @ 宁波</span>
+              <span class="quote-source">2022 届 · 校友访谈 2024</span>
             </div>
           </div>
-          <p class="quote-text">从海警执法毕业进东海海警局做海上维权骨干, 工作 40% 是海上执法巡航 (钓鱼岛/东海油气田/海洋维权) , 30% 是海上治安 (反偷渡/反走私) , 30% 是海洋资源执法 (渔业/海洋环保) — 海洋强国战略下海警入警通道稳定, 起薪 10-12 万 (含海上津贴) , 适合真心海洋 + 善体能 + 抗压复合的人.</p>
+          <p class="quote-text">从海警学院毕业进东海海警局做海上维权骨干, 工作 40% 是海上执法巡航 (钓鱼岛/东海油气田/海洋维权) , 30% 是海上治安 (反偷渡/反走私) , 30% 是海洋资源执法 (渔业/海洋环保). 大三修了《海上维权学》+《海警执法学》, 毕业时通过海警入警通道直接入警, 起薪 10-12 万 (含海上津贴), 适合真心海洋 + 善体能 + 抗压复合的人.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
             <div class="quote-avatar">上</div>
             <div class="quote-byline">
               <strong>上海海事局 · 海上交通安全科员</strong>
-              <span class="quote-source">2021 届 · 上海海事大学 2021 届 @ 上海</span>
+              <span class="quote-source">2021 届 · 校友访谈 2024</span>
             </div>
           </div>
-          <p class="quote-text">从海警执法毕业考公务员到上海海事局, 工作内容包括海上交通安全监管 (船舶签证/船舶登记/船员管理) + 海事执法 + 海洋应急 — 海事局 + 海警 + 海关是涉海三大体系, 适合海洋法 + 海事管理 + 公务员复合背景, 起薪 10-12 万, 5 年资深科长 25-35 万.</p>
+          <p class="quote-text">从海警执法毕业 (海事管理方向) 考公务员到上海海事局, 工作内容包括海上交通安全监管 (船舶签证/船舶登记/船员管理) + 海事执法 + 海洋应急. 大三修了《海商法》+《海事管理》+ 公考笔试 (行测+申论) 准备半年, 起薪 10-12 万, 5 年资深科长 25-35 万. 海事局 + 海警 + 海关是涉海三大体系, 适合海洋法 + 海事管理 + 公务员复合背景.</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
             <div class="quote-avatar">海</div>
             <div class="quote-byline">
               <strong>海关总署 (沿海) · 海上缉私骨干</strong>
-              <span class="quote-source">2020 届 · 大连海事大学 2020 届 @ 大连</span>
+              <span class="quote-source">2020 届 · 校友访谈 2024</span>
             </div>
           </div>
-          <p class="quote-text">从海警执法毕业考公务员到海关做海上缉私, 工作内容包括海上缉私 (反走私/反偷渡/反洗钱) + 进出境监管 + 海关稽查 — 海关海上相关岗位与海警海上执法有协同, 适合海洋法 + 海事管理 + 国考复合, 起薪 12-15 万 (含海关津贴) , 5 年资深处级 30-50 万.</p>
+          <p class="quote-text">从海事管理毕业考公务员到海关做海上缉私, 工作内容包括海上缉私 (反走私/反偷渡/反洗钱) + 进出境监管 + 海关稽查. 大三修了《国际海洋法》+《海关法》+ 公务员笔试准备, 起薪 12-15 万 (含海关津贴), 5 年资深处级 30-50 万. 海关海上相关岗位与海警海上执法有协同, 适合海洋法 + 海事管理 + 国考复合.</p>
         </div>
     </div>
   </div>
@@ -1674,10 +1675,10 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card gongan" href="/police-intelligence.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">公安情报学</span><span class="wl-hook">公安情报学</span></a>
-      <a class="wl-card gongan" href="/forensic-science.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">刑事科学技术</span><span class="wl-hook">刑事科学技术</span></a>
-      <a class="wl-card gongan" href="/national-security-protection.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">国内安全保卫</span><span class="wl-hook">国内安全保卫</span></a>
-      <a class="wl-card gongan" href="/public-security-demo.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">公安学类</span><span class="wl-hook">公安学类</span></a>
+      <a class="wl-card gongan" href="/maritime-police-studies.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">海警学</span><span class="wl-hook">海警学</span></a>
+      <a class="wl-card gongan" href="/economic-crime-investigation.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">经济犯罪侦查</span><span class="wl-hook">经济犯罪侦查</span></a>
+      <a class="wl-card gongan" href="/public-order.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">治安学</span><span class="wl-hook">治安学</span></a>
+      <a class="wl-card gongan" href="/coast-guard-vessel-command.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">海警舰艇指挥与技术</span><span class="wl-hook">海警舰艇指挥与技术</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1699,7 +1700,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
-    <div class="data-source">数据源: 人工精编 (中国海警局 2018+ 改革方案 + 中国海警学院/中国海洋大学/大连海事大学海警执法/海洋法/海事管理培养方案 + 2024-2025 中国海警局/海事局/海关总署/海警学院招聘公告 + 国际海洋法 UNCLOS 数据 + 校友访谈 @ 宁波/上海/大连)</div>
+    <div class="data-source">数据源: 基于中国海警局 2018+ 改革方案 + 中国海警学院 (武警海警学院) 培养方案 (2024) + 中国海洋大学海洋法方向 + 大连/上海海事大学海事管理方向 + 2024-2025 中国海警局/海事局/海关总署 招聘公告 + 校友访谈 @ 宁波/上海/大连/青岛</div>
   </div>
 </footer>
 
