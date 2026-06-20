@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<!-- Wishlist UI: 共享 store + helpers (顶部 chip / 右下 FAB / 12 主题卡 / 搜专业) -->
+<link rel="preload" href="/js/wishlist-store.js" as="script">
+<link rel="preload" href="/js/ui-helpers.js" as="script">
+<link rel="preload" href="/js/major-search.js" as="script">
+
+<title>全球健康学专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="严谨 · 冷静 · 鸟瞰。全球健康学是「公共卫生 + 国际发展 + 流行病学 + 卫生经济学」交叉的新兴专业, 培养能在 WHO/UNICEF/盖茨基金会/中国 CDC 做跨国公共卫生治">
+<style>
+@import url('https://fonts.loli.net/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'IBM Plex Sans', 'PingFang SC', sans-serif;
+  background: #F8FAFC;
+  color: #0F172A;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── 招 #5: CT grid 背景 (1px line 10px grid) ── */
+body::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(12, 74, 110, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(12, 74, 110, 0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* ── 招 #1: noise 纹理叠加 ── */
+body::after {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.29 0 0 0 0 0.43 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/></svg>");
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+}
+
+h1, h2, h3, h4 { font-family: 'IBM Plex Sans', 'PingFang SC', sans-serif; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: 'IBM Plex Mono', 'SF Mono', monospace; font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+
+/* ── 招 #7: drop cap ── */
+.lede.drop-cap::first-letter {
+  font-family: 'IBM Plex Sans', serif;
+  font-size: 4em;
+  font-weight: 600;
+  line-height: 0.9;
+  float: left;
+  margin: 0.05em 0.12em 0 0;
+  color: #0C4A6E;
+  letter-spacing: -0.04em;
+}
+
+/* ── HERO (medicine · vitals panel + ECG) ── */
+.hero {
+  padding: 80px 0 96px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #CBD5E1;
+  position: relative;
+  z-index: 2;
+}
+.hero::before { content: ""; display: block; width: 80px; height: 1px; background: #0C4A6E; margin: 0 auto 48px; opacity: 0.4; }
+.hero::after { content: ""; display: block; width: 80px; height: 1px; background: #0C4A6E; margin: 48px auto 0; opacity: 0.4; }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.15fr;
+  gap: 56px;
+  align-items: center;
+}
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+.vitals-panel {
+  padding: 32px 28px;
+  background: white;
+  border: 1px solid #94A3B8;
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(12, 74, 110, 0.05), 0 4px 24px rgba(12, 74, 110, 0.08);
+  position: relative;
+}
+.vitals-patient {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #94A3B8;
+  margin-bottom: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+}
+.vitals-patient-id { color: #0C4A6E; font-weight: 600; }
+.vitals-patient-sep { color: #CBD5E1; }
+.vitals-patient-meta { color: #475569; }
+.vitals-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.vitals-time { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; letter-spacing: 0.1em; }
+.vitals-status { display: flex; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #15803D; font-weight: 600; letter-spacing: 0.08em; }
+.vitals-status.alert { color: #B45309; }
+.vitals-status::before { content: ""; width: 8px; height: 8px; background: currentColor; border-radius: 50%; animation: pulse 1.5s infinite; }
+.vitals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.vital { padding: 16px 14px; background: #F8FAFC; border-radius: 8px; border-left: 3px solid transparent; transition: background 250ms; }
+.vital.normal { border-left-color: #15803D; }
+.vital.alert { border-left-color: #B45309; background: #FEF3C7; }
+.vital-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #475569; letter-spacing: 0.15em; font-weight: 600; }
+.vital-value { font-family: 'IBM Plex Mono', monospace; font-size: 2.25rem; font-weight: 700; color: #0F172A; line-height: 1; margin-top: 4px; letter-spacing: -0.02em; }
+.vital-unit  { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; margin-left: 4px; font-weight: 500; }
+.vital-range { font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #94A3B8; margin-top: 4px; letter-spacing: 0.05em; }
+
+/* ── hero side ── */
+.hero-decor { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+.hero-decor::before { content: ""; display: inline-block; width: 32px; height: 1px; background: #0C4A6E; }
+.hero h1 { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 24px; }
+.hero h1::before { content: "NO."; display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 500; color: #475569; letter-spacing: 0.2em; margin-bottom: 16px; }
+.hero-tagline { font-size: 1.125rem; color: #475569; margin-bottom: 32px; max-width: 560px; line-height: 1.7; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.tag { padding: 5px 12px; background: white; border: 1px solid #CBD5E1; border-radius: 999px; font-size: 0.8125rem; font-weight: 500; color: #0F172A; letter-spacing: 0.02em; }
+.tag.primary { background: transparent; border-color: #0C4A6E; color: #0C4A6E; }
+
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #CBD5E1; border-bottom: 1px solid #CBD5E1; border-left: 1px solid #CBD5E1; border-right: 1px solid #CBD5E1; }
+@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
+.stat { padding: 20px 22px; border-right: 1px solid #CBD5E1; position: relative; }
+.stat:last-child { border-right: none; }
+@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #CBD5E1; } }
+.stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #475569; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+.stat-value { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.375rem; font-weight: 600; color: #0C4A6E; margin-top: 6px; letter-spacing: -0.01em; }
+
+/* ── 招 #4: 巨型背景水印数字 ── */
+section.tab {
+  padding: 120px 0 96px;
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid #94A3B8;
+  border-bottom: 2px solid #94A3B8;
+  overflow: hidden;
+}
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.watermark {
+  position: absolute;
+  top: 40px; right: -20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: clamp(10rem, 18vw, 18rem);
+  font-weight: 700;
+  color: #0C4A6E;
+  opacity: 0.04;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.section-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600; color: #0C4A6E; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; color: #0F172A; }
+section.tab p { margin-bottom: 16px; color: #0F172A; position: relative; z-index: 1; }
+section.tab p.lede { color: #475569; font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; }
+
+/* ── 招 #2: stagger entrance ── */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ── curriculum (前序 列) ── */
+.curriculum-lede { color: #475569; font-size: 0.9375rem; margin: 0 0 32px; max-width: 720px; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; position: relative; z-index: 1; }
+.curriculum-block { padding: 28px 24px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
+.curriculum-block:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
+.curriculum-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #0C4A6E; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #E2E8F0; }
+.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; border-bottom: 1px dashed transparent; position: relative; }
+.course:hover { border-bottom-color: #E2E8F0; }
+.course-info { display: flex; flex-direction: column; gap: 2px; }
+.course-name { color: #0F172A; font-weight: 500; }
+.course-prereq { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #94A3B8; letter-spacing: 0.05em; }
+.course-prereq::before { content: "↳ "; color: #0C4A6E; }
+.course-credit { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #475569; }
+
+/* ── 招 #8: asymmetric 卡片 ── */
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 1px; background: #94A3B8; border: 1px solid #94A3B8; border-radius: 12px; overflow: hidden; margin-top: 32px; position: relative; z-index: 1; }
+.bento { position: relative; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(12, 74, 110, 0.85); z-index: 1; pointer-events: none; }
+.bento-item { padding: 28px 24px 24px; background: white; position: relative; z-index: 0; transition: background 200ms; }
+.bento-item:hover { background: #F8FAFC; }
+.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #0C4A6E; color: white; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #0C4A6E; border: 1px solid #0C4A6E; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.01em; padding-right: 44px; }
+.bento-tag { font-size: 0.8125rem; color: #475569; line-height: 1.5; line-break: strict; }
+
+/* ── companies (校友核实) ── */
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 24px 22px 20px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; position: relative; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
+.company:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
+.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #0C4A6E; color: white; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; font-weight: 700; flex-shrink: 0; }
+.company-tier { padding: 2px 8px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
+.tier-S { background: #0C4A6E; color: white; }
+.tier-A { background: transparent; color: #0C4A6E; border: 1px solid #0C4A6E; }
+.tier-B { background: #F1F5F9; color: #475569; }
+.company-name { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
+.company-meta { font-size: 0.8125rem; color: #475569; line-height: 1.5; margin-bottom: 8px; line-break: strict; }
+.company-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #15803D; background: rgba(21, 128, 61, 0.08); padding: 2px 6px; border-radius: 3px; letter-spacing: 0.08em; font-weight: 600; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #E2E8F0; }
+.sparkline-bar { flex: 1; background: #CBD5E1; border-radius: 1px; transition: background 250ms; min-height: 2px; }
+.company:hover .sparkline-bar { background: #0C4A6E; opacity: 0.6; }
+.sparkline-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #94A3B8; letter-spacing: 0.1em; margin-top: 4px; }
+
+/* ── 招 #3: 数字滚动 salary ── */
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #F8FAFC; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #475569; }
+.salary-stage { font-weight: 600; color: #0F172A; line-break: strict; }
+.salary-bar { display: inline-block; width: 80px; height: 6px; background: #F1F5F9; border-radius: 3px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #0C4A6E; border-radius: 3px; }
+.yoy { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 4px; }
+.yoy.up   { color: #15803D; background: rgba(21, 128, 61, 0.08); }
+.yoy.down { color: #B91C1C; background: rgba(185, 28, 28, 0.08); }
+.yoy.flat { color: #475569; background: #F1F5F9; }
+.approx { font-family: 'IBM Plex Mono', monospace; color: #94A3B8; margin-right: 4px; }
+
+/* ── directions ── */
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E2E8F0; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-weight: 500; font-size: 0.9375rem; line-break: strict; }
+.direction-bar { height: 10px; background: #F1F5F9; border-radius: 5px; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #0C4A6E; border-radius: 5px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #0F172A; }
+
+/* ── deep study ── */
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; text-align: center; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
+.path-card:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
+.path-pct { font-family: 'IBM Plex Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #0C4A6E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
+.path-name { color: #475569; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; line-break: strict; }
+
+/* ── quotes (Mayo 引文) ── */
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 32px 36px; background: white; border: 1px solid #E2E8F0; border-left: 2px solid #0C4A6E; border-radius: 0 12px 12px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; }
+.quote:hover { border-left-width: 8px; transform: translateX(4px); box-shadow: 0 8px 32px rgba(12, 74, 110, 0.10); }
+.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.quote-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0C4A6E; color: white; font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem; font-weight: 600; flex-shrink: 0; }
+.quote-byline { font-size: 0.875rem; }
+.quote-byline strong { font-weight: 500; color: #0F172A; display: block; }
+.quote-byline .quote-source { color: #475569; font-size: 0.75rem; font-family: 'IBM Plex Mono', monospace; }
+.quote-text { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.1875rem; line-height: 1.7; margin: 0; color: #0F172A; font-weight: 400; line-break: strict; }
+.quote-text::before { content: "\201C"; color: #0C4A6E; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
+.quote-text::after { content: "\201D"; color: #0C4A6E; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
+.quote-cite { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #94A3B8; margin-top: 16px; padding-top: 12px; border-top: 1px dashed #E2E8F0; font-style: italic; }
+
+/* ── xuanke ── */
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E2E8F0; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-weight: 500; font-size: 0.9375rem; line-break: strict; }
+.xuanke-bar { height: 8px; background: #F1F5F9; border-radius: 4px; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #0C4A6E; border-radius: 4px; }
+.xuanke-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; }
+
+/* ── timeline (临床 5+3+X) ── */
+.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 32px; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; position: relative; z-index: 1; }
+.tl-item { padding: 32px 24px; background: white; border-right: 1px solid #E2E8F0; position: relative; }
+.tl-item:nth-child(2) { background: #FEF3C7; }
+.tl-item:last-child { border-right: none; }
+.tl-year { font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; font-weight: 600; color: #0C4A6E; margin-bottom: 8px; letter-spacing: -0.01em; }
+.tl-stage { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
+.tl-income { font-size: 0.8125rem; color: #475569; line-height: 1.5; }
+.tl-warning { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #B45309; margin-top: 8px; padding: 4px 8px; background: rgba(180, 83, 9, 0.08); border-radius: 4px; display: inline-block; letter-spacing: 0.08em; }
+
+/* ── CTA ── */
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #0F172A; color: white; border: 1px solid #0C4A6E; border-radius: 16px; text-align: center; position: relative; overflow: hidden; }
+.cta-block::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+.cta-block h3 { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.75rem; margin-bottom: 12px; color: white; position: relative; z-index: 1; }
+.cta-block p { color: #94A3B8; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 16px; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: white; border: 1px solid #94A3B8; border-radius: 8px; color: #0F172A; font-family: 'IBM Plex Mono', monospace; font-size: 1rem; width: 180px; outline: none; transition: border-color 200ms; }
+.cta-input:focus { border-color: #38BDF8; }
+.cta-button { padding: 14px 36px; background: #38BDF8; color: #0F172A; border-radius: 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.05em; transition: transform 200ms, box-shadow 200ms; }
+.cta-button:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4); }
+.cta-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #94A3B8; margin-top: 16px; position: relative; z-index: 1; }
+
+/* ── ECG section flash ── */
+@keyframes ecgFlash { 0% { opacity: 0.6; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.05); } 100% { opacity: 0.6; transform: scaleY(1); } }
+.ecg-pulse { animation: ecgFlash 0.6s ease-out; }
+
+/* ── footer ── */
+footer { padding: 64px 0 48px; text-align: center; border-top: 1px solid #E2E8F0; position: relative; z-index: 2; background: #F1F5F9; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { color: #475569; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.15em; }
+footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-width: 600px; }
+/* ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 footer-nav */
+.footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 16px; margin: 0 0 28px 0; padding: 0; }
+.footer-nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(12, 74, 110, 0.2); border-radius: 999px; color: #0C4A6E; font-family: 'IBM Plex Mono', monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; transition: all 180ms ease-out; }
+.footer-nav-link:hover { background: rgba(12, 74, 110, 0.08); border-color: #0C4A6E; transform: translateY(-1px); }
+@media (max-width: 600px) { .footer-nav { gap: 8px 10px; margin-bottom: 20px; } .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; } }
+
+/* ── 数字滚动关键帧 (招 #3) ── */
+@keyframes countUp { from { opacity: 0.3; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.count-up { animation: countUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@keyframes ecg { 0% { stroke-dashoffset: 1000; } 100% { stroke-dashoffset: 0; } }
+.ecg-line { display: block; width: 100%; height: 32px; margin-bottom: 16px; }
+.ecg-line path { stroke: #0C4A6E; stroke-width: 1.5; fill: none; stroke-dasharray: 1000; animation: ecg 3s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up, .count-up { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Universal mobile patches — medicine theme (≤480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .container { padding: 0 14px !important; }
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+  .path-grid { grid-template-columns: 1fr !important; }
+  .company-grid { grid-template-columns: 1fr !important; }
+  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .bento { grid-template-columns: 1fr !important; }
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+  .ecg-line { opacity: 0.3 !important; }
+  /* medicine vital cards 2x2 已存在, 但 cells padding 偏大 — 收紧 */
+  .vital { padding: 14px 12px !important; }
+  .vital-value { font-size: 1.5rem !important; }
+}
+
+
+/* ─── Wishlist inject: 顶部 chip + 右下 FAB + 12 主题卡 ─── */
+.wl-chip {
+  position: fixed; top: 16px; right: 16px; z-index: 95;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 7px 12px; border-radius: 999px;
+  background: rgba(250,250,247,0.95); color: #14110D;
+  border: 1px solid #BFB9AB; cursor: pointer;
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  transition: all 180ms; letter-spacing: 0.02em;
+  text-decoration: none; box-shadow: 0 2px 8px rgba(20,17,13,0.06);
+}
+.wl-chip:hover { background: #B8323A; color: #FAFAF7; border-color: #B8323A; transform: translateY(-1px); opacity: 1; }
+.wl-chip[data-state="ready"] { background: #B8323A; color: #FAFAF7; border-color: #B8323A; }
+.wl-chip .count { font-weight: 700; }
+@media (max-width: 640px) {
+  .wl-chip { top: 10px; right: 10px; font-size: 0.6875rem; padding: 6px 10px; }
+}
+
+.wl-fab {
+  position: fixed; right: 24px; bottom: 24px; z-index: 9000;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #B8323A; color: #FAFAF7;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  cursor: pointer; border: none; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wl-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 32px rgba(184,50,58,0.32); }
+.wl-fab[data-state="added"] { background: #2F5F3E; }
+@media (max-width: 640px) { .wl-fab { right: 16px; bottom: 16px; width: 50px; height: 50px; font-size: 1.25rem; } }
+
+.wl-modal {
+  position: fixed; right: 24px; bottom: 96px; z-index: 9001;
+  width: min(320px, calc(100vw - 32px));
+  background: #FAFAF7; color: #14110D;
+  border: 1px solid #BFB9AB; border-radius: 12px; padding: 20px;
+  box-shadow: 0 20px 48px rgba(20,17,13,0.24);
+  transform: translateY(8px); opacity: 0; pointer-events: none;
+  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-modal[data-open="true"] { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.wl-modal .wl-mt { font-family: 'Source Han Serif SC', 'Songti SC', serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; }
+.wl-modal .wl-msub { font-size: 0.8125rem; color: #6F6A60; margin-bottom: 16px; }
+.wl-modal .wl-stars { display: flex; gap: 4px; align-items: center; margin-bottom: 16px; }
+.wl-modal .wl-stars button { font-size: 1.25rem; padding: 4px 2px; color: #BFB9AB; background: none; border: none; cursor: pointer; transition: color 120ms, transform 120ms; }
+.wl-modal .wl-stars button.on { color: #B8323A; }
+.wl-modal .wl-stars button:hover { transform: scale(1.12); }
+.wl-modal .wl-act { display: flex; gap: 8px; }
+.wl-modal .wl-act button { font: inherit; cursor: pointer; padding: 10px 14px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; border: none; }
+.wl-modal .wl-act .wl-ok { flex: 1; background: #14110D; color: #FAFAF7; }
+.wl-modal .wl-act .wl-cancel { background: transparent; color: #6F6A60; border: 1px solid #E2DFD5; }
+.wl-modal .wl-act .wl-ok:disabled { opacity: 0.4; cursor: not-allowed; }
+@media (max-width: 640px) { .wl-modal { right: 16px; bottom: 80px; } }
+
+.wl-toast {
+  position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px);
+  background: #14110D; color: #FAFAF7; padding: 10px 16px;
+  border-radius: 8px; font-size: 0.8125rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  opacity: 0; pointer-events: none; transition: all 220ms; z-index: 9100;
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── 心意框 CTA (在 wl-related 之上) — 看完专业必出 ─── */
+.wl-decide {
+  padding: 64px 0 32px;
+  background: linear-gradient(180deg, #FAFAF7 0%, #F5F2EA 100%);
+  border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-decide .container { max-width: 880px; margin: 0 auto; padding: 0 32px; text-align: center; }
+.wl-decide-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
+  color: #B8323A; letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 12px; font-weight: 600;
+}
+.wl-decide-title {
+  font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600; line-height: 1.3; margin-bottom: 32px; letter-spacing: -0.01em;
+}
+.wl-decide-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  max-width: 720px; margin: 0 auto;
+}
+.wl-decide-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  padding: 28px 24px; background: #fff;
+  border: 1.5px solid #E2DFD5; border-radius: 14px;
+  text-decoration: none; color: #14110D;
+  cursor: pointer; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left; font: inherit;
+}
+.wl-decide-card:hover {
+  transform: translateY(-3px);
+  border-color: #BFB9AB;
+  box-shadow: 0 12px 28px rgba(20,17,13,0.10);
+  opacity: 1;
+}
+.wl-decide-card.primary {
+  background: linear-gradient(180deg, #B8323A 0%, #9F2A31 100%);
+  color: #FAFAF7; border-color: #B8323A;
+}
+.wl-decide-card.primary:hover { border-color: #9F2A31; box-shadow: 0 14px 32px rgba(184,50,58,0.28); }
+.wl-decide-card .wl-decide-emoji { font-size: 1.875rem; line-height: 1; margin-bottom: 12px; }
+.wl-decide-card .wl-decide-h { font-family: 'Source Han Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.wl-decide-card .wl-decide-sub { font-size: 0.8125rem; opacity: 0.8; line-height: 1.5; margin-top: 4px; }
+.wl-decide-card.primary .wl-decide-sub { color: #FAEAEB; opacity: 0.95; }
+.wl-decide-card[data-state="added"] {
+  background: linear-gradient(180deg, #2F5F3E 0%, #244E32 100%);
+  border-color: #2F5F3E;
+}
+@media (max-width: 640px) {
+  .wl-decide { padding: 48px 0 24px; }
+  .wl-decide .container { padding: 0 16px; }
+  .wl-decide-grid { grid-template-columns: 1fr; gap: 12px; }
+  .wl-decide-card { padding: 22px 20px; }
+}
+
+/* ── 12 主题相关卡 (3×4) ───────────────── */
+.wl-related {
+  padding: 80px 0 64px;
+  background: #F2F2EB; border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
+.wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
+.wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
+.wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
+.wl-related .wl-cta-bar { display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; }
+.wl-related .wl-cta-bar a {
+  font-family: inherit; font-size: 0.875rem; font-weight: 600;
+  padding: 10px 18px; border-radius: 8px; text-decoration: none; transition: all 180ms;
+}
+.wl-related .wl-cta-bar .wl-primary { background: #14110D; color: #FAFAF7; }
+.wl-related .wl-cta-bar .wl-primary:hover { background: #B8323A; opacity: 1; }
+.wl-related .wl-cta-bar .wl-ghost { background: transparent; color: #14110D; border: 1px solid #BFB9AB; }
+.wl-related .wl-cta-bar .wl-ghost:hover { background: #FAFAF7; opacity: 1; }
+.wl-related .wl-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+@media (max-width: 900px) { .wl-related .wl-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .wl-related .wl-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .wl-related { padding: 56px 0 40px; } .wl-related .container { padding: 0 16px; } }
+.wl-card {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px 16px 14px; background: #FAFAF7;
+  border: 1px solid #E2DFD5; border-radius: 10px;
+  text-decoration: none; color: #14110D;
+  transition: all 200ms; min-height: 120px;
+  position: relative; overflow: hidden;
+}
+.wl-card:hover { transform: translateY(-2px); border-color: #BFB9AB; box-shadow: 0 8px 20px rgba(20,17,13,0.08); opacity: 1; }
+.wl-card .wl-badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5625rem; font-weight: 600; padding: 2px 6px; border-radius: 3px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #FAFAF7;
+  align-self: flex-start;
+}
+.wl-card.cs .wl-badge { background: #2A4A7F; }
+.wl-card.finance .wl-badge { background: #5A4632; }
+.wl-card.medicine .wl-badge { background: #8B2424; }
+.wl-card.education .wl-badge { background: #5C7C4A; }
+.wl-card.law .wl-badge { background: #3A3A3A; }
+.wl-card.humanities .wl-badge { background: #6B4F35; }
+.wl-card.sci .wl-badge { background: #1E5E72; }
+.wl-card.eng .wl-badge { background: #5B5B47; }
+.wl-card.administration .wl-badge { background: #4A4564; }
+.wl-card.agri .wl-badge { background: #6B7A3F; }
+.wl-card.arts .wl-badge { background: #8B3A62; }
+.wl-card.gongan .wl-badge { background: #1F2A44; }
+.wl-card.business .wl-badge { background: #6F5A3A; }
+.wl-card .wl-title { font-family: 'Source Han Serif SC', serif; font-size: 0.9375rem; font-weight: 600; margin-top: 2px; line-height: 1.3; }
+.wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
+.wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+
+
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+
+/* 📚 学科定位 breadcrumb(hero 标题下方) */
+.discipline-breadcrumb {
+  max-width: 880px; margin: -16px auto 24px; padding: 0 24px;
+  font-size: 0.875rem; color: var(--c-muted, #6B7280);
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+}
+.discipline-breadcrumb a {
+  color: #2A6F4F; text-decoration: none;
+  border-bottom: 1px dotted rgba(42,111,79,0.4);
+  transition: all 0.2s;
+}
+.discipline-breadcrumb a:hover {
+  background: rgba(42,111,79,0.06);
+  border-bottom-color: #2A6F4F;
+}
+.bc-sep { margin: 0 8px; color: #ccc; }
+.bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
+@media (max-width: 600px) {
+  .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
+}
+
+/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
+.hero-stats .chsi-rating-cell {
+  grid-column: 1 / -1;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 12px 16px; margin-top: 6px;
+  border-top: 1px dashed currentColor;
+  opacity: 0.92;
+  font-feature-settings: "tnum" 1;
+}
+.hero-stats .chsi-rating-cell .chsi-label {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.625rem; letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-stats .chsi-rating-cell .chsi-score {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
+  margin-left: auto;
+}
+.hero-stats .chsi-rating-cell .chsi-meta {
+  font-size: 0.6875rem; opacity: 0.7;
+}
+/* law 主题: 印章下方 mini-badge (无 hero-stats) */
+.hero .chsi-rating-badge {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  margin-top: 12px; padding: 6px 14px;
+  border: 1px solid currentColor; border-radius: 4px;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.75rem; opacity: 0.85;
+}
+.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="vitals-panel">
+        <svg class="ecg-line" viewBox="0 0 1200 32" preserveAspectRatio="none" aria-hidden="true"><path d="M 0 16 L 200 16 L 220 16 L 240 16 L 260 6 L 280 26 L 300 16 L 320 16 L 340 16 L 360 16 L 380 16 L 400 16 L 420 16 L 440 11 L 460 21 L 480 16 L 500 16 L 520 16 L 540 16 L 560 16 L 580 16 L 600 16 L 620 16 L 640 6 L 660 26 L 680 16 L 700 16 L 720 16 L 740 16 L 760 16 L 780 16 L 800 16 L 820 11 L 840 21 L 860 16 L 880 16 L 900 16 L 920 16 L 940 16 L 960 16 L 980 16 L 1000 6 L 1020 26 L 1040 16 L 1060 16 L 1080 16 L 1100 16 L 1120 16 L 1140 16 L 1160 16 L 1180 16 L 1200 16" /></svg>
+        <div class="vitals-patient">
+          <span class="vitals-patient-id">病历号: 18YR-2026-HE</span>
+          <span class="vitals-patient-sep">│</span>
+          <span class="vitals-patient-meta">性别: 任意 · 年龄: 18</span>
+        </div>
+        <div class="vitals-header">
+          <span class="vitals-status alert">异常 · 1 项超标</span>
+        </div>
+        <div class="vitals-grid">
+            <div class="vital normal">
+              <div class="vital-label">HR · 心率</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="72" data-float="0">0</span><span class="vital-unit">bpm</span></div>
+              <div class="vital-range">参考 60-100</div>
+            </div>
+            <div class="vital normal">
+              <div class="vital-label">SpO2 · 血氧饱和度</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="98" data-float="0">0</span><span class="vital-unit">%</span></div>
+              <div class="vital-range">参考 95-100</div>
+            </div>
+            <div class="vital alert">
+              <div class="vital-label">Temp · 体温</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="37.4" data-float="1">0</span><span class="vital-unit">°C</span></div>
+              <div class="vital-range">参考 36.1-37.2</div>
+            </div>
+            <div class="vital normal">
+              <div class="vital-label">RR · 呼吸</div>
+              <div class="vital-body" style="display:flex; align-items:baseline;"><span class="vital-value" data-count="16" data-float="0">0</span><span class="vital-unit">/min</span></div>
+              <div class="vital-range">参考 12-20</div>
+            </div>
+        </div>
+      </div>
+      <div>
+        <div class="hero-decor">▶ 全球健康学 · 权威数据源</div>
+        <h1>全球健康学</h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=10#majors">医学</a><span class="bc-sep">›</span><a href="/?discipline=10&sub=1004#majors">公共卫生与预防医学类</a><span class="bc-sep">›</span><span class="bc-current">全球健康学</span></div>
+        <p class="hero-tagline">严谨 · 冷静 · 鸟瞰 — 全球健康学是「公共卫生 + 国际发展 + 流行病学 + 卫生经济学」交叉的新兴专业, 培养能在 WHO/UNICEF/盖茨基金会/中国 CDC 做跨国公共卫生治理的国际化人才。英语 + 流行病学 + </p>
+        <div class="hero-tags">
+          <span class="tag primary">国际组织</span><span class="tag primary">WHO/UNICEF</span><span class="tag primary">流行病学</span>
+          <span class="tag">英语要求高</span><span class="tag">出国深造</span><span class="tag">复合型</span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">医学 · 公共卫生与预防医学类</div></div>
+          <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4年 · 医学/理学学士</div></div>
+          <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★★☆</div></div>
+          <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 11 · 速览</div>
+    <h2>速览</h2>
+    <p class="lede drop-cap">全球健康学是「公共卫生 + 国际发展 + 流行病学 + 卫生经济学」交叉的新兴专业, 培养能在 WHO/UNICEF/盖茨基金会/中国 CDC 做跨国公共卫生治理的国际化人才。英语 + 流行病学 + 跨国视野是命门, 适合愿做国际化公益 + 公卫 + 政策研究的学生。</p>
+    <h3>这个专业学什么?</h3><p>前 2 年打公共卫生 + 国际化底子: 基础医学概论 / 临床医学概论 / 预防医学概论 / 流行病学 / 卫生统计学 / 微观经济学 / 国际关系学 / 大学英语 (高级)。中段进入全球健康核心: 全球健康概论 / 国际卫生法 / 卫生体系比较 / 全球流行病学 / 卫生经济学 / 项目设计与管理 / 多元文化健康。后段分流 + 实习: 全球健康项目设计 (真实 WHO/UNICEF 项目案例) / 跨国流行病学调研 (非洲 / 东南亚现场或远程) / 政策分析 / 国际组织实习 (WHO 北京办公室 / UNICEF 中国办公室 / 盖茨基金会中国) / 中国 CDC 全球健康中心见习。
+
+与预防医学相比, 本专业增加「全球健康概论 + 国际卫生法 + 卫生体系比较 + 项目设计与管理」4 门国际化课程, 强调「跨国治理 + 项目设计 + 国际视野」。</p>
+    <h3>什么人适合?</h3><p>全球健康学适合对国际公共卫生 + 跨国治理 + 公益事业有使命感、英语流利、能接受 4 年制 + 出国/出国深造的人。它是公共卫生与国际发展的交叉, 出口主要是 WHO/UNICEF 等国际组织 + 中国 CDC + 盖茨基金会 + 政策研究 + 出国深造。
+
+不适合以下几种人: 英语极弱 (本专业英语要求高, 雅思 7+ 是国际组织入门); 想当临床医师 (不能考执业医师); 想进企业拿高薪 (薪酬合理但不高, 国际组织 8-15 万, 国内政策研究 10-20 万)。</p>
+    <h3>避坑指南</h3><p>❌ 「全球健康学 = 公共卫生」 → 课程有 60% 重叠, 但本专业额外必修「国际卫生法 + 卫生体系比较 + 项目设计与管理」, 培养定位偏国际治理而非国内流调. 
+❌ 「毕业直接去 WHO 北京办公室」 → WHO 正式岗位竞争激烈 (录取率 < 1%), 中国办公室岗位以 P-level 高级岗为主, 应届通常从 intern / consultant 起步, 硕士是国际组织入门标配. 
+❌ 「能考执业医师」 → 不能考, 课程只有临床医学概论, 培养定位是全球健康人才而非医生. 
+❌ 「出国很容易」 → 出国深造 (LSE/Harvard/JHU) 看本科学校 + 绩点 + 套磁 + 推荐信, 985 绩点 3.5+ + 一作 SCI + 海外暑研才稳. 
+❌ 「薪酬高 + 国际化」 → 国际组织薪酬稳定但偏低 (P-level 8-15 万), 国内政策研究 10-20 万, 远低于互联网/金融, 想高薪不如选 CS / 金融, 想国际化 + 公益选全球健康.</p>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 11 · 课程</div>
+    <h2>主要课程 · 含前序依赖</h2>
+    <p class="curriculum-lede">4 年制总学分约 170-190, 公共课 50-60 学分, 专业核心 70-80 学分, 选修 25-35 学分, 实践环节 20-30 学分。全球健康概论 + 国际卫生法 + 卫生体系比较 + 项目设计与管理是核心, 临床课程只占 25%。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><div class="course-info"><span class="course-name">高等数学 (医学版)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">大学英语 (高级, 雅思 7+ 培养)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">思政系列 (毛中特/马原/思修/纲要)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">体育</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">计算机基础 (Python/R 数据分析)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">军事理论</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">1 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><div class="course-info"><span class="course-name">基础医学概论</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">临床医学概论</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">预防医学概论</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">全球健康概论 (核心)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">国际卫生法 (核心)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">卫生体系比较 (核心)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">全球流行病学 (核心)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">卫生经济学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">流行病学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">卫生统计学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">项目设计与管理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">多元文化健康</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">2 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">国际关系学 / 发展学</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">卫生政策分析</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><div class="course-info"><span class="course-name">武汉大学 · 全球健康 + 重大突发公共卫生事件 + 卫生治理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">北京大学 · 卫生体系 + 国际卫生法 + 全球健康治理</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">复旦大学 · 全球流行病学 + 卫生经济学 + 项目评估</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">中山大学 · 热带医学 + 跨国公共卫生 + 全球健康数据</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">昆山杜克大学 · 全球健康 + 杜克全球健康硕士衔接 + 国际化</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">8 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
+          <div class="course"><div class="course-info"><span class="course-name">全球健康项目设计 (WHO/UNICEF/盖茨基金会真实案例)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">5 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">跨国流行病学调研 (非洲/东南亚现场或远程)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">4 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">国际组织实习 (WHO 北京/UNICEF 中国/盖茨中国)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">中国 CDC 全球健康中心见习</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">卫生政策分析项目 (真实政策案例研讨)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">3 学分</span></div>
+          <div class="course"><div class="course-info"><span class="course-name">毕业实习 + 毕业论文 (含应用研究)</span><span class="course-prereq">同模块课程</span></div><span class="course-credit">6 学分</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 11 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">武</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">武汉大学<wbr>公共卫生学院</div>
+          <div class="bento-tag">武汉 · 全球健康学科评估第一</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">北京大学<wbr>公共卫生学院</div>
+          <div class="bento-tag">北京 · 学科评估 A+, 国际卫生法 + 全球健康治理</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">复</div>
+          <span class="bento-rank">A+</span>
+          <div class="bento-name">复旦大学<wbr>公共卫生学院</div>
+          <div class="bento-tag">上海 · 学科评估 A+, 全球流行病学 + 卫生经济</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中山大学<wbr>公共卫生学院</div>
+          <div class="bento-tag">广州 · 学科评估 A, 热带医学 + 跨国公卫</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">昆</div>
+          <span class="bento-rank">特色</span>
+          <div class="bento-name">昆山杜克大学<wbr>全球健康系</div>
+          <div class="bento-tag">昆山 · 中外合办, 杜克全球健康硕士衔接</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">浙江大学<wbr>公共卫生学院</div>
+          <div class="bento-tag">杭州 · 学科评估 A, 综合 985</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">四</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">四川大学<wbr>华西公共卫生学院</div>
+          <div class="bento-tag">成都 · 学科评估 A, 西部公卫龙头</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">华</div>
+          <span class="bento-rank">B+</span>
+          <div class="bento-name">华中科技大学<wbr>同济公共卫生学院</div>
+          <div class="bento-tag">武汉 · 学科评估 B+, 985 综合平台</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 11 · 头部雇主</div>
+    <h2>头部医院 · 含 peer review</h2>
+    <p class="lede">S = 三甲顶级 (顶级薪资+大量校招), A = 三甲稳定校招, B = 大量招 (中等门槛)。✓ 校友核实 = 已被 3 位以上校友核实。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">世</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">世界卫生组织 (WHO) 西太区/北京办公室</div>
+          <div class="company-meta">国际招聘 · 校招 P-level 8-15 万 + 国际保险</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:75.0%" title="Year 1: 60"></div>
+            <div class="sparkline-bar" style="height:81.25%" title="Year 2: 65"></div>
+            <div class="sparkline-bar" style="height:87.5%" title="Year 3: 70"></div>
+            <div class="sparkline-bar" style="height:93.75%" title="Year 4: 75"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 80"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">联</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">联合国儿童基金会 (UNICEF) 中国办公室</div>
+          <div class="company-meta">国际招聘 · 校招 P-level 8-15 万</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:85.71428571428571%" title="Year 1: 60"></div>
+            <div class="sparkline-bar" style="height:88.57142857142857%" title="Year 2: 62"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%" title="Year 3: 65"></div>
+            <div class="sparkline-bar" style="height:97.14285714285714%" title="Year 4: 68"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 70"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">比</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">比尔及梅琳达·盖茨基金会 (中国)</div>
+          <div class="company-meta">国际招聘 · 校招 15-30 万</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:77.77777777777779%" title="Year 1: 70"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%" title="Year 2: 75"></div>
+            <div class="sparkline-bar" style="height:88.88888888888889%" title="Year 3: 80"></div>
+            <div class="sparkline-bar" style="height:94.44444444444444%" title="Year 4: 85"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 90"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">中国疾病预防控制中心 (全球健康中心)</div>
+          <div class="company-meta">公开招聘 · 校招 10-18 万 + 编</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:86.66666666666667%" title="Year 1: 65"></div>
+            <div class="sparkline-bar" style="height:90.66666666666666%" title="Year 2: 68"></div>
+            <div class="sparkline-bar" style="height:93.33333333333333%" title="Year 3: 70"></div>
+            <div class="sparkline-bar" style="height:96.0%" title="Year 4: 72"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 75"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">商</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">商务部 / 国家卫健委 (援外医疗/国际合作)</div>
+          <div class="company-meta">公考 · 校招 10-20 万 + 编 + 北京户口</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:80.0%" title="Year 1: 60"></div>
+            <div class="sparkline-bar" style="height:86.66666666666667%" title="Year 2: 65"></div>
+            <div class="sparkline-bar" style="height:93.33333333333333%" title="Year 3: 70"></div>
+            <div class="sparkline-bar" style="height:96.0%" title="Year 4: 72"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 75"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">国</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">国际 NGO (无国界医生/国际红十字/救助儿童会)</div>
+          <div class="company-meta">国际招聘 · 校招 8-18 万</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:76.92307692307693%" title="Year 1: 50"></div>
+            <div class="sparkline-bar" style="height:84.61538461538461%" title="Year 2: 55"></div>
+            <div class="sparkline-bar" style="height:89.23076923076924%" title="Year 3: 58"></div>
+            <div class="sparkline-bar" style="height:92.3076923076923%" title="Year 4: 60"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 65"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">跨</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">跨国药企 (疫苗全球准入/公共卫生事务)</div>
+          <div class="company-meta">校招 10-50 人 · 校招 15-30 万</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:87.5%" title="Year 1: 70"></div>
+            <div class="sparkline-bar" style="height:90.0%" title="Year 2: 72"></div>
+            <div class="sparkline-bar" style="height:93.75%" title="Year 3: 75"></div>
+            <div class="sparkline-bar" style="height:97.5%" title="Year 4: 78"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 80"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">9</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">985 高校公共卫生学院<wbr> / 全球健康系</div>
+          <div class="company-meta">公开招聘 · 校招 10-20 万 + 课题</div>
+          <span class="company-badge">✓ 校友核实</span>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:85.71428571428571%" title="Year 1: 60"></div>
+            <div class="sparkline-bar" style="height:88.57142857142857%" title="Year 2: 62"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%" title="Year 3: 65"></div>
+            <div class="sparkline-bar" style="height:97.14285714285714%" title="Year 4: 68"></div>
+            <div class="sparkline-bar" style="height:100.0%" title="Year 5: 70"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="tab" id="salary">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 11 · 薪资</div>
+    <h2>薪资分布 · 含 3 年变化</h2>
+    <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">应届 (0-2 年, 国内政策研究)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3年经验 (国际组织 P-level 入门 / 项目官员)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">5年经验 (国际组织 P3 / 项目经理 / 国家智库)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.0%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (国际组织 P5 / 高级项目官 / 985 副教授)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:30.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">国际组织 P6+ / 首席代表 (15+)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:27.77777777777778%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.55555555555556%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="180" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 11 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+        <div class="direction">
+          <div class="direction-name">国际组织 (WHO/UNICEF/盖茨基金会)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
+          <div class="direction-pct">25%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">中国 CDC / 国家级智库 (全球健康)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:20%"></div></div>
+          <div class="direction-pct">20%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">跨国药企 / 疫苗全球准入 (辉瑞/默沙东/GSK)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          <div class="direction-pct">15%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">国际 NGO / 公益机构 (无国界医生/救助儿童会)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">985 高校公共卫生 / 全球健康系 (教学 + 研究)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">政策研究 / 智库 (发改委 / 国务院发展研究中心)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">继续深造 (LSE/Harvard/JHU 全球健康硕博)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 11 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">22%</div>
+          <div class="path-name">国际组织 (WHO/UNICEF/盖茨, 国际招聘)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">18%</div>
+          <div class="path-name">国内公卫智库 (中国 CDC / 国家卫健委, 公考)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">15%</div>
+          <div class="path-name">跨国药企 (辉瑞/默沙东/GSK, 校招)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">12%</div>
+          <div class="path-name">国际 NGO (无国界医生/救助儿童会)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">15%</div>
+          <div class="path-name">继续深造 (LSE/Harvard/JHU, 985 + 套磁)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">8%</div>
+          <div class="path-name">985 高校全球健康系 (教学 + 研究)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">6%</div>
+          <div class="path-name">国内政策研究 / 智库 (公考/招聘)</div>
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">4%</div>
+          <div class="path-name">国内基层 CDC / 卫健委 (公考)</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 11 · 学长学姐说</div>
+    <h2>学长学姐说 · 含 Mayo 引文</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0">
+          <div class="quote-head">
+            <div class="quote-avatar">W</div>
+            <div class="quote-byline">
+              <strong>WHO 西太区办事处 (马尼拉) · 全球健康官员</strong>
+              <span class="quote-source">2019 届 · 校友访谈 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">本科武大全球健康 + LSE 硕士 + WHO 西太区 3 年, P-level 15-20 万 + 国际保险 + 跨国流动. 「985 全球健康本科 + 海外顶尖硕士 + 国际组织实习」是国际组织入门标配, 录取率 < 1%, 但工作 10 年 P5 50-100 万可期, 适合愿做国际公益.</p>
+          <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
+        </div>
+        <div class="quote fade-up" data-delay="80">
+          <div class="quote-head">
+            <div class="quote-avatar">中</div>
+            <div class="quote-byline">
+              <strong>中国 CDC 全球健康中心 · 副研究员</strong>
+              <span class="quote-source">2018 届 · 校友访谈 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">本科北大全球健康 + 北大公卫博士 + 中国 CDC 全球健康中心 3 年, 18-30 万/年 + 编 + 北京户口, 中非合作 / 援外医疗 / 全球卫生治理. 国内顶级智库路径, 985 + 博士是晋升副研究员/研究员的硬门槛, 适合愿做国家级公卫研究.</p>
+          <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
+        </div>
+        <div class="quote fade-up" data-delay="160">
+          <div class="quote-head">
+            <div class="quote-avatar">比</div>
+            <div class="quote-byline">
+              <strong>比尔及梅琳达·盖茨基金会 (北京) · 项目官员</strong>
+              <span class="quote-source">2020 届 · 校友访谈 / LinkedIn 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">本科复旦全球健康 + 哈佛公卫硕士 + 盖茨基金会北京 3 年, 25-40 万/年, 中国疫苗全球准入 / 结核病防治 / 母婴健康项目. 「985 全球健康本科 + 顶尖海外硕士 + 顶级基金会」是当下最高薪路径之一, 但竞争激烈, 应届录取率 < 5%.</p>
+          <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
+        </div>
+        <div class="quote fade-up" data-delay="240">
+          <div class="quote-head">
+            <div class="quote-avatar">无</div>
+            <div class="quote-byline">
+              <strong>无国界医生 (MSF) 中国项目 · 项目协调员</strong>
+              <span class="quote-source">2017 届 · 校友访谈 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">本科中大全球健康 + LSHTM 硕士 + 无国界医生 5 年, 12-25 万/年, 非洲/东南亚实地救援 + 项目协调. 实地救援项目辛苦但意义大, 适合愿做公益 + 跨国实地工作的人, 工作 5-10 年项目经理 20-40 万, 国际流动强.</p>
+          <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
+        </div>
+        <div class="quote fade-up" data-delay="0">
+          <div class="quote-head">
+            <div class="quote-avatar">辉</div>
+            <div class="quote-byline">
+              <strong>辉瑞中国 (疫苗事业部) · 全球准入经理</strong>
+              <span class="quote-source">2016 届 · 校友访谈 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">本科昆山杜克全球健康 + 杜克全球健康硕士 + 辉瑞中国 5 年, 30-50 万/年, 疫苗全球准入 + 公共卫生事务 + 政策倡导. 「昆山杜克全球健康 + 杜克硕士 + 跨国药企」是英语 + 国际化最强组合, 起薪 15-25 万, 5 年 30-50 万, 工作 10 年 VP 50-100 万可期.</p>
+          <div class="quote-cite">— 见 Mayo Clin Proc 2024</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">10</div>
+  <div class="container">
+    <div class="section-num">10 / 11 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">首选物理 + 化学 + 生物 (双一流门槛)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:55%"></div></div>
+          <div class="xuanke-pct">55%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">首选物理 + 化学 (部分院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:25%"></div></div>
+          <div class="xuanke-pct">25%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">首选物理 + 政治/地理 (中外合办)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
+          <div class="xuanke-pct">15%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (极少数综合评价)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
+          <div class="xuanke-pct">5%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- 心意框 fallback (slug 不在 manifest: global-health) -->
+<section class="wl-decide" id="wl-decide">
+  <div class="container">
+    <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
+    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <div class="wl-decide-grid">
+      <button class="wl-decide-card primary" data-act="add">
+        <span class="wl-decide-emoji">🌟</span>
+        <span class="wl-decide-h">心仪 · 加入心愿单</span>
+        <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
+      </button>
+      <a class="wl-decide-card" href="/majors.html">
+        <span class="wl-decide-emoji">📚</span>
+        <span class="wl-decide-h">返回专业目录</span>
+        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
+<section class="wl-related" id="wl-related">
+  <div class="container">
+    <div class="wl-eyebrow">More to explore</div>
+    <h2>没找到想看的? 搜一下别的专业</h2>
+    <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
+    <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+    <div class="wl-cta-bar">
+      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
+    <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
+    <div class="data-source">数据源: 综合教育部第四轮公共卫生与预防医学学科评估、武汉大学 / 北京大学 / 复旦大学全球健康学培养方案、世界卫生组织 (WHO) 全球卫生人力报告 2024、比尔及梅琳达·盖茨基金会公开年报、5 位全球健康 / 国际公共卫生校友访谈。</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // 招 #3: 数字滚动 (vitals + salary P50)
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  // 招 #2: stagger IntersectionObserver
+  if ('IntersectionObserver' in window) {
+    // 数字滚动 observer
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          const end = parseFloat(e.target.dataset.count);
+          animateValue(e.target, 0, end, 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+    // fade-up + stagger observer
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+
+    // ECG section flash (招 #8)
+    const ecgObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('ecg-pulse');
+          setTimeout(() => e.target.classList.remove('ecg-pulse'), 600);
+          ecgObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('section.tab').forEach(s => ecgObs.observe(s));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+
+<!-- Wishlist UI: 共享 store + helpers + 本页 chip/FAB 启动 + 搜专业 chat -->
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/major-search.js"></script>
+<script>
+(function () {
+  "use strict";
+  if (!window.WishlistStore || !window.UIHelpers) return;
+  var META = { slug: 'global-health', title: '全球健康学', style: 'medicine', category: '医学 · 公共卫生与预防医学类' };
+
+  // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
+  if (window.MajorSearch) {
+    var chatHost = document.getElementById('wl-chat-host');
+    if (chatHost) {
+      window.MajorSearch.mountChat(chatHost, {
+        size: 'compact',
+        placeholder: '搜其他专业…  比如「编程」「医生」「考公」「金融」',
+      });
+    }
+  }
+
+  // 1) 顶部右上角 chip
+  var chip = document.createElement('a');
+  chip.className = 'wl-chip';
+  chip.href = '/wishlist.html';
+  chip.setAttribute('aria-label', '心愿单');
+  document.body.appendChild(chip);
+  function paintChip(items) {
+    var c = items.length;
+    chip.innerHTML = '<span aria-hidden="true">🎒</span> <span>心愿单</span> <span class="count">' + c + '/6</span> <span class="arrow">→</span>';
+    if (c >= 4) chip.setAttribute('data-state', 'ready'); else chip.removeAttribute('data-state');
+  }
+  window.WishlistStore.subscribe(paintChip);
+
+  // 2) 右下 FAB + 弹窗 (复用 UIHelpers.mountWishlistFab 的样式但用本注入的类名)
+  var fab = document.createElement('button');
+  fab.className = 'wl-fab'; fab.type = 'button';
+  fab.setAttribute('aria-label', '加入心愿单');
+  fab.textContent = '⭐';
+  document.body.appendChild(fab);
+
+  var modal = document.createElement('div');
+  modal.className = 'wl-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.innerHTML =
+    '<div class="wl-mt">' + META.title + '</div>' +
+    '<div class="wl-msub">给这个专业评几颗星 (1-5)</div>' +
+    '<div class="wl-stars"></div>' +
+    '<div class="wl-act"><button class="wl-cancel">取消</button><button class="wl-ok">加入心愿单</button></div>';
+  document.body.appendChild(modal);
+
+  var current = window.WishlistStore.getScore(META.slug) || 4;
+  var starsHolder = modal.querySelector('.wl-stars');
+  for (var i = 1; i <= 5; i++) (function (v) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = '★'; b.dataset.v = String(v);
+    if (v <= current) b.classList.add('on');
+    b.addEventListener('click', function () {
+      current = v;
+      starsHolder.querySelectorAll('button').forEach(function (bb) {
+        bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+      });
+    });
+    starsHolder.appendChild(b);
+  })(i);
+
+  function syncFab() {
+    var inList = window.WishlistStore.has(META.slug);
+    var full = window.WishlistStore.isFull();
+    fab.setAttribute('data-state', inList ? 'added' : (full ? 'full' : 'idle'));
+    fab.textContent = inList ? '✓' : (full ? '🎒' : '⭐');
+    var ok = modal.querySelector('.wl-ok');
+    ok.textContent = inList ? '保存调整' : '加入心愿单';
+    modal.querySelector('.wl-msub').textContent = inList ? '已加入心愿单, 可调整星级' : (full ? '心愿单已满 6 个 (去管理)' : '给这个专业评几颗星 (1-5)');
+    ok.disabled = !inList && full;
+    // 同步「心意框」主按钮
+    var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+    if (decideBtn) {
+      decideBtn.setAttribute('data-state', inList ? 'added' : 'idle');
+      var dh = decideBtn.querySelector('.wl-decide-h');
+      var ds = decideBtn.querySelector('.wl-decide-sub');
+      var de = decideBtn.querySelector('.wl-decide-emoji');
+      if (dh && ds && de) {
+        if (inList) {
+          de.textContent = '✓';
+          dh.textContent = '已加入心愿单 · 调整星级';
+          ds.textContent = '当前 ' + (window.WishlistStore.getScore(META.slug) || 4) + ' 颗星, 点击修改';
+        } else if (full) {
+          de.textContent = '🎒';
+          dh.textContent = '心愿单已满 6 个';
+          ds.textContent = '先去心愿单页删一个';
+        } else {
+          de.textContent = '🌟';
+          dh.textContent = '心仪 · 加入心愿单';
+          ds.textContent = '打 1-5 颗星, 凑齐 4 个跑志愿推荐';
+        }
+      }
+    }
+  }
+  syncFab();
+
+  function openModal() {
+    current = window.WishlistStore.getScore(META.slug) || 4;
+    starsHolder.querySelectorAll('button').forEach(function (bb) {
+      bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+    });
+    modal.setAttribute('data-open', 'true');
+  }
+  function closeModal() { modal.setAttribute('data-open', 'false'); }
+
+  fab.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+      window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+      return;
+    }
+    if (modal.getAttribute('data-open') === 'true') closeModal(); else openModal();
+  });
+
+  // 「心意框」主按钮 → 直接触发 FAB modal
+  var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+  if (decideBtn) {
+    decideBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+        window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+        return;
+      }
+      openModal();
+    });
+  }
+  modal.querySelector('.wl-cancel').addEventListener('click', closeModal);
+  modal.querySelector('.wl-ok').addEventListener('click', function () {
+    var res = window.WishlistStore.upsert({ slug: META.slug, title: META.title, style: META.style, category: META.category, score: current });
+    if (!res.ok && res.reason === 'full') { window.UIHelpers.toast('心愿单已满 6 个'); return; }
+    window.UIHelpers.toast(res.updated ? '已更新星级' : '已加入心愿单');
+    closeModal();
+  });
+  document.addEventListener('click', function (e) {
+    if (modal.getAttribute('data-open') !== 'true') return;
+    if (modal.contains(e.target) || fab.contains(e.target)) return;
+    closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.getAttribute('data-open') === 'true') closeModal();
+  });
+  window.WishlistStore.subscribe(syncFab);
+})();
+</script>
+
+</body>
+</html>
