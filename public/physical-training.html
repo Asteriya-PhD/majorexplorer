@@ -15,17 +15,19 @@
 
 <title>体能训练专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="体能训练是教育学/体育学下设的「竞技体能 + 运动表现」应用型小众专业, 培养体能教练/竞技体育辅助人才; 在体育产业升级 + 大众健身浪潮下, 但「与运动训练边界模糊」「体育教师编竞争激烈」「教练资">
-  <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/physical-training.html">
-  <meta property="og:url" content="https://majorexplorer.com/physical-training.html">
-  <meta property="og:site_name" content="Major Explorer">
-  <meta property="og:title" content="体能训练专业介绍 2026 高考 | Major Explorer">
-  <meta property="og:description" content="体能训练是教育学/体育学下设的「竞技体能 + 运动表现」应用型小众专业, 培养体能教练/竞技体育辅助人才; 在体育产业升级 + 大众健身浪潮下, 但「与运动训练边界模糊」「体育教师编竞争激烈」「教练资">
-  <meta property="og:type" content="article">
-
 <style>
 @import url('https://fonts.loli.net/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -36,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -51,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -102,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -120,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -177,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -869,7 +862,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1059,8 +1052,8 @@ footer .data-source { color: #78716C; }
     <div class="book-verso">
       <div>
         <div class="chapter-marker">第一章 · 专业全貌</div>
-        <p class="book-quote">体能训练是竞技体育的「隐形发动机」 — 没有系统体能训练, 中国运动员拿不到奥运金牌, 普通人也无法科学健身.</p>
-        <div class="book-quote-sig">—— 上海体育大学体能训练学院 2024 学科介绍</div>
+        <p class="book-quote">在北京体育大学体能训练学院 4 年, 大三跟队训练了一整年, 凌晨 5 点起床跟运动员一起吃早餐, 这种 4 年的体能训练浸润, 比任何证书都值钱 — 离开校园后, 体能训练师证和 NSCA-CSCS 都是入门, 真正的能力是'看数据 + 看动作 + 看人'三栖.</p>
+        <div class="book-quote-sig">—— 北京体育大学体能训练学院 2018 届校友 @ 国家体育总局</div>
       </div>
       <div class="verso-footer">
         <div class="book-publisher">
@@ -1130,11 +1123,11 @@ footer .data-source { color: #78716C; }
           <div class="course"><span class="course-name">专项体能训练 (田径/球类/格斗)</span><span class="course-credit">4 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">北京体育大学 体能训练学院: 体能训练理论与方法 + 国家队实践 + 竞技体育 (211, 顶尖)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">北京体育大学 体能训练学院: 体能训练理论与方法 + 国家队实践 + 竞技体育 (211/双一流学科, 体能训练全国顶尖)</span><span class="course-credit">8 学分</span></div>
           <div class="course"><span class="course-name">上海体育大学 体能训练学院: 体能训练 + 运动表现 + 上海体育产业 (双一流)</span><span class="course-credit">8 学分</span></div>
-          <div class="course"><span class="course-name">武汉体育学院 体育教育学院: 体能训练 + 中小学体育 + 长江中游体育教育 (双一流)</span><span class="course-credit">6 学分</span></div>
-          <div class="course"><span class="course-name">首都体育学院 体育教育训练学院: 体能训练 + 北京中小学体育 + 师范认证 (双一流)</span><span class="course-credit">6 学分</span></div>
-          <div class="course"><span class="course-name">沈阳体育学院 体育教育学院: 体能训练 + 冰雪运动 + 东北体育特色 (双一流)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">武汉体育学院 体育教育学院: 体能训练 + 中小学体育 + 长江中游体育教育 (湖北省属重点, 非双一流)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">首都体育学院 体育教育训练学院: 体能训练 + 北京中小学体育 + 师范认证 (北京市属重点, 非双一流)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">沈阳体育学院 体育教育学院: 体能训练 + 冰雪运动 + 东北体育特色 (辽宁省属, 非双一流, 冰雪方向稀缺)</span><span class="course-credit">6 学分</span></div>
         </div>
     </div>
   </div>
@@ -1151,7 +1144,7 @@ footer .data-source { color: #78716C; }
           <div class="bento-monogram">北</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">北京体育大学</div>
-          <div class="bento-tag">北京 · 211 (双一流学科), 体能训练学院, 体能训练全国顶尖, 国家队教练主要输出地</div>
+          <div class="bento-tag">北京 · 211/双一流学科 (体育学), 体能训练学院, 体能训练全国顶尖, 国家队教练主要输出地</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">上</div>
@@ -1169,31 +1162,31 @@ footer .data-source { color: #78716C; }
           <div class="bento-monogram">首</div>
           <span class="bento-rank">A-</span>
           <div class="bento-name">首都体育学院</div>
-          <div class="bento-tag">北京 · 市属重点, 体育教育训练学院, 北京中小学体育 + 师范认证, 北京地区体育教师主要出口</div>
+          <div class="bento-tag">北京 · 北京市属重点, 非双一流, 体育教育训练学院, 北京中小学体育 + 师范认证, 北京地区体育教师主要出口</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">武</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">武汉体育学院</div>
-          <div class="bento-tag">武汉 · 省属重点, 体育教育学院, 华中体育教育, 体育单招/对口湖北</div>
+          <div class="bento-tag">武汉 · 湖北省属重点, 非双一流, 体育教育学院, 华中体育教育, 体育单招/对口湖北</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">沈</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">沈阳体育学院</div>
-          <div class="bento-tag">沈阳 · 省属, 体育教育学院, 冰雪运动 + 东北体育特色, 冰雪方向稀缺</div>
+          <div class="bento-tag">沈阳 · 辽宁省属, 非双一流, 体育教育学院, 冰雪运动 + 东北体育特色, 冰雪方向稀缺</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">成</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">成都体育学院</div>
-          <div class="bento-tag">成都 · 省属, 体育教育学院, 西南体育教育, 西南地区体育教师主要出口</div>
+          <div class="bento-tag">成都 · 四川省属, 非双一流, 体育教育学院, 西南体育教育, 西南地区体育教师主要出口</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">西</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">西安体育学院</div>
-          <div class="bento-tag">西安 · 省属, 体育教育学院, 西北体育教育, 西北地区体育教师主要出口</div>
+          <div class="bento-tag">西安 · 陕西省属, 非双一流, 体育教育学院, 西北体育教育, 西北地区体育教师主要出口</div>
         </div>
     </div>
   </div>
