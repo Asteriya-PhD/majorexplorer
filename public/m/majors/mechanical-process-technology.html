@@ -3,20 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#6B4F35">
+<meta name="theme-color" content="#5B5B47">
 <link rel="manifest" href="../manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
-<title>国际新闻与传播 · Major Explorer</title>
+<title>机械工艺技术 · Major Explorer</title>
 <link rel="stylesheet" href="../css/base.css">
 <link rel="stylesheet" href="../css/topbar.css">
 <link rel="stylesheet" href="../css/dock.css">
 <style>
   :root {
-    --theme:       #6B4F35;
-    --theme-deep:  #3D2E1F;
-    --theme-soft:  #F0E8DC;
+    --theme:       #5B5B47;
+    --theme-deep:  #3D3D2E;
+    --theme-soft:  #ECECE0;
     --theme-gold:  #B5934A;
+    /* 预定义整段 gradient 字符串 (避免 Chromium 双 var() in linear-gradient 解析 bug) */
+    --gradient-theme:     linear-gradient(180deg, #5B5B47 0%, #3D3D2E 100%);
+    --gradient-theme-h:   linear-gradient(90deg, #5B5B47 0%, #B5934A 100%);
+    --gradient-radial:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%), linear-gradient(180deg, #5B5B47 0%, #3D3D2E 100%);
   }
   .topbar.is-detail {
     grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
@@ -41,7 +45,7 @@
   .top-btn .heart-off { color: var(--muted-2); }
 
   /* hero 右上角手浮爱心 */
-  .hero { position: relative; }
+  .hero.is-detail { position: relative; }
   .hero-heart {
     position: absolute;
     top: -8px; right: 18px;
@@ -100,6 +104,21 @@
     animation: fadeIn 240ms ease-out;
   }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ───────── 滚动进度条 (顶部 2px, 主色) ───────── */
+  .scroll-progress {
+    position: fixed; top: var(--topbar-h); left: 0; right: 0;
+    height: 2px; z-index: 49;
+    background: transparent; pointer-events: none;
+  }
+  .scroll-progress::after {
+    content: ""; display: block;
+    height: 100%;
+    width: var(--p, 0%);
+    background: var(--gradient-theme-h);
+    box-shadow: 0 0 6px rgba(184,50,58,0.4);
+    transition: width 60ms linear;
+  }
   .wish-modal-card {
     position: relative; z-index: 1;
     width: 100%; max-width: 420px;
@@ -183,18 +202,16 @@
   .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
   .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
 
-  .hero {
+  .hero.is-detail {
     position: relative;
     padding: 32px 24px 36px;
-    background:
-      radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%),
-      linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    background: var(--gradient-radial);
     color: #F5F2EA;
     overflow: hidden;
     border-bottom: 0;
   }
-  .hero::before {
-    content: "国";
+  .hero.is-detail::before {
+    content: "机";
     position: absolute;
     right: -8%; bottom: -8%;
     font-family: var(--font-heading);
@@ -204,7 +221,7 @@
     color: rgba(245,242,234,0.06);
     pointer-events: none; user-select: none;
   }
-  .hero > *:not(.hero-heart) { position: relative; z-index: 1; }
+  .hero.is-detail > *:not(.hero-heart) { position: relative; z-index: 1; }
   .hero-crumb {
     font-family: var(--font-num);
     font-size: 0.6875rem; font-weight: 600;
@@ -300,7 +317,7 @@
   }
   .sal-cell-fill {
     display: block; height: 100%;
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
 
@@ -363,7 +380,7 @@
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 0%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .xk-pct {
     position: absolute; right: 0; top: -2px;
@@ -401,7 +418,7 @@
   .ds-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 0%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .ds-study .ds-fill {
     background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
@@ -441,7 +458,7 @@
   .emp-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 0%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .emp-desc {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -602,7 +619,7 @@
   .sal-bar::after {
     content: ""; position: absolute; left: 0; top: 0; bottom: 0;
     width: var(--w, 50%);
-    background: linear-gradient(90deg, var(--theme) 0%, var(--theme-gold) 100%);
+    background: var(--gradient-theme-h);
   }
   .sal-v {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
@@ -766,7 +783,7 @@
   .footer-cta {
     margin: 32px 16px 0;
     padding: 24px 20px;
-    background: linear-gradient(180deg, var(--theme) 0%, var(--theme-deep) 100%);
+    background: var(--gradient-theme);
     color: #FBF8F1;
     border-radius: 4px;
   }
@@ -815,36 +832,40 @@
 
 <header class="topbar is-detail">
   <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
-  <div class="top-crumb">国际新闻与传播 · </div>
+  <div class="top-crumb">机械工艺技术 · 080802</div>
   <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
 </header>
 
-<section class="hero">
+<!-- 滚动进度条 (顶部 2px, 主色) -->
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+<section class="hero is-detail">
   <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
     <span class="heart-bg"></span>
     <span id="heart-ico" class="heart-off">♡</span>
     <span class="heart-label" id="heart-label">收藏</span>
   </button>
-  <div class="hero-crumb"><span class="rule"></span>文学 > 新闻传播学类 · </div>
-  <h1 class="hero-title">国际新闻与传播</h1>
-  <div class="hero-sub">文学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
-  <p class="hero-tagline">让中国故事被世界准确听见, 让世界故事被中国深入理解.</p>
+  <div class="hero-crumb"><span class="rule"></span>工学 · 机械类 · 080802</div>
+  <h1 class="hero-title">机械工艺技术</h1>
+  <div class="hero-sub">工学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">机械工艺技术是把图纸变成零件的那门手艺 — 从歼-20 的钛合金框到手机摄像头模组的微米级精度, 工艺与工装是制造业的底层.</p>
 </section>
 
 <div class="stats-strip">
-  <div class="stat-cell"><span class="n">8<span class="unit">万</span></span><span class="l">入行中位</span></div>
-  <div class="stat-cell grad-tier" data-tier="中 13%"><span class="n">中 13%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell"><span class="n">10<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell grad-tier" data-tier="低 8%"><span class="n">低 8%</span><span class="l">深造需求</span></div>
   <div class="stat-cell"><span class="n">—<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
 
 <div class="tags-strip" id="tags-strip">
-  <span class="tag">国际新闻</span>
-<span class="tag">跨文化传播</span>
-<span class="tag">外语能力</span>
-<span class="tag">全球视野</span>
-<span class="tag">媒体融合</span>
-<span class="tag">文学学位</span>
-<span class="tag">对外叙事</span>
+  <span class="tag">机械制造工艺</span>
+<span class="tag">金属切削加工</span>
+<span class="tag">精密加工</span>
+<span class="tag">数控机床</span>
+<span class="tag">刀具与夹具</span>
+<span class="tag">工艺规划</span>
+<span class="tag">智能制造</span>
+<span class="tag">工业母机</span>
 </div>
 
 <article class="article" id="article">
@@ -854,7 +875,7 @@
         <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p class="lede">国际新闻与传播是「外语 + 国际视野 + 新闻专业」三栖复合文科. 真正的护城河从来不在学校, 在「对国际议题的持续关注 + 外语流利度 + 跨文化叙事能力」; 应届主流出口其实是「互联网出海 (TikTok/字节/SHEIN) + 4A 公关 + 跨国品牌」, 不是 BBC/纽约时报 — 央媒驻外首席 80-100 万是真实但极罕见.</p>
+        <p class="lede">机械工艺技术的核心是「金属切削加工 + 工艺规划 + 工装设计 + 数控编程」四栖, 它比机械设计制造及其自动化更偏「车间现场工艺」(工装 + 刀具 + 切削参数), 强机械制图 + 数控编程 + 工艺仿真功底是硬门槛; 在「高端数控机床国产化 + 精密加工 + 智能制造」风口下需求稳定, 但「产业地位低于机械设计 + 制造业整体下行 + 5 年后转工艺师/车间主任是主流」是该专业三大现实变量.</p>
         
       </div>
     </section>
@@ -867,7 +888,7 @@
       <div class="art-body">
         <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
       </div>
-      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">学了就能去 BBC / 纽约时报</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">国内培养体系主要面向「中文外宣 + 跨文化沟通」, 国际媒体 (BBC/路透/纽约时报) 中文岗位每年全国不超过 50 个, 多数要求 985 本硕 + 英文母语水平 + 多年实战经验; 真正能进国际媒体中国分社的应届不到 1%.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">国际新闻 = 翻译</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">翻译只是工具, 国际新闻与传播的核心是「跨文化叙事 + 全球议题研究」. 应届主流出口是「互联网出海 (TikTok/字节/SHEIN) + 4A 公关 (奥美/蓝标) + 跨国品牌 (联合利华/宝洁)」, 不是「翻译公司」.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">就业面窄, 只能去媒体</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">国际新闻毕业生就业面其实宽: 互联网出海 (内容运营/海外公关/本地化) / 4A 公关 (品牌/危机公关) / 跨国企业 (ESG 沟通/海外品牌) / 政府外事 (外交部/商务部) / 国际组织 (UN/世行) / 智库 (国关院/清华战略与安全研究中心), 媒体反而不是最大出口.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">央媒驻外首席 80-100 万, 现在入场有红利</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">央媒驻外首席 80-100 万是真实但极罕见, 通常要求 8-10 年经验 + 重大报道奖项 + 一门外语接近母语水平 + 长期驻外接受度; 应届进央媒国际部多从助理/编辑起, 月薪 10-15K + 北京户口 + 事业编才是常态.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">国际传播就业市场广阔, 不愁工作</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">就业面宽但起薪中位 (一线 8-12K, 二三线 5-8K), 与新闻学/传播学/汉语言文学/外语专业在同岗位竞争; 想拿到互联网出海/4A 公关/跨国品牌的 18K+ offer 通常要求「985 本 + 2 段大厂实习 + 外语流利」, 普通本科多走基础编辑岗.</div></div></div></div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">机械工艺技术 = 机械设计制造及其自动化</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">机械工艺技术是「车间现场工艺」专业, 偏工装 + 刀具 + 切削参数 + 数控编程; 机械设计制造及其自动化偏机械设计 + 力学仿真. 课程结构差异 30-40%, 就业方向差异 50%+, 不要混淆选专业.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">机械工艺技术毕业去车间当操作工</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">机械工艺技术主流就业是「工艺工程师 + 工装设计 + 数控编程 + 车间主任」, 不是操作工; 本科毕业 3-5 年后主流走向是车间工艺师/技术主管, 头部企业 (沈阳机床/秦川机床/北京精雕/格力/三一) 校招起薪 8-15 万, 5 年+ 车间主任年薪 25-50 万.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">数控机床操作工即将被替代</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">数控机床操作工是「低技能操作」确实在被替代, 但「数控编程 + 工艺规划 + 工装设计」是高技能岗, 2024+ 高端五轴机床人才缺口巨大; 沈阳机床/科德数控/北京精雕/创世纪等头部国产机床厂五轴工艺师年薪 25-50 万.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">机械工艺 = 夕阳行业</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">普通机械加工 (车/铣/刨/磨) 确实是传统行业, 但「五轴联动加工中心 + 精密与超精密加工 + 智能制造产线 + 工业母机」是 2020+ 国家战略方向 (高端数控机床卡脖子), 行业壁垒极高, 资深五轴工艺师/精密加工工程师是制造业的硬通货.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">刀具工程师是冷门岗位</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">刀具工程师 (金属切削刀具应用 + 切削参数优化) 是制造业核心岗之一, 山特维克/瓦尔特/伊斯卡/三菱/株硬等头部刀具公司校招 12-25 万, 5 年+ 资深刀具应用工程师年薪 40-80 万; 国产替代风口下株洲钻石/厦门金鹭等国内龙头也在扩招.</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
@@ -878,7 +899,19 @@
         <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
       </div>
       <div class="course-list">
-        
+        <div class="course-row">
+          <div class="course-yr">大一 公共</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 高等数学 (一/二) · <strong style="color:var(--accent);">★</strong> 线性代数 · <strong style="color:var(--accent);">★</strong> 概率论与数理统计 · 大学物理 · 工程制图 · 机械制图 · <strong style="color:var(--accent);">★</strong> 大学英语 · 思想政治理论课系列</div>
+          <div class="course-tag">公共基础</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三 核心</div>
+          <div class="course-names">机械原理 · 机械设计 · 金属切削原理与刀具 · 互换性与技术测量 · <strong style="color:var(--accent);">★</strong> 数控技术与编程 · 机床电气控制与 PLC · 机械制造工艺学 · 工装夹具设计 · 液压与气压传动 · 机械 CAD/CAM · 精密与超精密加工 · <strong style="color:var(--accent);">★</strong> 工业机器人基础</div>
+          <div class="course-tag">专业核心</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">西安交通大学机械工程学院: 机械工艺 + 精密加工 + 超精密磨削 (985, 学科评估 A+, 机械工程一级学科 A+, 与高端机床/精密光学深度合作) · 上海交通大学机械与动力工程学院: 机械工艺 + 智能制造 + 工业 4.0 (985, 学科评估 A+, 上海电气/振华重工校招主力) · 哈尔滨工业大学机电工程学院: 机械工艺 + 数控加工 + 工业机器人 (985, 学科评估 A, 沈阳机床/齐重数控/齐二机床校招资源) · 大连理工大学机械工程学院: 机械工艺 + 船舶机械 + 智能制造 (985, 学科评估 A-, 大连机床/瓦房店轴承/大连船舶校招) · 湖南大学机械与运载工程学院: 机械工艺 + 汽车制造工艺 + 工程机械 (985, 学科评估 B+, 三一/中联重科/山河智能校招主力)</div>
+          <div class="course-tag">方向选修</div>
+        </div>
       </div>
     </section>
   <section class="art-sec">
@@ -891,35 +924,35 @@
       </div>
       <div class="uni-row">
           <div class="uni-rank">01</div>
-          <div class="uni-name">中国人民大学</div>
+          <div class="uni-name">西安交通大学</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
-          <div class="uni-name">中国传媒大学</div>
+          <div class="uni-name">上海交通大学</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
-          <div class="uni-name">复旦大学</div>
+          <div class="uni-name">哈尔滨工业大学</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
-          <div class="uni-name">北京大学</div>
+          <div class="uni-name">大连理工大学</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
-          <div class="uni-name">北京外国语大学</div>
+          <div class="uni-name">华中科技大学</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
-          <div class="uni-name">武汉大学</div>
+          <div class="uni-name">清华大学</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
-          <div class="uni-name">暨南大学</div>
+          <div class="uni-name">北京理工大学</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
-          <div class="uni-name">上海外国语大学</div>
+          <div class="uni-name">湖南大学</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -932,7 +965,7 @@
         <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
       </div>
       <div class="co-list">
-        <div class="co-row"><div class="co-info"><div class="co-name">路透 (中国) / 美联社亚太分社 / BBC 中文部 / 纽约时报中文网<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★<span class="dot">·</span>国际媒体中国分社中文/英文岗 15-30K×14, 应届录取比例 &lt;1%, 985 本硕 + 英文母语水平</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">字节跳动 TikTok / 海外公关<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★<span class="dot">·</span>海外内容运营/海外公关 20-35K×15, 北京/上海, 985 国际传播 + 大厂实习是标配</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">阿里巴巴国际站 / 腾讯海外业务 / SHEIN / 米哈游海外品牌<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★<span class="dot">·</span>海外内容/海外品牌 18-32K×14, 杭州/广州/深圳集中, 互联网出海近年最大增量</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,0.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">联合国系统 / 世界银行 / 亚开行 / 国际 NGO<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★<span class="dot">·</span>国际组织 P 级 25-50 万, 通常要求硕士 + 多年经验 + 英文母语水平, 竞争激烈</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">新华社国际部 / CGTN / 中国日报 / 人民日报海外版<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>央媒事业编 10-18 万, 北京户口, 驻外首席 80-100 万 (8-10 年经验), 应届助理/编辑 12-15K</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">奥美 / 蓝标 / 伟达 / 罗德公关 (4A 公关)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>公关顾问/AE 12-22K×13, 北京/上海, 跨国品牌/危机公关/ESG 沟通</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">外交部 / 商务部 / 中国国际问题研究院<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★<span class="dot">·</span>公务员/事业编 10-18 万, 北京户口, 通常要求党员 + 选调生 + 985 硕士</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中新社国际部 / 财新传媒国际新闻部<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>记者/编辑 10-18K×13, 财经国际新闻岗</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div>
+        <div class="co-row"><div class="co-info"><div class="co-name">沈阳机床 / 秦川机床 / 科德数控 (高端机床)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★<span class="dot">·</span>工艺/五轴 12-25 万/年, 资深 30-60 万, 国产高端数控机床主力</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,7.0 25.0,7.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">北京精雕 / 创世纪 / 海天精工 (精密机床)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★<span class="dot">·</span>工艺/精密加工 15-30 万/年, 资深 35-70 万, 精密机床龙头</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">三一重工 / 中联重科 / 山河智能 (工程机械)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★★<span class="dot">·</span>工艺/制造 12-25 万/年, 资深 30-60 万, 工程机械龙头</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">比亚迪 / 吉利 / 长城 / 奇瑞 (汽车制造)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★★<span class="dot">·</span>工艺/制造 12-25 万/年, 资深 30-60 万, 整车厂制造工艺主力</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">山特维克 / 瓦尔特 / 伊斯卡 / 三菱 (刀具)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>刀具应用工程师 12-25 万/年, 资深 40-80 万, 全球刀具四巨头</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">格力 / 美的 / 海尔 (家电制造)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★★<span class="dot">·</span>工艺/制造 10-20 万/年, 资深 25-50 万, 家电龙头</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国航发 / 中国商飞 / 中航工业 (军工制造)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★<span class="dot">·</span>精密加工 15-30 万/年, 资深 35-70 万, 军工高端制造</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">富士康 / 立讯精密 / 比亚迪电子 (3C 精密)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★★<span class="dot">·</span>精密制造 10-20 万/年, 资深 25-50 万, 3C 精密代工/零部件</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -951,30 +984,30 @@
           <div class="sal-th-cell">P75 高位</div>
         </div>
         <div class="sal-tr">
-          <div class="sal-stage">应届生 (一线媒体/事业单位)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-stage">应届生 (二三线传统机械)<span class="sal-yoy up">↗ 4%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">6.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">9.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:11%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">13.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:10%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">应届生 (一线互联网出海/4A 公关)<span class="sal-yoy up">↗ 8%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:35%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:29%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
+          <div class="sal-stage">应届生 (一线机床/精密加工/汽车)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">3年经验 (互联网出海/4A 公关)<span class="sal-yoy up">↗ 8%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:45%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:36%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:35%;"></span></span></div>
+          <div class="sal-stage">3年经验 (中级工艺/工装/数控工程师)<span class="sal-yoy up">↗ 8%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:36%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:31%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">5年经验 (资深海外内容/品牌负责人)<span class="sal-yoy up">↗ 6%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:62%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:57%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">60.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:60%;"></span></span></div>
+          <div class="sal-stage">5年经验 (资深工艺师/车间主任)<span class="sal-yoy up">↗ 7%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:56%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">45.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:53%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">65.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:50%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">10年+ (央媒驻外首席/部门负责人/合伙人)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">70.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">100.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-stage">10年+ (技术专家/厂长)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">85.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">130.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
         </div>
       </div>
     </section>
@@ -987,7 +1020,7 @@
         <p>8 大就业方向及占比.</p>
       </div>
       <div class="emp-list">
-        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">互联网出海 / 海外内容 / 海外品牌</div><div class="emp-ratio">28%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:28.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">4A 公关 / 跨国品牌 / ESG 沟通</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">央媒 / 国际媒体驻外记者</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">外交外事 / 智库 / 国际组织</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">跨国企业 / 海外业务 / 国际品牌</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">MA 升学 (新闻传播/国际关系/MA TESOL)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">省级广电国际部 / 地方外宣系统</div><div class="emp-ratio">7%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:7.0%;"></div></div><div class="emp-desc"></div></div>
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">高端数控机床 / 精密加工工艺</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">汽车制造工艺 / 整车厂</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">工程机械 / 重型装备制造</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">刀具 / 工装 / 夹具设计</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">智能制造 / 工业 4.0</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">军工 / 航空航天制造</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">读研/读博 (机械工程一级学科强校)</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc"></div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -999,7 +1032,7 @@
         <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
       </div>
       <div class="ds-list">
-        <div class="ds-row"><div class="ds-name">直接就业 (互联网出海/4A 公关/跨国品牌/央媒)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">50%</div></div><div class="ds-row"><div class="ds-name">国内硕士 (新闻传播/国际关系/IMC 整合营销)</div><div class="ds-bar"><div class="ds-fill" style="--w:36%;"></div></div><div class="ds-pct">18%</div></div><div class="ds-row ds-study"><div class="ds-name">出国深造 (国际传播/MA TESOL/IMC/新闻学)</div><div class="ds-bar"><div class="ds-fill" style="--w:20%;"></div></div><div class="ds-pct">10%</div></div><div class="ds-row"><div class="ds-name">考公/选调/事业编 (外事侨务/广电/智库)</div><div class="ds-bar"><div class="ds-fill" style="--w:16%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">国内硕士 (跨考国际法/外交学/国际政治)</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">跨行 (教培/出版/咨询)</div><div class="ds-bar"><div class="ds-fill" style="--w:8%;"></div></div><div class="ds-pct">4%</div></div><div class="ds-row ds-study"><div class="ds-name">国内博士 (新闻学/传播学/国际关系博士点)</div><div class="ds-bar"><div class="ds-fill" style="--w:6%;"></div></div><div class="ds-pct">3%</div></div>
+        <div class="ds-row"><div class="ds-name">直接就业 (高端机床/精密加工/汽车制造)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">35%</div></div><div class="ds-row"><div class="ds-name">国内硕士 (西交/上交/华科/清华/哈工大 机械工程一级学科强校)</div><div class="ds-bar"><div class="ds-fill" style="--w:71%;"></div></div><div class="ds-pct">25%</div></div><div class="ds-row"><div class="ds-name">直接就业 (工程机械/军工/家电制造)</div><div class="ds-bar"><div class="ds-fill" style="--w:57%;"></div></div><div class="ds-pct">20%</div></div><div class="ds-row"><div class="ds-name">国内硕士 (其他 985/211 机械工程)</div><div class="ds-bar"><div class="ds-fill" style="--w:23%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row ds-study"><div class="ds-name">国内博士 (机械工程/智能制造, 高校教职路径)</div><div class="ds-bar"><div class="ds-fill" style="--w:14%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">跨行 (CS 数据分析/工业软件/制造业咨询)</div><div class="ds-bar"><div class="ds-fill" style="--w:11%;"></div></div><div class="ds-pct">4%</div></div><div class="ds-row ds-study"><div class="ds-name">出国深造 (德国/日本/美国/港新, 机械/制造)</div><div class="ds-bar"><div class="ds-fill" style="--w:9%;"></div></div><div class="ds-pct">3%</div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1011,7 +1044,7 @@
         <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
       </div>
       <div class="pull-list">
-        <div class="pull">"外语只是工具, 真正决定你能走多远的, 是对世界的理解力, 以及在陌生文化里找到故事的能力. 驻外 7 年, 月薪 30K + 艰苦地区补贴 + 家属随任, 但战乱/疫情/孤寂才是真实挑战, 想清楚能不能扛这种节奏."<span class="by">— </span></div><div class="pull">"国际新闻的课堂不是终点, 它教给我把复杂信息讲清楚的能力 — 这套方法论, 在产品、内容、市场都吃香. 应届进字节 TikTok 拿到了 25K×15, 比同期进央媒的同学高一倍, 选路径 &gt; 选学校."<span class="by">— </span></div><div class="pull">"把中国故事讲到海外, 不是翻译就够了, 而是要懂对方的关切, 找到文化共振的那个点. 在省级广电国际部做编辑, 月薪 9K + 事业编 + 省会户口, 节奏比央媒慢但比互联网稳定, 适合不想加班 996 的同学."<span class="by">— </span></div>
+        <div class="pull">"在哈工大读了本科机械工艺, 毕业后去了科德数控做五轴工艺工程师。最大感受是这门专业「实」在现场, 课堂学的金属切削原理和刀具参数, 在车间里全是真功夫 — 同一块钛合金, 不同刀具 + 不同切削参数出来的精度差异能到 0.01mm."<span class="by">— </span></div><div class="pull">"我们这届本科毕业的同学大致三条路: 一是去机床厂做五轴工艺, 二是去整车厂做焊装/总装工艺, 三是去工程机械厂做机加工。机械工艺的核心是「图纸 → 工艺 → 车间」, 适合愿意下车间的同学, 起薪在工科里中等."<span class="by">— </span></div><div class="pull">"机械工艺技术的好处是「实操强 + 行业壁垒明显」。我读研转到了智能制造方向 (工业 4.0 + MES 系统), 同学里有做五轴算法的、做精密磨削的、做工业机器人集成的。如果对制造业有真正兴趣, 这个专业很扎实."<span class="by">— </span></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1023,14 +1056,14 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">历史 + 政治 + 地理 (传统文科, 覆盖政史地全部要求)</div><div class="xk-bar"><div class="xk-fill" style="--w:50%;"></div><span class="xk-pct">50%</span></div></div></div><div class="xk-reason">选政治覆盖人/中传等, 选历史覆盖复/武大, 选地理覆盖浙/川大, 全部要求皆可报。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 政治 (再选化学或生物)</div><div class="xk-bar"><div class="xk-fill" style="--w:20%;"></div><span class="xk-pct">20%</span></div></div></div><div class="xk-reason">选政治可报人/中传等要求政治的院校, 另一门可自由搭配, 覆盖较广。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">历史 + 地理 (再选化学或生物)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">选地理覆盖浙/川大地缘政治方向, 兼顾历史基础, 另一门可自由选择。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (其他组合, 半数院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">近半院校不限制选科, 任意组合均可报考, 实际门槛为英语单科高分。</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:60%;"></div><span class="xk-pct">60%</span></div></div></div><div class="xk-reason">物理+化学是机械工艺技术的核心基组, 金属切削原理 + 工装设计 + 数控编程等核心课程直接对接, 985 机械强校几乎都要求物理+化学.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 (再选不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:28%;"></div><span class="xk-pct">28%</span></div></div></div><div class="xk-reason">部分工科院校只锁物+化, 力学 + 物理 + 化学是机械工艺的基础, 物理是材料力学的前置必修.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 生物 + 化学 (同组, 顺序差异)</div><div class="xk-bar"><div class="xk-fill" style="--w:7%;"></div><span class="xk-pct">7%</span></div></div></div><div class="xk-reason">与首选组合实质相同, 仅再选科目顺序不同, 多数院校系统按基组识别, 实际可报范围一致.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (少数综合院校)</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">少数综合大学接受不限选科, 但 985 机械强校普遍要求物理 + 化学, 不限选科可报范围有限.</div></div>
       </div>
     </section>
 </article>
 
 <div class="footer-cta">
   <div class="lead">⌖ 决定了吗</div>
-  <h3>把国际新闻与传播加入心愿单</h3>
+  <h3>把机械工艺技术加入心愿单</h3>
   <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
   <a class="cta-btn" id="cta-btn" href="#">
     <span class="ico" id="cta-ico">♡</span>
@@ -1054,7 +1087,7 @@
 <div class="wish-modal" id="wish-modal" hidden>
   <div class="wish-modal-bg" data-close="1"></div>
   <div class="wish-modal-card" role="dialog" aria-labelledby="wish-modal-title">
-    <h3 class="wish-modal-title" id="wish-modal-title">给 国际新闻与传播 打分</h3>
+    <h3 class="wish-modal-title" id="wish-modal-title">给 机械工艺技术 打分</h3>
     <p class="wish-modal-sub">1-5 星, 后续可在心愿单查看排序</p>
     <div class="star-row" id="star-row" role="radiogroup" aria-label="评分">
       <button class="star-btn" data-star="1" aria-label="1 星"><span>★</span></button>
@@ -1075,11 +1108,30 @@
   <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
 </nav>
 
-<script>window.__SLUG__ = "international-journalism-communication"; window.__TITLE__ = "国际新闻与传播";</script>
+<script>window.__SLUG__ = "mechanical-process-technology"; window.__TITLE__ = "机械工艺技术";</script>
 <script src="../js/loader.js"></script>
 <script src="../js/dock.js"></script>
 <script src="../js/detail.js"></script>
+<script src="../js/scroll-helpers.js"></script>
 <script>
+  // ───── 滚动进度条 (顶部 2px, 主色) ─────
+  (() => {
+    const bar = document.getElementById('scroll-progress');
+    if (!bar) return;
+    let ticking = false;
+    function update() {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const p = h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0;
+      bar.style.setProperty('--p', p + '%');
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  })();
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
   }
