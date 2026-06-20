@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -860,7 +861,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1067,7 +1068,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">智能交通工程是「交通 + 车路协同 + 智驾 + 轨交 + 交通 AI」五栖交叉, 它比传统交通运输多一层 AI + 控制 + 通信叠加, 强数学物理 + 控制理论是硬门槛; 行业风口 + 课业极重 + 头部算法岗硕博起步是三大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / C 语言与 Python; 大二核心: 理论力学 / 电工学 / 交通工程学 / 交通规划 / 自动控制原理 / 数字电子 / 数据结构; 大三方向分流: 车路协同 (V2X) / 智慧高速 (ETC+收费+监控) / 智能轨道交通 (地铁/高铁调度) / 交通 AI (信号优化/预测) / 自动驾驶落地 (运营/路测/政策) 五选一; 大四毕设 + 交通企业/车厂/互联网实习 (百度 Apollo/华为车 BU/高德/四维图新/海信网络科技/交科所). 4 年下来, 既能看懂交通规划与控制, 也能跑 SUMO/VISSIM/MATLAB 做交通仿真.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 力学/控制/规划/通信啃得动</li><li>对自动驾驶/智慧城市/轨道交通/交通 AI 有底层好奇心</li><li>接受「交叉 + 项目制」课业, 愿意主动加 SUMO/VISSIM/Python/ROS/导师课题组</li><li>能扛交通企业出差 + 长期驻地 + 项目周期压力, 接受 5-10 年沉淀</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥力学/控制/通信 — 该专业硬核课业会持续劝退</li><li>只想做纯软件/互联网 — 智能交通的软件是「交通仿真+车路协同+信号控制」, 不是「互联网应用」, 误判会后悔</li><li>期望「本科毕业 30 万+」— 头部车路协同/智驾算法岗校招 25-45 万, 资深 60-150 万, 但传统交通规划/管理岗 12-20 万</li><li>排斥工地/出差/长期驻地 — 交通工程项目需现场调研/出差/驻地, 工地条件艰苦</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">智能交通 = 传统交通运输 + 学点 AI</div><div class="ovv-simple-pit-reality">智能交通是 5 栖交叉 (交通+车路协同+智驾+轨交+AI), 不是「交通运输+Python」; 课程比传统交通运输多 8-10 门 (车路协同/智驾/SUMO 仿真/控制理论/通信原理/数据挖掘), 课业压力是 985 工科前列.</div></li><li><div class="ovv-simple-pit-myth">智能交通就是开滴滴/做导航</div><div class="ovv-simple-pit-reality">智能交通是 5 栖集成 (车路协同+智慧高速+智驾+轨交+交通 AI), 头部技术 (V2X 车路协同 / ETC 智慧收费 / 地铁智能调度 / 高铁 CTCS-3 / 交通 AI 信号优化) 是国家交通强国 2030 战略核心; 不是「导航 App」.</div></li><li><div class="ovv-simple-pit-myth">北交/同济/东南/西交/哈工大 之外没机会</div><div class="ovv-simple-pit-reality">头部 5 校 (北京交大交通运输 A+/同济交通 A/东南交通 A/西交交通 A/哈工大交通 A-) 是核心圈, 但 2020+ 交通强国 + 智慧城市 政策红利, 二梯队 985 (上交/华科/华南理工/湖大/重大/北航) 与 211 (南航/华东交大/西南交大/长安大学) 也开核心岗; 二梯队主要走传统交通规划/管理, 头部 5 校 + 985 走车路协同/智驾/交通 AI.</div></li><li><div class="ovv-simple-pit-myth">智驾算法岗本科就能拿</div><div class="ovv-simple-pit-reality">车路协同算法 / 智驾路径规划 / 交通 AI 信号优化 / 智能调度算法 — 头部公司 (百度 Apollo/华为车 BU/小马智行/文远知行/高德/四维图新) 90% 要求硕士及以上, 本科主要走交通规划/车路协同设备/智慧高速/调度运营, 想做算法核心基本必须读研.</div></li><li><div class="ovv-simple-pit-myth">智能交通行业 = 互联网薪资</div><div class="ovv-simple-pit-reality">互联网 CS 校招 25-50 万, 资深 80-200 万; 智能交通 (车路协同/智驾) 校招 18-30 万, 资深 50-100 万; 智驾算法校招 25-45 万, 资深 60-150 万; 传统交通规划校招 10-18 万, 资深 30-50 万; 薪资差距大, 选方向前必须看清.</div></li><li><div class="ovv-simple-pit-myth">考公考编对口岗位多</div><div class="ovv-simple-pit-reality">智能交通对口公务员/事业编多, 主要是 交通运输部/省交通厅/市交通局/公安交管局/规划院/设计院/地铁公司/铁路局, 竞争激烈 (常 80-150:1), 多数岗位专业代码卡「交通运输/交通工程」, 智能交通工程可能不被识别, 报考前必须查本省近 3 年招录目录; 选调是少数 985 校 + 党员 + 学生干部 + 智能交通专业的窗口.</div></li><li><div class="ovv-simple-pit-myth">智能交通都是大公司做</div><div class="ovv-simple-pit-reality">智能交通出口分 4 层: (1) 互联网/科技公司 (百度 Apollo/华为/腾讯/阿里/滴滴/高德/四维图新); (2) 央企/国企 (中交建/中铁/中国通号/中国铁塔/地铁公司/铁路局); (3) 头部 Tier 1 (海信网络科技/易华录/千方科技/银江股份/皖通科技); (4) 自动驾驶公司 (小马/文远/元戎/轻舟智航). 不是「只有大公司」.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">智能交通工程是「交通 + 车路协同 + 智驾 + 轨交 + 交通 AI」五栖交叉, 它在交通强国 + 智驾 + 智慧城市风口下有 18-30 万校招 溢价, 但课业极重 + 头部算法岗硕博起步是 3 大硬坎, 想做核心算法基本必读研.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / C 语言与 Python; 大二核心: 理论力学 / 电工学 / 交通工程学 / 交通规划 / 自动控制原理 / 数字电子 / 数据结构; 大三方向分流: 车路协同 (V2X) / 智慧高速 (ETC+收费+监控) / 智能轨道交通 (地铁/高铁调度) / 交通 AI (信号优化/预测) / 自动驾驶落地 (运营/路测/政策) 五选一; 大四毕设 + 交通企业/车厂/互联网实习 (百度 Apollo/华为车 BU/高德/四维图新/海信网络科技/交科所). 4 年下来, 既能看懂交通规划与控制, 也能跑 SUMO/VISSIM/MATLAB 做交通仿真.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 力学/控制/规划/通信啃得动</li><li>对自动驾驶/智慧城市/轨道交通/交通 AI 有底层好奇心</li><li>接受「交叉 + 项目制」课业, 愿意主动加 SUMO/VISSIM/Python/ROS/导师课题组</li><li>能扛交通企业出差 + 长期驻地 + 项目周期压力, 接受 5-10 年沉淀</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥力学/控制/通信 — 该专业硬核课业会持续劝退</li><li>只想做纯软件/互联网 — 智能交通的软件是「交通仿真+车路协同+信号控制」, 不是「互联网应用」, 误判会后悔</li><li>期望「本科毕业 30 万+」— 头部车路协同/智驾算法岗校招 25-45 万, 资深 60-150 万, 但传统交通规划/管理岗 12-20 万</li><li>排斥工地/出差/长期驻地 — 交通工程项目需现场调研/出差/驻地, 工地条件艰苦</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">智能交通 = 传统交通运输 + 学点 AI</div><div class="ovv-simple-pit-reality">智能交通是 5 栖交叉 (交通+车路协同+智驾+轨交+AI), 不是「交通运输+Python」; 课程比传统交通运输多 8-10 门 (车路协同/智驾/SUMO 仿真/控制理论/通信原理/数据挖掘), 课业压力是 985 工科前列.</div></li><li><div class="ovv-simple-pit-myth">智能交通就是开滴滴/做导航</div><div class="ovv-simple-pit-reality">智能交通是 5 栖集成 (车路协同+智慧高速+智驾+轨交+交通 AI), 头部技术 (V2X 车路协同 / ETC 智慧收费 / 地铁智能调度 / 高铁 CTCS-3 / 交通 AI 信号优化) 是国家交通强国 2030 战略核心; 不是「导航 App」.</div></li><li><div class="ovv-simple-pit-myth">北交/同济/东南/西交/哈工大 之外没机会</div><div class="ovv-simple-pit-reality">头部 5 校 (北京交大交通运输 A+/同济交通 A/东南交通 A/西交交通 A/哈工大交通 A-) 是核心圈, 但 2020+ 交通强国 + 智慧城市 政策红利, 二梯队 985 (上交/华科/华南理工/湖大/重大/北航) 与 211 (南航/华东交大/西南交大/长安大学) 也开核心岗; 二梯队主要走传统交通规划/管理, 头部 5 校 + 985 走车路协同/智驾/交通 AI.</div></li><li><div class="ovv-simple-pit-myth">智驾算法岗本科就能拿</div><div class="ovv-simple-pit-reality">车路协同算法 / 智驾路径规划 / 交通 AI 信号优化 / 智能调度算法 — 头部公司 (百度 Apollo/华为车 BU/小马智行/文远知行/高德/四维图新) 90% 要求硕士及以上, 本科主要走交通规划/车路协同设备/智慧高速/调度运营, 想做算法核心基本必须读研.</div></li><li><div class="ovv-simple-pit-myth">智能交通行业 = 互联网薪资</div><div class="ovv-simple-pit-reality">互联网 CS 校招 25-50 万, 资深 80-200 万; 智能交通 (车路协同/智驾) 校招 18-30 万, 资深 50-100 万; 智驾算法校招 25-45 万, 资深 60-150 万; 传统交通规划校招 10-18 万, 资深 30-50 万; 薪资差距大, 选方向前必须看清.</div></li><li><div class="ovv-simple-pit-myth">考公考编对口岗位多</div><div class="ovv-simple-pit-reality">智能交通对口公务员/事业编多, 主要是 交通运输部/省交通厅/市交通局/公安交管局/规划院/设计院/地铁公司/铁路局, 竞争激烈 (常 80-150:1), 多数岗位专业代码卡「交通运输/交通工程」, 智能交通工程可能不被识别, 报考前必须查本省近 3 年招录目录; 选调是少数 985 校 + 党员 + 学生干部 + 智能交通专业的窗口.</div></li><li><div class="ovv-simple-pit-myth">智能交通都是大公司做</div><div class="ovv-simple-pit-reality">智能交通出口分 4 层: (1) 互联网/科技公司 (百度 Apollo/华为/腾讯/阿里/滴滴/高德/四维图新); (2) 央企/国企 (中交建/中铁/中国通号/中国铁塔/地铁公司/铁路局); (3) 头部 Tier 1 (海信网络科技/易华录/千方科技/银江股份/皖通科技); (4) 自动驾驶公司 (小马/文远/元戎/轻舟智航). 不是「只有大公司」.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1515,22 +1516,22 @@ footer .data-source { color: #78716C; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 (传统工科, 90% 院校可报)</div>
+          <div class="xuanke-name">首选物理 + 化学 (传统工科, 90% 院校可报)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:68%"></div></div>
           <div class="xuanke-pct">68%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 (再选不限)</div>
+          <div class="xuanke-name">首选物理 (再选不限)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:22%"></div></div>
           <div class="xuanke-pct">22%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科)</div>
+          <div class="xuanke-name">首选物理 + 化学 + 生物 (传统理科)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:6%"></div></div>
           <div class="xuanke-pct">6%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 地理 (城市规划方向少数校)</div>
+          <div class="xuanke-name">首选物理 + 地理 (城市规划方向少数校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
           <div class="xuanke-pct">4%</div>
         </div>
@@ -1575,10 +1576,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card eng" href="/architecture.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">建筑学</span><span class="wl-hook">甲方乙方, 五年制设计</span></a>
-      <a class="wl-card eng" href="/process-equipment-control-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">过程装备与控制工程</span><span class="wl-hook">过程装备与控制工程</span></a>
-      <a class="wl-card eng" href="/polymer-materials-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">高分子材料与工程</span><span class="wl-hook">高分子材料与工程</span></a>
-      <a class="wl-card eng" href="/urban-underground-space-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">城市地下空间工程</span><span class="wl-hook">城市地下空间工程</span></a>
+      <a class="wl-card eng" href="/new-energy-science-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">新能源科学与工程</span><span class="wl-hook">新能源科学与工程</span></a>
+      <a class="wl-card eng" href="/virtual-reality-technology.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">虚拟现实技术</span><span class="wl-hook">虚拟现实技术</span></a>
+      <a class="wl-card eng" href="/intelligent-mining-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智能采矿工程</span><span class="wl-hook">智能采矿工程</span></a>
+      <a class="wl-card eng" href="/aircraft-manufacturing-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">飞行器制造工程</span><span class="wl-hook">飞行器制造工程</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
