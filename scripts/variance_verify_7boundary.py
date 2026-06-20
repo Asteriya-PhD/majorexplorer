@@ -55,11 +55,12 @@ def snapshot_registry():
 
 def run_batch(slugs, round_num, batch_idx, total_batches):
     """跑一批 10 篇的 m3 audit via content_audit.py"""
-    args = [s for s, _ in slugs]
+    # 必须传 slug:style 否则 content_audit 默认 'cs' style
+    args = [f'{s}:{st}' for s, st in slugs]
     print(f'\n{"="*80}')
     print(f'Round {round_num} · Batch {batch_idx}/{total_batches} · {len(slugs)} 篇')
     print(f'{"="*80}')
-    print(' '.join(args[:5]) + (f' ... +{len(args)-5}' if len(args) > 5 else ''))
+    print(' '.join(args[:3]) + (f' ... +{len(args)-3}' if len(args) > 3 else ''))
 
     before_ts = time.time()
     cmd = ['python3', str(CONTENT_AUDIT), '--slugs'] + args
