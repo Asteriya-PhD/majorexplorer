@@ -15,17 +15,19 @@
 
 <title>海外利益安全专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="涉外法律 + 国家安全的交叉特设专业, 全国开设院校 ≤ 10 所, 培养海外利益保护 + 涉外法治 + 国家安全复合人才.">
-  <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/overseas-interests-security.html">
-  <meta property="og:url" content="https://majorexplorer.com/overseas-interests-security.html">
-  <meta property="og:site_name" content="Major Explorer">
-  <meta property="og:title" content="海外利益安全专业介绍 2026 高考 | Major Explorer">
-  <meta property="og:description" content="涉外法律 + 国家安全的交叉特设专业, 全国开设院校 ≤ 10 所, 培养海外利益保护 + 涉外法治 + 国家安全复合人才.">
-  <meta property="og:type" content="article">
-
 <style>
 @import url('https://fonts.loli.net/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lato:wght@300;400;700&family=Cormorant+Unicase:wght@400;500;600;700&family=Caveat:wght@400;500;600&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -36,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -51,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -102,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -120,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -177,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -744,7 +737,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -934,7 +927,7 @@ footer .data-source { color: #78716C; }
       </div>
     </div>
     <h1>海外利益安全</h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=法学#majors">法学</a><span class="bc-sep">›</span><a href="/?discipline=法学&sub=法学#majors">法学</a><span class="bc-sep">›</span><span class="bc-current">海外利益安全</span></div>
+<div class="discipline-breadcrumb"><a href="/?discipline=03#majors">法学</a><span class="bc-sep">›</span><a href="/?discipline=03&sub=法学#majors">法学</a><span class="bc-sep">›</span><span class="bc-current">海外利益安全</span></div>
     <p class="hero-tagline">— 涉外法律 + 国家安全的交叉特设专业, 全国开设院校 ≤ 10 所, 培养海外利益保护 + 涉外法治 + 国家安全复合人才. —</p>
     <div class="hero-tags">
       <span class="tag primary">国家安全</span><span class="tag primary">涉外法律</span><span class="tag primary">海外利益</span>
@@ -1011,25 +1004,43 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">中国人民大学</div>
           <div class="bento-tag">北京 · 985, 法学第四轮学科评估 A+, 国际法/涉外法治学术派</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">北京大学</div>
+          <div class="bento-tag">北京 · 985, 国际法 + 国家安全法治学术重镇, 校友在外交/商务部/国际组织资源深厚</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">武</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">武汉大学</div>
           <div class="bento-tag">武汉 · 985, 国际法 A+, 网络空间国际治理特色</div>
         </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">华</div>
-          <span class="bento-rank">A-</span>
-          <div class="bento-name">华东政法大学</div>
-          <div class="bento-tag">上海 · 双非, 五院四系, 涉外法治 + 区域贸易法特色</div>
-        </div>
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">西</div>
+          <div class="bento-monogram">复</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">复旦大学</div>
+          <div class="bento-tag">上海 · 985, 国际法 + 国际关系双强, 985 涉外法治 + 国关跨学科培养</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">国</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">国际关系学院</div>
+          <div class="bento-tag">北京 · 国务院学位办直属, 国家安全方向最对口的院校, 涉外法律 + 国家安全 + 国际关系三栖培养, 政审严格</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">华</div>
           <span class="bento-rank">B+</span>
+          <div class="bento-name">华东政法大学</div>
+          <div class="bento-tag">上海 · 双非, 五院四系, 涉外法治 + 区域贸易法 (RCEP/CPTPP) 特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">西</div>
+          <span class="bento-rank">B</span>
           <div class="bento-name">西北政法大学</div>
           <div class="bento-tag">西安 · 双非, 五院四系, 国家安全法治 + 西北区位</div>
         </div>
@@ -1188,28 +1199,46 @@ footer .data-source { color: #78716C; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届</td>
-          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.36363636363637%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届公务员轨 (商务部/外交部/国安部/省外事办)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:48.0%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:72.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年</td>
-          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.0%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
+          <td class="salary-stage">应届涉外律所 (君合/金杜/中伦/方达)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年</td>
-          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:61.111111111111114%"></span></span></td>
+          <td class="salary-stage">应届中资企业海外法务 (华为/中建)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3年律所 (中级律师/合伙人助理)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +9%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="90" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年</td>
-          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:27.77777777777778%"></span></span><span class="yoy up">↗ +9%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:55.55555555555556%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="180" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年律所 (资深律师/合伙人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="130" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:65.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="200" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">5年中资海外法务 (总监级)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:41.66666666666667%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="120" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年合伙人/中央司局级</td>
+          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.5%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="250" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="400" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1322,7 +1351,7 @@ footer .data-source { color: #78716C; }
               <span class="quote-source">2012 · 校友访谈</span>
             </div>
           </div>
-          <p class="quote-text">政法国安部联合培养方向毕业, 硕博读完后 2015 年进商务部条法司, 参与中美贸易争端法律应对, 11 年做到主任科员.</p>
+          <p class="quote-text">政法国安部联合培养方向毕业, 硕博连读 5 年 (国际法方向), 2017 年进商务部条法司, 参与中美贸易争端法律应对, 12 年做到主任科员.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
@@ -1353,6 +1382,16 @@ footer .data-source { color: #78716C; }
             </div>
           </div>
           <p class="quote-text">北大国际法方向硕博连读, 毕业后到国合署做对外援助项目法律顾问, 5 年负责非洲/东南亚 30+ 项目合规审查.</p>
+        </div>
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">国</div>
+            <div class="quote-byline">
+              <strong>国家移民管理局 出入境政策研究处</strong>
+              <span class="quote-source">2018 · 校友访谈</span>
+            </div>
+          </div>
+          <p class="quote-text">国际关系学院国安法治方向本科 + 中国政法大学国际法硕, 现在做出入境政策研究, 海外利益保护 + 国家安全双背景是这类岗位的核心匹配.</p>
         </div>
     </div>
   </div>
@@ -1395,37 +1434,54 @@ footer .data-source { color: #78716C; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: overseas-interests-security) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「海外利益安全」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card law" href="/commercial-law.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">商法</span><span class="wl-hook">商法</span></a>
+      <a class="wl-card law" href="/gerontology.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">老年学</span><span class="wl-hook">老年学</span></a>
+      <a class="wl-card law" href="/cyber-information-law.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">网络与信息法学</span><span class="wl-hook">网络与信息法学</span></a>
+      <a class="wl-card law" href="/political-science-administration.html" data-tag="同主题"><span class="wl-badge">法学</span><span class="wl-title">政治学与行政学</span><span class="wl-hook">政治学与行政学</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card education" href="/psychology.html" data-tag="跨界"><span class="wl-badge">教育</span><span class="wl-title">心理学</span><span class="wl-hook">用户研究 + 认知神经科学</span></a>
+      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
+      <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
     </div>
   </div>
 </section>

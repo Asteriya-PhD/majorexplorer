@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -622,7 +623,7 @@ footer .data-source { color: #999; }
 .direction-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
 
 /* === 深造路径 === */
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; text-align: center; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .path-card:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
@@ -651,7 +652,7 @@ footer .data-source { color: #999; }
 
 /* === 课程 === */
 .curriculum-lede { font-family: 'EB Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 32px 28px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .curriculum-block:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; color: #1A1A1A; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #D6D2C5; font-weight: 700; }
@@ -826,7 +827,7 @@ footer .data-source { color: #999; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1064,7 +1065,7 @@ footer .data-source { color: #999; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">陶瓷艺术设计是「陶瓷工艺 + 美学 + 器物设计 + 文化产业」四栖交叉的特设专业, 它既不是「陶艺 DIY」, 也不是「日用瓷设计」, 真正的硬功夫是「手与泥的关系 (拉坯/利坯/施釉/窑变) + 器物设计表达 + 文化产业落地」三件套 — 但「行业窄但精、就业集中景德镇/德化/醴陵、起薪低、需 985 艺院硕为头部去向」是结构性现实, 头部企业/独立工作室 5 年资深 30-50 万.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">陶瓷艺术设计是艺术学门类下聚焦"泥火造型+釉彩装饰+器物美学"的应用型专业，以景德镇千年瓷都文脉为底色，培养能在日用瓷、艺术瓷、文创陶瓷、空间陈设陶瓷等领域从事设计、创作、生产与策展的复合型人才。本专业核心训练包括拉坯/注浆/泥条盘筑等成型工艺、青花/釉里红/颜色釉/新彩等装饰技法、釉料配方实验、窑炉烧成控制，以及将传统符号转译为当代生活美学的设计能力。区别于纯美术学专业，本专业强调"做出来"——学生需长期驻场工坊，掌握从图纸到成品的全流程。就业市场以景德镇、潮州、德化、醴陵四大产区和北上广深文创圈为主，近年随着新中式茶器、香薰、手作体验、独立工作室赛道的兴起，自由职业和品牌主理人路径显著扩容。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对陶瓷工艺/器物设计/美学有持久兴趣, 愿 5-10 年沉淀</li><li>手绘 + 拉坯/利坯 + 釉色实验三项都有基础/学习意愿</li><li>接受「就业窄但精」的格局, 期待成为独立艺术家/品牌主理人/陶艺教育者</li><li>家庭经济能撑艺术类学费 (景陶大/艺院 1-2 万/年 + 材料费 5-10 万/年)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标互联网/金融起薪 10-20K</li><li>手不稳/不愿动手做拉坯/利坯 (本专业核心是手与泥的关系)</li><li>把陶瓷艺术设计误以为「鉴宝/收藏/拍卖」, 实际是工艺 + 设计 + 文化产业</li><li>不愿读研, 想本科直接进国际艺术馆/拍卖行 (基本不可能)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">陶瓷艺术设计 = 陶艺 DIY 兴趣班</div><div class="ovv-simple-pit-reality">本专业是 4 年制艺院体系, 课程含陶瓷工艺 (拉坯/利坯/施釉/窑变) + 器物设计 + 文化研究, 不是兴趣班/短期培训; 真要做匠人级, 至少 5-10 年沉淀.</div></li><li><div class="ovv-simple-pit-myth">毕业 = 月薪 2-3 万的艺术家</div><div class="ovv-simple-pit-reality">本专业 70% 进日用瓷企业/陶艺工作室/文创/教育/博物馆, 起薪 6-10K, 头部企业 (景德镇陶文旅/潮州/德化龙头) 5 年设计师 20-30 万; 真艺术家是 5-10 年沉淀.</div></li><li><div class="ovv-simple-pit-myth">景德镇陶瓷大学 = 全国最强</div><div class="ovv-simple-pit-reality">景陶大是陶瓷艺术设计最强院校 (行业黄埔), 但清华美院/央美/国美的陶瓷方向学术与国际资源更强, 985 艺院硕是国际艺术家/策展人方向硬门槛.</div></li><li><div class="ovv-simple-pit-myth">陶瓷行业即将被 3D 打印取代</div><div class="ovv-simple-pit-reality">3D 打印可做基础器形, 但「手工拉坯 + 窑变 + 釉色配方」是真正稀缺, AI/3D 打印不能取代匠人经验, 行业反因稀缺手工产品价值上升.</div></li><li><div class="ovv-simple-pit-myth">陶瓷就业只去景德镇/潮州/德化</div><div class="ovv-simple-pit-reality">日用瓷企业 (景德镇/潮州/德化/醴陵) 是最大就业出口, 但文创/博物馆/独立工作室/陶艺教育也是重要去向, 一二线城市工作机会正在增加.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">陶瓷艺术设计是个「手要稳、4 年要泡工坊」的特设艺院专业: 它的真功夫是「手与泥的关系 (拉坯/利坯/施釉/窑变) + 当代器物美学 + 头部品牌/独立工作室 5 年沉淀」. 但 70% 就业集中在景德镇/潮州/德化/醴陵四大产区, 起薪 6-10K, 头部品牌主理人/国际艺术家 5-10 年才能拿到 50-100 万.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">陶瓷艺术设计是艺术学门类下聚焦"泥火造型+釉彩装饰+器物美学"的应用型专业，以景德镇千年瓷都文脉为底色，培养能在日用瓷、艺术瓷、文创陶瓷、空间陈设陶瓷等领域从事设计、创作、生产与策展的复合型人才。本专业核心训练包括拉坯/注浆/泥条盘筑等成型工艺、青花/釉里红/颜色釉/新彩等装饰技法、釉料配方实验、窑炉烧成控制，以及将传统符号转译为当代生活美学的设计能力。区别于纯美术学专业，本专业强调"做出来"——学生需长期驻场工坊，掌握从图纸到成品的全流程。就业市场以景德镇、潮州、德化、醴陵四大产区和北上广深文创圈为主，近年随着新中式茶器、香薰、手作体验、独立工作室赛道的兴起，自由职业和品牌主理人路径显著扩容。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对陶瓷工艺/器物设计/美学有持久兴趣, 愿 5-10 年沉淀</li><li>手绘 + 拉坯/利坯 + 釉色实验三项都有基础/学习意愿</li><li>接受「就业窄但精」的格局, 期待成为独立艺术家/品牌主理人/陶艺教育者</li><li>家庭经济能撑艺术类学费 (景陶大/艺院 1-2 万/年 + 材料费 5-10 万/年)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标互联网/金融起薪 10-20K</li><li>手不稳/不愿动手做拉坯/利坯 (本专业核心是手与泥的关系)</li><li>把陶瓷艺术设计误以为「鉴宝/收藏/拍卖」, 实际是工艺 + 设计 + 文化产业</li><li>不愿读研, 想本科直接进国际艺术馆/拍卖行 (基本不可能)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">陶瓷艺术设计 = 陶艺 DIY 兴趣班</div><div class="ovv-simple-pit-reality">本专业是 4 年制艺院体系, 课程含陶瓷工艺 (拉坯/利坯/施釉/窑变) + 器物设计 + 文化研究, 不是兴趣班/短期培训; 真要做匠人级, 至少 5-10 年沉淀.</div></li><li><div class="ovv-simple-pit-myth">毕业 = 月薪 2-3 万的艺术家</div><div class="ovv-simple-pit-reality">本专业 70% 进日用瓷企业/陶艺工作室/文创/教育/博物馆, 起薪 6-10K, 头部企业 (景德镇陶文旅/潮州/德化龙头) 5 年设计师 20-30 万; 真艺术家是 5-10 年沉淀.</div></li><li><div class="ovv-simple-pit-myth">景德镇陶瓷大学 = 全国最强</div><div class="ovv-simple-pit-reality">景陶大是陶瓷艺术设计最强院校 (行业黄埔), 但清华美院/央美/国美的陶瓷方向学术与国际资源更强, 985 艺院硕是国际艺术家/策展人方向硬门槛.</div></li><li><div class="ovv-simple-pit-myth">陶瓷行业即将被 3D 打印取代</div><div class="ovv-simple-pit-reality">3D 打印可做基础器形, 但「手工拉坯 + 窑变 + 釉色配方」是真正稀缺, AI/3D 打印不能取代匠人经验, 行业反因稀缺手工产品价值上升.</div></li><li><div class="ovv-simple-pit-myth">陶瓷就业只去景德镇/潮州/德化</div><div class="ovv-simple-pit-reality">日用瓷企业 (景德镇/潮州/德化/醴陵) 是最大就业出口, 但文创/博物馆/独立工作室/陶艺教育也是重要去向, 一二线城市工作机会正在增加.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1075,7 +1076,16 @@ footer .data-source { color: #999; }
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
-
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">艺术学概论</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">中外美术史</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">设计素描</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">设计色彩</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">大学英语</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">思想政治理论课</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">构成基础</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">艺术考察</span><span class="course-credit">3 学分</span></div>
+        </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
           <div class="course"><span class="course-name">中国陶瓷史/外国陶瓷史</span><span class="course-credit">3 学分</span></div>
           <div class="course"><span class="course-name">陶瓷造型基础（拉坯、注浆、泥条盘筑）</span><span class="course-credit">3 学分</span></div>
@@ -1097,7 +1107,13 @@ footer .data-source { color: #999; }
           <div class="course"><span class="course-name">3D打印陶瓷/数字陶艺</span><span class="course-credit">3 学分</span></div>
           <div class="course"><span class="course-name">工坊实践（拉坯、施釉、烧窑）课时占比约 35%-45%，多数</span><span class="course-credit">3 学分</span></div>
         </div>
-
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><span class="course-name">景德镇陶瓷大学 方向选修模块</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">清华大学美术学院 方向选修模块</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中国美术学院 方向选修模块</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中央美术学院 方向选修模块</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">广州美术学院 方向选修模块</span><span class="course-credit">4 学分</span></div>
+        </div>
     </div>
   </div>
 </section>
@@ -1111,51 +1127,45 @@ footer .data-source { color: #999; }
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">景</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">景德镇陶瓷大学</div>
-          <div class="bento-tag">中国唯一一所以陶瓷命名的多科性大学，号称"陶院"，拥有完整的本硕博培养体系与国家级实验教学示范中心。</div>
+          <div class="bento-tag">江西·中国唯一一所以陶瓷命名的多科性大学, "陶院", 完整本硕博体系 + 国家级实验教学示范中心, 行业黄埔.</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">清</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">清华大学<wbr>美术学院</div>
-          <div class="bento-tag">工艺美术系下设陶瓷方向，融合现代设计与实验艺术，毕业生多进入高端品牌与独立工作室。</div>
+          <div class="bento-tag">北京·工艺美术系陶瓷方向, 985 艺院, 融合现代设计与实验艺术, 毕业生多进高端品牌与独立工作室.</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">中国美术学院</div>
-          <div class="bento-tag">设计艺术学院陶艺方向强调当代艺术语境，工坊教学成熟，毗邻南宋官窑研究资源。</div>
+          <div class="bento-tag">杭州·设计艺术学院陶艺方向强调当代艺术语境, 工坊教学成熟, 毗邻南宋官窑研究资源.</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">中央美术学院</div>
-          <div class="bento-tag">实验艺术与科技艺术学院下设陶瓷创作方向，偏当代艺术表达，与传统产区路线差异明显。</div>
+          <div class="bento-tag">北京·实验艺术与科技艺术学院下设陶瓷创作方向, 偏当代艺术表达, 与传统产区路线差异明显.</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">广</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">广州美术学院</div>
-          <div class="bento-tag">工艺美术学院陶瓷方向，依托粤港澳大湾区文创与潮州产区资源，日用瓷与文创设计见长。</div>
+          <div class="bento-tag">广州·工艺美术学院陶瓷方向, 依托粤港澳大湾区文创与潮州产区资源, 日用瓷与文创设计见长.</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">南</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">南京艺术学院</div>
-          <div class="bento-tag">设计学院陶艺专业，宜兴紫砂资源便利，传统器物美学与当代设计并重。</div>
+          <div class="bento-tag">南京·设计学院陶艺专业, 宜兴紫砂资源便利, 传统器物美学与当代设计并重.</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">鲁</div>
+          <div class="bento-monogram">江</div>
           <span class="bento-rank">B+</span>
-          <div class="bento-name">鲁迅美术学院</div>
-          <div class="bento-tag">工艺美术系陶瓷方向，东北工业陶瓷与粗陶美学有特色。</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">湖</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">湖南大学<wbr>设计艺术学院</div>
-          <div class="bento-tag">依托湖南醴陵釉下五彩产区，工业设计+陶瓷结合的复合培养路径。</div>
+          <div class="bento-name">江南大学<wbr>设计学院</div>
+          <div class="bento-tag">无锡·工业设计 A+, 拓展陶瓷产品设计与生活方式品牌方向, 宜兴紫砂产学研合作.</div>
         </div>
     </div>
   </div>
@@ -1171,14 +1181,14 @@ footer .data-source { color: #999; }
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
             <div class="company-monogram">景</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">景德镇陶文旅集团（产区国企）</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">景德镇陶文旅集团 (产区国企)</div>
+          <div class="company-meta">★★★ · 校招 应届 6-10 万 · 3 年 12-18 万 · 5 年总监 25-40 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1187,14 +1197,14 @@ footer .data-source { color: #999; }
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
             <div class="company-monogram">潮</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">潮州松发陶瓷（上市日用瓷企业）</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">潮州松发陶瓷 (上市日用瓷企业)</div>
+          <div class="company-meta">★★ · 校招 应届 7-12 万 · 3 年 15-25 万 · 5 年总监 30-50 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1203,10 +1213,10 @@ footer .data-source { color: #999; }
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
             <div class="company-monogram">德</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">德化顺美集团（出口陶瓷龙头）</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">德化顺美集团 (出口陶瓷龙头)</div>
+          <div class="company-meta">★★★ · 校招 应届 6-10 万 · 3 年 12-20 万 · 5 年总监 22-35 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1219,12 +1229,12 @@ footer .data-source { color: #999; }
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
             <div class="company-monogram">醴</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">醴陵陶润实业（釉下五彩产区代表）</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">醴陵陶润实业 (釉下五彩产区代表)</div>
+          <div class="company-meta">★★ · 校招 应届 6-9 万 · 3 年 10-18 万 · 5 年总监 20-32 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1235,10 +1245,10 @@ footer .data-source { color: #999; }
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
             <div class="company-monogram">故</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">故宫文创/国博衍艺（文创IP赛道）</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">故宫文创/国博衍艺 (文创IP赛道)</div>
+          <div class="company-meta">★★★ · 校招 985 艺院硕起步, 应届 12-22 万 · 3 年 22-35 万 · 5 年主设计师 30-50 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1253,12 +1263,12 @@ footer .data-source { color: #999; }
             <div class="company-monogram">M</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">Mano Verde/粗陶新中式品牌（独立工作室代表）</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">Mano Verde / 粗陶新中式独立工作室 (代表)</div>
+          <div class="company-meta">★★ · 校招 应届 6-10 万 · 主理人 5 年 30-100 万 (品牌分成波动大)</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1269,10 +1279,10 @@ footer .data-source { color: #999; }
             <div class="company-monogram">野</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">野兽派/观夏/茶颜悦色等生活方式品牌（陶瓷产品合作）</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">野兽派 / 观夏 / 茶颜悦色生活方式品牌 (陶瓷合作)</div>
+          <div class="company-meta">★★★ · 校招 陶瓷产品设计师 10-20 万 · 资深 25-40 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1285,8 +1295,8 @@ footer .data-source { color: #999; }
             <div class="company-monogram">小</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">小红书/抖音电商生态中的独立陶艺主理人群体</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">小红书 / 抖音电商独立陶艺主理人 (自由职业群体)</div>
+          <div class="company-meta">★★ · 校招 纯电商收入 5-30 万/年波动大, 头部主理人 50-200 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1325,21 +1335,21 @@ footer .data-source { color: #999; }
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (主设计师/工艺师)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.45454545454545%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.18181818181817%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:64.28571428571429%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">5年经验 (设计总监/独立工作室主理人)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.0%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">10年+ (国际艺术家/品牌创始人)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:23.333333333333332%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:26.666666666666668%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="300" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1515,37 +1525,54 @@ footer .data-source { color: #999; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: ceramic-art-design) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「陶瓷艺术设计」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card arts" href="/visual-communication-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">视觉传达设计</span><span class="wl-hook">UI/UX + 品牌, 字节腾讯</span></a>
+      <a class="wl-card arts" href="/environmental-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">环境设计</span><span class="wl-hook">室内 + 室外, 设计院</span></a>
+      <a class="wl-card arts" href="/art-criticism.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">艺术批评</span><span class="wl-hook">艺术批评</span></a>
+      <a class="wl-card arts" href="/drama-film-art-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">戏剧影视美术设计</span><span class="wl-hook">戏剧影视美术设计</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
+      <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
+      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
     </div>
   </div>
 </section>

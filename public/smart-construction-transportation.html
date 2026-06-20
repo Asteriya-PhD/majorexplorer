@@ -14,17 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>智能建造与智慧交通专业介绍 2026 高考 | Major Explorer</title>
-  <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/smart-construction-transportation.html">
-  <meta property="og:url" content="https://majorexplorer.com/smart-construction-transportation.html">
-  <meta property="og:site_name" content="Major Explorer">
-  <meta property="og:title" content="智能建造与智慧交通专业介绍 2026 高考 | Major Explorer">
-  <meta property="og:type" content="article">
-
 <meta name="description" content="智能建造与智慧交通是面向"交通强国"和"数字中国"战略的新工科交叉专业, 融合土木工程、交通运输工程、计算机科学、人工智能与控制工程, 培养能在基础设施建设全周期应用 BIM、装配式建造、智能施工, ">
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -35,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -50,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -101,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -119,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -176,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -867,7 +861,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1074,7 +1068,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">智能建造与智慧交通的核心是「土木工程 + 交通运输 + 计算机/AI」三栖交叉, 它的 4 年读完不会让你「又能搬砖又能写代码」, 但在 BIM 强制落地、装配式建筑占比抬升、车路云一体化的政策窗口里, 给了你一个比纯土木更宽、比纯 CS 更稳的中间通道 — 但「工程 + IT」双底色也意味着双倍课程压力与方向分化.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">力学与结构基础 + BIM/装配式/智能施工 + 交通规划与智能交通系统 + 编程/数据/AI + 工程项目管理, 强调"工程 + IT"双底色。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对工程 + 数字技术都有兴趣, 喜欢动手做项目 (BIM 建模/工地实习/算法)</li><li>能接受一定比例的工地/项目现场实习, 不晕现场</li><li>愿意投入时间学编程 (Python/C++) + 数据分析</li><li>对「工程 + IT」复合定位有清晰预期, 不期待纯互联网高薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>本意是想读纯 CS/软件工程, 借这个专业「曲线转码」 (真转码建议直接读 CS)</li><li>抗拒工地/项目现场实习 (本专业必修)</li><li>期待本科毕业对标互联网大厂算法岗起薪 25K+</li><li>对传统土木工程基础课 (力学/结构/制图) 极度排斥</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">智能建造 = 土木 + 计算机双学位</div><div class="ovv-simple-pit-reality">绝大多数院校授予「工学学士」, 计算机课程广而不深 (Python/数据/AI 入门), 不能与 CS 科班竞争算法岗; 真想做算法, 得自学补足 CS 基础.</div></li><li><div class="ovv-simple-pit-myth">毕业就能进大厂算法岗</div><div class="ovv-simple-pit-reality">本专业 70% 毕业生进建筑央企/设计院/交投集团 (中建/中铁/中交/各省交投), 起薪 8-12K; 真正进华为/百度车路协同算法岗的不到 10%, 且需自学刷题.</div></li><li><div class="ovv-simple-pit-myth">BIM 工程师高薪紧缺</div><div class="ovv-simple-pit-reality">BIM 岗位需求是真, 但一线设计院起薪 8-12K, 项目提成另算, 资深 5 年 25-40 万, 远低于互联网算法岗, 行业「卷」主要在考 BIM 证书, 不在薪资.</div></li><li><div class="ovv-simple-pit-myth">智慧交通方向一定比传统交通薪资高</div><div class="ovv-simple-pit-reality">智慧交通企业 (海信/海康/千方) 算法岗起薪 15-25K, 但需求极少 (< 岗招 200 人), 多数进智慧交通企业的毕业生做系统集成/项目实施, 起薪与传统交通差别不大.</div></li><li><div class="ovv-simple-pit-myth">5 年制比 4 年制多一年更值</div><div class="ovv-simple-pit-reality">该专业多为 4 年制, 5 年制是建筑学 (老八校) 残余影响; 真要 5 年本硕连读建议直接考研, 别在本科多耗.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">智能建造与智慧交通的真功夫是「既懂工地又懂代码」的复合能力 — 这专业 4 年读完不让你「又能搬砖又能写代码」, 而是把你卡在 BIM 翻模岗被 CS 算法岗双向挤压的中间地带: BIM 强制落地和车路云一体化是政策窗口, 但 70% 毕业生进中建/中铁/交投 (起薪 8-12K), 仅 < 10% 真进华为/百度算法岗, 需自学刷题才有可能.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">力学与结构基础 + BIM/装配式/智能施工 + 交通规划与智能交通系统 + 编程/数据/AI + 工程项目管理, 强调"工程 + IT"双底色。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对工程 + 数字技术都有兴趣, 喜欢动手做项目 (BIM 建模/工地实习/算法)</li><li>能接受一定比例的工地/项目现场实习, 不晕现场</li><li>愿意投入时间学编程 (Python/C++) + 数据分析</li><li>对「工程 + IT」复合定位有清晰预期, 不期待纯互联网高薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>本意是想读纯 CS/软件工程, 借这个专业「曲线转码」 (真转码建议直接读 CS)</li><li>抗拒工地/项目现场实习 (本专业必修)</li><li>期待本科毕业对标互联网大厂算法岗起薪 25K+</li><li>对传统土木工程基础课 (力学/结构/制图) 极度排斥</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">智能建造 = 土木 + 计算机双学位</div><div class="ovv-simple-pit-reality">绝大多数院校授予「工学学士」, 计算机课程广而不深 (Python/数据/AI 入门), 不能与 CS 科班竞争算法岗; 真想做算法, 得自学补足 CS 基础.</div></li><li><div class="ovv-simple-pit-myth">毕业就能进大厂算法岗</div><div class="ovv-simple-pit-reality">本专业 70% 毕业生进建筑央企/设计院/交投集团 (中建/中铁/中交/各省交投), 起薪 8-12K; 真正进华为/百度车路协同算法岗的不到 10%, 且需自学刷题.</div></li><li><div class="ovv-simple-pit-myth">BIM 工程师高薪紧缺</div><div class="ovv-simple-pit-reality">BIM 岗位需求是真, 但一线设计院起薪 8-12K, 项目提成另算, 资深 5 年 25-40 万, 远低于互联网算法岗, 行业「卷」主要在考 BIM 证书, 不在薪资.</div></li><li><div class="ovv-simple-pit-myth">智慧交通方向一定比传统交通薪资高</div><div class="ovv-simple-pit-reality">智慧交通企业 (海信/海康/千方) 算法岗起薪 15-25K, 但需求极少 (< 岗招 200 人), 多数进智慧交通企业的毕业生做系统集成/项目实施, 起薪与传统交通差别不大.</div></li><li><div class="ovv-simple-pit-myth">5 年制比 4 年制多一年更值</div><div class="ovv-simple-pit-reality">该专业多为 4 年制, 5 年制是建筑学 (老八校) 残余影响; 真要 5 年本硕连读建议直接考研, 别在本科多耗.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1185,14 +1179,14 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
             <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">中建集团</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">中建集团 (中建科工/中建八局 BIM 中心)</div>
+          <div class="company-meta">★★★ · 校招 应届 BIM/智能施工 9-15 万 · 3 年骨干 18-30 万 · 5 年项目经理 30-55 万 · 10 年+ 总工 60-150 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1201,14 +1195,14 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
             <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">中铁集团</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">中铁集团 / 中铁建设</div>
+          <div class="company-meta">★★ · 校招 应届 8-14 万 · 3 年 16-28 万 · 5 年项目经理 28-50 万 · 出差/工地较多</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1217,10 +1211,10 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
             <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中交建</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">中交建 (中交一公局/中交建智慧交通)</div>
+          <div class="company-meta">★★★ · 校招 应届 8-15 万 · 3 年 18-32 万 · 5 年总工 30-55 万 · 海外项目 1.5 倍</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1233,14 +1227,14 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
             <div class="company-monogram">华</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">华为(智慧交通军团/车BU)</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">华为 (智慧交通军团 / 车 BU)</div>
+          <div class="company-meta">★★ · 校招 985 硕算法 30-55 万 · 3 年 60-100 万 · 5 年资深 100-180 万 · 占比 < 5%</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1249,14 +1243,14 @@ footer .data-source { color: #78716C; }
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
             <div class="company-monogram">百</div>
-            <span class="company-tier tier-B">B</span>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">百度Apollo</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">百度 Apollo / 小马智行 / 文远知行</div>
+          <div class="company-meta">★★ · 校招 985 硕算法 30-60 万 · 3 年 80-150 万 · 5 年资深 150-300 万 · 招聘 < 200 人/年</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1267,12 +1261,12 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">海</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">海康威视</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">海康威视 / 海信网络科技 (智慧城市/交通)</div>
+          <div class="company-meta">★★★ · 校招 应届算法/系统集成 15-25 万 · 3 年 30-50 万 · 5 年资深 50-90 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1283,10 +1277,10 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">千</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">千方科技</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">千方科技 / 高德地图 (交通大数据)</div>
+          <div class="company-meta">★★ · 校招 应届算法 18-30 万 · 3 年 35-60 万 · 5 年资深 60-100 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1296,11 +1290,11 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">海</div>
+            <div class="company-monogram">各</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">海信网络科技</div>
-          <div class="company-meta">★★ · 校招 详见公司招聘公告</div>
+          <div class="company-name">各省交投 / 城投集团 (智慧公路)</div>
+          <div class="company-meta">★★ · 校招 事业编 12-22 万 · 资深 25-45 万 · 稳定但涨幅慢, 国考/省考竞争比 50:1+</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1327,33 +1321,45 @@ footer .data-source { color: #78716C; }
       <tbody>
         <tr>
           <td class="salary-stage">应届生 (央企/设计院/交投)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">应届生 (智慧交通算法/互联网)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (智慧交通算法/车路协同)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.0%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (BIM 骨干/智慧工地)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="28" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:42.857142857142854%"></span></span><span class="yoy up">↗ +7%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.857142857142854%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验 (项目经理/算法骨干)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:48.888888888888886%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="32" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.11111111111111%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="45" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">3年经验 (智慧交通算法工程师)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.5%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (技术总监/事业部负责人)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="90" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (项目经理/设计院骨干)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:41.66666666666667%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">5年经验 (算法骨干/资深研发)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:37.5%"></span></span><span class="yoy up">↗ +13%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="160" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (技术总监/事业部负责人/创业)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:26.666666666666668%"></span></span><span class="yoy up">↗ +9%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="300" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1519,37 +1525,54 @@ footer .data-source { color: #78716C; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: smart-construction-transportation) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「智能建造与智慧交通」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card eng" href="/naval-architecture-and-ocean-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">船舶与海洋工程</span><span class="wl-hook">船舶与海洋工程</span></a>
+      <a class="wl-card eng" href="/geodesy-and-survey-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">测绘工程</span><span class="wl-hook">测绘工程</span></a>
+      <a class="wl-card eng" href="/land-remediation-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">土地整治工程</span><span class="wl-hook">土地整治工程</span></a>
+      <a class="wl-card eng" href="/exploration-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">勘查技术与工程</span><span class="wl-hook">勘查技术与工程</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
+      <a class="wl-card arts" href="/fine-arts.html" data-tag="跨界"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
     </div>
   </div>
 </section>

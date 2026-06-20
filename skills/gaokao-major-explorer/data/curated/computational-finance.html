@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Jost:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -731,7 +732,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -938,7 +939,7 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">计算金融 (0203T) 是 2018 年后才在中国高校正式设立的特设交叉专业, 它的核心壁垒不是"金融也不是计算机"而是"数学+编程+金融直觉"的三角. 在 2024 量化私募规模突破 1.5 万亿的背景下, 这专业的真实出口是"量化研究员/量化开发/策略开发", 应届 985 硕中位数 50-80 万, 3-5 年经验百万年薪是行业常态. 但风险是"C++ 不会 + 随机过程不懂 = 进不了核心策略组", 80% 毕业生实际去的是金融科技产品/数据分析/银行科技岗, 而非真正的高频/中低频量化 —— 这是这专业最大的认知差.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">计算金融是融合数学、统计学、计算机科学与金融学的交叉学科，培养运用定量分析、算法设计和程序开发解决金融定价、风险管理、投资决策等复杂问题的复合型人才。该专业以金融衍生品定价、量化交易策略、风险模型构建为核心方向，强调数学建模能力、编程实现能力与金融市场直觉的深度结合，是金融科技（FinTech）时代的核心专业之一。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学/统计/计算机/经济金融都有兴趣, 愿 5-10 年在量化金融沉淀</li><li>数学物理基础扎实 (高考数学 130+/物理竞赛省一加分), 愿转 CS 硕/统计硕</li><li>接受 985 硕为就业主流门槛 (头部量化/券商金工 90% 要求硕)</li><li>能适应量化行业高强度工作节奏 (加班/心理压力/模型迭代)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标头部量化起薪 50-80 万 (头部量化校招几乎不招本科生)</li><li>数学物理只是「还不错」, 不是「真爱好」, 随机过程/最优化/数值分析课会击垮你</li><li>把计算金融当「转 CS 的捷径」 (真要转 CS, 直接读 CS 更高效)</li><li>不愿读研, 想本科直接进头部投行/量化 (基本不可能)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">计算金融 = 金融 + CS 双学位</div><div class="ovv-simple-pit-reality">绝大多数院校授予「经济学学士」, 数学/统计/CS 课程广而不深, 真正要进头部量化 (九坤/明汯/幻方) 需 985 硕 + 数学/物理 PhD 级别, 本科 CS 技能远不够.</div></li><li><div class="ovv-simple-pit-myth">毕业能直接进中金/高盛</div><div class="ovv-simple-pit-reality">中金/高盛/摩根士丹利校招 985 硕 + CFA + 实习 3 段是硬门槛, 本科直接进 IBD/S&T 核心岗比例 <5%, 多数毕业生进银行/券商基础岗.</div></li><li><div class="ovv-simple-pit-myth">量化交易 = 程序员写策略</div><div class="ovv-simple-pit-reality">真正的量化研究 70% 是数学建模 + 统计推断 + 因子挖掘, 编程只是工具, 单纯 CS 背景反而难出头.</div></li><li><div class="ovv-simple-pit-myth">计算金融比 CS 更好就业</div><div class="ovv-simple-pit-reality">CS 顶尖毕业可进大厂算法 (30-80K/月), 计算金融顶尖 985 硕进头部量化 (50-150 万/年), 但招生规模小, 「内卷」程度不亚于 CS.</div></li><li><div class="ovv-simple-pit-myth">Kaggle 金牌 = 头部量化 offer</div><div class="ovv-simple-pit-reality">Kaggle/CMO/IMO 是头部量化简历门槛, 真正拿 offer 还要面试题 (概率论/随机过程/最优化) + 英文文献阅读, 整体通过率 < 10%.</div></li><li><div class="ovv-simple-pit-myth">本专业不需要读研</div><div class="ovv-simple-pit-reality">头部量化 (九坤/明汯/幻方/锐天) 校招 90% 要求 985 硕 + 顶会/竞赛; 头部券商金融工程 (中信/华泰) 同样要求 985 硕 + CFA/FRM.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">计算金融的核心是用 PDE/蒙特卡洛/C++ 重写华尔街那本定价手册, 不是「金融+CS 双学位」. 在 2024 量化私募规模突破 1.5 万亿背景下, 应届 985 硕中位数 50-80 万, 3-5 年百万年薪常态, 但 80% 毕业生实际去的是金融科技产品/数据分析/银行科技岗, 进不了真正的高频/中低频量化 — 这是这专业最大的认知差.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">计算金融是融合数学、统计学、计算机科学与金融学的交叉学科，培养运用定量分析、算法设计和程序开发解决金融定价、风险管理、投资决策等复杂问题的复合型人才。该专业以金融衍生品定价、量化交易策略、风险模型构建为核心方向，强调数学建模能力、编程实现能力与金融市场直觉的深度结合，是金融科技（FinTech）时代的核心专业之一。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学/统计/计算机/经济金融都有兴趣, 愿 5-10 年在量化金融沉淀</li><li>数学物理基础扎实 (高考数学 130+/物理竞赛省一加分), 愿转 CS 硕/统计硕</li><li>接受 985 硕为就业主流门槛 (头部量化/券商金工 90% 要求硕)</li><li>能适应量化行业高强度工作节奏 (加班/心理压力/模型迭代)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标头部量化起薪 50-80 万 (头部量化校招几乎不招本科生)</li><li>数学物理只是「还不错」, 不是「真爱好」, 随机过程/最优化/数值分析课会击垮你</li><li>把计算金融当「转 CS 的捷径」 (真要转 CS, 直接读 CS 更高效)</li><li>不愿读研, 想本科直接进头部投行/量化 (基本不可能)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">计算金融 = 金融 + CS 双学位</div><div class="ovv-simple-pit-reality">绝大多数院校授予「经济学学士」, 数学/统计/CS 课程广而不深, 真正要进头部量化 (九坤/明汯/幻方) 需 985 硕 + 数学/物理 PhD 级别, 本科 CS 技能远不够.</div></li><li><div class="ovv-simple-pit-myth">毕业能直接进中金/高盛</div><div class="ovv-simple-pit-reality">中金/高盛/摩根士丹利校招 985 硕 + CFA + 实习 3 段是硬门槛, 本科直接进 IBD/S&T 核心岗比例 <5%, 多数毕业生进银行/券商基础岗.</div></li><li><div class="ovv-simple-pit-myth">量化交易 = 程序员写策略</div><div class="ovv-simple-pit-reality">真正的量化研究 70% 是数学建模 + 统计推断 + 因子挖掘, 编程只是工具, 单纯 CS 背景反而难出头.</div></li><li><div class="ovv-simple-pit-myth">计算金融比 CS 更好就业</div><div class="ovv-simple-pit-reality">CS 顶尖毕业可进大厂算法 (30-80K/月), 计算金融顶尖 985 硕进头部量化 (50-150 万/年), 但招生规模小, 「内卷」程度不亚于 CS.</div></li><li><div class="ovv-simple-pit-myth">Kaggle 金牌 = 头部量化 offer</div><div class="ovv-simple-pit-reality">Kaggle/CMO/IMO 是头部量化简历门槛, 真正拿 offer 还要面试题 (概率论/随机过程/最优化) + 英文文献阅读, 整体通过率 < 10%.</div></li><li><div class="ovv-simple-pit-myth">本专业不需要读研</div><div class="ovv-simple-pit-reality">头部量化 (九坤/明汯/幻方/锐天) 校招 90% 要求 985 硕 + 顶会/竞赛; 头部券商金融工程 (中信/华泰) 同样要求 985 硕 + CFA/FRM.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1011,61 +1012,61 @@ footer .data-source { color: #78716C; }
           <div class="bento-monogram">北</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">北京大学</div>
-          <div class="bento-tag">应用经济学A+</div>
+          <div class="bento-tag">北京 · 985 · 数学科学学院 + 经济学院联合培养, 应用经济学A+, 量化金融最顶尖</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">清</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">清华大学</div>
-          <div class="bento-tag">应用经济学A+</div>
+          <div class="bento-tag">北京 · 985 · 经济管理学院 + 数学系, 应用经济学A+, 量化金融工程全国前二</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">复</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">复旦大学</div>
-          <div class="bento-tag">应用经济学A+</div>
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中国科学技术大学</div>
+          <div class="bento-tag">合肥 · 985 · 管理学院统计金融 + 数学科学学院, 量化金融全国前三, MCM/ICM 传统强校</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">上</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">上海交通大学</div>
-          <div class="bento-tag">金融学科强势</div>
+          <div class="bento-tag">上海 · 985 · 安泰经济与管理学院 + 数学科学学院, 上海区位金融资源</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">中</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">中国人民大学</div>
-          <div class="bento-tag">应用经济学A+</div>
+          <div class="bento-monogram">复</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">复旦大学</div>
+          <div class="bento-tag">上海 · 985 · 经济学院 + 数学科学学院, 应用经济学A+, 校友在外资投行/量化深厚</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">中央财经大学</div>
-          <div class="bento-tag">应用经济学A</div>
+          <span class="bento-rank">A</span>
+          <div class="bento-name">中国人民大学</div>
+          <div class="bento-tag">北京 · 985 · 应用经济学A+, 金融工程学术重镇, 部委金融校友资源</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">上</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">A</span>
           <div class="bento-name">上海财经大学</div>
-          <div class="bento-tag">应用经济学A</div>
+          <div class="bento-tag">上海 · 211 · 财经类第一, 应用经济学A, 头部券商/公募基金校招主渠道</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">A-</span>
+          <div class="bento-name">中央财经大学</div>
+          <div class="bento-tag">北京 · 211 · 应用经济学A, 金融科技 + 金融监管特色, 银行金科校友多</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">对</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">对外经济贸易大学</div>
-          <div class="bento-tag">应用经济学A</div>
+          <div class="bento-tag">北京 · 211 · 应用经济学A, 外资投行/跨境金融校友资源</div>
         </div>
-        <div class="bento-item fade-up" data-delay="0">
+        <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">厦</div>
           <span class="bento-rank">B+</span>
           <div class="bento-name">厦门大学</div>
-          <div class="bento-tag">应用经济学A</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">西</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">西南财经大学</div>
-          <div class="bento-tag">应用经济学A-</div>
+          <div class="bento-tag">厦门 · 985 · 应用经济学A, 计量经济 + 金融工程传统强校</div>
         </div>
     </div>
   </div>
@@ -1083,8 +1084,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">中</div>
             <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">中金公司</div>
-          <div class="company-meta">★★★ · 校招 30-60 万/年 (事业编/资深岗)</div>
+          <div class="company-name">中金公司 (中金所/金工部)</div>
+          <div class="company-meta">★★★ · 校招 985 硕 + CFA 校招 base 30-50 万, 3 年 60-100 万, 5 年 VP 150-300 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:75.0%"></div>
@@ -1099,8 +1100,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">中</div>
             <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">中信证券</div>
-          <div class="company-meta">★★ · 校招 30-60 万/年 (事业编/资深岗)</div>
+          <div class="company-name">中信证券 (衍生品/金工部)</div>
+          <div class="company-meta">★★ · 校招 985 硕校招 30-50 万, 3 年 60-120 万, 5 年 150-300 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
@@ -1112,31 +1113,31 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">华</div>
-            <span class="company-tier tier-A">A</span>
+            <div class="company-monogram">幻</div>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">华泰证券</div>
-          <div class="company-meta">★★★ · 校招 20-40 万/年 (核心研发/产品岗)</div>
+          <div class="company-name">幻方量化 (头部私募)</div>
+          <div class="company-meta">★★ · 校招 985 硕 + 顶会/竞赛校招 base 80-150 万, 3 年 200-500 万, 5 年策略合伙人 500-1500 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">中</div>
-            <span class="company-tier tier-A">A</span>
+            <div class="company-monogram">九</div>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">中信建投证券</div>
-          <div class="company-meta">★★ · 校招 20-40 万/年 (核心研发/产品岗)</div>
+          <div class="company-name">九坤/明汯/锐天/衍复 (量化私募四大)</div>
+          <div class="company-meta">★★ · 校招 985 硕校招 60-120 万, 3 年 150-400 万, 5 年策略合伙人 400-1000 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
+            <div class="sparkline-bar" style="height:83.33333333333334%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1144,11 +1145,11 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">国</div>
+            <div class="company-monogram">华</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">国泰君安证券</div>
-          <div class="company-meta">★★★ · 校招 20-40 万/年 (核心研发/产品岗)</div>
+          <div class="company-name">华泰证券 (金工/资管)</div>
+          <div class="company-meta">★★★ · 校招 985 硕校招 25-45 万, 3 年 50-100 万, 5 年 100-200 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1160,15 +1161,15 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">招</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">易</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">招商证券</div>
-          <div class="company-meta">★★ · 校招 12-25 万/年 (普通技术岗)</div>
+          <div class="company-name">易方达/华夏基金 (公募量化)</div>
+          <div class="company-meta">★★ · 校招 985 硕校招 30-60 万, 3 年 60-120 万, 5 年基金经理 150-300 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1176,15 +1177,15 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">易</div>
+            <div class="company-monogram">招</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">易方达基金</div>
-          <div class="company-meta">★★★ · 校招 12-25 万/年 (普通技术岗)</div>
+          <div class="company-name">招商证券 / 中信建投 (中型券商金工)</div>
+          <div class="company-meta">★★ · 校招 985 硕校招 20-35 万, 3 年 40-70 万, 5 年 80-150 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
@@ -1192,13 +1193,13 @@ footer .data-source { color: #78716C; }
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">华</div>
+            <div class="company-monogram">蚂</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">华夏基金</div>
-          <div class="company-meta">★★ · 校招 12-25 万/年 (普通技术岗)</div>
+          <div class="company-name">蚂蚁集团 / 腾讯金融科技 (互联网金融科技)</div>
+          <div class="company-meta">★★★ · 校招 985 硕算法岗 35-70 万, 3 年 70-130 万, 5 年 130-250 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:100.0%"></div>
+            <div class="sparkline-bar" style="height:66.66666666666666%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1222,34 +1223,34 @@ footer .data-source { color: #78716C; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (985 硕, 量化私募)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:87.5%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="37" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:92.5%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (985 硕, 头部量化私募)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:53.333333333333336%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">应届生 (985 硕, 头部券商金工)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:62.5%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="25" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +9%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年经验 (量化策略骨干)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="60" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:92.3076923076923%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="62" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:95.38461538461539%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="65" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">3年经验 (量化策略骨干/研究员)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="80" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:26.666666666666668%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="300" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验 (量化合伙人/资深策略)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:95.23809523809523%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="102" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:97.14285714285714%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="105" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (资深策略/PM/合伙人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="200" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:28.57142857142857%"></span></span><span class="yoy up">↗ +13%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="400" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="700" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (首席量化/PM/创始人)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="200" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:97.5609756097561%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="202" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:98.53658536585365%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="205" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">10年+ (首席量化/创始人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="500" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:20.0%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="1200" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:48.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="2500" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1425,37 +1426,54 @@ footer .data-source { color: #78716C; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: computational-finance) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「计算金融」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card finance" href="/finance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card finance" href="/national-economy-management.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">国民经济管理</span><span class="wl-hook">国民经济管理</span></a>
+      <a class="wl-card finance" href="/insurance.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">保险学</span><span class="wl-hook">保险学</span></a>
+      <a class="wl-card finance" href="/finance-math.html" data-tag="同主题"><span class="wl-badge">财经</span><span class="wl-title">金融数学</span><span class="wl-hook">金融数学</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card eng" href="/mechanical-engineering.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">机械工程</span><span class="wl-hook">制造业脊梁, 越老越香</span></a>
+      <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card cs" href="/artificial-intelligence.html" data-tag="跨界"><span class="wl-badge">计算机</span><span class="wl-title">人工智能</span><span class="wl-hook">算法堆顶, 博士起步</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
     </div>
   </div>
 </section>
