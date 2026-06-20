@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -731,7 +732,7 @@ footer .data-source { color: #6B5D3F; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -937,7 +938,7 @@ footer .data-source { color: #6B5D3F; }
           <div class="hu-stat"><span class="hu-stat-seal">正</span><div class="stat-label">学 科 门 类</div><div class="stat-value">文学 · 外国语言文学类</div></div>
           <div class="hu-stat"><div class="stat-label">学 制 · 学 位</div><div class="stat-value">4Y · 文学学士</div></div>
           <div class="hu-stat"><div class="stat-label">难 度 评 定</div><div class="stat-value">★★★★☆</div></div>
-          <div class="hu-stat"><div class="stat-label">版 本 修 订</div><div class="stat-value">2026-06</div></div>
+          <div class="hu-stat"><div class="stat-label">版 本 修 订</div><div class="stat-value">2026-06-20T15:15:09.898158+00:00</div></div>
         </div>
         <ul class="hu-toc">
           <li><span class="hu-toc-cnum">壹</span><span class="hu-toc-name">速览 · 专业全貌</span><span class="hu-toc-pg">p. 02</span></li>
@@ -956,7 +957,7 @@ footer .data-source { color: #6B5D3F; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">吉尔吉斯语的核心是「吉尔吉斯语精读 + 俄语 + 中亚历史与文化 + 一带一路跨境贸易」四栖训练, 在 2013 一带一路 + 上合组织扩员 + 中亚油气/矿产/基建合作 的 2024-2026 — 应届起薪对小语种高位 (一线 10-18 万), 但「岗位总量极少 + 中亚安全风险 + 文化隔离 + 就业面极窄」是该专业四大风险, 「区别于主流外语」是选专业第一关.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 吉尔吉斯语精读 (从西里尔字母开始)/吉尔吉斯语听力/吉尔吉斯语口语/吉尔吉斯语写作/中亚五国概况/大学英语; 大二核心: 吉尔吉斯语高级精读/吉尔吉斯-汉互译/中亚历史/俄罗斯文学与文化/吉尔吉斯斯坦法律与政治; 大三方向分流: 中亚跨境贸易 / 吉尔吉斯语翻译 / 中亚研究 / 国际关系与外交 四选一; 大四毕业实习 (中亚中资企业/上合组织相关机构/孔子学院) + 毕业论文.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对中亚五国/上合组织/一带一路有持续兴趣, 接受极小众小语种</li><li>愿意死磕吉尔吉斯语 — 突厥语族 + 西里尔字母 + 中亚文化隔离, 公认最难小语种之一</li><li>对中亚安全风险 (政局/治安) + 高温气候 + 文化差异有心理准备</li><li>愿意接受中亚留学/交换 (吉尔吉斯斯坦/哈萨克斯坦) 作为加分项</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待 4 年本科对标主流外语 (英语/日语/法语) 就业体量 — 吉尔吉斯语岗位比主流小语种少 30-50 倍</li><li>对中亚/俄语/突厥语族完全没兴趣 — 吉尔吉斯语就业面极窄, 没强烈兴趣很难坚持 4 年</li><li>把吉尔吉斯语等同于「去新疆/中亚旅游」 — 该专业培养「一带一路派驻 + 上合合作 + 翻译 + 中亚研究」人才, 不是「导游」</li><li>对中亚安全风险 + 高温气候 + 文化差异没准备</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">吉尔吉斯语 = 中亚翻译/导游</div><div class="ovv-simple-pit-reality">中亚翻译/导游只是入门级, 真正头部岗位是中亚跨境贸易/中亚研究/上合合作/中资派驻 — 这些岗位要求「吉尔吉斯语 + 俄语 + 跨境贸易/政治/能源」综合能力, 纯翻译只是 1/4 能力.</div></li><li><div class="ovv-simple-pit-myth">中亚中资企业工资高, 应届对标 30-50 万</div><div class="ovv-simple-pit-reality">中亚中资企业 (中石油/中色/中工国际/华为/中兴/小米/特变电工) 应届管培生起薪 10-18 万, 派驻中亚补贴 20-50 万/年 — 头部派驻年包可达 30-45 万, 但需考虑中亚安全风险 + 文化隔离 + 1-3 年外派 + 家庭分离.</div></li><li><div class="ovv-simple-pit-myth">毕业可进上合组织/外交部</div><div class="ovv-simple-pit-reality">上合组织北京秘书处 + 外交部欧亚司 是真正的头部目标, 但应届门槛极高 (985 硕 + 俄语/中亚语 + 党员 + 国际关系背景), 中国吉尔吉斯语毕业生真正能进入的是「中亚中资企业派驻 + 边境合作机构 + 孔子学院」三条线, 上合/外交部岗位极少.</div></li><li><div class="ovv-simple-pit-myth">孔子学院教师 = 稳定外派</div><div class="ovv-simple-pit-reality">孔子学院是吉尔吉斯语毕业生主流去向之一 (比什凯克/奥什有 4 所孔子学院), 但薪资偏低 (月薪 1-1.5 万人民币 + 当地补贴), 适合「真正喜欢中亚文化 + 教学」的同学, 不是「赚钱派驻」.</div></li><li><div class="ovv-simple-pit-myth">吉尔吉斯语 = 俄语替身</div><div class="ovv-simple-pit-reality">吉尔吉斯语是突厥语族 + 西里尔字母, 与俄语 (斯拉夫语族) 语法结构差异极大; 但中亚实际工作场景俄语仍是通用语 (尤其商务/官方), 真正想在中亚工作必须「吉尔吉斯语 + 俄语」双语, 单学吉尔吉斯语就业面更窄.</div></li><li><div class="ovv-simple-pit-myth">AI 翻译取代吉尔吉斯语</div><div class="ovv-simple-pit-reality">AI 翻译在通用场景已替代大量笔译, 但中亚跨境贸易/能源合作/法律文件 等专业场景, 因术语精度 + 文化差异 + 法律责任, 仍需人工 — 吉尔吉斯语专业的护城河是「吉尔吉斯语 + 俄语 + 跨境贸易」三强, 不是单翻译.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">吉尔吉斯语的核心是「吉尔吉斯语精读 + 俄语 + 中亚历史与文化 + 一带一路跨境贸易」四栖训练; 2013 年一带一路 + 2024 上合组织扩员 + 2024-2026 中亚油气/矿产/基建合作, 三重窗口下该专业从冷门储备变务实通道. 应届起薪对小语种高位 (一线 10-18 万), 但「岗位总量极少 + 中亚安全风险 + 文化隔离 + 就业面极窄」是该专业四大风险, 「区别于主流外语」是选专业第一关.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 吉尔吉斯语精读 (从西里尔字母开始)/吉尔吉斯语听力/吉尔吉斯语口语/吉尔吉斯语写作/中亚五国概况/大学英语; 大二核心: 吉尔吉斯语高级精读/吉尔吉斯-汉互译/中亚历史/俄罗斯文学与文化/吉尔吉斯斯坦法律与政治; 大三方向分流: 中亚跨境贸易 / 吉尔吉斯语翻译 / 中亚研究 / 国际关系与外交 四选一; 大四毕业实习 (中亚中资企业/上合组织相关机构/孔子学院) + 毕业论文.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对中亚五国/上合组织/一带一路有持续兴趣, 接受极小众小语种</li><li>愿意死磕吉尔吉斯语 — 突厥语族 + 西里尔字母 + 中亚文化隔离, 公认最难小语种之一</li><li>对中亚安全风险 (政局/治安) + 高温气候 + 文化差异有心理准备</li><li>愿意接受中亚留学/交换 (吉尔吉斯斯坦/哈萨克斯坦) 作为加分项</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待 4 年本科对标主流外语 (英语/日语/法语) 就业体量 — 吉尔吉斯语岗位比主流小语种少 30-50 倍</li><li>对中亚/俄语/突厥语族完全没兴趣 — 吉尔吉斯语就业面极窄, 没强烈兴趣很难坚持 4 年</li><li>把吉尔吉斯语等同于「去新疆/中亚旅游」 — 该专业培养「一带一路派驻 + 上合合作 + 翻译 + 中亚研究」人才, 不是「导游」</li><li>对中亚安全风险 + 高温气候 + 文化差异没准备</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">吉尔吉斯语 = 中亚翻译/导游</div><div class="ovv-simple-pit-reality">中亚翻译/导游只是入门级, 真正头部岗位是中亚跨境贸易/中亚研究/上合合作/中资派驻 — 这些岗位要求「吉尔吉斯语 + 俄语 + 跨境贸易/政治/能源」综合能力, 纯翻译只是 1/4 能力.</div></li><li><div class="ovv-simple-pit-myth">中亚中资企业工资高, 应届对标 30-50 万</div><div class="ovv-simple-pit-reality">中亚中资企业 (中石油/中色/中工国际/华为/中兴/小米/特变电工) 应届管培生起薪 10-18 万, 派驻中亚补贴 20-50 万/年 — 头部派驻年包可达 30-45 万, 但需考虑中亚安全风险 + 文化隔离 + 1-3 年外派 + 家庭分离.</div></li><li><div class="ovv-simple-pit-myth">毕业可进上合组织/外交部</div><div class="ovv-simple-pit-reality">上合组织北京秘书处 + 外交部欧亚司 是真正的头部目标, 但应届门槛极高 (985 硕 + 俄语/中亚语 + 党员 + 国际关系背景), 中国吉尔吉斯语毕业生真正能进入的是「中亚中资企业派驻 + 边境合作机构 + 孔子学院」三条线, 上合/外交部岗位极少.</div></li><li><div class="ovv-simple-pit-myth">孔子学院教师 = 稳定外派</div><div class="ovv-simple-pit-reality">孔子学院是吉尔吉斯语毕业生主流去向之一 (比什凯克/奥什有 4 所孔子学院), 但薪资偏低 (月薪 1-1.5 万人民币 + 当地补贴), 适合「真正喜欢中亚文化 + 教学」的同学, 不是「赚钱派驻」.</div></li><li><div class="ovv-simple-pit-myth">吉尔吉斯语 = 俄语替身</div><div class="ovv-simple-pit-reality">吉尔吉斯语是突厥语族 + 西里尔字母, 与俄语 (斯拉夫语族) 语法结构差异极大; 但中亚实际工作场景俄语仍是通用语 (尤其商务/官方), 真正想在中亚工作必须「吉尔吉斯语 + 俄语」双语, 单学吉尔吉斯语就业面更窄.</div></li><li><div class="ovv-simple-pit-myth">AI 翻译取代吉尔吉斯语</div><div class="ovv-simple-pit-reality">AI 翻译在通用场景已替代大量笔译, 但中亚跨境贸易/能源合作/法律文件 等专业场景, 因术语精度 + 文化差异 + 法律责任, 仍需人工 — 吉尔吉斯语专业的护城河是「吉尔吉斯语 + 俄语 + 跨境贸易」三强, 不是单翻译.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1013,49 +1014,25 @@ footer .data-source { color: #6B5D3F; }
           <div class="bento-monogram">新</div>
           <span class="bento-rank">A+</span>
           <div class="bento-name">新疆大学</div>
-          <div class="bento-tag">乌鲁木齐 · 211, 外国语学院, 国内吉尔吉斯语第一, 一带一路跨境贸易特色</div>
+          <div class="bento-tag">乌鲁木齐 · 211/双一流 · 中亚研究核心校, 吉尔吉斯语本科最早开设 (2000 年代)</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">A+</span>
           <div class="bento-name">北京外国语大学</div>
-          <div class="bento-tag">北京 · 211, 亚非学院, 吉尔吉斯语 + 中亚研究, 北外语言优势 + 上合方向</div>
+          <div class="bento-tag">北京 · 985 · 外语类顶尖, 吉尔吉斯语方向完备, 外交部输送核心</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">上</div>
           <span class="bento-rank">A</span>
           <div class="bento-name">上海外国语大学</div>
-          <div class="bento-tag">上海 · 211, 俄欧亚学院, 吉尔吉斯语 + 俄语 + 中亚研究, 上合 + 中亚研究特色</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">西</div>
-          <span class="bento-rank">A-</span>
-          <div class="bento-name">西安外国语大学</div>
-          <div class="bento-tag">西安 · 双非, 亚非学院, 吉尔吉斯语 + 中亚历史 + 西部边疆</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">兰</div>
-          <span class="bento-rank">A-</span>
-          <div class="bento-name">兰州大学</div>
-          <div class="bento-tag">兰州 · 985, 外国语学院吉尔吉斯语方向, 中亚研究 + 西部边疆安全</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">广</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">广东外语外贸大学</div>
-          <div class="bento-tag">广州 · 双非, 西方语言文化学院, 吉尔吉斯语方向起步</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">大</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">大连外国语大学</div>
-          <div class="bento-tag">大连 · 双非, 俄语学院吉尔吉斯语方向, 俄语 + 中亚研究</div>
+          <div class="bento-tag">上海 · 211 · 多语种教学强校, 吉尔吉斯语 211 学科覆盖</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">B</span>
+          <span class="bento-rank">A-</span>
           <div class="bento-name">中央民族大学</div>
-          <div class="bento-tag">北京 · 985, 外国语学院吉尔吉斯语方向, 民族语 + 中亚研究</div>
+          <div class="bento-tag">北京 · 985 · 少数民族语言 + 中亚研究交叉, 民族文化 + 跨境合作输送</div>
         </div>
     </div>
   </div>
@@ -1414,37 +1391,54 @@ footer .data-source { color: #6B5D3F; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: kyrgyz-language) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「吉尔吉斯语」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card humanities" href="/0502101.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">塔玛齐格特语</span><span class="wl-hook">塔玛齐格特语</span></a>
+      <a class="wl-card humanities" href="/world-history.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">世界史</span><span class="wl-hook">世界史</span></a>
+      <a class="wl-card humanities" href="/burmese.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">缅甸语</span><span class="wl-hook">缅甸语</span></a>
+      <a class="wl-card humanities" href="/archaeology.html" data-tag="同主题"><span class="wl-badge">人文</span><span class="wl-title">考古学</span><span class="wl-hook">田野 + 文博 + 事业编</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
+      <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
     </div>
   </div>
 </section>
