@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manifest Shortcuts 效果演示 · Major Explorer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+    background: linear-gradient(135deg, #F5F2EA 0%, #e8e0d0 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: #2a2a2a;
+  }
+  .container { max-width: 880px; margin: 0 auto; }
+
+  h1 { font-size: 32px; margin-bottom: 12px; font-weight: 700; }
+  .subtitle { color: #666; font-size: 16px; margin-bottom: 36px; line-height: 1.6; }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .demo-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .demo-card h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .demo-card .platform {
+    font-size: 12px;
+    color: #999;
+    background: #f5f5f5;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .demo-card p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  /* 模拟手机桌面 */
+  .phone-frame {
+    background: #1a1a1a;
+    border-radius: 36px;
+    padding: 12px;
+    width: 280px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .phone-screen {
+    background: linear-gradient(180deg, #4a6fa5 0%, #6b8db8 100%);
+    border-radius: 24px;
+    aspect-ratio: 9/19;
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-time {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 24px 8px;
+    text-align: center;
+  }
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px 12px;
+    padding: 24px 16px;
+  }
+  .app-icon {
+    aspect-ratio: 1;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .app-icon.major {
+    background: linear-gradient(135deg, #B8323A 0%, #9a2830 100%);
+    box-shadow: 0 4px 12px rgba(184, 50, 58, 0.4);
+  }
+  .app-icon.major::after {
+    content: "ME";
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+  }
+  .app-icon.label {
+    font-size: 9px;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .app-icon.label .name {
+    color: white;
+    font-size: 10px;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+  .app-icon:active { transform: scale(0.92); }
+
+  /* Long-press context menu (Android-style) */
+  .shortcuts-menu {
+    position: absolute;
+    top: 60px;
+    left: 16px;
+    right: 16px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    z-index: 10;
+    display: none;
+    animation: popIn 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .shortcuts-menu.show { display: block; }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.9) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .shortcut-item:hover { background: rgba(184, 50, 58, 0.06); }
+  .shortcut-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #B8323A 0%, #9a2830 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .shortcut-text { flex: 1; }
+  .shortcut-text .name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+  }
+  .shortcut-text .desc {
+    font-size: 11px;
+    color: #888;
+  }
+  .arrow { color: #999; font-size: 18px; }
+
+  /* 控制按钮 */
+  .controls {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .btn {
+    background: #B8323A;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: #9a2830; transform: translateY(-1px); }
+  .btn.secondary { background: #2a2a2a; margin-left: 8px; }
+  .btn.secondary:hover { background: #000; }
+
+  /* JSON 配置展示 */
+  .config {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+  .config .key { color: #9cdcfe; }
+  .config .str { color: #ce9178; }
+  .config .punc { color: #d4d4d4; }
+
+  .features {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .features h2 { font-size: 20px; margin-bottom: 16px; }
+  .features ul { list-style: none; padding: 0; }
+  .features li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .features li:last-child { border-bottom: none; }
+  .features li::before {
+    content: "✓";
+    color: #B8323A;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .toggle-target {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(4px);
+    border: 1px dashed rgba(255,255,255,0.3);
+  }
+
+  footer {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>📱 PWA Manifest Shortcuts 效果演示</h1>
+  <p class="subtitle">
+    当用户把 Major Explorer 添加到主屏幕后,长按桌面图标会弹出快捷菜单。<br>
+    4 个常用入口直达,免去打开首页再点击的步骤。
+  </p>
+
+  <div class="demo-grid">
+    <!-- 移动端模拟 -->
+    <div class="demo-card">
+      <h2>📱 移动端 <span class="platform">Android Chrome</span></h2>
+      <p>长按桌面 Major Explorer 图标,弹出 4 个快捷入口</p>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-time">10:24</div>
+          <div class="app-grid">
+            <div class="app-icon">📞</div>
+            <div class="app-icon">💬</div>
+            <div class="app-icon">📷</div>
+            <div class="app-icon">⚙️</div>
+            <div class="app-icon">🗺️</div>
+            <div class="app-icon">🎵</div>
+            <div class="app-icon toggle-target" onclick="toggleMenu()">📚</div>
+            <div class="app-icon major toggle-target" onclick="toggleMenu()" title="长按我">M</div>
+          </div>
+
+          <div class="shortcuts-menu show" id="shortcutsMenu">
+            <div class="shortcut-item" onclick="nav('📚 13 大学科门类全量目录')">
+              <div class="shortcut-icon">📚</div>
+              <div class="shortcut-text">
+                <div class="name">专业目录</div>
+                <div class="desc">13 学科门类 / 92 专业类</div>
+              </div>
+              <div class="arrow">›</div>
+            </div>
+            <div class="shortcut-item" onclick="nav('🎯 9 档志愿推荐')">
+              <div class="shortcut-icon">🎯</div>
+              <div class="shortcut-text">
+                <div class="name">志愿推荐</div>
+                <div class="desc">冲 12 / 稳 16 / 保 8</div>
+              </div>
+              <div class="arrow">›</div>
+            </div>
+            <div class="shortcut-item" onclick="nav('🔍 搜索专业')">
+              <div class="shortcut-icon">🔍</div>
+              <div class="shortcut-text">
+                <div class="name">搜专业</div>
+                <div class="desc">按名字 / 学科门类</div>
+              </div>
+              <div class="arrow">›</div>
+            </div>
+            <div class="shortcut-item" onclick="nav('🎒 我的心愿单')">
+              <div class="shortcut-icon">🎒</div>
+              <div class="shortcut-text">
+                <div class="name">心愿单</div>
+                <div class="desc">管理 4-6 个意向专业</div>
+              </div>
+              <div class="arrow">›</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" onclick="toggleMenu()">长按图标演示</button>
+        <button class="btn secondary" onclick="document.getElementById('shortcutsMenu').classList.remove('show')">关闭</button>
+      </div>
+    </div>
+
+    <!-- 配置代码 -->
+    <div class="demo-card">
+      <h2>⚙️ manifest.json 配置</h2>
+      <p>在现有的 manifest.json shortcuts 数组里再加 2 个,达到 4 个</p>
+      <div class="config"><span class="punc">{</span>
+  <span class="key">"name"</span><span class="punc">:</span> <span class="str">"Major Explorer"</span><span class="punc">,</span>
+  <span class="key">"shortcuts"</span><span class="punc">: [</span>
+    <span class="punc">{</span> <span class="key">"name"</span><span class="punc">:</span> <span class="str">"目录"</span><span class="punc">,</span> <span class="key">"url"</span><span class="punc">:</span> <span class="str">"/m/catalog.html"</span> <span class="punc">}</span><span class="punc">,</span>
+    <span class="punc">{</span> <span class="key">"name"</span><span class="punc">:</span> <span class="str">"推荐"</span><span class="punc">,</span> <span class="key">"url"</span><span class="punc">:</span> <span class="str">"/m/recommendations.html"</span> <span class="punc">}</span><span class="punc">,</span>
+    <span class="punc">{</span> <span class="key">"name"</span><span class="punc">:</span> <span class="str">"搜索"</span><span class="punc">,</span>  <span class="key">"url"</span><span class="punc">:</span> <span class="str">"/m/search.html"</span>   <span class="punc">}</span><span class="punc">,</span>  <span style="color:#6a9955">// 新增</span>
+    <span class="punc">{</span> <span class="key">"name"</span><span class="punc">:</span> <span class="str">"心愿单"</span><span class="punc">,</span> <span class="key">"url"</span><span class="punc">:</span> <span class="str">"/m/wishlist.html"</span> <span class="punc">}</span>   <span style="color:#6a9955">// 新增</span>
+  <span class="punc">]</span>
+<span class="punc">}</span></div>
+    </div>
+  </div>
+
+  <!-- 效果总结 -->
+  <div class="features">
+    <h2>🎯 实际效果</h2>
+    <ul>
+      <li><strong>减少跳转</strong>: 用户从桌面长按 → 直达目标页 (1 步 vs 打开首页 + 点击导航的 2 步)</li>
+      <li><strong>高频路径优先</strong>: 目录 (浏览全部) / 推荐 (查志愿) / 搜索 (找具体) / 心愿单 (管理意向) 都是用户最常访问</li>
+      <li><strong>OS 级集成</strong>: 桌面图标右键菜单、Android 长按菜单、Windows 跳转列表都生效</li>
+      <li><strong>图标统一</strong>: 每个 shortcut 可指定独立图标 (目前共用 /m/icon-192.png)</li>
+      <li><strong>无 app 也能用</strong>: 即使没添加为 PWA,Chrome 地址栏也会显示 install 按钮 (Tier 1 加的)</li>
+    </ul>
+  </div>
+
+  <div class="features">
+    <h2>📊 各平台支持度</h2>
+    <ul>
+      <li><strong>Android Chrome 96+</strong>: ✅ 完整支持,长按桌面图标弹出</li>
+      <li><strong>Android Edge / Samsung</strong>: ✅ 支持</li>
+      <li><strong>Windows Chrome / Edge</strong>: ✅ 任务栏右键 → 跳转列表</li>
+      <li><strong>macOS Chrome</strong>: ✅ 程序坞右键 → 菜单</li>
+      <li><strong>iOS Safari 16.4+</strong>: ⚠️ 部分支持 (按规范实现但不显眼)</li>
+      <li><strong>Firefox Android</strong>: ❌ 不支持</li>
+    </ul>
+  </div>
+
+  <footer>
+    演示页面 · docs/pwa-tier1-screenshots/manifest-shortcuts-demo.html
+  </footer>
+</div>
+
+<script>
+function toggleMenu() {
+  document.getElementById('shortcutsMenu').classList.toggle('show');
+}
+function nav(label) {
+  alert('✅ 跳转到: ' + label + '\n\n真实场景下会直接打开对应页面,无需经过首页');
+  document.getElementById('shortcutsMenu').classList.remove('show');
+}
+// 提示用户可以点击模拟
+setTimeout(() => {
+  console.log('提示: 点击 "长按图标演示" 按钮查看效果');
+}, 500);
+</script>
+
+</body>
+</html>

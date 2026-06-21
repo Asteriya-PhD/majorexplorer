@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Unicase:wght@500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Oswald:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Long+Cang&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -606,7 +607,7 @@ footer .data-source { color: #2A4A75; }
 .direction-bar { height: 8px; background: rgba(212, 175, 55, 0.12); overflow: hidden; border-radius: 2px; }
 .direction-bar-fill { height: 100%; background: #2A4A75; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
 .direction-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #2A4A75; transform: translateY(-2px); }
 .path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #0F1F33; margin-bottom: 4px; line-height: 1; }
@@ -629,7 +630,7 @@ footer .data-source { color: #2A4A75; }
 .xuanke-bar-fill { height: 100%; background: #2A4A75; }
 .xuanke-pct { font-family: var(--font-heading); font-weight: 700; text-align: right; font-size: 1.0625rem; color: #0F1F33; }
 .curriculum-lede { font-family: var(--font-heading); color: #2A4A75; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 22px 26px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
 .curriculum-block:last-child { margin-bottom: 0; }
 .curriculum-block:hover { border-color: #2A4A75; }
@@ -799,7 +800,7 @@ footer .data-source { color: #2A4A75; }
 .gg-hero + section.tab .ovv-pit-reality, .gg-hero ~ section.tab .ovv-pit-reality { color: var(--gg-paper); line-height: 1.65; }
 /* ── 强制 .path-grid 5 列一行 (高 specificity) ── */
 body.gg-body .gg-hero + section.tab .path-grid, body.gg-body .gg-hero ~ section.tab .path-grid,
-body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+body.biz-body .biz-hero + section.tab .path-grid, body.biz-body .biz-hero ~ section.tab .path-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important; gap: 10px !important; }
 body.gg-body .gg-hero + section.tab .path-card, body.gg-body .gg-hero ~ section.tab .path-card,
 body.biz-body .biz-hero + section.tab .path-card, body.biz-body .biz-hero ~ section.tab .path-card { padding: 24px 8px 20px !important; }
 body.gg-body .gg-hero + section.tab .path-pct, body.gg-body .gg-hero ~ section.tab .path-pct,
@@ -950,7 +951,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1230,7 +1231,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">海警学的本质是「海洋法体系 + 海上执法勤务 + 舰艇指挥 + 海上维权行动」四栖训练, 它不是海军指挥 (海军是军籍), 也不是普通公安 (海警隶属武警部队序列但执行海上行政执法) — 「仅 3 所院校开设 + 入警需公安联考海警方向 + 体检严格含体能 + 海上驻船执勤」是这专业四大结构性特征.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 法理学 / 宪法学 / 刑法学 / 民法学 / 海洋法概论 / 大学英语 / 思政系列; 大二核心: 海警勤务学 / 海警法 / 海上刑事案件办理 / 海警情报学 / 海上治安管理 / 海洋行政执法 / 航海基础; 大三方向分流: 海警舰艇指挥 / 海上刑事侦查 / 海警情报 / 海洋法务 / 涉外海事 5 选 1; 大四毕业实习 (舰艇跟船 2-3 个月 + 海警局基层队所 2 个月) + 论文. 4 年下来既要能在海上查缉走私偷渡, 也能在陆上办理涉海行政案件.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对海洋/海上维权/海洋法有持久兴趣, 不晕船、不怕长期海上驻船</li><li>体能过硬 (公安海警体检含 800 米跑/引体向上/俯卧撑 + 视力 4.8+), 立志入警</li><li>接受 5-10 年长跑 (本科 + 公安联考海警方向 + 海警局基层队所)</li><li>愿意去沿海艰苦地区 (黄岩岛/钓鱼岛/南海岛礁 / 三沙 / 舟山 / 三门湾 / 北海等海警工作站)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>本意是想当海军 (海军是军籍考军校, 海警是武警现役体系, 不是同一序列)</li><li>体能不达标 (海警体检 + 体能测试刷掉 30-40% 应届生)</li><li>把海警等同于普通警察 (海警有专属舰艇出海 + 长期海上驻船, 不只是陆地派出所)</li><li>期待「本科毕业对标互联网大厂 30 万」(海警入警即事业编/警员, 应届 8-12 万起薪, 高薪不在体制内)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">海警学 = 海军军官</div><div class="ovv-simple-pit-reality">海警是武警部队序列下的现役执法力量 (2018 年改革后转隶武警), 海军是军籍; 海警学毕业生通过公安联考海警方向入警, 授武警警衔, 不是海军尉官, 不能考海军军校.</div></li><li><div class="ovv-simple-pit-myth">海警学毕业生都能上舰艇</div><div class="ovv-simple-pit-reality">海警局基层岗位 60%+ 是岸基队所 (海岸派出所/海警工作站), 真正能上大型执法舰艇的是少数, 多数毕业生在沿海派出所/执法办案队, 出海任务轮换制.</div></li><li><div class="ovv-simple-pit-myth">海警学对女生开放度很高</div><div class="ovv-simple-pit-reality">海警基层一线长期出海 + 体能高强度, 多数海警局基层队所女警比例不足 15%; 部分舰艇岗位明确不招女生, 女生多在岸基内勤/法制/情报岗位.</div></li><li><div class="ovv-simple-pit-myth">海洋法核心是国际法</div><div class="ovv-simple-pit-reality">海警工作中 70%+ 处理的是国内海洋行政执法 (走私/偷渡/海洋渔业违法/海岛保护), 国际海洋法 (UNCLOS/领海基线/专属经济区) 是框架, 真正用得多的是《海警法》《海域使用管理法》《海洋环境保护法》.</div></li><li><div class="ovv-simple-pit-myth">海警学考研面很宽</div><div class="ovv-simple-pit-reality">海警学是公安学特设, 研究生招生极少 (公安大学/中国海洋大学等), 多数毕业生通过联考直接入警, 考研多转向法学 (国际法/刑法/行政法) 或公共管理 (MPA), 不能在公安系统内部读研.</div></li><li><div class="ovv-simple-pit-myth">海警薪酬跟海员一样高</div><div class="ovv-simple-pit-reality">海警是武警现役警员, 享受军队供给制 + 警衔津贴 + 海岛/出海补助, 综合年薪 12-25 万, 不是「海员工资」市场化; 但稳定 + 警衔晋升 + 退役安置有保障, 是长线稳定而非高薪赛道.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">海警学的核心是「海洋法 + 海上执法勤务 + 舰艇指挥 + 海上维权」四栖, 它不是海军 (军籍), 也不是普通公安 — 而是武警海警总队序列下、专为 300 万平方公里蓝色国土执法的特设专业; 在海洋强国 + 钓鱼岛/南海维权背景下, 公安联考海警方向是入警通道, 体检含体能 + 视力 4.8, 但「仅 3 所院校开设 + 海上驻船执勤 + 沿海艰苦地区」是这专业三大结构性现实.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 法理学 / 宪法学 / 刑法学 / 民法学 / 海洋法概论 / 大学英语 / 思政系列; 大二核心: 海警勤务学 / 海警法 / 海上刑事案件办理 / 海警情报学 / 海上治安管理 / 海洋行政执法 / 航海基础; 大三方向分流: 海警舰艇指挥 / 海上刑事侦查 / 海警情报 / 海洋法务 / 涉外海事 5 选 1; 大四毕业实习 (舰艇跟船 2-3 个月 + 海警局基层队所 2 个月) + 论文. 4 年下来既要能在海上查缉走私偷渡, 也能在陆上办理涉海行政案件.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对海洋/海上维权/海洋法有持久兴趣, 不晕船、不怕长期海上驻船</li><li>体能过硬 (公安海警体检含 800 米跑/引体向上/俯卧撑 + 视力 4.8+), 立志入警</li><li>接受 5-10 年长跑 (本科 + 公安联考海警方向 + 海警局基层队所)</li><li>愿意去沿海艰苦地区 (黄岩岛/钓鱼岛/南海岛礁 / 三沙 / 舟山 / 三门湾 / 北海等海警工作站)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>本意是想当海军 (海军是军籍考军校, 海警是武警现役体系, 不是同一序列)</li><li>体能不达标 (海警体检 + 体能测试刷掉 30-40% 应届生)</li><li>把海警等同于普通警察 (海警有专属舰艇出海 + 长期海上驻船, 不只是陆地派出所)</li><li>期待「本科毕业对标互联网大厂 30 万」(海警入警即武警现役/警员, 应届 8-12 万起薪, 高薪不在体制内)</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">海警学 = 海军军官</div><div class="ovv-simple-pit-reality">海警是武警部队序列下的现役执法力量 (2018 年改革后转隶武警), 海军是军籍; 海警学毕业生通过公安联考海警方向入警, 授武警警衔, 不是海军尉官, 不能考海军军校.</div></li><li><div class="ovv-simple-pit-myth">海警学毕业生都能上舰艇</div><div class="ovv-simple-pit-reality">海警局基层岗位 60%+ 是岸基队所 (海岸派出所/海警工作站), 真正能上大型执法舰艇的是少数, 多数毕业生在沿海派出所/执法办案队, 出海任务轮换制.</div></li><li><div class="ovv-simple-pit-myth">海警学对女生开放度很高</div><div class="ovv-simple-pit-reality">海警基层一线长期出海 + 体能高强度, 多数海警局基层队所女警比例不足 15%; 部分舰艇岗位明确不招女生, 女生多在岸基内勤/法制/情报岗位.</div></li><li><div class="ovv-simple-pit-myth">海洋法核心是国际法</div><div class="ovv-simple-pit-reality">海警工作中 70%+ 处理的是国内海洋行政执法 (走私/偷渡/海洋渔业违法/海岛保护), 国际海洋法 (UNCLOS/领海基线/专属经济区) 是框架, 真正用得多的是《海警法》《海域使用管理法》《海洋环境保护法》.</div></li><li><div class="ovv-simple-pit-myth">海警学考研面很宽</div><div class="ovv-simple-pit-reality">海警学是公安学特设, 研究生招生极少 (公安大学/中国海洋大学等), 多数毕业生通过联考直接入警, 考研多转向法学 (国际法/刑法/行政法) 或公共管理 (MPA), 不能在公安系统内部读研.</div></li><li><div class="ovv-simple-pit-myth">海警薪酬跟海员一样高</div><div class="ovv-simple-pit-reality">海警是武警现役警员, 享受军队供给制 + 警衔津贴 + 海岛/出海补助, 综合年薪 12-25 万, 不是「海员工资」市场化; 但稳定 + 警衔晋升 + 退役安置有保障, 是长线稳定而非高薪赛道.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1264,7 +1265,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
           <div class="course"><span class="course-name">海事英语</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">中国人民武装警察部队海警学院 (浙江杭州/舟山): 海警舰艇指挥 + 海上维权执法 + 海洋维权战术 (国内海警学旗舰, 唯一培养海警舰艇长方向)</span></div>
+          <div class="course"><span class="course-name">中国人民武装警察部队海警学院 (浙江舟山, 筹建中国海警大学): 海警舰艇指挥 + 海上维权执法 + 海洋维权战术 (国内海警学旗舰, 唯一培养海警舰艇长方向, 2020 年完成转制)</span></div>
           <div class="course"><span class="course-name">中国海洋大学法学院 (海警方向): 海洋法 + 海事国际法 + 海警法务 (依托海洋法学科, 海事法/海洋维权研究)</span></div>
           <div class="course"><span class="course-name">公安大学海警学院 (北京): 海上刑事侦查 + 海警情报 + 涉海反恐 (公安系统海警方向理论研究最强)</span></div>
           <div class="course"><span class="course-name">浙江警察学院 (海警方向): 海上治安管理 + 沿海派出所勤务 + 海上反恐 (浙江省内海警输送渠道)</span></div>
@@ -1284,50 +1285,44 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">中</div>
           <span class="bento-rank">S</span>
-          <div class="bento-name">中国人民武装警察部队海警学院</div>
-          <div class="bento-tag">浙江杭州/舟山 · 军校属性, 国内唯一培养海警舰艇长的本科学院, 海警学旗舰</div>
+          <div class="bento-name">中国人民武装警察部队海警学院<wbr> (筹建中国海警大学<wbr>)</div>
+          <div class="bento-tag">浙江舟山 · 武警部队直属, 国内唯一海警学本科学院 (050307TK 特设代码), 培养海警舰艇长 + 海警执法员; 2020 年完成转制, 中国海警大学为筹建目标</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">A+</span>
+          <span class="bento-rank">★★★★★ (A+)</span>
           <div class="bento-name">中国人民公安大学</div>
-          <div class="bento-tag">北京 · 公安部直属 211, 海警学院方向, 海上刑事侦查 + 海警情报理论研究最强</div>
+          <div class="bento-tag">北京 · 公安部直属 211 双一流, 海警学院方向, 海上刑事侦查 + 海警情报理论研究最强</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">★★★★★ (A)</span>
           <div class="bento-name">中国海洋大学</div>
           <div class="bento-tag">青岛 · 985, 法学院海洋法特色, 海警法务/海事国际法方向资源最佳</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">浙</div>
-          <span class="bento-rank">A-</span>
-          <div class="bento-name">浙江警察学院</div>
-          <div class="bento-tag">杭州 · 浙江省公安厅直属, 海警方向与海警学院联培, 浙江省海警系统主要输送</div>
+          <div class="bento-monogram">武</div>
+          <span class="bento-rank">★★★★☆ (A-)</span>
+          <div class="bento-name">武警工程大学</div>
+          <div class="bento-tag">西安 · 武警部队直属, 边防指挥/反侦察/通信工程专业, 武警序列海警方向联培</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">广</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">广东海洋大学</div>
           <div class="bento-tag">湛江 · 广东省属, 南海方向特色, 广东/海南海警局输送</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">上</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">上海公安学院</div>
-          <div class="bento-tag">上海 · 上海市公安局直属, 海警方向与海警学院联合培养, 上海海警/海事公安输送</div>
+          <div class="bento-monogram">浙</div>
+          <span class="bento-rank">★★★☆☆ (B)</span>
+          <div class="bento-name">浙江警察学院</div>
+          <div class="bento-tag">杭州 · 浙江省公安厅直属, 海警方向与海警学院联培, 浙江省海警系统主要输送</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">大</div>
-          <span class="bento-rank">B</span>
+          <span class="bento-rank">★★★☆☆ (B)</span>
           <div class="bento-name">大连海事大学</div>
-          <div class="bento-tag">大连 · 211, 海事法与海洋法传统强校, 近年与海警系统联合培养方向</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">江</div>
-          <span class="bento-rank">B</span>
-          <div class="bento-name">江苏警官学院</div>
-          <div class="bento-tag">南京 · 江苏省公安厅直属, 海警方向近年开设, 江苏沿海上岗渠道</div>
+          <div class="bento-tag">大连 · 211, 海事法/海洋法强校, 海事国际法/海洋维权法务方向, 海警法务联培</div>
         </div>
     </div>
   </div>
@@ -1362,7 +1357,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">沿海省/市海警支队 (浙江/广东/海南/福建/山东)</div>
-          <div class="company-meta">★★★ · 校招 事业编警员 10-20 万/年 + 出海补助, 沿海一线主力</div>
+          <div class="company-meta">★★★ · 校招 武警现役警员 10-20 万/年 + 出海补助, 沿海一线主力</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:80.0%"></div>
@@ -1378,7 +1373,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
             <span class="company-tier tier-A">A</span>
           </div>
           <div class="company-name">沿海市公安局海警/边防 (改革后并入公安)</div>
-          <div class="company-meta">★★ · 校招 事业编 10-18 万/年, 海警局转隶后部分岗位并入公安系统</div>
+          <div class="company-meta">★★ · 校招 武警现役 10-18 万/年, 海警局转隶后部分岗位并入公安系统</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:75.0%"></div>
@@ -1640,6 +1635,26 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
           </div>
           <p class="quote-text">班里一半入警进海警局, 我选考公务员去海事局, 同样涉海但更朝九晚五; 海警学给我最有用的是海洋法体系 + 海警法知识, 工作后看案件上手很快.</p>
         </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">中</div>
+            <div class="quote-byline">
+              <strong>中国海警局南海分局 · 舰艇执法员 (1301 舰)</strong>
+              <span class="quote-source">2021 届 · 海警学院 2021 届 @ 海南三沙</span>
+            </div>
+          </div>
+          <p class="quote-text">在海警学院 4 年, 大三选了舰艇指挥方向, 大四跟船实习 3 个月跑了 4 个航次, 单航最长 45 天 — 现在南海一线执法, 主要查缉走私 + 海洋渔业违法, 舰艇上 24 小时轮班是真实节奏, 想出海的同学要提前做好心理建设.</p>
+        </div>
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">中</div>
+            <div class="quote-byline">
+              <strong>中国海警局直属海警总队 · 海警情报分析员</strong>
+              <span class="quote-source">2024 届 · 公安大学海警学院 2024 届 @ 浙江舟山</span>
+            </div>
+          </div>
+          <p class="quote-text">毕业选了海警情报方向, 不出海但工作强度也大 — 每天要处理 50+ 条海洋违法线索, 跟海警情报学和海洋法课程完全对得上; 入警第一年驻舟山基地, 跟舰艇上的同事配合查处 2 起重大走私案, 加班半年但学到东西多.</p>
+        </div>
     </div>
   </div>
 </section>
@@ -1681,37 +1696,54 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: maritime-police-studies) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「海警学」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card gongan" href="/prison-studies.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">监狱学</span><span class="wl-hook">监狱学</span></a>
+      <a class="wl-card gongan" href="/public-order.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">治安学</span><span class="wl-hook">治安学</span></a>
+      <a class="wl-card gongan" href="/drug-control.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">禁毒学</span><span class="wl-hook">禁毒学</span></a>
+      <a class="wl-card gongan" href="/police-command-tactics.html" data-tag="同主题"><span class="wl-badge">公安</span><span class="wl-title">警务指挥与战术</span><span class="wl-hook">警务指挥与战术</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
+      <a class="wl-card arts" href="/fine-arts.html" data-tag="跨界"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
+      <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
     </div>
   </div>
 </section>
@@ -1725,7 +1757,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
       <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
-    <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 武警海警学院/公安大学海警学院/中国海洋大学海警方向培养方案 + 2024-2025 公安联考海警方向/海关缉私局/海事局公务员招录样本 + 校友访谈 @ 浙江舟山/广东湛江/山东青岛)</div>
+    <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 武警海警学院 (2020 转制, 筹建中国海警大学)/公安大学海警学院/中国海洋大学海警方向/武警工程大学边防方向培养方案 + 2024-2025 公安联考海警方向/海关缉私局/海事局公务员招录样本 + 校友访谈 @ 浙江舟山/广东湛江/山东青岛)</div>
   </div>
 </footer>
 
