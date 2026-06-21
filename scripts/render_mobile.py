@@ -396,10 +396,11 @@ def render_salary(salary):
 def render_schools(schools, hubei_only=False):
     """schools = [{name, rank, tag, score?}]
 
-    rank 字段格式 (3 种兼容):
-    1) "★★★★★ (A+)" — 星 + 学科评估 (密码学等老专业)
-    2) "★★★★★"        — 仅星 (仿生等新专业, 无第四/五轮评估)
-    3) tag 字段含 "评估 A+" 等描述 (兜底)
+    rank 字段格式 (4 种兼容):
+    1) "A+" / "A" / "A-" / "B+" — 仅字母 (工商管理/虚拟现实等)
+    2) "★★★★★ (A+)" — 星 + 学科评估 (密码学等老专业)
+    3) "★★★★★"        — 仅星 (仿生等新专业, 无第四/五轮评估)
+    4) tag 字段含 "评估 A+" 等描述 (兜底)
     """
     if not schools:
         return ""
@@ -412,16 +413,22 @@ def render_schools(schools, hubei_only=False):
         rank = s.get("rank", "")
         tag = s.get("tag", "")
         eval_badge = ""
-        # 策略 1: rank 字段 "(A+)" 格式
-        m = re.search(r"\(([ABCDF][+\-]?)\)", rank)
-        if m:
-            eval_badge = m.group(1)
-        # 策略 2: rank 字段纯星 "★★★★★" → 映射
+        # 策略 1: rank 字段纯字母 "A+" (工商管理/虚拟现实格式)
+        if not eval_badge:
+            m = re.fullmatch(r"\s*([ABCDF][+\-]?)\s*", rank)
+            if m:
+                eval_badge = m.group(1)
+        # 策略 2: rank 字段 "(A+)" 格式 (密码学等老专业)
+        if not eval_badge:
+            m = re.search(r"\(([ABCDF][+\-]?)\)", rank)
+            if m:
+                eval_badge = m.group(1)
+        # 策略 3: rank 字段纯星 "★★★★★" → 映射
         if not eval_badge:
             filled = rank.count("★")
             if 0 <= filled <= 5:
                 eval_badge = star_to_eval[filled]
-        # 策略 3: tag 字段含评估字母
+        # 策略 4: tag 字段含评估字母
         if not eval_badge:
             m = re.search(r"\b([ABCDF][+\-]?)\b", tag)
             if m:
