@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -908,9 +919,9 @@
           <div class="course-names">综合荷兰语 (一至四年级进阶) · <strong style="color:var(--accent);">★</strong> 荷兰语听力/口语/写作 · 荷兰语语法 · <strong style="color:var(--accent);">★</strong> 荷兰语笔译基础 · <strong style="color:var(--accent);">★</strong> 荷兰语口译基础 · 荷兰文学史 (中古至当代) · 比利时弗拉芒语入门 · 荷兰与比利时概况 · 荷兰语高级阅读</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
-          <div class="course-yr">特色</div>
+          <div class="course-yr">大三 方向</div>
           <div class="course-names">北京大学 (顶尖综合): 荷兰语高级文学批评 / 中荷关系史 / 荷兰法律文献选读 / 弗拉芒语文学专题 / 欧盟事务与多语种研究 · <strong style="color:var(--accent);">★</strong> 北京外国语大学 (外语类顶尖): 交替传译 (荷) / 同声传译入门 / 国际会议模拟 / 外交文书写作 / 荷比卢区域研究 · <strong style="color:var(--accent);">★</strong> 广东外语外贸大学 (区域研究特色): 粤港澳-荷比贸易实务 / 东南亚荷兰语遗产研究 (印尼/南非) / 商务荷兰语 / 跨境电商荷兰语 / 国际结算荷兰语 · <strong style="color:var(--accent);">★</strong> 上海外国语大学 (复合型): 国际新闻荷兰语 / 媒体时事翻译 / 荷兰语新闻听写 / 国际组织荷兰语 / 多语种外交模拟 · 南京大学 (语言学+文学): 荷兰语语言学专题 / 历史语言学 / 比较语言学 (荷-德-英) / 荷兰语语音学 / 计算语言学与荷兰语</div>
-          <div class="course-tag">特色</div>
+          <div class="course-tag">方向选修</div>
         </div>
       </div>
     </section>
@@ -925,30 +936,37 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">北京大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">北京外国语大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">广东外语外贸大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">上海外国语大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">南京大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">北京语言大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">四川外国语大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1047,7 +1065,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar"><div class="xk-fill" style="--w:95%;"></div><span class="xk-pct">95%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar"><div class="xk-fill" style="--w:80%;"></div><span class="xk-pct">80%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar"><div class="xk-fill" style="--w:35%;"></div><span class="xk-pct">35%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:95%;"></div></div><span class="xk-pct">95%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:80%;"></div></div><span class="xk-pct">80%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:35%;"></div></div><span class="xk-pct">35%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name"></div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div>
       </div>
     </section>
 </article>
