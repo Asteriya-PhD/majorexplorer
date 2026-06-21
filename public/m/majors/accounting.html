@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -917,13 +928,13 @@
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 基础会计学 · 中级财务会计 · 高级财务会计 · 成本会计 · 管理会计 · 财务管理 · 审计学 · 税法 · 会计信息系统 · 财务报表分析 · 政府与非营利组织会计</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">大数据与会计分析 · 国际会计准则（IFRS） · 金融会计 · 税务筹划 · 企业内部控制 · ESG与可持续发展会计 · 会计职业道德 · RPA财务机器人应用</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
           <div class="course-yr">大四 实践</div>
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 会计模拟实训 · <strong style="color:var(--accent);">★</strong> 财务软件应用实训 · <strong style="color:var(--accent);">★</strong> 企业沙盘模拟 · <strong style="color:var(--accent);">★</strong> 毕业实习（企业财务/事务所） · <strong style="color:var(--accent);">★</strong> 毕业论文/设计</div>
           <div class="course-tag">实践环节</div>
-        </div><div class="course-row">
-          <div class="course-yr">特色</div>
-          <div class="course-names">大数据与会计分析 · 国际会计准则（IFRS） · 金融会计 · 税务筹划 · 企业内部控制 · ESG与可持续发展会计 · 会计职业道德 · RPA财务机器人应用</div>
-          <div class="course-tag">特色</div>
         </div>
       </div>
     </section>
@@ -937,35 +948,43 @@
       </div>
       <div class="uni-row">
           <div class="uni-rank">01</div>
-          <div class="uni-name">厦门大学<span class="badge">A+</span></div>
+          <div class="uni-name">厦门大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">上海财经大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
-          <div class="uni-name">中央财经大学<span class="badge">A+</span></div>
+          <div class="uni-name">中央财经大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">中国人民大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">中南财经政法大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">西南财经大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">东北财经大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">对外经济贸易大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1064,7 +1083,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:75%;"></div><span class="xk-pct">75%</span></div></div></div><div class="xk-reason">传统理科组合, 医学/工科/农学/部分理学专业必选, 覆盖最广。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 生物 (再选化学或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:14%;"></div><span class="xk-pct">14%</span></div></div></div><div class="xk-reason">医学/生物/医技/部分农学方向可报, 化学弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">医学/药学/护理/部分农学方向, 物理弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价/中外合作)</div><div class="xk-bar"><div class="xk-fill" style="--w:3%;"></div><span class="xk-pct">3%</span></div></div></div><div class="xk-reason">极少数综合评价/中外合作专业, 工科/医学通常不适用。</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:75%;"></div></div><span class="xk-pct">75%</span></div></div></div><div class="xk-reason">传统理科组合, 医学/工科/农学/部分理学专业必选, 覆盖最广。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 生物 (再选化学或不限)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:14%;"></div></div><span class="xk-pct">14%</span></div></div></div><div class="xk-reason">医学/生物/医技/部分农学方向可报, 化学弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或不限)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">医学/药学/护理/部分农学方向, 物理弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价/中外合作)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:3%;"></div></div><span class="xk-pct">3%</span></div></div></div><div class="xk-reason">极少数综合评价/中外合作专业, 工科/医学通常不适用。</div></div>
       </div>
     </section>
 </article>

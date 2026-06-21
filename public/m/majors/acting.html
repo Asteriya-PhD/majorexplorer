@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -845,7 +856,7 @@
     <span id="heart-ico" class="heart-off">♡</span>
     <span class="heart-label" id="heart-label">收藏</span>
   </button>
-  <div class="hero-crumb"><span class="rule"></span>艺术学 · 戏剧与影视学类 (戏剧学方向) · 13文学与新闻传播类</div>
+  <div class="hero-crumb"><span class="rule"></span>艺术学 · 戏剧与影视学类 (表演/130301) · 13文学与新闻传播类</div>
   <h1 class="hero-title">表演</h1>
   <div class="hero-sub">艺术学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
   <p class="hero-tagline">演员是用自己的身体和灵魂, 把别人的故事讲给世界听的人.</p>
@@ -875,7 +886,7 @@
         <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p class="lede">表演的核心是「台词 + 形体 + 声乐 + 镜头前表演 + 角色塑造」五栖台前训练, 它既不是「学导演」(那是导演专业), 也不是「学戏文」(那是剧本创作), 而是「把自己变成角色」的职业 — 「形象/普通话/临场反应是硬门槛 + 30 岁后转型 (教学/综艺/培训) + 90% 毕业生做配角/群演/教学 + 头部明星概率 &lt; 1%」是该专业四大现实.</p>
+        <p class="lede">表演是「台词+形体+声乐+镜头前表演+角色塑造」五栖台前训练, 90% 毕业生做配角/群演/教学, 头部明星 &lt; 1%, 30 岁后转型教学/综艺是普遍规律 — 形象/普通话/临场反应是硬门槛, 不是「学唱歌」也不是「学网红」.</p>
         
       </div>
     </section>
@@ -925,34 +936,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">北京电影学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">中央戏剧学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">上海戏剧学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">中国传媒大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">北京师范大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
-          <div class="uni-name">南京大学</div>
+          <div class="uni-name">浙江传媒学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
-          <div class="uni-name">武汉大学</div>
+          <div class="uni-name">解放军艺术学院 (现并入国防大学)</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">南京艺术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1044,7 +1063,7 @@
         <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
       </div>
       <div class="pull-list">
-        <div class="pull">"北电表演系本科, 2021 年校招签约头部经纪公司. 真实感受: 90% 同学前 3 年都在做配角/群演/网剧, 30 岁后能演主角的不到 20%; 想出头必须靠作品 + 人脉 + 运气, 30 岁前靠父母养是常态."<span class="by">— </span></div><div class="pull">"中戏表演系本科, 2022 年签约开心麻花. 真实感受: 话剧舞台招聘极少, 央戏/上戏/南艺为主, 月薪 8-12k 起步, 真正能演主角的 5-10 年沉淀; 想跨界影视/综艺/教学, 必须主动积累作品."<span class="by">— </span></div><div class="pull">"我们那一届真正去头部院线/网剧做主角的不到 5%, 70%+ 都在做配角/群演/教学/培训/读研. 艺术学学士考公/选调专业代码受限, 报考前必须查本省近 3 年招录目录, 30 岁后转型是普遍规律."<span class="by">— </span></div>
+        <div class="pull">"大二主修镜头前表演, 大三接了《漫长的季节》网剧群特 + 副导演助理, 校招签头部经纪公司. 真实感受: 90% 同学前 3 年都在做配角/群演/网剧, 30 岁后能演主角的不到 20%; 想出头必须靠作品 + 人脉 + 运气, 30 岁前靠父母养是常态."<span class="by">— 北京电影学院 表演学院</span></div><div class="pull">"中戏表演系本科, 师从陈明华教授, 大三演过《雷雨》四凤 + 《暗恋桃花源》女主角. 2022 年签约开心麻花, 月薪 8-12k 起步, 真正能演主角的 5-10 年沉淀; 想跨界影视/综艺/教学, 必须主动积累作品."<span class="by">— 中央戏剧学院 表演系</span></div><div class="pull">"上戏表演系本 + 戏剧与影视学硕, 跟过导师《上海屋檐下》《家》复排项目. 真实感受: 真正去头部院线/网剧做主角的不到 5%, 70%+ 都在做配角/群演/教学/培训/读研. 艺术学学士考公/选调专业代码受限, 报考前必须查本省近 3 年招录目录, 30 岁后转型是普遍规律."<span class="by">— 上海戏剧学院 表演系</span></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1056,7 +1075,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选历史 + 再选不限 (覆盖最广)</div><div class="xk-bar"><div class="xk-fill" style="--w:75%;"></div><span class="xk-pct">75%</span></div></div></div><div class="xk-reason">美术学 / 音乐学 / 戏剧影视文学 等艺术类, 历史组合是绝对主流, 再选一般不限.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限 (部分校)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">部分校 (如 数字媒体艺术 / 艺术与科技 / 艺术史论) 接受物理组合.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">不限选科 (艺术类校考特色)</div><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason">艺术类校考 / 中外合作专业, 多不限选科, 看专业校考成绩.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选历史 + 再选不限 (覆盖最广)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:75%;"></div></div><span class="xk-pct">75%</span></div></div></div><div class="xk-reason">美术学 / 音乐学 / 戏剧影视文学 等艺术类, 历史组合是绝对主流, 再选一般不限.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限 (部分校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">部分校 (如 数字媒体艺术 / 艺术与科技 / 艺术史论) 接受物理组合.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">不限选科 (艺术类校考特色)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason">艺术类校考 / 中外合作专业, 多不限选科, 看专业校考成绩.</div></div>
       </div>
     </section>
 </article>

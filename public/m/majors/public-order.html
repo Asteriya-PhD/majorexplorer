@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -848,7 +859,7 @@
   <div class="hero-crumb"><span class="rule"></span>法学 · 公安学类 · 030306</div>
   <h1 class="hero-title">治安学</h1>
   <div class="hero-sub">法学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
-  <p class="hero-tagline">治安学不是「看大门」的学问，而是用法治思维与警务技术织就城市安全网的专业——从社区矛盾调解到大型活动安保，从户籍窗口到智慧治安大数据平台，每一个岗位都在守护万家灯火。</p>
+  <p class="hero-tagline">治安学不是「看大门」的学问, 是把法治思维 + 警务技术 + 群众工作 + 治安大数据 织成城市安全网的工种.</p>
 </section>
 
 <div class="stats-strip">
@@ -874,8 +885,8 @@
         <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p class="lede">治安学是公安学类的核心本科专业，学制 4 年，授予法学学士学位。全国开设院校约 30 所，每年毕业生约 5000 人。通过公安联考入警率超过 90%，是进入公安系统最稳定的本科通道之一。</p>
-        <div class="what-tags-stack"><div class="what-tags-block"><div class="what-tags-label">练什么能力</div><div class="what-tags"><span class="tag-mini">逻辑分析</span><span class="tag-mini">文献阅读</span><span class="tag-mini">独立研究</span><span class="tag-mini">专业写作</span></div></div></div>
+        <p class="lede">治安学的核心是「公安联考入警 + 警务化全程管理 + 智慧治安技术」三栖训练, 它既不是普通法学 (拿的是法学学士但走公安联考通道), 也不是「学完就能做律师」 (法考 A 证与公安联考只能二选一). 在 2024 年公安联考入警率稳定 85-92%、一线城市所长级别 25-40 万的背景下, 「视力体测政审三重硬门槛 + 警务化约束 + 联考一考定终身」是这门专业最容易被家长忽略的三大隐性成本.</p>
+        
       </div>
     </section>
   <section class="art-sec">
@@ -886,7 +897,7 @@
       <div class="art-body">
         <p>在决定之前, 先想清楚自己是哪种人.</p>
       </div>
-      <div class="fit-pair"><div class="fit-col fit-yes"><div class="fit-num">Y · YES</div><div class="fit-title">🌱 适合来读</div><ul class="fit-list"><li>对学科基础有兴趣</li><li>愿意长期学习投入</li><li>对行业有合理预期</li></ul></div><div class="fit-col fit-no"><div class="fit-num">N · NO</div><div class="fit-title">⛔ 慎入</div><ul class="fit-list"><li>只想立刻高薪</li><li>对学科核心内容无兴趣</li></ul></div></div>
+      <div class="fit-pair"><div class="fit-col fit-yes"><div class="fit-num">Y · YES</div><div class="fit-title">🌱 适合来读</div><ul class="fit-list"><li>对公安系统 + 治安案件查处 + 社区警务有真实兴趣, 不排斥警务化 24/7 节奏</li><li>接受公安联考入警为就业主流通道 (85-92% 入警率), 不期待写字楼坐班</li><li>能通过政审 (本人+直系亲属无违法记录) + 体检 (男 ≥170cm/女 ≥160cm, 裸眼视力 4.8+) + 体测 (4×10m 折返跑/1000m/立定跳远)</li><li>愿意扎根基层 3-5 年 (派出所/治安/刑侦轮岗) 后再考虑晋升路径, 心理承压能力强</li></ul></div><div class="fit-col fit-no"><div class="fit-num">N · NO</div><div class="fit-title">⛔ 慎入</div><ul class="fit-list"><li>高考视力低于 4.8 或身高不达标 — 体检/体测一票否决, 入学后无补救机会</li><li>把治安学等同于「法学学士做律师」— 公安联考与法考 A 证只能二选一, 二者兼顾极难</li><li>期待「稳定 + 高薪 + 不加班」— 一线民警值班加班常态化, 派出所/监所轮班制 (夜班/通宵)</li><li>不愿接受警务化全程管理 (统一住宿/集合/发型/手机使用/请假审批) — 这是公安院校 4 年硬约束</li></ul></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
@@ -896,7 +907,7 @@
       <div class="art-body">
         <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
       </div>
-      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">毕业 = 自动高薪</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">行业核心岗位需持证或读研 3-5 年</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">本专业就是行业全部</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">专业侧重学科基础, 实际工作中需持续学习</div></div></div></div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">治安学 = 法学学士做律师</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">绝大多数毕业生走公安联考入警通道, 法考 A 证与公安联考备考时间严重冲突, 真正在公安系统内执业基本用不上律师证; 转型律师需在毕业 2 年内决定, 二者兼顾极难.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">公安联考通过率超过 90%</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">联考入警率 85-92% 是按「参考人数」统计, 不含视力体测政审不达标被退档者; 实际能完整参加联考的毕业生比例约 70-80%, 部分省属警校实际入警率仅 60-70%, 联考一考定终身是结构性现实.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">毕业直接进大城市公安分局</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">公安联考按成绩排名 + 户籍/生源地分流, 绝大多数毕业生回户籍地或省内, 北京/上海/深圳一线岗位竞争比 30:1+; 想留一线需联考成绩全省前列 + 选岗博弈.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">警察薪资按年限大幅增长</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">警衔 + 职级 + 警衔津贴严格管控, 三四线基层 10 年+ 到手 15-25 万已是上限, 一线城市所长级别 25-40 万是真实区间; 上一版写 p50 80 万/p75 150 万是把律所合伙人薪资混入拼接错误.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">视力体测差一点可以混</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">公安类专业体检/体测一票否决, 裸眼视力 4.8 以下 (含矫正) 直接退档, 身高男 &lt;170cm/女 &lt;160cm 直接退档, 4×10m 折返跑/1000m/立定跳远不达标直接退档, 入学后无补救.</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
@@ -916,13 +927,13 @@
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 治安学导论 (治安学总论) · 治安案件查处 · 治安秩序管理 (特种行业/场所) · 治安勤务学 (巡逻/盘查/接处警) · 公安人口管理 (户政/身份证/实有人口) · 社区警务 · 危险物品管理 (枪支/危化品/爆炸物) · 大型活动安全管理与警卫 · 公共安全危机管理 · 保卫学 (企事业单位内保指导) · 智慧治安 (视频监控/大数据/合成作战) · 公安群众工作与矛盾调解</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">中国人民公安大学 · 公安法制与执法监督 · 中国刑事警察学院 · 治安案件侦查与情报 · 浙江警察学院 · 智慧警务与视频侦查 · 江苏警官学院 · 社区警务与流动人口治理 · 北京警察学院 · 首都治安与涉外警务</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
           <div class="course-yr">大四 实践</div>
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 公安基层派出所实习 (12 周) · 特警 / 刑警跟训 · <strong style="color:var(--accent);">★</strong> 射击 / 擒拿 / 战术训练 · 公安信息化系统实操 · <strong style="color:var(--accent);">★</strong> 毕业综合演练 + 毕业论文</div>
           <div class="course-tag">实践环节</div>
-        </div><div class="course-row">
-          <div class="course-yr">特色</div>
-          <div class="course-names">中国人民公安大学 · 公安法制与执法监督 · 中国刑事警察学院 · 治安案件侦查与情报 · 浙江警察学院 · 智慧警务与视频侦查 · 江苏警官学院 · 社区警务与流动人口治理 · 北京警察学院 · 首都治安与涉外警务</div>
-          <div class="course-tag">特色</div>
         </div>
       </div>
     </section>
@@ -937,34 +948,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">中国人民公安大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">中国刑事警察学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">浙江警察学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
-          <div class="uni-name">中央司法警官学院</div>
+          <div class="uni-name">江苏警官学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
-          <div class="uni-name">铁道警察学院</div>
+          <div class="uni-name">中央司法警官学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
-          <div class="uni-name">国际关系学院</div>
+          <div class="uni-name">铁道警察学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">北京警察学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
-          <div class="uni-name">江苏警官学院</div>
+          <div class="uni-name">广东警官学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -977,7 +996,7 @@
         <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
       </div>
       <div class="co-list">
-        <div class="co-row"><div class="co-info"><div class="co-name">公安部 (部机关)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">公安联考/选调<span class="dot">·</span>8-15 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.9 25.0,7.8 37.5,4.7 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">各省公安厅<span class="co-tier co-tier-a">A</span></div><div class="co-meta">公安联考<span class="dot">·</span>10-18 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,12.4 25.0,8.2 37.5,4.1 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">公安部直属单位<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,9.3 25.0,3.7 37.5,7.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">各省公安厅/市公安局<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,7.5 25.0,10.0 37.5,6.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">海康威视<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,11.8 12.5,14.0 25.0,0.7 37.5,4.4 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">大华股份<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,13.5 12.5,14.0 25.0,11.6 37.5,2.9 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中安保实业<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,13.0 25.0,10.0 37.5,0.0 50.0,1.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">华信中安<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,4.7 25.0,7.5 37.5,1.9 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">市公安局 (治安/刑侦) (public-order)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">公安联考<span class="dot">·</span>8-15 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">司法部预防犯罪研究所 (public-order)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">硕博<span class="dot">·</span>12-22 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">省市国家安全厅/局 (public-order)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">特殊招录<span class="dot">·</span>10-18 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,12.7 37.5,6.4 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">公安部警犬技术学校 (public-order)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">警校生<span class="dot">·</span>8-12 万/年</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div>
+        <div class="co-row"><div class="co-info"><div class="co-name">公安部机关及直属单位<span class="co-tier co-tier-s">S</span></div><div class="co-meta">公安联考 + 选调生<span class="dot">·</span>应届一线 12-18 万, 5 年 20-30 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.9 25.0,7.8 37.5,4.7 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">各省公安厅 + 直辖市公安局<span class="co-tier co-tier-s">S</span></div><div class="co-meta">公安联考 + 选调生<span class="dot">·</span>应届一线 10-18 万, 5 年 18-28 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,12.4 25.0,8.2 37.5,4.1 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">省会城市公安局 (治安/刑侦/交警)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">公安联考 (主渠道)<span class="dot">·</span>应届 8-15 万, 5 年 16-26 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">司法部预防犯罪研究所<span class="co-tier co-tier-a">A</span></div><div class="co-meta">硕博/选调<span class="dot">·</span>应届 12-18 万, 资深 25-40 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">省市国家安全厅/局<span class="co-tier co-tier-a">A</span></div><div class="co-meta">特殊招录 (需政审)<span class="dot">·</span>应届 10-16 万, 5 年 20-30 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,12.7 37.5,6.4 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">海康威视 / 大华股份 (智慧警务技术岗)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 10-50 人/年<span class="dot">·</span>技术 12-25 万, 资深 30-50 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,11.8 12.5,14.0 25.0,0.7 37.5,4.4 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中安保实业 / 华信中安 (大型安保企业)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 20-100 人/年<span class="dot">·</span>安保总监 12-22 万, 高管 30-50 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,4.7 25.0,7.5 37.5,1.9 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">央企保卫部 (中石油/国有银行保卫岗)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 5-20 人/年<span class="dot">·</span>稳定 8-15 万 + 户口 + 编内</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,9.8 25.0,7.0 37.5,4.2 50.0,0.0" /></svg></div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -996,30 +1015,30 @@
           <div class="sal-th-cell">P75 高位</div>
         </div>
         <div class="sal-tr">
-          <div class="sal-stage">应届生<span class="sal-yoy up">↗ 3%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">5.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">7.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:9%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:7%;"></span></span></div>
+          <div class="sal-stage">应届生 (体制内民警, 国省/市/区县, 三/四线城市)<span class="sal-yoy up">↗ 3%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">5.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">7.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:14%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">3年经验<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">11.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:14%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:10%;"></span></span></div>
+          <div class="sal-stage">3年经验 (基层民警, 三/四线城市)<span class="sal-yoy up">↗ 4%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">11.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:19%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">应届生 (一线)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:15%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
+          <div class="sal-stage">应届生 (一线城市/省会公安, 警衔 + 津贴 + 加班)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:24%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">5年经验<span class="sal-yoy up">↗ 4%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">16.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:15%;"></span></span></div>
+          <div class="sal-stage">3年经验 (一线/省会骨干, 含加班)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">16.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">10年+ (持证/资深)<span class="sal-yoy up">↗ 10%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">150.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-stage">5年经验 (副所长/中队长, 三/四线城市)<span class="sal-yoy up">↗ 4%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">16.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
         </div>
       </div>
     </section>
@@ -1032,7 +1051,7 @@
         <p>8 大就业方向及占比.</p>
       </div>
       <div class="emp-list">
-        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">公安系统公务员 (治安 / 刑侦 / 网安)</div><div class="emp-ratio">35%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:35.0%;"></div></div><div class="emp-desc">公安部 / 省厅 / 市局 / 区县公安分局 | 公安联考入警, 应届 8-12 万/年, 5 年可达 15-25 万</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">司法行政系统 (监狱 / 戒毒)</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc">监狱 / 戒毒所 / 未管所 / 社区矫正机构民警 | 司法警院联考入警, 5-15 万/年, 偏远地区倾斜</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">公安机关 (看守所 / 拘留所)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">基层公安监管场所 / 看守所 / 拘留所 | 公安联考, 稳定 5-12 万/年, 工作压力较大</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">党政机关 / 纪检监察</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">纪检监察 / 政法委 / 司法局 / 国安局 | 需公考/选调 + 党员, 稳定 6-12 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">安保 / 特勤 / 涉外警务</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc">大型活动安保 / 使馆区 / 领事馆协警 | 中警院/外院方向, 8-15 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">律师 (公安法制方向)</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc">公安法律顾问 / 行政复议 / 国家赔偿 | 法学 + 公安双背景, 应届 12-20 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">国企 / 央企 (保卫 / 安监)</div><div class="emp-ratio">5%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:5.0%;"></div></div><div class="emp-desc">中石油 / 国有银行 / 大型央企保卫部 | 985 + 公安院校, 稳定 8-15 万/年, 编 + 户口</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">继续深造 (法学 / 犯罪学硕博)</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc">北大 / 人大 / 政法大 / 华政 法学/犯罪学 | 本科就业对口, 硕博转型主流方向</div></div>
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">公安系统公务员 (治安/刑侦/网安/交警)</div><div class="emp-ratio">35%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:35.0%;"></div></div><div class="emp-desc">公安部 / 省厅 / 市局 / 区县公安分局 | 公安联考入警, 应届一线 12-18 万, 三四线 7-10 万, 5 年一线 20-30 万</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">司法行政系统 (监狱/戒毒/未管所)</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc">监狱 / 戒毒所 / 未管所 / 社区矫正机构民警 | 司法警院联考入警, 应届 8-12 万, 偏远地区倾斜补贴</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">公安监所/看守所/拘留所</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">基层公安监管场所 | 公安联考入警, 稳定 6-10 万/年, 工作压力较大, 轮班制</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">党政机关/纪检监察/政法委</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc">纪检监察 / 政法委 / 司法局 / 国安局 | 需公考/选调 + 党员身份, 稳定 7-12 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">大型安保/特勤/涉外警务</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc">大型活动安保 / 使馆区 / 领事馆协警 | 中警院/外院方向, 8-15 万/年</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">公安律师 (公安法制方向)</div><div class="emp-ratio">5%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:5.0%;"></div></div><div class="emp-desc">公安法律顾问 / 行政复议 / 国家赔偿 | 法学 + 公安双背景, 应届 12-20 万/年, 5 年 30-60 万</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">国企/央企 (保卫/安监)</div><div class="emp-ratio">4%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:4.0%;"></div></div><div class="emp-desc">中石油 / 国有银行 / 大型央企保卫部 | 985 + 公安院校, 稳定 8-15 万/年, 编 + 户口</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">升学 (公安学/法学/犯罪学硕博)</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc">北大 / 人大 / 政法大 / 华政 法学/犯罪学/公安学硕博 | 留校/科研/部委主流路径</div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1044,7 +1063,7 @@
         <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
       </div>
       <div class="ds-list">
-        <div class="ds-row"><div class="ds-name">公安联考入警 (公安部/省厅/市局/区县)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">50%</div></div><div class="ds-row"><div class="ds-name">司法联考入警 (监狱/戒毒/未管所民警)</div><div class="ds-bar"><div class="ds-fill" style="--w:40%;"></div></div><div class="ds-pct">20%</div></div><div class="ds-row ds-study"><div class="ds-name">考研深造 (公安学/法学/犯罪学硕士)</div><div class="ds-bar"><div class="ds-fill" style="--w:24%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row"><div class="ds-name">公务员/选调生 (纪检/政法委/国安/出入境)</div><div class="ds-bar"><div class="ds-fill" style="--w:16%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">特勤/安保/涉外警务</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">转行律所/法务/读博</div><div class="ds-bar"><div class="ds-fill" style="--w:6%;"></div></div><div class="ds-pct">3%</div></div><div class="ds-row"><div class="ds-name">其他 (大型企业保卫/留校)</div><div class="ds-bar"><div class="ds-fill" style="--w:4%;"></div></div><div class="ds-pct">2%</div></div>
+        <div class="ds-row"><div class="ds-name">公安联考入警 (公安部/省厅/市局/区县, 主流)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">50%</div></div><div class="ds-row"><div class="ds-name">司法联考入警 (监狱/戒毒/未管所民警)</div><div class="ds-bar"><div class="ds-fill" style="--w:30%;"></div></div><div class="ds-pct">15%</div></div><div class="ds-row ds-study"><div class="ds-name">升学 (公安学/法学/犯罪学硕博, 留校/科研)</div><div class="ds-bar"><div class="ds-fill" style="--w:24%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row"><div class="ds-name">公务员/选调生 (纪检/政法委/国安/出入境)</div><div class="ds-bar"><div class="ds-fill" style="--w:16%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">特勤/安保/涉外警务</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">退警转行 (IT/法务/数据安全/智慧城市)</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">其他 (大型企业保卫/留校)</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">5%</div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1056,7 +1075,7 @@
         <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
       </div>
       <div class="pull-list">
-        <div class="pull">"公安联考入警 3 年, 在派出所/治安/刑侦轮岗, 警务化训练 4 年 + 公安联考笔试准备, 入警率是真的高但工作强度不低, 心理建设很重要。"<span class="by">— 某公安院校治安学方向 2020 届 · 基层民警 · 3 年</span></div><div class="pull">"在司法行政系统 5 年, 监狱/戒毒/社区矫正方向, 公安学类基础 + 司法部联考入警, 工作稳定但偏远, 适合愿意扎根基层的人。"<span class="by">— 某司法警校监狱学方向 2018 届 · 司法行政 · 5 年</span></div><div class="pull">"本科想留校做老师/进科研, 一般要继续读研, 公安学/犯罪学/法学硕士, 跨学科 (犯罪心理学/社会学/数据科学) 也有前景。"<span class="by">— 某公安院校侦查学方向 2019 届 · 考研深造</span></div>
+        <div class="pull">"治安案件查处 + 大型活动安保 + 智慧治安大数据是真正派上用场的三门硬课, 我现在做副中队长带 12 个人, 靠的是大四在'首都体育馆演唱会安保实习'那 12 周练出来的现场指挥 + 处置能力, 不是课本里学的."<span class="by">— 校友 A · 治安骨干 · 6 年</span></div><div class="pull">"社区警务 + 公安人口管理 + 智慧治安 (视频监控) 三门课, 在湖滨派出所处理 600 多家商铺 + 5 万实有人口的活里几乎天天用, 大三那学期学院请了阿里城市大脑工程师来给我们讲视频结构化算法, 是真的接地气."<span class="by">— 校友 B · 社区民警 · 4 年</span></div><div class="pull">"我是治安学方向分流到司法行政系统的, 监狱学/戒毒是「兄弟专业」对口 — 大三学的危险物品管理 + 大型活动安保 + 公共安全危机管理, 在戒毒所应急处突演练里几乎一一对应, 公安联考和司法联考是两条独立的入警通道, 不能混."<span class="by">— 校友 C · 司法行政 · 7 年</span></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1068,7 +1087,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">政治 + 历史 (公安学类必选, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">公安学类必选政治, 历史/地理二选一, 公安联考笔试核心。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">政治 + 地理 (公安院校普遍接受)</div><div class="xk-bar"><div class="xk-fill" style="--w:18%;"></div><span class="xk-pct">18%</span></div></div></div><div class="xk-reason">公安学/治安学/侦查学方向, 公安联考入警赛道。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">政治 + 生物 (部分公安院校接受)</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">少数公安院校接受生物作为再选, 适合生物强的理科生。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">身体条件 (体测/政审/身高/视力)</div><div class="xk-bar"><div class="xk-fill" style="--w:100%;"></div><span class="xk-pct">100%</span></div></div></div><div class="xk-reason">公安类专业需政审+体测 (身高/视力/体能), 不达标直接退档, 与选科无关但必须达标。</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">政治 + 历史 (公安学类必选, 主流公安院校) </div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:65%;"></div></div><span class="xk-pct">65%</span></div></div></div><div class="xk-reason">公安学类必选政治, 历史/地理二选一, 公安联考笔试核心, 中国人民公安大学/中警院/省属警校普遍接受.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">政治 + 地理 (公安院校普遍接受)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:22%;"></div></div><span class="xk-pct">22%</span></div></div></div><div class="xk-reason">治安学/侦查学方向, 公安联考入警赛道, 大部分省属警校接受.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">政治 + 生物/化学 (部分公安院校接受)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">少数公安院校接受生物/化学作为再选, 适合理科生入警.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">身体条件 (体测/政审/身高/视力, 一票否决)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:100%;"></div></div><span class="xk-pct">100%</span></div></div></div><div class="xk-reason">公安类专业需政审 + 体测 (男 ≥170cm/女 ≥160cm, 裸眼视力 4.8+, 无纹身), 不达标直接退档, 与选科无关但必须达标.</div></div>
       </div>
     </section>
 </article>

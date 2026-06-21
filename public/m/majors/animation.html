@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -915,13 +926,13 @@
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 动漫造型基础 (角色 + 场景) · 动漫运动规律 (12 原则 + 力学 + 表情 + 口型) · 中外动画史 (Chinese &amp; Western Animation History) · 动画概论 · 分镜脚本 (Storyboard) · 数字图像处理 (PS/AI/Clip Studio Paint) · 二维动画软件 (Animate CC/TVPaint) · 三维建模 + 绑定 (Maya/Blender) · 三维动画 + 渲染 (Maya/Blender/C4D) · 定格动画 (Stop Motion) · 影视语言与镜头 · 动画表演 (Acting for Animation) · AI 动画工具 (Stable Diffusion/Runway/Sora/Kling)</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">北京电影学院 · 实验动画 (国内顶尖, 实验短片 + 艺术动画) · 中国传媒大学 · 游戏美术与交互动画 · 中国美术学院 · 独立动画与艺术短片 · 中央美术学院 · 实验动画与跨媒体 · 清华大学美术学院 · AI 艺术与生成式动画</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
           <div class="course-yr">大四 实践</div>
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 动画公司/影视制作公司实习 (追光/原力/彩条屋/若森) · 定格工作室项目 (Stop-motion Studio) · <strong style="color:var(--accent);">★</strong> 毕业创作 (原创短片/独立动画) · <strong style="color:var(--accent);">★</strong> 二维手绘动画实训 (传统赛璐珞风格) · <strong style="color:var(--accent);">★</strong> 三维动画项目实训 (Maya/ZBrush 全流程) · 行业采风 (动漫展/电影节/产业基地) · 联合创作 (校企合作项目, 如央美 × 华强方特)</div>
           <div class="course-tag">实践环节</div>
-        </div><div class="course-row">
-          <div class="course-yr">特色</div>
-          <div class="course-names">北京电影学院 · 实验动画 (国内顶尖, 实验短片 + 艺术动画) · 中国传媒大学 · 游戏美术与交互动画 · 中国美术学院 · 独立动画与艺术短片 · 中央美术学院 · 实验动画与跨媒体 · 清华大学美术学院 · AI 艺术与生成式动画</div>
-          <div class="course-tag">特色</div>
         </div>
       </div>
     </section>
@@ -936,34 +947,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">北京电影学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">中国传媒大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">中国美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">中央美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">清华大学美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">广州美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">南京艺术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">吉林动画学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1062,7 +1081,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">不限选科 (艺考主导, 90% 艺术院校接受)</div><div class="xk-bar"><div class="xk-fill" style="--w:65%;"></div><span class="xk-pct">65%</span></div></div></div><div class="xk-reason">艺术学类主要按艺考专业成绩录取, 选科要求宽松, 文化课基本是文综组合 (历史 + 政治 + 地理)。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 政治 (文综 + 艺考)</div><div class="xk-bar"><div class="xk-fill" style="--w:18%;"></div><span class="xk-pct">18%</span></div></div></div><div class="xk-reason">美术 / 音乐 / 戏剧文化课要求, 文综组合是主流。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 (理工类艺术: 影视技术 / 数媒)</div><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">数字媒体艺术 / 影视技术 / 录音艺术 等跨理工方向, 物理是基础。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 地理 (再选政治, 偏文)</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">艺术学理论 / 艺术管理 偏理论方向, 文综也可。</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">不限选科 (艺考主导, 90% 艺术院校接受)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:65%;"></div></div><span class="xk-pct">65%</span></div></div></div><div class="xk-reason">艺术学类主要按艺考专业成绩录取, 选科要求宽松, 文化课基本是文综组合 (历史 + 政治 + 地理)。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 政治 (文综 + 艺考)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:18%;"></div></div><span class="xk-pct">18%</span></div></div></div><div class="xk-reason">美术 / 音乐 / 戏剧文化课要求, 文综组合是主流。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 (理工类艺术: 影视技术 / 数媒)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">数字媒体艺术 / 影视技术 / 录音艺术 等跨理工方向, 物理是基础。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 地理 (再选政治, 偏文)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">艺术学理论 / 艺术管理 偏理论方向, 文综也可。</div></div>
       </div>
     </section>
 </article>

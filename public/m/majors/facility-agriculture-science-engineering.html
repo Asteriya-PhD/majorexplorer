@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -852,7 +863,7 @@
 </section>
 
 <div class="stats-strip">
-  <div class="stat-cell"><span class="n">7<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">6<span class="unit">万</span></span><span class="l">入行中位</span></div>
   <div class="stat-cell grad-tier" data-tier="中 27%"><span class="n">中 27%</span><span class="l">深造需求</span></div>
   <div class="stat-cell"><span class="n">3.9<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
@@ -875,7 +886,7 @@
         <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p class="lede">设施农业科学与工程的核心是「温室设计 + 设施园艺 + 环境控制 + 无土栽培 + 智慧农业」五栖训练, 它在设施农业园区 / 农业科技公司 / 乡村振兴 / 都市农业赛道有特色需求, 但「农学整体起薪 5-8 万是常态 + 基层县域去向为主 + 男生主导 + 985 硕才是头部设施农业/智慧农业门槛」是该专业四大结构性现实.</p>
+        <p class="lede">设施农业科学与工程的核心是「温室设计 + 设施园艺 + 无土栽培 + 智慧农业」四栖训练, 它在设施农业园区 / 农业科技公司 / 乡村振兴 / 都市农业赛道有特色需求, 但「农学整体起薪 6-10 万是常态 + 基层县域去向为主 + 农学学士在公务员/事业单位岗位受限 + 头部设施农业公司研发岗 985 硕才是门槛」是该专业四大结构性现实.</p>
         
       </div>
     </section>
@@ -888,7 +899,7 @@
       <div class="art-body">
         <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
       </div>
-      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">设施农业 = 农学, 毕业就是回家种大棚</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">实际是「设施园艺 + 无土栽培 + 智能温室 + 都市农业 + 智慧农业」复合专业, 25%+ 毕业生进设施农业公司 (京鹏科技/上海孙桥/寿光蔬菜基地/京东农场) 12-25 万, 20%+ 进基层农技推广/都市农业项目 8-12 万, 25%+ 升学, 与「回家种大棚」完全不同.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">设施农业是冷门, 毕业就失业</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">2024+ 都市农业 + 智慧农业 (智能温室/水肥一体化) + 设施农业 + 乡村振兴 4 大风口下, 设施农业强校 (中国农大/西北农林/河北农大/东北农大/华农/南农) 就业率 95%+; 真正对口就业是「设施农业公司 + 基层农技 + 都市农业 + 选调 + 升学」, 路径明确.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">都市农业 = 阳台种菜, 没技术含量</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">实际涵盖「智能温室 + 水肥一体化 + 无土栽培 + 植物工厂 + 都市菜园 + CSA 社区支持农业 + 屋顶农场」, 京鹏科技/上海孙桥/京东农场/极星农业 校招 12-25 万, 3 年+ 25-45 万, 资深 40-80 万; 真正「都市农业」是工业化的智慧农业, 不是阳台种菜.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">设施农业 = 大棚, 招本科生就行</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">智能温室 (玻璃温室/植物工厂) 招设施农业工程师 985 硕 + 农业/工程/物联网底子, 校招 12-22 万, 资深 25-50 万; 985 本科走设施农业销售/技术经理/施工, 8-12 万, 真正核心研发 (智能温室/水肥 AI/植物工厂) 是硕博.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">设施农业毕业只能去农村, 工作环境差</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">实际 60%+ 在城市/县城办公 (设施农业公司销售/技术支持/研发/项目运营), 40% 在基地/温室 (都市农场/植物工厂/选调); 温室实习是阶段性, 长期工作多为销售/技术/研发/项目/选调, 与「纯田间」不同.</div></div></div></div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">设施农业 = 农学, 毕业就是回家种大棚</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">实际是「设施园艺 + 无土栽培 + 智能温室 + 都市农业 + 智慧农业」复合专业, 22%+ 毕业生进设施农业公司 (京鹏科技/上海孙桥/寿光蔬菜基地/京东农场) 8-15 万, 15%+ 进基层农技推广/都市农业项目 8-12 万, 22%+ 升学, 与「回家种大棚」完全不同.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">设施农业是冷门, 毕业就失业</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">2024+ 都市农业 + 智慧农业 (智能温室/水肥一体化) + 设施农业 + 乡村振兴 4 大风口下, 设施农业强校 (中国农大/西北农林/河北农大/华农/南农/浙大) 就业率 95%+; 真正对口就业是「设施农业公司 + 基层农技 + 都市农业 + 选调 + 升学」, 路径明确.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">都市农业 = 阳台种菜, 没技术含量</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">实际涵盖「智能温室 + 水肥一体化 + 无土栽培 + 植物工厂 + 都市菜园 + CSA 社区支持农业 + 屋顶农场」, 京鹏科技/上海孙桥/京东农场/极星农业 本科校招 8-15 万, 985 硕 14-22 万, 资深 30-60 万; 真正「都市农业」是工业化的智慧农业, 不是阳台种菜.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">设施农业 = 大棚, 招本科生就行</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">智能温室 (玻璃温室/植物工厂) 招设施农业工程师 985 硕 + 农业/工程/物联网底子, 校招 14-22 万, 资深 30-55 万; 985 本科走设施农业销售/技术经理/施工 8-15 万, 真正核心研发 (智能温室/水肥 AI/植物工厂) 是硕博.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">设施农业毕业只能去农村, 工作环境差</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">实际 60%+ 在城市/县城办公 (设施农业公司销售/技术支持/研发/项目运营), 40% 在基地/温室 (都市农场/植物工厂/选调); 温室实习是阶段性, 长期工作多为销售/技术/研发/项目/选调, 与「纯田间」不同.</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
@@ -905,11 +916,11 @@
           <div class="course-tag">公共基础</div>
         </div><div class="course-row">
           <div class="course-yr">大三 核心</div>
-          <div class="course-names">植物学 · 植物生理学 · 农业气象学 · 土壤肥料学 · 农业微生物学 · <strong style="color:var(--accent);">★</strong> 工程力学基础 · <strong style="color:var(--accent);">★</strong> 流体力学基础 · 设施园艺学 · 无土栽培学 · 设施环境工程 (温室设计 + 光温水气调控) · 水肥一体化技术 · 智慧农业与农业物联网</div>
+          <div class="course-names">植物学 · 植物生理学 · 农业气象学 · 土壤肥料学 · 农业微生物学 · <strong style="color:var(--accent);">★</strong> 工程力学基础 · <strong style="color:var(--accent);">★</strong> 流体力学基础 · 设施园艺学 · 无土栽培学 · 设施环境工程学 (温室设计 + 光温水气调控) · 农业设施设计与建造 · 设施作物栽培学 · 水肥一体化技术 · 植物工厂原理与设计 · 农业物联网与传感技术 · 设施农业装备与机械化 · 智慧农业与精准农业</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
           <div class="course-yr">大三 方向</div>
-          <div class="course-names">中国农业大学农学院/水利与土木工程学院: 设施园艺 + 温室设计 + 智慧农业 (中国农大农学 A+, 全国第一, 985 旗舰, 设施园艺 + 温室工程特色) · 西北农林科技大学园艺学院/水利与建筑工程学院: 旱区设施农业 + 温室 + 无土栽培 (西农园艺 A, 985 强校, 旱区设施 + 果树设施特色) · 南京农业大学园艺学院/资源与环境科学学院: 设施蔬菜 + 水肥一体化 + 智能温室 (南农园艺 A, 双一流, 985 强校, 设施蔬菜 + 水肥特色) · 华中农业大学园艺林学学院/经济管理学院: 长江流域设施农业 + 都市农业 + 智慧农业 (华农园艺 A-, 双一流, 都市农业 + 设施农业特色) · 浙江大学农业与生物技术学院/生物系统工程与食品科学学院: 数字温室 + 植物工厂 + 智慧农业 (浙大农学 A-, 985 旗舰, 数字温室 + 植物工厂特色)</div>
+          <div class="course-names">中国农业大学 (农学院/水利与土木工程学院): 设施园艺 + 温室设计 + 智慧农业 (中国农大园艺学 第四轮 B+, 985 旗舰, 设施园艺 + 温室工程特色) · 西北农林科技大学 (园艺学院/水利与建筑工程学院): 旱区设施农业 + 温室 + 无土栽培 (西农园艺学 第四轮 B+, 985 强校, 旱区设施 + 果树设施特色) · 河北农业大学 (园艺学院/城乡建设学院): 设施结构 + 温室工程 + 设施园艺 (全国最早开设设施农业 2002, 设施结构设计 + 温室建造特色) · 南京农业大学 (园艺学院/资源与环境科学学院): 设施蔬菜 + 水肥一体化 + 智能温室 (南农园艺学 第四轮 A-, 211/双一流, 设施蔬菜 + 水肥特色) · 山东农业大学 (园艺科学与工程学院): 设施蔬菜 + 日光温室 + 设施果树 (寿光蔬菜基地核心校, 山东日光温室 + 设施蔬菜特色)</div>
           <div class="course-tag">方向选修</div>
         </div>
       </div>
@@ -925,34 +936,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">中国农业大学</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">西北农林科技大学</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
-          <div class="uni-name">南京农业大学</div>
+          <div class="uni-name">河北农业大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
-          <div class="uni-name">华中农业大学</div>
+          <div class="uni-name">南京农业大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
-          <div class="uni-name">浙江大学</div>
+          <div class="uni-name">华中农业大学</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
-          <div class="uni-name">华南农业大学</div>
+          <div class="uni-name">浙江大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
-          <div class="uni-name">沈阳农业大学</div>
+          <div class="uni-name">山东农业大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
-          <div class="uni-name">山东农业大学</div>
+          <div class="uni-name">华南农业大学</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -965,7 +984,7 @@
         <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
       </div>
       <div class="co-list">
-        <div class="co-row"><div class="co-info"><div class="co-name">京鹏科技 / 上海孙桥 / 寿光蔬菜基地 / 极星农业 (智能温室/植物工厂)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★<span class="dot">·</span>校招 12-25 万, 资深 30-80 万; 北京/上海/潍坊/湖州, 头部设施农业龙头, 985 硕 + 园艺/工程/物联网底子是核心, 智能温室风口</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中科院/顶尖农业高校 (读研/读博/博后主流)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>博士 20-35 万 + 安家费 20-50 万; 北京/南京/武汉/杨凌/广州, 走学术路径, 顶刊论文 (Hort Res/Front Plant Sci/Sci Hortic) 硬通货</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">大疆农业 / 极飞科技 / 汉和航空 (智慧农业无人机/设施农业)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★<span class="dot">·</span>校招 12-22 万, 资深 25-45 万; 深圳/广州/无锡, 智慧植保 + 精准施药 + 水肥一体化, 2024+ 智慧农业风口</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,0.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">大华股份 / 海康威视 / 华为智慧农业 / 京东农场 / 阿里数字农业 (智慧农业+物联网)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★<span class="dot">·</span>校招 15-25 万, 资深 30-60 万; 杭州/深圳/北京/广州, 农业物联网 + 水肥 AI + 智能温室控制 + 农产品溯源</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中化现代农业 (中化 MAP) / 北大荒 / 温氏 / 牧原 / 海大集团 (种养加龙头+设施农业)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★<span class="dot">·</span>校招 10-15 万, 资深 20-40 万; 北京/上海/哈尔滨/云浮/南阳, 数字农场 + 精准农业 + 设施托管服务</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">农业农村部 / 各省农业农村厅 / 市县农业农村局 / 农技推广中心 (公务员/事业编)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★<span class="dot">·</span>事业编 8-15 万 + 户口; 北京/各省/市/县, 设施农业推广 + 都市农业 + 农业执法 + 乡村振兴, 选调生通道在乡村振兴战略下持续倾斜</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">诺普信 / 辉丰股份 / 丰山集团 / 钱江生化 / 农大肥业 (农资+水肥一体化)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>校招 10-15 万, 资深 20-40 万; 深圳/盐城/淮安/台州/济南, 农资销售 + 水肥一体化 + 设施托管服务</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">京东农场/阿里数字农业/网易未央/拼多多农服/一米市集 (互联网+农业/都市农业)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>校招 12-22 万, 资深 25-50 万; 北京/杭州/广州/上海, 数字农场 + 农业大数据 + AI 病虫害识别 + 都市菜园/CSA</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div>
+        <div class="co-row"><div class="co-info"><div class="co-name">京鹏科技 / 上海孙桥 / 寿光蔬菜基地 / 极星农业 (智能温室/植物工厂)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★★<span class="dot">·</span>本科校招 8-15 万, 985 硕研发 14-22 万, 资深 30-60 万; 北京/上海/潍坊/湖州, 头部设施农业龙头, 985 硕 + 园艺/工程/物联网底子是研发核心, 智能温室风口</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中科院/顶尖农业高校 (读研/读博/博后主流)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>博士 20-35 万 + 安家费 20-50 万; 北京/南京/武汉/杨凌/广州, 走学术路径, 顶刊论文 (Hort Res/Front Plant Sci/Sci Hortic) 硬通货</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">大疆农业 / 极飞科技 / 汉和航空 (智慧农业无人机/设施农业)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★<span class="dot">·</span>本科校招 10-15 万, 985 硕 15-22 万, 资深 25-45 万; 深圳/广州/无锡, 智慧植保 + 精准施药 + 水肥一体化, 2024+ 智慧农业风口</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,0.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">大华股份 / 海康威视 / 华为智慧农业 / 京东农场 / 阿里数字农业 (智慧农业+物联网)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★<span class="dot">·</span>本科校招 12-18 万, 985 硕 18-25 万, 资深 30-60 万; 杭州/深圳/北京/广州, 农业物联网 + 水肥 AI + 智能温室控制 + 农产品溯源</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中化现代农业 (中化 MAP) / 北大荒 / 温氏 / 牧原 / 海大集团 (种养加龙头+设施农业)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★★<span class="dot">·</span>校招 8-13 万, 资深 20-35 万; 北京/上海/哈尔滨/云浮/南阳, 数字农场 + 精准农业 + 设施托管服务</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">农业农村部 / 各省农业农村厅 / 市县农业农村局 / 农技推广中心 (公务员/事业编)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★<span class="dot">·</span>事业编 8-15 万 + 户口; 北京/各省/市/县, 设施农业推广 + 都市农业 + 农业执法 + 乡村振兴, 选调生通道在乡村振兴战略下持续倾斜</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">诺普信 / 辉丰股份 / 丰山集团 / 钱江生化 / 农大肥业 (农资+水肥一体化)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>校招 8-13 万, 资深 20-35 万; 深圳/盐城/淮安/台州/济南, 农资销售 + 水肥一体化 + 设施托管服务</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">京东农场/阿里数字农业/网易未央/拼多多农服/一米市集 (互联网+农业/都市农业)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>本科校招 10-15 万, 985 硕 15-22 万, 资深 25-50 万; 北京/杭州/广州/上海, 数字农场 + 农业大数据 + AI 病虫害识别 + 都市菜园/CSA</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -984,28 +1003,28 @@
           <div class="sal-th-cell">P75 高位</div>
         </div>
         <div class="sal-tr">
-          <div class="sal-stage">应届生 (985 本科, 设施农业销售/技术营销)<span class="sal-yoy up">↗ 4%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">7.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:14%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:9%;"></span></span></div>
+          <div class="sal-stage">应届生 (本科, 设施农业销售/技术营销/施工)<span class="sal-yoy up">↗ 4%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">6.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:13%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:10%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:8%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">应届生 (985 硕, 智能温室/水肥一体化)<span class="sal-yoy up">↗ 6%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:24%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+          <div class="sal-stage">应届生 (985 硕, 智能温室/水肥一体化/植物工厂研发)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">16.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:15%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">3年经验 (设施农业销售经理/智能温室工程师)<span class="sal-yoy up">↗ 7%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:23%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:19%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">5年经验 (资深设施农业/智慧农业专家)<span class="sal-yoy up">↗ 7%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:50%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:50%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">65.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:43%;"></span></span></div>
+          <div class="sal-stage">5年经验 (资深设施农业/智慧农业专家/区域经理)<span class="sal-yoy up">↗ 7%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:49%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:44%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">55.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:37%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">10年+ (首席设施农业/智慧农业 CTO/选调干部)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">45.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
           <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
           <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">150.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
         </div>
@@ -1056,7 +1075,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">农学主流组合, 覆盖设施农业核心课程, 涉及植物学 + 土壤肥料 + 设施环境工程基础, 985 农学强校均覆盖.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 (再选生物或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:18%;"></div><span class="xk-pct">18%</span></div></div></div><div class="xk-reason">多数农业院校基础要求, 智能温室/水肥一体化方向可走, 农学大类均可填报, 985 农学强校覆盖.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或不限)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">部分农业院校接受, 偏设施园艺/无土栽培方向, 物理弱可走, 农学大类可报.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合院校)</div><div class="xk-bar"><div class="xk-fill" style="--w:4%;"></div><span class="xk-pct">4%</span></div></div></div><div class="xk-reason">极少数综合型大学农学院开放, 设施农业作为农学特设专业招生门槛低, 但 985 农学强校普遍要求物化生.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">农学主流组合, 覆盖设施农业核心课程, 涉及植物学 + 土壤肥料 + 设施环境工程基础, 985 农学强校均覆盖.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 (再选生物或不限)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:18%;"></div></div><span class="xk-pct">18%</span></div></div></div><div class="xk-reason">多数农业院校基础要求, 智能温室/水肥一体化方向可走, 农学大类均可填报, 985 农学强校覆盖.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或不限)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">部分农业院校接受, 偏设施园艺/无土栽培方向, 物理弱可走, 农学大类可报.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合院校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:4%;"></div></div><span class="xk-pct">4%</span></div></div></div><div class="xk-reason">极少数综合型大学农学院开放, 设施农业作为农学特设专业招生门槛低, 但 985 农学强校普遍要求物化生.</div></div>
       </div>
     </section>
 </article>

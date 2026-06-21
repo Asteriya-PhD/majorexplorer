@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -915,13 +926,13 @@
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 基础医学概论 · 临床医学概论 · 预防医学概论 · 全球健康概论 (核心) · 国际卫生法 (核心) · 卫生体系比较 (核心) · 全球流行病学 (核心) · 卫生经济学 · 流行病学 · <strong style="color:var(--accent);">★</strong> 卫生统计学 · 项目设计与管理 · 多元文化健康 · 国际关系学 / 发展学 · 卫生政策分析</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">武汉大学 · 全球健康 + 重大突发公共卫生事件 + 卫生治理 · 北京大学 · 卫生体系 + 国际卫生法 + 全球健康治理 · 复旦大学 · 全球流行病学 + 卫生经济学 + 项目评估 · 中山大学 · 热带医学 + 跨国公共卫生 + 全球健康数据 · 昆山杜克大学 · 全球健康 + 杜克全球健康硕士衔接 + 国际化</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
           <div class="course-yr">大四 实践</div>
           <div class="course-names">全球健康项目设计 (WHO/UNICEF/盖茨基金会真实案例) · 跨国流行病学调研 (非洲/东南亚现场或远程) · <strong style="color:var(--accent);">★</strong> 国际组织实习 (WHO 北京/UNICEF 中国/盖茨中国) · 中国 CDC 全球健康中心见习 · 卫生政策分析项目 (真实政策案例研讨) · <strong style="color:var(--accent);">★</strong> 毕业实习 + 毕业论文 (含应用研究)</div>
           <div class="course-tag">实践环节</div>
-        </div><div class="course-row">
-          <div class="course-yr">特色</div>
-          <div class="course-names">武汉大学 · 全球健康 + 重大突发公共卫生事件 + 卫生治理 · 北京大学 · 卫生体系 + 国际卫生法 + 全球健康治理 · 复旦大学 · 全球流行病学 + 卫生经济学 + 项目评估 · 中山大学 · 热带医学 + 跨国公共卫生 + 全球健康数据 · 昆山杜克大学 · 全球健康 + 杜克全球健康硕士衔接 + 国际化</div>
-          <div class="course-tag">特色</div>
         </div>
       </div>
     </section>
@@ -936,34 +947,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">武汉大学公共卫生学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
-          <div class="uni-name">北京大学公共卫生学院<span class="badge">A+</span></div>
+          <div class="uni-name">北京大学公共卫生学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
-          <div class="uni-name">复旦大学公共卫生学院<span class="badge">A+</span></div>
+          <div class="uni-name">复旦大学公共卫生学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
-          <div class="uni-name">中山大学公共卫生学院<span class="badge">A</span></div>
+          <div class="uni-name">中山大学公共卫生学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">昆山杜克大学全球健康系</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
-          <div class="uni-name">浙江大学公共卫生学院<span class="badge">A</span></div>
+          <div class="uni-name">浙江大学公共卫生学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
-          <div class="uni-name">四川大学华西公共卫生学院<span class="badge">A</span></div>
+          <div class="uni-name">四川大学华西公共卫生学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">华中科技大学同济公共卫生学院</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1067,7 +1086,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 化学 + 生物 (双一流门槛)</div><div class="xk-bar"><div class="xk-fill" style="--w:55%;"></div><span class="xk-pct">55%</span></div></div></div><div class="xk-reason">预防医学 / 公共卫生 / 全球健康 等方向, 多数 985/211 要求 物理+化学+生物 三选全选.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 化学 (部分院校)</div><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason">部分校生物要求放宽, 物理+化学 即可, 适合化学强但生物稍弱者.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 政治/地理 (中外合办)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">昆山杜克 / 西交利物浦 等中外合办, 物理 + 政治或地理, 国际化导向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价)</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">极少数综合评价或中外合作, 不限选科, 但英语 + 国际化要求高.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 化学 + 生物 (双一流门槛)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:55%;"></div></div><span class="xk-pct">55%</span></div></div></div><div class="xk-reason">预防医学 / 公共卫生 / 全球健康 等方向, 多数 985/211 要求 物理+化学+生物 三选全选.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 化学 (部分院校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason">部分校生物要求放宽, 物理+化学 即可, 适合化学强但生物稍弱者.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 政治/地理 (中外合办)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">昆山杜克 / 西交利物浦 等中外合办, 物理 + 政治或地理, 国际化导向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">极少数综合评价或中外合作, 不限选科, 但英语 + 国际化要求高.</div></div>
       </div>
     </section>
 </article>

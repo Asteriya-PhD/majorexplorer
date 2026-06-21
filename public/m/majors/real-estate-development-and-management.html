@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -915,13 +926,13 @@
           <div class="course-names">管理学原理 · 微观经济学 · 宏观经济学 · 会计学原理 · <strong style="color:var(--accent);">★</strong> 统计学 · 城市规划原理 (核心) · 建筑构造与识图 (核心) · 房地产开发经营 (核心) · 房地产市场分析 (核心) · 房地产金融与投资 (核心) · 房地产估价 · 房地产项目策划 · 城市更新与旧城改造 · 房地产法规 · 营销策划 / 房地产营销管理</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">重庆大学 · 房地产开发 + 城市建设 + 房地产金融 · 东南大学 · 城市更新 + 房地产开发 + 城市规划 · 华中师范大学 · 房地产经营 + 城市经济 + 项目管理 · 天津大学 · 房地产开发 + 工程管理 + 城市规划 · 西安建筑科技大学 · 房地产开发 + 城市规划 + 建筑工程</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
           <div class="course-yr">大四 实践</div>
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 建筑识图实训 (CAD / 楼盘沙盘 / 现场识图) · 房地产营销沙盘 (项目定位 + 价格策略 + 营销方案) · <strong style="color:var(--accent);">★</strong> 房地产估价实训 (市场比较法 / 收益法 / 成本法) · 城市更新调研 (旧改项目实地 + 政策研讨) · <strong style="color:var(--accent);">★</strong> 专业实习 (8-12 周, 房企 / 代理 / 物业 / 住建) · <strong style="color:var(--accent);">★</strong> 毕业实习 + 毕业论文 (含应用研究)</div>
           <div class="course-tag">实践环节</div>
-        </div><div class="course-row">
-          <div class="course-yr">特色</div>
-          <div class="course-names">重庆大学 · 房地产开发 + 城市建设 + 房地产金融 · 东南大学 · 城市更新 + 房地产开发 + 城市规划 · 华中师范大学 · 房地产经营 + 城市经济 + 项目管理 · 天津大学 · 房地产开发 + 工程管理 + 城市规划 · 西安建筑科技大学 · 房地产开发 + 城市规划 + 建筑工程</div>
-          <div class="course-tag">特色</div>
         </div>
       </div>
     </section>
@@ -935,35 +946,43 @@
       </div>
       <div class="uni-row">
           <div class="uni-rank">01</div>
-          <div class="uni-name">重庆大学建设管理与房地产学院<span class="badge">A</span></div>
+          <div class="uni-name">重庆大学建设管理与房地产学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">清华大学建设管理系 (房地产方向)</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">同济大学建设管理与房地产系</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">东南大学土木工程学院 (房地产开发)</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">华中科技大学建设管理与房地产学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">天津大学管理与经济学部</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">西安建筑科技大学管理学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">沈阳建筑大学管理学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1067,7 +1086,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 化学/生物 (985 工科强校)</div><div class="xk-bar"><div class="xk-fill" style="--w:35%;"></div><span class="xk-pct">35%</span></div></div></div><div class="xk-reason">重庆大学 / 东南大学 / 天津大学 / 同济大学 等 985 强校房地产多要求物理 + 化学/生物, 适合工科基础好.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 不限 (211 综合类)</div><div class="xk-bar"><div class="xk-fill" style="--w:30%;"></div><span class="xk-pct">30%</span></div></div></div><div class="xk-reason">华中师大 / 河海大学 / 四川大学 等 211 综合大学, 物理必选, 化学生物不限, 适合数学物理双强.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选历史 + 不限 (财经类 / 省属)</div><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason">河南财经政法 / 山东工商学院 / 西安建筑科技 等财经类 / 省属建筑, 历史 / 物理均可, 文理兼收, 适合文科思维 + 数学基础.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价 / 中外合作)</div><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason">极少数综合评价 / 中外合作, 不限选科, 但英语 + 综合素质要求高.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 化学/生物 (985 工科强校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:35%;"></div></div><span class="xk-pct">35%</span></div></div></div><div class="xk-reason">重庆大学 / 东南大学 / 天津大学 / 同济大学 等 985 强校房地产多要求物理 + 化学/生物, 适合工科基础好.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 不限 (211 综合类)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:30%;"></div></div><span class="xk-pct">30%</span></div></div></div><div class="xk-reason">华中师大 / 河海大学 / 四川大学 等 211 综合大学, 物理必选, 化学生物不限, 适合数学物理双强.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选历史 + 不限 (财经类 / 省属)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason">河南财经政法 / 山东工商学院 / 西安建筑科技 等财经类 / 省属建筑, 历史 / 物理均可, 文理兼收, 适合文科思维 + 数学基础.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价 / 中外合作)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason">极少数综合评价 / 中外合作, 不限选科, 但英语 + 综合素质要求高.</div></div>
       </div>
     </section>
 </article>

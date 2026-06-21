@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -925,34 +936,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">北京理工大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">武汉理工大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">哈尔滨工业大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">东华大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">天津大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">上海交通大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">四川大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">西北工业大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1051,7 +1070,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 (再选不限, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">物理+化学是功能材料核心基组, 量子力学/固体物理/物理化学等核心课程直接对接, 光电/储能/磁性方向均开放.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 综合强校覆盖更广)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">物理+化学+生物可覆盖 985 综合类功能材料强校 (上交/华工/川大), 部分交叉方向 (生物医用材料) 需要生物基础.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 地理 (西部功能材料方向)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">部分综合院校西部功能材料基地 (西工大/兰州大学) 接受物化地, 偏向航天功能材料.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或其他)</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">部分医科交叉或农学背景强校 (中国农大/华中农大) 接受化+生, 但 985 工科强校普遍仍要求物理.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合院校)</div><div class="xk-bar"><div class="xk-fill" style="--w:2%;"></div><span class="xk-pct">2%</span></div></div></div><div class="xk-reason">极少数综合大学或财经类院校接受不限, 但 985/211 功能材料强校普遍仍要求物理+化学.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 (再选不限, 90% 院校可报)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">物理+化学是功能材料核心基组, 量子力学/固体物理/物理化学等核心课程直接对接, 光电/储能/磁性方向均开放.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 综合强校覆盖更广)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">物理+化学+生物可覆盖 985 综合类功能材料强校 (上交/华工/川大), 部分交叉方向 (生物医用材料) 需要生物基础.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 地理 (西部功能材料方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">部分综合院校西部功能材料基地 (西工大/兰州大学) 接受物化地, 偏向航天功能材料.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或其他)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">部分医科交叉或农学背景强校 (中国农大/华中农大) 接受化+生, 但 985 工科强校普遍仍要求物理.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合院校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:2%;"></div></div><span class="xk-pct">2%</span></div></div></div><div class="xk-reason">极少数综合大学或财经类院校接受不限, 但 985/211 功能材料强校普遍仍要求物理+化学.</div></div>
       </div>
     </section>
 </article>

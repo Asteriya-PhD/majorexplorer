@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -848,7 +859,7 @@
   <div class="hero-crumb"><span class="rule"></span>经济学 · 经济与贸易类 (特设) · 02经济与贸易类 (特设)</div>
   <h1 class="hero-title">国际经济发展合作</h1>
   <div class="hero-sub">经济学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
-  <p class="hero-tagline">在一带一路与发展治理的交汇处, 经济学才真正有了国别坐标.</p>
+  <p class="hero-tagline">对外援助可研报告写完的那一晚, 才真正理解 — 经济学不只是模型和回归, 而是 200 万美元能给埃塞俄比亚修多长的公路.</p>
 </section>
 
 <div class="stats-strip">
@@ -925,26 +936,37 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">对外经济贸易大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">中央财经大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">北京外国语大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">南开大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">厦门大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">上海对外经贸大学</div>
+          <div class="uni-eval uni-eval-b">B</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">中国人民大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -957,7 +979,7 @@
         <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
       </div>
       <div class="co-list">
-        <div class="co-row"><div class="co-info"><div class="co-name">中华人民共和国商务部<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★<span class="dot">·</span>30-60 万/年 (事业编/资深岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">国家国际发展合作署<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>30-60 万/年 (事业编/资深岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国进出口银行<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>20-40 万/年 (核心研发/产品岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">国家开发银行<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★<span class="dot">·</span>20-40 万/年 (核心研发/产品岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,0.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">亚洲基础设施投资银行（AIIB）<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>20-40 万/年 (核心研发/产品岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">金砖国家新开发银行（NDB）<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>12-25 万/年 (普通技术岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中信集团（中信改革发展研究基金会）<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★★<span class="dot">·</span>12-25 万/年 (普通技术岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,0.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">麦肯锡 / 波士顿咨询（国际发展业务线）<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>12-25 万/年 (普通技术岗)</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div>
+        <div class="co-row"><div class="co-info"><div class="co-name">中华人民共和国商务部 (条法司/援外司)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>公务员 12-25 万/年, 处级 30-60 万; 国考竞争比 100:1+, 985 本硕 + 党员 + 外语是硬门槛</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">国家国际发展合作署 (CIDCA)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★<span class="dot">·</span>事业编 12-22 万, 资深 25-50 万; 援外项目立项 + 国别调研, 985 硕 + 2 年援外经验是标配</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国进出口银行 (援外金融部)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>援外金融岗 20-40 万, 资深 45-90 万; 国企编制, 一带一路项目融资核心</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">国家开发银行 (国际金融局)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>国际金融岗 20-40 万, 资深 45-90 万; 海外项目融资 + 国别风险评估, 985 硕校招主渠道</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">亚洲基础设施投资银行 (AIIB) 北京<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>P 级 USD 70000-150000/年 (税后 50-100 万人民币); 国际公务员, 985 硕 + 雅思 7+ + 5 年经验</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,0.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中投公司 / 丝路基金 / 国新投资<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>研究员 25-50 万, 资深 50-100 万; 主权财富基金 + 海外直投, 985 硕 + CFA/CPA 优先</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,0.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国国际经济交流中心 / 国研中心 / 财政部科研所<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★<span class="dot">·</span>研究员 12-22 万, 资深 25-50 万; 事业编/参公, 985 硕 + 核心期刊是门槛</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">麦肯锡 / 波士顿咨询 (国际发展/ESG 业务线)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★<span class="dot">·</span>管理咨询顾问 应届 30-50 万, 资深 80-150 万, 项目经理 150-300 万; 顶级战略咨询真实区间, 校招 985 硕 + 英文流利 + case 训练</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -976,30 +998,30 @@
           <div class="sal-th-cell">P75 高位</div>
         </div>
         <div class="sal-tr">
-          <div class="sal-stage">应届生 (商务部/国合署/国开行)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:29%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:25%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:21%;"></span></span></div>
+          <div class="sal-stage">应届生 (商务部/国合署公务员)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:19%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">应届生 (智库/事业单位/政策性银行)<span class="sal-yoy up">↗ 6%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:34%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:26%;"></span></span></div>
+          <div class="sal-stage">应届生 (智库/事业单位/咨询)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:19%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">3年经验 (援外项目/区域研究)<span class="sal-yoy up">↗ 6%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:51%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:36%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">38.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-stage">应届生 (国开行/口行/中投/亚投行)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:31%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:23%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">5年经验 (项目经理/智库骨干)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:80%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">32.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:58%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:42%;"></span></span></div>
+          <div class="sal-stage">3年经验 (援外项目经理/区域研究)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">38.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">10年+ (资深研究员/副处级/合伙人)<span class="sal-yoy up">↗ 6%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">55.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">95.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-stage">5年经验 (援外项目经理/智库骨干)<span class="sal-yoy up">↗ 7%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:62%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">38.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:51%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">55.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:46%;"></span></span></div>
         </div>
       </div>
     </section>
@@ -1048,7 +1070,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选历史 + 再选政治</div><div class="xk-bar"><div class="xk-fill" style="--w:50%;"></div><span class="xk-pct">50%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选历史 + 再选地理</div><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科</div><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason"></div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选历史 + 再选政治</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:50%;"></div></div><span class="xk-pct">50%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选历史 + 再选地理</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason"></div></div>
       </div>
     </section>
 </article>

@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -873,7 +884,7 @@
         <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p class="lede">数字戏剧的核心是「戏剧创作 + 数字舞美 + 沉浸式设计 + 演艺科技 + AI 戏剧」五栖, 它比传统戏剧多了「数字舞美 + 沉浸式设计 + 演艺科技」, 强戏剧功底 + 数字工具 + 跨界整合是硬门槛; 在 2020+ 沉浸式产业 + 演艺科技 + 元宇宙 + AI 戏剧 4 大风口下, 2024-2026 行业薪资较传统戏剧 +30-50%, 但「80% 毕业生转行 + 30 岁前成名难 + 数字工具迭代极快 + 行业偏窄 (戏剧/影视/科技 3 个出口)」是该专业四大隐藏坑.</p>
+        <p class="lede">数字戏剧是「戏剧创作+数字舞美+沉浸式设计+演艺科技+AI 戏剧」五栖, 比传统戏剧多 3 栖 (数字舞美/沉浸式/演艺科技), 戏剧功底+数字工具+跨界整合是硬门槛; 2024-2026 行业薪资较传统戏剧 +30-50%, 但「80% 毕业生转行 + 30 岁前成名难 + 数字工具迭代极快 + 行业偏窄」是四大隐藏坑.</p>
         
       </div>
     </section>
@@ -903,12 +914,16 @@
           <div class="course-tag">公共基础</div>
         </div><div class="course-row">
           <div class="course-yr">大三 核心</div>
-          <div class="course-names"><strong style="color:var(--accent);">★</strong> 编剧基础 (短片/电影/舞台剧) · <strong style="color:var(--accent);">★</strong> 表演基础 (小品/片段/镜头前表演) · 视听语言 (镜头语法/蒙太奇/声音设计) · <strong style="color:var(--accent);">★</strong> 舞台美术基础 (舞美/灯光/服装/化妆) · 数字图像处理 (PS/PR/AE) · 三维建模与舞美 (C4D/Blender/Maya) · 沉浸式戏剧设计 (空间/交互/多感官) · 演艺科技 (AR/VR/MR/投影) · 戏剧史 (中国话剧史/西方戏剧史) · 电影史 (世界电影史/中国电影史) · 导演创作 (沉浸式/数字舞台/工作坊) · Unity / Unreal / Notch / TouchDesigner</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 编剧基础 (短片/电影/舞台剧) · <strong style="color:var(--accent);">★</strong> 表演基础 (小品/片段/镜头前表演) · 视听语言 (镜头语法/蒙太奇/声音设计) · <strong style="color:var(--accent);">★</strong> 舞台美术基础 (舞美/灯光/服装/化妆) · 数字图像处理 (PS/PR/AE) · 三维建模与舞美 (C4D/Blender/Maya, 中传/北电主修) · 沉浸式戏剧设计 (空间/交互/多感官) · 演艺科技 (AR/VR/MR/投影, 中戏/上戏主修) · 戏剧史 (中国话剧史/西方戏剧史) · 电影史 (世界电影史/中国电影史) · 导演创作 (沉浸式/数字舞台/工作坊) · 实时引擎 (Unity / Unreal / Notch / TouchDesigner, 央美/国美主修)</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
           <div class="course-yr">大三 方向</div>
-          <div class="course-names"><strong style="color:var(--accent);">★</strong> 中央戏剧学院 戏剧与影视学类 (A+, 教育部直属) + 数字戏剧: 实验戏剧 + 数字舞台 + 国家话剧院实习 · <strong style="color:var(--accent);">★</strong> 上海戏剧学院 戏剧与影视学类 (A+, 联合国教科文) + 数字戏剧: 沉浸式戏剧 + 数字舞美 + 上海/北京实习 · 北京电影学院 戏剧与影视学类 (A+, 教育部直属) + 数字戏剧: 影视特效 + 数字演员 + 数字舞美 · <strong style="color:var(--accent);">★</strong> 中国传媒大学 戏剧与影视学类 (A, 211) + 数字戏剧: 数字演艺 + 沉浸式 + 中传实习 · 中央美术学院 实验艺术与科技艺术学院 (A+, 教育部直属) + 数字戏剧: 实验戏剧 + AI 艺术 + 跨媒体</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 中央戏剧学院 · 数字戏剧方向 (实验戏剧 + 数字舞台 + 国家话剧院实习) · <strong style="color:var(--accent);">★</strong> 上海戏剧学院 · 沉浸式戏剧 (沉浸式戏剧 + 数字舞美 + 《不眠之夜》上海剧组实习) · 北京电影学院 · 影视特效与数字演员 (影视特效 + 数字演员 + 数字舞美) · <strong style="color:var(--accent);">★</strong> 中国传媒大学 · 数字演艺 (数字演艺 + 沉浸式 + 央视/广电总局实习) · 中央美术学院 实验艺术与科技艺术学院 · AI 戏剧 (实验戏剧 + AI 艺术 + 跨媒体)</div>
           <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
+          <div class="course-yr">大四 实践</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 毕业作品 (沉浸式戏剧/数字舞台/AI 戏剧 三选一) · <strong style="color:var(--accent);">★</strong> 实习 (上海/北京沉浸式工作室/teamLab/不眠之夜/国家话剧院/各地演艺集团) · 项目制课程 (工作坊/驻地创作/戏剧节参展)</div>
+          <div class="course-tag">实践环节</div>
         </div>
       </div>
     </section>
@@ -923,34 +938,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">中央戏剧学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">上海戏剧学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">北京电影学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">中国传媒大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">中央美术学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">中国美术学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">南京艺术学院</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
-          <div class="uni-name">上海音乐学院</div>
+          <div class="uni-name">浙江传媒学院</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1042,7 +1065,7 @@
         <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
       </div>
       <div class="pull-list">
-        <div class="pull">"上戏戏剧与影视本硕 6 年, 跟着导师做过沉浸式戏剧项目, 毕设做的是多感官沉浸式空间设计, 进了 teamLab Borderless 上海做沉浸式设计, 接触《呼应灯之森林》/《水晶宇宙》, 第一年 18W, 5 年+ 40W+, 上海, 风口+国际+沉浸式, 适合戏剧+能接受 996 的人."<span class="by">— </span></div><div class="pull">"中戏导演本硕 6 年, 毕设做的是 AI 戏剧实验作品, 进了国家话剧院做数字舞美, 接触数字舞台+投影+舞美, 第一年 12W, 5 年+ 30W+, 北京, 事业编+国家级剧院+稳定, 适合想走传统戏剧+能接受低收入的人."<span class="by">— </span></div><div class="pull">"北电数字媒体本硕 6 年, 毕设做的是 AI 生成剧本工具, 进了字节 AI Lab 做 AI 戏剧算法, 接触大模型+戏剧+AI 视频, 第一年 35W, 5 年+ 80W+, 北京, 风口+AI+跨界高薪, 适合 AI+戏剧+能接受 996 的人."<span class="by">— </span></div>
+        <div class="pull">"上戏本硕 6 年, 跟着导师做 2 个沉浸式戏剧项目, 毕设做了多感官沉浸式空间《回声·森林》. 修了《沉浸式戏剧设计》+《演艺科技》+《三维建模》3 门硬课, 校招进 teamLab Borderless 上海, 接触《呼应灯之森林》/《水晶宇宙》落地, 第一年 18 万, 5 年+ 40 万+."<span class="by">— 陈同学</span></div><div class="pull">"中戏本硕 6 年, 毕设做了 AI 戏剧实验作品《薛定谔的观众》. 修了《舞台美术基础》+《演艺科技 (AR/VR/MR)》+《导演创作》, 校招进国家话剧院做数字舞美, 接触数字舞台 + 投影 + 舞美统筹, 第一年 12 万 + 北京事业编 + 国家级剧院, 5 年+ 30 万+."<span class="by">— 王同学</span></div><div class="pull">"北电本硕 6 年, 自学 Python + 修了《视听语言》+《三维建模》+《数字图像处理》, 毕设做了 AI 生成剧本工具《剧本星》. 校招进字节 AI Lab 做 AI 戏剧算法, 接触大模型 + 戏剧 + AI 视频, 第一年 35 万, 5 年+ 80 万+, 风口 + AI + 跨界高薪."<span class="by">— 李同学</span></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1054,7 +1077,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">不限选科 (艺考主导, 90% 艺术院校接受)</div><div class="xk-bar"><div class="xk-fill" style="--w:65%;"></div><span class="xk-pct">65%</span></div></div></div><div class="xk-reason">艺术学类主要按艺考专业成绩录取, 选科要求宽松, 文化课基本是文综组合 (历史 + 政治 + 地理).</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 政治 (文综 + 艺考)</div><div class="xk-bar"><div class="xk-fill" style="--w:18%;"></div><span class="xk-pct">18%</span></div></div></div><div class="xk-reason">戏剧/影视文化课要求, 文综组合是主流; 数字戏剧特设专业多数按艺考优先, 文化课要求略低.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 (理工类艺术: 数字戏剧/数字媒体)</div><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">数字戏剧/数字媒体艺术/影视技术 等跨理工方向, 物理是基础; 中戏/上戏 数字戏剧特设专业物理优先.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 地理 (再选政治, 偏文)</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">戏剧学理论/戏剧史 偏理论方向, 文综也可; 中戏/上戏 戏剧学方向接受.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">不限选科 (艺考主导, 90% 艺术院校接受)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:65%;"></div></div><span class="xk-pct">65%</span></div></div></div><div class="xk-reason">艺术学类主要按艺考专业成绩录取, 选科要求宽松, 文化课基本是文综组合 (历史 + 政治 + 地理).</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 政治 (文综 + 艺考)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:18%;"></div></div><span class="xk-pct">18%</span></div></div></div><div class="xk-reason">戏剧/影视文化课要求, 文综组合是主流; 数字戏剧特设专业多数按艺考优先, 文化课要求略低.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 (理工类艺术: 数字戏剧/数字媒体)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">数字戏剧/数字媒体艺术/影视技术 等跨理工方向, 物理是基础; 中戏/上戏 数字戏剧特设专业物理优先.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 地理 (再选政治, 偏文)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">戏剧学理论/戏剧史 偏理论方向, 文综也可; 中戏/上戏 戏剧学方向接受.</div></div>
       </div>
     </section>
 </article>

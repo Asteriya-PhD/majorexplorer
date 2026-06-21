@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -924,26 +935,32 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">中国农业大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">西北农林科技大学</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">南京农业大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">华中农业大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">河北农业大学</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">佛山科学技术学院</div>
+          <div class="uni-eval uni-eval-b">B</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1047,7 +1064,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">化学 + 生物 (必选, 主流农科可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:48%;"></div><span class="xk-pct">48%</span></div></div></div><div class="xk-reason">中兽医学是农学门类动物医学类专业, 主流院校要求化学 + 生物, 适配中国农大/西北农林/南京农大/华中农大等核心院校.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 医学/农学主流)</div><div class="xk-bar"><div class="xk-fill" style="--w:28%;"></div><span class="xk-pct">28%</span></div></div></div><div class="xk-reason">传统理科铁三角组合, 覆盖最广, 多数开设中兽医学院校均接受, 实际录取率稳定.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 + 地理 (农业院校接受)</div><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">部分农业院校接受化学 + 生物 + 地理, 适合化学 + 生物 + 文科综合背景, 实际录取率稳定.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数院校试点)</div><div class="xk-bar"><div class="xk-fill" style="--w:6%;"></div><span class="xk-pct">6%</span></div></div></div><div class="xk-reason">极少数综合类或民族类院校在改革试点中接受更多选科组合, 但实际录取仍以化学 + 生物为主.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">动物接触 + 中药过敏检查 (部分院校)</div><div class="xk-bar"><div class="xk-fill" style="--w:100%;"></div><span class="xk-pct">100%</span></div></div></div><div class="xk-reason">中兽医学需接触动物活体 + 中药材, 部分院校在入学时做基本健康筛查, 中药过敏者谨慎选择.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">化学 + 生物 (必选, 主流农科可报)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:48%;"></div></div><span class="xk-pct">48%</span></div></div></div><div class="xk-reason">中兽医学是农学门类动物医学类专业, 主流院校要求化学 + 生物, 适配中国农大/西北农林/南京农大/华中农大等核心院校.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 医学/农学主流)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:28%;"></div></div><span class="xk-pct">28%</span></div></div></div><div class="xk-reason">传统理科铁三角组合, 覆盖最广, 多数开设中兽医学院校均接受, 实际录取率稳定.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 + 地理 (农业院校接受)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">部分农业院校接受化学 + 生物 + 地理, 适合化学 + 生物 + 文科综合背景, 实际录取率稳定.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数院校试点)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:6%;"></div></div><span class="xk-pct">6%</span></div></div></div><div class="xk-reason">极少数综合类或民族类院校在改革试点中接受更多选科组合, 但实际录取仍以化学 + 生物为主.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">动物接触 + 中药过敏检查 (部分院校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:100%;"></div></div><span class="xk-pct">100%</span></div></div></div><div class="xk-reason">中兽医学需接触动物活体 + 中药材, 部分院校在入学时做基本健康筛查, 中药过敏者谨慎选择.</div></div>
       </div>
     </section>
 </article>

@@ -394,7 +394,11 @@ def render_salary(salary):
 
 
 def render_schools(schools, hubei_only=False):
-    """schools = [{name, rank, tag, score?}]"""
+    """schools = [{name, rank, tag, score?}]
+
+    rank 字段格式: "★★★★★ (A+)" / "★★★★★ (A)" / "★★★★☆ (A-)" / "★★★★☆ (B+)"
+    解析出 A+/A/A-/B+ 等学科评估等级作为显眼的右侧徽章.
+    """
     if not schools:
         return ""
     # 湖北优先, 但目前 mock 全是湖北的 + 跨省, 先全列
@@ -402,21 +406,34 @@ def render_schools(schools, hubei_only=False):
     rows = []
     for i, s in enumerate(items, 1):
         rank = s.get("rank", "")
-        # 把 ★ 渲染成徽章
-        rank_html = re.sub(r"★", "★", esc(rank))
-        # tag → 短 badge
         tag = s.get("tag", "")
-        # 如果 tag 含 A+ / A / A- / B+ → 取第一个
-        badge = ""
-        m = re.search(r"评估?\s*([A+\-]+[ABCDF]?)", tag)
+        # Day 17 fix: 从 rank 字段 "(A+)" 格式解析学科评估, 兜底 tag 全文
+        eval_badge = ""
+        m = re.search(r"\(([ABCDF][+\-]?)\)", rank)  # 优先 rank "(A+)" 格式
         if m:
-            badge = m.group(1)
+            eval_badge = m.group(1)
+        else:
+            m = re.search(r"\b([ABCDF][+\-]?)\b", tag)
+            if m:
+                eval_badge = m.group(1)
+        # eval → CSS class (颜色按等级) — 用 mapping 避免 replace 顺序冲突
+        eval_class = ""
+        if eval_badge:
+            eval_class_map = {
+                "A+": "a-plus", "A": "a", "A-": "a-minus",
+                "B+": "b-plus", "B": "b", "B-": "b-minus",
+                "C+": "c", "C": "c", "C-": "c",
+                "D": "d",
+            }
+            eval_class = f"uni-eval-{eval_class_map.get(eval_badge, eval_badge.lower())}"
         # score (没数据时省)
         score = s.get("score") or s.get("hubei_2024_score") or s.get("min_2024")
         score_html = f'<div class="uni-score">{esc(score)}</div>' if score else '<div class="uni-score">—</div>'
+        eval_html = f'<div class="uni-eval {eval_class}">{esc(eval_badge)}</div>' if eval_badge else '<div class="uni-eval uni-eval-none">—</div>'
         rows.append(f'''<div class="uni-row">
           <div class="uni-rank">{i:02d}</div>
-          <div class="uni-name">{esc(s.get("name", ""))}{f'<span class="badge">{esc(badge)}</span>' if badge else ''}</div>
+          <div class="uni-name">{esc(s.get("name", ""))}</div>
+          {eval_html}
           {score_html}
         </div>''')
     return f'''<section class="art-sec">
@@ -536,7 +553,7 @@ def render_xuanke(xuanke_list):
             f'<span class="xk-num">0{i}</span>'
             f'<div class="xk-info">'
             f'<div class="xk-name">{esc(name)}</div>'
-            f'<div class="xk-bar"><div class="xk-fill" style="--w:{pct}%;"></div><span class="xk-pct">{pct}%</span></div>'
+            f'<div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:{pct}%;"></div></div><span class="xk-pct">{pct}%</span></div>'
             f'</div>'
             f'</div>'
             f'<div class="xk-reason">{esc(reason)}</div>'

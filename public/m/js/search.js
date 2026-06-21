@@ -96,14 +96,22 @@
         theme: "#5A4632",
       }))});
     }
-    // Day 7 fix v2: 只在有相似 major 命中但无字面匹配时显示 CTA
-    // 例: 搜「人类学」命中「民族学」(major), 没字面 → 显示 CTA
-    // 反例: 搜「地矿类」(纯大类名, 无 major 命中) → 不显示 CTA, 引导用户去 /majors.html
-    const hasExactMatch = majors.some((m) => {
+    // Day 17 fix: 大类名搜索(如「法医学类」)不应显示"尚未收录"
+    // - 有 major 字面匹配 → 不显示 CTA
+    // - 有 category 字面匹配 (大类名命中) → 不显示 CTA (用户找到了自己想要的大类)
+    // - 只有相似 major 命中 (SYNONYMS 词典触发) → 显示 CTA (避免"硬匹配"误导)
+    // - 0 命中 → 显示 CTA (引导用户报告 / 实时生成)
+    const hasMajorMatch = majors.some((m) => {
       const t = (m.title || "").toLowerCase();
       return t === f || t.includes(f);
     });
-    const showCTA = majors.length > 0 && !hasExactMatch;  // 必须有 major 相似命中但无字面才显示
+    const hasCatMatch = cats.some((c) => {
+      const n = (c.name || "").toLowerCase();
+      return n === f || n.includes(f);
+    });
+    const hasExactMatch = hasMajorMatch || hasCatMatch;
+    // 仅有相似 major (无 major/大类字面) 时显示 CTA
+    const showCTA = majors.length > 0 && !hasExactMatch;
     const noResultHtml = (!sections.length || showCTA) ? renderNoResult(query) : "";
 
     if (!sections.length) {

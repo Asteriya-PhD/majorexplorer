@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -853,7 +864,7 @@
 
 <div class="stats-strip">
   <div class="stat-cell"><span class="n">10<span class="unit">万</span></span><span class="l">入行中位</span></div>
-  <div class="stat-cell grad-tier" data-tier="中 16%"><span class="n">中 16%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell grad-tier" data-tier="中 17%"><span class="n">中 17%</span><span class="l">深造需求</span></div>
   <div class="stat-cell"><span class="n">—<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
 
@@ -900,15 +911,15 @@
       <div class="course-list">
         <div class="course-row">
           <div class="course-yr">大一 公共</div>
-          <div class="course-names"><strong style="color:var(--accent);">★</strong> 高等数学（含工程数学） · <strong style="color:var(--accent);">★</strong> 线性代数 · <strong style="color:var(--accent);">★</strong> 概率论与数理统计 · 复变函数与积分变换 · 大学物理（含实验）</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 高等数学（含工程数学） · <strong style="color:var(--accent);">★</strong> 线性代数 · <strong style="color:var(--accent);">★</strong> 概率论与数理统计 · 复变函数与积分变换 · 大学物理（含实验） · <strong style="color:var(--accent);">★</strong> 大学英语 (I-IV) · 思想政治理论课系列</div>
           <div class="course-tag">公共基础</div>
         </div><div class="course-row">
           <div class="course-yr">大三 核心</div>
-          <div class="course-names">理论力学</div>
+          <div class="course-names">理论力学 · 自动控制原理 · 现代控制理论 · 飞行力学 / 飞行动力学 · 嵌入式系统 (ARM/单片机) · 信号与系统 · 数字信号处理 · 航空电子 / 飞控系统设计 · 导航原理 (惯性/卫星/组合) · 飞行仿真 (MATLAB/Simulink) · C/C++ 程序设计 (嵌入式方向)</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
           <div class="course-yr">大三 方向</div>
-          <div class="course-names">清华大学: 自动控制原理 + 现代控制理论 + 飞行力学 + 嵌入式系统 + Matlab/Simulink · 北京航空航天大学: 飞控系统设计 + 导航原理 + 航空电子 + 飞行仿真 · 哈尔滨工业大学: 飞行器动力学 + 卫星导航 + 微小卫星技术 + 航天材料 · 西北工业大学: 飞行器总体设计 + 推进系统 + 飞行控制 + 航空发动机 · 南京航空航天大学: 无人机系统 + 飞行管理 + 适航技术 + 航空人因工程</div>
+          <div class="course-names">清华大学 (自动化系) · 鲁棒控制 + 最优控制 + 飞行器智能控制 + Matlab/Simulink 高级仿真 · 北京航空航天大学 (航空科学与工程学院 / 自动化学院) · 飞控系统设计 + 导航制导 + 航空电子 + 飞行仿真 + 大飞机专项 · 哈尔滨工业大学 (航天学院 / 自动化学院) · 卫星导航 + 微小卫星技术 + 姿轨控 + 航天器总体设计 · 西北工业大学 (航天学院 / 航空学院) · 飞行控制 + 飞控系统设计 + 飞行器总体设计 + 先进控制理论 · 南京航空航天大学 (自动化学院 / 航天学院) · 无人机飞控 + 飞行管理 + 适航技术 + 飞行仿真</div>
           <div class="course-tag">方向选修</div>
         </div>
       </div>
@@ -924,26 +935,32 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">西北工业大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">北京航空航天大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">哈尔滨工业大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">南京航空航天大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">国防科技大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">北京理工大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -975,30 +992,30 @@
           <div class="sal-th-cell">P75 高位</div>
         </div>
         <div class="sal-tr">
-          <div class="sal-stage">应届生 (主机所/航天院所)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:22%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-stage">应届生 (主机所/航天院所, 事业编)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">3年经验 (主机所骨干/工程师)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">16.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:29%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">32.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">应届生 (商飞/大疆/互联网无人机)<span class="sal-yoy up">↗ 8%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:43%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:70%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:31%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">38.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">3年经验 (主机所骨干)<span class="sal-yoy up">↗ 6%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">16.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:36%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:43%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">32.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:64%;"></span></span></div>
+          <div class="sal-stage">5年经验 (副研/高工/项目骨干)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:51%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">38.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:48%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">55.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:46%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">5年经验 (副研/高工/项目骨干)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:56%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">30.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:64%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:80%;"></span></span></div>
-        </div><div class="sal-tr">
-          <div class="sal-stage">10年+ (研究员/技术总监/总师)<span class="sal-yoy up">↗ 4%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">45.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">47.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-stage">10年+ (研究员/技术总监/总师)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">55.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">120.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
         </div>
       </div>
     </section>
@@ -1023,7 +1040,7 @@
         <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
       </div>
       <div class="ds-list">
-        <div class="ds-row"><div class="ds-name">国内硕士 (飞控/导航/制导, 985)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">40%</div></div><div class="ds-row"><div class="ds-name">直接就业 (主机所/航天院事业编)</div><div class="ds-bar"><div class="ds-fill" style="--w:62%;"></div></div><div class="ds-pct">25%</div></div><div class="ds-row ds-study"><div class="ds-name">国内博士 (飞行器设计/控制, 高校/院所)</div><div class="ds-bar"><div class="ds-fill" style="--w:30%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row"><div class="ds-name">直接就业 (商飞/大疆/无人机/eVTOL)</div><div class="ds-bar"><div class="ds-fill" style="--w:30%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row ds-study"><div class="ds-name">出国深造 (航空航天/控制, 美/欧/日)</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">4%</div></div><div class="ds-row"><div class="ds-name">公务员/民航局</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">4%</div></div><div class="ds-row"><div class="ds-name">跨行 (嵌入式软件/汽车自动驾驶)</div><div class="ds-bar"><div class="ds-fill" style="--w:8%;"></div></div><div class="ds-pct">3%</div></div>
+        <div class="ds-row"><div class="ds-name">国内硕士 (飞控/导航/制导, 985 主流)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">45%</div></div><div class="ds-row"><div class="ds-name">直接就业 (主机所/航天院事业编)</div><div class="ds-bar"><div class="ds-fill" style="--w:40%;"></div></div><div class="ds-pct">18%</div></div><div class="ds-row"><div class="ds-name">直接就业 (商飞/大疆/无人机/eVTOL)</div><div class="ds-bar"><div class="ds-fill" style="--w:31%;"></div></div><div class="ds-pct">14%</div></div><div class="ds-row ds-study"><div class="ds-name">国内博士 (飞行器设计/控制, 高校/院所)</div><div class="ds-bar"><div class="ds-fill" style="--w:27%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row ds-study"><div class="ds-name">出国深造 (航空航天/控制, 美/欧/日)</div><div class="ds-bar"><div class="ds-fill" style="--w:11%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">公务员/民航局</div><div class="ds-bar"><div class="ds-fill" style="--w:7%;"></div></div><div class="ds-pct">3%</div></div><div class="ds-row"><div class="ds-name">跨行 (嵌入式软件/汽车自动驾驶/机器人)</div><div class="ds-bar"><div class="ds-fill" style="--w:7%;"></div></div><div class="ds-pct">3%</div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1047,7 +1064,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 再选化学</div><div class="xk-bar"><div class="xk-fill" style="--w:60%;"></div><span class="xk-pct">60%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限</div><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 再选化学 + 生物</div><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">首选物理 + 再选地理</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason"></div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 再选化学</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:60%;"></div></div><span class="xk-pct">60%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 再选化学 + 生物</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">首选物理 + 再选地理</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason"></div></div>
       </div>
     </section>
 </article>

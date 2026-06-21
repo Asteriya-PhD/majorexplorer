@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -915,13 +926,13 @@
           <div class="course-names">大气物理学 (辐射 + 云雾物理 + 大气光学 + 声学) · 动力气象学 (控制方程组 + 波 + 罗斯贝波 + 准地转) · 天气学 (气旋 + 反气旋 + 锋面 + 副高 + 季风) · 气候学 (辐射平衡 + 水循环 + ENSO + 季风系统) · <strong style="color:var(--accent);">★</strong> 数值天气预报 (WRF/GRAPES 模式 + 同化算法) · <strong style="color:var(--accent);">★</strong> 天气分析实习 (地面 + 高空填图 + 预报) · 大气化学 (气溶胶 + 臭氧 + 雾霾 + 碳循环) · 卫星气象与雷达气象 (FY-4 + EOS + 多普勒雷达反演) · <strong style="color:var(--accent);">★</strong> 气象观测与数据处理 (实习 + 上机) · 计算方法 (偏微分数值解 + 谱方法 + 有限差分)</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">北京大学 · 物理学院大气与海洋科学系 (气候动力学 + 古气候 + 碳循环全国第一) · 南京信息工程大学 (南信大) · 大气科学学院 (气象 + 大气物理 + 数值预报 学科评估 A+, 王牌) · 中国科学技术大学 · 地球和空间科学学院 (大气化学 + 卫星遥感 + 季风, 少年班出口) · 兰州大学 · 大气科学学院 (青藏高原气象 + 干旱气候 + 半干旱生态, 西部重镇) · 中山大学 · 大气科学学院 (季风 + 热带气象 + 海洋气象, 粤港澳跳板)</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
           <div class="course-yr">大四 实践</div>
           <div class="course-names">实验室轮转 (8-12 周) · <strong style="color:var(--accent);">★</strong> 科研项目实战 (导师制) · <strong style="color:var(--accent);">★</strong> 毕业论文 / 毕业设计 · 学术会议汇报 · <strong style="color:var(--accent);">★</strong> 暑期学校 + 学科竞赛</div>
           <div class="course-tag">实践环节</div>
-        </div><div class="course-row">
-          <div class="course-yr">特色</div>
-          <div class="course-names">北京大学 · 物理学院大气与海洋科学系 (气候动力学 + 古气候 + 碳循环全国第一) · 南京信息工程大学 (南信大) · 大气科学学院 (气象 + 大气物理 + 数值预报 学科评估 A+, 王牌) · 中国科学技术大学 · 地球和空间科学学院 (大气化学 + 卫星遥感 + 季风, 少年班出口) · 兰州大学 · 大气科学学院 (青藏高原气象 + 干旱气候 + 半干旱生态, 西部重镇) · 中山大学 · 大气科学学院 (季风 + 热带气象 + 海洋气象, 粤港澳跳板)</div>
-          <div class="course-tag">特色</div>
         </div>
       </div>
     </section>
@@ -935,35 +946,43 @@
       </div>
       <div class="uni-row">
           <div class="uni-rank">01</div>
-          <div class="uni-name">南京信息工程大学<span class="badge">A+</span></div>
+          <div class="uni-name">南京信息工程大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">北京大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">清华大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">中国科学技术大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">兰州大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">中山大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">复旦大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">中国海洋大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1062,7 +1081,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">理学 (数理化生地 / 心理) 主流, 物理 + 化学是数学 / 物理 / 化学 / 生物 / 统计 必选, 生物是医学预科强相关。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 其他 (地质 / 地理 / 大气)</div><div class="xk-bar"><div class="xk-fill" style="--w:20%;"></div><span class="xk-pct">20%</span></div></div></div><div class="xk-reason">地质学 / 地理科学 / 大气科学 / 海洋 / 空间等, 物理化学是基础, 生物非必选。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 政治 (基础医学 / 医学预科)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">基础医学 / 医预科 / 部分生物医学方向, 物理化学是必选, 政治是医学伦理强相关。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (海洋 / 地理信息少数方向)</div><div class="xk-bar"><div class="xk-fill" style="--w:2%;"></div><span class="xk-pct">2%</span></div></div></div><div class="xk-reason">极少数海洋技术 / 地理信息科学部分院校不限生物。</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:70%;"></div></div><span class="xk-pct">70%</span></div></div></div><div class="xk-reason">理学 (数理化生地 / 心理) 主流, 物理 + 化学是数学 / 物理 / 化学 / 生物 / 统计 必选, 生物是医学预科强相关。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 其他 (地质 / 地理 / 大气)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:20%;"></div></div><span class="xk-pct">20%</span></div></div></div><div class="xk-reason">地质学 / 地理科学 / 大气科学 / 海洋 / 空间等, 物理化学是基础, 生物非必选。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 政治 (基础医学 / 医学预科)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">基础医学 / 医预科 / 部分生物医学方向, 物理化学是必选, 政治是医学伦理强相关。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (海洋 / 地理信息少数方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:2%;"></div></div><span class="xk-pct">2%</span></div></div></div><div class="xk-reason">极少数海洋技术 / 地理信息科学部分院校不限生物。</div></div>
       </div>
     </section>
 </article>

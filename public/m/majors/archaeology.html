@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -915,13 +926,13 @@
           <div class="course-names">旧石器时代考古 · 新石器时代考古 · 夏商周考古 · 秦汉魏晋南北朝考古 · 隋唐宋元明考古 · 田野考古方法与技术 · 考古绘图与测量 · 体质人类学 · 文物与博物馆学</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">北京大学 · 科技考古与古DNA实验室 · 吉林大学 · 边疆考古 (东北亚 / 高句丽 / 渤海) · 山东大学 · 东方考古与盐业考古 · 复旦大学 · 文化遗产与考古文博 · 四川大学 · 巴蜀考古与三星堆</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
           <div class="course-yr">大四 实践</div>
           <div class="course-names"><strong style="color:var(--accent);">★</strong> 田野发掘实习 (6-8 周野外工地, 探方发掘/地层辨认/器物提取) · <strong style="color:var(--accent);">★</strong> 室内整理与器物修复实习 (陶器/青铜/玉石器清洗、拼对、绘图、建档) · <strong style="color:var(--accent);">★</strong> 科技考古实验室实习 (碳十四测年/古DNA 提取/动植物考古/同位素分析) · <strong style="color:var(--accent);">★</strong> 博物馆陈列与策展实习 (1-2 个月博物馆实习, 展品说明撰写/陈列设计辅助) · <strong style="color:var(--accent);">★</strong> 毕业论文 (以某遗址/某类器物为研究对象)</div>
           <div class="course-tag">实践环节</div>
-        </div><div class="course-row">
-          <div class="course-yr">特色</div>
-          <div class="course-names">北京大学 · 科技考古与古DNA实验室 · 吉林大学 · 边疆考古 (东北亚 / 高句丽 / 渤海) · 山东大学 · 东方考古与盐业考古 · 复旦大学 · 文化遗产与考古文博 · 四川大学 · 巴蜀考古与三星堆</div>
-          <div class="course-tag">特色</div>
         </div>
       </div>
     </section>
@@ -936,34 +947,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">北京大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">吉林大学</div>
+          <div class="uni-eval uni-eval-a">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">山东大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">复旦大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">南京大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">四川大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">中山大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">武汉大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -1067,7 +1086,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选历史 + 再选不限 (覆盖最广, 70%+ 院校可报)</div><div class="xk-bar"><div class="xk-fill" style="--w:72%;"></div><span class="xk-pct">72%</span></div></div></div><div class="xk-reason">考古学属历史学门类 (0601), 历史是必选基础科目, 大多数院校 (北大/吉大/山大/复旦/南大/川大/中山) 要求必选历史, 再选科目不限.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选历史 + 地理 (田野与空间分析方向)</div><div class="xk-bar"><div class="xk-fill" style="--w:16%;"></div><span class="xk-pct">16%</span></div></div></div><div class="xk-reason">田野考古 + 文化遗产管理方向需要 GIS / 遥感 / 空间分析基础, 史地组合适配科技考古与文化遗产方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选历史 + 化学 (文物保护方向)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">文物保护与修复方向需化学/材料学定量基础 (青铜器腐蚀/陶瓷烧制温度/纸张脱酸/高分子加固), 史化组合适配文保细分方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价/高校专项)</div><div class="xk-bar"><div class="xk-fill" style="--w:4%;"></div><span class="xk-pct">4%</span></div></div></div><div class="xk-reason">极少数综合评价/高校专项 (复旦/山大部分综评), 重综合素质 + 历史/地理学科成绩.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选历史 + 再选不限 (覆盖最广, 70%+ 院校可报)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:72%;"></div></div><span class="xk-pct">72%</span></div></div></div><div class="xk-reason">考古学属历史学门类 (0601), 历史是必选基础科目, 大多数院校 (北大/吉大/山大/复旦/南大/川大/中山) 要求必选历史, 再选科目不限.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选历史 + 地理 (田野与空间分析方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:16%;"></div></div><span class="xk-pct">16%</span></div></div></div><div class="xk-reason">田野考古 + 文化遗产管理方向需要 GIS / 遥感 / 空间分析基础, 史地组合适配科技考古与文化遗产方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选历史 + 化学 (文物保护方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">文物保护与修复方向需化学/材料学定量基础 (青铜器腐蚀/陶瓷烧制温度/纸张脱酸/高分子加固), 史化组合适配文保细分方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价/高校专项)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:4%;"></div></div><span class="xk-pct">4%</span></div></div></div><div class="xk-reason">极少数综合评价/高校专项 (复旦/山大部分综评), 重综合素质 + 历史/地理学科成绩.</div></div>
       </div>
     </section>
 </article>

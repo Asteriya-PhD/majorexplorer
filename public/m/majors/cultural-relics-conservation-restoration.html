@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -852,7 +863,7 @@
 </section>
 
 <div class="stats-strip">
-  <div class="stat-cell"><span class="n">8<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">6<span class="unit">万</span></span><span class="l">入行中位</span></div>
   <div class="stat-cell grad-tier" data-tier="中 16%"><span class="n">中 16%</span><span class="l">深造需求</span></div>
   <div class="stat-cell"><span class="n">—<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
@@ -888,7 +899,7 @@
       <div class="art-body">
         <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
       </div>
-      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">文物保护与修复 = 文物与博物馆学</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">文物保护与修复 (130403T) 是「艺术学 + 化学/材料学 + 实操修复」, 文物与博物馆学 (060104T, 历史学) 偏策展/研究/考古/博物馆运营; 文物保护与修复核心是「化学/材料学 + 实操修复 (青铜/瓷器/书画/玉器) + 科技考古」, 学位是「艺术学学士」, 不是「历史学学士」.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">故宫/上博/各省博物馆 毕业就能当修复师</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">故宫文保处 A+, 上博文物保护中心 A, 北大/西大/吉大/复旦文保方向 A, 但年招生 20-40 人/校, 80% 毕业生 5-10 年内做助理修复师/数字化/科研, 真正能挂名独立修复师 5% 以下, 头部修复师 (故宫/上博 顶级) 1% 以下; 化学/材料学/显微操作基础是硬门槛.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">修复师 = 高薪稳定 (工艺大师)</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">头部修复师 (故宫/上博/各省博物馆 顶级) 单项目 5-30 万, 资深 30-100 万, 顶级 25-60 万; 但事业编制或项目制, 工作强度大 (单件修复 6-24 月), 普通修复师 8-15 万, 助理 5-10 万; 头部资源高度集中 (故宫/上博/各省博物馆 + 独立修复工作室).</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">文物保护 = 实验室干净体面</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">青铜器除锈 (化学试剂/酸碱) + 瓷器补配 (高温窑炉) + 壁画修复 (高粉尘) + 书画修复 (长时间显微) 需要化学试剂 + 长时间显微镜下操作, 部分修复现场高粉尘/高湿度/有化学刺激 — 不是「坐办公室搞研究」, 实际是体力 + 化学防护 + 细致活 + 长期显微.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">文物保护与修复考公考编容易</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术学学士 (1304 美术学类, 特设) 考公/选调/事业编受专业代码限制, 国家文物局/省文物局/各省博物馆/文化和旅游厅编制少, 选调/省考竞争比常年 100:1+; 部分岗位专业代码卡「美术学类」, 文物保护与修复特设专业可能不被识别, 报考前必须查本省近 3 年招录目录.</div></div></div></div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">文物保护与修复 = 文物与博物馆学</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">文物保护与修复 (130403T) 是「艺术学 + 化学/材料学 + 实操修复」, 文物与博物馆学 (060104T, 历史学) 偏策展/研究/考古/博物馆运营; 文物保护与修复核心是「化学/材料学 + 实操修复 (青铜/瓷器/书画/玉器) + 科技考古」, 学位是「艺术学学士」, 不是「历史学学士」.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">故宫/上博/各省博物馆 毕业就能当修复师</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">故宫文保处 A+, 上博文物保护中心 A, 北大/西大/吉大/复旦文保方向 A, 但年招生 20-40 人/校, 80% 毕业生 5-10 年内做助理修复师/数字化/科研, 真正能挂名独立修复师 5% 以下, 头部修复师 (故宫/上博 顶级) 1% 以下; 化学/材料学/显微操作基础是硬门槛.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">修复师 = 高薪稳定 (工艺大师)</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">头部独立修复师 (故宫/上博/南博 顶级) 资深 30-50 万年薪, 独立工作室主理人 50-80 万, 单项目 (大件青铜/壁画) 5-30 万, 顶端 100 万+ 极罕见; 但事业编制或项目制, 工作强度大 (单件修复 6-24 月), 普通修复师 12-25 万, 助理 6-12 万; 头部资源高度集中 (故宫/上博/南博 + 独立修复工作室 + 拍卖行市场岗).</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">文物保护 = 实验室干净体面</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">青铜器除锈 (化学试剂/酸碱) + 瓷器补配 (高温窑炉) + 壁画修复 (高粉尘) + 书画修复 (长时间显微) 需要化学试剂 + 长时间显微镜下操作, 部分修复现场高粉尘/高湿度/有化学刺激 — 不是「坐办公室搞研究」, 实际是体力 + 化学防护 + 细致活 + 长期显微.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">文物保护与修复考公考编容易</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术学学士 (1304 美术学类, 特设) 考公/选调/事业编受专业代码限制, 国家文物局/省文物局/各省博物馆/文化和旅游厅编制少, 选调/省考竞争比常年 100:1+; 部分岗位专业代码卡「美术学类」, 文物保护与修复特设专业可能不被识别, 报考前必须查本省近 3 年招录目录.</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
@@ -925,34 +936,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">中央美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">中国美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">南京艺术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">清华大学美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">上海视觉艺术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">广州美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">四川美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">鲁迅美术学院</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -985,24 +1004,24 @@
         </div>
         <div class="sal-tr">
           <div class="sal-stage">应届生 (事业编/文保单位)<span class="sal-yoy up">↗ 4%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:27%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:25%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">6.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">3-5年 (中级修复师)<span class="sal-yoy up">↗ 5%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:47%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:44%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:47%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:36%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:31%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">5-10年 (资深修复师/项目负责人)<span class="sal-yoy up">↗ 4%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:73%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">32.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:71%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">45.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:75%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:67%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">30.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:60%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">42.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:52%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">10年+ (顶级修复师/拍卖行高管)<span class="sal-yoy up">↗ 3%</span></div>
+          <div class="sal-stage">10年+ (顶级修复师/独立工作室/拍卖行高管)<span class="sal-yoy up">↗ 3%</span></div>
           <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">30.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">45.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">60.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
         </div>
       </div>
     </section>
@@ -1051,7 +1070,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">历史 + 化学 (文物保护与科技考古方向)</div><div class="xk-bar"><div class="xk-fill" style="--w:40%;"></div><span class="xk-pct">40%</span></div></div></div><div class="xk-reason">文物保护与修复是艺术学 + 化学/材料学交叉, 史+化组合覆盖化学修复/科技考古方向, 90% 主流院校可报.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选不限, 偏材料学方向)</div><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason">文物保护与修复偏材料学 + 化学, 化+生组合适合偏金属/陶瓷/高分子材料方向, 适合理科强基考生.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 (再选不限, 偏科技考古方向)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">科技考古需要 XRF/XRD/扫描电镜/3D 扫描等定量工具, 物+化组合适合偏科技考古/数字化方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 地理 + 政治 (经典艺术学组合)</div><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">艺术学类传统组合, 史+地+政覆盖美术史/文物史方向, 适合偏美术史/文物史方向, 985 文物保护/美术学硕可走.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">不限选科 (少数综合类院校)</div><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">部分综合类或艺术院校文物保护与修复专业不限选科, 适合无明确偏科考生兜底选择, 化学/材料学基础要求高.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">历史 + 化学 (文物保护与科技考古方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:40%;"></div></div><span class="xk-pct">40%</span></div></div></div><div class="xk-reason">文物保护与修复是艺术学 + 化学/材料学交叉, 史+化组合覆盖化学修复/科技考古方向, 90% 主流院校可报.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选不限, 偏材料学方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason">文物保护与修复偏材料学 + 化学, 化+生组合适合偏金属/陶瓷/高分子材料方向, 适合理科强基考生.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">物理 + 化学 (再选不限, 偏科技考古方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">科技考古需要 XRF/XRD/扫描电镜/3D 扫描等定量工具, 物+化组合适合偏科技考古/数字化方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 地理 + 政治 (经典艺术学组合)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">艺术学类传统组合, 史+地+政覆盖美术史/文物史方向, 适合偏美术史/文物史方向, 985 文物保护/美术学硕可走.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">不限选科 (少数综合类院校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">部分综合类或艺术院校文物保护与修复专业不限选科, 适合无明确偏科考生兜底选择, 化学/材料学基础要求高.</div></div>
       </div>
     </section>
 </article>

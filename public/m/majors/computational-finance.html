@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,16 +773,23 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
   }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
 
   .footer-cta {
     margin: 32px 16px 0;
@@ -852,7 +863,7 @@
 </section>
 
 <div class="stats-strip">
-  <div class="stat-cell"><span class="n">50<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell"><span class="n">8<span class="unit">万</span></span><span class="l">入行中位</span></div>
   <div class="stat-cell grad-tier" data-tier="中 27%"><span class="n">中 27%</span><span class="l">深造需求</span></div>
   <div class="stat-cell"><span class="n">—<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
@@ -875,7 +886,7 @@
         <h2 class="art-title">这个专业学什么</h2>
       </div>
       <div class="art-body">
-        <p class="lede">计算金融的核心是用 PDE/蒙特卡洛/C++ 重写华尔街那本定价手册, 不是「金融+CS 双学位」. 在 2024 量化私募规模突破 1.5 万亿背景下, 应届 985 硕中位数 50-80 万, 3-5 年百万年薪常态, 但 80% 毕业生实际去的是金融科技产品/数据分析/银行科技岗, 进不了真正的高频/中低频量化 — 这是这专业最大的认知差.</p>
+        <p class="lede">计算金融是「PDE + 蒙特卡洛 + C++ + 金融市场直觉」四栖融合的工种, 不是「金融 + CS 双学位」 — 头部量化校招 90% 要求 985 硕 + 数学/统计/计算机 PhD 级别, 应届方差极大 (普通券商 25-40 万 vs 头部量化 100-200 万), 课程广而不深是结构性问题. 在 2024 量化私募规模突破 1.5 万亿的背景下, 应届 985 硕中位数 50-80 万, 3-5 年百万年薪常态, 但 80% 毕业生实际去的是金融科技产品/数据分析/银行科技岗, 进不了真正的高频/中低频量化 — 这是这专业最容易被家长和考生提前忽略的最大认知差.</p>
         
       </div>
     </section>
@@ -905,11 +916,11 @@
           <div class="course-tag">公共基础</div>
         </div><div class="course-row">
           <div class="course-yr">大三 核心</div>
-          <div class="course-names">量化投资策略 · <strong style="color:var(--accent);">★</strong> 算法交易 · 信用风险建模 · 资产定价理论 · 金融工程 · 高频交易系统 · 区块链与金融科技 · Python程序设计 · C++程序设计 · <strong style="color:var(--accent);">★</strong> 数据结构与算法 · 数据库系统 · 金融数值方法 · 随机过程 · 时间序列分析 · 机器学习与数据挖掘 · 金融学原理 · 公司金融 · 投资学 · 金融市场学 · 固定收益证券 · 金融衍生品定价 · 金融风险管理 · <strong style="color:var(--accent);">★</strong> 微积分 · <strong style="color:var(--accent);">★</strong> 线性代数 · <strong style="color:var(--accent);">★</strong> 概率论与数理统计 · <strong style="color:var(--accent);">★</strong> 高级数学 · 微观经济学 · 宏观经济学</div>
+          <div class="course-names">量化投资策略 · <strong style="color:var(--accent);">★</strong> 算法交易 · 信用风险建模 · 资产定价理论 · 金融工程 · 区块链与金融科技 · Python程序设计 · C++程序设计 · <strong style="color:var(--accent);">★</strong> 数据结构与算法 · 数据库系统 · 金融数值方法 · 随机过程 · 时间序列分析 · 机器学习与数据挖掘 · 金融学原理 · 公司金融 · 投资学 · 金融市场学 · 固定收益证券 · 金融衍生品定价 · 金融风险管理 · 金融计量经济学 · <strong style="color:var(--accent);">★</strong> 蒙特卡洛模拟 (Monte Carlo Simulation) · 利率模型</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
           <div class="course-yr">大三 方向</div>
-          <div class="course-names">北京大学: 随机过程 (Shreve) + 金融工程 + 量化交易策略 + 金融衍生品定价 · 中国人民大学: 金融计量经济学 + 时间序列分析 + 金融风险管理 + 公司金融 · 上海财经大学: 金融工程 + 投资学 + 固定收益证券 + 量化投资 · 中央财经大学: 金融科技 + 区块链金融 + 保险精算 + 金融监管 · <strong style="color:var(--accent);">★</strong> 中国科学技术大学: 量化金融 + 数学建模 (MCM/ICM) + 算法交易 + 高频系统</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 北京大学 (数学科学学院+经济学院联合) · 随机过程 (Shreve) + 金融工程 + 量化交易策略 + 金融衍生品定价 · 中国人民大学 (财政金融学院) · 金融计量经济学 + 时间序列分析 + 金融风险管理 + 公司金融 · 上海财经大学 (金融学院) · 金融工程 + 投资学 + 固定收益证券 + 量化投资 · 中央财经大学 (金融学院) · 金融科技 + 区块链金融 + 保险精算 + 金融监管 · <strong style="color:var(--accent);">★</strong> 中国科学技术大学 (管理学院+数学科学学院) · 量化金融 + 数学建模 (MCM/ICM) + 算法交易 + 高频系统</div>
           <div class="course-tag">方向选修</div>
         </div>
       </div>
@@ -925,34 +936,42 @@
       <div class="uni-row">
           <div class="uni-rank">01</div>
           <div class="uni-name">北京大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
           <div class="uni-name">清华大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
           <div class="uni-name">中国科学技术大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
           <div class="uni-name">上海交通大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">复旦大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">中国人民大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">上海财经大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
           <div class="uni-name">中央财经大学</div>
+          <div class="uni-eval uni-eval-none">—</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -984,30 +1003,30 @@
           <div class="sal-th-cell">P75 高位</div>
         </div>
         <div class="sal-tr">
+          <div class="sal-stage">应届生 (本科一线直接就业, 银行金科/中小私募)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:3%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:2%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:2%;"></span></span></div>
+        </div><div class="sal-tr">
           <div class="sal-stage">应届生 (985 硕, 头部券商金工)<span class="sal-yoy up">↗ 9%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:5%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:3%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">70.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:3%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:8%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:6%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:4%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">应届生 (985 硕, 头部量化私募)<span class="sal-yoy up">↗ 12%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:10%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:7%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">150.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:6%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:13%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">120.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:10%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">3年经验 (量化策略骨干/研究员)<span class="sal-yoy up">↗ 12%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">80.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:16%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">150.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">300.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
+          <div class="sal-stage">3年经验 (985 硕, 量化策略骨干/研究员)<span class="sal-yoy up">↗ 12%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">60.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">100.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">180.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:15%;"></span></span></div>
         </div><div class="sal-tr">
-          <div class="sal-stage">5年经验 (资深策略/PM/合伙人)<span class="sal-yoy up">↗ 13%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">200.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">400.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">700.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
-        </div><div class="sal-tr">
-          <div class="sal-stage">10年+ (首席量化/创始人)<span class="sal-yoy up">↗ 10%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">500.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">1200.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">2500.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-stage">5年经验 (985 硕, 资深策略/PM)<span class="sal-yoy up">↗ 13%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">120.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">200.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">350.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:29%;"></span></span></div>
         </div>
       </div>
     </section>
@@ -1056,7 +1075,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 再选化学</div><div class="xk-bar"><div class="xk-fill" style="--w:60%;"></div><span class="xk-pct">60%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限</div><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 再选生物</div><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科</div><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason"></div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选物理 + 再选化学</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:60%;"></div></div><span class="xk-pct">60%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:25%;"></div></div><span class="xk-pct">25%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 再选生物</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason"></div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason"></div></div>
       </div>
     </section>
 </article>
