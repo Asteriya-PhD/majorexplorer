@@ -483,6 +483,15 @@ def render_schools(schools, hubei_only=False):
           {eval_html}
           {score_html}
         </div>''')
+    # Day 17 v3: 该专业所有学校都无评估数据时, 在院校分布顶部加说明卡片
+    # 让用户明白为啥显示 "#N 软科位置" 而非 A+/A
+    has_any_eval = any(normalize_rank(s.get("rank", ""), s.get("tag", ""))["eval"] for s in items)
+    eval_note = "" if has_any_eval else (
+        '<div class="uni-eval-note">'
+        '<strong>📋 该专业未参与教育部第四/五轮学科评估</strong>'
+        '<span>排名依据: 2024 软科中国大学专业排名 + 武书连综合榜. 学校顺序按榜单综合得分排序, "#1" 即榜单第 1 名.</span>'
+        '</div>'
+    )
     return f'''<section class="art-sec">
       <div class="art-head">
         <span class="art-num">五</span>
@@ -490,6 +499,7 @@ def render_schools(schools, hubei_only=False):
       </div>
       <div class="art-body">
         <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+        {eval_note}
       </div>
       {''.join(rows)}
     </section>'''
