@@ -54,7 +54,7 @@
     color: rgba(20,17,13,0.04);
     pointer-events: none; user-select: none; z-index: 0;
   }
-  .home-hero .container { position: relative; z-index: 2; max-width: 880px; text-align: center; }
+  .home-hero .container { position: relative; z-index: 2; max-width: clamp(1024px, 92vw, 1280px); text-align: center; }
   .home-hero .eyebrow {
     display: inline-block;
     font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
@@ -134,7 +134,7 @@
     background: var(--bg);
     border-top: 1px solid var(--line);
   }
-  .next-step .container { max-width: 880px; text-align: center; }
+  .next-step .container { max-width: clamp(1024px, 92vw, 1280px); text-align: center; }
   .next-step .eyebrow {
     font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted);
     letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px;
@@ -451,7 +451,7 @@
   // 1) chat 栏 (Step 0/Step 3 改造: 移到 hero 最显眼位置, strategy 移到下方)
   window.MajorSearch.mountChat(document.getElementById('chat-host'), {
     size: 'hero',
-    placeholder: '想学什么? 试试「编程」「医生」「考公」「设计」「金融」…',
+    placeholder: '试试输入「编程」「医生」「金融」「设计」「考公」…',
   });
 
   // 2) 加载 manifest + discipline_hierarchy + 渲染 13 门类入口 (Day 21 改造: 取代 11700px 卡片墙)

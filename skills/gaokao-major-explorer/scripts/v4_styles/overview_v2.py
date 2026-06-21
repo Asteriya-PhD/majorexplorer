@@ -1,13 +1,14 @@
 """
-v4_styles/overview_v2.py — 速览 v2: 3 张子卡片堆叠 (学什么 / 适合谁 / 避坑)
+v4_styles/overview_v2.py — 速览 v2: 2 张子卡片堆叠 (学什么 / 适合谁) + 独立避坑 section
 """
 
 
 # ──────────────────────────────────────────────────────────
-# render_overview_v2: 3 张子卡片堆叠, 用于 data["overview_v2"]
+# render_overview_v2: 2 张子卡片堆叠 (学什么 / 适合谁), 用于 data["overview_v2"]
+# 注意: 避坑指南 (pitfalls) 已分离为独立的 render_pitfalls_v2 (page-level section)
 # ──────────────────────────────────────────────────────────
 def render_overview_v2(data: dict) -> str:
-    """3 张子卡片 (学什么 / 适合谁 / 避坑), 主题色自动适配, 移动端 1 列堆叠"""
+    """2 张子卡片 (学什么 / 适合谁), 主题色自动适配, 移动端 1 列堆叠"""
     ov = data.get("overview_v2", {})
     if not ov:
         return ""
@@ -15,7 +16,6 @@ def render_overview_v2(data: dict) -> str:
     lede = ov.get("lede") or data.get("summary", "")
     what = ov.get("what", {})
     fit = ov.get("fit", {})
-    pitfalls = ov.get("pitfalls", [])
 
     # ── lede 段 ──
     html = f'<p class="lede drop-cap ovv-lede">{lede}</p>'
@@ -23,7 +23,7 @@ def render_overview_v2(data: dict) -> str:
     # ── 子卡 1: 这个专业学什么? (绿条) ──
     html += '<div class="ovv-card fade-up">'
     html += '<div class="ovv-card-head">'
-    html += '<span class="ovv-card-num">01 / 03</span>'
+    html += '<span class="ovv-card-num">01 / 02</span>'
     html += '<h3 class="ovv-card-title">这个专业学什么?</h3>'
     html += '<span class="ovv-card-tag">Foundations · Directions · Skills</span>'
     html += '</div>'
@@ -70,7 +70,7 @@ def render_overview_v2(data: dict) -> str:
     if yes_list or no_list:
         html += '<div class="ovv-card is-blue fade-up">'
         html += '<div class="ovv-card-head">'
-        html += '<span class="ovv-card-num">02 / 03</span>'
+        html += '<span class="ovv-card-num">02 / 02</span>'
         html += '<h3 class="ovv-card-title">什么人适合?</h3>'
         html += '<span class="ovv-card-tag">Fit Check</span>'
         html += '</div>'
@@ -87,26 +87,52 @@ def render_overview_v2(data: dict) -> str:
             html += '</ul></div>'
         html += '</div></div>'
 
-    # ── 子卡 3: 避坑指南 (橙红条) ──
-    if pitfalls:
-        html += '<div class="ovv-card is-orange fade-up">'
-        html += '<div class="ovv-card-head">'
-        html += '<span class="ovv-card-num">03 / 03</span>'
-        html += '<h3 class="ovv-card-title">避坑指南</h3>'
-        html += f'<span class="ovv-card-tag">{len(pitfalls)} 个常见误区</span>'
-        html += '</div>'
-        html += '<div class="ovv-pits">'
-        for i, p in enumerate(pitfalls, 1):
-            if isinstance(p, dict):
-                myth = p.get("myth", "")
-                reality = p.get("reality", "")
-            else:
-                myth = str(p)
-                reality = ""
-            html += f'<div class="ovv-pit"><div class="ovv-pit-num">误区 {i:02d}</div><div class="ovv-pit-myth">❌ {myth}</div><div class="ovv-pit-reality">{reality}</div></div>'
-        html += '</div></div>'
-
     return html
+
+
+# ──────────────────────────────────────────────────────────
+# render_pitfalls_v2: 独立 page-level section (避坑指南)
+# 返回整段 <section> HTML, 含 watermark + section-num + <h2> + 误区列表.
+# 复用 .ovv-pits / .ovv-pit / .ovv-pit-num / .ovv-pit-myth / .ovv-pit-reality CSS
+# ──────────────────────────────────────────────────────────
+def render_pitfalls_v2(data: dict) -> str:
+    """独立 避坑指南 section, 用于 data["overview_v2"]["pitfalls"]"""
+    ov = data.get("overview_v2", {})
+    pitfalls = ov.get("pitfalls", []) if ov else data.get("pitfalls", [])
+    if isinstance(pitfalls, str):
+        pitfalls = [pitfalls] if pitfalls.strip() else []
+    if not pitfalls:
+        return ""
+
+    pit_items = ""
+    for i, p in enumerate(pitfalls, 1):
+        if isinstance(p, dict):
+            myth = p.get("myth", "")
+            reality = p.get("reality", "")
+        else:
+            myth = str(p)
+            reality = ""
+        pit_items += (
+            f'<div class="ovv-pit fade-up">'
+            f'<div class="ovv-pit-num">误区 {i:02d}</div>'
+            f'<div class="ovv-pit-myth">❌ {myth}</div>'
+            f'<div class="ovv-pit-reality">{reality}</div>'
+            f'</div>'
+        )
+
+    return (
+        f'<section class="tab" id="pitfalls">\n'
+        f'  <div class="watermark">02</div>\n'
+        f'  <div class="container">\n'
+        f'    <div class="section-num">02 / 10 · 避坑</div>\n'
+        f'    <h2>避坑指南</h2>\n'
+        f'    <p class="lede">选专业前最容易踩的 {len(pitfalls)} 个误区, 每条都来自真实咨询案例。</p>\n'
+        f'    <div class="ovv-pits">\n'
+        f'{pit_items}\n'
+        f'    </div>\n'
+        f'  </div>\n'
+        f'</section>'
+    )
 
 
 # ──────────────────────────────────────────────────────────
