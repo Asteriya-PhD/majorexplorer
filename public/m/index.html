@@ -7,6 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Major Explorer · 当志愿开始有了形状</title>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/topbar.css">
@@ -172,10 +173,76 @@
 <script src="js/dock.js"></script>
 <script src="js/home.js"></script>
 <script src="js/scroll-helpers.js"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => null));
-  }
-</script>
+
+  <!-- PWA: SW registration + install banner + update toast -->
+  <script>
+  (function(){
+    if (!('serviceWorker' in navigator)) return;
+    var deferredPrompt = null;
+    var installTimer = null;
+
+    // SW register + update listener
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      reg.addEventListener('updatefound', function() {
+        var newWorker = reg.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', function() {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            showUpdateToast();
+          }
+        });
+      });
+    }).catch(function() {});
+
+    // beforeinstallprompt: 30s 延迟弹 banner
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return;
+      if (installTimer) clearTimeout(installTimer);
+      installTimer = setTimeout(showInstallBanner, 30000);
+    });
+
+    window.showInstallBanner = function() {
+      if (!deferredPrompt) return;
+      if (document.querySelector('.install-banner')) return;
+      var banner = document.createElement('div');
+      banner.className = 'install-banner';
+      banner.setAttribute('role', 'dialog');
+      banner.innerHTML =
+        '<span class="install-text">📲 安装到主屏幕, 离线查专业</span>' +
+        '<button class="install-yes" type="button">安装</button>' +
+        '<button class="install-dismiss" type="button" aria-label="关闭">✕</button>';
+      document.body.appendChild(banner);
+      banner.querySelector('.install-yes').addEventListener('click', function() {
+        if (!deferredPrompt) { banner.remove(); return; }
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function() { deferredPrompt = null; banner.remove(); });
+      });
+      banner.querySelector('.install-dismiss').addEventListener('click', function() {
+        banner.remove();
+      });
+    };
+
+    function showUpdateToast() {
+      if (document.querySelector('.update-toast')) return;
+      var toast = document.createElement('div');
+      toast.className = 'update-toast';
+      toast.setAttribute('role', 'status');
+      toast.innerHTML =
+        '<span>🚀 新版本可用</span>' +
+        '<button class="update-reload" type="button">刷新</button>' +
+        '<button class="update-dismiss" type="button" aria-label="关闭">✕</button>';
+      document.body.appendChild(toast);
+      toast.querySelector('.update-reload').addEventListener('click', function() {
+        location.reload();
+      });
+      toast.querySelector('.update-dismiss').addEventListener('click', function() {
+        toast.remove();
+      });
+      setTimeout(function() { if (toast.parentNode) toast.remove(); }, 30000);
+    }
+  })();
+  </script>
 </body>
 </html>

@@ -483,3 +483,92 @@ footer.site a { color: var(--muted); text-decoration: underline; text-decoration
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ── PWA: install banner (30s-delayed beforeinstallprompt) ─────── */
+.install-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid var(--line, #e8e6dc);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: 0 6px 28px rgba(20, 17, 13, 0.15);
+  z-index: 9999;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  color: #2a2a2a;
+  max-width: calc(100vw - 32px);
+  animation: slideUp 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.install-banner .install-text { line-height: 1.4; }
+.install-banner button {
+  background: #B8323A;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.install-banner button:hover { background: #9a2830; }
+.install-banner button.install-dismiss {
+  background: transparent;
+  color: #888;
+  padding: 7px 8px;
+}
+.install-banner button.install-dismiss:hover { color: #555; background: #f5f5f5; }
+
+/* ── PWA: SW update toast (top-right, 30s auto-dismiss) ─────── */
+.update-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: #2c7a7b;
+  color: white;
+  padding: 11px 16px;
+  border-radius: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 9999;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  animation: slideIn 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.update-toast button {
+  background: white;
+  color: #2c7a7b;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.update-toast button:hover { background: #f0fafa; }
+.update-toast button.update-dismiss {
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  padding: 5px 6px;
+}
+.update-toast button.update-dismiss:hover { color: white; background: rgba(255,255,255,0.1); }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}

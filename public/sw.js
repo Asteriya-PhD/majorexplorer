@@ -1,35 +1,34 @@
-/* Major Explorer · Mobile Service Worker
- * 缓存策略 (修复 dock tab "Response served by service worker has redirections"):
- *   - HTML 文档 (text/html, navigation): network-first, 不缓存 (让 CF middleware 处理 302)
- *   - 静态资源 (CSS/JS/PNG/JPG/WOFF): stale-while-revalidate
- *   - 数据 (manifest.json, hierarchy): stale-while-revalidate
- *   - 网络失败 HTML 请求 → fallback 到 /m/offline.html
+/* Major Explorer · PC Service Worker (v1)
+ * 缓存策略 (与 mobile 一致, 防 CF Pages SW HTML redirect trap):
+ *   - HTML 文档: network-first, 不缓存
+ *   - 静态资源 (/js/, /css/, /assets/): stale-while-revalidate
+ *   - 数据 (/data/): stale-while-revalidate
+ *   - HTML 网络失败 → fallback 到 /offline.html
  * 版本号: 改这里强制升级
  */
-const CACHE_NAME = "m-explorer-v3-20260621";
-const OFFLINE_URL = "/m/offline.html";
+const CACHE_NAME = "explorer-v1-20260621";
+const OFFLINE_URL = "/offline.html";
 const SHELL = [
-  "/m/",
-  "/m/index.html",
-  "/m/catalog.html",
-  "/m/recommendations.html",
-  "/m/search.html",
-  "/m/wishlist.html",
-  "/m/me.html",
-  "/m/offline.html",
-  "/m/manifest.json",
-  "/m/css/base.css",
-  "/m/css/topbar.css",
-  "/m/css/dock.css",
-  "/m/js/loader.js",
-  "/m/js/dock.js",
-  "/m/js/home.js",
-  "/m/js/catalog.js",
-  "/m/js/recs.js",
-  "/m/js/search.js",
-  "/m/js/wishlist.js",
-  "/m/js/me.js",
-  "/m/js/detail.js",
+  "/",
+  "/index.html",
+  "/majors.html",
+  "/search.html",
+  "/wishlist.html",
+  "/preferences.html",
+  "/recommendations.html",
+  "/offline.html",
+  "/manifest.json",
+  "/css/shared.css",
+  "/js/data-loader.js",
+  "/js/major-search.js",
+  "/js/pc-search.js",
+  "/js/topbar.js",
+  "/js/ui-helpers.js",
+  "/js/wishlist-store.js",
+  "/js/recommender.js",
+  "/js/preferences-form.js",
+  "/js/discipline-pills.js",
+  "/js/strategy-pills.js",
   "/m/icon-192.png",
   "/m/icon-512.png",
 ];
@@ -57,14 +56,13 @@ self.addEventListener("fetch", e => {
   if (e.request.method !== "GET") return;
   if (url.origin !== location.origin) return;
 
-  // 数据 (manifest, hierarchy, strategy): stale-while-revalidate
+  // 数据 (manifest.json, hierarchy, strategy): stale-while-revalidate
   if (DATA_HOSTS.some(h => url.pathname.startsWith(h))) {
     e.respondWith(staleWhileRevalidate(e.request));
     return;
   }
 
-  // HTML 文档请求 (navigation 或 text/html): network-first, 不缓存
-  // 这样 CF Pages middleware 的 302 redirect 才能正常工作, 不被 sw 拦截
+  // HTML 文档请求: network-first + offline fallback
   const isHTML =
     e.request.mode === "navigate" ||
     (e.request.headers.get("accept") || "").includes("text/html");
@@ -73,8 +71,11 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  // 静态资源 (CSS/JS/PNG/JPG/WOFF 等): stale-while-revalidate
-  if (url.pathname.startsWith("/m/")) {
+  // 静态资源 (CSS/JS/PNG/JPG/WOFF): stale-while-revalidate
+  if (url.pathname.startsWith("/js/") ||
+      url.pathname.startsWith("/css/") ||
+      url.pathname.startsWith("/assets/") ||
+      url.pathname.startsWith("/m/")) {
     e.respondWith(staleWhileRevalidate(e.request));
     return;
   }
@@ -98,10 +99,8 @@ async function networkFirst(req) {
   const cache = await caches.open(CACHE_NAME);
   try {
     const r = await fetch(req);
-    // HTML 不缓存, 这里只 cache 静态资源成功响应
     if (r && r.ok) {
       const ct = r.headers.get("content-type") || "";
-      // 不缓存 HTML 文档, 防止 redirect response 被缓存
       if (!ct.includes("text/html")) {
         cache.put(req, r.clone());
       }
@@ -128,7 +127,6 @@ async function networkFirstWithOffline(req) {
   } catch (e) {
     const cached = await cache.match(req);
     if (cached) return cached;
-    // 网络失败 + 无缓存 → 返回 offline.html
     const offline = await cache.match(OFFLINE_URL);
     if (offline) return offline;
     return new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
