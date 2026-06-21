@@ -70,6 +70,30 @@ python3 scripts/smart_audit.py --dry-run --json | jq '.candidates[:5]'
 
 ## 9 步流水线 (每批 30-50 篇)
 
+### Step 0: Auto-Repair Rank 字段 (Day 17 加, 长期治理)
+
+**任何 synth / hand-code / online-on-demand 产出的新 major JSON, 必须先跑 repair 脚本规整 top_schools.rank 字段**:
+
+```bash
+# Dry-run 先看
+python3 scripts/repair_top_schools_rank.py --dry-run
+
+# 真跑 (会写回 JSON)
+python3 scripts/repair_top_schools_rank.py
+```
+
+**规整规则** (canonical = `"★★★★☆ (A+)"` 星+括号):
+- `"A+"` 纯字母 → `"★★★★★ (A+)"` (5★ 满)
+- `"★★★★★ (A+)"` 星+括号 → 不变
+- `"★★★★★"` 纯星 → 不变 (render 端映射)
+- `tag` 含字母 → 提取 → `"★★★★☆ (A+)"` (4★ 表明仅 tag 提及)
+- `1`/`2`/`3` int 序号 → `""` 空字符串 (不强映射, render 显示 "—")
+- `""`/`None` → 不变
+
+**为什么**: render_mobile.py 的 normalize_rank() 已兜底 5 种格式 (运行时防御), 但 synth 阶段会持续产出新格式, 长期应在数据层统一, 让渲染端无需兼容。**新格式只需在 repair 脚本 +1 case**, 数据层 +1 case, 渲染端不动。
+
+**插入位置**: 每次 batch synth 完成 → Step 1 audit 之前 必跑。
+
 ### Step 1: Audit Driven (必读)
 
 **单篇 deep dive** → 老 `content_audit.py`:

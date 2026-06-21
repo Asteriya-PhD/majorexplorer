@@ -403,16 +403,20 @@ def normalize_rank(rank, tag=""):
     2) "★★★★★ (A+)" — 星+括号 (密码学)
     3) "★★★★★"        — 纯星 (仿生)
     4) tag 字段含 "A+" — 兜底
-    5) 1/2/3 int  — 序号 (财政学, 显示 "—")
+    5) 1/2/3 int / 空 / None — 序号 (财政学, 显示 "—")
+
+    ⚠️ Day 17 fix: rank 空字符串 (rank == "") 直接返回 eval="", **不要**走星数映射,
+    否则 rank="" → 0 stars → "B-" 误判.
     """
     if rank is None or rank == "":
-        rank = ""
-    elif isinstance(rank, int):
+        # 空字符串 = 无数据, 不强映射
+        return {"eval": "", "source": "empty", "raw": ""}
+    if isinstance(rank, int):
         # int 序号 → 无评估数据, 不强映射
         return {"eval": "", "source": "int", "raw": str(rank)}
-    rank = str(rank)
+    rank = str(rank).strip()
     # 策略 1: 纯字母
-    m = re.fullmatch(r"\s*([ABCDF][+\-]?)\s*", rank)
+    m = re.fullmatch(r"([ABCDF][+\-]?)", rank)
     if m:
         return {"eval": m.group(1), "source": "rank", "raw": rank}
     # 策略 2: 星+括号
@@ -421,7 +425,7 @@ def normalize_rank(rank, tag=""):
         return {"eval": m.group(1), "source": "rank", "raw": rank}
     # 策略 3: 纯星 → 映射 (0-5 颗实心 ★ → B-/B/B+/A-/A/A+)
     filled = rank.count("★")
-    if 0 <= filled <= 5:
+    if 0 < filled <= 5:  # ⚠️ 严格 >0 (空字符串/无星不算)
         return {"eval": ["B-", "B", "B+", "A-", "A", "A+"][filled], "source": "star", "raw": rank}
     # 策略 4: tag 兜底
     m = re.search(r"\b([ABCDF][+\-]?)\b", tag)
