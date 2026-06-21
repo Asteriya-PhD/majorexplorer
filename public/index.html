@@ -128,78 +128,6 @@
     .home-hero .below-chat { margin-top: 14px; font-size: 0.75rem; }
   }
 
-  /* ── 精品报告 (主体) ───── */
-  .home-majors { padding: 64px 0 32px; background: var(--bg-soft); border-top: 1px solid var(--line); scroll-margin-top: 70px; }
-  .home-majors .container { max-width: 1120px; }
-  .home-majors .section-head {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid var(--fg);
-  }
-  .home-majors .section-head h2 { font-size: 1.5rem; }
-  .home-majors .section-head .count { font-family: var(--font-num); color: var(--muted); font-size: 0.8125rem; letter-spacing: 0.1em; }
-  .home-majors .sub-lede {
-    font-size: 0.9375rem; color: var(--muted); margin-bottom: 28px; line-height: 1.7;
-    max-width: 720px;
-  }
-  .home-majors .sub-lede strong { color: var(--fg); }
-  .home-majors .sub-lede .hint-icon {
-    display: inline-block; vertical-align: -2px;
-    width: 16px; height: 16px; line-height: 16px; text-align: center;
-    background: var(--accent); color: var(--bg); border-radius: 50%;
-    font-size: 0.625rem; font-weight: 700; margin-right: 4px;
-  }
-
-  .theme-block { margin-bottom: 32px; }
-  .theme-block .theme-title {
-    display: flex; align-items: center; gap: 10px;
-    font-family: var(--font-heading); font-size: 1.1875rem; font-weight: 600;
-    margin-bottom: 14px;
-  }
-  .theme-block .theme-title .dot {
-    width: 10px; height: 10px; border-radius: 2px;
-    display: inline-block;
-  }
-  .theme-block .theme-title .meta {
-    margin-left: auto;
-    font-family: var(--font-num); font-size: 0.75rem; color: var(--muted);
-    letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;
-  }
-  .major-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;
-  }
-  @media (max-width: 640px) { .major-grid { gap: 8px; } }
-
-  .major-card {
-    display: flex; flex-direction: column; gap: 4px;
-    padding: 14px 14px 12px; background: #fff;
-    border: 1px solid var(--line); border-radius: 8px;
-    text-decoration: none; color: var(--fg);
-    transition: all 180ms; min-height: 98px;
-  }
-  .major-card:hover {
-    border-color: var(--line-strong);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(20,17,13,0.08);
-    opacity: 1;
-  }
-  .major-card .title { font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600; line-height: 1.3; }
-  .major-card .cat { font-size: 0.6875rem; color: var(--muted); line-height: 1.4; margin-top: auto; }
-  .major-card .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
-  .major-card .tags .tag-mini { font-size: 0.625rem; padding: 1px 6px; background: var(--bg-soft); border-radius: 3px; color: var(--muted); }
-
-  .dot-menjia { background: var(--accent); }
-  .dot-menjia[data-code="0106"] { background: #6B4F35; } /* 哲学·历史学 — 深棕 */
-  .dot-menjia[data-code="02"] { background: #5A4632; } /* 经济学 */
-  .dot-menjia[data-code="03"] { background: #3A3A3A; } /* 法学 */
-  .dot-menjia[data-code="04"] { background: #5C7C4A; } /* 教育学 */
-  .dot-menjia[data-code="05"] { background: #6B4F35; } /* 文学 */
-  .dot-menjia[data-code="07"] { background: #1E5E72; } /* 理学 */
-  .dot-menjia[data-code="08"] { background: #5B5B47; } /* 工学 */
-  .dot-menjia[data-code="09"] { background: #6B7A3F; } /* 农学 */
-  .dot-menjia[data-code="10"] { background: #8B2424; } /* 医学 */
-  .dot-menjia[data-code="12"] { background: #4A4564; } /* 管理学 */
-  .dot-menjia[data-code="13"] { background: #8B3A62; } /* 艺术学 */
-
   /* ── 之后才是志愿推荐 (降级) ─────────────── */
   .next-step {
     padding: 56px 0;
@@ -348,22 +276,129 @@
   </div>
 </section>
 
-<!-- ────────── 精品报告 (主体) ────────── -->
-<section class="home-majors" id="majors">
+<!-- ────────── 学科门类入口 (主体, Day 21 改造: 替换原 #majors 卡片墙) ────────── -->
+<section class="home-cats" id="majors">
   <div class="container">
     <div class="section-head">
-      <h2>深度专业解读·精品报告</h2>
+      <h2>📚 按学科门类逛专业目录</h2>
       <div class="count" id="major-count">加载中…</div>
     </div>
-    <p class="sub-lede">
+    <p class="sub-lede" style="margin-bottom: 28px;">
       <span class="hint-icon">!</span>
-      下方是按教育部 <strong>13 个学科门类</strong>分组的精品报告 (哲学·历史学 / 经济学 / 法学 / 教育学 / 文学 / 理学 / 工学 / 农学 / 医学 / 管理学 / 艺术学, <strong>持续扩充中</strong>)。
-      没找到你想看的? <strong>用上面的搜索框</strong>或<a href="mailto:hello@example.com" style="color: var(--accent); text-decoration: underline;">留邮箱催更</a>。
-      每个报告页右下角 <strong>⭐ 按钮</strong> 可加入心愿单 (1–5 颗星), 凑 4 个就能跑志愿推荐。
+      教育部本科目录 <strong>13 学科门类 · 92 专业类 · 868 专业</strong>, 已上线 <strong style="color: var(--accent);" id="cats-curated-count">—</strong> 个精品深度报告 (✦ 标记). 挑感兴趣的门类直接看, 或下方一键浏览完整目录。
     </p>
-    <div id="theme-zone"></div>
+    <!-- 13 门类 chip -->
+    <div class="cats-grid" id="cats-grid">
+      <p style="color: var(--muted); padding: 24px 0;">加载中…</p>
+    </div>
+    <!-- 主 CTA -->
+    <div class="cats-cta-row">
+      <a class="cats-cta-primary" href="/majors.html">📚 查看 13 门类 · 868 专业完整目录 →</a>
+      <a class="cats-cta-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+    </div>
   </div>
 </section>
+
+<style>
+  /* Day 21 改造: 学科门类入口区 (替换原 home-majors 卡片墙) */
+  .home-cats {
+    padding: 56px 0 64px;
+    background: var(--bg);
+  }
+  .home-cats .section-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 6px;
+  }
+  .home-cats .section-head h2 {
+    font-size: 1.625rem;
+    font-family: 'Source Han Serif SC', serif;
+    font-weight: 600; letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .home-cats .section-head .count {
+    font-family: var(--font-num); font-size: 0.8125rem;
+    color: var(--muted);
+  }
+  .cats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .cat-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-decoration: none; color: var(--fg);
+    transition: all 150ms ease;
+  }
+  .cat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(184,50,58,0.08);
+  }
+  .cat-card .cat-icon { font-size: 1.5rem; line-height: 1; }
+  .cat-card .cat-body { flex: 1; min-width: 0; }
+  .cat-card .cat-code {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.1em;
+  }
+  .cat-card .cat-name {
+    font-size: 1rem; font-weight: 600; line-height: 1.3;
+    margin-top: 1px;
+  }
+  .cat-card .cat-stat {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); white-space: nowrap;
+  }
+  .cat-card .cat-stat .accent {
+    color: var(--accent); font-weight: 700;
+  }
+  .cats-cta-row {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    align-items: center;
+  }
+  .cats-cta-primary {
+    flex: 1; min-width: 280px;
+    padding: 16px 24px;
+    background: var(--accent); color: #FAFAF7;
+    border-radius: 10px;
+    font-size: 1rem; font-weight: 600;
+    text-decoration: none; text-align: center;
+    transition: all 150ms;
+    box-shadow: 0 2px 8px rgba(184,50,58,0.18);
+  }
+  .cats-cta-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(184,50,58,0.28);
+  }
+  .cats-cta-ghost {
+    padding: 16px 24px;
+    border: 1.5px solid var(--accent); color: var(--accent);
+    border-radius: 10px;
+    font-size: 1rem; font-weight: 600;
+    text-decoration: none;
+    transition: all 150ms;
+  }
+  .cats-cta-ghost:hover {
+    background: var(--accent); color: #FAFAF7;
+  }
+  @media (max-width: 768px) {
+    .home-cats { padding: 36px 0 48px; }
+    .home-cats .section-head h2 { font-size: 1.25rem; }
+    .cats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .cat-card { padding: 10px 12px; gap: 8px; }
+    .cat-card .cat-icon { font-size: 1.25rem; }
+    .cat-card .cat-name { font-size: 0.875rem; }
+    .cat-card .cat-stat { font-size: 0.6875rem; }
+    .cats-cta-primary, .cats-cta-ghost { min-width: 0; width: 100%; padding: 14px; font-size: 0.9375rem; }
+  }
+</style>
 
 <!-- ────────── 看完专业 → 才是志愿推荐 ────────── -->
 <section class="next-step">
@@ -418,73 +453,57 @@
     placeholder: '想学什么? 试试「编程」「医生」「考公」「设计」「金融」…',
   });
 
-  // 2) 加载 manifest + 渲染精品专业 grid (按教育部官方 13 门类分组)
-  const manifest = await window.MajorSearch.loadManifest();
+  // 2) 加载 manifest + discipline_hierarchy + 渲染 13 门类入口 (Day 21 改造: 取代 11700px 卡片墙)
+  const [manifest, hier] = await Promise.all([
+    window.MajorSearch.loadManifest(),
+    fetch('/data/discipline_hierarchy.json', { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : { '门类': {} }))
+      .catch(() => ({ '门类': {} })),
+  ]);
   const majors = manifest.majors || [];
   document.getElementById('major-count').textContent = '已上线 ' + majors.length + ' 个 · 持续扩充中';
 
-  // 门类分组 (教育部 13 门类, 合并 01 哲学+06 历史学 → "哲学·历史学")
-  // 跳过 11 军事学 (chsi 空) 和 14 交叉学科 (无精品)
-  const MENJIA_ORDER = [
-    { code: '0106', name: '哲学·历史学', icon: '📜' },
-    { code: '02', name: '经济学', icon: '📈' },
-    { code: '03', name: '法学', icon: '⚖️' },
-    { code: '04', name: '教育学', icon: '🎓' },
-    { code: '05', name: '文学', icon: '✒️' },
-    { code: '07', name: '理学', icon: '🔬' },
-    { code: '08', name: '工学', icon: '⚙️' },
-    { code: '09', name: '农学', icon: '🌱' },
-    { code: '10', name: '医学', icon: '🩺' },
-    { code: '12', name: '管理学', icon: '📊' },
-    { code: '13', name: '艺术学', icon: '🎨' },
-  ];
-
-  // Group majors by menjia_moe (0106 group includes both 01 and 06)
-  const byMenjia = {};
+  // 统计每门类已上线精品数 (用 menjia_moe; 14 交叉学科可能没字段)
+  const curatedByMenjia = {};
   for (const m of majors) {
     const code = m.menjia_moe || '';
-    // 合并 01 + 06 → '0106'
-    const groupKey = (code === '01' || code === '06') ? '0106' : code;
-    if (!byMenjia[groupKey]) byMenjia[groupKey] = [];
-    byMenjia[groupKey].push(m);
+    if (!code) continue;
+    curatedByMenjia[code] = (curatedByMenjia[code] || 0) + 1;
   }
-  for (const k of Object.keys(byMenjia)) {
-    byMenjia[k].sort((a, b) => a.title.localeCompare(b.title, 'zh'));
-  }
+  const totalCurated = majors.length;
+  const totalEl = document.getElementById('cats-curated-count');
+  if (totalEl) totalEl.textContent = totalCurated + ' 个 (60% 覆盖率)';
 
-  const themeZone = document.getElementById('theme-zone');
-  for (const t of MENJIA_ORDER) {
-    const list = byMenjia[t.code];
-    if (!list || list.length === 0) continue;
-    const block = document.createElement('div');
-    block.className = 'theme-block';
-    block.innerHTML = [
-      '<div class="theme-title">',
-      '  <span class="dot dot-menjia" data-code="' + t.code + '"></span>',
-      '  <span>' + UI.escapeHtml(t.name) + '</span>',
-      '  <span class="meta">' + list.length + ' 个精品</span>',
-      '</div>',
-      '<div class="major-grid"></div>',
-    ].join('');
-    const grid = block.querySelector('.major-grid');
-    for (const m of list) {
-      const a = document.createElement('a');
-      a.className = 'major-card';
-      a.href = '/' + m.slug + '.html';
-      const tagsHtml = (m.tags || []).slice(0, 2).map((tg) =>
-        '<span class="tag-mini">' + UI.escapeHtml(tg) + '</span>'
-      ).join('');
-      a.innerHTML = [
-        '<div class="title">' + UI.escapeHtml(m.title) + '</div>',
-        '<div class="tags">' + tagsHtml + '</div>',
-        '<div class="cat">' + UI.escapeHtml(m.category || '') + '</div>',
+  // 渲染 13 门类 chip
+  const menjiaSrc = hier['门类'] || {};
+  const codes = Object.keys(menjiaSrc).sort();
+  // 排序: 把 09 农学 11 军事 14 交叉 这种小门类放后面? 不, 按官方 01-14 顺序
+  const grid = document.getElementById('cats-grid');
+  if (grid && codes.length > 0) {
+    grid.innerHTML = codes.map((code) => {
+      const d = menjiaSrc[code];
+      const curatedN = curatedByMenjia[code] || 0;
+      // 总专业数 = sub_classes 下 majors 累加
+      let totalN = 0;
+      const subs = d.sub_classes || {};
+      Object.values(subs).forEach((sc) => { totalN += (sc.majors || []).length; });
+      const star = curatedN > 0
+        ? '<span class="cat-stat">✦<span class="accent">' + curatedN + '</span>/' + totalN + '</span>'
+        : '<span class="cat-stat">' + totalN + ' 专业</span>';
+      return [
+        '<a class="cat-card" href="/majors.html#d-' + code + '">',
+        '  <span class="cat-icon">' + (d.icon || '📚') + '</span>',
+        '  <span class="cat-body">',
+        '    <span class="cat-code">' + code + '</span>',
+        '    <span class="cat-name">' + (d.name || '?') + '</span>',
+        '  </span>',
+        '  ' + star,
+        '</a>',
       ].join('');
-      grid.appendChild(a);
-    }
-    themeZone.appendChild(block);
+    }).join('');
   }
 
-  // 3) 顶部 chip
+  // 3) 顶部 chip (legacy 占位, 保留兼容)
   if (window.WishlistStore) {
   }
 })();

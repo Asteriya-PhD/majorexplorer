@@ -152,18 +152,16 @@
   }
   function esc(s) { return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"})[c]); }
 
-  // 0 命中: 显示 "尚未收录「{query}」+ 点击报告" 卡片
+  // 0 命中: "尚未收录「{query}」" 卡片 (Day 21 改造: 取消"实时生成", 只留"想看 xx" 反馈)
   function renderNoResult(query) {
     return `
       <div class="no-result-report" data-q="${esc(query)}">
         <div class="nrr-title">尚未收录「<strong>${esc(query)}</strong>」</div>
-        <div class="nrr-desc">试试实时生成 (约 60-120 秒), 或告诉我们你想看。</div>
+        <div class="nrr-desc">告诉我们你想看这个专业, 我们优先收录 (精品报告持续扩充中)。</div>
         <div class="nrr-actions">
-          <button class="nrr-synth-btn" type="button">🔄 实时生成这篇</button>
-          <button class="nrr-btn" type="button">📨 报告给我们</button>
+          <button class="nrr-btn" type="button">💡 想看「${esc(query)}」</button>
         </div>
         <div class="nrr-synth-status"></div>
-        <div class="nrr-fallback">没反应? 邮件 <a href="mailto:major.explorer.feedback@gmail.com">major.explorer.feedback@gmail.com</a></div>
       </div>
     `;
   }
@@ -179,7 +177,7 @@
         const r = await fetch("/api/report", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "missing-major", name: query, source: "mobile" }),
+          body: JSON.stringify({ type: "missing-major", category: "want", name: query, source: "mobile" }),
         });
         const d = await r.json().catch(() => ({}));
         if (r.ok && d.ok) {
@@ -190,15 +188,14 @@
           throw new Error(d.error || `HTTP ${r.status}`);
         }
       } catch (e) {
-        btn.textContent = "✕ 发送失败, 用邮件兜底";
+        btn.textContent = "✕ 发送失败, 用底栏「反馈」重试";
         btn.classList.remove("loading");
         btn.classList.add("failed");
         btn.disabled = false;
         console.error("[search.js] report failed", e);
       }
     });
-    // 新增: 实时合成 CTA
-    bindSynthCard(root, query, "mobile");
+    // Day 21: 删除 bindSynthCard 调用 (取消实时合成 UI, 后端端点仍保留)
   }
 
   // ── 4 段进度映射 ──

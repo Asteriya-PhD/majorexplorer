@@ -207,13 +207,18 @@
   <a class="dock-tab active" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
 </nav>
 
-<!-- 反馈 modal -->
+<!-- 反馈 modal (Day 21: 加 category 细分) -->
 <div class="feedback-modal" id="feedback-modal" hidden>
   <div class="feedback-modal-bg" id="feedback-modal-bg"></div>
   <div class="feedback-modal-card">
-    <div class="feedback-modal-head">提个反馈 / 报告问题</div>
-    <div class="feedback-modal-hint">写多少都行, 不写也能发 (1 分钟限 1 次)</div>
-    <textarea class="feedback-modal-textarea" id="feedback-text" placeholder="哪儿不好? 想看啥? 校准/选科/算法哪不对? — 一句话就够"></textarea>
+    <div class="feedback-modal-head">提个反馈</div>
+    <div class="feedback-modal-hint">选一类, 1 分钟限 1 次 (写多少都行)</div>
+    <div class="fb-category-row" role="radiogroup" aria-label="反馈类型">
+      <label class="fb-cat-label"><input type="radio" name="m-fb-cat" value="want" checked>💡 想看</label>
+      <label class="fb-cat-label"><input type="radio" name="m-fb-cat" value="bug">🐛 Bug</label>
+      <label class="fb-cat-label"><input type="radio" name="m-fb-cat" value="like">👍 点赞</label>
+    </div>
+    <textarea class="feedback-modal-textarea" id="feedback-text" placeholder="例: 想看「考古学」/ 选科表错了 / 排版很棒…"></textarea>
     <div class="feedback-modal-actions">
       <button class="fb-btn fb-cancel" id="fb-cancel" type="button">取消</button>
       <button class="fb-btn fb-send" id="fb-send" type="button">发送</button>

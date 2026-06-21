@@ -50,14 +50,19 @@
     '  </div>' +
     '</header>';
 
-  // 反馈 modal HTML (复用 mobile 模式, source="pc" — 跟 G 阶段闭环对齐)
+  // 反馈 modal HTML (Day 21: 加 category 细分 — 想看专业 / Bug / 点赞)
   var modalHtml = '' +
     '<div class="feedback-modal" id="topbar-feedback-modal" hidden>' +
     '  <div class="feedback-modal-bg" id="topbar-feedback-modal-bg"></div>' +
     '  <div class="feedback-modal-card">' +
-    '    <div class="feedback-modal-head">提个反馈 / 报告问题</div>' +
-    '    <div class="feedback-modal-hint">写多少都行, 不写也能发 (1 分钟限 1 次)</div>' +
-    '    <textarea class="feedback-modal-textarea" id="topbar-feedback-text" placeholder="哪儿不好? 想看啥? 校准/选科/算法哪不对? — 一句话就够"></textarea>' +
+    '    <div class="feedback-modal-head">提个反馈</div>' +
+    '    <div class="feedback-modal-hint">选一类, 1 分钟限 1 次 (写多少都行)</div>' +
+    '    <div class="fb-category-row" role="radiogroup" aria-label="反馈类型">' +
+    '      <label class="fb-cat-label"><input type="radio" name="topbar-fb-cat" value="want" checked>💡 想看某专业</label>' +
+    '      <label class="fb-cat-label"><input type="radio" name="topbar-fb-cat" value="bug">🐛 Bug</label>' +
+    '      <label class="fb-cat-label"><input type="radio" name="topbar-fb-cat" value="like">👍 点赞</label>' +
+    '    </div>' +
+    '    <textarea class="feedback-modal-textarea" id="topbar-feedback-text" placeholder="例: 想看「考古学」/ 选科表错了 / 这个排版很棒…"></textarea>' +
     '    <div class="feedback-modal-actions">' +
     '      <button class="fb-btn fb-cancel" id="topbar-fb-cancel" type="button">取消</button>' +
     '      <button class="fb-btn fb-send" id="topbar-fb-send" type="button">发送</button>' +
@@ -108,8 +113,24 @@
       if (e.key === "Escape" && !fbModal.hidden) closeFb();
     });
     if (fbSend) {
+      // Day 21: 根据当前选中 category 动态换 placeholder
+      var fbCatRadios = document.querySelectorAll('input[name="topbar-fb-cat"]');
+      var placeholders = {
+        want: '想看哪个专业? 写专业名 (例: 考古学 / 中医康复 / 量子信息)',
+        bug:  '哪里有 bug? 哪个页面? 怎么复现? — 一句话就行',
+        like: '哪点喜欢? 想看更多哪种内容? — 写多少都行',
+      };
+      fbCatRadios.forEach(function(r) {
+        r.addEventListener('change', function() {
+          if (fbText) fbText.placeholder = placeholders[r.value] || '';
+        });
+      });
+
       fbSend.addEventListener("click", async () => {
         var text = (fbText.value || "").trim();
+        // Day 21: 收集当前选中 category
+        var checkedCat = document.querySelector('input[name="topbar-fb-cat"]:checked');
+        var category = checkedCat ? checkedCat.value : 'want';
         fbSend.disabled = true; fbText.disabled = true; fbCancel.disabled = true;
         var oldText = fbSend.textContent;
         fbSend.textContent = "发送中...";
@@ -117,7 +138,7 @@
           var r = await fetch("/api/report", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ type: "feedback", text: text, source: "pc" }),
+            body: JSON.stringify({ type: "feedback", category: category, text: text, source: "pc" }),
           });
           var d = await r.json().catch(function () { return {}; });
           if (r.ok && d.ok) {
@@ -128,7 +149,7 @@
             throw new Error(d.error || ("HTTP " + r.status));
           }
         } catch (e) {
-          fbSend.textContent = "✕ 失败, 邮件 major.explorer.feedback@gmail.com";
+          fbSend.textContent = "✕ 失败, 请稍后重试";
           fbSend.classList.add("failed");
           fbSend.disabled = false; fbText.disabled = false; fbCancel.disabled = false;
           console.error("[topbar.js] feedback failed", e);

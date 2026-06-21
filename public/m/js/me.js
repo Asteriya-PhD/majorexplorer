@@ -58,8 +58,24 @@
   if (fbBg) fbBg.addEventListener("click", closeFb);
   if (fbCancel) fbCancel.addEventListener("click", closeFb);
   if (fbSend) {
+    // Day 21: 根据 category 动态换 placeholder
+    const fbCatRadios = document.querySelectorAll('input[name="m-fb-cat"]');
+    const placeholders = {
+      want: '想看哪个专业? 写专业名 (例: 考古学 / 中医康复)',
+      bug:  '哪里有 bug? 哪个页面? 怎么复现?',
+      like: '哪点喜欢? 想看更多哪种内容?',
+    };
+    fbCatRadios.forEach((r) => {
+      r.addEventListener('change', () => {
+        if (fbText) fbText.placeholder = placeholders[r.value] || '';
+      });
+    });
+
     fbSend.addEventListener("click", async () => {
       const text = (fbText.value || "").trim();
+      // Day 21: 收集当前选中 category
+      const checkedCat = document.querySelector('input[name="m-fb-cat"]:checked');
+      const category = checkedCat ? checkedCat.value : 'want';
       fbSend.disabled = true; fbText.disabled = true; fbCancel.disabled = true;
       const oldText = fbSend.textContent;
       fbSend.textContent = "发送中...";
@@ -67,7 +83,7 @@
         const r = await fetch("/api/report", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "feedback", text, source: "mobile" }),
+          body: JSON.stringify({ type: "feedback", category, text, source: "mobile" }),
         });
         const d = await r.json().catch(() => ({}));
         if (r.ok && d.ok) {
@@ -78,7 +94,7 @@
           throw new Error(d.error || `HTTP ${r.status}`);
         }
       } catch (e) {
-        fbSend.textContent = "✕ 失败, 邮件 major.explorer.feedback@gmail.com";
+        fbSend.textContent = "✕ 失败, 请稍后重试";
         fbSend.classList.add("failed");
         fbSend.disabled = false; fbText.disabled = false; fbCancel.disabled = false;
         console.error("[me.js] feedback failed", e);

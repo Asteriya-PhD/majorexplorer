@@ -262,6 +262,30 @@ h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height
   font-size: 0.8125rem; color: var(--muted);
   margin-bottom: 14px;
 }
+/* Day 21: 反馈 category 细分 (想看专业 / Bug / 点赞) */
+.fb-category-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.fb-cat-label {
+  flex: 1; min-width: 100px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--line-strong); border-radius: 8px;
+  font-size: 0.875rem; cursor: pointer;
+  background: #fff; color: var(--fg);
+  transition: all 160ms;
+  user-select: none;
+}
+.fb-cat-label input[type="radio"] {
+  position: absolute; opacity: 0; pointer-events: none;
+}
+.fb-cat-label:hover { border-color: var(--accent); }
+.fb-cat-label:has(input:checked) {
+  background: var(--accent); color: #FAFAF7;
+  border-color: var(--accent);
+  font-weight: 600;
+}
 .feedback-modal-textarea {
   width: 100%;
   min-height: 120px;
