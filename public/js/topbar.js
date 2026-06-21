@@ -41,7 +41,6 @@
     '    <div class="topbar-right">' +
     '      <nav class="nav-links" aria-label="主导航">' +
     '        <a href="/" class="' + (active === 'home' ? 'active' : '') + '">首页</a>' +
-    '        <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">精品专业</a>' +
     '        <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">专业目录</a>' +
     '        <a href="/preferences.html" class="' + (active === 'preferences' ? 'active' : '') + '">填偏好</a>' +
     '      </nav>' +

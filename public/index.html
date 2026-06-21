@@ -482,11 +482,12 @@
   if (grid && codes.length > 0) {
     grid.innerHTML = codes.map((code) => {
       const d = menjiaSrc[code];
-      const curatedN = curatedByMenjia[code] || 0;
-      // 总专业数 = sub_classes 下 majors 累加
+      // Day 21.1 fix: 截断 ✦ 数 ≤ totalN 避免视觉异常 (经济学 ✦24/21 → ✦21/21)
       let totalN = 0;
       const subs = d.sub_classes || {};
       Object.values(subs).forEach((sc) => { totalN += (sc.majors || []).length; });
+      const curatedRaw = curatedByMenjia[code] || 0;
+      const curatedN = Math.min(curatedRaw, totalN);
       const star = curatedN > 0
         ? '<span class="cat-stat">✦<span class="accent">' + curatedN + '</span>/' + totalN + '</span>'
         : '<span class="cat-stat">' + totalN + ' 专业</span>';

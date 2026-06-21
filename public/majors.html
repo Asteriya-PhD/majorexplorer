@@ -349,6 +349,14 @@
       const disciplines = hier.门类;
       const codes = Object.keys(disciplines).sort();
 
+      // Day 21.1 fix: 按 menjia_moe 精品计数 (修 hierarchy 命名漂移)
+      const curatedByMenjia = Object.create(null);
+      (manifest.majors || []).forEach((m) => {
+        const code = m.menjia_moe || '';
+        if (!code) return;
+        curatedByMenjia[code] = (curatedByMenjia[code] || 0) + 1;
+      });
+
       // Compute counts
       let totalCurated = 0;
       const dStats = {};
@@ -357,17 +365,17 @@
         const subs = d.sub_classes || {};
         const subCount = Object.keys(subs).length;
         let majorCount = 0;
-        let curatedCount = 0;
         Object.values(subs).forEach((sc) => {
-          (sc.majors || []).forEach((mn) => {
-            majorCount += 1;
-            if (slugByTitle[mn]) curatedCount += 1;
-          });
+          (sc.majors || []).forEach(() => { majorCount += 1; });
         });
+        // 精品按 menjia_moe 算; 但截断到 ≤ majorCount (避免 ✦42 > 28 这种视觉异常)
+        const curatedRaw = curatedByMenjia[code] || 0;
+        const curatedCount = Math.min(curatedRaw, majorCount);
         dStats[code] = { subCount, majorCount, curatedCount };
         totalCurated += curatedCount;
       });
 
+      // summary-bar 总精品 = 13 chip ✦ 加总 (保证数字自洽)
       curatedCountEl.textContent = totalCurated;
 
       // Render TOC pills
@@ -400,7 +408,9 @@
           .map((scCode) => {
             const sc = subs[scCode];
             const majors = sc.majors || [];
-            const scCurated = majors.filter((mn) => slugByTitle[mn]).length;
+            // sub-class 精品数: 用 title 匹配 (没有更细粒度) + min 截断
+            const scCuratedRaw = majors.filter((mn) => slugByTitle[mn]).length;
+            const scCurated = Math.min(scCuratedRaw, majors.length);
             const _esc = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const chips = majors
               .map((mn) => {
