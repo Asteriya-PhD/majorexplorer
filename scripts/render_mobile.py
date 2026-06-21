@@ -396,23 +396,33 @@ def render_salary(salary):
 def render_schools(schools, hubei_only=False):
     """schools = [{name, rank, tag, score?}]
 
-    rank 字段格式: "★★★★★ (A+)" / "★★★★★ (A)" / "★★★★☆ (A-)" / "★★★★☆ (B+)"
-    解析出 A+/A/A-/B+ 等学科评估等级作为显眼的右侧徽章.
+    rank 字段格式 (3 种兼容):
+    1) "★★★★★ (A+)" — 星 + 学科评估 (密码学等老专业)
+    2) "★★★★★"        — 仅星 (仿生等新专业, 无第四/五轮评估)
+    3) tag 字段含 "评估 A+" 等描述 (兜底)
     """
     if not schools:
         return ""
     # 湖北优先, 但目前 mock 全是湖北的 + 跨省, 先全列
     items = schools[:8]
     rows = []
+    # 星数 → 学科评估 (0-5 颗实心 ★ 对应 B-/B/B+/A-/A/A+)
+    star_to_eval = ["B-", "B", "B+", "A-", "A", "A+"]
     for i, s in enumerate(items, 1):
         rank = s.get("rank", "")
         tag = s.get("tag", "")
-        # Day 17 fix: 从 rank 字段 "(A+)" 格式解析学科评估, 兜底 tag 全文
         eval_badge = ""
-        m = re.search(r"\(([ABCDF][+\-]?)\)", rank)  # 优先 rank "(A+)" 格式
+        # 策略 1: rank 字段 "(A+)" 格式
+        m = re.search(r"\(([ABCDF][+\-]?)\)", rank)
         if m:
             eval_badge = m.group(1)
-        else:
+        # 策略 2: rank 字段纯星 "★★★★★" → 映射
+        if not eval_badge:
+            filled = rank.count("★")
+            if 0 <= filled <= 5:
+                eval_badge = star_to_eval[filled]
+        # 策略 3: tag 字段含评估字母
+        if not eval_badge:
             m = re.search(r"\b([ABCDF][+\-]?)\b", tag)
             if m:
                 eval_badge = m.group(1)
