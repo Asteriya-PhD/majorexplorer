@@ -6,7 +6,7 @@ v4_styles/render.py — 通用 v4 渲染 orchestrator (cs/finance/law/education/
 from pathlib import Path
 from .base import FONT_URLS, get_base_css, COUNT_UP_JS, BASE_V4_CSS, _dedup_by_name, soft_break_name, get_first_char
 from .body_bg import get_body_bg_css
-from .overview_v2 import render_overview_v2, OVERVIEW_V2_CSS
+from .overview_v2 import render_overview_v2, render_pitfalls_v2, OVERVIEW_V2_CSS
 from .overview_simple import render_overview_simple, OVERVIEW_SIMPLE_CSS, is_simple_format
 from .themes import HERO_FN, THEME_CSS
 
@@ -311,7 +311,7 @@ def apply_chsi_rating(html: str, data: dict) -> str:
         f'<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分">'
         f'<span class="chsi-label">阳光高考 · 用户满意度</span>'
         f'<span class="chsi-meta">5 分制</span>'
-        f'<span class="chsi-score">{sat:.1f}</span>'
+        f'<span class="chsi-score">★ {sat:.1f}/5</span>'
         f'</div>'
     )
     # Inject before the closing </div> of the hero-stats wrapper.
@@ -664,10 +664,12 @@ def render_v4(data: dict, style: str) -> str:
   </div>
 </section>
 
+{render_pitfalls_v2(data)}
+
 <section class="tab" id="curriculum">
-  <div class="watermark">02</div>
+  <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 课程</div>
+    <div class="section-num">03 / 10 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">{data.get("curriculum_note", "全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。")}</p>
     <div class="curriculum-grid">
@@ -677,9 +679,9 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">03</div>
+  <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">03 / 10 · 院校</div>
+    <div class="section-num">04 / 10 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -689,9 +691,9 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">04</div>
+  <div class="watermark">05</div>
   <div class="container">
-    <div class="section-num">04 / 10 · 头部雇主</div>
+    <div class="section-num">05 / 10 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -701,9 +703,9 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">05</div>
+  <div class="watermark">06</div>
   <div class="container">
-    <div class="section-num">05 / 10 · 薪资</div>
+    <div class="section-num">06 / 10 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -718,9 +720,9 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">06</div>
+  <div class="watermark">07</div>
   <div class="container">
-    <div class="section-num">06 / 10 · 就业方向</div>
+    <div class="section-num">07 / 10 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -730,9 +732,9 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="deep-study">
-  <div class="watermark">07</div>
+  <div class="watermark">08</div>
   <div class="container">
-    <div class="section-num">07 / 10 · 深造路径</div>
+    <div class="section-num">08 / 10 · 深造路径</div>
     <h2>深造路径</h2>
     <div class="path-grid">
 {path_html}
@@ -741,9 +743,9 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="quotes">
-  <div class="watermark">08</div>
+  <div class="watermark">09</div>
   <div class="container">
-    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <div class="section-num">09 / 10 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -753,9 +755,9 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">09</div>
+  <div class="watermark">10</div>
   <div class="container">
-    <div class="section-num">09 / 10 · 选科要求</div>
+    <div class="section-num">10 / 10 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">

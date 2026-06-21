@@ -272,14 +272,18 @@
 .ms-shell.compact .ms-input { font-size: 0.9375rem; padding: 8px 0; }
 .ms-send {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 40px; height: 40px; border-radius: 10px;
+  gap: 6px;
+  height: 40px; padding: 0 16px; border-radius: 10px;
   background: #14110D; color: #FAFAF7; border: none; cursor: pointer;
   transition: background 180ms, transform 180ms;
-  font-size: 1.125rem;
+  font-size: 0.9375rem; font-weight: 600; white-space: nowrap;
 }
+.ms-send-arrow { font-size: 1.0625rem; transition: transform 180ms; }
 .ms-send:hover { background: #B8323A; transform: translateY(-1px); }
+.ms-send:hover .ms-send-arrow { transform: translateX(2px); }
 .ms-send:disabled { background: #BFB9AB; cursor: not-allowed; transform: none; }
-.ms-shell.compact .ms-send { width: 36px; height: 36px; font-size: 1rem; }
+.ms-send:disabled .ms-send-arrow { transform: none; }
+.ms-shell.compact .ms-send { height: 36px; padding: 0 12px; font-size: 0.875rem; }
 
 .ms-chips {
   display: flex; flex-wrap: wrap; gap: 8px;
@@ -295,12 +299,16 @@
   max-height: 0; opacity: 0; margin-top: 0; pointer-events: none;
 }
 .ms-chip {
+  display: inline-block;
   font-size: 0.8125rem; padding: 7px 14px; border-radius: 999px;
   background: #FAFAF7; color: #14110D; border: 1px solid #E2DFD5;
   cursor: pointer; transition: all 160ms;
   font-family: 'Inter', 'PingFang SC', sans-serif;
+  text-decoration: none;
+  line-height: 1.4;
 }
-.ms-chip:hover { border-color: #14110D; transform: translateY(-1px); }
+.ms-chip:hover { border-color: #14110D; transform: translateY(-1px); text-decoration: none; }
+.ms-chip:visited { color: #14110D; }
 
 .ms-results {
   position: absolute; top: calc(100% + 8px); left: 0; right: 0;
@@ -376,7 +384,7 @@
     shell.innerHTML = [
       '<form class="ms-bar" autocomplete="off" role="search">',
       '  <input class="ms-input" type="text" placeholder="' + placeholder.replace(/"/g, "&quot;") + '" aria-label="搜索专业">',
-      '  <button class="ms-send" type="submit" aria-label="搜索"><span aria-hidden="true">→</span></button>',
+      '  <button class="ms-send" type="submit" aria-label="搜索专业">搜专业 <span class="ms-send-arrow" aria-hidden="true">→</span></button>',
       '</form>',
       '<div class="ms-chips" role="list"></div>',
       '<div class="ms-results" role="listbox"></div>',
@@ -389,12 +397,20 @@
     const chipBar = shell.querySelector(".ms-chips");
     const results = shell.querySelector(".ms-results");
 
-    // chips
+    // chips: 用 <a> 链接到 /search.html?cat=<keyword>, 让主搜索页处理 (语义 + 可分享 + 可爬)
     chips.forEach((c) => {
-      const b = document.createElement("button");
-      b.type = "button"; b.className = "ms-chip"; b.textContent = c.label;
-      b.addEventListener("click", () => { input.value = c.q; doSearch(); input.focus(); });
-      chipBar.appendChild(b);
+      const a = document.createElement("a");
+      a.href = "/search.html?cat=" + encodeURIComponent(c.q);
+      a.className = "ms-chip";
+      a.textContent = c.label;
+      a.setAttribute("role", "button");
+      a.addEventListener("click", (e) => {
+        // 允许 Cmd/Ctrl/middle-click 新窗口, 其他情况即时填入 input 并触发搜索
+        if (e.metaKey || e.ctrlKey || e.button === 1) return;
+        e.preventDefault();
+        input.value = c.q; doSearch(); input.focus();
+      });
+      chipBar.appendChild(a);
     });
 
     function _escapeHtml(s) {

@@ -160,7 +160,7 @@ def render_curriculum(curriculum):
     return f'''<section class="art-sec">
       <div class="art-head">
         <span class="art-num">四</span>
-        <h2 class="art-title">本科 4 年学的课</h2>
+        <h2 class="art-title">主要课程</h2>
       </div>
       <div class="art-body">
         <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
@@ -216,7 +216,7 @@ def render_overview_v2(ov2):
     return f'''<section class="art-sec">
       <div class="art-head">
         <span class="art-num">一</span>
-        <h2 class="art-title">这个专业学什么</h2>
+        <h2 class="art-title">速览</h2>
       </div>
       <div class="art-body">
         {f'<p class="lede">{esc(lede)}</p>' if lede else ''}
@@ -377,7 +377,7 @@ def render_salary(salary):
     return f'''<section class="art-sec">
       <div class="art-head">
         <span class="art-num">七</span>
-        <h2 class="art-title">毕业后真的能拿多少</h2>
+        <h2 class="art-title">薪资分布</h2>
       </div>
       <div class="art-body">
         <p>P25/P50/P75 = 25/50/75 百分位. ≈ 表示估算值. ↗/↘ = 3 年变化.</p>
