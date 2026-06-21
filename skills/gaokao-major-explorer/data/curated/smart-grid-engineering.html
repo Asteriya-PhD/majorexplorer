@@ -18,6 +18,16 @@
 <style>
 @import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -860,7 +861,7 @@ footer .data-source { color: #78716C; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1040,14 +1041,14 @@ footer .data-source { color: #78716C; }
 
 <header class="hero">
   <div style="border-bottom: 2px solid #1B3A5C; display: grid; grid-template-columns: auto 1fr auto; align-items: center; padding: 12px 24px; font-family: 'Roboto Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: #1B3A5C; position: relative; z-index: 2;">
-    <span style="border-right: 1px solid rgba(27,58,92,0.4); padding-right: 16px;">DWG-SMART-GRID-INFORMATION-ENGINEERING-2026-003</span>
+    <span style="border-right: 1px solid rgba(27,58,92,0.4); padding-right: 16px;">DWG-SMART-GRID-ENGINEERING-2026-003</span>
     <span style="text-align: center; font-weight: 600; padding: 0 16px;">智能电网信息工程 · 课程总览</span>
     <span style="border-left: 1px solid rgba(27,58,92,0.4); padding-left: 16px;"><span style="color: #FF6B35;">SCALE 1:1 · </span>A4 LANDSCAPE</span>
   </div>
   <div class="container" style="padding-top: 64px;">
     <div class="hero-decor" style="color: #FF6B35;">▶ 智能电网信息工程 · 制造业基础</div>
     <h1 class="display" style="font-family: 'Inter', sans-serif; color: #1A1F2E; font-weight: 800; letter-spacing: -0.03em;">智能电网信息工程</h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=08#majors">工学</a><span class="bc-sep">›</span><a href="/?discipline=08&sub=工学类#majors">工学类</a><span class="bc-sep">›</span><span class="bc-current">智能电网信息工程</span></div>
+<div class="discipline-breadcrumb"><a href="/?discipline=08#majors">工学</a><span class="bc-sep">›</span><a href="/?discipline=08&sub=电气类#majors">电气类</a><span class="bc-sep">›</span><span class="bc-current">智能电网信息工程</span></div>
     <p class="hero-tagline" style="color: #5C6373; max-width: 720px;">电气类下的「电力系统 + 信息通信 + 电力电子」三栖特设专业, 主打新能源并网/储能调度/特高压输电, 双碳战略下国网/南网扩招但编制收紧, 「强电+弱电+通信」复合是该专业最大优势.</p>
     <div class="hero-tags">
       <span class="tag primary">智能电网</span><span class="tag primary">电力系统</span><span class="tag primary">电力电子</span>
@@ -1120,61 +1121,61 @@ footer .data-source { color: #78716C; }
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">华</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">★★★★★ (A)</span>
           <div class="bento-name">华北电力大学</div>
           <div class="bento-tag">北京/保定 · 211 双一流, 电气学科评估 A, 国家电网/南方电网校招第一主力校, 新能源并网/储能调度全国顶尖</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">清</div>
-          <span class="bento-rank">A+</span>
+          <span class="bento-rank">★★★★★ (A+)</span>
           <div class="bento-name">清华大学</div>
           <div class="bento-tag">北京 · 985, 电机工程与应用电子技术系, 电气学科评估 A+, 电力系统/电力电子/能源互联网, 国网/南网总部首选</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">西</div>
-          <span class="bento-rank">A+</span>
+          <span class="bento-rank">★★★★★ (A+)</span>
           <div class="bento-name">西安交通大学</div>
           <div class="bento-tag">西安 · 985, 电气工程学院, 电气学科评估 A+, 高电压/特高压输电全国顶尖, 西迁电气强校</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">华</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">★★★★★ (A)</span>
           <div class="bento-name">华中科技大学</div>
           <div class="bento-tag">武汉 · 985, 电气与电子工程学院, 电气学科评估 A, 电力系统/脉冲功率/电机强校, 南方电网校招重点</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">浙</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">★★★★★ (A)</span>
           <div class="bento-name">浙江大学</div>
           <div class="bento-tag">杭州 · 985, 电气工程学院, 电气学科评估 A, 电力电子/新能源/电力系统综合强</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">上</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">★★★★★ (A)</span>
           <div class="bento-name">上海交通大学</div>
           <div class="bento-tag">上海 · 985, 电气工程系, 智能电网/电力大数据/能源互联网, 国际合作强</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">哈</div>
-          <span class="bento-rank">A-</span>
+          <span class="bento-rank">★★★★☆ (A-)</span>
           <div class="bento-name">哈尔滨工业大学</div>
           <div class="bento-tag">哈尔滨 · 985, 电气工程及自动化学院, 电力系统/电力电子, 寒地电网特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">重</div>
-          <span class="bento-rank">A-</span>
+          <span class="bento-rank">★★★★☆ (A-)</span>
           <div class="bento-name">重庆大学</div>
           <div class="bento-tag">重庆 · 985, 电气工程学院, 高电压/输电工程, 西部电网校招主力</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">东</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">东南大学</div>
           <div class="bento-tag">南京 · 985, 电气工程学院, 电力系统/电力电子, 江苏电网校招主力</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">武</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">武汉大学</div>
           <div class="bento-tag">武汉 · 985, 电气与自动化学院, 电力系统/高电压, 湖北电网校招重点</div>
         </div>
@@ -1195,7 +1196,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">国家电网 (国网各级分公司)</div>
-          <div class="company-meta">★★★★★ · 校招 国网一批 12-25 万/年 (一线城市 18-30 万), 资深 35-80 万; 985/211 电气强校是主力生源, 一批考试通过率 5-10%</div>
+          <div class="company-meta">★★★★★ · 校招 国网一批 12-25 万/年 (一线城市 18-30 万), 资深 35-80 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1211,7 +1212,7 @@ footer .data-source { color: #78716C; }
             <span class="company-tier tier-S">S</span>
           </div>
           <div class="company-name">南方电网 (南网五省区)</div>
-          <div class="company-meta">★★★★ · 校招 南网 12-25 万/年 (广东 18-30 万), 资深 35-80 万; 华科/华电/清华校招主力, 广东/广西/云南/贵州/海南</div>
+          <div class="company-meta">★★★★ · 校招 南网 12-25 万/年 (广东 18-30 万), 资深 35-80 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1226,8 +1227,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中国华能/华电/国电投/大唐/国家能源投资 (五大发电集团)</div>
-          <div class="company-meta">★★★★ · 校招 总部 18-35 万/年, 二级公司 12-22 万; 985 电气硕是门槛, 总部岗位竞争激烈</div>
+          <div class="company-name">中国华能/华电/国电投/大唐/国家能源投资</div>
+          <div class="company-meta">★★★★ · 校招 总部 18-35 万/年, 二级公司 12-22 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1242,8 +1243,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">许</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">许继电气/南瑞继保/国电南瑞/四方股份 (电力设备龙头)</div>
-          <div class="company-meta">★★★★ · 校招 电力设备研发 15-30 万/年, 资深 35-70 万; 许昌/南京/北京/上海, 二次设备 (保护/自动化) 龙头</div>
+          <div class="company-name">许继电气/南瑞继保/国电南瑞/四方股份</div>
+          <div class="company-meta">★★★★ · 校招 电力设备研发 15-30 万/年, 资深 35-70 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1258,8 +1259,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">阳</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">阳光电源/华为数字能源/宁德储能/海博思创 (储能/光伏逆变器)</div>
-          <div class="company-meta">★★★ · 校招 储能系统/电力电子 20-40 万, 资深 50-100 万; 招电力电子/EE 背景偏多, 智能电网专业主要是并网调度岗</div>
+          <div class="company-name">阳光电源/华为数字能源/宁德储能/海博思创</div>
+          <div class="company-meta">★★★ · 校招 储能系统/电力电子 20-40 万, 资深 50-100 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:80.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1274,8 +1275,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中国电力建设/中国能源建设 (电力建设央企)</div>
-          <div class="company-meta">★★★★ · 校招 电力建设 10-20 万, 资深 25-50 万; 项目制, 海外/西部项目多, 工作地点偏远</div>
+          <div class="company-name">中国电力建设/中国能源建设</div>
+          <div class="company-meta">★★★★ · 校招 电力建设 10-20 万, 资深 25-50 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:75.0%"></div>
@@ -1290,8 +1291,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">电</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">电力设计院 (华北/华东/中南/西北/西南电力设计院)</div>
-          <div class="company-meta">★★★ · 校招 电力设计 12-25 万, 资深 35-70 万; 985 电气硕是门槛, 工作强度大, 出差多</div>
+          <div class="company-name">电力设计院 (华北/华东/中南/西北/西南)</div>
+          <div class="company-meta">★★★ · 校招 电力设计 12-25 万, 资深 35-70 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:75.0%"></div>
             <div class="sparkline-bar" style="height:75.0%"></div>
@@ -1306,8 +1307,8 @@ footer .data-source { color: #78716C; }
             <div class="company-monogram">特</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">特变电工/远东智慧能源/亨通光电 (输变电/线缆)</div>
-          <div class="company-meta">★★★ · 校招 输变电 10-20 万, 资深 25-45 万; 新疆/江苏/上海, 西部电气制造基地</div>
+          <div class="company-name">特变电工/远东智慧能源/亨通光电</div>
+          <div class="company-meta">★★★ · 校招 输变电 10-20 万, 资深 25-45 万</div>
           <div class="sparkline">
             <div class="sparkline-bar" style="height:100.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
@@ -1582,18 +1583,18 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card eng" href="/mining-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">采矿工程</span><span class="wl-hook">采矿工程</span></a>
-      <a class="wl-card eng" href="/chemical-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">化学工程与工艺</span><span class="wl-hook">流程工业, 万华中石化</span></a>
-      <a class="wl-card eng" href="/new-energy-science-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">新能源科学与工程</span><span class="wl-hook">新能源科学与工程</span></a>
-      <a class="wl-card eng" href="/electronic-science-technology.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">电子科学与技术</span><span class="wl-hook">电子科学与技术</span></a>
+      <a class="wl-card eng" href="/soft-matter-science-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">软物质科学与工程</span><span class="wl-hook">软物质科学与工程</span></a>
+      <a class="wl-card eng" href="/agricultural-electrification.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">农业电气化</span><span class="wl-hook">农业电气化</span></a>
+      <a class="wl-card eng" href="/smart-energy-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智慧能源工程</span><span class="wl-hook">智慧能源工程</span></a>
+      <a class="wl-card eng" href="/intelligent-interaction-design.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智能交互设计</span><span class="wl-hook">智能交互设计</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
-      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
-      <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
+      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card cs" href="/artificial-intelligence.html" data-tag="跨界"><span class="wl-badge">计算机</span><span class="wl-title">人工智能</span><span class="wl-hook">算法堆顶, 博士起步</span></a>
       <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
+      <a class="wl-card education" href="/psychology.html" data-tag="跨界"><span class="wl-badge">教育</span><span class="wl-title">心理学</span><span class="wl-hook">用户研究 + 认知神经科学</span></a>
       <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
-      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
     </div>
   </div>
 </section>
@@ -1666,7 +1667,7 @@ footer .data-source { color: #78716C; }
 (function () {
   "use strict";
   if (!window.WishlistStore || !window.UIHelpers) return;
-  var META = { slug: 'smart-grid-information-engineering', title: '智能电网信息工程', style: 'eng', category: '工学 · 电气类 (特设方向)' };
+  var META = { slug: 'smart-grid-engineering', title: '智能电网信息工程', style: 'eng', category: '工学 · 电气类 (特设方向)' };
 
   // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
   if (window.MajorSearch) {

@@ -372,10 +372,13 @@
     font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
     color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
   }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
   .xk-bar {
-    position: relative; height: 4px; background: var(--bg-soft);
-    border-radius: 2px; overflow: hidden;
-    margin-right: 56px;
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
   }
   .xk-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -383,9 +386,9 @@
     background: var(--gradient-theme-h);
   }
   .xk-pct {
-    position: absolute; right: 0; top: -2px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
     color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
   }
   .xk-reason {
     font-family: var(--font-body); font-size: 0.8125rem;
@@ -755,6 +758,7 @@
     letter-spacing: 0.02em;
   }
 
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
   .uni-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; padding: 12px 0;
@@ -769,15 +773,40 @@
     font-family: var(--font-heading); font-size: 0.9375rem;
     font-weight: 600; color: var(--fg);
   }
-  .uni-name .badge {
-    font-family: var(--font-num); font-size: 0.625rem;
-    background: var(--theme); color: #FBF8F1;
-    padding: 1px 5px; border-radius: 2px;
-    margin-left: 6px; vertical-align: 1px;
-  }
-  .uni-score {
+  .uni-eval {
     font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
-    color: var(--theme); text-align: right;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
+  }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
+  /* Day 17 v3: 院校分布无评估数据说明卡片 (针对特设专业/新专业) */
+  .uni-eval-note {
+    margin: 12px 0 16px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(184,50,58,0.04) 0%, rgba(184,50,58,0.02) 100%);
+    border-left: 3px solid var(--theme);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--fg-soft);
+  }
+  .uni-eval-note strong {
+    display: block;
+    color: var(--theme-deep);
+    font-size: 0.875rem;
+    margin-bottom: 4px;
   }
 
   .footer-cta {
@@ -832,7 +861,7 @@
 
 <header class="topbar is-detail">
   <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
-  <div class="top-crumb">艺术史论 · 13文学与新闻传播类</div>
+  <div class="top-crumb">艺术史论 · 13艺术学理论类</div>
   <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
 </header>
 
@@ -845,15 +874,15 @@
     <span id="heart-ico" class="heart-off">♡</span>
     <span class="heart-label" id="heart-label">收藏</span>
   </button>
-  <div class="hero-crumb"><span class="rule"></span>艺术学 · 艺术学理论类 · 13文学与新闻传播类</div>
+  <div class="hero-crumb"><span class="rule"></span>艺术学 · 艺术学理论类 · 13艺术学理论类</div>
   <h1 class="hero-title">艺术史论</h1>
   <div class="hero-sub">艺术学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
-  <p class="hero-tagline">艺术史论不是'学画画', 是'看懂作品为什么是这样, 以及这样意味着什么'.</p>
+  <p class="hero-tagline">艺术史不是博物馆里安静的展柜, 是用眼睛触摸几千年人类情感的专业.</p>
 </section>
 
 <div class="stats-strip">
   <div class="stat-cell"><span class="n">8<span class="unit">万</span></span><span class="l">入行中位</span></div>
-  <div class="stat-cell grad-tier" data-tier="高 43%"><span class="n">高 43%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell grad-tier" data-tier="中 20%"><span class="n">中 20%</span><span class="l">深造需求</span></div>
   <div class="stat-cell"><span class="n">—<span class="unit">/5</span></span><span class="l">满意度</span></div>
 </div>
 
@@ -861,11 +890,11 @@
   <span class="tag">艺术史</span>
 <span class="tag">艺术理论</span>
 <span class="tag">艺术批评</span>
-<span class="tag">策展</span>
-<span class="tag">艺术品市场</span>
+<span class="tag">策展研究</span>
 <span class="tag">美术史</span>
-<span class="tag">文化遗产</span>
-<span class="tag">博物馆</span>
+<span class="tag">美学</span>
+<span class="tag">艺术品市场</span>
+<span class="tag">美术馆</span>
 </div>
 
 <article class="article" id="article">
@@ -888,7 +917,7 @@
       <div class="art-body">
         <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
       </div>
-      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">艺术史论 = 学画画/学设计</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术史是'理论 + 史论 + 批评'的学术专业, 美术学/绘画/设计/书法学是'实践'专业, 课程侧重差异显著; 真正'艺术史对口'的是高校艺术学院/美术学院 + 博物馆/美术馆/拍卖行/艺术品市场/媒体艺术评论, 美术学/设计学毕业生多去设计公司/教育/实践创作, 两者是两码事.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">艺术史论 = 艺术市场 (高薪)</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术市场 (拍卖/画廊/艺术金融/艺术品投资) 是艺术史的'市场化路径'之一, 但招录极少且要求头部 985 艺术史硕 + 行业人脉 + 商业运营能力, 头部拍卖行 (中国嘉德/北京保利/华艺国际/香港苏富比) 年招 &lt; 20 人, 真正能进的是少数; 大部分艺术史毕业生实际走学术/美术馆路径.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">策展是艺术史论的高薪主赛道</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">策展 (博物馆/美术馆/画廊/艺术机构) 2020+ 增长但 2023+ 内卷加剧, 真正'核心策展'的'独立策展人 + 头部美术馆策展人'年收入可达 50-200 万, 但招录极少, 985 艺术史硕 + 5+ 年策展经验 + 行业人脉是隐形门槛; 大部分策展岗起薪 8-15 万, 资深 25-50 万.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">艺术史论比美术学'更冷门更有红利'</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术史'冷门'是双刃剑, 头部稀缺但路径窄; 头部 985 艺术史硕博 (中央美术学院艺术史论/中国美术学院艺术人文学院/清华大学美术学院艺术史论系/北京大学艺术学院/南京艺术学院艺术研究院) 实际接收大量本校直升 + 推免生, 留给外校统考名额极少, 普通本科艺术史毕业生多去读研/转行.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">艺术史论有'破译大师'的高光时刻</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术史'重新发现大师/重新定义作品'是头部学者的科研突破 (如贡布里希/潘诺夫斯基/巫鸿/方闻/高居翰/柯律格等), 普通艺术史毕业生 99% 是在做'个案研究 + 流派梳理 + 艺术批评'的案头工作, 真正能'破译大师'的不到 1%; 学术成就感是 5-10 年才能看到的.</div></div></div></div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">艺术史论 = 美术学 + 理论</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术史论是艺术学门类下的理论型专业 (130101), 美术学 (130401) 是实践型, 课程 70% 是阅读+写作+展览策划, 30% 是技法体验; 实际毕业生 60% 走学术/策展/媒体, 25% 进拍卖/画廊/艺术品市场, 15% 跨行, 不是「艺术家」.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">美术馆招聘相对公平透明</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">故宫/国博/各省头部美术馆核心岗 90% 要求「985 硕博 + 双一流 + 田野/策展实习 + 顶刊论文」, 普通本科简历直接被筛掉 — 985 艺术史硕博 + 海外访学 + 顶刊是头部馆硬通货, 普通校毕业 5-10 年也未必能进.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">艺术品市场是高薪主赛道</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">拍卖行 (嘉德/保利/匡时/华艺) 招「艺术市场/图录编纂/拍卖专员」岗位较少, 真正高薪的是「市场研究 + 藏家关系 + 当代艺术运营」, 与传统艺术史鉴定关系不大; 想做拍卖合伙人必须 985 硕 + 5+ 年行业经验 + 圈内人脉.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">艺术评论能'叫好又叫座'</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">艺术评论 90% 是「叫好不叫座」 — 头部艺术评论员 (《美术研究》《美术观察》《艺术新闻》等) 月稿费 0.5-2 万, 写作周期长 + 稿费低, 多数评论员需要大学教职 + 写作双栖; 真正能靠纯艺术评论养家的人 5% 不到.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">本科毕业能直接做策展人</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">策展助理是本科起点, 真正独立策展需要「5-10 年经验 + 5+ 次独立策展 + 学术发表 + 圈内人脉」; 头部美术馆 (UCCA/龙美术馆/今日美术馆) 策展人 90% 是 985 艺术史硕博 + 海外经历 + 多次独立策展.</div></div></div></div>
     </section>
   <section class="art-sec">
       <div class="art-head">
@@ -901,15 +930,15 @@
       <div class="course-list">
         <div class="course-row">
           <div class="course-yr">大一 公共</div>
-          <div class="course-names">中外美术史 · 艺术学概论 · 美学概论 · 设计史 · <strong style="color:var(--accent);">★</strong> 大学英语 / 学术英语读写 · 思想政治理论课系列 · <strong style="color:var(--accent);">★</strong> 高等数学 (或文科数学, 极少数院校要求) · <strong style="color:var(--accent);">★</strong> 大学语文 (或文学基础)</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 大学英语 / 学术英语读写 · <strong style="color:var(--accent);">★</strong> 大学语文 (或文学基础) · 思想政治理论课系列 · 中国近现代史纲要 · <strong style="color:var(--accent);">★</strong> 计算机基础 (文献检索与图像处理) · 体育</div>
           <div class="course-tag">公共基础</div>
         </div><div class="course-row">
           <div class="course-yr">大三 核心</div>
-          <div class="course-names">中国美术史 (断代史) · 西方美术史 · 艺术理论 (模仿论/表现论/形式论/艺术体制论) · 艺术批评方法 · 艺术史方法论 · 现当代艺术史 · 艺术史专题研究 · 中国画论/西方画论 · 艺术与文化研究 · 艺术机构与艺术体制 · <strong style="color:var(--accent);">★</strong> 艺术写作与评论 · 视觉文化研究</div>
+          <div class="course-names">中外美术史 (通论) · <strong style="color:var(--accent);">★</strong> 艺术学概论 / 艺术理论导论 · 美学概论 (中国美学/西方美学) · 中国美术史 (断代史: 先秦/秦汉/魏晋南北朝/隋唐/宋元/明清) · 西方美术史 (古希腊/中世纪/文艺复兴/巴洛克/印象派/现代主义) · 艺术理论 (模仿论/表现论/形式论/艺术体制论/艺术终结论) · 艺术批评方法 (形式分析/图像学/社会艺术史/女性主义艺术史) · 艺术史方法论 (文献/考古/图像志/风格分析) · 现当代艺术史 (印象派之后到当代) · 设计史 / 工艺美术史</div>
           <div class="course-tag">专业核心</div>
         </div><div class="course-row">
           <div class="course-yr">大三 方向</div>
-          <div class="course-names">中央美术学院艺术管理与教育学院 (艺术史论方向): 中国美术史 + 西方美术史 + 艺术管理与策展 (央美 A+, 艺术史 A+, 985/双一流特色) · 中国美术学院艺术人文学院: 中国美术史 + 艺术史方法论 + 南方美术史 (国美 A+, 艺术史 A+, 南方美术研究重镇) · 清华大学美术学院艺术史论系: 艺术史 + 艺术理论 + 艺术与科学 (清华美院 A, 985 顶尖, 艺术与科学交叉) · 北京大学艺术学院: 艺术史 + 美学 + 文化产业 (985 顶尖, 艺术学理论 + 文化产业双轮) · 南京艺术学院艺术研究院: 中国美术史 + 艺术史方法论 + 艺术批评 (南艺 A-, 艺术史 A-, 中国美术研究传统)</div>
+          <div class="course-names">清华大学美术学院艺术史论系: 艺术史 + 艺术理论 + 艺术与科学 (清华美院 A, 985 顶尖, 艺术与科学交叉) · 北京大学艺术学院: 艺术史 + 美学 + 文化产业 (985 顶尖, 艺术学理论 + 文化产业双轮) · 中央美术学院人文学院: 中国美术史 + 佛教美术 + 书画鉴定 (央美 A+, 艺术史最强, 田野与博物馆资源全国顶尖) · 南京艺术学院艺术学研究所: 艺术史 + 艺术管理 + 非遗研究 (南艺 B+, 江南艺术与传统艺术见长) · 中国美术学院艺术人文学院: 美术史论 + 艺术考古 + 书画鉴定 (国美 A, 江南书画与文人艺术传统)</div>
           <div class="course-tag">方向选修</div>
         </div>
       </div>
@@ -921,38 +950,47 @@
       </div>
       <div class="art-body">
         <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+        
       </div>
       <div class="uni-row">
           <div class="uni-rank">01</div>
-          <div class="uni-name">中央美术学院</div>
+          <div class="uni-name">清华大学</div>
+          <div class="uni-eval uni-eval-a-plus" title="教育部第四/五轮学科评估">A+</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">02</div>
-          <div class="uni-name">中国美术学院</div>
+          <div class="uni-name">北京大学</div>
+          <div class="uni-eval uni-eval-a-plus" title="教育部第四/五轮学科评估">A+</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">03</div>
-          <div class="uni-name">清华大学</div>
+          <div class="uni-name">中央美术学院</div>
+          <div class="uni-eval uni-eval-a-plus" title="教育部第四/五轮学科评估">A+</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">04</div>
-          <div class="uni-name">北京大学</div>
+          <div class="uni-name">中国美术学院</div>
+          <div class="uni-eval uni-eval-a" title="教育部第四/五轮学科评估">A</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">05</div>
           <div class="uni-name">南京艺术学院</div>
+          <div class="uni-eval uni-eval-a-minus" title="教育部第四/五轮学科评估">A-</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">06</div>
           <div class="uni-name">东南大学</div>
+          <div class="uni-eval uni-eval-b-plus" title="教育部第四/五轮学科评估">B+</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">07</div>
           <div class="uni-name">上海大学</div>
+          <div class="uni-eval uni-eval-b-plus" title="教育部第四/五轮学科评估">B+</div>
           <div class="uni-score">—</div>
         </div><div class="uni-row">
           <div class="uni-rank">08</div>
-          <div class="uni-name">四川美术学院</div>
+          <div class="uni-name">中央民族大学</div>
+          <div class="uni-eval uni-eval-b" title="教育部第四/五轮学科评估">B</div>
           <div class="uni-score">—</div>
         </div>
     </section>
@@ -965,7 +1003,7 @@
         <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
       </div>
       <div class="co-list">
-        <div class="co-row"><div class="co-info"><div class="co-name">各高校艺术学院/美术学院/文学院 (教师/科研)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★<span class="dot">·</span>博士起步, 助教 10-18 万, 副教授 20-40 万, 教授 30-60 万; 985/双一流博是核心门槛, 学术压力持续</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">故宫/国博/各省博物馆 (艺术研究/陈列)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>事业编 12-25 万/年, 艺术史方向年招 &lt; 30 人, 985 硕 + 田野/策展经验是硬门槛</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国美术馆/上海美术馆/各省级美术馆/今日美术馆/UCCA<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>事业编/合同制 12-30 万/年, 策展人/研究员/策展助理, 985 硕 + 策展经验是核心</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">拍卖行/艺术品市场 (中国嘉德/北京保利/华艺国际/香港苏富比)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★<span class="dot">·</span>图录编纂/研究员/市场专员 15-40 万/年, 资深 50-200 万; 985 艺术史硕 + 行业人脉是隐形门槛, 年招 &lt; 20 人</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">媒体艺术评论 (人民日报/澎湃/财新艺术新闻/Hi艺术/雅昌艺术网)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>艺术评论员/记者 12-30 万/年, 资深 30-60 万; 文字功底 + 行业人脉是核心, 招录量小</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">画廊/艺术机构 (佩斯/常青/香格纳/空白空间/各头部画廊)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>画廊研究员/销售/运营 10-25 万/年, 资深 30-80 万; 985 硕 + 行业人脉是隐形门槛</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">文旅集团/艺术 IP 运营 (故宫文创/敦煌文创/各头部文创)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>艺术 IP 策划/运营 12-30 万/年, 资深 30-80 万; 985 硕 + 文创运营经验是核心</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">出版社/艺术出版社 (人民美术/上海书画/三联书店/广西美术)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>艺术编辑/出版 8-15 万/年, 资深 20-35 万; 985 硕 + 艺术史背景是优势</div></div><div class="co-spark-wrap"></div></div>
+        <div class="co-row"><div class="co-info"><div class="co-name">各高校艺术学院/美术学院/文学院 (教师/科研)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★★<span class="dot">·</span>校招 博士起步, 助教 10-18 万, 副教授 20-40 万, 教授 30-60 万; 985/双一流博是核心门槛, 学术压力持续</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">故宫/国博/各省博物馆 (艺术研究/陈列)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>校招 事业编 12-25 万/年, 艺术史方向年招 &lt; 30 人, 985 硕 + 田野/策展经验是硬门槛</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">UCCA 尤伦斯/龙美术馆/今日美术馆 (策展/研究)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>校招 15-30 万/年, 策展助理起步, 独立策展人 30-80 万, 985 艺术史硕 + 多次独立策展经验是核心门槛</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国嘉德/北京保利/匡时/华艺国际 (拍卖行)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>校招 市场研究/图录编纂 25-80 万/年, 鉴宝岗极少</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">雅昌艺术网/《艺术新闻》中文版/《美术研究》(媒体艺术评论)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★<span class="dot">·</span>校招 编辑/记者 10-18 万, 资深主编/评论员 25-50 万, 985 硕 + 圈内人脉 + 写作能力是核心</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">佳士得/苏富比 (国际拍卖行中国区)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★<span class="dot">·</span>校招 30-60 万/年, 英文 + 艺术史双能力是隐形门槛, 招录极少</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">人民美术出版社/上海书画出版社 (出版编辑)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>校招 编辑 10-15 万/年, 资深编辑/主编 20-35 万, 事业编/社聘稳定</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">各大文旅集团/艺术区/文化产业园 (策划/运营)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★<span class="dot">·</span>校招 12-22 万/年, 项目策划 + 展览运营, 商业思维 + 艺术鉴赏双栖</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -985,29 +1023,29 @@
         </div>
         <div class="sal-tr">
           <div class="sal-stage">应届生 (高校/研究所/博物馆/美术馆事业编)<span class="sal-yoy up">↗ 3%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:16%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:10%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">16.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:6%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">应届生 (媒体艺术评论/出版社)<span class="sal-yoy up">↗ 4%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:16%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:10%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:7%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">应届生 (拍卖行/画廊/艺术品市场)<span class="sal-yoy up">↗ 6%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:24%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:17%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">30.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:26%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:19%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">3年经验 (高校讲师/美术馆骨干/拍卖行图录负责人)<span class="sal-yoy up">↗ 7%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">14.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:28%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:21%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:16%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:38%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:31%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">35.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:23%;"></span></span></div>
         </div><div class="sal-tr">
           <div class="sal-stage">5年经验 (高校副教授/策展人/拍卖行资深/画廊合伙人)<span class="sal-yoy up">↗ 10%</span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:50%;"></span></span></div>
-          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:42%;"></span></span></div>
-          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">100.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:40%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:62%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:57%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">65.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:43%;"></span></span></div>
         </div>
       </div>
     </section>
@@ -1020,7 +1058,7 @@
         <p>8 大就业方向及占比.</p>
       </div>
       <div class="emp-list">
-        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">高校艺术学院/美术学院/文学院 (教师/科研)</div><div class="emp-ratio">30%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:30.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">博物馆/美术馆 (艺术研究/陈列/策展)</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">拍卖行/艺术品市场 (图录/市场/拍卖)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">画廊/艺术机构 (研究/销售/运营)</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">媒体艺术评论 (艺术新闻/艺术评论)</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">文旅集团/艺术 IP 运营 (文创 IP)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">出版社/艺术出版社</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">读研/读博 (100% 主流)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div>
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">高校艺术史/美术学院 (教师/科研)</div><div class="emp-ratio">28%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:28.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">博物馆/美术馆 (艺术研究/陈列/策展)</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">拍卖行/画廊/艺术品市场 (市场研究/图录)</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">媒体艺术评论/出版编辑</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">读研/读博 (主流就业门槛)</div><div class="emp-ratio">25%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:25.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">文旅集团/艺术区/文化产业园</div><div class="emp-ratio">5%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:5.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">海外就业/国际机构</div><div class="emp-ratio">2%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:2.0%;"></div></div><div class="emp-desc"></div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1032,7 +1070,7 @@
         <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
       </div>
       <div class="ds-list">
-        <div class="ds-row ds-study"><div class="ds-name">国内博士 (985/双一流 艺术史论/艺术学理论/美术学, 高校教职)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">38%</div></div><div class="ds-row"><div class="ds-name">国内硕士 (985/双一流 艺术史论/艺术学理论/美术学)</div><div class="ds-bar"><div class="ds-fill" style="--w:74%;"></div></div><div class="ds-pct">28%</div></div><div class="ds-row"><div class="ds-name">直接就业 (高校/研究所/博物馆/美术馆事业编)</div><div class="ds-bar"><div class="ds-fill" style="--w:21%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">直接就业 (拍卖行/画廊/艺术品市场)</div><div class="ds-bar"><div class="ds-fill" style="--w:21%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">直接就业 (媒体艺术评论/出版社)</div><div class="ds-bar"><div class="ds-fill" style="--w:16%;"></div></div><div class="ds-pct">6%</div></div><div class="ds-row ds-study"><div class="ds-name">出国深造 (东亚艺术史/艺术史, 哈佛/普林斯顿/牛津/剑桥/UC Berkeley)</div><div class="ds-bar"><div class="ds-fill" style="--w:13%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">跨行 (教培/文创/媒体/出版)</div><div class="ds-bar"><div class="ds-fill" style="--w:11%;"></div></div><div class="ds-pct">4%</div></div>
+        <div class="ds-row"><div class="ds-name">国内硕士 (985 艺术学院/美术学院, 主流就业门槛)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">28%</div></div><div class="ds-row"><div class="ds-name">直接就业 (拍卖行/画廊/艺术品市场)</div><div class="ds-bar"><div class="ds-fill" style="--w:64%;"></div></div><div class="ds-pct">18%</div></div><div class="ds-row"><div class="ds-name">直接就业 (博物馆/美术馆事业编)</div><div class="ds-bar"><div class="ds-fill" style="--w:54%;"></div></div><div class="ds-pct">15%</div></div><div class="ds-row ds-study"><div class="ds-name">出国深造 (哈佛/普林斯顿/Columbia/Courtauld/UCL, 艺术史硕士/博士)</div><div class="ds-bar"><div class="ds-fill" style="--w:43%;"></div></div><div class="ds-pct">12%</div></div><div class="ds-row ds-study"><div class="ds-name">国内博士 (艺术史/美术学, 高校教职)</div><div class="ds-bar"><div class="ds-fill" style="--w:29%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">直接就业 (媒体艺术评论/出版)</div><div class="ds-bar"><div class="ds-fill" style="--w:29%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">跨行 (教培/出版/文创/媒体)</div><div class="ds-bar"><div class="ds-fill" style="--w:21%;"></div></div><div class="ds-pct">6%</div></div>
       </div>
     </section>
   <section class="art-sec">
@@ -1056,7 +1094,7 @@
         <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
       </div>
       <div class="xk-list">
-        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">首选历史 + 再选不限 (覆盖最广)</div><div class="xk-bar"><div class="xk-fill" style="--w:75%;"></div><span class="xk-pct">75%</span></div></div></div><div class="xk-reason">美术学 / 音乐学 / 戏剧影视文学 等艺术类, 历史组合是绝对主流, 再选一般不限.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">首选物理 + 再选不限 (部分校)</div><div class="xk-bar"><div class="xk-fill" style="--w:15%;"></div><span class="xk-pct">15%</span></div></div></div><div class="xk-reason">部分校 (如 数字媒体艺术 / 艺术与科技 / 艺术史论) 接受物理组合.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">不限选科 (艺术类校考特色)</div><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason">艺术类校考 / 中外合作专业, 多不限选科, 看专业校考成绩.</div></div>
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">历史 + 地理 + 政治 (经典文博组合, 史地政全覆盖)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:50%;"></div></div><span class="xk-pct">50%</span></div></div></div><div class="xk-reason">艺术史论多数院校不限选科, 史地政是文博组合最经典, 90% 主流院校可报.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 地理 (艺术史与考古方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:22%;"></div></div><span class="xk-pct">22%</span></div></div></div><div class="xk-reason">美术史论与考古/历史方向偏重, 史+地组合可报绝大多数.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">历史 + 政治 (艺术管理与文化政策方向)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">艺术管理与文化政策方向涉及文化政策法规, 史+政组合可报.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">不限选科 (多数艺术类院校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:16%;"></div></div><span class="xk-pct">16%</span></div></div></div><div class="xk-reason">艺术史论作为理论型专业, 多数艺术类院校不限制选科, 适合无明确偏科考生.</div></div>
       </div>
     </section>
 </article>

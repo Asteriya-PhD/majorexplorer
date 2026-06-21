@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; echo '⚠️  gaokao-team-b session started'; echo '📄 写/改 major JSON 前必读: docs/PIPELINE_major_quality.md'; echo '📌 4 anti-pollution rules: lede/who_fits_no/deep_study/curriculum'; echo '🎯 P0 优秀案例: computational-linguistics / electronic-science-technology / health-law / cultural-relics-museology'; echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "grep -lE 'major|JSON|专业|批量|hand.?code|精品' <<< \"$CLAUDE_USER_PROMPT\" > /dev/null 2>&1 && echo '💡 提示: 写/改 major JSON 前必读 docs/PIPELINE_major_quality.md' || true"
+          }
+        ]
+      }
+    ]
+  }
+}

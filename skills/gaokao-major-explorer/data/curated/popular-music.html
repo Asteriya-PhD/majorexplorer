@@ -14,10 +14,20 @@
 <link rel="preload" href="/js/major-search.js" as="script">
 
 <title>流行音乐专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="艺术学音乐与舞蹈学类下的「流行演唱+流行演奏+商业音乐」特设专业, 4 年制, 与音乐表演/作曲/音乐学 形成「流行-古典-理论」三分, 在新式音乐/短视频/独立厂牌/音乐综艺风口下需求增长, 但「艺">
+<meta name="description" content="流行音乐 (130209T) 是 4 年制艺术学特设专业, 与音乐表演 (130201, 偏古典) / 作曲 (130203) / 音乐学 (130202) 平行, 主流方向是「流行演唱 + 流行演奏">
 <style>
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -28,13 +38,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -43,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -94,13 +104,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -112,12 +120,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -169,15 +171,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -622,7 +623,7 @@ footer .data-source { color: #999; }
 .direction-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
 
 /* === 深造路径 === */
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; text-align: center; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .path-card:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
@@ -651,7 +652,7 @@ footer .data-source { color: #999; }
 
 /* === 课程 === */
 .curriculum-lede { font-family: 'EB Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .curriculum-block { padding: 32px 28px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
 .curriculum-block:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; color: #1A1A1A; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #D6D2C5; font-weight: 700; }
@@ -826,7 +827,7 @@ footer .data-source { color: #999; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1037,8 +1038,8 @@ footer .data-source { color: #999; }
           <span class="title-cn">流行音乐</span>
           <span class="title-en">HISTORY · THEORY · CURATORSHIP</span>
         </h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=13#majors">艺术学</a><span class="bc-sep">›</span><a href="/?discipline=13&sub=文学与新闻传播类#majors">文学与新闻传播类</a><span class="bc-sep">›</span><span class="bc-current">流行音乐</span></div>
-        <p class="hero-tagline">艺术学音乐与舞蹈学类下的「流行演唱+流行演奏+商业音乐」特设专业, 4 年制, 与音乐表演/作曲/音乐学 形成「流行-古典-理论」三分, 在新式音乐/短视频/独立厂牌/音乐综艺风口下需求增长, 但「艺术学学位受限 + 商业音乐高度依赖个人风格 + 头部艺人概率 < 1% + AI 音乐冲击」是四大现实.</p>
+<div class="discipline-breadcrumb"><a href="/?discipline=13#majors">艺术学</a><span class="bc-sep">›</span><a href="/?discipline=13&sub=音乐与舞蹈学类 (流行音乐方向, 130209T)#majors">音乐与舞蹈学类 (流行音乐方向, 130209T)</a><span class="bc-sep">›</span><span class="bc-current">流行音乐</span></div>
+        <p class="hero-tagline">流行音乐 (130209T) 是 4 年制艺术学特设专业, 与音乐表演 (130201, 偏古典) / 作曲 (130203) / 音乐学 (130202) 平行, 主流方向是「流行演唱 + 流行演奏 + 商业音乐制作 + 唱作人」, 头部校招集中央音现代音乐学院/上音/中音/川音流行音乐学院 — 但 90% 毕业生 </p>
         <div class="hu-stats-grid">
           <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">艺术学 · 音乐与舞蹈学类 (流行音乐方向)</span></div>
           <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">4 年 · 艺术学学士</span></div>
@@ -1064,7 +1065,7 @@ footer .data-source { color: #999; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">流行音乐的核心是「流行演唱 + 流行演奏 + 商业音乐制作 + 唱作人/独立音乐人」四栖训练, 它既不是「音乐表演 (130201)」(偏美声/民族/古典), 也不是「作曲与作曲技术理论 (130203)」(偏古典/管弦乐), 也不是「音乐学 (130202)」(偏音乐学/史论), 4 年制偏商业化流行 — 「央音/上音/中音/川音 是顶 + 商业音乐高度依赖个人风格 + 头部艺人概率 < 1% + 艺术学学士考公受限 + AI 音乐 (Suno/Udio) 冲击」是该专业五大现实.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 艺术学概论 / 音乐学概论 / 中外音乐史 / 视唱练耳 / 乐理 / 大学英语 / 思想政治理论课系列; 大二核心: 流行演唱 (美声/民族/流行 3 种唱法) / 流行演奏 (钢琴/吉他/贝斯/鼓) / 商业音乐制作 (Logic Pro/Cubase/Ableton Live) / MIDI 与编曲 / 录音与混音基础 / 舞台表演; 大三方向分流: 流行演唱 / 流行演奏 / 唱作人 / 商业音乐制作 / 独立音乐人 / 音乐剧 五选一; 大四毕业作品 (个人专辑/EP/演出/综艺) + 实习 (唱片公司/音乐厂牌/流媒体平台/MCN/演出公司). 4 年下来, 既能唱能弹能写, 也能做商业制作, 还能上舞台.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对流行演唱/演奏/创作有底层冲动, 有清晰个人风格或可塑性, 愿意 5-10 年沉淀</li><li>舞台表现力强 + 临场反应 + 抗压强, 接受高强度训练 (4 年 2000+ 小时) + 出差/演出/综艺</li><li>愿意补全产业链知识 (唱/弹/写/制作/舞台/综艺), 不止步于「会唱」</li><li>接受 90% 同学做音乐教师/教培/独立音乐人/MCN, 心态稳, 不强求头部艺人</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待 4 年本科毕业对标头部艺人 (概率 < 1%) — 央音/上音/中音 90% 毕业生 5-10 年内做教培/独立音乐人/演出</li><li>把流行音乐误以为「音乐表演 (美声/民族)」 — 流行音乐偏商业化, 音乐表演偏古典, 培养目标不同</li><li>晕舞台/晕演出/晕高强度训练 (4 年 2000+ 小时) — 流行音乐是项目制 + 演出, 4 年高强度训练是核心</li><li>对个人形象/表演/商业化没准备, 只是想学唱歌 — 流行音乐是「表演 + 商业 + 风格化」, 不是单纯音乐</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">流行音乐 = 音乐表演 (美声/民族)</div><div class="ovv-simple-pit-reality">流行音乐 (130209T) 是「流行演唱+流行演奏+商业音乐」, 音乐表演 (130201) 偏美声/民族/古典演唱演奏; 流行音乐核心是「商业化流行 + 唱作人 + 独立厂牌」, 4 年学制与音乐表演 (4-5 年) 不同, 课程 30% 重叠 (声乐/乐理), 但培养目标差异显著.</div></li><li><div class="ovv-simple-pit-myth">央音/上音/中音毕业就能当头部艺人</div><div class="ovv-simple-pit-reality">央音/上音/中音/川音流行音乐学院/现代音乐学院是行业顶, 但年招生 30-100 人/校, 90% 毕业生 5-10 年内做音乐教师/教培/独立音乐人/MCN/演出, 真正能签约头部唱片公司/独立厂牌/上音乐综艺 5% 以下, 头部艺人 (周杰伦/那英/陈奕迅级) 1% 以下.</div></li><li><div class="ovv-simple-pit-myth">流行音乐 = 高薪稳定 (艺人收入)</div><div class="ovv-simple-pit-reality">头部艺人/歌手/独立音乐人/头部唱作人年收入 100-2000 万, 顶级 (与头部唱片公司签约) 5000 万-1 亿; 但项目制 (按演出/版税/版权/广告结算), 工作强度大, 普通流行音乐毕业生 5-15 万, 独立音乐人靠演出/版权/月入 1-10 万; 头部资源高度集中 (北京/上海/广州/杭州/成都少数头部厂牌).</div></li><li><div class="ovv-simple-pit-myth">独立厂牌/短视频/音乐综艺风口 = 校招扩编</div><div class="ovv-simple-pit-reality">2020+ 独立厂牌 (摩登天空/太合/华研/网易云音乐人) + 短视频 (字节/快手) + 音乐综艺 (《歌手》《中国好声音》《我是歌手》《天赐的声音》《乘风破浪的姐姐》) 风口是真, 但校招量小, 招「唱作 + 表演 + 商业运营 + 短视频」复合人才; 真正扩编的是「音乐制作人 + 短视频音乐 + 综艺音乐 + 商业演出」, 985 硕 + 头部作品 + 商业资源.</div></li><li><div class="ovv-simple-pit-myth">流行音乐考公考编容易</div><div class="ovv-simple-pit-reality">艺术学学士 (1302 音乐与舞蹈学类) 考公/选调/事业编受专业代码限制, 国家大剧院/上海大剧院/各省歌舞剧院/文化和旅游厅编制少, 选调/省考竞争比常年 100:1+; 部分岗位专业代码卡「音乐与舞蹈学类」, 流行音乐特设专业可能不被识别, 报考前必须查本省近 3 年招录目录.</div></li><li><div class="ovv-simple-pit-myth">AI 不会冲击流行音乐/独立音乐人</div><div class="ovv-simple-pit-reality">2024+ Suno/Udio 等 AI 音乐生成爆发, 短视频 BGM/广告配乐/商业演出/综艺翻唱被 AI 替代 30-50%; 数字人/虚拟偶像 (柳夜熙/AYAYI/Imma/A-SOUL) 冲击基础流行; 真正不可替代的是「头部艺人个人风格 + 现场演出 + 原创作品版权」, 但入门级翻唱/编曲/商业演出被压缩, 行业洗牌期.</div></li><li><div class="ovv-simple-pit-myth">本专业可以做音乐制作人/编曲师</div><div class="ovv-simple-pit-reality">音乐制作人/编曲师 (网易云/QQ 音乐/腾讯音乐 + 太合/华研/摩登天空) 是细分赛道, 头部制作人 (与周杰伦/那英/陈奕迅合作) 校招量小, 要求「音乐制作/作曲/编曲/混音」复合背景; 与流行音乐培养目标部分重叠, 真正对口的是「音乐制作 + 编曲 + 商业制作」, 不是艺人/歌手.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">流行音乐 (130209T) 走的是「演唱+演奏+商业制作+唱作人/独立音乐人」四栖路径, 它跟音乐表演 (130201, 美声/民族) 是平行而非包含关系; 头部央音/上音/中音/川音流行音乐学院年招 30-100 人/校, 90% 毕业生 5-10 年内做教培/独立音乐人/演出, 头部艺人 (周杰伦/那英级) 概率 < 1%, AI 音乐 (Suno/Udio) 2024+ 冲击入门级翻唱编曲, 艺术学学士考公专业代码受限 — 5 重现实决定这不是「学唱歌」而是「商业化流行音乐 + 演艺 + 教学」复合赛道.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 艺术学概论 / 音乐学概论 / 中外音乐史 / 视唱练耳 / 乐理 / 大学英语 / 思想政治理论课系列; 大二核心: 流行演唱 (流行/爵士/灵魂 3 种唱法分支) / 流行演奏 (钢琴/吉他/贝斯/鼓) / 商业音乐制作 (Logic Pro/Cubase/Ableton Live) / MIDI 与编曲 / 录音与混音基础 / 舞台表演; 大三方向分流: 流行演唱 / 流行演奏 / 唱作人 / 商业音乐制作 / 独立音乐人 / 音乐剧 五选一; 大四毕业作品 (个人专辑/EP/演出/综艺) + 实习 (唱片公司/音乐厂牌/流媒体平台/MCN/演出公司). 4 年下来, 既能唱能弹能写, 也能做商业制作, 还能上舞台.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对流行演唱/演奏/创作有底层冲动, 有清晰个人风格或可塑性, 愿意 5-10 年沉淀</li><li>舞台表现力强 + 临场反应 + 抗压强, 接受高强度训练 (4 年 2000+ 小时) + 出差/演出/综艺</li><li>愿意补全产业链知识 (唱/弹/写/制作/舞台/综艺), 不止步于「会唱」</li><li>接受 90% 同学做音乐教师/教培/独立音乐人/MCN, 心态稳, 不强求头部艺人</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待 4 年本科毕业对标头部艺人 (概率 < 1%) — 央音/上音/中音 90% 毕业生 5-10 年内做教培/独立音乐人/演出</li><li>把流行音乐误以为「音乐表演 (美声/民族)」 — 流行音乐偏商业化, 音乐表演偏古典, 培养目标不同</li><li>晕舞台/晕演出/晕高强度训练 (4 年 2000+ 小时) — 流行音乐是项目制 + 演出, 4 年高强度训练是核心</li><li>对个人形象/表演/商业化没准备, 只是想学唱歌 — 流行音乐是「表演 + 商业 + 风格化」, 不是单纯音乐</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">流行音乐 = 音乐表演 (美声/民族)</div><div class="ovv-simple-pit-reality">流行音乐 (130209T) 是「流行演唱+流行演奏+商业音乐」, 音乐表演 (130201) 偏美声/民族/古典演唱演奏; 流行音乐核心是「商业化流行 + 唱作人 + 独立厂牌」, 4 年学制与音乐表演 (4-5 年) 不同, 课程 30% 重叠 (声乐/乐理), 但培养目标差异显著.</div></li><li><div class="ovv-simple-pit-myth">央音/上音/中音毕业就能当头部艺人</div><div class="ovv-simple-pit-reality">央音/上音/中音/川音流行音乐学院/现代音乐学院是行业顶, 但年招生 30-100 人/校, 90% 毕业生 5-10 年内做音乐教师/教培/独立音乐人/MCN/演出, 真正能签约头部唱片公司/独立厂牌/上音乐综艺 5% 以下, 头部艺人 (周杰伦/那英/陈奕迅级) 1% 以下.</div></li><li><div class="ovv-simple-pit-myth">流行音乐 = 高薪稳定 (艺人收入)</div><div class="ovv-simple-pit-reality">头部艺人/歌手/独立音乐人/头部唱作人年收入 100-2000 万, 顶级 (与头部唱片公司签约) 5000 万-1 亿; 但项目制 (按演出/版税/版权/广告结算), 工作强度大, 普通流行音乐毕业生 5-15 万, 独立音乐人靠演出/版权/月入 1-10 万; 头部资源高度集中 (北京/上海/广州/杭州/成都少数头部厂牌).</div></li><li><div class="ovv-simple-pit-myth">独立厂牌/短视频/音乐综艺风口 = 校招扩编</div><div class="ovv-simple-pit-reality">2020+ 独立厂牌 (摩登天空/太合/华研/网易云音乐人) + 短视频 (字节/快手) + 音乐综艺 (《歌手》《中国好声音》《我是歌手》《天赐的声音》《乘风破浪的姐姐》) 风口是真, 但校招量小, 招「唱作 + 表演 + 商业运营 + 短视频」复合人才; 真正扩编的是「音乐制作人 + 短视频音乐 + 综艺音乐 + 商业演出」, 985 硕 + 头部作品 + 商业资源.</div></li><li><div class="ovv-simple-pit-myth">流行音乐考公考编容易</div><div class="ovv-simple-pit-reality">艺术学学士 (1302 音乐与舞蹈学类) 考公/选调/事业编受专业代码限制, 国家大剧院/上海大剧院/各省歌舞剧院/文化和旅游厅编制少, 选调/省考竞争比常年 100:1+; 部分岗位专业代码卡「音乐与舞蹈学类」, 流行音乐特设专业可能不被识别, 报考前必须查本省近 3 年招录目录.</div></li><li><div class="ovv-simple-pit-myth">AI 不会冲击流行音乐/独立音乐人</div><div class="ovv-simple-pit-reality">2024+ Suno/Udio 等 AI 音乐生成爆发, 短视频 BGM/广告配乐/商业演出/综艺翻唱被 AI 替代 30-50%; 数字人/虚拟偶像 (柳夜熙/AYAYI/Imma/A-SOUL) 冲击基础流行; 真正不可替代的是「头部艺人个人风格 + 现场演出 + 原创作品版权」, 但入门级翻唱/编曲/商业演出被压缩, 行业洗牌期.</div></li><li><div class="ovv-simple-pit-myth">本专业可以做音乐制作人/编曲师</div><div class="ovv-simple-pit-reality">音乐制作人/编曲师 (网易云/QQ 音乐/腾讯音乐 + 太合/华研/摩登天空) 是细分赛道, 头部制作人 (与周杰伦/那英/陈奕迅合作) 校招量小, 要求「音乐制作/作曲/编曲/混音」复合背景; 与流行音乐培养目标部分重叠, 真正对口的是「音乐制作 + 编曲 + 商业制作」, 不是艺人/歌手.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1119,55 +1120,55 @@ footer .data-source { color: #999; }
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">A+</span>
+          <span class="bento-rank">★★★★★ (A+)</span>
           <div class="bento-name">中央音乐学院</div>
           <div class="bento-tag">北京 · 艺术院校 (211 双一流), 现代音乐学院 (2019+ 新设), 流行演唱+流行演奏+电子音乐, 国内现代音乐旗舰, 央音新增长极</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">上</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">★★★★★ (A)</span>
           <div class="bento-name">上海音乐学院</div>
           <div class="bento-tag">上海 · 艺术院校 (双一流), 现代器乐与打击乐系/流行音乐, 流行演奏+现代器乐+跨界, 上海国际大都市流行音乐资源</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">中</div>
-          <span class="bento-rank">A-</span>
+          <span class="bento-rank">★★★★☆ (A-)</span>
           <div class="bento-name">中国音乐学院</div>
           <div class="bento-tag">北京 · 艺术院校 (双一流), 音乐学系/流行音乐, 流行演唱+中国风流行+跨界, 民族+流行跨界特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">四</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">四川音乐学院</div>
           <div class="bento-tag">成都 · 省属重点, 流行音乐学院, 流行演唱+流行演奏+商业音乐, 西南流行音乐重镇, 招生规模大</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">星</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">星海音乐学院</div>
           <div class="bento-tag">广州 · 省属重点, 现代音乐与戏剧学院, 流行音乐+现代音乐+流行演唱, 华南流行音乐特色, 粤港澳大湾区</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">天</div>
-          <span class="bento-rank">B</span>
+          <span class="bento-rank">★★★☆☆ (B)</span>
           <div class="bento-name">天津音乐学院</div>
           <div class="bento-tag">天津 · 省属重点, 现代音乐系, 流行音乐+现代音乐, 华北地区</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">武</div>
-          <span class="bento-rank">B</span>
+          <span class="bento-rank">★★★☆☆ (B)</span>
           <div class="bento-name">武汉音乐学院</div>
           <div class="bento-tag">武汉 · 省属重点, 流行音乐方向, 流行演唱+流行演奏, 华中地区流行音乐特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">南</div>
-          <span class="bento-rank">B</span>
+          <span class="bento-rank">★★★☆☆ (B)</span>
           <div class="bento-name">南京艺术学院</div>
           <div class="bento-tag">南京 · 艺术院校, 流行音乐学院, 流行音乐+商业音乐, 江苏/长三角流行音乐特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">北</div>
-          <span class="bento-rank">B-</span>
+          <span class="bento-rank">★★★☆☆ (B-)</span>
           <div class="bento-name">北京现代音乐研修学院<wbr> (民办)</div>
           <div class="bento-tag">北京 · 民办艺术院校, 流行音乐+现代音乐, 招生规模大, 民办头部</div>
         </div>
@@ -1575,14 +1576,14 @@ footer .data-source { color: #999; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card arts" href="/drama-film-directing.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">戏剧影视导演</span><span class="wl-hook">戏剧影视导演</span></a>
-      <a class="wl-card arts" href="/art-management.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">艺术管理</span><span class="wl-hook">艺术管理</span></a>
-      <a class="wl-card arts" href="/chinese-painting.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">中国画</span><span class="wl-hook">中国画</span></a>
-      <a class="wl-card arts" href="/musical-performance.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">音乐表演</span><span class="wl-hook">音乐表演</span></a>
+      <a class="wl-card arts" href="/digital-performance-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">数字演艺设计</span><span class="wl-hook">数字演艺设计</span></a>
+      <a class="wl-card arts" href="/film-television-technology.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">影视技术</span><span class="wl-hook">影视技术</span></a>
+      <a class="wl-card arts" href="/music-composition-theory.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">作曲与作曲技术理论</span><span class="wl-hook">作曲与作曲技术理论</span></a>
+      <a class="wl-card arts" href="/dance-choreography.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">舞蹈编导</span><span class="wl-hook">舞蹈编导</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
-      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
       <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
       <a class="wl-card cs" href="/artificial-intelligence.html" data-tag="跨界"><span class="wl-badge">计算机</span><span class="wl-title">人工智能</span><span class="wl-hook">算法堆顶, 博士起步</span></a>
       <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
