@@ -398,40 +398,46 @@ def normalize_rank(rank, tag=""):
     """Normalize 各种 rank 字段格式 → 统一返回 {eval: "A+"|""|..., source: "rank"|"tag"|"star"|"int"|""}
 
     Day 17 加 normalizer: 防止后续 synth 引入新格式导致渲染崩/误判.
-    5 种历史格式:
+    6 种历史格式:
     1) "A+" / "A" / "A-" / "B+" — 纯字母 (工商/VR)
     2) "★★★★★ (A+)" — 星+括号 (密码学)
     3) "★★★★★"        — 纯星 (仿生)
-    4) tag 字段含 "A+" — 兜底
-    5) 1/2/3 int / 空 / None — 序号 (财政学, 显示 "—")
+    4) rank 空 + tag 含 "A+" — 兜底 (天文学: tag="教育部第四轮学科评估 A+")
+    5) 1/2/3 int  — 序号 (财政学)
+    6) 全空 / 无任何数据 — 真无评估
 
-    ⚠️ Day 17 fix: rank 空字符串 (rank == "") 直接返回 eval="", **不要**走星数映射,
-    否则 rank="" → 0 stars → "B-" 误判.
+    ⚠️ Day 17 v2 fix: rank 空字符串 **不要** early return, 必须 fall through 到 tag 兜底.
+    否则天文学这种"评估数据在 tag 不在 rank"的专业会被漏.
     """
-    if rank is None or rank == "":
-        # 空字符串 = 无数据, 不强映射
-        return {"eval": "", "source": "empty", "raw": ""}
+    # 策略 0: int 序号 (早判, 不查 tag)
     if isinstance(rank, int):
-        # int 序号 → 无评估数据, 不强映射
         return {"eval": "", "source": "int", "raw": str(rank)}
-    rank = str(rank).strip()
+
+    rank_str = str(rank).strip() if rank is not None else ""
+
     # 策略 1: 纯字母
-    m = re.fullmatch(r"([ABCDF][+\-]?)", rank)
+    m = re.fullmatch(r"([ABCDF][+\-]?)", rank_str)
     if m:
-        return {"eval": m.group(1), "source": "rank", "raw": rank}
+        return {"eval": m.group(1), "source": "rank", "raw": rank_str}
     # 策略 2: 星+括号
-    m = re.search(r"\(([ABCDF][+\-]?)\)", rank)
+    m = re.search(r"\(([ABCDF][+\-]?)\)", rank_str)
     if m:
-        return {"eval": m.group(1), "source": "rank", "raw": rank}
-    # 策略 3: 纯星 → 映射 (0-5 颗实心 ★ → B-/B/B+/A-/A/A+)
-    filled = rank.count("★")
-    if 0 < filled <= 5:  # ⚠️ 严格 >0 (空字符串/无星不算)
-        return {"eval": ["B-", "B", "B+", "A-", "A", "A+"][filled], "source": "star", "raw": rank}
-    # 策略 4: tag 兜底
-    m = re.search(r"\b([ABCDF][+\-]?)\b", tag)
-    if m:
-        return {"eval": m.group(1), "source": "tag", "raw": rank}
-    return {"eval": "", "source": "", "raw": rank}
+        return {"eval": m.group(1), "source": "rank", "raw": rank_str}
+    # 策略 3: 纯星 → 映射 (1-5 颗实心 ★ → B/B+/A-/A/A+; 0 不算)
+    filled = rank_str.count("★")
+    if 0 < filled <= 5:
+        return {"eval": ["B-", "B", "B+", "A-", "A", "A+"][filled], "source": "star", "raw": rank_str}
+    # 策略 3.5: rank 是中文描述 (如 "特色" / "唯一开设" / "强校") → 无标准评估
+    if rank_str and re.fullmatch(r"[一-鿿]{2,8}", rank_str):
+        # 纯中文 2-8 字 → 描述符, 非评估
+        pass  # 继续走 tag 兜底或返回空
+    # 策略 4: tag 兜底 (rank 空 / 无字母 / 纯星 0 颗都试)
+    # ⚠️ 不加 \b 在 + - 后, 否则 "A+" 在中文逗号前不匹配 (Python \b 在 + 与 , 之间无边界)
+    m = re.search(r"([ABCDF][+\-]?)", tag or "")
+    if m and m.group(1):
+        return {"eval": m.group(1), "source": "tag", "raw": rank_str}
+    # 全空 / 真无评估
+    return {"eval": "", "source": "", "raw": rank_str}
 
 
 def render_schools(schools, hubei_only=False):
@@ -464,7 +470,13 @@ def render_schools(schools, hubei_only=False):
         # score (没数据时省)
         score = s.get("score") or s.get("hubei_2024_score") or s.get("min_2024")
         score_html = f'<div class="uni-score">{esc(score)}</div>' if score else '<div class="uni-score">—</div>'
-        eval_html = f'<div class="uni-eval {eval_class}">{esc(eval_badge)}</div>' if eval_badge else '<div class="uni-eval uni-eval-none">—</div>'
+        # Day 17 fix: 无评估数据时显示位置序号 "#1" 软科, 不显示 "—" (UX 改进)
+        # - 有评估 → 显示 A+/A/A-/B+
+        # - 无评估 → 显示 "#1" (2024 软科专业排名位置, 让用户知道是榜单前 X)
+        if eval_badge:
+            eval_html = f'<div class="uni-eval {eval_class}" title="教育部第四/五轮学科评估">{esc(eval_badge)}</div>'
+        else:
+            eval_html = f'<div class="uni-eval uni-eval-none" title="无公开学科评估, 按 2024 软科综合排名">#{i}</div>'
         rows.append(f'''<div class="uni-row">
           <div class="uni-rank">{i:02d}</div>
           <div class="uni-name">{esc(s.get("name", ""))}</div>
