@@ -6,6 +6,7 @@ render_mobile.py — 批量渲染 126 个 mobile 详情页
 输出:  public/m/majors/{slug}.html (126 个)
 """
 import json
+import logging
 import re
 import sys
 from pathlib import Path
@@ -393,50 +394,59 @@ def render_salary(salary):
     </section>'''
 
 
+def normalize_rank(rank, tag=""):
+    """Normalize 各种 rank 字段格式 → 统一返回 {eval: "A+"|""|..., source: "rank"|"tag"|"star"|"int"|""}
+
+    Day 17 加 normalizer: 防止后续 synth 引入新格式导致渲染崩/误判.
+    5 种历史格式:
+    1) "A+" / "A" / "A-" / "B+" — 纯字母 (工商/VR)
+    2) "★★★★★ (A+)" — 星+括号 (密码学)
+    3) "★★★★★"        — 纯星 (仿生)
+    4) tag 字段含 "A+" — 兜底
+    5) 1/2/3 int  — 序号 (财政学, 显示 "—")
+    """
+    if rank is None or rank == "":
+        rank = ""
+    elif isinstance(rank, int):
+        # int 序号 → 无评估数据, 不强映射
+        return {"eval": "", "source": "int", "raw": str(rank)}
+    rank = str(rank)
+    # 策略 1: 纯字母
+    m = re.fullmatch(r"\s*([ABCDF][+\-]?)\s*", rank)
+    if m:
+        return {"eval": m.group(1), "source": "rank", "raw": rank}
+    # 策略 2: 星+括号
+    m = re.search(r"\(([ABCDF][+\-]?)\)", rank)
+    if m:
+        return {"eval": m.group(1), "source": "rank", "raw": rank}
+    # 策略 3: 纯星 → 映射 (0-5 颗实心 ★ → B-/B/B+/A-/A/A+)
+    filled = rank.count("★")
+    if 0 <= filled <= 5:
+        return {"eval": ["B-", "B", "B+", "A-", "A", "A+"][filled], "source": "star", "raw": rank}
+    # 策略 4: tag 兜底
+    m = re.search(r"\b([ABCDF][+\-]?)\b", tag)
+    if m:
+        return {"eval": m.group(1), "source": "tag", "raw": rank}
+    return {"eval": "", "source": "", "raw": rank}
+
+
 def render_schools(schools, hubei_only=False):
     """schools = [{name, rank, tag, score?}]
 
-    rank 字段格式 (5 种兼容):
-    1) "A+" / "A" / "A-" / "B+" — 仅字母 (工商管理/虚拟现实等)
-    2) "★★★★★ (A+)" — 星 + 学科评估 (密码学等老专业)
-    3) "★★★★★"        — 仅星 (仿生等新专业, 无第四/五轮评估)
-    4) tag 字段含 "评估 A+" 等描述 (兜底)
-    5) 1/2/3 int  — 仅序号 (财政学等无公开评估, 显示 "—" 不强行映射)
+    Day 17 refactor: rank 字段用 normalize_rank() 统一规整 (5 种历史格式兼容).
+    新增格式只需加 normalize_rank() 一个 case, render_schools 不动.
     """
     if not schools:
         return ""
     # 湖北优先, 但目前 mock 全是湖北的 + 跨省, 先全列
     items = schools[:8]
     rows = []
-    # 星数 → 学科评估 (0-5 颗实心 ★ 对应 B-/B/B+/A-/A/A+)
-    star_to_eval = ["B-", "B", "B+", "A-", "A", "A+"]
     for i, s in enumerate(items, 1):
-        rank = s.get("rank", "")
+        rank_raw = s.get("rank", "")
         tag = s.get("tag", "")
-        # 策略 0: rank 是 int (序号) → 无评估数据, 跳过字母提取避免误判
-        rank_is_int = isinstance(rank, int)
-        rank = str(rank) if rank_is_int else rank
-        eval_badge = ""
-        # 策略 1: rank 字段纯字母 "A+" (工商管理/虚拟现实格式)
-        if not eval_badge and not rank_is_int:
-            m = re.fullmatch(r"\s*([ABCDF][+\-]?)\s*", rank)
-            if m:
-                eval_badge = m.group(1)
-        # 策略 2: rank 字段 "(A+)" 格式 (密码学等老专业)
-        if not eval_badge and not rank_is_int:
-            m = re.search(r"\(([ABCDF][+\-]?)\)", rank)
-            if m:
-                eval_badge = m.group(1)
-        # 策略 3: rank 字段纯星 "★★★★★" → 映射
-        if not eval_badge and not rank_is_int:
-            filled = rank.count("★")
-            if 0 <= filled <= 5:
-                eval_badge = star_to_eval[filled]
-        # 策略 4: tag 字段含评估字母
-        if not eval_badge and not rank_is_int:
-            m = re.search(r"\b([ABCDF][+\-]?)\b", tag)
-            if m:
-                eval_badge = m.group(1)
+        # 规整 (normalizer 5 策略兼容)
+        norm = normalize_rank(rank_raw, tag)
+        eval_badge = norm["eval"]
         # eval → CSS class (颜色按等级) — 用 mapping 避免 replace 顺序冲突
         eval_class = ""
         if eval_badge:
