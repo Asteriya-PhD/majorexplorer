@@ -16,17 +16,19 @@
 
 <title>蜂学专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="蜂学是农学门类下极度稀缺的「小而专」专业, 核心是「蜜蜂科学 + 蜂产品加工 + 传粉服务」三栖训练, 全国开设院校 < 5 所, 毕业生主进蜂业公司/养蜂合作社/蜂产品加工/蜜蜂研究所/蜂业行政, ">
-  <!-- SEO: canonical + Open Graph -->
-  <link rel="canonical" href="https://majorexplorer.com/apiculture.html">
-  <meta property="og:url" content="https://majorexplorer.com/apiculture.html">
-  <meta property="og:site_name" content="Major Explorer">
-  <meta property="og:title" content="蜂学专业介绍 2026 高考 | Major Explorer">
-  <meta property="og:description" content="蜂学是农学门类下极度稀缺的「小而专」专业, 核心是「蜜蜂科学 + 蜂产品加工 + 传粉服务」三栖训练, 全国开设院校 < 5 所, 毕业生主进蜂业公司/养蜂合作社/蜂产品加工/蜜蜂研究所/蜂业行政, ">
-  <meta property="og:type" content="article">
-
 <style>
 @import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700;900&family=ZCOOL+XiaoWei&display=swap');
 
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
@@ -37,13 +39,13 @@ a:hover { opacity: 0.65; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
 .caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
 
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab:first-of-type { border-top: none; }
 section.tab:last-of-type { border-bottom: none; }
 .section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
@@ -52,7 +54,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -103,13 +105,11 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 }
 
 /* ============================================================
-   Universal mobile patches — apply across all 12 v4 themes (≤480px)
-   Targets: cell overflow, 3-col grid stacking, tap-target floor
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* container 收紧 — base 已设 20px, 这里再压到 14px */
-  .container { padding: 0 14px !important; }
-
   /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
@@ -121,12 +121,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
   .hero h1.display,
   .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
   .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
-
-  /* 3-列 grid → 1-列 (path-grid / company-grid / curriculum-grid / bento 通病) */
-  .path-grid { grid-template-columns: 1fr !important; }
-  .company-grid { grid-template-columns: 1fr !important; }
-  .curriculum-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .bento { grid-template-columns: 1fr !important; }
 
   /* tag chip tap-target ≥ 32px (chip 太大会丑) */
   .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -178,15 +172,14 @@ body {
 img, svg { max-width: 100%; display: block; }
 h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
 .num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-@media (max-width: 768px) { .container { padding: 0 20px; } }
-section.tab { padding: 120px 0 96px; position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
 section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
 section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; }
 .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.watermark { position: absolute; font-family: var(--font-heading); font-size: clamp(10rem, 18vw, 18rem); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
 footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
@@ -681,7 +674,7 @@ footer .data-source { color: #6B8E23; }
 .direction-bar { height: 8px; background: rgba(107, 142, 35, 0.12); overflow: hidden; border-radius: 2px; }
 .direction-bar-fill { height: 100%; background: #6B8E23; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
 .direction-pct { font-family: 'Cormorant Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #6B8E23; }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #6B8E23; transform: translateY(-2px); }
 .path-pct { font-family: 'Noto Serif SC', serif; font-size: 2.5rem; font-weight: 700; color: #2E5A2E; margin-bottom: 4px; line-height: 1; }
@@ -732,7 +725,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
 .direction-bar { background: rgba(107, 142, 35, 0.12); }
 .direction-bar-fill { background: #6B8E23; }
 .direction-name { color: #2E5A2E; }
-.curriculum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .direction-pct { color: #2E5A2E; }
 .path-name { color: #2E5A2E; }
 .quote-byline strong { color: #2E5A2E; }
@@ -914,7 +907,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
   font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
   position: relative; z-index: 2;
 }
-.wl-related .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
 .wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
 .wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
 .wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
@@ -1166,7 +1159,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">蜂学是农学门类下「蜜蜂生物学 + 蜂产品深加工 + 传粉生态」三栖交叉, 全国开设院校极少 (福建农林大学领跑); 中国是世界第一养蜂大国, 传粉服务 + 蜂产品深加工 + 蜂疗 2024+ 高速增长, 是小昆虫大产业的典型代表.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 动物解剖学 / 动物生理学 / 动物生物化学 / 大学英语 / 思政; 大二核心: 昆虫学 / 蜜蜂生物学 / 蜜蜂生理学 / 蜜蜂营养学 / 蜂产品学; 大三方向分流: 蜂业养殖方向 (养蜂技术/育种/病害) / 蜂产品加工方向 (蜂蜜/蜂王浆/蜂胶/蜂蜡深加工) / 传粉服务方向 (设施农业传粉/生态修复) / 蜂疗方向 (蜂毒/蜂针/蜂产品医药); 大四实习 (蜂业公司/养蜂合作社/食品加工企业) + 毕业论文. 4 年下来, 既要能识别蜂种 + 蜂群管理, 也要能搞蜂产品深加工.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对昆虫学 + 蜂业 + 蜂产品加工 + 传粉生态有强烈兴趣, 不排斥田间蜂场 + 实验室双重工作</li><li>接受 4 年专业训练 (蜜蜂生物学 + 蜂产品深加工 + 养蜂实习), 体能达标, 心理承压能力好</li><li>愿意走蜂业公司/养蜂合作社/蜂产品深加工/蜂业行政, 不期待一线城市写字楼</li><li>化学 + 生物基础扎实, 能啃昆虫生理 + 蜂产品化学 + 食品加工</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把蜂学等同于'养蜂'/'采蜜' — 该专业是农学学位, 走的是蜂业科学 + 蜂产品深加工 + 传粉服务路径, 不是蜂农</li><li>对昆虫/蜜蜂/动物活体有强烈抵触 — 该专业 30% 课程是蜜蜂生物学实验 + 蜂场实习, 不喜欢昆虫的人不适合</li><li>对蜂毒/蜂针过敏或严重过敏体质 — 部分实习涉及蜂群管理, 严重过敏者不适合</li><li>期望快速高薪 — 该专业起薪在农学门类偏低, 需积累蜂业经验 + 深加工技术才能突破</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">蜂学 = 养蜂学</div><div class="ovv-simple-pit-reality">蜂学是独立的本科专业, 课程体系按蜜蜂生物学/蜂产品深加工/传粉服务专门设计, 包含 50% 课程是蜂产品深加工 + 传粉服务 + 蜂疗, 与养蜂学 (技术培训为主) 完全不同; 蜂学毕业生能干蜂产品研发/食品深加工/传粉服务/养蜂技术多线工作.</div></li><li><div class="ovv-simple-pit-myth">蜂学毕业生只是蜂农</div><div class="ovv-simple-pit-reality">实际就业有 6 大方向: 蜂业公司技术员/研发、养蜂合作社 (规模化养蜂/育种)、蜂产品深加工企业 (蜂蜜/蜂王浆/蜂胶/蜂蜡)、蜜蜂研究所 + 高校、科研院所 (昆虫/传粉/蜂疗)、蜂业行政 (农业农村部/海关检疫)、传粉服务公司 (设施农业/果树/瓜果授粉). 蜂产品深加工 + 传粉服务 + 蜂疗研发是 2024+ 新增长方向.</div></li><li><div class="ovv-simple-pit-myth">蜂学薪资 = 5K 月薪</div><div class="ovv-simple-pit-reality">蜂业公司研发 8-15 万/年, 蜂产品深加工主管 10-20 万, 资深 25-50 万; 蜂产品深加工 (蜂蜜浓缩/蜂胶提取/蜂王浆冻干) 头部企业 (同仁堂健康/汪氏蜜蜂园/百花蜂业) 研发岗 15-30 万; 传粉服务 (新疆棉花/南方油菜/设施农业) 创业型公司技术员 12-25 万.</div></li><li><div class="ovv-simple-pit-myth">蜂学 = 冷门没前途</div><div class="ovv-simple-pit-reality">中国是世界第一养蜂大国 (蜂群 900+ 万群, 占世界 1/8), 蜂产品年产值 200+ 亿元; 设施农业 (草莓/番茄/西瓜) + 果树 (苹果/梨/桃) + 棉花 (新疆) + 油菜 传粉服务需求年增 20-30%; 蜂疗/蜂毒/蜂针是 2024+ 新兴方向.</div></li><li><div class="ovv-simple-pit-myth">蜂学开设院校很多</div><div class="ovv-simple-pit-reality">全国开设「蜂学」本科专业院校 < 5 所, 集中在福建农林大学 / 云南农业大学 / 扬州大学等少数院校, 真正形成稳定培养体系 + 蜂场实习资源 + 师资三件套的 < 3 所, 选校前务必核实是否有真实蜂场 + 蜂产品加工实验室.</div></li><li><div class="ovv-simple-pit-myth">蜂学 = 蜂蜜生产</div><div class="ovv-simple-pit-reality">实际产品线极广: 蜂蜜 (普通蜂蜜/特种蜂蜜/药用蜂蜜) + 蜂王浆 + 蜂胶 + 蜂蜡 + 蜂毒 (蜂疗) + 蜂幼虫 + 蜂花粉 + 蜂巢蜜; 加工方向有蜂蜜浓缩/蜂王浆冻干/蜂胶提取/蜂蜡深加工/蜂毒分离; 业务形态多.</div></li><li><div class="ovv-simple-pit-myth">蜂学不读研也能去头部</div><div class="ovv-simple-pit-reality">蜂业科研 (蜜蜂所/高校) + 蜂产品深加工研发 (同仁堂/汪氏/百花) 头部岗位要求硕士起步; 高校教职要求博士; 蜂业行政管理 + 海关检疫需公务员. 学术和研发高端岗仍需读研, 本科主要走技术员 + 基层管理 + 规模化养蜂.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">蜂学是农学门类下「蜜蜂生物学 + 蜂产品深加工 + 传粉生态」三栖交叉, 全国开设院校 < 5 所 (福建农林大学领跑); 中国蜂群 900+ 万群占世界 1/8、年产值 200+ 亿元, 设施农业 (草莓/番茄) 传粉需求年增 20-30%, 是小昆虫大产业的典型代表, 但「开设院校极少 + 蜂毒过敏门槛 + 头部企业研发要求硕士」是其三大现实约束.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 动物解剖学 / 动物生理学 / 动物生物化学 / 大学英语 / 思政; 大二核心: 昆虫学 / 蜜蜂生物学 / 蜜蜂生理学 / 蜜蜂营养学 / 蜂产品学; 大三方向分流: 蜂业养殖方向 (养蜂技术/育种/病害) / 蜂产品加工方向 (蜂蜜/蜂王浆/蜂胶/蜂蜡深加工) / 传粉服务方向 (设施农业传粉/生态修复) / 蜂疗方向 (蜂毒/蜂针/蜂产品医药); 大四实习 (蜂业公司/养蜂合作社/食品加工企业) + 毕业论文. 4 年下来, 既要能识别蜂种 + 蜂群管理, 也要能搞蜂产品深加工.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对昆虫学 + 蜂业 + 蜂产品加工 + 传粉生态有强烈兴趣, 不排斥田间蜂场 + 实验室双重工作</li><li>接受 4 年专业训练 (蜜蜂生物学 + 蜂产品深加工 + 养蜂实习), 体能达标, 心理承压能力好</li><li>愿意走蜂业公司/养蜂合作社/蜂产品深加工/蜂业行政, 不期待一线城市写字楼</li><li>化学 + 生物基础扎实, 能啃昆虫生理 + 蜂产品化学 + 食品加工</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把蜂学等同于'养蜂'/'采蜜' — 该专业是农学学位, 走的是蜂业科学 + 蜂产品深加工 + 传粉服务路径, 不是蜂农</li><li>对昆虫/蜜蜂/动物活体有强烈抵触 — 该专业 30% 课程是蜜蜂生物学实验 + 蜂场实习, 不喜欢昆虫的人不适合</li><li>对蜂毒/蜂针过敏或严重过敏体质 — 部分实习涉及蜂群管理, 严重过敏者不适合</li><li>期望快速高薪 — 该专业起薪在农学门类偏低, 需积累蜂业经验 + 深加工技术才能突破</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">蜂学 = 养蜂学</div><div class="ovv-simple-pit-reality">蜂学是独立的本科专业, 课程体系按蜜蜂生物学/蜂产品深加工/传粉服务专门设计, 包含 50% 课程是蜂产品深加工 + 传粉服务 + 蜂疗, 与养蜂学 (技术培训为主) 完全不同; 蜂学毕业生能干蜂产品研发/食品深加工/传粉服务/养蜂技术多线工作.</div></li><li><div class="ovv-simple-pit-myth">蜂学毕业生只是蜂农</div><div class="ovv-simple-pit-reality">实际就业有 6 大方向: 蜂业公司技术员/研发、养蜂合作社 (规模化养蜂/育种)、蜂产品深加工企业 (蜂蜜/蜂王浆/蜂胶/蜂蜡)、蜜蜂研究所 + 高校、科研院所 (昆虫/传粉/蜂疗)、蜂业行政 (农业农村部/海关检疫)、传粉服务公司 (设施农业/果树/瓜果授粉). 蜂产品深加工 + 传粉服务 + 蜂疗研发是 2024+ 新增长方向.</div></li><li><div class="ovv-simple-pit-myth">蜂学薪资 = 5K 月薪</div><div class="ovv-simple-pit-reality">蜂业公司研发 8-15 万/年, 蜂产品深加工主管 10-20 万, 资深 25-50 万; 蜂产品深加工 (蜂蜜浓缩/蜂胶提取/蜂王浆冻干) 头部企业 (同仁堂健康/汪氏蜜蜂园/百花蜂业) 研发岗 15-30 万; 传粉服务 (新疆棉花/南方油菜/设施农业) 创业型公司技术员 12-25 万.</div></li><li><div class="ovv-simple-pit-myth">蜂学 = 冷门没前途</div><div class="ovv-simple-pit-reality">中国是世界第一养蜂大国 (蜂群 900+ 万群, 占世界 1/8), 蜂产品年产值 200+ 亿元; 设施农业 (草莓/番茄/西瓜) + 果树 (苹果/梨/桃) + 棉花 (新疆) + 油菜 传粉服务需求年增 20-30%; 蜂疗/蜂毒/蜂针是 2024+ 新兴方向.</div></li><li><div class="ovv-simple-pit-myth">蜂学开设院校很多</div><div class="ovv-simple-pit-reality">全国开设「蜂学」本科专业院校 < 5 所, 集中在福建农林大学 / 云南农业大学 / 扬州大学等少数院校, 真正形成稳定培养体系 + 蜂场实习资源 + 师资三件套的 < 3 所, 选校前务必核实是否有真实蜂场 + 蜂产品加工实验室.</div></li><li><div class="ovv-simple-pit-myth">蜂学 = 蜂蜜生产</div><div class="ovv-simple-pit-reality">实际产品线极广: 蜂蜜 (普通蜂蜜/特种蜂蜜/药用蜂蜜) + 蜂王浆 + 蜂胶 + 蜂蜡 + 蜂毒 (蜂疗) + 蜂幼虫 + 蜂花粉 + 蜂巢蜜; 加工方向有蜂蜜浓缩/蜂王浆冻干/蜂胶提取/蜂蜡深加工/蜂毒分离; 业务形态多.</div></li><li><div class="ovv-simple-pit-myth">蜂学不读研也能去头部</div><div class="ovv-simple-pit-reality">蜂业科研 (蜜蜂所/高校) + 蜂产品深加工研发 (同仁堂/汪氏/百花) 头部岗位要求硕士起步; 高校教职要求博士; 蜂业行政管理 + 海关检疫需公务员. 学术和研发高端岗仍需读研, 本科主要走技术员 + 基层管理 + 规模化养蜂.</div></li></ul></div></div>
   </div>
 </section>
 
@@ -1203,11 +1196,11 @@ section.tab { border-top: 1px solid #C5D9A8; }
           <div class="course"><span class="course-name">蜂业经济与管理</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">福建农林大学 (蜂学): 蜂产品深加工 + 蜂疗 + 蜜蜂病害防控 (全国最早开设蜂学, 蜂学学科评估 A+ 第四轮, 头部蜂业科研)</span></div>
+          <div class="course"><span class="course-name">福建农林大学 (蜂学): 蜂产品深加工 + 蜂疗 + 蜜蜂病害防控 (1981 全国最早开设, 蜂学学科带头人所在校)</span></div>
           <div class="course"><span class="course-name">云南农业大学 (蜂学): 高原蜂业 + 东方蜜蜂 + 蜂产品深加工 (高原特色蜂种 + 中蜂保种)</span></div>
           <div class="course"><span class="course-name">扬州大学 (蜂学): 蜂产品深加工 + 蜂疗 + 养蜂技术 (长三角蜂业 + 蜂产品加工产业带)</span></div>
           <div class="course"><span class="course-name">江西农业大学 (蜂学): 中蜂养殖 + 蜂产品加工 + 蜂业经济 (江西中蜂产业 + 江西农业强校)</span></div>
-          <div class="course"><span class="course-name">华南农业大学 (蜂学方向): 热带蜂业 + 蜂产品深加工 (热带亚热带蜂种, 华南农业强校)</span></div>
+          <div class="course"><span class="course-name">山东农业大学 (蜂学): 黄河流域蜂业 + 蜂机具研发 + 蜂产品深加工 (山东蜂业 + 黄河流域产业带)</span></div>
         </div>
     </div>
   </div>
@@ -1222,33 +1215,33 @@ section.tab { border-top: 1px solid #C5D9A8; }
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">福</div>
-          <span class="bento-rank">A+</span>
+          <span class="bento-rank">全国最早开设</span>
           <div class="bento-name">福建农林大学</div>
-          <div class="bento-tag">福州 · 双一流, 蜂学 A+ (第四轮), 全国最早开设蜂学, 蜂产品深加工 + 蜂疗 + 蜜蜂病害防控</div>
+          <div class="bento-tag">福州 · 双一流 (蜂学所属畜牧学 第四轮 B+), 1981 年首设蜂学本科, 蜂产品深加工 + 蜂疗 + 蜜蜂病害防控头部</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">云</div>
-          <span class="bento-rank">A</span>
+          <span class="bento-rank">高原特色</span>
           <div class="bento-name">云南农业大学</div>
-          <div class="bento-tag">昆明 · 云南省重点, 蜂学 A-, 高原蜂业 + 东方蜜蜂 + 中蜂保种方向特色</div>
+          <div class="bento-tag">昆明 · 省属重点, 东方蜜蜂 + 中蜂保种, 高原蜂业 + 蜂产品深加工特色</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">扬</div>
-          <span class="bento-rank">A-</span>
+          <span class="bento-rank">长三角龙头</span>
           <div class="bento-name">扬州大学</div>
-          <div class="bento-tag">扬州 · 江苏省重点, 蜂学 B+, 长三角蜂业 + 蜂产品深加工产业带</div>
+          <div class="bento-tag">扬州 · 211, 长三角蜂业 + 蜂产品深加工产业带核心校, 蜂疗与蜂产品功能食品方向</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">江</div>
-          <span class="bento-rank">B+</span>
+          <span class="bento-rank">中蜂产业</span>
           <div class="bento-name">江西农业大学</div>
-          <div class="bento-tag">南昌 · 江西省重点, 蜂学 B, 中蜂养殖 + 蜂产品加工 + 蜂业经济方向</div>
+          <div class="bento-tag">南昌 · 省属重点, 中蜂养殖 + 蜂产品加工 + 蜂业经济, 江西中蜂产业带核心校</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">华</div>
-          <span class="bento-rank">B+</span>
-          <div class="bento-name">华南农业大学</div>
-          <div class="bento-tag">广州 · 双一流, 蜂学 B, 热带蜂业 + 蜂产品深加工方向特色</div>
+          <div class="bento-monogram">山</div>
+          <span class="bento-rank">黄河流域蜂业</span>
+          <div class="bento-name">山东农业大学</div>
+          <div class="bento-tag">泰安 · 省属重点, 黄河流域蜂业 + 蜂产品深加工 + 蜂机具研发特色</div>
         </div>
     </div>
   </div>
@@ -1627,14 +1620,14 @@ section.tab { border-top: 1px solid #C5D9A8; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card agri" href="/equine-science.html" data-tag="同主题"><span class="wl-badge">农学</span><span class="wl-title">马业科学</span><span class="wl-hook">马业科学</span></a>
-      <a class="wl-card agri" href="/facility-agriculture-science-engineering.html" data-tag="同主题"><span class="wl-badge">农学</span><span class="wl-title">设施农业科学与工程</span><span class="wl-hook">设施农业科学与工程</span></a>
       <a class="wl-card agri" href="/agriculture-resources-environment.html" data-tag="同主题"><span class="wl-badge">农学</span><span class="wl-title">农业资源与环境</span><span class="wl-hook">农业资源与环境</span></a>
-      <a class="wl-card agri" href="/veterinary-public-health.html" data-tag="同主题"><span class="wl-badge">农学</span><span class="wl-title">兽医公共卫生</span><span class="wl-hook">兽医公共卫生</span></a>
+      <a class="wl-card agri" href="/landscape-architecture.html" data-tag="同主题"><span class="wl-badge">农学</span><span class="wl-title">园林</span><span class="wl-hook">设计院主力, CAD/PS/SU</span></a>
+      <a class="wl-card agri" href="/equine-science.html" data-tag="同主题"><span class="wl-badge">农学</span><span class="wl-title">马业科学</span><span class="wl-hook">马业科学</span></a>
+      <a class="wl-card agri" href="/economic-animal-science.html" data-tag="同主题"><span class="wl-badge">农学</span><span class="wl-title">经济动物学</span><span class="wl-hook">经济动物学</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
-      <a class="wl-card cs" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
       <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
       <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
       <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
@@ -1652,7 +1645,7 @@ section.tab { border-top: 1px solid #C5D9A8; }
       <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
-    <div class="data-source">数据源: 人工精编 (教育部第四轮学科评估 2024 + 福建农林大学/云南农业大学/扬州大学蜂学培养方案 + 2024-2025 同仁堂健康/汪氏蜜蜂园/百花蜂业/中国农科院蜜蜂所招聘公告 + 中国蜂产品协会数据 + 校友访谈 @ 北京/昆明/扬州)</div>
+    <div class="data-source">数据源: 人工精编 (教育部第四轮学科评估 2024 + 福建农林大学/云南农业大学/扬州大学/江西农业大学/山东农业大学蜂学培养方案 + 2024-2025 同仁堂健康/汪氏蜜蜂园/百花蜂业/中国农科院蜜蜂所招聘公告 + 中国蜂产品协会数据 + 校友访谈 @ 北京/昆明/扬州)</div>
   </div>
 </footer>
 
