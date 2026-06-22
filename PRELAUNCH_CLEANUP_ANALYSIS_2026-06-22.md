@@ -540,8 +540,52 @@ gaokao-hubei-mvp/                 (git status clean)
 └── PRELAUNCH_CLEANUP_ANALYSIS_2026-06-22.md (本报告)
 ```
 
-### J.9 Phase 4 待办 (上线后再说, 或不做)
+### J.9 Phase 4 完成 (D1 scripts/ 子目录重组, 2026-06-22 执行)
 
-- [ ] **D1**: scripts/ 子目录重组 (build/audit/synth/schema-fix/deploy/) — ADR-024, 单独立项
-- [ ] **D3**: Mobile/PC 双轨 → 响应式单轨 (1000 文件重构, 不做)
-- [ ] **A.2**: README 全量重写 (已在 Phase 3 E 同步做, 后续跟随专业数增长定期更新)
+| 项 | 动作 | 结果 |
+|---|---|---|
+| D1 | git mv 45 脚本到 4 子目录 (build/18 + audit/10 + synth/4 + schema-fix/13) | 45 R/RM, 顶层 52 → 6 |
+| D1 import 修复 | batches/add_h_features.py sys.path + build/inject_theme_colors.py ROOT+sys.path | 2 M |
+| D1 ROOT 修复 | 26 个脚本 `parents[1]`→`parents[2]` 或 `parent.parent`→`parent.parent.parent` | 26 RM |
+| D1 docs 路径 | 6 docs 文件 41 处 `scripts/xxx.py` → `scripts/<subdir>/xxx.py` | 6 M |
+| D1 验证 | 4 代表性脚本 (smart_audit/build_sitemap/synth_trigger/rebuild_manifest) ROOT 全部正确 | ✅ |
+
+**2 个 commit**:
+- `a0faed7f` (前一个) refactor(scripts): D1 子目录重组 (45 移动 + 28 修改)
+- `a0faed7f` docs(scripts): D1 同步 docs 路径 (41 处)
+
+**ADR-024 状态**: ⏳ pending → ✅ 锁定 (Phase 4 执行)
+
+### J.10 Phase 4 后最终状态 (全部精简完成)
+
+```
+scripts/
+├── __init__.py                   # 留顶层
+├── claim.py                      # 留顶层 (工作流)
+├── next_pick.py                  # 留顶层 (工作流)
+├── generate_sample_rank_gd_js.py # 留顶层 (数据工具)
+├── chsi_name_normalize.py        # 留顶层 (数据工具)
+├── perf_measure.py               # 留顶层 (性能测量)
+├── build/        (18 .py)        # 构建 + 渲染 + 注入 + 部署输出
+├── audit/        (10 .py)        # 质量审计 + 验证
+├── synth/        (4 .py)         # LLM 合成
+├── schema-fix/   (13 .py)        # schema 修复 + manifest 维护
+├── batches/      (28 .py)        # 批量脚本 (不动)
+├── chsi/         (1 .py)         # chsi 工具
+├── smoke_fixtures/               # 测试 fixtures
+└── _archive/                     # 53 个历史脚本归档 (37 Phase 3 + 15 原有 + 1 test_3llm_synth)
+```
+
+### J.11 全部精简工作完成 (Phase 1-4)
+
+| Phase | 完成日期 | commits | 主要内容 |
+|---|---|---|---|
+| Phase 1 | 2026-06-22 | 1 (c9ecdb45) | C2 orphan HTML + C3 docs 归档 |
+| Phase 2 | 2026-06-22 | 1 (ac15ebb6) | C1 本地 + D4 curated + D5 symlink + E README |
+| Phase 3 | 2026-06-22 | 5 (bab67e01~6418c23e) | C4 scripts 归档 + C5 FastAPI 删 + C6 SCF + G5 data + D2 docs + E 文档 |
+| Phase 4 | 2026-06-22 | 2 (D1 代码 + D1 文档) | D1 scripts/ 子目录重组 |
+| **总计** | | **9 commits** | |
+
+### J.12 唯一未做项 (用户明确决定不做)
+
+- **D3**: Mobile/PC 双轨 → 响应式单轨 (1000 文件重构, 用户明确说"不做")

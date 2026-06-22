@@ -560,25 +560,50 @@ README.md 仍写 "70+ 个热门本科专业", 但 `public/data/manifest.json` �
 
 ---
 
-## ADR-024: scripts/ 子目录重组延后 (D1 不在 Phase 3 做)
+## ADR-024: scripts/ 子目录重组 (D1, Phase 4 执行)
 
 **日期**: 2026-06-22
-**状态**: ⏳ pending
+**状态**: ✅ 锁定 (Phase 4 执行, 2026-06-22)
 
 ### 上下文
-`scripts/` 顶层 52 个 active .py (Phase 3 归档 37 个后) 仍平铺, 找东西难。D1 建议按职能分子目录 (build/audit/synth/schema-fix/deploy/)。
+`scripts/` 顶层 52 个 active .py (Phase 3 归档 37 个后) 仍平铺, 找东西难。D1 按职能分子目录 (build/audit/synth/schema-fix/)。
 
-但 D1 改动大: 50 个脚本移动 + 改 `docs/` 里所有 `scripts/xxx.py` 路径引用 + 改脚本间 `from <module> import` 互引用。
+D1 改动大: 45 个脚本移动 + 改 `docs/` 里所有 `scripts/xxx.py` 路径引用 + 改脚本间 `from <module> import` 互引用 + 改 26 个脚本的 `Path(__file__).parents[N]` ROOT 计算。
 
 ### 决定
-**Phase 3 不做 D1**, 单独立项。Phase 3 只做 C4 归档 (移到 `_archive/`), 顶层保持平铺。
+**Phase 4 执行 D1** (2026-06-22), 按职能分 4 子目录:
+
+| 子目录 | 数量 | 职能 |
+|---|---|---|
+| `scripts/build/` | 18 | 构建 + 渲染 + 注入 + 部署输出 (build_sitemap/render_*/inject_*/push_wechat 等) |
+| `scripts/audit/` | 10 | 质量审计 + 验证 (smart_audit/check_*/variance_*/verify_* 等) |
+| `scripts/synth/` | 4 | LLM 合成 (batch_synth/synth_monitor/synth_queue_worker/synth_trigger) |
+| `scripts/schema-fix/` | 13 | schema 修复 + manifest 维护 (backfill_*/fix_*/rekey_*/rebuild_manifest 等) |
+| `scripts/` 顶层 | 6 | 工作流 + 数据工具 (__init__/claim/next_pick/generate_sample_rank_gd_js/chsi_name_normalize/perf_measure) |
+| `scripts/batches/` | 28 | 批量脚本 (不动, 已是子目录) |
+
+**import 修复** (2 处互引用):
+- `scripts/batches/add_h_features.py`: `sys.path.insert` 加 `scripts/build/` (inject_seo 移到 build/)
+- `scripts/build/inject_theme_colors.py`: `ROOT` `parents[1]`→`parents[2]`, `sys.path` 加 `scripts/build/`
+
+**ROOT 路径修复** (26 个脚本):
+- 移动到子目录的脚本 `Path(__file__).parents[1]`→`parents[2]` 或 `parent.parent`→`parent.parent.parent`
+- 确保仍指向项目根 (验证: 4 代表性脚本 ROOT 全部正确)
+
+**docs 路径同步** (41 处, 6 个 docs 文件):
+- audit_registry_schema.md (8 处) / ARCHITECTURE.md (6 处) / DEPLOY_HYBRID.md (4 处)
+- PIPELINE_major_quality.md (20 处) / PRELAUNCH_REVIEW_2026-06-21.md (1 处) / DECISIONS.md (2 处)
 
 ### 后果
-- ✅ Phase 3 风险可控, 不破坏 import
-- ⚠️ `scripts/` 顶层 52 个 .py 仍平铺, 找东西难
-- ⏳ D1 单独立项时, 需同步改 docs 路径引用 + 脚本间 import
+- ✅ `scripts/` 顶层从 52 → 6 (找东西容易)
+- ✅ 按职能分类, 新脚本有明确归属
+- ✅ 4 代表性脚本 ROOT 验证通过
+- ⚠️ 历史文档 (如 `_archive/` 里的 PLAN_day*) 路径引用未同步 (归档文档, 不改)
+- ⚠️ 未来加新脚本需遵循子目录约定
 
----
+### 2 个 commit
+- `refactor(scripts): D1 scripts/ 子目录重组 — 45 脚本分到 build/audit/synth/schema-fix/`
+- `docs(scripts): D1 同步 docs/ 路径引用 — 41 处 scripts/xxx.py → scripts/<subdir>/xxx.py`
 
 ## 如何添加新 ADR
 
