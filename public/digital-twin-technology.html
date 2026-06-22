@@ -606,6 +606,11 @@ section.tab h2 { color: #F8FAFC; }
 section.tab p { color: #F8FAFC; }
 section.tab p.lede { color: #94A3B8; line-break: strict; }
 section.tab h3 { color: #F8FAFC; }
+/* 修复 2026-06-22: cs 主题深色背景, 默认 var(--ink, #1A1A1A) 不可见, 覆盖 12 处 var(--ink) 文字类 */
+:root { --ink: #F8FAFC; --rule: #1F2937; }
+/* a1b9ebc6 的 !important #1A1A1A 硬编码需要 theme override */
+section.tab .ovv-simple-fit-list li { color: #F8FAFC !important; }
+section.tab .ovv-pit { background: rgba(34, 197, 94, 0.04); border-color: #1F2937; }
 footer { background: rgba(11, 17, 32, 0.6); border-top: 1px solid #1F2937; }
 footer .label { color: #22C55E; }
 footer .data-source { color: #94A3B8; }
