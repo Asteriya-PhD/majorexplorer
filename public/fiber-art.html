@@ -13,10 +13,10 @@
 <link rel="preload" href="/js/ui-helpers.js" as="script">
 <link rel="preload" href="/js/major-search.js" as="script">
 
-<title>软件工程专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="软件工程不是「写代码的民工」—— 是用工程化方法论构建大规模软件系统的学科。2025 年本科平均月薪 8465 元 (软工专业薪酬榜第二), 一线大厂应届总包 30-60 万, 但代码量是计算机类的 ">
+<title>纤维艺术专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="纤维艺术是「织 + 染 + 编 + 绣 + 综合材料」的传统与当代工艺结合 — 织锦/刺绣/缂丝/编织/壁毯/纤维装置/材料艺术, 是「传统工艺 + 当代艺术 + 文创 + 时装」四栖. 本科起薪 5">
 <style>
-@import url('https://fonts.loli.net/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Archivo:wght@400;500;600;700;800;900&display=swap');
 
 :root {
   /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
@@ -191,18 +191,14 @@ footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 
 
 
-body { background: #0B1120; color: #F8FAFC; font-family: 'JetBrains Mono', 'PingFang SC', monospace; }
-/* 招 #5: 1px dot grid */
-body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(circle at 1px 1px, #1F2937 1px, transparent 0); background-size: 24px 24px; }
-/* 招 #1: noise + 招 #5 强化: CRT scanlines */
-body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+body { background: #F8F6F2; color: #1A1A1A; font-family: 'Noto Serif SC', 'EB Garamond', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.025) 0px, rgba(34, 197, 94, 0.025) 1px, transparent 1px, transparent 3px),
-    url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.77 0 0 0 0 0.37 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
-  opacity: 0.5;
+    radial-gradient(ellipse 800px 500px at 50% 0%, rgba(255, 248, 220, 0.30), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 50% 100%, rgba(184, 144, 42, 0.08), transparent 60%);
 }
-/* 招 #6: 终端光标 */
-body { cursor: text; }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); opacity: 0.30; mix-blend-mode: multiply; }
+section.tab { background: transparent; }
 
 
 /* === 速览 v2 — 3 子卡堆叠 === */
@@ -457,249 +453,251 @@ body { cursor: text; }
 }
 
 
-.hero { padding: 80px 0 96px; background: transparent; border-bottom: 1px solid #1F2937; position: relative; z-index: 2; overflow: hidden; }
-.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
-.terminal-panel { padding: 28px 24px; background: rgba(17, 24, 39, 0.6); border: 1px solid #22C55E; border-radius: 4px; box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.15), 0 0 40px rgba(34, 197, 94, 0.1), inset 0 0 60px rgba(34, 197, 94, 0.03); position: relative; }
-.terminal-panel::before { content: "╔═══════════════════════════════════════════════════════════╗"; position: absolute; top: -14px; left: 0; right: 0; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1; white-space: pre; opacity: 0.4; }
-.terminal-panel::after { content: "╚═══════════════════════════════════════════════════════════╝"; position: absolute; bottom: -14px; left: 0; right: 0; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1; white-space: pre; opacity: 0.4; }
-.terminal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #1F2937; }
-.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
-.terminal-dot.r { background: #EF4444; }
-.terminal-dot.y { background: #F59E0B; }
-.terminal-dot.g { background: #22C55E; }
-.terminal-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; margin-left: 8px; letter-spacing: 0.05em; }
-.terminal-status { margin-left: auto; display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #22C55E; letter-spacing: 0.08em; }
-.terminal-status::before { content: ""; width: 6px; height: 6px; background: #22C55E; border-radius: 50%; animation: pulse 1.2s infinite; }
-.terminal-body { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; line-height: 1.7; color: #94A3B8; }
-.terminal-line { margin-bottom: 6px; }
-.terminal-prompt { color: #22C55E; }
-.terminal-cmd { color: #F8FAFC; }
-.terminal-comment { color: #475569; }
-.terminal-output { color: #94A3B8; }
-.terminal-ascii { white-space: pre; color: #4ADE80; opacity: 1.0; line-height: 1.2; font-size: 0.75rem; margin: 12px 0; font-weight: 500; text-shadow: 0 0 6px rgba(34, 197, 94, 0.4); }
+/* === 美术馆白盒 (白墙 + 灯光锥 + 大理石地面) === */
+.museum-wall { position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 248, 220, 0.30) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 50% 100%, rgba(184, 144, 42, 0.08) 0%, transparent 60%),
+              linear-gradient(180deg, #F8F6F2 0%, #FBF9F4 50%, #F2EFE8 100%);
+}
+.museum-wall::before { content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  opacity: 0.6; mix-blend-mode: multiply; pointer-events: none;
+}
+.museum-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 80px; z-index: 1;
+  background: linear-gradient(180deg, transparent 0%, rgba(184, 144, 42, 0.05) 50%, rgba(184, 144, 42, 0.12) 100%),
+              repeating-linear-gradient(90deg, #F0EDE5 0px, #EBE7DE 30px, #F0EDE5 60px, #EDE8DF 90px);
+}
+.museum-floor::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184, 144, 42, 0.4) 20%, rgba(184, 144, 42, 0.4) 80%, transparent);
+}
+.museum-light { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 600px; height: 200px; z-index: 2; pointer-events: none;
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(255, 248, 220, 0.5) 0%, transparent 70%);
+}
 
-.hero-side { display: flex; flex-direction: column; }
-.hero-decor { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #22C55E; letter-spacing: 0.15em; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
-.hero-decor::before { content: "$ "; }
-.hero-decor::after { content: " █"; animation: pulse 1.2s infinite; }
-.hero h1 { font-family: 'JetBrains Mono', monospace; font-size: clamp(2.75rem, 5.5vw, 4.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: #F8FAFC; margin-bottom: 24px; min-height: 1.2em; }
-.hero h1 .typed-cursor { color: #22C55E; animation: pulse 1s infinite; }
-.hero h1 .typed::after { content: "_"; color: #22C55E; animation: pulse 1s infinite; }
-.hero-tagline { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; color: #94A3B8; margin-bottom: 32px; line-height: 1.7; }
-.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
-.tag { padding: 5px 12px; background: rgba(34, 197, 94, 0.05); border: 1px solid #1F2937; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #F8FAFC; letter-spacing: 0.05em; }
-.tag.primary { background: rgba(34, 197, 94, 0.1); border-color: #22C55E; color: #22C55E; }
+/* === 美术馆 logo === */
+.museum-logo { position: absolute; top: 28px; left: 50%; transform: translateX(-50%); z-index: 5; text-align: center; pointer-events: none; }
+.museum-logo-text { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.4em; color: #1A1A1A; text-transform: uppercase; border-bottom: 1px solid #1A1A1A; padding-bottom: 4px; }
+.museum-logo-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.7rem; color: #6B5D43; letter-spacing: 0.1em; margin-top: 4px; }
 
-.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #1F2937; border-bottom: 1px solid #1F2937; border-left: 1px solid #1F2937; border-right: 1px solid #1F2937; }
-@media (max-width: 768px) { .hero-stats { grid-template-columns: repeat(2, 1fr); } }
-.stat { padding: 20px 22px; border-right: 1px solid #1F2937; position: relative; }
-.stat:last-child { border-right: none; }
-@media (max-width: 768px) { .stat:nth-child(2) { border-right: none; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid #1F2937; } }
-.stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.15em; }
-.stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 600; color: #22C55E; margin-top: 6px; letter-spacing: -0.01em; }
+/* === 朱砂印章 === */
+.cinnabar-seal { position: absolute; top: 90px; right: 80px; z-index: 6; width: 70px; height: 70px; background: #B83A2A;
+  display: flex; align-items: center; justify-content: center; font-family: 'Noto Serif SC', serif; font-weight: 900; color: #FFE8B0; font-size: 0.78rem; line-height: 1.1; text-align: center;
+  box-shadow: 0 2px 8px rgba(184, 58, 42, 0.3), inset 0 0 0 2px #FFE8B0, inset 0 0 0 3px #B83A2A; transform: rotate(-6deg); }
+.cinnabar-seal::before { content: ""; position: absolute; inset: 4px; border: 1px solid #FFE8B0; opacity: 0.5; }
 
-section.tab { border-top: 1px solid #475569; border-bottom: 2px solid #475569; }
-section.tab:first-of-type { border-top: none; }
-.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: #1F2937; border: 1px solid #1F2937; border-radius: 4px; overflow: hidden; margin-top: 32px; position: relative; z-index: 1; }
-.bento { position: relative; }
+/* === 金属铭牌 === */
+.brass-plate { position: absolute; top: 88px; left: 80px; z-index: 6; padding: 8px 18px;
+  background: linear-gradient(135deg, #C8A26E 0%, #B8902A 50%, #8B6914 100%); border: 1px solid #6B5D43;
+  font-family: 'EB Garamond', serif; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: #2A1A0A;
+  box-shadow: 0 2px 6px rgba(107, 93, 67, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
 
-.bento-item:nth-child(3) { position: relative; }
-.bento-item:nth-child(3)::before,
-.bento-item:nth-child(6)::before,
-.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(34, 197, 94, 0.85); z-index: 1; pointer-events: none; }
-.bento-item { padding: 28px 24px 24px; background: rgba(11, 17, 32, 0.6); position: relative; z-index: 0; transition: background 200ms; }
-.bento-item:hover { background: rgba(17, 24, 39, 0.8); }
-.bento-monogram { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 0.9375rem; font-weight: 700; }
-.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #22C55E; border: 1px solid #22C55E; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
-.bento-name { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; color: #F8FAFC; padding-right: 44px; text-wrap: balance; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.7em; }
-.bento-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; line-height: 1.5; }
+/* === 装饰色卡 === */
+.color-swatches { position: absolute; left: 36px; top: 220px; z-index: 5; width: 96px; height: 168px; padding: 12px 8px; background: linear-gradient(180deg, #FFFFFF 0%, #F5F0E5 100%); border: 1.5px solid #B8902A; border-radius: 2px; box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 0 0 1px #FFFFFF; z-index: 5; }
+.color-swatches::before { content: "PALETTE"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #B8902A; color: #FFFFFF; font-family: 'EB Garamond', serif; font-size: 0.5rem; letter-spacing: 0.3em; padding: 2px 8px; font-weight: 700; }
+.color-swatch { position: absolute; left: 50%; display: block; height: 12px; border-radius: 2px 8px 2px 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 -1px 0 rgba(0,0,0,0.15); }
+.swatch-1 { top: 28px; width: 78px; transform: translateX(-50%) rotate(-4deg); background: linear-gradient(90deg, #C8A26E 0%, #B8902A 50%, #8B6914 100%); }
+.swatch-2 { top: 48px; width: 64px; transform: translateX(-50%) rotate(7deg); background: linear-gradient(90deg, #DC2626 0%, #991B1B 100%); }
+.swatch-3 { top: 68px; width: 82px; transform: translateX(-50%) rotate(-2deg); background: linear-gradient(90deg, #1E40AF 0%, #1E3A8A 100%); }
+.swatch-4 { top: 88px; width: 70px; transform: translateX(-50%) rotate(5deg); background: linear-gradient(90deg, #4A5D3A 0%, #2A3A1A 100%); }
+.swatch-5 { top: 108px; width: 60px; transform: translateX(-50%) rotate(-3deg); background: linear-gradient(90deg, #6B3410 0%, #4A2A0A 100%); }
+.color-swatch-label { display: none; }
 
+/* === 画框 (双线 + 暖金内沿) === */
+.gallery-frame-wrap { position: relative; margin: 60px 24px 0; z-index: 4; padding: 18px; background: #F8F6F2;
+  box-shadow: 0 0 0 1px #1A1A1A, 0 0 0 5px #F8F6F2, 0 0 0 6px #1A1A1A, 0 24px 48px rgba(0, 0, 0, 0.10), inset 0 0 0 1px #B8902A; }
+.gallery-frame-wrap::before, .gallery-frame-wrap::after { content: ""; position: absolute; width: 24px; height: 24px; border: 1.5px solid #B8902A; pointer-events: none; }
+.gallery-frame-wrap::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.gallery-frame-wrap::after { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+.frame-corner-bl, .frame-corner-br { position: absolute; width: 24px; height: 24px; border: 1.5px solid #B8902A; pointer-events: none; }
+.frame-corner-bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+.frame-corner-br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+.gallery-frame-inner { background: #FFFFFF; padding: 40px 36px 28px; position: relative; }
+
+/* === 展签 (bottom gallery label) === */
+.gallery-label { position: relative; margin: 32px auto 0; z-index: 6; padding: 12px 28px; background: #FFFFFF; border: 1px solid #1A1A1A; box-shadow: 0 4px 12px rgba(0,0,0,0.12); text-align: center; max-width: 720px; }
+.gallery-label::before { content: ""; position: absolute; top: -1px; left: 16px; right: 16px; height: 1px; background: linear-gradient(90deg, transparent, #B8902A 20%, #B8902A 80%, transparent); }
+.label-eyebrow { font-family: 'EB Garamond', serif; font-weight: 600; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: #B8902A; }
+.label-title { font-family: 'Noto Serif SC', serif; font-size: 0.95rem; font-weight: 700; color: #1A1A1A; margin-top: 4px; }
+.label-meta { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.7rem; color: #6B5D43; margin-top: 4px; letter-spacing: 0.05em; }
+
+/* === Hero 白盒主内容 === */
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #B8902A; position: relative; z-index: 2; overflow: hidden; min-height: 720px; color: #1A1A1A; }
+.hero, .hero * { --font-heading: 'Noto Serif SC', 'EB Garamond', serif; --font-num: 'EB Garamond', serif; }
+.hero .container { position: relative; z-index: 3; }
+section.tab h1, section.tab h2, section.tab h3, section.tab h4 { font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; }
+.num, .num * { font-family: 'EB Garamond', serif; font-variant-numeric: lining-nums; }
+
+.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
+.hero-chapter { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.4em; color: #B8902A; margin-bottom: 14px; text-transform: uppercase; display: inline-block; padding-bottom: 4px; border-bottom: 1px solid #B8902A; }
+.hero-title { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.02em; color: #1A1A1A; margin: 0 0 6px; }
+.title-cn { display: block; }
+.title-en-small { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-weight: 400; font-size: 0.45em; color: #6B5D43; letter-spacing: 0.25em; margin-bottom: 8px; text-transform: uppercase; }
+.title-en { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B5D43; letter-spacing: 0.3em; margin-top: 14px; text-transform: uppercase; }
+.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #4A5A3A; max-width: 720px; margin: 20px auto 0; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px auto 0; max-width: 100%; padding: 16px 0; border-top: 1px solid rgba(184, 144, 42, 0.3); border-bottom: 1px solid rgba(184, 144, 42, 0.3); }
+.hu-stat { text-align: center; padding: 6px 4px; position: relative; }
+.hu-stat:not(:last-child)::after { content: ""; position: absolute; right: -6px; top: 22%; bottom: 22%; width: 1px; background: rgba(184, 144, 42, 0.2); }
+.hu-stat-label { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.25em; color: #B8902A; margin-bottom: 6px; }
+.hu-stat-value { font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; color: #1A1A1A; line-height: 1.3; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 24px; }
+.hu-tag { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.78rem; letter-spacing: 0.05em; padding: 4px 14px; border: 1px solid #1A1A1A; color: #1A1A1A; background: rgba(248, 246, 242, 0.6); }
+
+/* === Body section 配色 (白盒浅色) === */
+section.tab { border-top: 1px solid #D6D2C5; }
+section.tab h2 { color: #1A1A1A; font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: clamp(1.375rem, 2.2vw, 1.625rem); }
+section.tab h3 { color: #1A1A1A; font-family: 'Noto Serif SC', serif; }
+section.tab p { color: #2A2520; }
+section.tab p.lede { color: #4A5A3A; }
+.watermark { font-family: 'EB Garamond', serif; color: #D6D2C5; }
+footer { background: #2A2520; color: #FAFAF6; border-top: 1px solid #B8902A; }
+footer .label { color: #FAFAF6; font-family: 'EB Garamond', serif; }
+footer .data-source { color: #999; }
+.drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B83A2A; font-weight: 900; }
+
+/* === 速览 v2 (白盒 default) === */
+.ovv-card { background: #FFFFFF; border: 1px solid #E5E5E0; }
+.ovv-card-title { color: #1A1A1A; }
+.ovv-card-tag { color: #6B5D43; }
+.ovv-foundations-label, .ovv-dir-name, .ovv-skill { color: #1A1A1A; }
+.ovv-dir { background: #FBF9F4; border-color: #D6D2C5; }
+.ovv-dir:hover { border-color: #B83A2A; background: #FAFAF6; }
+.ovv-dir-desc { color: #4A5A3A; }
+.ovv-skill { background: #FBF9F4; color: #1A1A1A; border-color: #1A1A1A; }
+.ovv-bonus { color: #2A2520; background: rgba(184, 144, 42, 0.06); border-left: 3px solid #B8902A; }
+.ovv-pit { background: #FBF9F4; border-color: #D6D2C5; border-left: 3px solid #B83A2A; }
+.ovv-pit-reality { color: #2A2520; }
+.ovv-fit-col { background: #FBF9F4; border-color: #D6D2C5; }
+.ovv-fit-col.is-yes { background: rgba(46, 125, 50, 0.05); border-color: #2E7D32; }
+.ovv-fit-col.is-no { background: rgba(185, 28, 28, 0.05); border-color: #B83A2A; }
+.ovv-fit-list li { color: #1A1A1A; border-color: #D6D2C5; }
+.ovv-card-head { border-color: #D6D2C5; }
+.ovv-pits .ovv-pit:last-child:nth-child(odd) { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
+
+/* === 院校 === */
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; position: relative; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.bento-item::before { content: "✦"; position: absolute; top: 20px; right: 20px; color: #B8902A; font-size: 0.875rem; opacity: 0.5; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #B83A2A; }
+.bento-item:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1A1A1A; color: #FAFAF6; font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #B83A2A; border: 1px solid #B83A2A; border-radius: 0; font-family: 'EB Garamond', serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.8125rem; color: #6B5D43; line-height: 1.5; }
+
+/* === 公司 === */
 .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.company { padding: 24px 22px 20px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
-.company:hover { border-color: #22C55E; transform: translateY(-2px); }
-.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.company-monogram { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; }
-.company-tier { padding: 2px 8px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; }
-.tier-S { background: #22C55E; color: #0B1120; }
-.tier-A { background: transparent; color: #22C55E; border: 1px solid #22C55E; }
-.tier-B { background: rgba(34, 197, 94, 0.1); color: #94A3B8; }
-.company-name { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; color: #F8FAFC; }
-.company-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #94A3B8; line-height: 1.5; margin-bottom: 12px; }
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #1F2937; }
-.sparkline-bar { flex: 1; background: #1F2937; min-height: 2px; transition: background 250ms; }
-.company:hover .sparkline-bar { background: #22C55E; opacity: 0.6; }
-.sparkline-label { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #475569; letter-spacing: 0.1em; margin-top: 4px; }
+.company { padding: 28px 24px 22px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.company:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1A1A1A; color: #FAFAF6; font-family: 'EB Garamond', serif; font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #B8902A; color: #B8902A; font-family: 'EB Garamond', serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #B8902A; color: #FFFFFF; border-color: #B8902A; }
+.tier-A { background: transparent; }
+.tier-B { background: transparent; color: #6B5D43; border-color: #D6D2C5; }
+.company-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #1A1A1A; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #D6D2C5; }
+.sparkline-bar { flex: 1; background: #D6D2C5; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #B8902A; }
+.sparkline-label { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.6875rem; color: #6B5D43; letter-spacing: 0.05em; margin-top: 6px; }
 
-.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
-.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #1F2937; font-size: 0.875rem; }
+/* === 薪资表 === */
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #D6D2C5; font-size: 0.9375rem; }
 .salary-table tr:last-child td { border-bottom: none; }
-.salary-table th { background: rgba(17, 24, 39, 0.6); font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #94A3B8; }
-.salary-stage { font-weight: 600; color: #F8FAFC; }
-.salary-bar { display: inline-block; width: 80px; height: 6px; background: #1F2937; border-radius: 1px; margin-left: 8px; vertical-align: middle; overflow: hidden; }
-.salary-bar-fill { display: block; height: 100%; background: #22C55E; }
-.yoy { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; border-radius: 2px; }
-.yoy.up   { color: #22C55E; background: rgba(34, 197, 94, 0.1); }
-.yoy.down { color: #EF4444; background: rgba(239, 68, 68, 0.1); }
-.yoy.flat { color: #94A3B8; background: rgba(31, 41, 55, 0.5); }
-.approx { font-family: 'JetBrains Mono', monospace; color: #475569; margin-right: 4px; }
+.salary-table th { background: #F8F6F2; font-family: 'EB Garamond', serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #B8902A; }
+.salary-stage { font-family: 'Noto Serif SC', serif; font-weight: 700; color: #1A1A1A; font-size: 1.0625rem; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(184, 144, 42, 0.12); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #B8902A; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.yoy { display: inline-block; font-family: 'EB Garamond', serif; font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #2E7D32; background: rgba(46, 125, 50, 0.08); }
+.yoy.down { color: #B83A2A; background: rgba(184, 58, 42, 0.08); }
+.yoy.flat { color: #6B5D43; background: rgba(107, 93, 67, 0.06); }
 
+/* === 就业方向 === */
 .direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #1F2937; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #D6D2C5; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.875rem; color: #F8FAFC; }
-.direction-bar { height: 10px; background: #1F2937; border-radius: 1px; overflow: hidden; }
-.direction-bar-fill { height: 100%; background: #22C55E; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-.direction-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #F8FAFC; }
+.direction-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 600; color: #1A1A1A; }
+.direction-bar { height: 8px; background: rgba(184, 144, 42, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #B8902A; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.path-card { padding: 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
-.path-card:hover { border-color: #22C55E; transform: translateY(-2px); }
-.path-pct { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #22C55E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
-.path-name { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; letter-spacing: 0.08em; margin-top: 8px; text-transform: uppercase; }
+/* === 深造路径 === */
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; text-align: center; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.path-card:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
+.path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #6B5D43; margin-top: 8px; }
 
 .path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
+/* === 学长学姐说 === */
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
-.quote { padding: 28px 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-left: 2px solid #22C55E; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
-.quote:hover { border-left-width: 6px; transform: translateX(4px); }
-.quote::before { content: "// "; color: #22C55E; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.quote-avatar { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #22C55E; color: #0B1120; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; }
-.quote-byline strong { display: block; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #F8FAFC; font-size: 0.875rem; }
-.quote-byline .quote-source { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; }
-.quote-text { font-family: 'JetBrains Mono', monospace; font-size: 1.0625rem; line-height: 1.7; color: #F8FAFC; font-style: normal; }
-.quote-text::before { content: "“"; color: #22C55E; }
-.quote-text::after { content: "”"; color: #22C55E; }
+.quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-left: 4px solid #B83A2A; border-radius: 0 3px 3px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1A1A1A; color: #FAFAF6; font-family: 'EB Garamond', serif; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'Noto Serif SC', serif; font-weight: 700; color: #1A1A1A; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B5D43; }
+.quote-text { font-family: 'Noto Serif SC', serif; font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #1A1A1A; }
+.quote-text::before { content: "「"; color: #B83A2A; }
+.quote-text::after { content: "」"; color: #B83A2A; }
 
+/* === 选科 === */
 .xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #1F2937; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #D6D2C5; }
 .xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.875rem; color: #F8FAFC; }
-.xuanke-bar { height: 8px; background: #1F2937; border-radius: 1px; overflow: hidden; }
-.xuanke-bar-fill { height: 100%; background: #22C55E; }
-.xuanke-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #22C55E; }
+.xuanke-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #1A1A1A; }
+.xuanke-bar { height: 6px; background: #D6D2C5; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #B8902A; }
+.xuanke-pct { font-family: 'EB Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #B8902A; }
 
-.curriculum-lede { color: #94A3B8; font-size: 0.875rem; margin: 0 0 32px; max-width: 720px; }
+/* === 课程 === */
+.curriculum-lede { font-family: 'EB Garamond', serif; font-style: italic; color: #4A5A3A; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
 .curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.curriculum-block { padding: 28px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; transition: border-color 250ms, transform 250ms; }
-.curriculum-block:hover { border-color: #22C55E; transform: translateY(-2px); }
-.curriculum-title { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #22C55E; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #1F2937; }
-.course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.875rem; border-bottom: 1px dashed transparent; }
-.course:hover { border-bottom-color: #1F2937; }
-.course-name { color: #F8FAFC; }
-.course-credit { color: #94A3B8; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; margin-left: 8px; }
+.curriculum-block { padding: 32px 28px; background: #FFFFFF; border: 1px solid #D6D2C5; border-radius: 3px; transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.curriculum-block:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
+.curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; color: #1A1A1A; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #D6D2C5; font-weight: 700; }
+.course { color: #1A1A1A; border-bottom: 1px dashed #D6D2C5; padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(184, 144, 42, 0.05); padding-left: 8px; }
+.course-name { color: #1A1A1A; }
+.course-credit { color: #B8902A; font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
 
-.cta-block { margin-top: 32px; padding: 64px 48px; background: rgba(11, 17, 32, 0.8); border: 1px solid #22C55E; border-radius: 4px; text-align: center; position: relative; overflow: hidden; }
-.cta-block::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.05) 0px, transparent 1px); background-size: 100% 3px; pointer-events: none; }
-.cta-block h3 { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; margin-bottom: 12px; color: #F8FAFC; position: relative; z-index: 1; }
-.cta-block p { color: #94A3B8; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+/* === CTA === */
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #1A1A1A; text-align: center; position: relative; }
+.cta-block::before { content: "MAJOR · MUSEUM · 2026"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #F8F6F2; padding: 0 16px; color: #B8902A; font-family: 'EB Garamond', serif; font-size: 0.7rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: 'Noto Serif SC', serif; font-size: 1.75rem; margin-bottom: 12px; color: #1A1A1A; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: #4A5A3A; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
 .cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
-.cta-input { padding: 14px 18px; background: #0B1120; border: 1px solid #1F2937; border-radius: 2px; color: #F8FAFC; font-family: 'JetBrains Mono', monospace; font-size: 1rem; width: 180px; outline: none; }
-.cta-input:focus { border-color: #22C55E; }
-.cta-button { padding: 14px 36px; background: #22C55E; color: #0B1120; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.9375rem; font-weight: 700; }
-.cta-note { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #475569; margin-top: 16px; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #F8F6F2; border: 1px solid #D6D2C5; color: #1A1A1A; font-family: 'Noto Serif SC', serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #B83A2A; }
+.cta-button { padding: 14px 36px; background: #1A1A1A; color: #FAFAF6; font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-button:hover { background: #B83A2A; }
+.cta-note { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B5D43; margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #1A1A1A; color: #1A1A1A; font-family: 'EB Garamond', serif; font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #1A1A1A; color: #FAFAF6; }
 
-.watermark { color: #22C55E; opacity: 0.04; }
-.section-num { color: #22C55E; }
-section.tab h2 { color: #F8FAFC; }
-section.tab p { color: #F8FAFC; }
-section.tab p.lede { color: #94A3B8; line-break: strict; }
-section.tab h3 { color: #F8FAFC; }
-/* 修复 2026-06-22: cs 主题深色背景全面 redesign 适配 */
-/* 1. 全局 var(--ink) 浅色 (12 处 fallback #1A1A1A → 浅色) */
-:root { --ink: #F8FAFC; --rule: #1F2937; }
-/* 2. fit-check section redesign — 原 is-yes/is-no 用 0.03 浅色 bg 在深主题格格不入 */
-section.tab .ovv-simple-fit-col {
-  padding: 24px 24px 20px; border-radius: 4px;
-  background: rgba(11, 17, 32, 0.4); border: 1px solid #1F2937;
+/* === 响应式 === */
+@media (max-width: 1023px) {
+  .gallery-frame-wrap { max-width: 92%; margin: 60px auto 0; }
+  .gallery-frame-inner { padding: 40px 32px 32px; }
+  .cinnabar-seal { right: 40px; top: 70px; width: 56px; height: 56px; font-size: 0.65rem; }
+  .brass-plate { left: 40px; top: 68px; padding: 6px 14px; font-size: 0.6rem; }
+  .color-swatches { left: 16px; bottom: 16px; }
+  .gallery-label { bottom: 8px; min-width: 260px; padding: 8px 18px; }
+  .museum-logo-text { font-size: 0.8rem; }
+  .museum-logo-sub { font-size: 0.6rem; }
 }
-section.tab .ovv-simple-fit-col.is-yes {
-  border-left: 3px solid #22C55E;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(11, 17, 32, 0.4));
-}
-section.tab .ovv-simple-fit-col.is-no {
-  border-left: 3px solid #F87171;
-  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08), rgba(11, 17, 32, 0.4));
-}
-section.tab .ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #22C55E; }
-section.tab .ovv-simple-fit-col.is-no .ovv-simple-fit-label { color: #F87171; }
-section.tab .ovv-simple-fit-list li {
-  color: #F8FAFC !important; /* override a1b9ebc6 !important #1A1A1A */
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-}
-/* 3. pit-reality card 背景适配深主题 */
-section.tab .ovv-pit {
-  background: rgba(11, 17, 32, 0.4); border-color: #1F2937;
-}
-section.tab .ovv-pit-reality { color: #F8FAFC; }
-/* 4. lede 段落 (其他 section 标题下小字) */
-section.tab p.lede { color: #94A3B8; }
-section.tab .section-num { color: #22C55E; }
-/* 5. watkermark 背景水印数字 */
-section.tab .watermark { color: #22C55E; opacity: 0.04; }
-/* 6. overview_v2 redesign — AI 等 cs 主题深色背景 (Day 23 06-22 二次发现: 速览 Foundations section 还是浅色) */
-section.tab .ovv-card {
-  background: rgba(11, 17, 32, 0.5); border-color: #1F2937;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-section.tab .ovv-card::before { background: #22C55E; }
-section.tab .ovv-card.is-blue::before { background: #22C55E; }
-section.tab .ovv-card.is-orange::before { background: #F87171; }
-section.tab .ovv-card-head { border-bottom-color: rgba(255, 255, 255, 0.1); }
-section.tab .ovv-card-num { color: #22C55E; }
-section.tab .ovv-card-title { color: #F8FAFC; }
-section.tab .ovv-card-tag { color: #94A3B8; }
-section.tab .ovv-foundations-label,
-section.tab .ovv-directions-label { color: #94A3B8; }
-section.tab .ovv-timeline::before { background: linear-gradient(90deg, transparent, #22C55E 20%, #22C55E 80%, transparent); }
-section.tab .ovv-tl-step::before { background: #0B1120; border-color: #22C55E; }
-section.tab .ovv-tl-step span { color: #F8FAFC; }
-section.tab .ovv-dir {
-  background: rgba(11, 17, 32, 0.4); border-color: #1F2937;
-}
-section.tab .ovv-dir:hover { border-color: #22C55E; background: rgba(34, 197, 94, 0.06); }
-section.tab .ovv-dir-num { color: #22C55E; }
-section.tab .ovv-dir-name { color: #F8FAFC; }
-section.tab .ovv-dir-desc { color: #94A3B8; }
-section.tab .ovv-skill {
-  background: rgba(11, 17, 32, 0.4); border-color: #22C55E; color: #22C55E;
-}
-section.tab .ovv-bonus {
-  background: rgba(184, 144, 42, 0.08); border-left-color: #B8902A; color: #F8FAFC;
-}
-/* v2 fit-check (与 simple 不同的类名 .ovv-fit-col 不是 .ovv-simple-fit-col) */
-section.tab .ovv-fit-col {
-  background: rgba(11, 17, 32, 0.4); border-color: #1F2937;
-}
-section.tab .ovv-fit-col.is-yes {
-  border-left: 3px solid #22C55E;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(11, 17, 32, 0.4));
-}
-section.tab .ovv-fit-col.is-no {
-  border-left: 3px solid #F87171;
-  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08), rgba(11, 17, 32, 0.4));
-}
-section.tab .ovv-fit-col.is-yes .ovv-fit-label { color: #22C55E; }
-section.tab .ovv-fit-col.is-no .ovv-fit-label { color: #F87171; }
-section.tab .ovv-fit-list li {
-  color: #F8FAFC; border-bottom-color: rgba(255, 255, 255, 0.08);
-}
-footer { background: rgba(11, 17, 32, 0.6); border-top: 1px solid #1F2937; }
-footer .label { color: #22C55E; }
-footer .data-source { color: #94A3B8; }
-
-.drop-cap::first-letter { font-family: 'JetBrains Mono', monospace; font-size: 4em; font-weight: 700; line-height: 0.9; float: left; margin: 0.05em 0.12em 0 0; color: #22C55E; }
-
-.lede { color: #94A3B8; line-break: strict; }
-
-.terminal-prompt, .hero-decor { color: #22C55E; }
-
-/* ── CS mobile patch (≤480px) — hide 终端 ASCII 3D 大字, 因为下方有干净标题重复显示 ── */
-@media (max-width: 480px) {
-  .terminal-panel { display: none !important; }
-  .hero-grid { display: block !important; }
-  .hero { padding-top: 40px !important; padding-bottom: 32px !important; }
+@media (max-width: 767px) {
+  .gallery-frame-wrap { padding: 12px; }
+  .gallery-frame-inner { padding: 30px 20px 24px; }
+  .cinnabar-seal, .brass-plate { display: none; }
+  .color-swatches { display: none; }
+  .gallery-label { position: static; transform: none; margin: 24px auto 0; max-width: 90%; }
+  .museum-logo { top: 16px; }
+  .museum-logo-text { font-size: 0.7rem; letter-spacing: 0.25em; }
+  .museum-logo-sub { font-size: 0.55rem; }
 }
 
 
@@ -1011,49 +1009,57 @@ footer .data-source { color: #94A3B8; }
 <body>
 
 <header class="hero">
-  <div class="container">
-    <div class="hero-grid">
-      <div class="terminal-panel">
-        <div class="terminal-header">
-          <span class="terminal-dot r"></span>
-          <span class="terminal-dot y"></span>
-          <span class="terminal-dot g"></span>
-          <span class="terminal-title">~/major/computer-science.md</span>
-          <span class="terminal-status">在线</span>
+  <div class="museum-wall"></div>
+  <div class="museum-floor"></div>
+  <div class="museum-light"></div>
+  <!-- 顶部 美术馆 logo -->
+  <div class="museum-logo">
+    <div class="museum-logo-text">MUSEUM OF MAJOR</div>
+    <div class="museum-logo-sub">Major Explorer Collection · Est. 2026</div>
+  </div>
+  <!-- 朱红印章 (右) -->
+  <div class="cinnabar-seal">MAJOR<br/>EXPLORER</div>
+  <!-- 金属铭牌 (左) -->
+  <div class="brass-plate">Section I · Studies</div>
+  <!-- 装饰色卡 (左下, 替代颜料管) -->
+  <div class="color-swatches">
+    <div class="color-swatch swatch-1"><span class="color-swatch-label">黄</span></div>
+    <div class="color-swatch swatch-2"><span class="color-swatch-label">朱</span></div>
+    <div class="color-swatch swatch-3"><span class="color-swatch-label">青</span></div>
+    <div class="color-swatch swatch-4"><span class="color-swatch-label">墨</span></div>
+    <div class="color-swatch swatch-5"><span class="color-swatch-label">赭</span></div>
+  </div>
+  <!-- 画框 + 主内容 -->
+  <div class="gallery-frame-wrap">
+    <div class="frame-corner-bl"></div>
+    <div class="frame-corner-br"></div>
+    <div class="gallery-frame-inner">
+      <div class="hero-content">
+        <div class="hero-chapter">Museum of Studies</div>
+        <h1 class="hero-title">
+          <span class="title-en-small">Museum of</span>
+          <span class="title-cn">纤维艺术</span>
+          <span class="title-en">HISTORY · THEORY · CURATORSHIP</span>
+        </h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=13#majors">艺术学</a><span class="bc-sep">›</span><a href="/?discipline=13&sub=1305#majors">设计学类</a><span class="bc-sep">›</span><span class="bc-current">纤维艺术</span></div>
+        <p class="hero-tagline">纤维艺术是「织 + 染 + 编 + 绣 + 综合材料」的传统与当代工艺结合 — 织锦/刺绣/缂丝/编织/壁毯/纤维装置/材料艺术, 是「传统工艺 + 当代艺术 + 文创 + 时装」四栖. 本科起薪 5-8 万, 头部国际品牌 (爱马仕/LV) 工艺师 15-30 万, 顶级纤维艺术家 (双年展/国际画廊) 年入 50-</p>
+        <div class="hu-stats-grid">
+          <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">艺术学 · 设计学类</span></div>
+          <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">4 年 · 艺术学学士</span></div>
+          <div class="hu-stat"><span class="hu-stat-label">难度</span><span class="hu-stat-value">★★★★☆</span></div>
+          <div class="hu-stat"><span class="hu-stat-label">更新</span><span class="hu-stat-value">2026-06</span></div>
         </div>
-        <div class="terminal-body">
-          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">cat /major/software-engineering.md</span></div>
-          <pre class="terminal-ascii">   _____                  _       ____                       _
-  / ____|                | |     / ____|                     | |
- | |     _ __ ___  _ __ | | __ | (___  _ __   ___ _ __   ___| |__
- | |    | '__/ _ \| '_ \| |/ /  \___ \| '_ \ / _ \ '_ \ / __| '_ \
- | |____| | | (_) | | | |   <   ____) | |_) |  __/ | | | (__| | | |
-  \_____|_|  \___/|_| |_|_|\_\ |_____/| .__/ \___|_| |_|\___|_| |_|
-                                       |_|
-</pre>
-          <div class="terminal-line"><span class="terminal-comment"># 软件工程不是「写代码的民工」—— 是用工程化方法论构建大规模软件系统的学科。2025 年本科平均月薪 8465 元 (软工专业薪酬榜第二), 一线大厂应届总包 30-60 万, 但代码量是计算机类的 1.5 倍, 需要极强的自学能力和抗压能</span></div>
-          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">echo "高薪 · 4 年制 · 工学学士"</span></div>
-          <div class="terminal-line terminal-output">高薪 · 4 年 · 工学学士 · 按 Tab 浏览</div>
-          <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">_</span><span class="typed-cursor">█</span></div>
-        </div>
-      </div>
-      <div class="hero-side">
-        <div class="hero-decor">cat /major/software-engineering.md</div>
-        <h1>软件工程<span class="typed">_</span></h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=08#majors">工学</a><span class="bc-sep">›</span><a href="/?discipline=08&sub=0809#majors">计算机类</a><span class="bc-sep">›</span><span class="bc-current">软件工程</span></div>
-        <p class="hero-tagline">// 软件工程不是「写代码的民工」—— 是用工程化方法论构建大规模软件系统的学科。2025 年本科平均月薪 8465 元 (软工专业薪酬榜第二), 一线大厂应届总包 30-60 万, 但代码量是计算机类的 </p>
         <div class="hero-tags">
-          <span class="tag primary">[高薪]</span><span class="tag primary">[代码量大]</span><span class="tag primary">[工程导向]</span>
-          <span class="tag">实习重要</span><span class="tag">35岁争议</span>
-        </div>
-        <div class="hero-stats">
-          <div class="stat"><div class="stat-label">类型<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">★ 4.1/5</span></div></div><div class="stat-value">工学 · 计算机类</div></div>
-          <div class="stat"><div class="stat-label">学制</div><div class="stat-value">4Y · 工学学士</div></div>
-          <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★★★☆</div></div>
-          <div class="stat"><div class="stat-label">更新</div><div class="stat-value">2026-06</div></div>
+          <span class="hu-tag">纤维艺术</span><span class="hu-tag">编织/染织</span><span class="hu-tag">传统工艺</span><span class="hu-tag">非遗传承</span><span class="hu-tag">材料艺术</span>
         </div>
       </div>
     </div>
+  </div>
+  <!-- 展签 (底部) -->
+  <div class="gallery-label">
+    <div class="label-eyebrow">Collection · F.001</div>
+    <div class="label-title">纤维艺术</div>
+    <div class="label-meta">Major Explorer Editorial · 2026 春季</div>
   </div>
 </header>
 
@@ -1062,7 +1068,7 @@ footer .data-source { color: #94A3B8; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <p class="lede drop-cap ovv-lede">软件工程是用工程化方法构建大规模软件系统的学科。2025 年本科平均月薪 8465 元, 一线大厂应届总包 30-60 万, 但代码量是计算机类的 1.5 倍, 需要极强的自学能力与抗压能力。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 02</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>程序设计基础 (C 语言)</span></div><div class="ovv-tl-step"><span>面向对象程序设计 (Java/C++)</span></div><div class="ovv-tl-step"><span>数据结构与算法</span></div><div class="ovv-tl-step"><span>计算机组成原理</span></div><div class="ovv-tl-step"><span>计算机网络</span></div><div class="ovv-tl-step"><span>操作系统原理</span></div><div class="ovv-tl-step"><span>数据库系统原理</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">系统软件与编译器</div><div class="ovv-dir-desc">清华大学特色方向, 偏底层系统与编译技术, 适合立志做操作系统/数据库内核的学生。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">软件分析与形式化验证</div><div class="ovv-dir-desc">南京大学特色方向, 聚焦高可信软件, 学完后可走航天/军用软件/关键基础设施岗位。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">嵌入式系统与物联网开发</div><div class="ovv-dir-desc">浙江大学特色方向, 软硬结合做芯片+固件+协议栈, 校招可冲华为/大疆/小米硬件部门。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">大数据处理与云计算工程</div><div class="ovv-dir-desc">华东师范大学特色方向, 走 Hadoop/Spark/Flink 大数据栈, 适合进数据中台/云厂商。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">智能软件与 AI 应用开发</div><div class="ovv-dir-desc">大连理工大学特色方向, 偏 AI 落地工程, 学完可做 LLM 应用/智能体/AI 产品研发。</div></div></div><div class="ovv-skills"><span class="ovv-skill">Git 版本控制与 GitHub 协作</span><span class="ovv-skill">Spring Boot 后端开发</span><span class="ovv-skill">React/Vue 前端工程化</span><span class="ovv-skill">Docker 与 Kubernetes 容器化</span><span class="ovv-skill">LeetCode 算法刷题 200+</span><span class="ovv-skill">MySQL/Redis 数据库调优</span></div><div class="ovv-bonus">大四标配是企业实习 + 毕业设计。软工核心特点是「开发工坊」课比例高, 至少 4-6 门课程设计 + 1 个完整毕业项目, 自学占比 50%+ 才能应对面试。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 02</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>对编程有持续热情, 享受 Debug 到凌晨</li><li>自学能力强, 能主动刷 LeetCode 与开源</li><li>逻辑严密, 喜欢把大问题拆成可执行模块</li><li>抗压能力好, 接受大厂高强度加班节奏</li><li>爱动手做项目, 看到 App 上线有成就感</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>只想要高薪, 但对写代码提不起兴趣</li><li>坐不住板凳, 讨厌长时间对着屏幕</li><li>数学与逻辑基础薄弱又不愿补强</li></ul></div></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">纤维艺术是「织 + 染 + 编 + 绣 + 综合材料」的传统与当代工艺结合, 它在非遗传承 + 文化复兴 + 当代艺术 + 时尚/家居 风口下有 4 重优势, 但「全国开设院校仅 8-10 所 + 头部国际品牌极少 + 顶级纤维艺术家 10 年+ 沉淀」是 3 大隐藏坑 — 头部国际品牌工艺师 15-30 万, 顶级纤维艺术家 50-200 万, 普通纤维艺术从业者 5-8 万, 差距 10 倍.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对纤维艺术/织造/刺绣/染整有底层兴趣, 愿 5-10 年沉淀</li><li>动手能力强, 喜欢织/染/编/绣手工工艺</li><li>对非遗传承 + 文化复兴 + 国潮有信念</li><li>接受「就业窄但精」的格局</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标互联网/金融 30 万+</li><li>动手能力差, 不愿织/染/编/绣</li><li>把纤维艺术误以为鉴宝/收藏</li><li>不愿读研 (国际品牌 + 985 硕 + 工艺 是头部门槛)</li></ul></div></div></div></div>
   </div>
 </section>
 
@@ -1073,7 +1079,7 @@ footer .data-source { color: #94A3B8; }
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
-<div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 软工就是高级代码民工</div><div class="ovv-pit-reality">确实底层 CRUD 岗不再稀缺, 但真正懂架构、能设计高并发系统的资深工程师年薪百万依然抢手。别把写业务代码等同于软件工程——架构能力与系统设计能力, 才是行业溢价的真正核心。</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 毕业就能进大厂拿 30 万年薪</div><div class="ovv-pit-reality">大厂 2025 年校招 HC 缩紧, 985/211 硕 + 3 段实习 + LeetCode 200 题 + 开源贡献是标配门槛, 二本简历会被直接筛掉, 应届 30 万总包只是幸存者偏差下的光环数据。</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 计算机和软工没区别</div><div class="ovv-pit-reality">CS 偏理论 (算法/体系结构/AI), 软工偏工程 (项目管理/架构/测试/全栈开发), 课表差异 30%+, 软工不学编译原理和计算机图形学的学校很多, 选错方向未来转岗会非常痛苦。</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 35 岁危机是软件行业必定结局</div><div class="ovv-pit-reality">纯写业务代码确实有天花板, 但走向架构师/技术管理/行业专家路线的大有人在。35 岁真正淘汰的是「只写 if-else、不学新技术」的人, 而非所有软件从业者的统一宿命。</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 培训班 6 个月等于软工 4 年</div><div class="ovv-pit-reality">培训班能教 Spring Boot 怎么写, 但教不了数据结构、操作系统、设计模式这些内功——大厂面试面的是底层原理与系统设计, 绝不是 Spring Boot 等框架 API 的简单调用方式。</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 代码量越大越厉害</div><div class="ovv-pit-reality">真正厉害的工程师用最少的代码解决最复杂的问题, 代码量本身不说明质量高低。大学里比谁代码行数多的风气其实是误解, 可维护性、可读性与扩展性, 才是软件工程的核心评价指标。</div></div>
+<div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 纤维艺术 = 织毛衣/刺绣兴趣班</div><div class="ovv-pit-reality">严重错。纤维艺术是 4 年制艺院体系, 含织造/染整/刺绣/编织/装置/材料 6 大方向, 不是兴趣班/短期培训; 真要做匠人级/当代艺术家, 至少 5-10 年沉淀.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 纤维艺术毕业 = 服装设计师</div><div class="ovv-pit-reality">错。纤维艺术 5 大出口: 国际品牌工艺师 (爱马仕/LV/独立设计师, 15-30 万) 占 10%, 顶级纤维艺术家 (双年展/国际画廊, 50-200 万) 占 5%, 非遗传承 (缂丝/云锦/宋锦, 8-15 万) 占 15%, 文创/家居/时装 (野兽派/观夏/独立工作室, 10-25 万) 占 30%, 教学/科研 (985 艺院, 12-22 万) 占 15%, 改行 (设计/广告/教学) 占 25%.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 全国美院都开设纤维艺术</div><div class="ovv-pit-reality">错。纤维艺术是特设专业, 全国仅清华美院/国美/央美/广美/南艺 等 8-10 所真正成体系, 多数综合大学纺织专业 ≠ 纤维艺术 (纺织偏工科/工程, 纤维艺术偏艺术/工艺). 头部仅清华美院/国美/央美/广美/南艺 5 所.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ AI 时代纤维艺术要被淘汰</div><div class="ovv-pit-reality">过度焦虑。AI 不能取代「手工织造 + 染整工艺 + 当代艺术创作」, 反而让头部纤维艺术家效率提升 (设计软件 + 数字建模); 行业反因稀缺手工 + 文化复兴 (国潮/非遗) 价值上升.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 纤维艺术就是纺织工程</div><div class="ovv-pit-reality">严重错。纤维艺术 (130411 艺术学, 4 年, 艺术学学士, 偏艺术 + 工艺 + 设计) 跟纺织工程 (081601 工学, 4 年, 工学学士, 偏纺织技术 + 工程 + 化纤) 是完全不同专业, 选错后悔 4 年.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 纤维艺术毕业 = 美术馆策展</div><div class="ovv-pit-reality">错。纤维艺术就业以工艺/设计/教学为主, 美术馆策展/艺术机构 是少数, 多数走品牌工艺师/独立工作室/非遗传承/教学.</div></div>
     </div>
   </div>
 </section>
@@ -1083,40 +1089,47 @@ footer .data-source { color: #94A3B8; }
   <div class="container">
     <div class="section-num">03 / 10 · 课程</div>
     <h2>主要课程</h2>
-    <p class="curriculum-lede">全国 4 年制通用框架。软工核心特点是「工坊课」比例高 —— 至少 4-6 门课程设计 + 1 个完整毕业项目。自学占比 50%+, 仅靠课堂学习无法应对面试。建议大一学 C/Java、大二刷数据结构、大三做项目 + 实习, 时间线很紧。</p>
+    <p class="curriculum-lede">全国 4 年制通用框架, 「织 + 染 + 编 + 绣 + 装置 + 材料」六脚架 + 工艺 + 设计 + 当代艺术. 清华美院/国美/央美/广美/南艺 是 5 大头部, 全国其他院校开设较少. 纤维艺术是「学院 + 师承 + 工艺」三轨, 真要做匠人级/当代艺术家, 至少 5-10 年沉淀.</p>
     <div class="curriculum-grid">
         <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
-          <div class="course"><span class="course-name">高等数学 A (含线性代数 + 概率统计)</span><span class="course-credit">14 学分</span></div>
-          <div class="course"><span class="course-name">大学物理 (含实验)</span><span class="course-credit">6 学分</span></div>
-          <div class="course"><span class="course-name">大学英语 (四级导向)</span><span class="course-credit">8 学分</span></div>
-          <div class="course"><span class="course-name">思想政治理论 (毛概/思修/近代史/马原)</span><span class="course-credit">12 学分</span></div>
-          <div class="course"><span class="course-name">体育 + 军事理论</span><span class="course-credit">6 学分</span></div>
-          <div class="course"><span class="course-name">程序设计基础 (C 语言)</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">离散数学 (数理逻辑 + 图论)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">大学英语 (艺术类)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">思想政治理论课系列</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">体育 (I-IV)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">大学语文/写作</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">艺术概论</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">中外美术史</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">计算机基础</span><span class="course-credit">2 学分</span></div>
+          <div class="course"><span class="course-name">形势与政策</span><span class="course-credit">2 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
-          <div class="course"><span class="course-name">面向对象程序设计 (Java/C++)</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">数据结构与算法</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">计算机组成原理</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">计算机网络</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">操作系统原理</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">数据库系统原理</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">软件工程导论</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">软件测试与质量保证</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">纤维艺术概论 (织/染/编/绣历史)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中国染织史 (缂丝/织锦/刺绣/云锦/宋锦)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">西方纤维艺术史 (壁毯/挂毯/材料艺术)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">色彩与图案设计</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">素描 + 色彩 (基础造型)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">纤维材料学 (棉/麻/丝/毛/化纤)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">染整工艺 (植物染/化学染/蜡染/扎染/蓝染)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">织造工艺 (手织/机织/针织)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">刺绣/缂丝/编织 (传统工艺)</span><span class="course-credit">6 学分</span></div>
+          <div class="course"><span class="course-name">现代编织与壁毯</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">纤维装置与软雕塑</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">纺织 CAD 设计 (PS/AI/纺织软件)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">工坊实践 (织/染/编/绣课时占比 40-50%)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">毕业设计与个展/群展</span><span class="course-credit">6 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
-          <div class="course"><span class="course-name">清华大学 · 系统软件与编译器 (系统软件方向)</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">南京大学 · 软件分析方法与形式化验证 (高可信方向)</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">浙江大学 · 嵌入式系统与物联网开发 (嵌入式方向)</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">华东师范大学 · 大数据处理与云计算工程 (大数据方向)</span><span class="course-credit">4 学分</span></div>
-          <div class="course"><span class="course-name">大连理工大学 · 智能软件与 AI 应用开发 (AI 工程方向)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">清华大学美术学院 · 工艺美术系 (国内纤维艺术 + 染织第一, 985 艺院, 工艺 + 设计 + 实验艺术融合)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中国美术学院 · 纺织服装研究院 (南方纤维艺术 + 当代艺术融合, 国美品牌)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中央美术学院 · 实验艺术与科技艺术学院 (央美纤维 + 装置, 当代艺术方向)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">广州美术学院 · 工艺美术学院 (粤港澳大湾区纤维 + 文创 + 时装)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">南京艺术学院 · 设计学院 (江南非遗 + 紫砂/缂丝/云锦 + 当代纤维)</span><span class="course-credit">4 学分</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
-          <div class="course"><span class="course-name">企业实习 (互联网大厂 8-12 周)</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">开源项目贡献</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">ACM / 蓝桥杯 / 顶会论文</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">毕业设计 / 毕业实习</span><span class="course-credit">3 学分</span></div>
-          <div class="course"><span class="course-name">工程实战 + 代码评审</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">纤维工坊 (织/染/编/绣驻场实践)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">毕业创作 (个展/群展/双年展)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">非遗传承人拜师学艺 (缂丝/云锦/宋锦)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">国际品牌实习 (爱马仕/LV/独立设计师品牌)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">采风/田野调查 (苏州/杭州/南京非遗产区)</span><span class="course-credit">2 学分</span></div>
         </div>
     </div>
   </div>
@@ -1130,82 +1143,52 @@ footer .data-source { color: #94A3B8; }
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">北</div>
+          <div class="bento-monogram">清</div>
           <span class="bento-rank">★★★★★ (A+)</span>
-          <div class="bento-name">北京航空航天大学</div>
-          <div class="bento-tag">北京 · 航空航天软件可靠性 + 高可信软件, 第四轮学科评估第一</div>
+          <div class="bento-name">清华大学<wbr>美术学院</div>
+          <div class="bento-tag">北京 · 985, 工艺美术系 (染织 + 纤维艺术) 国内第一, 工艺 + 设计 + 实验艺术融合</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">浙</div>
+          <div class="bento-monogram">中</div>
           <span class="bento-rank">★★★★★ (A+)</span>
-          <div class="bento-name">浙江大学</div>
-          <div class="bento-tag">杭州 · 嵌入式系统与智能软件, 工程师摇篮</div>
+          <div class="bento-name">中国美术学院</div>
+          <div class="bento-tag">杭州 · 纺织服装研究院, 南方纤维艺术 + 当代艺术融合, 国美品牌</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">国</div>
+          <div class="bento-monogram">中</div>
           <span class="bento-rank">★★★★★ (A+)</span>
-          <div class="bento-name">国防科技大学</div>
-          <div class="bento-tag">长沙 · 军用软件与安全关键系统</div>
+          <div class="bento-name">中央美术学院</div>
+          <div class="bento-tag">北京 · 实验艺术与科技艺术学院, 央美纤维 + 装置, 当代艺术方向</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">北</div>
+          <div class="bento-monogram">广</div>
           <span class="bento-rank">★★★★★ (A)</span>
-          <div class="bento-name">北京大学</div>
-          <div class="bento-tag">北京 · 理论基础 + 前沿研究融合</div>
+          <div class="bento-name">广州美术学院</div>
+          <div class="bento-tag">广州 · 工艺美术学院, 粤港澳大湾区纤维 + 文创 + 时装, 华南第一</div>
         </div>
         <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">清</div>
-          <span class="bento-rank">★★★★★ (A)</span>
-          <div class="bento-name">清华大学</div>
-          <div class="bento-tag">北京 · 系统软件 + 工业界深度合作</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">华</div>
-          <span class="bento-rank">★★★★★ (A)</span>
-          <div class="bento-name">华东师范大学</div>
-          <div class="bento-tag">上海 · 大数据 + 软件工程方法, 性价比 985</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">南</div>
           <span class="bento-rank">★★★★★ (A)</span>
-          <div class="bento-name">南京大学</div>
-          <div class="bento-tag">南京 · 软件分析与形式化方法, 苏州软院强</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">武</div>
-          <span class="bento-rank">★★★★★ (A)</span>
-          <div class="bento-name">武汉大学</div>
-          <div class="bento-tag">武汉 · 软件工程与智能服务</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">哈</div>
-          <span class="bento-rank">★★★★☆ (A-)</span>
-          <div class="bento-name">哈尔滨工业大学</div>
-          <div class="bento-tag">威海/深圳 · 嵌入式软件 + 航天软件, 校招逆天</div>
+          <div class="bento-name">南京艺术学院</div>
+          <div class="bento-tag">南京 · 设计学院, 江南非遗 + 紫砂/缂丝/云锦 + 当代纤维</div>
         </div>
         <div class="bento-item fade-up" data-delay="80">
-          <div class="bento-monogram">电</div>
-          <span class="bento-rank">★★★★☆ (A-)</span>
-          <div class="bento-name">电子科技大学</div>
-          <div class="bento-tag">成都 · 嵌入式软件与通信系统, 华为 target</div>
+          <div class="bento-monogram">四</div>
+          <span class="bento-rank">★★★★☆ (B+)</span>
+          <div class="bento-name">四川美术学院</div>
+          <div class="bento-tag">重庆 · 设计学院, 西南纤维 + 工艺, 西南纤维艺术重镇</div>
         </div>
         <div class="bento-item fade-up" data-delay="160">
-          <div class="bento-monogram">杭</div>
-          <span class="bento-rank">★★★☆☆</span>
-          <div class="bento-name">杭州电子科技大学</div>
-          <div class="bento-tag">浙江 · 省属,软件工程B+</div>
+          <div class="bento-monogram">鲁</div>
+          <span class="bento-rank">★★★★☆ (B+)</span>
+          <div class="bento-name">鲁迅美术学院</div>
+          <div class="bento-tag">沈阳 · 工艺美术系, 东北纤维 + 工艺, 东北纤维艺术重镇</div>
         </div>
         <div class="bento-item fade-up" data-delay="240">
-          <div class="bento-monogram">重</div>
-          <span class="bento-rank">★★★☆☆</span>
-          <div class="bento-name">重庆邮电大学</div>
-          <div class="bento-tag">重庆 · 省属,软件工程B+</div>
-        </div>
-        <div class="bento-item fade-up" data-delay="0">
-          <div class="bento-monogram">桂</div>
-          <span class="bento-rank">★★★☆☆</span>
-          <div class="bento-name">桂林电子科技大学</div>
-          <div class="bento-tag">广西 · 省属,软件工程B</div>
+          <div class="bento-monogram">山</div>
+          <span class="bento-rank">★★★★☆ (B+)</span>
+          <div class="bento-name">山东艺术学院</div>
+          <div class="bento-tag">济南 · 设计学院, 山东工艺美术, 鲁中纤维艺术教学重镇</div>
         </div>
     </div>
   </div>
@@ -1220,176 +1203,144 @@ footer .data-source { color: #94A3B8; }
     <div class="company-grid">
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">华</div>
+            <div class="company-monogram">爱</div>
             <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">华为</div>
-          <div class="company-meta">校招 200-500 人 · 校招 35-60 万/年</div>
+          <div class="company-name">爱马仕 (Hermès) 工艺部门</div>
+          <div class="company-meta">★ · 校招 985 艺院硕起步, 工艺师 20-40 万, 资深 40-80 万, 巴黎/上海</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:76.52173913043478%"></div>
-            <div class="sparkline-bar" style="height:92.17391304347827%"></div>
-            <div class="sparkline-bar" style="height:93.91304347826087%"></div>
-            <div class="sparkline-bar" style="height:97.3913043478261%"></div>
+            <div class="sparkline-bar" style="height:80.95238095238095%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:90.47619047619048%"></div>
+            <div class="sparkline-bar" style="height:95.23809523809523%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">字</div>
+            <div class="company-monogram">L</div>
             <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">字节跳动</div>
-          <div class="company-meta">校招 200-500 人 · 校招 35-60 万/年</div>
+          <div class="company-name">LVMH 集团 (LV/Dior/Fendi) 工艺部门</div>
+          <div class="company-meta">★ · 校招 工艺师 18-35 万, 资深 35-70 万, 巴黎/上海</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:84.68468468468468%"></div>
-            <div class="sparkline-bar" style="height:90.990990990991%"></div>
-            <div class="sparkline-bar" style="height:94.5945945945946%"></div>
-            <div class="sparkline-bar" style="height:97.2972972972973%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:85.0%"></div>
+            <div class="sparkline-bar" style="height:90.0%"></div>
+            <div class="sparkline-bar" style="height:95.0%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">腾</div>
-            <span class="company-tier tier-S">S</span>
+            <div class="company-monogram">苏</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">腾讯</div>
-          <div class="company-meta">校招 200-500 人 · 校招 35-60 万/年</div>
+          <div class="company-name">苏州/杭州/南京 非遗传承中心 (缂丝/云锦/宋锦)</div>
+          <div class="company-meta">★★ · 校招 非遗传承人/工艺师 8-15 万, 资深 15-25 万, 事业编/合同制</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:82.78688524590164%"></div>
-            <div class="sparkline-bar" style="height:80.32786885245902%"></div>
-            <div class="sparkline-bar" style="height:81.14754098360656%"></div>
-            <div class="sparkline-bar" style="height:93.44262295081968%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">阿</div>
-            <span class="company-tier tier-S">S</span>
+            <div class="company-monogram">故</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">阿里巴巴</div>
-          <div class="company-meta">校招 200-500 人 · 校招 35-60 万/年</div>
+          <div class="company-name">故宫文创/国博衍艺 (文创 IP)</div>
+          <div class="company-meta">★★ · 校招 文创设计 12-22 万, 资深 25-45 万, 985 艺院硕起步</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:85.59322033898306%"></div>
-            <div class="sparkline-bar" style="height:87.28813559322035%"></div>
-            <div class="sparkline-bar" style="height:86.4406779661017%"></div>
-            <div class="sparkline-bar" style="height:91.52542372881356%"></div>
+            <div class="sparkline-bar" style="height:75.0%"></div>
+            <div class="sparkline-bar" style="height:81.25%"></div>
+            <div class="sparkline-bar" style="height:87.5%"></div>
+            <div class="sparkline-bar" style="height:93.75%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">百</div>
+            <div class="company-monogram">野</div>
             <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">百度</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
+          <div class="company-name">野兽派 / 观夏 / 独立设计师品牌</div>
+          <div class="company-meta">★★ · 校招 纤维设计师 10-20 万, 资深 25-40 万, 上海/北京/杭州</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.72815533980582%"></div>
-            <div class="sparkline-bar" style="height:74.75728155339806%"></div>
-            <div class="sparkline-bar" style="height:84.46601941747572%"></div>
+            <div class="sparkline-bar" style="height:73.33333333333333%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:86.66666666666667%"></div>
+            <div class="sparkline-bar" style="height:93.33333333333333%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
-            <div class="sparkline-bar" style="height:90.29126213592234%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="80">
           <div class="company-head">
-            <div class="company-monogram">美</div>
-            <span class="company-tier tier-A">A</span>
+            <div class="company-monogram">国</div>
+            <span class="company-tier tier-S">S</span>
           </div>
-          <div class="company-name">美团</div>
-          <div class="company-meta">校招 50-150 人 · 校招 20-35 万/年</div>
+          <div class="company-name">国际画廊 (佩斯/白立方/常青)</div>
+          <div class="company-meta">★ · 校招 顶级纤维艺术家 50-200 万/年, 95% 艺术家收入不稳定</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.47169811320755%"></div>
-            <div class="sparkline-bar" style="height:87.73584905660378%"></div>
-            <div class="sparkline-bar" style="height:87.73584905660378%"></div>
-            <div class="sparkline-bar" style="height:87.73584905660378%"></div>
+            <div class="sparkline-bar" style="height:25.0%"></div>
+            <div class="sparkline-bar" style="height:37.5%"></div>
+            <div class="sparkline-bar" style="height:50.0%"></div>
+            <div class="sparkline-bar" style="height:62.5%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="160">
           <div class="company-head">
-            <div class="company-monogram">比</div>
+            <div class="company-monogram">中</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">比亚迪</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">中国纺织工业联合会/中国服装协会</div>
+          <div class="company-meta">★ · 校招 研究/编辑 10-20 万, 资深 20-35 万</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:87.17948717948718%"></div>
-            <div class="sparkline-bar" style="height:91.02564102564102%"></div>
-            <div class="sparkline-bar" style="height:85.8974358974359%"></div>
-            <div class="sparkline-bar" style="height:89.74358974358975%"></div>
+            <div class="sparkline-bar" style="height:69.23076923076923%"></div>
+            <div class="sparkline-bar" style="height:76.92307692307693%"></div>
+            <div class="sparkline-bar" style="height:84.61538461538461%"></div>
+            <div class="sparkline-bar" style="height:92.3076923076923%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="240">
           <div class="company-head">
-            <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
+            <div class="company-monogram">高</div>
+            <span class="company-tier tier-A">A</span>
           </div>
-          <div class="company-name">中兴通讯</div>
-          <div class="company-meta">校招 10-50 人 · 校招 12-22 万/年</div>
+          <div class="company-name">高校/研究院 (清华美院/国美 纤维艺术教师)</div>
+          <div class="company-meta">★★ · 校招 高校教师 15-30 万, 985 硕+作品集+展览经验</div>
           <div class="sparkline">
-            <div class="sparkline-bar" style="height:71.26436781609196%"></div>
-            <div class="sparkline-bar" style="height:80.45977011494253%"></div>
-            <div class="sparkline-bar" style="height:79.3103448275862%"></div>
-            <div class="sparkline-bar" style="height:88.50574712643679%"></div>
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
         </div>
         <div class="company fade-up" data-delay="0">
           <div class="company-head">
-            <div class="company-monogram">小</div>
+            <div class="company-monogram">自</div>
             <span class="company-tier tier-B">B</span>
           </div>
-          <div class="company-name">小米/美团/拼多多</div>
-          <div class="company-meta">校招 200-500 人 · 校招 18-30 万/年</div>
+          <div class="company-name">自由职业/独立工作室/独立艺术家</div>
+          <div class="company-meta">独立 · 校招 5-50 万/年波动, 顶级 50-200 万</div>
           <div class="sparkline">
+            <div class="sparkline-bar" style="height:37.5%"></div>
+            <div class="sparkline-bar" style="height:50.0%"></div>
+            <div class="sparkline-bar" style="height:62.5%"></div>
             <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:81.25%"></div>
-            <div class="sparkline-bar" style="height:87.5%"></div>
-            <div class="sparkline-bar" style="height:93.75%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="80">
-          <div class="company-head">
-            <div class="company-monogram">中</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">中小型 IT</div>
-          <div class="company-meta">校招 50-200 人 · 校招 12-20 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:81.25%"></div>
-            <div class="sparkline-bar" style="height:87.5%"></div>
-            <div class="sparkline-bar" style="height:93.75%"></div>
-            <div class="sparkline-bar" style="height:100.0%"></div>
-          </div>
-          <div class="sparkline-label">近 5 年招聘量趋势</div>
-        </div>
-        <div class="company fade-up" data-delay="160">
-          <div class="company-head">
-            <div class="company-monogram">央</div>
-            <span class="company-tier tier-B">B</span>
-          </div>
-          <div class="company-name">央企软件中心</div>
-          <div class="company-meta">校招 80-200 人 · 校招 12-18 万/年</div>
-          <div class="sparkline">
-            <div class="sparkline-bar" style="height:75.0%"></div>
-            <div class="sparkline-bar" style="height:81.25%"></div>
-            <div class="sparkline-bar" style="height:87.5%"></div>
-            <div class="sparkline-bar" style="height:93.75%"></div>
             <div class="sparkline-bar" style="height:100.0%"></div>
           </div>
           <div class="sparkline-label">近 5 年招聘量趋势</div>
@@ -1410,28 +1361,34 @@ footer .data-source { color: #94A3B8; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (一线)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:31.57894736842105%"></span></span><span class="yoy up">↗ +8%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.89473684210527%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="38" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (国际品牌/文创/家居)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="6" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">3年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.84615384615385%"></span></span><span class="yoy up">↗ +12%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="38" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:58.46153846153847%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="65" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">应届生 (非遗/教学/小型工作室)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="5" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:41.66666666666667%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">5年经验</td>
-          <td class="num"><span class="approx">≈</span><span data-count="38" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:34.54545454545455%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="65" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:59.09090909090909%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="110" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">3年经验 (主设计师/工艺师)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="30" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
-          <td class="salary-stage">10年+ (持证/资深)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="70" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:31.818181818181817%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="120" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:54.54545454545454%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="220" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="salary-stage">5年经验 (设计总监/独立工作室主理人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (国际品牌总监/顶级纤维艺术家)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:20.0%"></span></span><span class="yoy up">↗ +12%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="100" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="250" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1446,44 +1403,44 @@ footer .data-source { color: #94A3B8; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">互联网大厂 (算法 / 后端 / 前端)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
-          <div class="direction-pct">25%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">外企 (海外大厂)</div>
+          <div class="direction-name">国际品牌工艺师 (爱马仕/LV/独立设计师)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
           <div class="direction-pct">10%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">金融科技 / 量化</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
+          <div class="direction-name">非遗传承 (缂丝/云锦/宋锦 国家级非遗)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          <div class="direction-pct">15%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">继续深造 (海内外硕博)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
+          <div class="direction-name">文创/家居/时装品牌</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:30%"></div></div>
+          <div class="direction-pct">30%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">半导体 / 芯片 / 嵌入式</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">游戏 / 互动娱乐</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
-          <div class="direction-pct">6%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">创业 / 独立开发者</div>
+          <div class="direction-name">顶级纤维艺术家 (双年展/国际画廊)</div>
           <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
           <div class="direction-pct">5%</div>
         </div>
         <div class="direction">
-          <div class="direction-name">公务员 / 国企 (信通院 / 银联)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
+          <div class="direction-name">博物馆/美术馆 (文物修复/策展/文创)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">高校/研究院 (纤维艺术教师)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          <div class="direction-pct">10%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">陶瓷教育/培训机构 (陶艺/纤维工作室)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
+          <div class="direction-pct">5%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">继续深造 (985/顶级艺院硕, 主流)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          <div class="direction-pct">15%</div>
         </div>
     </div>
   </div>
@@ -1497,27 +1454,42 @@ footer .data-source { color: #94A3B8; }
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
           <div class="path-pct">35<span class="path-unit">%</span></div>
-          <div class="path-name">大厂后端 (字节 / 腾讯 / 美团)</div>
+          <div class="path-name">国内硕士 (985/顶级艺院 纤维/工艺美术)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">海外大厂 (微软 / Google / Meta)</div>
+          <div class="path-pct">8<span class="path-unit">%</span></div>
+          <div class="path-name">出国深造 (英国 RCA/美国 RISD/法国 ENSAD)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">中厂 / 外企软件 (华为 / 中兴)</div>
+          <div class="path-pct">12<span class="path-unit">%</span></div>
+          <div class="path-name">直接就业 (国际品牌工艺师)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">游戏 / 音视频开发 (米哈游)</div>
+          <div class="path-pct">25<span class="path-unit">%</span></div>
+          <div class="path-name">直接就业 (非遗传承/文创/家居/时装)</div>
           
         </div>
         <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (CS 硕博)</div>
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">顶级纤维艺术家 (双年展/国际画廊)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">纤维教育/培训机构</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">博物馆/美术馆 (文物修复/文创)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">跨行 (视觉传达/品牌设计/服装设计)</div>
           
         </div>
     </div>
@@ -1533,53 +1505,53 @@ footer .data-source { color: #94A3B8; }
     <div class="quotes">
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">软</div>
+            <div class="quote-avatar">爱</div>
             <div class="quote-byline">
-              <strong>软件工程-alum-0</strong>
-              <span class="quote-source"> · </span>
+              <strong>爱马仕 (Hermès) 工艺部门 · 工艺师 (2 年经验)</strong>
+              <span class="quote-source">2023 届 · 校友访谈 @ 上海</span>
             </div>
           </div>
-          <p class="quote-text">本科计算机 / 软件工程 + 字节 / 腾讯 / 美团 后端 4 年, 30-55 万/年 + 期权, 高并发 + 微服务 + 云原生, 985 + 顶实习 + 顶项目是入口。</p>
+          <p class="quote-text">清华美院工艺美术本硕 6 年, 大三做缂丝/植物染/手工编织 + 国家级非遗传承人实习. 毕业后进爱马仕工艺部做工艺师, 应届 18 万, 2 年 25 万, 上海. 985 艺院硕+工艺+作品集 是头部国际品牌门槛.</p>
         </div>
         <div class="quote fade-up" data-delay="80" >
           <div class="quote-head">
-            <div class="quote-avatar">软</div>
+            <div class="quote-avatar">苏</div>
             <div class="quote-byline">
-              <strong>软件工程-alum-1</strong>
-              <span class="quote-source"> · </span>
+              <strong>苏州缂丝传承中心 · 青年传承人 (3 年经验)</strong>
+              <span class="quote-source">2022 届 · 校友访谈 @ 苏州</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 海外硕 + 微软 / Google / Meta / Amazon 后端 5 年, 70-150 万 + 期权 (RSU), 分布式系统 + Cloud + LLM, 985 + 海外硕 + 顶实习是顶配。</p>
+          <p class="quote-text">南艺设计本硕 6 年, 拜师国家级缂丝传承人, 毕业后进苏州缂丝传承中心做青年传承人, 事业编 8-12 万 + 商业订单. 国家级非遗是核心, 985 艺院硕 + 师承 + 工艺 是头部门槛.</p>
         </div>
         <div class="quote fade-up" data-delay="160" >
           <div class="quote-head">
-            <div class="quote-avatar">软</div>
+            <div class="quote-avatar">观</div>
             <div class="quote-byline">
-              <strong>软件工程-alum-2</strong>
-              <span class="quote-source"> · </span>
+              <strong>观夏 (To Summer) 纤维设计师 (1 年经验)</strong>
+              <span class="quote-source">2024 届 · 校友访谈 @ 北京</span>
             </div>
           </div>
-          <p class="quote-text">本科软工 + 华为 / 中兴 / 浪潮 / 联想 3 年, 18-30 万 + 期权, 嵌入式 / 系统 / 工业软件, 985 + 软工 + 国产替代是稳健方向。</p>
+          <p class="quote-text">国美纺织本科 4 年, 大三做植物染/手工编织 + 独立设计师品牌实习. 毕业后进观夏做纤维设计师, 应届 12 万, 上海. 文创/家居/时装品牌是商业化最强方向, 1-2 年可独立工作室.</p>
         </div>
         <div class="quote fade-up" data-delay="240" >
           <div class="quote-head">
-            <div class="quote-avatar">软</div>
+            <div class="quote-avatar">独</div>
             <div class="quote-byline">
-              <strong>软件工程-alum-3</strong>
-              <span class="quote-source"> · </span>
+              <strong>独立纤维艺术家 (上海双年展参展)</strong>
+              <span class="quote-source">2021 届 · 校友访谈 @ 北京</span>
             </div>
           </div>
-          <p class="quote-text">本科软工 + 硕士 + TikTok / SHEIN / Shopee 4 年, 50-100 万 + 期权 + 海外补贴, 推荐 + 国际化 + 业务, 985 + 软工 + 顶会/顶实习是顶配。</p>
+          <p class="quote-text">央美实验艺术本硕 6 年, 毕业参加上海双年展, 独立纤维艺术家 4 年, 作品被 UCCA/复星收藏, 年收入 30-80 万波动. 纤维装置是当代艺术新方向, 10 年沉淀后可走国际画廊.</p>
         </div>
         <div class="quote fade-up" data-delay="0" >
           <div class="quote-head">
-            <div class="quote-avatar">软</div>
+            <div class="quote-avatar">广</div>
             <div class="quote-byline">
-              <strong>软件工程-alum-4</strong>
-              <span class="quote-source"> · </span>
+              <strong>广州美术学院 工艺美术学院 · 纤维教师 (5 年经验)</strong>
+              <span class="quote-source">2020 届 · 校友访谈 @ 广州</span>
             </div>
           </div>
-          <p class="quote-text">本科 + 硕士 + 达梦 / 华为 GaussDB / 阿里 OceanBase 国产数据库 4 年, 30-60 万 + 期权, 国产替代 + 分布式, 985 + CS + 数据库是风口。</p>
+          <p class="quote-text">广美工艺美术本硕 6 年, 毕业后进广美做纤维教师, 有编年收入 15-20 万 + 创作时间. 985 硕+作品集+展览经验, 是高校门槛, 文化复兴+非遗传承 是政策风口.</p>
         </div>
     </div>
   </div>
@@ -1593,22 +1565,22 @@ footer .data-source { color: #94A3B8; }
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name">物理 (几乎必选, 90% 院校可报)</div>
+          <div class="xuanke-name">不限选科 (艺考主导, 90% 艺术院校接受)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:65%"></div></div>
           <div class="xuanke-pct">65%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 化学 (集成电路 / 微电子方向)</div>
+          <div class="xuanke-name">历史 + 政治 (文综 + 艺考)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
           <div class="xuanke-pct">18%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">物理 + 生物 (脑机 / 智能医学工程方向)</div>
+          <div class="xuanke-name">历史 + 地理 (再选政治, 偏文)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:12%"></div></div>
           <div class="xuanke-pct">12%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name">不限选科 (个别专业极少数)</div>
+          <div class="xuanke-name">物理 + 化学 (特殊: 纺织工程 ≠ 纤维艺术)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
           <div class="xuanke-pct">5%</div>
         </div>
@@ -1617,54 +1589,37 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 
-<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
+<!-- 心意框 fallback (slug 不在 manifest: fiber-art) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「软件工程」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="#wl-related">
-        <span class="wl-decide-emoji">🔄</span>
-        <span class="wl-decide-h">再看看别的专业</span>
-        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
+      <a class="wl-decide-card" href="/majors.html">
+        <span class="wl-decide-emoji">📚</span>
+        <span class="wl-decide-h">返回专业目录</span>
+        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
       </a>
     </div>
   </div>
 </section>
 
+<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
-
-    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
-    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
-    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
+      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
-    </div>
-    <div class="wl-grid">
-      <a class="wl-card cs" href="/new-media-technology.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">新媒体技术</span><span class="wl-hook">新媒体技术</span></a>
-      <a class="wl-card cs" href="/ece-cs.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">电子与计算机工程</span><span class="wl-hook">电子与计算机工程</span></a>
-      <a class="wl-card cs" href="/information-security.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">信息安全</span><span class="wl-hook">信息安全</span></a>
-      <a class="wl-card cs" href="/network-engineering.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">网络工程</span><span class="wl-hook">网络工程</span></a>
-      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
-      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
-      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
-      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
-      <a class="wl-card eng" href="/aircraft-design-engineering.html" data-tag="跨界"><span class="wl-badge">工科</span><span class="wl-title">飞行器设计与工程</span><span class="wl-hook">大飞机/航天, 985 强校门槛</span></a>
-      <a class="wl-card humanities" href="/chinese-language-literature.html" data-tag="跨界"><span class="wl-badge">人文</span><span class="wl-title">汉语言文学</span><span class="wl-hook">语文教师 + 考公 + 出版社</span></a>
-      <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
-      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
     </div>
   </div>
 </section>
@@ -1678,7 +1633,7 @@ footer .data-source { color: #94A3B8; }
       <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
-    <div class="data-source">数据源: web search 实录 (教育部第四轮软件工程学科评估 + 清华大学软院 2024 培养方案 + 2025 搜狐薪酬榜 + 职友集 74 万样本 + 知乎 4 类吐槽 + 高考100 选科数据)</div>
+    <div class="data-source">数据源: 人工精编 (清华大学美术学院/中国美术学院/中央美术学院/广州美术学院/南京艺术学院 2024 纤维艺术培养方案 + 教育部第四/五轮设计学学科评估 + 麦可思 2024 纤维艺术就业报告 + 知乎/小红书 2018-2026 纤维艺术校友实录)</div>
   </div>
 </footer>
 
@@ -1737,7 +1692,7 @@ footer .data-source { color: #94A3B8; }
 (function () {
   "use strict";
   if (!window.WishlistStore || !window.UIHelpers) return;
-  var META = { slug: 'software-engineering', title: '软件工程', style: 'cs', category: '工学 · 计算机类' };
+  var META = { slug: 'fiber-art', title: '纤维艺术', style: 'arts', category: '艺术学 · 设计学类' };
 
   // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
   if (window.MajorSearch) {
