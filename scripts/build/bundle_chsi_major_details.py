@@ -20,7 +20,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 RAW_DIR = ROOT / "data" / "raw" / "major_detail"
 OUT_F = ROOT / "public" / "data" / "chsi_major_details.json"
 

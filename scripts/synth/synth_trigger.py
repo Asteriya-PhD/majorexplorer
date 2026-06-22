@@ -26,7 +26,7 @@ import time
 from pathlib import Path
 
 # 让 scf 包可被 import
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(ROOT))
 
 from scf.synth.llm import get_client, get_client_with_fallback, RetryableError, PermanentError

@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 PUBLIC_DATA = ROOT / "public" / "data"
 
 MANIFEST_F = PUBLIC_DATA / "manifest.json"

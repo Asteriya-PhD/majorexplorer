@@ -26,7 +26,7 @@ backfill_manifest_fields.py — 补全 curated/*.json 缺 discipline/sub_discipl
 import argparse, json, sys, re
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CURATED = ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
 
 # 13 门类 (MOE 标准 + index.html:190-201 颜色)

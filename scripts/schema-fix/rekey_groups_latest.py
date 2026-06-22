@@ -9,7 +9,7 @@ import json
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 PUBLIC_DATA = ROOT / "public" / "data"
 
 OUT_F = PUBLIC_DATA / "groups_latest.json"

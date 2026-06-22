@@ -24,7 +24,7 @@ from pathlib import Path
 APPID = os.environ.get("WECHAT_APPID", "").strip()
 SECRET = os.environ.get("WECHAT_SECRET", "").strip()
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 PUBLIC = REPO / "public"
 COVER = PUBLIC / "wechat-cover.png"
 IMG1 = PUBLIC / "og" / "cs.png"

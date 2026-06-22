@@ -61,7 +61,7 @@ from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CURATED = ROOT / 'skills' / 'gaokao-major-explorer' / 'data' / 'curated'
 TEST_RESULTS = ROOT / 'test_results'
 REGISTRY = ROOT / 'data' / 'audit_registry.json'  # git tracked 单一真相 (2026-06-18 新增)

@@ -15,7 +15,7 @@ import sys
 import pathlib
 import re
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent / "public"
+ROOT = pathlib.Path(__file__).resolve().parent.parent.parent / "public"
 MANIFEST_LINK = '<link rel="manifest" href="/manifest.json">'
 HEAD_RE = re.compile(r"<head[^>]*>", re.IGNORECASE)
 MANIFEST_RE = re.compile(r'rel=["\']manifest["\']', re.IGNORECASE)

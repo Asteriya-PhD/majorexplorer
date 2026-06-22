@@ -29,7 +29,7 @@ import argparse, json, glob, os, sys, datetime
 from pathlib import Path
 from collections import defaultdict
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / 'data' / 'audit_registry.json'
 TEST_RESULTS = ROOT / 'test_results'
 

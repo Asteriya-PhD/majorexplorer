@@ -34,7 +34,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CURATED_DIR = ROOT / "skills/gaokao-major-explorer/data/curated"
 
 # Star → eval 映射 (5 颗实心 ★ → A+, 0 → B-)

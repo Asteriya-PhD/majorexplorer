@@ -26,7 +26,7 @@ rebuild_manifest.py — 从 curated/*.json 重建 public/data/manifest.json
 import argparse, json, sys, datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CURATED = ROOT / "skills" / "gaokao-major-explorer" / "curated_data" if (ROOT / "skills" / "gaokao-major-explorer" / "curated_data").exists() else ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
 MANIFEST = ROOT / "public" / "data" / "manifest.json"
 

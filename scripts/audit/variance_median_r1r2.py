@@ -8,7 +8,7 @@ import json, statistics
 from pathlib import Path
 from datetime import datetime
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / 'data' / 'audit_registry.json'
 TEST_RESULTS = ROOT / 'test_results'
 

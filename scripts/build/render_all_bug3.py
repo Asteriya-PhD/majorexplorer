@@ -30,7 +30,7 @@ import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 MANIFEST = ROOT / "public" / "data" / "manifest.json"
 CURATED = ROOT / "skills" / "gaokao-major-explorer" / "curated" / "data" / "curated" if False else ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
 PUBLIC = ROOT / "public"

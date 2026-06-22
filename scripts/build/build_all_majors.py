@@ -27,7 +27,7 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 RAW_DIR = ROOT / "data/admissions_raw"
 OUT_PATH = ROOT / "public/data/school_all_majors.json"
 

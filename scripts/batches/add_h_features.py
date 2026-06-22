@@ -11,8 +11,8 @@
 import sys
 from pathlib import Path
 
-# 复用 inject_seo 的 og: 注入逻辑
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+# 复用 inject_seo 的 og: 注入逻辑 (inject_seo 移到 scripts/build/)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "build"))
 from inject_seo import inject_seo  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent

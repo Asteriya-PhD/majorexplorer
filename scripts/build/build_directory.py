@@ -23,7 +23,7 @@ import argparse, json, re, sys, datetime
 from pathlib import Path
 from collections import defaultdict
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CHSI_POOL = ROOT / "data" / "raw" / "majors_list.json"
 MANIFEST = ROOT / "public" / "data" / "manifest.json"
 REGISTRY = ROOT / "data" / "audit_registry.json"

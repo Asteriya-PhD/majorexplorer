@@ -23,7 +23,7 @@ import sys, os, json, subprocess, time, argparse, statistics
 from pathlib import Path
 from datetime import datetime
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CURATED = ROOT / 'skills' / 'gaokao-major-explorer' / 'data' / 'curated'
 TEST_RESULTS = ROOT / 'test_results'
 REGISTRY = ROOT / 'data' / 'audit_registry.json'

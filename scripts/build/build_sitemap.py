@@ -20,7 +20,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 CURATED = REPO_ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
 
 DEFAULT_BASE = "https://[PLACEHOLDER_DOMAIN]"
