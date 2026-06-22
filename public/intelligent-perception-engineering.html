@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<link rel="manifest" href="/manifest.json">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#5B5B47">
 <!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
 <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.loli.net">
@@ -55,7 +53,7 @@ section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
 section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
 section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
 
-.watermark { position: absolute; top: 40px; right: -20px; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+.watermark { position: absolute; top: 40px; right: max(var(--container-px), calc(50vw - 640px + var(--container-px))); font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
 
 footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
 footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -1057,7 +1055,7 @@ footer .data-source { color: #78716C; }
       <span class="tag">工业互联网</span><span class="tag">数字孪生</span><span class="tag">智能制造</span><span class="tag">智能驾驶感知</span><span class="tag">工业4.0</span>
     </div>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-label">学科<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">5.0</span></div></div><div class="stat-value">工学 · 仪器类 (0807)</div></div>
+      <div class="stat"><div class="stat-label">学科<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">★ 5.0/5</span></div></div><div class="stat-value">工学 · 仪器类 (0807)</div></div>
       <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4Y · 工学学士</div></div>
       <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★★★☆</div></div>
       <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
@@ -1070,14 +1068,26 @@ footer .data-source { color: #78716C; }
   <div class="container">
     <div class="section-num">01 / 10 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">智能感知工程是仪器仪表的智能化升级版, 核心是「传感器 + 信号处理 + 机器视觉 + 工业互联网」四栖; 它不是「电子信息工程」也不是「人工智能」, 而是「机器如何感知物理世界」的工程实现; 在机器人/自动驾驶/IoT/AR-VR 爆发下, 头部华为/大疆/蔚来感知算法岗起薪 25-45 万, 但「985 仪器强校 vs 普通院校资源鸿沟」「仪器类 vs 电子信息 vs CS 三方抢岗」「MEMS 赛道窄 + 本科难进工艺线」是该专业三大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / C 语言 / 工程制图; 大二核心: 电路原理 / 模拟电子 / 数字电子 / 信号与系统 / 传感器原理 / 精密机械基础; 大三方向分流: 智能传感器与 MEMS / 机器视觉与图像处理 / 工业互联网与数字孪生 / 智能感知算法 四大方向四选一; 大四毕设 + 实习 + MATLAB/Python/OpenCV 仿真实战. 4 年下来, 既要能读懂 MEMS 传感器信号链, 也要能调视觉感知算法.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 力学/电磁学/光学啃得动, 强信号 + 弱电两栖</li><li>对传感器/机器视觉/智能制造有底层好奇心</li><li>接受「硬核」课业 + 实习, 愿意主动加车队/电赛/MEMS 挑战赛/导师课题组</li><li>能扛长周期投入 — 头部感知算法岗 985 硕博为主, 本科多走测试/工艺/集成</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥力学/电学 — 该专业硬核课业会持续劝退</li><li>只想做纯软件/算法 — 建议直接选 CS/AI, 不要「曲线救国」来智能感知</li><li>期望「本科毕业 30 万+」 — 头部感知算法岗要 985 硕博, 本科起薪 12-18 万是常态</li><li>不愿补英文文献阅读 — 行业 IEEE Sensors / 机器视觉顶会全英文</li><li>身体素质不能接受 4 年全程高强度课程 + 实习</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">智能感知工程 = 电子信息工程</div><div class="ovv-simple-pit-reality">智能感知工程偏「传感器 + 仪器仪表 + 智能算法」, 电子信息工程偏「通信 + 信号处理 + 嵌入式」. 课程结构 50% 重叠 (电路/信号), 但感知工程多 MEMS/精密仪器/机器视觉, 电子信息多通信协议/射频. 不要混淆选专业.</div></li><li><div class="ovv-simple-pit-myth">本科毕业就能去大疆/华为做感知算法</div><div class="ovv-simple-pit-reality">大疆/华为/蔚来感知算法岗 80%+ 要求 985 硕博 + 顶会论文 (CVPR/ICCV/ECCV) + 项目经验, 本科主要走测试/集成/工艺/Tier1 供应商; 想拿感知算法核心岗基本必须读研.</div></li><li><div class="ovv-simple-pit-myth">智能感知 = 仪器类, 就业窄</div><div class="ovv-simple-pit-reality">智能感知工程就业面比传统仪器类宽很多: 头部去华为/大疆/蔚来做感知算法 (25-45 万), 中部去 Tier1 (MEMS/机器视觉模组) 12-25 万, 尾部去智能制造/工业互联网/测试 10-18 万. 选校时务必查第五轮仪器科学与技术学科评估.</div></li><li><div class="ovv-simple-pit-myth">MEMS 传感器工艺线容易进</div><div class="ovv-simple-pit-reality">MEMS 工艺线 (歌尔/瑞声/敏芯/英飞凌) 工艺岗集中在苏州/上海/无锡, 985 本科有机会但需实习 + 课题对口; 设计岗 (MEMS 设计工程师) 必须硕博, 应届硕博起薪 25-40 万, 资深 50-80 万.</div></li><li><div class="ovv-simple-pit-myth">智能感知 = 人工智能</div><div class="ovv-simple-pit-reality">智能感知是「传感器 + 算法」的工程实现, 偏弱电 + 信号处理; 人工智能是「数据 + 模型」的算法实现, 偏软件. 两者有交叉 (感知算法) 但本质不同. 选专业时如果目标是 AI 算法, 选 CS/AI; 如果目标是感知硬件 + 算法融合, 选智能感知工程.</div></li><li><div class="ovv-simple-pit-myth">985 仪器强校 vs 普通院校差距不大</div><div class="ovv-simple-pit-reality">仪器科学与技术学科评估 A 类 (A-/A) 主要集中在清华/北航/哈工大/东南/上交/重大/湖大/中北大学 (仪器特色) + 合工大 (MEMS 特色), 头部企业校招渠道差距巨大 — 华为/大疆/歌尔校招宣讲几乎只去这 8 所, 选校时务必查第五轮学科评估.</div></li><li><div class="ovv-simple-pit-myth">数字孪生核心岗偏软工, 智能感知反成边缘</div><div class="ovv-simple-pit-reality">数字孪生 = 物理世界建模 + 实时数据采集 + 仿真预测, 智能感知工程是「实时数据采集」的源头, 不是边缘. 头部数字孪生平台 (西门子/达索/工业富联) 校招需要「机械 + 仪器 + 软件」复合背景, 智能感知工程对口, 但需自学 Python/Unity/Three.js.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">智能感知工程是仪器仪表的智能化升级版, 核心是「传感器 + 信号处理 + 机器视觉 + 工业互联网」四栖; 它不是「电子信息工程」也不是「人工智能」, 而是「机器如何感知物理世界」的工程实现; 在机器人/自动驾驶/IoT/AR-VR 爆发下, 头部华为/大疆/蔚来感知算法岗起薪 25-45 万, 但「985 仪器强校 vs 普通院校资源鸿沟」「仪器类 vs 电子信息 vs CS 三方抢岗」「MEMS 赛道窄 + 本科难进工艺线」是该专业三大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / C 语言 / 工程制图; 大二核心: 电路原理 / 模拟电子 / 数字电子 / 信号与系统 / 传感器原理 / 精密机械基础; 大三方向分流: 智能传感器与 MEMS / 机器视觉与图像处理 / 工业互联网与数字孪生 / 智能感知算法 四大方向四选一; 大四毕设 + 实习 + MATLAB/Python/OpenCV 仿真实战. 4 年下来, 既要能读懂 MEMS 传感器信号链, 也要能调视觉感知算法.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 力学/电磁学/光学啃得动, 强信号 + 弱电两栖</li><li>对传感器/机器视觉/智能制造有底层好奇心</li><li>接受「硬核」课业 + 实习, 愿意主动加车队/电赛/MEMS 挑战赛/导师课题组</li><li>能扛长周期投入 — 头部感知算法岗 985 硕博为主, 本科多走测试/工艺/集成</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥力学/电学 — 该专业硬核课业会持续劝退</li><li>只想做纯软件/算法 — 建议直接选 CS/AI, 不要「曲线救国」来智能感知</li><li>期望「本科毕业 30 万+」 — 头部感知算法岗要 985 硕博, 本科起薪 12-18 万是常态</li><li>不愿补英文文献阅读 — 行业 IEEE Sensors / 机器视觉顶会全英文</li><li>身体素质不能接受 4 年全程高强度课程 + 实习</li></ul></div></div></div></div>
+  </div>
+</section>
+
+<section class="tab" id="pitfalls">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 避坑</div>
+    <h2>避坑指南</h2>
+    <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
+    <div class="ovv-pits">
+<div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 智能感知工程 = 电子信息工程</div><div class="ovv-pit-reality">智能感知工程偏「传感器 + 仪器仪表 + 智能算法」, 电子信息工程偏「通信 + 信号处理 + 嵌入式」. 课程结构 50% 重叠 (电路/信号), 但感知工程多 MEMS/精密仪器/机器视觉, 电子信息多通信协议/射频. 不要混淆选专业.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 本科毕业就能去大疆/华为做感知算法</div><div class="ovv-pit-reality">大疆/华为/蔚来感知算法岗 80%+ 要求 985 硕博 + 顶会论文 (CVPR/ICCV/ECCV) + 项目经验, 本科主要走测试/集成/工艺/Tier1 供应商; 想拿感知算法核心岗基本必须读研.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 智能感知 = 仪器类, 就业窄</div><div class="ovv-pit-reality">智能感知工程就业面比传统仪器类宽很多: 头部去华为/大疆/蔚来做感知算法 (25-45 万), 中部去 Tier1 (MEMS/机器视觉模组) 12-25 万, 尾部去智能制造/工业互联网/测试 10-18 万. 选校时务必查第五轮仪器科学与技术学科评估.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ MEMS 传感器工艺线容易进</div><div class="ovv-pit-reality">MEMS 工艺线 (歌尔/瑞声/敏芯/英飞凌) 工艺岗集中在苏州/上海/无锡, 985 本科有机会但需实习 + 课题对口; 设计岗 (MEMS 设计工程师) 必须硕博, 应届硕博起薪 25-40 万, 资深 50-80 万.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 智能感知 = 人工智能</div><div class="ovv-pit-reality">智能感知是「传感器 + 算法」的工程实现, 偏弱电 + 信号处理; 人工智能是「数据 + 模型」的算法实现, 偏软件. 两者有交叉 (感知算法) 但本质不同. 选专业时如果目标是 AI 算法, 选 CS/AI; 如果目标是感知硬件 + 算法融合, 选智能感知工程.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 985 仪器强校 vs 普通院校差距不大</div><div class="ovv-pit-reality">仪器科学与技术学科评估 A 类 (A-/A) 主要集中在清华/北航/哈工大/东南/上交/重大/湖大/中北大学 (仪器特色) + 合工大 (MEMS 特色), 头部企业校招渠道差距巨大 — 华为/大疆/歌尔校招宣讲几乎只去这 8 所, 选校时务必查第五轮学科评估.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 07</div><div class="ovv-pit-myth">❌ 数字孪生核心岗偏软工, 智能感知反成边缘</div><div class="ovv-pit-reality">数字孪生 = 物理世界建模 + 实时数据采集 + 仿真预测, 智能感知工程是「实时数据采集」的源头, 不是边缘. 头部数字孪生平台 (西门子/达索/工业富联) 校招需要「机械 + 仪器 + 软件」复合背景, 智能感知工程对口, 但需自学 Python/Unity/Three.js.</div></div>
+    </div>
   </div>
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">02</div>
+  <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 课程</div>
+    <div class="section-num">03 / 10 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1117,9 +1127,9 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">03</div>
+  <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">03 / 10 · 院校</div>
+    <div class="section-num">04 / 10 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1200,9 +1210,9 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">04</div>
+  <div class="watermark">05</div>
   <div class="container">
-    <div class="section-num">04 / 10 · 头部雇主</div>
+    <div class="section-num">05 / 10 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1355,9 +1365,9 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">05</div>
+  <div class="watermark">06</div>
   <div class="container">
-    <div class="section-num">05 / 10 · 薪资</div>
+    <div class="section-num">06 / 10 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1395,9 +1405,9 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">06</div>
+  <div class="watermark">07</div>
   <div class="container">
-    <div class="section-num">06 / 10 · 就业方向</div>
+    <div class="section-num">07 / 10 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1446,9 +1456,9 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="deep-study">
-  <div class="watermark">07</div>
+  <div class="watermark">08</div>
   <div class="container">
-    <div class="section-num">07 / 10 · 深造路径</div>
+    <div class="section-num">08 / 10 · 深造路径</div>
     <h2>深造路径</h2>
     <div class="path-grid">
         <div class="path-card fade-up" data-delay="0">
@@ -1496,9 +1506,9 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="quotes">
-  <div class="watermark">08</div>
+  <div class="watermark">09</div>
   <div class="container">
-    <div class="section-num">08 / 10 · 学长学姐说</div>
+    <div class="section-num">09 / 10 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1547,9 +1557,9 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">09</div>
+  <div class="watermark">10</div>
   <div class="container">
-    <div class="section-num">09 / 10 · 选科要求</div>
+    <div class="section-num">10 / 10 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1578,37 +1588,54 @@ footer .data-source { color: #78716C; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: intelligent-perception-engineering) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「智能感知工程」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card eng" href="/brewing-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">酿酒工程</span><span class="wl-hook">酿酒工程</span></a>
+      <a class="wl-card eng" href="/electronic-science-technology.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">电子科学与技术</span><span class="wl-hook">电子科学与技术</span></a>
+      <a class="wl-card eng" href="/special-energy-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">特种能源技术与工程</span><span class="wl-hook">特种能源技术与工程</span></a>
+      <a class="wl-card eng" href="/information-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">信息工程</span><span class="wl-hook">信息工程</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card business" href="/accounting.html" data-tag="跨界"><span class="wl-badge">工商</span><span class="wl-title">会计学</span><span class="wl-hook">考证, 稳定, 越老越值钱</span></a>
+      <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
+      <a class="wl-card law" href="/law.html" data-tag="跨界"><span class="wl-badge">法学</span><span class="wl-title">法学</span><span class="wl-hook">法考 + 红圈所, 卷学历</span></a>
+      <a class="wl-card arts" href="/fine-arts.html" data-tag="跨界"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
     </div>
   </div>
 </section>
@@ -1824,6 +1851,5 @@ footer .data-source { color: #78716C; }
 })();
 </script>
 
-<script src="/js/scroll-top-pc.js" defer></script>
 </body>
 </html>
