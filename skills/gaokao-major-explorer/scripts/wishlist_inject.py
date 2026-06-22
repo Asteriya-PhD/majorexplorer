@@ -179,7 +179,7 @@ WISHLIST_INJECT_HEAD_LINKS = """<!-- Wishlist UI: 共享 store + helpers (顶部
 WISHLIST_INJECT_STYLE = """
 /* ─── Wishlist inject: 顶部 chip + 右下 FAB + 12 主题卡 ─── */
 .wl-chip {
-  position: fixed; top: 16px; right: 16px; z-index: 95;
+  position: fixed; top: 80px; right: 16px; z-index: 95;
   display: inline-flex; align-items: center; gap: 6px;
   font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
   font-size: 0.75rem; font-weight: 600;
