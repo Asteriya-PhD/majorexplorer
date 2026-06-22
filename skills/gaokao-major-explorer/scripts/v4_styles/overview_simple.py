@@ -153,19 +153,9 @@ def render_overview_simple(data: dict) -> str:
             html += '</ul></div>'
         html += '</div></div>'
 
-    # 4. pitfalls
-    if pitfalls:
-        html += '<div class="ovv-simple-section">'
-        html += '<h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3>'
-        html += '<ul class="ovv-simple-pitfalls">'
-        for p in pitfalls:
-            if isinstance(p, dict):
-                myth = p.get("myth", "")
-                reality = p.get("reality", "")
-                if myth and reality:
-                    html += f'<li><div class="ovv-simple-pit-myth">{myth}</div>'
-                    html += f'<div class="ovv-simple-pit-reality">{reality}</div></li>'
-        html += '</ul></div>'
+    # 注: pitfalls 已分离为独立 page-level section (render_pitfalls_v2).
+    # 修复 2026-06-22: simple format 之前在速览 inline 渲染 pitfalls, 加上 render_pitfalls_v2
+    # 再渲染一次 → 同 7 条 pit 显示 2 次 (43 篇 PC HTML 中招). 改为只在独立避坑 section 渲染一次.
 
     html += '</div>'
     return html

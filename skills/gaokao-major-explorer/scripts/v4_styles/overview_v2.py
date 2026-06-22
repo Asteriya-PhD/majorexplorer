@@ -96,7 +96,7 @@ def render_overview_v2(data: dict) -> str:
 # 复用 .ovv-pits / .ovv-pit / .ovv-pit-num / .ovv-pit-myth / .ovv-pit-reality CSS
 # ──────────────────────────────────────────────────────────
 def render_pitfalls_v2(data: dict) -> str:
-    """独立 避坑指南 section, 用于 data["overview_v2"]["pitfalls"]"""
+    """独立 避坑指南 section, 用于 data["overview_v2"]["pitfalls"] (或顶层 pitfalls 兜底)"""
     ov = data.get("overview_v2", {})
     pitfalls = ov.get("pitfalls", []) if ov else data.get("pitfalls", [])
     if isinstance(pitfalls, str):

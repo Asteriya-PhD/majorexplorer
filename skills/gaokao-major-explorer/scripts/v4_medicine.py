@@ -463,6 +463,31 @@ COUNT_UP_JS = """
 # ──────────────────────────────────────────────────────────
 # 院校 / 公司名软换行 helper — 在「大学/学院/医学院/学部/学校/中心」后插 <wbr>
 # 防止换行点落到「大」「学」之间, 同时不改变文本
+def _render_medicine_pitfalls(data: dict) -> str:
+    """medicine style 渲染 overview_v2.pitfalls (list of {myth, reality}).
+    修复 2026-06-22: 之前 medicine 只读顶层 data.pitfalls (string),
+    若 JSON 只有 overview_v2.pitfalls (list) 则不渲染 → 避坑 section 缺失.
+    """
+    pitfalls = data.get("overview_v2", {}).get("pitfalls", [])
+    if not pitfalls:
+        return ""
+    items = []
+    for i, p in enumerate(pitfalls, 1):
+        if isinstance(p, dict):
+            myth = p.get("myth", "")
+            reality = p.get("reality", "")
+            if myth and reality:
+                items.append(f'<div class="m-pit"><div class="m-pit-num">误区 {i:02d}</div>'
+                             f'<div class="m-pit-myth">❌ {myth}</div>'
+                             f'<div class="m-pit-reality">✓ {reality}</div></div>')
+    if not items:
+        return ""
+    return (
+        '<h3>避坑指南</h3>'
+        '<div class="m-pits">' + "".join(items) + '</div>'
+    )
+
+
 def _dedup_by_name(items: list, key: str = "name") -> list:
     """Drop duplicate dicts (by item[key]) while preserving order — defensive against bad data."""
     seen, kept = set(), []
@@ -766,7 +791,7 @@ def render_v4_medicine(data: dict) -> str:
     <p class="lede drop-cap">{summary}</p>
     {f'<h3>这个专业学什么?</h3><p>{data.get("what_you_learn", "")}</p>' if data.get("what_you_learn") else ''}
     {f'<h3>什么人适合?</h3><p>{data.get("who_fits", "")}</p>' if data.get("who_fits") else ''}
-    {f'<h3>避坑指南</h3><p>{data.get("pitfalls", "")}</p>' if data.get("pitfalls") else ''}
+    {f'<h3>避坑指南</h3><p>{data.get("pitfalls", "")}</p>' if data.get("pitfalls") else (_render_medicine_pitfalls(data) if data.get("overview_v2", {}).get("pitfalls") else '')}
   </div>
 </section>
 
