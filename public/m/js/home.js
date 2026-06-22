@@ -6,7 +6,7 @@
   const total = M.manifest.majors.length;
   document.querySelectorAll(".js-mcount").forEach(el => el.textContent = total);
 
-  // ───── 本日精读 (4 篇随机) ─────
+  // ───── 今日推荐 (4 篇精选) ─────
   const featList = document.getElementById("feat-list");
   if (featList) {
     const all = M.manifest.majors;

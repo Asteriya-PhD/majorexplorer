@@ -287,16 +287,16 @@
   // ───────── 5. 主流程 ─────────
   function recommend(user, data, opts) {
     opts = opts || {};
-    // 9 个 sub_tier 各自的配额 (合计 12+16+8=36 张卡)
-    // 内部强制每个 sub_tier 至少 1 条, 保证档内梯度.
+    // 三档配额: 6 + 8 + 6 = 20 张卡 (Day 22 简化, 不再分强稳/中稳/弱稳子档)
+    // 内部 sub_tier 仍保留用于内部排序 (按概率单调), 但前端只展示冲/稳/保 + 百分比
     const subQuotas = Object.assign({
-      "强冲": 4, "中冲": 4, "微冲": 4,    // 冲 12
-      "强稳": 6, "中稳": 6, "弱稳": 4, // 稳 16
-      "强保": 4, "中保": 3, "兜底": 1, // 保 8
+      "强冲": 4, "中冲": 4, "微冲": 4,
+      "强稳": 6, "中稳": 6, "弱稳": 4,
+      "强保": 4, "中保": 3, "兜底": 1,
     }, opts.subQuotas || {});
-    const topChong = opts.topChong || (subQuotas["强冲"] + subQuotas["中冲"] + subQuotas["微冲"]);
-    const topWen = opts.topWen || (subQuotas["强稳"] + subQuotas["中稳"] + subQuotas["弱稳"]);
-    const topBao = opts.topBao || (subQuotas["强保"] + subQuotas["中保"] + subQuotas["兜底"]);
+    const topChong = opts.topChong || 6;
+    const topWen = opts.topWen || 8;
+    const topBao = opts.topBao || 6;
 
     const { collegesById, collegesByEid, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms, chsiByEduId } = data;
     if ((!collegesById && !collegesByEid) || !schoolHistory || !groupsLatest || !specialties || !yfyd) {

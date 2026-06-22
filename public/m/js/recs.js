@@ -1,4 +1,4 @@
-/* recs.js — 9 档志愿推荐 · 复用 PC Recommender 算法
+/* recs.js — 3 档志愿推荐 · 复用 PC Recommender 算法
  *
  * 数据流:
  *   - DataLoader.loadAll(): 加载 5 个数据文件 (light 295KB + heavy 3.4MB)
@@ -7,8 +7,8 @@
  *   - interests: 从 WishlistStore 读 (用户收藏的专业), score = rating
  *   - cities: 空 (mobile UI 无具体城市)
  *
- * 输出: 9 sub_tier (强冲/中冲/微冲 + 强稳/中稳/弱稳 + 强保/中保/兜底) × 1 校/档
- *       每校显示 top_major[0] 作为代表专业 + 校名 + 城市 + score
+ * 输出: 3 档 (冲 + 稳 + 保) × 共 20 张卡 (6+8+6)
+ *       每张卡: 校名 + 城市 + top_major + 录取概率 + 推荐理由
  */
 (async () => {
   // 选科 chip — 3+1+2 严格约束 (湖北新高考)
@@ -109,11 +109,11 @@
     rankOut.textContent = scoreToRank(+scoreInput.value || 580);
   }
 
-  // ─── 9 档 UI 颜色 (跟 PC 端 sub_tier 同款色) ───
+  // ─── 3 档颜色 (冲红/稳蓝/保绿, 单色覆盖全档) ───
   const tierColors = {
-    "强冲": "#B8323A", "中冲": "#C44E55", "微冲": "#D1757B",
-    "强稳": "#B5934A", "中稳": "#C7A766", "弱稳": "#D6BE85",
-    "强保": "#5C7C4A", "中保": "#7B9669", "兜底": "#9AB089",
+    "冲": "#B8323A",
+    "稳": "#3182CE",
+    "保": "#38A169",
   };
   function tierColor(name) { return tierColors[name] || "#B8323A"; }
 
@@ -221,32 +221,58 @@
   }
 
   // ─── PC Recommender 调用 + 渲染 ───
-  const SUB_TIERS = ["强冲", "中冲", "微冲", "强稳", "中稳", "弱稳", "强保", "中保", "兜底"];
-
-  function groupBySubTier(result) {
-    // 把 {冲:[...], 稳:[...], 保:[...]} 摊平, 按 sub_tier 分组成 9 桶
-    const buckets = {};
-    for (const t of SUB_TIERS) buckets[t] = null;
-    for (const cat of ["冲", "稳", "保"]) {
-      for (const school of (result[cat] || [])) {
-        const tier = school.sub_tier;
-        if (!tier || !buckets.hasOwnProperty(tier)) continue;
-        // 桶里只放分数最高的 1 个
-        if (!buckets[tier] || school.score > buckets[tier].score) buckets[tier] = school;
-      }
-    }
-    return buckets;
-  }
+  const CATS = [
+    { key: "冲", name: "冲", desc: "P 25–50% · 拼一拼", minP: 0.20, maxP: 0.60 },
+    { key: "稳", name: "稳", desc: "P 60–88% · 重点关注", minP: 0.60, maxP: 0.90 },
+    { key: "保", name: "保", desc: "P 90–99% · 稳妥兜底", minP: 0.90, maxP: 1.01 },
+  ];
 
   function esc(s) { return String(s == null ? "" : s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"})[c]); }
 
-  function render(school, tier) {
-    if (!school) {
+  // 推荐理由生成: 根据 score_breakdown 各维度, 突出最强匹配
+  function buildReason(school) {
+    if (!school) return "—";
+    const bk = school.score_breakdown || {};
+    const m = bk.major || 0, c = bk.city || 0, t = bk.tier || 0, chsi = bk.chsi || 0;
+    const topMajor = (school.top_majors && school.top_majors[0] && school.top_majors[0].name) || "";
+    const topRk = (school.top_majors && school.top_majors[0] && (school.top_majors[0].xueke || school.top_majors[0].ruanke)) || "";
+    const med = school.median_rank_3y ? `3 年中位位次 ${Math.round(school.median_rank_3y).toLocaleString()}` : "";
+    const parts = [];
+    if (m >= 4 && topMajor) parts.push(`✦ 专业匹配 ${m.toFixed(1)} · ${topMajor}${topRk ? ` (${topRk})` : ""}`);
+    if (c >= 4 && school.city) parts.push(`✦ 城市匹配 · ${school.city}`);
+    if (t >= 4) parts.push(`✦ ${school.tier || "强校"}`);
+    if (chsi >= 4) parts.push(`✦ 阳光高考满意度 ${chsi}/5`);
+    if (parts.length === 0) {
+      if (med) parts.push(`综合分 ${(school.score || 0).toFixed(1)} · ${med}`);
+      else parts.push(`综合分 ${(school.score || 0).toFixed(1)}`);
+    }
+    return parts.slice(0, 2).join(" · ");  // 最多 2 条, 不超长
+  }
+
+  function renderSchool(school, catKey) {
+    if (!school) return "";
+    const topMajor = (school.top_majors && school.top_majors[0] && school.top_majors[0].name) || "—";
+    const reason = buildReason(school);
+    return `
+      <div class="rec" style="--theme: ${tierColor(catKey)};">
+        <div class="rec-body">
+          <div class="rec-cat">${esc(school.tier || "")} · 录取概率 <strong style="color:${tierColor(catKey)};">${Math.round(school.prob * 100)}%</strong></div>
+          <h3 class="rec-title">${esc(school.school_name)} · ${esc(topMajor)}</h3>
+          <div class="rec-meta">📍 ${esc(school.city || "")} · 位次 ${(school.median_rank_3y || 0).toLocaleString()} · 综合分 ${(school.score || 0).toFixed(1)}</div>
+          <div class="rec-reason" style="font-size:0.75rem;color:var(--fg-soft);margin-top:6px;line-height:1.5;border-top:1px dashed var(--line);padding-top:6px;">${esc(reason)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderBucket(cat, schools) {
+    if (!schools || schools.length === 0) {
       return `
         <div class="tier-group">
           <div class="tier-head">
-            <span class="tier-tag" style="--tier-color: ${tierColor(tier)}; background: ${tierColor(tier)};">${tier}</span>
+            <span class="tier-tag" style="--tier-color: ${tierColor(cat.key)}; background: ${tierColor(cat.key)};">${cat.name}</span>
             <span class="tier-name" style="color: var(--muted);">暂无匹配</span>
+            <span class="tier-meta">${cat.desc}</span>
           </div>
           <div class="rec" style="--theme: var(--muted-2); opacity: 0.5;">
             <div class="rec-body">
@@ -256,22 +282,14 @@
         </div>
       `;
     }
-    const topMajor = (school.top_majors && school.top_majors[0] && school.top_majors[0].name) || "—";
     return `
       <div class="tier-group">
         <div class="tier-head">
-          <span class="tier-tag" style="--tier-color: ${tierColor(tier)}; background: ${tierColor(tier)};">${tier}</span>
-          <span class="tier-name">${esc(school.school_name)}</span>
-          <span class="tier-meta">${esc(school.city || "")} · ${esc(topMajor)}</span>
+          <span class="tier-tag" style="--tier-color: ${tierColor(cat.key)}; background: ${tierColor(cat.key)};">${cat.name}</span>
+          <span class="tier-name">${cat.desc}</span>
+          <span class="tier-meta">${schools.length} 所</span>
         </div>
-        <div class="rec" style="--theme: var(--accent);">
-          <div class="rec-body">
-            <div class="rec-cat">${esc(school.tier || "")}${school.prob ? ` · 录取概率 ${Math.round(school.prob * 100)}%` : ""}</div>
-            <h3 class="rec-title">${esc(topMajor)}</h3>
-            <div class="rec-meta">位次 ${(school.median_rank_3y || 0).toLocaleString()} · 综合分 ${school.score || "—"}</div>
-          </div>
-          <div class="rec-arrow">→</div>
-        </div>
+        ${schools.map(s => renderSchool(s, cat.key)).join("")}
       </div>
     `;
   }
@@ -295,11 +313,11 @@
     try {
       // 加载 PC 全部数据 (light 295KB + heavy 3.4MB, IDB 缓存后 <200ms)
       const data = await window.DataLoader.loadAll();
+      // 3 档共 20 张: 冲 6 + 稳 8 + 保 6
       const result = window.Recommender.recommend(user, data, {
-        topChong: 6, topWen: 8, topBao: 4,
+        topChong: 6, topWen: 8, topBao: 6,
       });
-      const buckets = groupBySubTier(result);
-      out.innerHTML = SUB_TIERS.map(t => render(buckets[t], t)).join("");
+      out.innerHTML = CATS.map(c => renderBucket(c, result[c.key])).join("");
     } catch (e) {
       console.error("[recs.js] 推荐失败", e);
       out.innerHTML = `<div class="empty">
