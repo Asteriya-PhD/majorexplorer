@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lighthouse perf: 字体源提前预连接 (DNS + TCP + TLS), 减 FCP/LCP 100-400ms -->
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
+<!-- Wishlist UI: 共享 store + helpers (顶部 chip / 右下 FAB / 12 主题卡 / 搜专业) -->
+<link rel="preload" href="/js/wishlist-store.js" as="script">
+<link rel="preload" href="/js/ui-helpers.js" as="script">
+<link rel="preload" href="/js/major-search.js" as="script">
+
+<title>生态修复学专业介绍 2026 高考 | Major Explorer</title>
+<meta name="description" content="生态修复学是「生态学 + 林学 + 土壤学 + 地理信息」交叉特设, 服务山水林田湖草沙一体化保护修复国家战略. 应届 5-9 万, 45% 流向林草局/自然资源局/生态环保企业/读研, 985 硕是">
+<style>
+@import url('https://fonts.loli.net/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;500;600;700;900&family=ZCOOL+XiaoWei&display=swap');
+
+:root {
+  /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
+  --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+  --container-max: clamp(1024px, 92vw, 1280px);
+  --container-px: clamp(20px, 4vw, 40px);
+  --section-py: clamp(60px, 8vw, 120px);
+  --section-py-bottom: clamp(48px, 6vw, 96px);
+  --watermark-size: clamp(8rem, 12vw, 14rem);
+  --hero-min-h: clamp(480px, 70vh, 720px);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { line-height: 1.65; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1; position: relative; overflow-x: hidden; }
+img, svg { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; transition: opacity 200ms; }
+a:hover { opacity: 0.65; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; }
+.caps { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-px); position: relative; z-index: 2; }
+/* 旧 max-width:1200px / padding:0 40px / 768px padding override 全部由 clamp 取代 */
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab:first-of-type { border-top: none; }
+section.tab:last-of-type { border-bottom: none; }
+.section-num { font-family: var(--font-num); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 12px; text-transform: uppercase; position: relative; z-index: 1; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; position: relative; z-index: 1; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; position: relative; z-index: 1; }
+section.tab p.lede { font-size: 1.0625rem; line-height: 1.75; max-width: 720px; margin-bottom: 32px; position: relative; z-index: 1; }
+
+.watermark { position: absolute; top: 40px; right: max(var(--container-px), calc(50vw - 640px + var(--container-px))); font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; }
+
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+
+/* ──────────────────────────────────────────────────────────
+   不必要的换行修复 — 短标签 / 徽章 / 单元统一 nowrap
+   长文本 (lede / hero-tagline / quote) 用 text-wrap: pretty
+   防止数字+单位、`/ · ` 周围、「」括号 等被切到下一行
+   ────────────────────────────────────────────────────────── */
+.section-num,
+.stat-label, .stat-value,
+.tag,
+.bento-rank, .company-tier,
+.yoy, .approx,
+.sparkline-label,
+.curriculum-title,
+.path-name, .path-pct,
+.direction-pct, .xuanke-pct,
+.vital-label, .vital-value,
+.docket-court, .docket-title, .docket-meta span,
+.letterhead-meta, .letterhead-logo,
+.chapter-marker,
+.quote-byline strong, .quote-byline .quote-source,
+.terminal-title, .terminal-status,
+.salary-stage,
+.hero-decor { white-space: nowrap; }
+
+/* 长段落用 pretty wrap — 不在标点 / 数字 / 引号中间切 */
+.lede, .hero-tagline, .quote-text,
+.company-meta, .bento-tag,
+section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+
+/* 数字+单位、`万/年/月` 单字单位不应单独成行 */
+.num, .stat-value, .path-pct, .direction-pct, .xuanke-pct,
+.salary-stage, .approx { word-break: keep-all; }
+
+
+/* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
+.bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Mobile patches (≤480px) — Day 1 responsive overhaul 2026-06-19
+   留 overflow/tap-target/hero overflow 实用 fix,
+   grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
+   ============================================================ */
+@media (max-width: 480px) {
+  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
+  .hero-stats { gap: 0 !important; }
+  .hero-stats .stat,
+  .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
+  .hero-stats .stat-value { font-size: 0.9375rem !important; line-height: 1.3 !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; }
+  .hero-stats .stat-label { font-size: 0.5625rem !important; letter-spacing: 0.08em !important; }
+
+  /* hero 大字: 各主题 clamp 在 390px 仍偏大, 强压 */
+  .hero h1.display,
+  .hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem) !important; line-height: 1.1 !important; word-break: break-all !important; }
+  .hero-tagline { font-size: 0.95rem !important; line-height: 1.6 !important; }
+
+  /* tag chip tap-target ≥ 32px (chip 太大会丑) */
+  .tag { min-height: 32px; display: inline-flex; align-items: center; padding-top: 6px !important; padding-bottom: 6px !important; }
+
+  /* CTA / link button tap-target ≥ 44px (WCAG AAA) */
+  .cta-button,
+  .cta-form button,
+  button.cta-button,
+  a.cta-button { min-height: 44px !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+  /* salary-table 列字号缩 */
+  .salary-table { font-size: 0.8125rem !important; }
+  .salary-table th, .salary-table td { padding: 8px 10px !important; }
+
+  /* 装饰元素弱化 */
+  .ecg-line { opacity: 0.3 !important; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   BASE_V4_CSS: 8 招底层 (v4 渲染统一注入, 解决新主题 CSS 不继承问题)
+   ────────────────────────────────────────────────────────── */
+:root {
+  /* 字体 (8 主题共用, 主题专属 CSS 可覆盖) */
+  --font-heading: "Noto Serif SC", "Cormorant Garamond", "Bodoni Moda", "Cinzel", "Songti SC", serif;
+  --font-body:    "Noto Serif SC", "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-cn:      "Noto Serif SC", "Songti SC", "PingFang SC", serif;
+  --font-num:     "JetBrains Mono", "Bebas Neue", "Oswald", monospace;
+  /* 主题色默认 (各主题可覆盖) */
+  --bg: #FAFAF6; --fg: #1A1A1A; --muted: #6B6B6B;
+  --primary: #1A1A1A; --primary_dim: #0A0A0A;
+  --surface: #FFFFFF; --surface_alt: #F5F5F4;
+  --border: #E5E5E5; --border_strong: #1A1A1A;
+  --accent: #DC2626;
+  --shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow_hover: 0 2px 0 rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+img, svg { max-width: 100%; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.num, .num * { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+/* 旧 .container { max-width: 1120px; padding: 0 32px } + 768px override 已由 get_base_css() 的 clamp 版本接管, 这里删除以避免 cascade 冲突 */
+section.tab { padding: var(--section-py) 0 var(--section-py-bottom); position: relative; z-index: 2; overflow: hidden; border-top: 1px solid #E2E8F0; }
+section.tab h2 { font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 600; margin-bottom: 24px; }
+section.tab h3 { font-size: 1.1875rem; font-weight: 600; margin: 40px 0 12px; }
+section.tab p { margin-bottom: 16px; }
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.watermark { position: absolute; font-family: var(--font-heading); font-size: var(--watermark-size); font-weight: 700; line-height: 0.85; letter-spacing: -0.05em; pointer-events: none; user-select: none; z-index: 0; opacity: 0.04; }
+footer { padding: 64px 0 48px; text-align: center; position: relative; z-index: 2; }
+footer .label { font-family: var(--font-num); font-size: 0.6875rem; letter-spacing: 0.15em; opacity: 0.7; }
+footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+
+
+
+
+body { background: linear-gradient(165deg, #F5F9EC 0%, #E8EFDC 45%, #F5F9EC 100%); color: #2E5A2E; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 700px 400px at 18% 25%, rgba(230, 180, 34, 0.08), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 82% 75%, rgba(107, 142, 35, 0.12), transparent 60%);
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.52 0 0 0 0 0.28 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.30; mix-blend-mode: multiply; }
+
+
+/* === 速览 v2 — 3 子卡堆叠 === */
+.ovv-lede { max-width: 720px; margin: 0 0 48px; }
+.ovv-card {
+  position: relative; padding: 36px 40px 40px; margin-bottom: 32px;
+  background: var(--paper, #FAFAF6); border: 1px solid var(--rule, #E5E5E0);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color 250ms, transform 250ms, box-shadow 250ms;
+}
+.ovv-card:hover { border-color: var(--moss, #6B8E23); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+.ovv-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue::before { background: #1E3A5F; }
+.ovv-card.is-orange::before { background: #B91C1C; }
+.ovv-card-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--rule, #E5E5E0); }
+.ovv-card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.875rem;
+  letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+  color: var(--moss, #6B8E23);
+}
+.ovv-card.is-blue .ovv-card-num { color: #1E3A5F; }
+.ovv-card.is-orange .ovv-card-num { color: #B91C1C; }
+.ovv-card-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin: 0; flex: 1;
+}
+.ovv-card-tag {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: var(--muted, #666);
+}
+
+/* === 学什么 — 时间轴 + 5 方向 grid + 3 技能 chip === */
+.ovv-foundations { margin-bottom: 28px; }
+.ovv-foundations-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-timeline {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: relative; padding-top: 18px;
+}
+.ovv-timeline::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--moss, #6B8E23) 20%, var(--moss, #6B8E23) 80%, transparent);
+}
+.ovv-tl-step { position: relative; text-align: center; }
+.ovv-tl-step::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper, #FAFAF6);
+  border: 1.5px solid var(--moss, #6B8E23);
+}
+.ovv-tl-step span {
+  display: block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  color: var(--ink, #1A1A1A); padding-top: 14px;
+}
+.ovv-directions-label {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: var(--muted, #666);
+  margin: 24px 0 12px; letter-spacing: 0.05em;
+}
+.ovv-directions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ovv-dir {
+  padding: 18px 16px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px;
+  background: rgba(255,255,255,0.4);
+  transition: border-color 200ms, background 200ms, transform 200ms;
+  min-height: 110px;
+}
+.ovv-dir:hover { border-color: var(--moss, #6B8E23); background: var(--paper, #FAFAF6); transform: translateY(-2px); }
+.ovv-dir-num {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--moss, #6B8E23); margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+.ovv-dir-name {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: var(--ink, #1A1A1A); margin-bottom: 6px; line-height: 1.3;
+}
+.ovv-dir-desc {
+  font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--muted, #666);
+  line-height: 1.5;
+}
+.ovv-skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.ovv-skill {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem;
+  padding: 6px 14px; border: 1px solid var(--moss, #6B8E23);
+  color: var(--moss, #6B8E23); border-radius: 2px; background: rgba(255,255,255,0.4);
+}
+.ovv-bonus {
+  margin-top: 24px; padding: 16px 20px;
+  border-left: 3px solid var(--gold, #B8902A); background: rgba(184, 144, 42, 0.04);
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-style: italic;
+  color: var(--ink, #1A1A1A); line-height: 1.7;
+}
+
+/* === 适合谁 — ✓ / ✗ 双列 === */
+.ovv-fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ovv-fit-col { padding: 20px 24px; border: 1px solid var(--rule, #E5E5E0); border-radius: 3px; }
+.ovv-fit-col.is-yes { border-left: 3px solid #2E7D32; background: rgba(46, 125, 50, 0.03); }
+.ovv-fit-col.is-no { border-left: 3px solid #B91C1C; background: rgba(185, 28, 28, 0.03); }
+.ovv-fit-label {
+  font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.9375rem;
+  margin-bottom: 12px; letter-spacing: 0.05em;
+}
+.ovv-fit-col.is-yes .ovv-fit-label { color: #2E7D32; }
+.ovv-fit-col.is-no .ovv-fit-label { color: #B91C1C; }
+.ovv-fit-list { list-style: none; padding: 0; margin: 0; }
+.ovv-fit-list li {
+  font-family: 'Noto Serif SC', serif; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A); padding: 6px 0; border-bottom: 1px dashed var(--rule, #E5E5E0);
+  position: relative; padding-left: 20px;
+}
+.ovv-fit-list li:last-child { border-bottom: none; }
+.ovv-fit-col.is-yes .ovv-fit-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 6px; color: #2E7D32; font-weight: 700;
+}
+.ovv-fit-col.is-no .ovv-fit-list li::before {
+  content: "✗"; position: absolute; left: 0; top: 6px; color: #B91C1C; font-weight: 700;
+}
+
+/* === 避坑 — 6 误区 + 真相 === */
+.ovv-pits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ovv-pit {
+  padding: 20px 22px; border: 1px solid var(--rule, #E5E5E0); border-left: 3px solid #B91C1C;
+  border-radius: 3px; background: rgba(185, 28, 28, 0.02);
+  transition: border-color 200ms, transform 200ms, background 200ms;
+}
+.ovv-pit:hover { border-color: #B91C1C; background: rgba(185, 28, 28, 0.06); transform: translateX(4px); }
+.ovv-pit-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.75rem;
+  color: #B91C1C; letter-spacing: 0.15em; margin-bottom: 4px;
+}
+.ovv-pit-myth {
+  font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700;
+  color: #B91C1C; margin-bottom: 8px; line-height: 1.4;
+}
+.ovv-pit-reality {
+  font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+
+/* === 移动端 === */
+@media (max-width: 1023px) {
+  .ovv-card { padding: 28px 28px 32px; }
+  .ovv-timeline { grid-template-columns: repeat(4, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+5) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(3, 1fr); }
+  .ovv-fit-grid { grid-template-columns: 1fr; }
+  .ovv-pits { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .ovv-card { padding: 24px 22px 28px; }
+  .ovv-card-head { flex-wrap: wrap; gap: 8px; }
+  .ovv-card-title { font-size: 1.25rem; }
+  .ovv-timeline { grid-template-columns: repeat(3, 1fr); }
+  .ovv-timeline > .ovv-tl-step:nth-child(n+4) { display: none; }
+  .ovv-directions { grid-template-columns: repeat(2, 1fr); }
+  .ovv-skills { gap: 6px; }
+  .ovv-skill { font-size: 0.75rem; padding: 4px 10px; }
+}
+@media (max-width: 480px) {
+  .ovv-directions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ovv-card, .ovv-dir, .ovv-pit { transition: none; }
+  .ovv-card:hover, .ovv-dir:hover, .ovv-pit:hover { transform: none; }
+}
+
+
+/* === 简化速览 (TEMPLATE 锁版, 不分 cards) === */
+.ovv-simple { max-width: 880px; margin: 0 auto; }
+.ovv-simple-section { margin-bottom: 56px; }
+.ovv-simple-lede {
+  font-family: var(--font-heading);
+  font-size: 1.1875rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+  margin-bottom: 48px; max-width: 760px; padding-left: 0;
+  font-weight: 400;
+}
+.ovv-simple-lede::first-letter {
+  font-family: var(--font-heading);
+  font-size: 3.25rem; font-weight: 700; line-height: 1;
+  color: var(--accent, #DC2626); margin-right: 8px; float: left;
+  padding-top: 4px;
+}
+.ovv-simple-h {
+  font-family: var(--font-heading);
+  font-size: 1.375rem; font-weight: 700; color: var(--ink, #1A1A1A);
+  margin: 0 0 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  letter-spacing: -0.01em;
+}
+.ovv-simple-h .ovv-num {
+  font-family: var(--font-num);
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--muted, #6B6B6B); letter-spacing: 0.2em;
+  margin-right: 12px;
+}
+.ovv-simple-body {
+  font-family: var(--font-body);
+  font-size: 1rem; line-height: 1.85; color: var(--ink, #1A1A1A);
+}
+.ovv-simple-fit {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-top: 16px;
+}
+.ovv-simple-fit-col { padding: 20px 0; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
+.ovv-simple-fit-label {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #2E7D32; }
+.ovv-simple-fit-col.is-no  .ovv-simple-fit-label { color: #B8323A; }
+.ovv-simple-fit-list {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-fit-list li {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; line-height: 1.7;
+  color: var(--ink, #1A1A1A);
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+.ovv-simple-fit-list li:last-child { border-bottom: none; }
+.ovv-simple-pitfalls {
+  list-style: none; padding: 0; margin: 0;
+}
+.ovv-simple-pitfalls li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule, #E5E5E0);
+  display: grid; grid-template-columns: 1fr; gap: 6px;
+}
+.ovv-simple-pitfalls li:last-child { border-bottom: none; }
+.ovv-simple-pit-myth {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem; color: #B8323A; font-weight: 600;
+}
+.ovv-simple-pit-myth::before { content: "❌ "; }
+.ovv-simple-pit-reality {
+  font-family: var(--font-body);
+  font-size: 0.9375rem; color: var(--ink, #1A1A1A);
+  line-height: 1.7;
+}
+.ovv-simple-pit-reality::before { content: "✓ "; color: #2E7D32; font-weight: 700; }
+@media (max-width: 768px) {
+  .ovv-simple-fit { grid-template-columns: 1fr; gap: 16px; }
+}
+
+
+/* 招 #6 字体 */
+.hero, .hero * { --font-heading: 'Noto Serif SC', 'Cormorant Garamond', serif; --font-num: 'Cormorant Garamond', serif; }
+section.tab h1, section.tab h2, section.tab h3, section.tab h4 { font-family: var(--font-heading); }
+section.tab p, section.tab li { font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; }
+.num, .num * { font-family: 'Cormorant Garamond', 'Source Han Serif SC', serif; font-variant-numeric: oldstyle-nums; font-feature-settings: 'onum' 1; }
+
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #B8CC98; position: relative; z-index: 2; overflow: hidden; min-height: 720px; }
+.hero .container { position: relative; z-index: 3; }
+
+/* ── 木桌 (含线纹) ── */
+.desk {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(107,142,35,0.0) 0px, rgba(107,142,35,0.0) 120px,
+      rgba(107,142,35,0.08) 121px, rgba(107,142,35,0.0) 122px,
+      rgba(107,142,35,0.0) 260px, rgba(107,142,35,0.10) 261px, rgba(107,142,35,0.0) 262px),
+    linear-gradient(180deg, #F0F5E2 0%, #E0E8C8 100%);
+}
+.sunbeam {
+  position: absolute; top: -180px; left: 30%;
+  transform: rotate(20deg);
+  width: 700px; height: 1100px;
+  background: linear-gradient(180deg, rgba(255,250,200,0.25) 0%, rgba(255,250,200,0.10) 30%, transparent 70%);
+  z-index: 2; pointer-events: none; filter: blur(20px);
+}
+
+/* ── 角标 ── */
+.corner-mark { position: absolute; width: 22px; height: 22px; z-index: 4; }
+.corner-mark::before, .corner-mark::after { content: ""; position: absolute; background: #2E5A2E; }
+.corner-mark::before { width: 22px; height: 1.5px; }
+.corner-mark::after { width: 1.5px; height: 22px; }
+.cm-tl { top: 24px; left: 24px; }
+.cm-tr { top: 24px; right: 24px; }
+.cm-tr::before { right: 0; }
+.cm-tr::after { right: 0; }
+.cm-bl { bottom: 24px; left: 24px; }
+.cm-bl::before { bottom: 0; }
+.cm-bl::after { bottom: 0; }
+.cm-br { bottom: 24px; right: 24px; }
+.cm-br::before { right: 0; bottom: 0; }
+.cm-br::after { right: 0; bottom: 0; }
+
+/* ── 顶部题首 ── */
+.top-mark {
+  position: absolute; top: 36px; left: 50%; transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #6B8E23; z-index: 4; white-space: nowrap;
+}
+.top-mark::before, .top-mark::after { content: "·"; margin: 0 12px; color: #B8CC98; }
+
+/* ── 标本夹 ── */
+.herbarium-stage {
+  position: relative;
+  margin: 0 auto;
+  max-width: 1080px;
+  padding: 22px 12px;
+  z-index: 5;
+}
+.press-cover {
+  position: relative;
+  background: linear-gradient(135deg, #A8C088 0%, #B8CC98 25%, #98B078 50%, #A8C088 75%, #88A868 100%);
+  border-radius: 3px;
+  padding: 22px 12px;
+  box-shadow:
+    inset 0 0 50px rgba(46,90,46,0.20),
+    inset 0 0 0 1.5px rgba(230,180,34,0.30),
+    0 24px 48px rgba(46,90,46,0.30);
+}
+.press-cover::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='l'><feTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23l)'/></svg>");
+  opacity: 0.30; mix-blend-mode: overlay; border-radius: 3px; pointer-events: none;
+}
+.press-cover::after {
+  content: ""; position: absolute; inset: 18px;
+  background:
+    radial-gradient(circle 3.5px at 0% 0%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 100% 0%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 0% 100%, var(--paper) 100%, transparent),
+    radial-gradient(circle 3.5px at 100% 100%, var(--paper) 100%, transparent);
+  pointer-events: none;
+}
+
+.specimen-page {
+  position: relative;
+  min-height: 540px;
+  background: linear-gradient(180deg, #F5F9EC 0%, #E8EFDC 50%, #F5F9EC 100%);
+  box-shadow: inset 0 0 60px rgba(107,142,35,0.10), inset 0 0 0 1px rgba(107,142,35,0.20);
+  overflow: hidden;
+  padding: 48px 56px;
+}
+.specimen-page::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  opacity: 0.4; mix-blend-mode: multiply; pointer-events: none;
+}
+.page-left { border-radius: 2px 10px 10px 2px; box-shadow: inset -10px 0 18px -6px rgba(60,80,40,0.22); }
+.page-right { border-radius: 10px 2px 2px 10px; box-shadow: inset 10px 0 18px -6px rgba(60,80,40,0.22); }
+.page-content { position: relative; z-index: 2; }
+.chapter-mark {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
+  font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: #6B8E23; margin-bottom: 16px;
+}
+.chapter-mark::before { content: "§ "; color: #B8902A; }
+
+.hero-title {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif; font-weight: 900;
+  font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.05; letter-spacing: -0.02em;
+  color: #2E5A2E; margin: 8px 0 12px;
+}
+.title-cn { display: block; }
+.title-en {
+  display: block; font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-weight: 500; font-size: 0.55em; color: #6B8E23; margin-top: 6px; letter-spacing: 0.04em;
+}
+.ampersand { font-style: italic; color: #B8902A; font-weight: 400; padding: 0 0.05em; }
+.lat-name { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.95rem; }
+.pull-quote {
+  font-family: 'Noto Serif SC', serif; font-weight: 500;
+  font-size: 0.92rem; line-height: 1.7; color: #2E5A2E;
+  border-left: 2px solid #B8902A; padding: 4px 0 4px 14px; margin: 18px 0 6px;
+}
+.attribution { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.78rem; color: #6B8E23; }
+
+/* ── 朱砂印 ── */
+.seal {
+  display: inline-block; background: #B83A2A; color: #FFE8B0;
+  font-family: 'Noto Serif SC', serif; font-weight: 900;
+  font-size: 0.7rem; line-height: 1; letter-spacing: 0.1em;
+  padding: 4px 6px; margin: 4px;
+  border: 1.5px solid #B83A2A; border-radius: 2px;
+  box-shadow: 0 0 0 1px #FFE8B0 inset, 1px 1px 0 rgba(0,0,0,0.10);
+  transform: rotate(-3deg);
+}
+.seal-vertical { writing-mode: vertical-rl; padding: 6px 4px; }
+.hu-stat-seal { display: flex; gap: 4px; margin-top: 14px; }
+
+/* ── 校勘式 stat (右页) ── */
+.hu-stat {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 8px 0; border-bottom: 1px dashed rgba(107,142,35,0.25);
+  font-family: 'Noto Serif SC', serif;
+}
+.hu-stat:last-child { border-bottom: none; }
+.hu-stat-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8rem; color: #6B8E23; min-width: 60px; letter-spacing: 0.05em; }
+.hu-stat-value { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: #2E5A2E; }
+
+/* ── 书签 ── */
+.bookmark {
+  position: absolute; top: 0; right: 56px;
+  width: 28px; height: 96px; background: #B8902A;
+  box-shadow: inset -2px 0 0 rgba(0,0,0,0.15);
+  z-index: 6;
+}
+.bookmark::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 16px; background: linear-gradient(135deg, transparent 50%, #B8902A 50%) 0 0/14px 16px no-repeat, linear-gradient(225deg, transparent 50%, #B8902A 50%) 14px 0/14px 16px no-repeat; }
+
+/* ── 装饰: 麦穗 + 叶脉 + 光合色素 ── */
+.wheat { position: absolute; top: 60px; left: 12px; width: 56px; height: 200px; opacity: 0.85; z-index: 3; }
+.leaf-vein { position: absolute; bottom: 60px; left: 12px; width: 56px; height: 200px; opacity: 0.7; z-index: 3; }
+.chloro-panel {
+  position: absolute; right: 12px; top: 60px;
+  width: 200px; padding: 14px 16px;
+  background: rgba(245,249,236,0.85);
+  border: 1px solid rgba(107,142,35,0.25);
+  border-radius: 2px;
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  z-index: 3;
+}
+.cp-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 0.85rem; color: #2E5A2E; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid #B8CC98; padding-bottom: 6px; margin-bottom: 8px; }
+.chloro-line { display: grid; grid-template-columns: 90px 1fr auto; gap: 8px; font-size: 0.78rem; padding: 3px 0; color: #2E5A2E; align-items: baseline; }
+.chloro-line .num { font-style: italic; color: #B8902A; }
+.chloro-line .ch { font-family: 'Noto Serif SC', serif; }
+.chloro-line .note { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.7rem; }
+
+/* 招 #7 数字滚动/招 #4 巨型水印 */
+section.tab h2 { color: #2E5A2E; font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; }
+section.tab h3 { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
+section.tab p.lede { color: #4A5A3A; }
+.watermark { font-family: 'Cormorant Garamond', serif; color: #B8CC98; }
+footer { background: #F0F5E2; border-top: 1px solid #B8CC98; }
+footer .label { color: #2E5A2E; font-family: 'Noto Serif SC', serif; }
+footer .data-source { color: #6B8E23; }
+.drop-cap::first-letter { font-family: 'Noto Serif SC', serif; color: #B8902A; }
+
+/* ── Agri body section 框架 (仿 HUMANITIES 极简浅色 + 绿色主题) ── */
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.bento-item { padding: 28px 24px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; box-shadow: 0 1px 0 rgba(46, 90, 46, 0.04); }
+.bento-item::before { content: "❀"; position: absolute; top: 20px; right: 20px; color: #6B8E23; font-size: 0.875rem; opacity: 0.4; }
+.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #6B8E23; z-index: 1; pointer-events: none; }
+.bento-item:hover { border-color: #6B8E23; transform: translateY(-2px); }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #2E5A2E; border: 1px solid #2E5A2E; border-radius: 0; font-family: 'Noto Serif SC', serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 12px; }
+.bento-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; color: #2E5A2E; padding-right: 80px; text-wrap: balance; line-height: 1.3; }
+.bento-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8125rem; color: #6B8E23; line-height: 1.5; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.company { padding: 28px 24px 22px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #6B8E23; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.company-tier { padding: 2px 8px; border: 1px solid #6B8E23; color: #6B8E23; font-family: 'Noto Serif SC', serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; }
+.tier-S { background: #2E5A2E; color: #F0F5E2; border-color: #2E5A2E; }
+.tier-A { background: transparent; }
+.tier-B { background: transparent; color: #6B8E23; border-color: #B8CC98; }
+.company-name { font-family: 'Noto Serif SC', serif; font-size: 1.1875rem; font-weight: 700; margin-bottom: 8px; color: #2E5A2E; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #DCE8C5; }
+.sparkline-bar { flex: 1; background: #B8CC98; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #6B8E23; opacity: 0.7; }
+.sparkline-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.6875rem; color: #6B8E23; letter-spacing: 0.05em; margin-top: 6px; }
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; overflow: hidden; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #DCE8C5; font-size: 0.9375rem; }
+.salary-table tr:last-child td { border-bottom: none; }
+.salary-table th { background: #F0F5E2; font-family: 'Noto Serif SC', serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #6B8E23; }
+.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 200px 1fr 70px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #DCE8C5; }
+.direction:last-child { border-bottom: none; }
+.direction-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 600; color: #2E5A2E; }
+.direction-bar { height: 8px; background: rgba(107, 142, 35, 0.12); overflow: hidden; border-radius: 2px; }
+.direction-bar-fill { height: 100%; background: #6B8E23; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 2px; }
+.direction-pct { font-family: 'Cormorant Garamond', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #6B8E23; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-card { padding: 32px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #6B8E23; transform: translateY(-2px); }
+.path-pct { font-family: 'Noto Serif SC', serif; font-size: 2.5rem; font-weight: 700; color: #2E5A2E; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.875rem; margin-top: 8px; }
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
+.quotes { margin-top: 32px; position: relative; z-index: 1; }
+.quote { padding: 28px 32px 24px; background: #FAFCF3; border: 1px solid #B8CC98; border-left: 4px solid #B8902A; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quote-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; }
+.quote-byline strong { display: block; font-family: 'Noto Serif SC', serif; font-weight: 700; color: #2E5A2E; font-size: 0.9375rem; }
+.quote-byline .quote-source { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 0.75rem; }
+.quote-text { font-family: 'Noto Serif SC', serif; font-style: italic; font-size: 1.1875rem; line-height: 1.65; color: #2E5A2E; }
+.quote-text::before { content: "「"; color: #B8902A; }
+.quote-text::after { content: "」"; color: #B8902A; }
+.xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
+.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #DCE8C5; }
+.xuanke:last-child { border-bottom: none; }
+.xuanke-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #2E5A2E; }
+.xuanke-bar { height: 6px; background: #DCE8C5; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #6B8E23; }
+.xuanke-pct { font-family: 'Noto Serif SC', serif; font-weight: 700; text-align: right; font-size: 1.0625rem; color: #6B8E23; }
+.curriculum-lede { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #6B8E23; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FAFCF3; border: 1px solid #2E5A2E; text-align: center; position: relative; }
+.cta-block::before { content: "❀  ❀  ❀"; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #F0F5E2; padding: 0 16px; color: #2E5A2E; font-size: 0.875rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: 'Noto Serif SC', serif; font-size: 1.75rem; margin-bottom: 12px; color: #2E5A2E; position: relative; z-index: 1; font-weight: 700; }
+.cta-block p { color: #4A5A3A; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
+.cta-input { padding: 14px 18px; background: #F0F5E2; border: 1px solid #B8CC98; color: #2E5A2E; font-family: 'Noto Serif SC', serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #6B8E23; }
+.cta-button { padding: 14px 36px; background: #2E5A2E; color: #F0F5E2; font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; }
+.cta-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.75rem; color: #6B8E23; margin-top: 16px; position: relative; z-index: 1; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid #2E5A2E; color: #2E5A2E; font-family: 'Noto Serif SC', serif; font-size: 0.75rem; letter-spacing: 0.05em; }
+.tag.primary { background: #2E5A2E; color: #F0F5E2; }
+
+/* ── Agri body section 配色 (浅绿底, 保持与 BASE_CSS 默认对比) ── */
+section.tab { border-top: 1px solid #C5D9A8; }
+.section-num { color: #6B8E23; }
+.watermark { color: #6B8E23; opacity: 0.04; }
+.salary-stage { color: #2E5A2E; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: rgba(107, 142, 35, 0.15); margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #6B8E23; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.salary-bar { background: rgba(107, 142, 35, 0.15); }
+.salary-bar-fill { background: #6B8E23; }
+.yoy { display: inline-block; font-family: 'Noto Serif SC', serif; font-size: 0.8125rem; font-weight: 600; margin-left: 12px; padding: 2px 8px; }
+.yoy.up { color: #2E5A2E; background: rgba(46, 90, 46, 0.08); }
+.yoy.down { color: #DC2626; background: rgba(220, 38, 38, 0.08); }
+.yoy.flat { color: #999; }
+.direction-bar { background: rgba(107, 142, 35, 0.12); }
+.direction-bar-fill { background: #6B8E23; }
+.direction-name { color: #2E5A2E; }
+.curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.direction-pct { color: #2E5A2E; }
+.path-name { color: #2E5A2E; }
+.quote-byline strong { color: #2E5A2E; }
+.quote-source { color: #A0824D; }
+.quote-text { color: #2E5A2E; }
+.quote-text::before, .quote-text::after { color: #6B8E23; }
+.xuanke-bar { background: rgba(107, 142, 35, 0.12); }
+.xuanke-bar-fill { background: #6B8E23; }
+.xuanke-name { color: #2E5A2E; }
+.xuanke-pct { color: #2E5A2E; }
+.course { color: #2E5A2E; border-bottom: 1px dashed rgba(107, 142, 35, 0.2); padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.9375rem; transition: background 200ms, padding-left 200ms; }
+.course:hover { background: rgba(107, 142, 35, 0.04); padding-left: 8px; }
+.course-name { color: #2E5A2E; }
+.course-credit { color: #6B8E23; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.8125rem; flex-shrink: 0; font-weight: 600; }
+.curriculum-block { padding: 22px 26px; background: rgba(245, 249, 236, 0.55); border: 1px solid #B8CC98; border-radius: 3px; margin-bottom: 18px; transition: border-color 250ms; }
+.curriculum-block:last-child { margin-bottom: 0; }
+.curriculum-block:hover { border-color: #6B8E23; }
+.curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; color: #2E5A2E; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(107,142,35,0.3); font-weight: 700; }
+.bento-tag { color: #6B8E23; }
+.bento-rank { color: #6B8E23; border: 1px solid #6B8E23; }
+.bento-name { color: #2E5A2E; }
+.company-meta { color: #A0824D; }
+.cta-block p { color: #4A5A3A; }
+.cta-input { background: #FAFAFA; border: 1px solid #C5D9A8; color: #2E5A2E; }
+.cta-button:hover { background: #FAFAFA; color: #6B8E23; }
+.cta-note { color: #A0824D; }
+
+/* ── Hero 主内容区 (agri 居中布局, 装饰作 frame) ── */
+.hero-content { max-width: 880px; margin: 0 auto; padding: 60px 0 40px; position: relative; z-index: 5; text-align: center; }
+.hero-chapter { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; letter-spacing: 0.3em; color: #6B8E23; margin-bottom: 14px; text-transform: uppercase; }
+.hero-title { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: clamp(3rem, 7vw, 5rem); line-height: 1; letter-spacing: -0.01em; color: #2E5A2E; margin: 0 0 10px; }
+.title-cn { display: block; }
+.title-en { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 1.5rem; color: #6B8E23; margin-top: 12px; letter-spacing: 0.04em; }
+.ampersand { color: #E6B422; font-style: italic; }
+.hero-tagline { font-family: 'Noto Serif SC', serif; font-size: 1rem; line-height: 1.7; color: #4A5A3A; max-width: 720px; margin: 18px auto 0; }
+.hu-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 28px auto 0; max-width: 880px; padding: 20px 0; border-top: 1px solid rgba(107,142,35,0.4); border-bottom: 1px solid rgba(107,142,35,0.4); }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
+.hu-tag { font-family: 'Noto Serif SC', serif; font-size: 0.8rem; padding: 4px 12px; border: 1px solid #6B8E23; color: #2E5A2E; border-radius: 2px; background: rgba(245,249,236,0.6); }
+
+/* ── agri (林奈植物图鉴) mobile patch — chloro-panel/wheat/top-mark 重叠 园艺 大字 ──
+   策略: 隐藏装饰元素, 让 hero 主体 (标题+stats+tags) 干净显示 */
+@media (max-width: 480px) {
+  .chloro-panel { display: none !important; }
+  .wheat { display: none !important; }
+  .top-mark { font-size: 0.55rem !important; padding: 4px 8px !important; }
+  .corner-mark { width: 14px !important; height: 14px !important; }
+  .hu-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 14px 0 !important; }
+  /* 标题区上下间距收紧 */
+  .title-en { font-size: 1.1rem !important; margin-top: 6px !important; }
+}
+
+
+/* ─── Wishlist inject: 顶部 chip + 右下 FAB + 12 主题卡 ─── */
+.wl-chip {
+  position: fixed; top: 80px; right: 16px; z-index: 95;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  font-size: 0.75rem; font-weight: 600;
+  padding: 7px 12px; border-radius: 999px;
+  background: rgba(250,250,247,0.95); color: #14110D;
+  border: 1px solid #BFB9AB; cursor: pointer;
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  transition: all 180ms; letter-spacing: 0.02em;
+  text-decoration: none; box-shadow: 0 2px 8px rgba(20,17,13,0.06);
+}
+.wl-chip:hover { background: #B8323A; color: #FAFAF7; border-color: #B8323A; transform: translateY(-1px); opacity: 1; }
+.wl-chip[data-state="ready"] { background: #B8323A; color: #FAFAF7; border-color: #B8323A; }
+.wl-chip .count { font-weight: 700; }
+@media (max-width: 640px) {
+  .wl-chip { top: 10px; right: 10px; font-size: 0.6875rem; padding: 6px 10px; }
+}
+
+.wl-fab {
+  position: fixed; right: 24px; bottom: 24px; z-index: 9000;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #B8323A; color: #FAFAF7;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  cursor: pointer; border: none; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wl-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 32px rgba(184,50,58,0.32); }
+.wl-fab[data-state="added"] { background: #2F5F3E; }
+@media (max-width: 640px) { .wl-fab { right: 16px; bottom: 16px; width: 50px; height: 50px; font-size: 1.25rem; } }
+
+.wl-modal {
+  position: fixed; right: 24px; bottom: 96px; z-index: 9001;
+  width: min(320px, calc(100vw - 32px));
+  background: #FAFAF7; color: #14110D;
+  border: 1px solid #BFB9AB; border-radius: 12px; padding: 20px;
+  box-shadow: 0 20px 48px rgba(20,17,13,0.24);
+  transform: translateY(8px); opacity: 0; pointer-events: none;
+  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-modal[data-open="true"] { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.wl-modal .wl-mt { font-family: 'Source Han Serif SC', 'Songti SC', serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 4px; }
+.wl-modal .wl-msub { font-size: 0.8125rem; color: #6F6A60; margin-bottom: 16px; }
+.wl-modal .wl-stars { display: flex; gap: 4px; align-items: center; margin-bottom: 16px; }
+.wl-modal .wl-stars button { font-size: 1.25rem; padding: 4px 2px; color: #BFB9AB; background: none; border: none; cursor: pointer; transition: color 120ms, transform 120ms; }
+.wl-modal .wl-stars button.on { color: #B8323A; }
+.wl-modal .wl-stars button:hover { transform: scale(1.12); }
+.wl-modal .wl-act { display: flex; gap: 8px; }
+.wl-modal .wl-act button { font: inherit; cursor: pointer; padding: 10px 14px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; border: none; }
+.wl-modal .wl-act .wl-ok { flex: 1; background: #14110D; color: #FAFAF7; }
+.wl-modal .wl-act .wl-cancel { background: transparent; color: #6F6A60; border: 1px solid #E2DFD5; }
+.wl-modal .wl-act .wl-ok:disabled { opacity: 0.4; cursor: not-allowed; }
+@media (max-width: 640px) { .wl-modal { right: 16px; bottom: 80px; } }
+
+.wl-toast {
+  position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px);
+  background: #14110D; color: #FAFAF7; padding: 10px 16px;
+  border-radius: 8px; font-size: 0.8125rem; box-shadow: 0 8px 24px rgba(20,17,13,0.16);
+  opacity: 0; pointer-events: none; transition: all 220ms; z-index: 9100;
+  font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+.wl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── 心意框 CTA (在 wl-related 之上) — 看完专业必出 ─── */
+.wl-decide {
+  padding: 64px 0 32px;
+  background: linear-gradient(180deg, #FAFAF7 0%, #F5F2EA 100%);
+  border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-decide .container { max-width: 880px; margin: 0 auto; padding: 0 32px; text-align: center; }
+.wl-decide-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
+  color: #B8323A; letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 12px; font-weight: 600;
+}
+.wl-decide-title {
+  font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600; line-height: 1.3; margin-bottom: 32px; letter-spacing: -0.01em;
+}
+.wl-decide-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  max-width: 720px; margin: 0 auto;
+}
+.wl-decide-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  padding: 28px 24px; background: #fff;
+  border: 1.5px solid #E2DFD5; border-radius: 14px;
+  text-decoration: none; color: #14110D;
+  cursor: pointer; transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left; font: inherit;
+}
+.wl-decide-card:hover {
+  transform: translateY(-3px);
+  border-color: #BFB9AB;
+  box-shadow: 0 12px 28px rgba(20,17,13,0.10);
+  opacity: 1;
+}
+.wl-decide-card.primary {
+  background: linear-gradient(180deg, #B8323A 0%, #9F2A31 100%);
+  color: #FAFAF7; border-color: #B8323A;
+}
+.wl-decide-card.primary:hover { border-color: #9F2A31; box-shadow: 0 14px 32px rgba(184,50,58,0.28); }
+.wl-decide-card .wl-decide-emoji { font-size: 1.875rem; line-height: 1; margin-bottom: 12px; }
+.wl-decide-card .wl-decide-h { font-family: 'Source Han Serif SC', serif; font-size: 1.0625rem; font-weight: 700; }
+.wl-decide-card .wl-decide-sub { font-size: 0.8125rem; opacity: 0.8; line-height: 1.5; margin-top: 4px; }
+.wl-decide-card.primary .wl-decide-sub { color: #FAEAEB; opacity: 0.95; }
+.wl-decide-card[data-state="added"] {
+  background: linear-gradient(180deg, #2F5F3E 0%, #244E32 100%);
+  border-color: #2F5F3E;
+}
+@media (max-width: 640px) {
+  .wl-decide { padding: 48px 0 24px; }
+  .wl-decide .container { padding: 0 16px; }
+  .wl-decide-grid { grid-template-columns: 1fr; gap: 12px; }
+  .wl-decide-card { padding: 22px 20px; }
+}
+
+/* ── 12 主题相关卡 (3×4) ───────────────── */
+.wl-related {
+  padding: 80px 0 64px;
+  background: #F2F2EB; border-top: 1px solid #E2DFD5;
+  font-family: 'Inter', 'PingFang SC', sans-serif; color: #14110D;
+  position: relative; z-index: 2;
+}
+.wl-related .container { max-width: var(--container-max, 1280px); margin: 0 auto; padding: 0 var(--container-px, 40px); }
+.wl-related .wl-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; color: #6F6A60; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
+.wl-related h2 { font-family: 'Source Han Serif SC', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.01em; }
+.wl-related .wl-lede { font-size: 0.9375rem; color: #6F6A60; max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
+.wl-related .wl-cta-bar { display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; }
+.wl-related .wl-cta-bar a {
+  font-family: inherit; font-size: 0.875rem; font-weight: 600;
+  padding: 10px 18px; border-radius: 8px; text-decoration: none; transition: all 180ms;
+}
+.wl-related .wl-cta-bar .wl-primary { background: #14110D; color: #FAFAF7; }
+.wl-related .wl-cta-bar .wl-primary:hover { background: #B8323A; opacity: 1; }
+.wl-related .wl-cta-bar .wl-ghost { background: transparent; color: #14110D; border: 1px solid #BFB9AB; }
+.wl-related .wl-cta-bar .wl-ghost:hover { background: #FAFAF7; opacity: 1; }
+.wl-related .wl-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+@media (max-width: 900px) { .wl-related .wl-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .wl-related .wl-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .wl-related { padding: 56px 0 40px; } .wl-related .container { padding: 0 16px; } }
+.wl-card {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px 16px 14px; background: #FAFAF7;
+  border: 1px solid #E2DFD5; border-radius: 10px;
+  text-decoration: none; color: #14110D;
+  transition: all 200ms; min-height: 120px;
+  position: relative; overflow: hidden;
+}
+.wl-card:hover { transform: translateY(-2px); border-color: #BFB9AB; box-shadow: 0 8px 20px rgba(20,17,13,0.08); opacity: 1; }
+.wl-card .wl-badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5625rem; font-weight: 600; padding: 2px 6px; border-radius: 3px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #FAFAF7;
+  align-self: flex-start;
+}
+.wl-card.cs .wl-badge { background: #2A4A7F; }
+.wl-card.finance .wl-badge { background: #5A4632; }
+.wl-card.medicine .wl-badge { background: #8B2424; }
+.wl-card.education .wl-badge { background: #5C7C4A; }
+.wl-card.law .wl-badge { background: #3A3A3A; }
+.wl-card.humanities .wl-badge { background: #6B4F35; }
+.wl-card.sci .wl-badge { background: #1E5E72; }
+.wl-card.eng .wl-badge { background: #5B5B47; }
+.wl-card.administration .wl-badge { background: #4A4564; }
+.wl-card.agri .wl-badge { background: #6B7A3F; }
+.wl-card.arts .wl-badge { background: #8B3A62; }
+.wl-card.gongan .wl-badge { background: #1F2A44; }
+.wl-card.business .wl-badge { background: #6F5A3A; }
+.wl-card .wl-title { font-family: 'Source Han Serif SC', serif; font-size: 0.9375rem; font-weight: 600; margin-top: 2px; line-height: 1.3; }
+.wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
+.wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+
+
+/* ⭐ 标题旁国家战略徽章 */
+.strategy-badge {
+  display: inline-block; margin-left: 14px;
+  font-family: 'Songti SC', 'SimSun', '宋体', serif;
+  font-size: 0.75rem; color: #B8323A;
+  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
+  border: 1px solid rgba(184,50,58,0.3);
+  padding: 4px 12px; border-radius: 4px;
+  letter-spacing: 0.08em; font-weight: 600;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
+.strategy-fit-card {
+  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
+  border: 1px solid rgba(184,50,58,0.2);
+  border-radius: 8px;
+  padding: 18px 22px; margin: 0 0 24px 0;
+}
+.strategy-fit-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.strategy-fit-icon { font-size: 1.1rem; }
+.strategy-fit-title {
+  font-weight: 600; color: #B8323A;
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 1rem; letter-spacing: 0.05em;
+}
+.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
+.strategy-fit-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+}
+.strategy-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; background: white;
+  border: 1px solid rgba(184,50,58,0.3);
+  border-radius: 6px; text-decoration: none;
+  color: #1A1A1A; font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+.strategy-link:hover {
+  background: rgba(184,50,58,0.06);
+  border-color: #B8323A; transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
+}
+.strategy-link-name { font-weight: 500; }
+.strategy-link-tier {
+  color: #D97706; font-size: 0.6875rem; font-weight: 500;
+  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
+}
+.strategy-fit-tip {
+  font-size: 0.75rem; color: #8B7355;
+  margin-top: 4px; font-style: italic;
+}
+@media (max-width: 600px) {
+  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+}
+
+
+/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
+.hero-stats .chsi-rating-cell {
+  grid-column: 1 / -1;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 12px 16px; margin-top: 6px;
+  border-top: 1px dashed currentColor;
+  opacity: 0.92;
+  font-feature-settings: "tnum" 1;
+}
+.hero-stats .chsi-rating-cell .chsi-label {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.625rem; letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-stats .chsi-rating-cell .chsi-score {
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
+  margin-left: auto;
+}
+.hero-stats .chsi-rating-cell .chsi-meta {
+  font-size: 0.6875rem; opacity: 0.7;
+}
+/* law 主题: 印章下方 mini-badge (无 hero-stats) */
+.hero .chsi-rating-badge {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  margin-top: 12px; padding: 6px 14px;
+  border: 1px solid currentColor; border-radius: 4px;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.75rem; opacity: 0.85;
+}
+.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
+
+
+/* ── footer 底部导航 (L3 dead-link 兜底 + L2 /majors.html 直链) ── */
+.footer-nav {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 16px; margin: 0 0 28px 0; padding: 0;
+}
+.footer-nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--font-num, 'IBM Plex Mono', monospace);
+  font-size: 0.8125rem; font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  backdrop-filter: blur(4px);
+}
+.footer-nav-link:hover {
+  background: rgba(184, 50, 58, 0.08);
+  border-color: rgba(184, 50, 58, 0.3);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .footer-nav { gap: 8px 10px; margin-bottom: 20px; }
+  .footer-nav-link { padding: 7px 14px; font-size: 0.75rem; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <!-- 装饰层 (absolute, 不影响内容布局) -->
+  <div class="desk"></div>
+  <div class="sunbeam"></div>
+  <div class="corner-mark cm-tl"></div>
+  <div class="corner-mark cm-tr"></div>
+  <div class="corner-mark cm-bl"></div>
+  <div class="corner-mark cm-br"></div>
+  <div class="top-mark">高考选专业 · 精品卷 第五册 · 華北農學會藏版</div>
+  <div class="wheat">
+    <svg viewBox="0 0 50 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 25 160 Q 26 110 25 60" stroke="#C8A26E" stroke-width="1" fill="none"/>
+      <g fill="#E6B422" stroke="#B8902A" stroke-width="0.3">
+        <ellipse cx="20" cy="75" rx="3.5" ry="8" transform="rotate(-15 20 75)"/>
+        <ellipse cx="30" cy="88" rx="3.5" ry="8" transform="rotate(15 30 88)"/>
+        <ellipse cx="19" cy="105" rx="4" ry="9" transform="rotate(-15 19 105)"/>
+        <ellipse cx="31" cy="118" rx="4" ry="9" transform="rotate(15 31 118)"/>
+        <ellipse cx="18" cy="135" rx="4.5" ry="10" transform="rotate(-15 18 135)"/>
+      </g>
+      <g stroke="#B8902A" stroke-width="0.4" fill="none" opacity="0.8">
+        <line x1="25" y1="60" x2="20" y2="22"/><line x1="25" y1="60" x2="25" y2="14"/>
+        <line x1="25" y1="60" x2="30" y2="22"/><line x1="25" y1="60" x2="22" y2="28"/>
+        <line x1="25" y1="60" x2="28" y2="28"/>
+      </g>
+    </svg>
+  </div>
+  <div class="leaf-vein">
+    <svg viewBox="0 0 50 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 25 10 L 25 150" stroke="#6B8E23" stroke-width="0.7" fill="none" opacity="0.6"/>
+      <g stroke="#9CB87A" stroke-width="0.4" fill="none" opacity="0.6">
+        <path d="M 25 28 Q 16 32 10 40"/><path d="M 25 28 Q 34 32 40 40"/>
+        <path d="M 25 55 Q 14 62 8 75"/><path d="M 25 55 Q 36 62 42 75"/>
+        <path d="M 25 85 Q 14 95 8 110"/><path d="M 25 85 Q 36 95 42 110"/>
+        <path d="M 25 115 Q 16 125 12 140"/><path d="M 25 115 Q 34 125 38 140"/>
+      </g>
+    </svg>
+  </div>
+  <div class="chloro-panel">
+    <div class="cp-title">光合色素</div>
+    <div class="chloro-line"><span class="ch">叶绿素 a</span><span class="note">蓝绿</span></div>
+    <div class="chloro-line"><span class="ch">叶绿素 b</span><span class="note">黄绿</span></div>
+    <div class="chloro-line"><span class="ch">胡萝卜素</span><span class="note">橙</span></div>
+    <div class="chloro-line"><span class="ch">叶黄素</span><span class="note">黄</span></div>
+    <div class="chloro-line"><span class="ch">花青素</span><span class="note">红紫</span></div>
+  </div>
+  <!-- 朱砂方印 -->
+  <div class="hu-stat-seal"><span class="seal">农</span></div>
+  <div class="bookmark"></div>
+  <!-- 主内容 (居中, viewport 1440×900 可见) -->
+  <div class="hero-content">
+    <div class="hero-chapter">农学 · 自然保护与环境生态类 · 第一章</div>
+    <h1 class="hero-title">
+      <span class="title-cn">生态修复学</span>
+      <span class="title-en">Agri-Botany <span class="ampersand">&amp;</span> 林奈式分类</span>
+    </h1>
+<div class="discipline-breadcrumb"><a href="/?discipline=09#majors">农学</a><span class="bc-sep">›</span><a href="/?discipline=09&sub=自然保护与环境生态类#majors">自然保护与环境生态类</a><span class="bc-sep">›</span><span class="bc-current">生态修复学</span></div>
+    <p class="hero-tagline">生态修复学是「生态学 + 林学 + 土壤学 + 地理信息」交叉特设, 服务山水林田湖草沙一体化保护修复国家战略. 应届 5-9 万, 45% 流向林草局/自然资源局/生态环保企业/读研, 985 硕是头部科研院所门槛, 是体制内 + 情怀驱动的「慢热但稳」专业.</p>
+    <div class="hu-stats-grid">
+      <div class="hu-stat"><span class="hu-stat-label">学科</span><span class="hu-stat-value">农学 · 自然保护与环境生态类</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">学制</span><span class="hu-stat-value">4 年 · 农学学士</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">难度</span><span class="hu-stat-value">★★★☆☆</span></div>
+      <div class="hu-stat"><span class="hu-stat-label">更新</span><span class="hu-stat-value">2026-06-22</span></div>
+    </div>
+    <div class="hero-tags">
+      <span class="hu-tag">生态文明</span><span class="hu-tag">山水林田湖草</span><span class="hu-tag">碳中和</span><span class="hu-tag">国土空间</span><span class="hu-tag">体制内</span><span class="hu-tag">情怀驱动</span>
+    </div>
+  </div>
+</header>
+
+<section class="tab" id="overview">
+  <div class="watermark">01</div>
+  <div class="container">
+    <div class="section-num">01 / 10 · 速览</div>
+    <h2>速览</h2>
+    <div class="ovv-simple"><p class="ovv-simple-lede">生态修复学的核心是「恢复生态学 + 污染生态学 + 土壤修复 + 流域治理 + 遥感监测」五栖训练, 它在山水林田湖草沙 + 双碳目标下有「政策红利 + 工作偏野外 + 应届起薪低 + 体制内友好」四大特征 — 50% 流向林草/自然资源/生态环境系统/读研, 是农学里体制内最稳定的方向之一.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识 (高数 B + 普化 + 地学基础 + 生物学 + 生态学概论), 大二专业基础 (植物学 + 土壤学 + 气象气候学 + 地理信息系统 GIS + 恢复生态学), 大三专业核心 (污染生态学 + 流域生态学 + 水土保持学 + 植被恢复工程 + 生态监测与评估 + 退化生态系统修复技术), 大四分流 + 毕业论文 (森林生态修复 / 矿山生态修复 / 水体生态修复 / 草地生态修复 / 城市生态修复 5 个方向, 8-12 周专业实习进自然保护区或生态修复项目).</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对「山水林田湖草沙」生态系统有结构化好奇心, 愿意野外作业</li><li>能接受「自然保护区 + 修复项目工地」驻地, 暑寒假实习 (中科院/省林勘院/东方园林/铁汉生态)</li><li>愿意读研 (40%) 或考公务员/事业编 (30%) — 体制内是最大出口</li><li>认同「绿水青山就是金山银山」+ 双碳目标政策方向, 不强求互联网/金融起薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业 15 万+ 起薪 (生态一线 5-9 万, 5 年才到 12-20 万)</li><li>不愿野外/不愿读研/不愿考公 — 三大主流出口都需要时间</li><li>把生态修复等同于「种树/环保」, 没意识到「水土保持 + 流域治理 + 生态监测」是核心</li><li>晕化学 (土壤修复 + 污染生态学是必修基础课)</li></ul></div></div></div></div>
+  </div>
+</section>
+
+<section class="tab" id="pitfalls">
+  <div class="watermark">02</div>
+  <div class="container">
+    <div class="section-num">02 / 10 · 避坑</div>
+    <h2>避坑指南</h2>
+    <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
+    <div class="ovv-pits">
+<div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 01</div><div class="ovv-pit-myth">❌ 生态修复 = 林业 + 环境工程, 课程差不多</div><div class="ovv-pit-reality">生态修复学 (090208) 属「农学自然保护与环境生态类」, 与林学 (090501) / 环境工程 (082502) 培养方案有 40% 差异. 生态修复偏「退化生态系统恢复 + 山水林田湖草一体化」, 林学偏「林木培育」, 环境工程偏「污染治理工程」. 选错专业类, 考公岗位/考研方向都不同. 林草局/自然资源局校招时更认可 090208.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 02</div><div class="ovv-pit-myth">❌ 双碳目标下, 生态修复毕业生起薪大涨</div><div class="ovv-pit-reality">双碳目标是真政策红利 (2024 全国生态修复市场规模 1.2 万亿), 但毕业生起薪与农学持平 (一线 5-9 万). 真正高薪的是「生态修复工程项目经理 + 碳汇项目开发」, 但岗位极少 (全国年招 < 2000 人), 985 硕 + GIS/遥感/碳汇计量背景才有竞争力. 双非生态毕业生主流去「自然保护区 + 生态修复施工」, 起薪 5-8 万.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 03</div><div class="ovv-pit-myth">❌ 生态修复考公容易</div><div class="ovv-pit-reality">生态修复考公归「自然保护与环境生态类/农林大类」, 2024 国考林草局/省自然资源厅/省生态环境厅竞争比 50-100:1, 远低于经济类 (40-80:1) 但低于农学整体 (80-150:1). 北京林业大学/南京林业大学/中国林科院是省市林草系统选调黄金, 双非生态只能报三不限, 竞争比 100-200:1.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 04</div><div class="ovv-pit-myth">❌ 中科院/林科院是生态修复首选</div><div class="ovv-pit-reality">中科院系统 (生态环境研究中心/水利部水土保持研究所/植物研究所) + 中国林科院校招/硕博 50-200 人/年, 事业编 8-15 万 + 北京, 是 985 硕主流去向. 但本科直接进只能做科研助理 (8-12 万) 或技术员. 头部科研院所 80% 要求硕博 + 研究经历 (野外/实验室/GIS).</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 05</div><div class="ovv-pit-myth">❌ 东方园林/铁汉生态/棕榈股份是生态修复首选企业</div><div class="ovv-pit-reality">上市生态修复企业 (东方园林/铁汉生态/棕榈股份/蒙草生态/岭南股份) 校招 30-100 人/家, 起薪 8-15 万, 是双非生态主流去向. 但研发岗 (生态修复技术研发) 80% 要求 985 硕 + 土壤学/植物学背景, 双非生态做「项目施工员 + 苗圃技术员」是常态.</div></div><div class="ovv-pit fade-up"><div class="ovv-pit-num">误区 06</div><div class="ovv-pit-myth">❌ 生态修复出国容易</div><div class="ovv-pit-reality">生态修复出国率 ≤ 5%, 主要去向瓦赫宁根/UC Davis/科罗拉多州立 恢复生态学/生态学, 托福 95+ + 985 本 + 研究经历是门槛. 80% 生态毕业生没出国打算. 「生态留学热」是被高估的伪需求.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="curriculum">
+  <div class="watermark">03</div>
+  <div class="container">
+    <div class="section-num">03 / 10 · 课程</div>
+    <h2>主要课程</h2>
+    <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
+    <div class="curriculum-grid">
+        <div class="curriculum-block fade-up"><div class="curriculum-title">公共必修 (所有院校都开)</div>
+          <div class="course"><span class="course-name">大学英语 (I-IV)</span><span class="course-credit">8 学分</span></div>
+          <div class="course"><span class="course-name">思想政治理论 (思修/史纲/马原/毛概/习思想)</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">体育 (I-IV)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">高等数学 (B 类, 农林院校微积分)</span><span class="course-credit">5 学分</span></div>
+          <div class="course"><span class="course-name">无机及分析化学</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">有机化学</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">大学物理 C + 物理实验</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">计算机基础 (ArcGIS/QGIS/R 生态统计)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">形势与政策 + 创业基础</span><span class="course-credit">2 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">通用专业核心 (≈ 80% 院校覆盖)</div>
+          <div class="course"><span class="course-name">生态学概论 (Ecology)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">恢复生态学 (Restoration Ecology)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">植物学 (Botany)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">土壤学 (Soil Science)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">气象气候学 (Climatology)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">地理信息系统 GIS (Geographic Information System)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">污染生态学 (Pollution Ecology)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">水土保持学 (Soil & Water Conservation)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">植被恢复工程 (Vegetation Restoration)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">生态监测与评估 (Ecological Monitoring)</span><span class="course-credit">3 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">5 校特色选修 (按方向分流)</div>
+          <div class="course"><span class="course-name">北京林业大学 · 森林生态修复 + 水土保持 (水土保持学院, 黄土高原试验站)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">南京林业大学 · 南方森林生态修复 + 城市生态 (南方现代林业协同创新中心)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">西南大学 · 西部山地生态修复 + 流域治理 (三峡库区生态试验站)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中山大学 · 城市生态修复 + 红树林恢复 (热带亚热带生态重点实验室)</span><span class="course-credit">4 学分</span></div>
+          <div class="course"><span class="course-name">中科院水利部水土保持研究所 · 黄土高原生态修复 + 土壤侵蚀 (973 计划, 西北试验站)</span><span class="course-credit">4 学分</span></div>
+        </div>
+        <div class="curriculum-block fade-up"><div class="curriculum-title">实践教学环节</div>
+          <div class="course"><span class="course-name">专业实习 (8-12 周, 自然保护区/生态修复项目/林草系统)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">毕业论文 / 毕业设计 (生态修复技术方向)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">学科竞赛 + 大学生创新创业训练</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">案例研习 + 项目实战 (山水林田湖草修复案例)</span><span class="course-credit">3 学分</span></div>
+          <div class="course"><span class="course-name">社会实践 + 志愿服务</span><span class="course-credit">3 学分</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="schools">
+  <div class="watermark">04</div>
+  <div class="container">
+    <div class="section-num">04 / 10 · 院校</div>
+    <h2>院校分布</h2>
+    <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
+    <div class="bento">
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">北</div>
+          <span class="bento-rank">★★★★★ (A+)</span>
+          <div class="bento-name">北京林业大学</div>
+          <div class="bento-tag">北京 · 211/双一流, 林学 A+, 水土保持学院全国第一, 生态修复塔尖</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">南</div>
+          <span class="bento-rank">★★★★★ (A+)</span>
+          <div class="bento-name">南京林业大学</div>
+          <div class="bento-tag">南京 · 双一流, 林学 A+, 南方森林生态修复 + 城市生态特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">西</div>
+          <span class="bento-rank">★★★★☆ (A-)</span>
+          <div class="bento-name">西南大学</div>
+          <div class="bento-tag">重庆 · 211/双一流, 生态学 A-, 三峡库区生态修复 + 西部山地生态</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">★★★★★ (A+)</span>
+          <div class="bento-name">中山大学</div>
+          <div class="bento-tag">广州 · 985/双一流, 生态学 A+, 城市生态修复 + 红树林恢复特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="0">
+          <div class="bento-monogram">中</div>
+          <span class="bento-rank">★★★★☆ (A-)</span>
+          <div class="bento-name">中国农业大学</div>
+          <div class="bento-tag">北京 · 985/双一流, 生态学 A-, 草地生态修复 + 农田生态特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="80">
+          <div class="bento-monogram">西</div>
+          <span class="bento-rank">★★★★☆ (B+)</span>
+          <div class="bento-name">西北农林科技大学</div>
+          <div class="bento-tag">陕西杨凌 · 985/双一流, 林学 B+, 黄土高原生态修复 + 水土保持特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="160">
+          <div class="bento-monogram">东</div>
+          <span class="bento-rank">★★★★☆ (B+)</span>
+          <div class="bento-name">东北林业大学</div>
+          <div class="bento-tag">哈尔滨 · 211/双一流, 林学 B+, 东北森林生态修复 + 湿地生态特色</div>
+        </div>
+        <div class="bento-item fade-up" data-delay="240">
+          <div class="bento-monogram">福</div>
+          <span class="bento-rank">★★★★☆ (B)</span>
+          <div class="bento-name">福建农林大学</div>
+          <div class="bento-tag">福州 · 双非但行业强校, 林学 B, 南方红树林 + 森林生态修复特色</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="companies">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 10 · 头部雇主</div>
+    <h2>头部雇主</h2>
+    <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
+    <div class="company-grid">
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">中科院生态环境研究中心</div>
+          <div class="company-meta">硕博 30-100 人 · 校招 事业编 8-15 万/年, 北京, 985 硕门槛</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:73.33333333333333%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:86.66666666666667%"></div>
+            <div class="sparkline-bar" style="height:93.33333333333333%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">中国林业科学研究院 (林科院)</div>
+          <div class="company-meta">硕博 50-150 人 · 校招 事业编 8-15 万/年, 北京, 985 硕门槛</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:73.33333333333333%"></div>
+            <div class="sparkline-bar" style="height:80.0%"></div>
+            <div class="sparkline-bar" style="height:86.66666666666667%"></div>
+            <div class="sparkline-bar" style="height:93.33333333333333%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">中</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">中铁建生态/中国铁建生态公司</div>
+          <div class="company-meta">校招 50-150 人 · 校招 10-18 万/年, 985 本可起步</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:58.82352941176471%"></div>
+            <div class="sparkline-bar" style="height:64.70588235294117%"></div>
+            <div class="sparkline-bar" style="height:76.47058823529412%"></div>
+            <div class="sparkline-bar" style="height:88.23529411764706%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">东</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">东方园林/铁汉生态/棕榈股份 (上市生态修复)</div>
+          <div class="company-meta">校招 30-100 人 · 校招 8-15 万/年, 项目经理 15-25 万</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:69.23076923076923%"></div>
+            <div class="sparkline-bar" style="height:76.92307692307693%"></div>
+            <div class="sparkline-bar" style="height:84.61538461538461%"></div>
+            <div class="sparkline-bar" style="height:92.3076923076923%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="0">
+          <div class="company-head">
+            <div class="company-monogram">蒙</div>
+            <span class="company-tier tier-A">A</span>
+          </div>
+          <div class="company-name">蒙草生态 (草原生态修复龙头)</div>
+          <div class="company-meta">校招 30-80 人 · 校招 8-15 万/年, 项目经理 15-22 万</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="80">
+          <div class="company-head">
+            <div class="company-monogram">各</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">各省/市林草局 + 自然资源局 (事业编/选调)</div>
+          <div class="company-meta">省考/选调 100-500 人 · 校招 事业编 6-12 万/年, 北林/南林选调黄金</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="160">
+          <div class="company-head">
+            <div class="company-monogram">各</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">各省/市生态环境局 (事业编/选调)</div>
+          <div class="company-meta">省考/选调 100-500 人 · 校招 事业编 6-12 万/年</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:71.42857142857143%"></div>
+            <div class="sparkline-bar" style="height:78.57142857142857%"></div>
+            <div class="sparkline-bar" style="height:85.71428571428571%"></div>
+            <div class="sparkline-bar" style="height:92.85714285714286%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+        <div class="company fade-up" data-delay="240">
+          <div class="company-head">
+            <div class="company-monogram">水</div>
+            <span class="company-tier tier-S">S</span>
+          </div>
+          <div class="company-name">水利部水土保持监测中心 + 各省水保监测总站</div>
+          <div class="company-meta">硕博/校招 30-80 人 · 校招 事业编 6-12 万/年, 985 本可起步</div>
+          <div class="sparkline">
+            <div class="sparkline-bar" style="height:69.23076923076923%"></div>
+            <div class="sparkline-bar" style="height:76.92307692307693%"></div>
+            <div class="sparkline-bar" style="height:84.61538461538461%"></div>
+            <div class="sparkline-bar" style="height:92.3076923076923%"></div>
+            <div class="sparkline-bar" style="height:100.0%"></div>
+          </div>
+          <div class="sparkline-label">近 5 年招聘量趋势</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="salary">
+  <div class="watermark">06</div>
+  <div class="container">
+    <div class="section-num">06 / 10 · 薪资</div>
+    <h2>薪资分布</h2>
+    <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
+    <table class="salary-table">
+      <thead>
+        <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="salary-stage">应届生 (一线/县乡)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="4.5" data-float="1">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:56.25%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="6.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="8.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">3年经验 (生态修复项目经理/林草系统中坚/水保监测站长)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="8.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:44.44444444444444%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="12.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="18.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">5年经验 (生态修复总工/林草系统中层/碳汇项目负责人)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="14.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:43.75%"></span></span><span class="yoy up">↗ +9%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="22.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.75%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="32.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">10年+ (科研首席/省林草局处长/上市生态企业高管)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="25.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:35.714285714285715%"></span></span><span class="yoy up">↗ +8%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="40.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:57.14285714285714%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="70.0" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="tab" id="directions">
+  <div class="watermark">07</div>
+  <div class="container">
+    <div class="section-num">07 / 10 · 就业方向</div>
+    <h2>就业方向</h2>
+    <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
+    <div class="direction-list">
+        <div class="direction">
+          <div class="direction-name">国家/省/市林草系统 (事业编/选调)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
+          <div class="direction-pct">22%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">继续深造 (生态学/林学/水土保持硕博)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:40%"></div></div>
+          <div class="direction-pct">40%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">国家/省/市自然资源局 + 生态环境局 (事业编/选调)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          <div class="direction-pct">12%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">中科院/中国林科院/水利部水保所 (科研岗)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">生态修复企业 (东方园林/铁汉/蒙草)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          <div class="direction-pct">8%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">中铁建生态 + 国企生态环保板块</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
+          <div class="direction-pct">5%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">基层农技推广/乡村振兴 (事业编/三支一扶)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:3%"></div></div>
+          <div class="direction-pct">3%</div>
+        </div>
+        <div class="direction">
+          <div class="direction-name">自主创业 (生态农场/生态工程公司, 少数)</div>
+          <div class="direction-bar"><div class="direction-bar-fill" style="width:2%"></div></div>
+          <div class="direction-pct">2%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="deep-study">
+  <div class="watermark">08</div>
+  <div class="container">
+    <div class="section-num">08 / 10 · 深造路径</div>
+    <h2>深造路径</h2>
+    <div class="path-grid">
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">40<span class="path-unit">%</span></div>
+          <div class="path-name">国内硕士 (985 生态学/林学/水土保持, 主流就业门槛)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">10<span class="path-unit">%</span></div>
+          <div class="path-name">国内博士 (恢复生态学/水土保持/生态工程, 高校教职门槛)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">2<span class="path-unit">%</span></div>
+          <div class="path-name">出国深造 (瓦赫宁根/UC Davis/科罗拉多州立 生态)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">25<span class="path-unit">%</span></div>
+          <div class="path-name">直接就业 (林草/自然资源/生态环境, 体制内主流)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="0">
+          <div class="path-pct">15<span class="path-unit">%</span></div>
+          <div class="path-name">考公务员/选调生 (林草/自然资源/生态环境系统)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="80">
+          <div class="path-pct">5<span class="path-unit">%</span></div>
+          <div class="path-name">中科院/林科院/水保所 (科研岗)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="160">
+          <div class="path-pct">2<span class="path-unit">%</span></div>
+          <div class="path-name">生态修复企业 (项目经理, 双非主流)</div>
+          
+        </div>
+        <div class="path-card fade-up" data-delay="240">
+          <div class="path-pct">1<span class="path-unit">%</span></div>
+          <div class="path-name">其他 (继续教育/待业)</div>
+          
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="quotes">
+  <div class="watermark">09</div>
+  <div class="container">
+    <div class="section-num">09 / 10 · 学长学姐说</div>
+    <h2>学长学姐说</h2>
+    <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
+    <div class="quotes">
+        <div class="quote fade-up" data-delay="0" >
+          <div class="quote-head">
+            <div class="quote-avatar">县</div>
+            <div class="quote-byline">
+              <strong>县林业局 · 林政稽查大队 (选调生)</strong>
+              <span class="quote-source">2018 届 · 校友访谈 / 知乎 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">北林 + 生态修复 + 选调是真黄金组合。本科北林生态修复 + 硕士恢复生态学, 校招进县林业局做选调生, 事业编 + 8 万起薪 + 县乡补贴. 生态修复考公竞争比 50-100:1, 远低于经济类. 北京林业大学/南京林业大学/中国林科院是省市林草系统选调黄金, 双非只能报三不限, 竞争比 100-200:1.</p>
+        </div>
+        <div class="quote fade-up" data-delay="80" >
+          <div class="quote-head">
+            <div class="quote-avatar">中</div>
+            <div class="quote-byline">
+              <strong>中科院生态环境研究中心 · 助理研究员 (事业编)</strong>
+              <span class="quote-source">2019 届 · 校友访谈 / 小红书 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">生态修复 + 中科院是真科研。本科南林生态修复 + 硕士恢复生态学 (跟导师做红树林恢复), 校招进中科院生态环境研究中心做助理研究员, 事业编 + 12 万起薪 + 北京. 头部科研院所基本只招 985 硕, 2-3 年学制 + 国家专项. 生态修复不是「种树」, 是用生态学 + 土壤学 + 遥感监测把破坏的山水还原成可持续生态系统.</p>
+        </div>
+        <div class="quote fade-up" data-delay="160" >
+          <div class="quote-head">
+            <div class="quote-avatar">省</div>
+            <div class="quote-byline">
+              <strong>省自然资源厅 · 国土空间规划处 (选调生)</strong>
+              <span class="quote-source">2020 届 · 校友访谈 / 知乎 2025</span>
+            </div>
+          </div>
+          <p class="quote-text">中大 + 生态修复 + 选调是真吃香。本科中大生态修复 + 硕士生态学, 校招进省自然资源厅做选调生, 事业编 + 10 万起薪 + 广州. 985 本 + 选调生三件套, 自然资源系统是 985 选调黄金. 同学里去东方园林 12 万, 去县乡农技站 6 万, 选调属于中等偏上但稳定, 5 年后主任科员 15 万+.</p>
+        </div>
+        <div class="quote fade-up" data-delay="240" >
+          <div class="quote-head">
+            <div class="quote-avatar">东</div>
+            <div class="quote-byline">
+              <strong>东方园林 · 生态修复项目经理</strong>
+              <span class="quote-source">2017 届 · 校友访谈 / 知乎 2024</span>
+            </div>
+          </div>
+          <p class="quote-text">西南大学生态修复在西部认可度高。本科西南大学生态修复 + 硕士恢复生态学, 校招进东方园林做生态修复项目经理, 三年从技术员到项目经理, 现在带 8 人团队跑云南 + 贵州 + 四川, 年薪 22 万+. 上市生态企业 (东方/铁汉/蒙草) 校招 30-100 人/家, 双非可起步, 项目经理 15-25 万. 985 硕做科研 18-30 万, 但项目经理靠项目提成可冲 40 万+, 适合愿跑项目 + 野外驻地的毕业生.</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="xuanke">
+  <div class="watermark">10</div>
+  <div class="container">
+    <div class="section-num">10 / 10 · 选科要求</div>
+    <h2>选科要求 (新高考 3+1+2)</h2>
+    <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
+    <div class="xuanke-list">
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 化学 + 生物 (传统理科, 90% 院校可报)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
+          <div class="xuanke-pct">70%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 生物 (再选化学或不限)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:16%"></div></div>
+          <div class="xuanke-pct">16%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">物理 + 地理 (再选化学或生物)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:10%"></div></div>
+          <div class="xuanke-pct">10%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (极少数综合评价/中外合作)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
+          <div class="xuanke-pct">4%</div>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- 心意框 fallback (slug 不在 manifest: ecological-restoration) -->
+<section class="wl-decide" id="wl-decide">
+  <div class="container">
+    <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
+    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <div class="wl-decide-grid">
+      <button class="wl-decide-card primary" data-act="add">
+        <span class="wl-decide-emoji">🌟</span>
+        <span class="wl-decide-h">心仪 · 加入心愿单</span>
+        <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
+      </button>
+      <a class="wl-decide-card" href="/majors.html">
+        <span class="wl-decide-emoji">📚</span>
+        <span class="wl-decide-h">返回专业目录</span>
+        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
+<section class="wl-related" id="wl-related">
+  <div class="container">
+    <div class="wl-eyebrow">More to explore</div>
+    <h2>没找到想看的? 搜一下别的专业</h2>
+    <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
+    <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+    <div class="wl-cta-bar">
+      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+      <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
+      <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
+      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+    </div>
+    <div class="label">Major Explorer · 2026 高考专业指南</div>
+    <div class="data-source">数据源: 5 路 web search 实录 (北京林业大学/南京林业大学/西南大学/中山大学/中科院水利部水土保持研究所 生态修复学培养方案 + 教育部第四轮林学/生态学学科评估 + 麦可思 2024 农学就业蓝皮书 + 2025 校招 offer 墙 (中科院/各省林勘院/中铁建生态/东方园林) + 知乎/小红书 2018-2026 生态修复校友自述)</div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateValue(el, start, end, duration) {
+    const isFloat = el.dataset.float === '1';
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const val = start + (end - start) * easeOutExpo(t);
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = '1';
+          e.target.classList.add('count-up');
+          animateValue(e.target, 0, parseFloat(e.target.dataset.count), 1500);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = parseInt(e.target.dataset.delay || '0');
+          setTimeout(() => e.target.classList.add('visible'), delay);
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+  } else {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-count]').forEach(el => {
+      el.textContent = el.dataset.float === '1' ? parseFloat(el.dataset.count).toFixed(1) : Math.round(parseFloat(el.dataset.count));
+    });
+  }
+})();
+</script>
+
+
+<!-- Wishlist UI: 共享 store + helpers + 本页 chip/FAB 启动 + 搜专业 chat -->
+<script src="/js/wishlist-store.js"></script>
+<script src="/js/ui-helpers.js"></script>
+<script src="/js/major-search.js"></script>
+<script>
+(function () {
+  "use strict";
+  if (!window.WishlistStore || !window.UIHelpers) return;
+  var META = { slug: 'ecological-restoration', title: '生态修复学', style: 'agri', category: '农学 · 自然保护与环境生态类' };
+
+  // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
+  if (window.MajorSearch) {
+    var chatHost = document.getElementById('wl-chat-host');
+    if (chatHost) {
+      window.MajorSearch.mountChat(chatHost, {
+        size: 'compact',
+        placeholder: '搜其他专业…  比如「编程」「医生」「考公」「金融」',
+      });
+    }
+  }
+
+  // 1) 顶部右上角 chip
+  var chip = document.createElement('a');
+  chip.className = 'wl-chip';
+  chip.href = '/wishlist.html';
+  chip.setAttribute('aria-label', '心愿单');
+  document.body.appendChild(chip);
+  function paintChip(items) {
+    var c = items.length;
+    chip.innerHTML = '<span aria-hidden="true">🎒</span> <span>心愿单</span> <span class="count">' + c + '/6</span> <span class="arrow">→</span>';
+    if (c >= 4) chip.setAttribute('data-state', 'ready'); else chip.removeAttribute('data-state');
+  }
+  window.WishlistStore.subscribe(paintChip);
+
+  // 2) 右下 FAB + 弹窗 (复用 UIHelpers.mountWishlistFab 的样式但用本注入的类名)
+  var fab = document.createElement('button');
+  fab.className = 'wl-fab'; fab.type = 'button';
+  fab.setAttribute('aria-label', '加入心愿单');
+  fab.textContent = '⭐';
+  document.body.appendChild(fab);
+
+  var modal = document.createElement('div');
+  modal.className = 'wl-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.innerHTML =
+    '<div class="wl-mt">' + META.title + '</div>' +
+    '<div class="wl-msub">给这个专业评几颗星 (1-5)</div>' +
+    '<div class="wl-stars"></div>' +
+    '<div class="wl-act"><button class="wl-cancel">取消</button><button class="wl-ok">加入心愿单</button></div>';
+  document.body.appendChild(modal);
+
+  var current = window.WishlistStore.getScore(META.slug) || 4;
+  var starsHolder = modal.querySelector('.wl-stars');
+  for (var i = 1; i <= 5; i++) (function (v) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = '★'; b.dataset.v = String(v);
+    if (v <= current) b.classList.add('on');
+    b.addEventListener('click', function () {
+      current = v;
+      starsHolder.querySelectorAll('button').forEach(function (bb) {
+        bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+      });
+    });
+    starsHolder.appendChild(b);
+  })(i);
+
+  function syncFab() {
+    var inList = window.WishlistStore.has(META.slug);
+    var full = window.WishlistStore.isFull();
+    fab.setAttribute('data-state', inList ? 'added' : (full ? 'full' : 'idle'));
+    fab.textContent = inList ? '✓' : (full ? '🎒' : '⭐');
+    var ok = modal.querySelector('.wl-ok');
+    ok.textContent = inList ? '保存调整' : '加入心愿单';
+    modal.querySelector('.wl-msub').textContent = inList ? '已加入心愿单, 可调整星级' : (full ? '心愿单已满 6 个 (去管理)' : '给这个专业评几颗星 (1-5)');
+    ok.disabled = !inList && full;
+    // 同步「心意框」主按钮
+    var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+    if (decideBtn) {
+      decideBtn.setAttribute('data-state', inList ? 'added' : 'idle');
+      var dh = decideBtn.querySelector('.wl-decide-h');
+      var ds = decideBtn.querySelector('.wl-decide-sub');
+      var de = decideBtn.querySelector('.wl-decide-emoji');
+      if (dh && ds && de) {
+        if (inList) {
+          de.textContent = '✓';
+          dh.textContent = '已加入心愿单 · 调整星级';
+          ds.textContent = '当前 ' + (window.WishlistStore.getScore(META.slug) || 4) + ' 颗星, 点击修改';
+        } else if (full) {
+          de.textContent = '🎒';
+          dh.textContent = '心愿单已满 6 个';
+          ds.textContent = '先去心愿单页删一个';
+        } else {
+          de.textContent = '🌟';
+          dh.textContent = '心仪 · 加入心愿单';
+          ds.textContent = '打 1-5 颗星, 凑齐 4 个跑志愿推荐';
+        }
+      }
+    }
+  }
+  syncFab();
+
+  function openModal() {
+    current = window.WishlistStore.getScore(META.slug) || 4;
+    starsHolder.querySelectorAll('button').forEach(function (bb) {
+      bb.classList.toggle('on', parseInt(bb.dataset.v, 10) <= current);
+    });
+    modal.setAttribute('data-open', 'true');
+  }
+  function closeModal() { modal.setAttribute('data-open', 'false'); }
+
+  fab.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+      window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+      return;
+    }
+    if (modal.getAttribute('data-open') === 'true') closeModal(); else openModal();
+  });
+
+  // 「心意框」主按钮 → 直接触发 FAB modal
+  var decideBtn = document.querySelector('.wl-decide-card[data-act="add"]');
+  if (decideBtn) {
+    decideBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.WishlistStore.isFull() && !window.WishlistStore.has(META.slug)) {
+        window.UIHelpers.toast('心愿单已满 6 个, 去管理 → /wishlist.html');
+        return;
+      }
+      openModal();
+    });
+  }
+  modal.querySelector('.wl-cancel').addEventListener('click', closeModal);
+  modal.querySelector('.wl-ok').addEventListener('click', function () {
+    var res = window.WishlistStore.upsert({ slug: META.slug, title: META.title, style: META.style, category: META.category, score: current });
+    if (!res.ok && res.reason === 'full') { window.UIHelpers.toast('心愿单已满 6 个'); return; }
+    window.UIHelpers.toast(res.updated ? '已更新星级' : '已加入心愿单');
+    closeModal();
+  });
+  document.addEventListener('click', function (e) {
+    if (modal.getAttribute('data-open') !== 'true') return;
+    if (modal.contains(e.target) || fab.contains(e.target)) return;
+    closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.getAttribute('data-open') === 'true') closeModal();
+  });
+  window.WishlistStore.subscribe(syncFab);
+})();
+</script>
+
+</body>
+</html>
