@@ -28,7 +28,7 @@ import pathlib
 import argparse
 from datetime import datetime
 
-ROOT = pathlib.Path(__file__).parent.parent
+ROOT = pathlib.Path(__file__).parent.parent.parent
 CURATED = ROOT / 'skills' / 'gaokao-major-explorer' / 'data' / 'curated'
 HISTORY_DIR = ROOT / 'scripts' / 'audit_history'
 HISTORY_DIR.mkdir(exist_ok=True)

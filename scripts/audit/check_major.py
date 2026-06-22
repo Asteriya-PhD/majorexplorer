@@ -17,7 +17,7 @@ import pathlib
 import re
 from collections import defaultdict
 
-ROOT = pathlib.Path(__file__).parent.parent
+ROOT = pathlib.Path(__file__).parent.parent.parent
 CURATED = ROOT / 'skills' / 'gaokao-major-explorer' / 'data' / 'curated'
 
 REQUIRED_FIELDS = [

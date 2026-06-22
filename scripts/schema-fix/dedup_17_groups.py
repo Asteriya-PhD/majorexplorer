@@ -21,7 +21,7 @@ import os
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).parent.parent.parent
 MANIFEST = ROOT / "public" / "data" / "manifest.json"
 REGISTRY = ROOT / "data" / "audit_registry.json"
 CURATED = ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"

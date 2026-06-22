@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 from collections import defaultdict
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).parent.parent.parent
 HIER_PATH = ROOT / "public/data/discipline_hierarchy.json"
 MFST_PATH = ROOT / "public/data/manifest.json"
 

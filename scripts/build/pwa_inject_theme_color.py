@@ -13,7 +13,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).parent.parent.parent
 PUBLIC = ROOT / "public"
 CURATED = ROOT / "skills/gaokao-major-explorer/data/curated"
 

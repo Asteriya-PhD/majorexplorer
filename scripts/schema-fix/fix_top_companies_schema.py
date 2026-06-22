@@ -13,7 +13,7 @@ For each remaining major with top_companies as list[str]:
 import json, glob, os, re, sys
 from pathlib import Path
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).parent.parent.parent
 CURATION = ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
 PUBLIC = ROOT / "public"
 
