@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6B4F35">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
+<title>文物保护技术 · Major Explorer</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/topbar.css">
+<link rel="stylesheet" href="../css/dock.css">
+<style>
+  :root {
+    --theme:       #6B4F35;
+    --theme-deep:  #3D2E1F;
+    --theme-soft:  #F0E8DC;
+    --theme-gold:  #B5934A;
+    /* 预定义整段 gradient 字符串 (避免 Chromium 双 var() in linear-gradient 解析 bug) */
+    --gradient-theme:     linear-gradient(180deg, #6B4F35 0%, #3D2E1F 100%);
+    --gradient-theme-h:   linear-gradient(90deg, #6B4F35 0%, #B5934A 100%);
+    --gradient-radial:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%), linear-gradient(180deg, #6B4F35 0%, #3D2E1F 100%);
+  }
+  .topbar.is-detail {
+    grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+  }
+  .top-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    font-family: var(--font-heading); font-size: 1.125rem;
+    color: var(--fg-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-crumb {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+    text-align: center;
+    grid-column: 2 / 6;
+    opacity: 0; transition: opacity 200ms;
+    pointer-events: none;
+  }
+  .topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+  .top-btn .heart-on { color: var(--accent); }
+  .top-btn .heart-off { color: var(--muted-2); }
+
+  /* hero 右上角手浮爱心 */
+  .hero.is-detail { position: relative; }
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 200ms, background 200ms;
+  }
+  .hero-heart:active { transform: scale(0.9); background: rgba(255,255,255,0.95); }
+  .hero-heart .heart-off { color: var(--muted-2); font-size: 1.125rem; line-height: 1; }
+  .hero-heart .heart-on { color: var(--accent); font-size: 1.125rem; line-height: 1; }
+
+  /* 爱心手浮按钮增强 (心愿单打分入口) */
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 200ms, box-shadow 200ms;
+  }
+  .hero-heart:active { transform: scale(0.94); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+  .hero-heart.is-on { background: var(--accent); border-color: var(--accent); }
+  .hero-heart.is-on .heart-off, .hero-heart.is-on .heart-on { color: #FBF8F1; }
+  .hero-heart.is-on .heart-label { color: #FBF8F1; }
+  .heart-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase;
+  }
+
+  /* 心愿打分模态框 */
+  .wish-modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .wish-modal[hidden] { display: none; }
+  .wish-modal-bg {
+    position: absolute; inset: 0;
+    background: rgba(20, 20, 18, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 240ms ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ───────── 滚动进度条 (顶部 2px, 主色) ───────── */
+  .scroll-progress {
+    position: fixed; top: var(--topbar-h); left: 0; right: 0;
+    height: 2px; z-index: 49;
+    background: transparent; pointer-events: none;
+  }
+  .scroll-progress::after {
+    content: ""; display: block;
+    height: 100%;
+    width: var(--p, 0%);
+    background: var(--gradient-theme-h);
+    box-shadow: 0 0 6px rgba(184,50,58,0.4);
+    transition: width 60ms linear;
+  }
+  .wish-modal-card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 420px;
+    background: var(--bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 24px 24px 28px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.16);
+    animation: slideUp 280ms cubic-bezier(0.2, 0.9, 0.3, 1.05);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .wish-modal-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .wish-modal-sub {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--muted); margin-bottom: 18px;
+  }
+  .star-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .star-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; padding: 0;
+    font-size: 32px; color: var(--line); cursor: pointer;
+    transition: transform 120ms, color 120ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .star-btn span { display: block; line-height: 1; }
+  .star-btn:active { transform: scale(0.85); }
+  .star-btn.is-on { color: #E8A53A; }
+  .star-hint {
+    text-align: center;
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); margin-bottom: 14px;
+    min-height: 16px;
+  }
+  .wish-tags-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .wish-tag {
+    padding: 6px 14px;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 600;
+    color: var(--theme-deep); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 24px;
+    cursor: pointer; transition: all 160ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-tag.is-on {
+    background: var(--theme); color: #FBF8F1; border-color: var(--theme);
+  }
+  .wish-comment {
+    width: 100%;
+    min-height: 64px; max-height: 120px;
+    padding: 10px 12px;
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+  .wish-comment:focus { outline: 0; border-color: var(--theme); }
+  .wish-modal-actions {
+    display: flex; gap: 10px;
+  }
+  .wish-btn {
+    flex: 1; height: 44px;
+    border-radius: 22px; border: 0;
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-btn-cancel { background: var(--bg-soft); color: var(--muted); }
+  .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
+  .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+
+  .hero.is-detail {
+    position: relative;
+    padding: 32px 24px 36px;
+    background: var(--gradient-radial);
+    color: #F5F2EA;
+    overflow: hidden;
+    border-bottom: 0;
+  }
+  .hero.is-detail::before {
+    content: "文";
+    position: absolute;
+    right: -8%; bottom: -8%;
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 50vw, 16rem);
+    font-weight: 700; line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(245,242,234,0.06);
+    pointer-events: none; user-select: none;
+  }
+  .hero.is-detail > *:not(.hero-heart) { position: relative; z-index: 1; }
+  .hero-crumb {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--theme-gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-crumb .rule { flex: 0 0 24px; height: 1px; background: var(--theme-gold); }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-weight: 700; line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #FBF8F1;
+  }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: rgba(245,242,234,0.72);
+    margin: 14px 0 0; letter-spacing: 0.04em;
+  }
+  .hero-sub .dot { color: var(--theme-gold); margin: 0 8px; }
+  .hero-tagline {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem; line-height: 1.55;
+    color: rgba(245,242,234,0.92);
+    margin: 22px 0 0; font-weight: 400;
+    border-left: 2px solid var(--theme-gold);
+    padding-left: 12px;
+  }
+
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+  /* === Salary Table · P25/P50/P75 === */
+  .sal-table {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .sal-th, .sal-tr {
+    display: grid;
+    grid-template-columns: 92px 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .sal-th-stage, .sal-stage {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em; line-height: 1.5;
+    padding-top: 6px;
+  }
+  .sal-stage { color: var(--theme-deep); font-size: 0.875rem; }
+  .sal-yoy {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 5px; border-radius: 2px; margin-left: 6px;
+    color: #FBF8F1;
+  }
+  .sal-yoy.up { background: #4C7A4C; }
+  .sal-yoy.down { background: var(--accent); }
+  .sal-th-cell, .sal-cell {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+    text-align: center;
+  }
+  .sal-th-cell.is-p50, .sal-cell.is-p50 { color: var(--theme-deep); font-weight: 700; }
+  .sal-th-cell { padding-top: 6px; }
+  .sal-cell {
+    font-family: var(--font-body); font-size: 0.8125rem; font-weight: 400;
+    color: var(--fg); text-align: left;
+    display: flex; flex-direction: column; gap: 4px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .sal-cell.is-p50 { font-weight: 700; }
+  .sal-cell .approx { color: var(--muted); font-size: 0.75rem; margin-right: 2px; }
+  .sal-cell .sal-cell-num {
+    font-family: var(--font-num); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep);
+  }
+  .sal-cell.is-p50 .sal-cell-num { color: var(--accent-ink); }
+  .sal-cell .sal-cell-unit {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); margin-left: 2px; font-weight: 400;
+  }
+  .sal-cell-bar {
+    display: block; height: 4px;
+    background: var(--bg-soft); border-radius: 1px; overflow: hidden;
+    margin-top: 2px;
+  }
+  .sal-cell-fill {
+    display: block; height: 100%;
+    background: var(--gradient-theme-h);
+  }
+  .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
+
+  /* === 移除按钮 === */
+  .wish-btn-remove { background: var(--bg-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .wish-btn-remove:active { background: rgba(184,50,58,0.08); }
+  .stats-strip {
+    background: var(--theme);
+    margin: 0 0 14px;
+    padding: 22px 20px 20px;
+    border-radius: 2px;
+    color: var(--bg);
+  }
+  .stat-cell {
+    text-align: center;
+  }
+  .stat-cell .n {
+    font-family: var(--font-num);
+    font-size: 1.875rem; font-weight: 700;
+    color: var(--bg);
+    line-height: 1.05; letter-spacing: -0.01em;
+    display: block;
+  }
+  .stat-cell .n .unit { font-size: 0.8125rem; color: var(--theme-soft); font-weight: 500; margin-left: 3px; opacity: 0.85; }
+  .stat-cell .l {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--theme-soft); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-top: 6px; display: block;
+    opacity: 0.75;
+  }
+  /* 读研档位高亮 (B 块里也保留色彩对比) */
+  .stat-cell.grad-tier[data-tier="高"] .n { color: #FBF8F1; }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme-soft); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--theme-soft); opacity: 0.7; }
+  .stat-cell.grad-tier .n { font-size: 1.875rem; }
+
+  /* === 选科要求 (xuanke) === */
+  .xk-list { margin-top: 8px; }
+  .xk-row {
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+  .xk-row:first-child { border-top: 0; padding-top: 4px; }
+  .xk-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .xk-num {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+    padding-top: 2px; min-width: 24px;
+  }
+  .xk-info { flex: 1; }
+  .xk-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
+  }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .xk-bar {
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
+  }
+  .xk-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: var(--gradient-theme-h);
+  }
+  .xk-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
+  }
+  .xk-reason {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 深造路径 (deep_study) === */
+  .ds-list { margin-top: 4px; }
+  .ds-row {
+    display: grid; grid-template-columns: 1fr 80px 36px;
+    gap: 10px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .ds-row:first-child { padding-top: 4px; }
+  .ds-row:last-child { border-bottom: 0; }
+  .ds-name {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.4;
+  }
+  .ds-study .ds-name {
+    font-weight: 600; color: var(--theme-deep);
+  }
+  .ds-study .ds-name::before {
+    content: "🎓 ";
+  }
+  .ds-bar {
+    height: 6px; border-radius: 1px; background: var(--bg-soft);
+    overflow: hidden; position: relative;
+  }
+  .ds-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: var(--gradient-theme-h);
+  }
+  .ds-study .ds-fill {
+    background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
+  }
+  .ds-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  /* === 就业方向 (employment_direction) === */
+  .emp-list { margin-top: 4px; }
+  .emp-row {
+    padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .emp-row:first-child { border-top: 0; padding-top: 4px; }
+  .emp-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
+  }
+  .emp-num {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em; min-width: 24px;
+  }
+  .emp-name {
+    flex: 1;
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep); line-height: 1.3;
+  }
+  .emp-ratio {
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  .emp-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden; margin-bottom: 6px;
+    margin-left: 34px;
+  }
+  .emp-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: var(--gradient-theme-h);
+  }
+  .emp-desc {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 头部雇主 (top_companies) === */
+  .co-list { margin-top: 4px; }
+  .co-row {
+    display: grid; grid-template-columns: 1fr 70px;
+    gap: 12px; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .co-row:first-child { padding-top: 4px; }
+  .co-row:last-child { border-bottom: 0; }
+  .co-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--fg); line-height: 1.4; margin-bottom: 4px;
+  }
+  .co-tier {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-left: 8px;
+    color: #FBF8F1; vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+  .co-tier-s { background: var(--accent-ink); }
+  .co-tier-a { background: var(--theme); }
+  .co-tier-b { background: var(--muted); }
+  .co-meta {
+    font-family: var(--font-body); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.02em;
+  }
+  .co-meta .dot { color: var(--line); margin: 0 4px; }
+  .co-spark-wrap {
+    display: flex; align-items: center; justify-content: flex-end;
+  }
+  .co-spark {
+    width: 60px; height: 16px;
+    overflow: visible;
+  }
+  .co-spark polyline {
+    fill: none; stroke: var(--theme); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .tags-strip {
+    padding: 18px 20px 12px;
+    background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    padding: 4px 9px;
+    background: var(--theme-soft);
+    color: var(--theme-deep);
+    border-radius: 2px;
+  }
+
+  .article { padding: 8px 24px 24px; background: var(--bg); }
+  .art-sec {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .art-sec:last-of-type { border-bottom: 0; }
+  .art-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .art-num {
+    font-family: var(--font-num);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--theme);
+    letter-spacing: 0.18em;
+    border: 1px solid var(--theme);
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .art-title {
+    font-family: var(--font-heading);
+    font-size: 1.625rem; font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .art-body p {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--fg-soft);
+    margin: 0 0 16px;
+  }
+  .art-body p strong { color: var(--fg); font-weight: 600; }
+  .art-body p em {
+    color: var(--theme); font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 60%);
+    padding: 0 2px;
+  }
+
+  .pull {
+    margin: 28px -8px;
+    padding: 22px 18px 22px 24px;
+    border-left: 3px solid var(--theme-gold);
+    background: var(--bg-paper);
+    font-family: var(--font-heading);
+    font-size: 1.25rem; line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull .by {
+    display: block; margin-top: 12px;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .course-list {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .course-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .course-yr {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.08em;
+  }
+  .course-names {
+    font-family: var(--font-body); font-size: 0.9375rem; color: var(--fg); line-height: 1.5;
+  }
+  .course-tag {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .sal-rows { margin-top: 4px; }
+  .sal-row {
+    display: grid; grid-template-columns: 90px 1fr 60px;
+    gap: 10px; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sal-row:last-child { border-bottom: 0; }
+  .sal-l { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .sal-bar {
+    height: 6px; border-radius: 1px;
+    background: var(--theme-soft);
+    overflow: hidden; position: relative;
+  }
+  .sal-bar::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 50%);
+    background: var(--gradient-theme-h);
+  }
+  .sal-v {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  .risk {
+    margin: 18px 0;
+    padding: 14px 16px 14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    background: rgba(184,50,58,0.04);
+    border-left: 4px solid var(--accent);
+  }
+  .risk-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-body {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg-soft);
+  }
+  .risk-body strong { color: var(--accent-ink); }
+
+  /* fit 杂志风 — 大字衬线 + 序号 + 列表文章流 */
+  .fit-pair { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 0; }
+  .fit-col { padding: 12px 0 8px; border-top: 1px solid var(--line); }
+  .fit-col:first-child { border-top: 0; padding-top: 6px; }
+  .fit-num {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .fit-col.fit-yes .fit-num { color: var(--theme-deep); }
+  .fit-col.fit-no  .fit-num { color: var(--accent); }
+  .fit-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 10px; letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .fit-col.fit-no .fit-title { color: var(--accent-ink); }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    padding: 8px 0; border-top: 1px dashed var(--line);
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg);
+    position: relative; padding-left: 18px;
+  }
+  .fit-list li:first-child { border-top: 0; padding-top: 4px; }
+  .fit-list li::before {
+    content: "→"; position: absolute; left: 0; top: 8px;
+    color: var(--theme); font-weight: 700;
+  }
+  .fit-list li:first-child::before { top: 4px; }
+  .fit-col.fit-no .fit-list li::before { content: "✗"; color: var(--accent); }
+
+  /* pitfalls 杂志风 — 文章流 误区/真相 上下排 */
+  .pit-grid { display: flex; flex-direction: column; gap: 0; padding: 8px 0 4px; }
+  .pit-row {
+    padding: 14px 0; border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pit-row:first-child { border-top: 0; padding-top: 4px; }
+  .pit-myth-side, .pit-reality-side { display: flex; flex-direction: column; gap: 4px; }
+  .pit-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pit-reality-side .pit-label { color: var(--theme-deep); }
+  .pit-myth-text {
+    font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700;
+    color: var(--accent-ink); line-height: 1.4;
+  }
+  .pit-reality-text {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); line-height: 1.65;
+  }
+
+  /* stat-cell 读研档位 (高/中/低) */
+  .stat-cell.grad-tier .n { font-size: 1rem; }
+  .stat-cell.grad-tier[data-tier="高"] .n { color: var(--accent-ink); }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--muted); }
+
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
+  .uni-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .uni-rank {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .uni-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .uni-eval {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
+  }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
+  /* Day 17 v3: 院校分布无评估数据说明卡片 (针对特设专业/新专业) */
+  .uni-eval-note {
+    margin: 12px 0 16px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(184,50,58,0.04) 0%, rgba(184,50,58,0.02) 100%);
+    border-left: 3px solid var(--theme);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--fg-soft);
+  }
+  .uni-eval-note strong {
+    display: block;
+    color: var(--theme-deep);
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+  }
+
+  .footer-cta {
+    margin: 32px 16px 0;
+    padding: 24px 20px;
+    background: var(--gradient-theme);
+    color: #FBF8F1;
+    border-radius: 4px;
+  }
+  .footer-cta .lead {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--theme-gold);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-cta h3 {
+    font-family: var(--font-heading); font-size: 1.375rem;
+    font-weight: 700; line-height: 1.2;
+    margin: 0 0 8px; color: #FBF8F1;
+  }
+  .footer-cta p {
+    font-family: var(--font-body); font-size: 0.9375rem; line-height: 1.55;
+    color: rgba(245,242,234,0.85);
+    margin: 0 0 16px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--theme-gold); color: var(--theme-deep);
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; border-radius: 999px; min-height: 44px;
+  }
+  .cta-btn .arrow { font-family: var(--font-num); font-weight: 400; }
+  .cta-btn.on .ico { color: var(--accent); }
+
+  .footer-meta {
+    margin-top: 28px;
+    padding: 20px 24px 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  }
+  .footer-meta .mark {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .footer-meta .mark .dot { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topbar is-detail">
+  <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
+  <div class="top-crumb">文物保护技术 · 060601</div>
+  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+</header>
+
+<!-- 滚动进度条 (顶部 2px, 主色) -->
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+<section class="hero is-detail">
+  <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
+    <span class="heart-bg"></span>
+    <span id="heart-ico" class="heart-off">♡</span>
+    <span class="heart-label" id="heart-label">收藏</span>
+  </button>
+  <div class="hero-crumb"><span class="rule"></span>历史学 · 文物与博物馆学类 · 060601</div>
+  <h1 class="hero-title">文物保护技术</h1>
+  <div class="hero-sub">历史学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">文物保护技术, 是用化学试剂、物理仪器和材料学方法, 让千年文物在时间洪流里不再褪色的人.</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><span class="n">6<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell grad-tier" data-tier="中 18%"><span class="n">中 18%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell"><span class="n">★ 4.0<span class="unit">/5</span></span><span class="l">满意度</span></div>
+</div>
+
+<div class="tags-strip" id="tags-strip">
+  <span class="tag">文物保护</span>
+<span class="tag">文物检测</span>
+<span class="tag">化学修复</span>
+<span class="tag">科技考古</span>
+<span class="tag">材料分析</span>
+<span class="tag">环境监测</span>
+<span class="tag">文物数字化</span>
+<span class="tag">文化遗产</span>
+</div>
+
+<article class="article" id="article">
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">一</span>
+        <h2 class="art-title">速览</h2>
+      </div>
+      <div class="art-body">
+        <p class="lede">文物保护技术 (060105) 是历史学下的「化学+物理+材料+考古」四栖交叉专业, 北大/西大/吉大/复旦/南大等综合性大学开设, 偏实验室而非偏展厅, 「用化学+材料+无损检测让文物延年」是核心, 但「化学基础被严重低估 + 实验驻地辛苦 + 历史学/考古学硕博是头部馆硬门槛」是入门后才看清的三道坎.</p>
+        
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">二</span>
+        <h2 class="art-title">什么人适合</h2>
+      </div>
+      <div class="art-body">
+        <p>在决定之前, 先想清楚自己是哪种人.</p>
+      </div>
+      <div class="fit-pair"><div class="fit-col fit-yes"><div class="fit-num">Y · YES</div><div class="fit-title">🌱 适合来读</div><ul class="fit-list"><li>对文物保护/科技考古有底层兴趣, 化学/物理基础扎实, 愿意 5-10 年沉淀</li><li>动手能力强 + 不晕化学试剂/高粉尘/长时间显微操作 + 接受长期驻地</li><li>愿意补全产业链知识 (青铜/陶瓷/书画/玉器/数字化/环境监测), 不止步于「会用一台仪器」</li><li>接受 5-10 年沉淀 (从助理检测师到独立检测/修复师), 心态稳, 不强求速成</li></ul></div><div class="fit-col fit-no"><div class="fit-num">N · NO</div><div class="fit-title">⛔ 慎入</div><ul class="fit-list"><li>期待 4 年本科毕业对标独立检测师/修复师 (概率 &lt; 10%) — 故宫/上博 80% 毕业生 5-10 年内做助理检测师/数字化/科研</li><li>晕化学试剂/晕高粉尘/晕长时间显微操作 — 文保实验是体力 + 化学防护 + 细致活, 不是「坐办公室搞研究」</li><li>对化学/物理没兴趣, 只是想学历史/考古 — 化学/物理/材料学是核心基础 (无机化学/有机化学/分析化学/物理化学/材料学), 不会化学难以胜任</li><li>把文保技术误以为「文物与博物馆学 (060104)」 — 一个偏实验室检测修复, 一个偏策展考古博物馆运营</li></ul></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">避坑指南</h2>
+      </div>
+      <div class="art-body">
+        <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
+      </div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">文物保护技术 = 文物与博物馆学</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">文物保护技术 (060105) 偏「化学+材料+实验+检测」, 文物与博物馆学 (060104) 偏「策展+考古+博物馆运营+田野」, 两者同属历史学门类但能力模型完全不同; 前者实验室多, 后者田野/展厅多, 选专业前务必分清 — 想做实验选 060105, 想做策展选 060104.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">文保技术毕业就能进故宫/上博</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">故宫文保处 A+, 上博文物保护中心 A, 北大/西大/吉大/复旦/南大文保方向 A+, 但年招生 20-40 人/校, 80% 毕业生 5-10 年内做助理检测师/数字化/科研, 真正能挂名独立检测/修复师 10% 以下, 头部检测师 (故宫/上博/南博 顶级) 1% 以下; 化学/材料学/显微操作基础是硬门槛, 硕博是普遍门槛.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">文保 = 实验室干净体面</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">青铜器除锈 (化学试剂/酸碱) + 瓷器补配 (高温窑炉) + 壁画修复 (高粉尘) + 书画修复 (长时间显微) + 环境监测 (现场采样/驻点) 需要化学试剂 + 长时间显微镜下操作, 部分实验现场高粉尘/高湿度/有化学刺激 — 不是「坐办公室搞研究」, 实际是体力 + 化学防护 + 细致活 + 长期显微.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">文保技术考公考编容易</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">历史学学士 (0601 历史学类, 含 060105 特设) 考公/选调/事业编受专业代码限制, 国家文物局/省文物局/各省博物馆/文化和旅游厅编制少, 选调/省考竞争比常年 100:1+; 部分岗位专业代码卡「历史学类」, 文物保护技术特设专业可能不被识别, 报考前必须查本省近 3 年招录目录.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">AI 不会冲击文保技术</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">2024+ AI 文物识图 (故宫 AI 文物识图/Google Arts &amp; Culture) + 3D 扫描 + 数字孪生 + XRF/XRD 自动化分析爆发, 文物识图/扫描/初级分析被 AI 替代 30-50%; 真正不可替代的是「现场保护修复 + 复杂工艺 + 化学判断 + 大型青铜器/壁画修复」, 但入门级识图/扫描/数字化被压缩, 必须主动补 AI 工具 + 数字化.</div></div></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
+        <h2 class="art-title">主要课程</h2>
+      </div>
+      <div class="art-body">
+        <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
+      </div>
+      <div class="course-list">
+        <div class="course-row">
+          <div class="course-yr">大一 公共</div>
+          <div class="course-names">中国通史 (中国古代/近代/现代) · 世界通史 · 考古学通论 · 文物学概论 · <strong style="color:var(--accent);">★</strong> 大学英语 · 思想政治理论课系列 · <strong style="color:var(--accent);">★</strong> 大学语文/写作 · 体育 · <strong style="color:var(--accent);">★</strong> 计算机基础</div>
+          <div class="course-tag">公共基础</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三 核心</div>
+          <div class="course-names">无机化学 · 有机化学 · 分析化学 (含仪器分析) · 物理化学 · <strong style="color:var(--accent);">★</strong> 材料学基础 (金属/陶瓷/高分子) · 文物保护技术概论 · 中国文物史 · 外国文物史 · 田野考古学 · <strong style="color:var(--accent);">★</strong> 文物鉴定基础 (瓷器/青铜/书画模块) · <strong style="color:var(--accent);">★</strong> 科技考古导论 · 文物摄影与数字化</div>
+          <div class="course-tag">专业核心</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">北京大学考古文博学院: 科技考古 + 无机质文物保护 + 体质人类学 (夏商周断代工程核心团队, 化学/材料学/考古学交叉) · 西北大学文化遗产学院: 丝绸之路考古 + 周秦汉唐文物保护 + 中亚文物保护 (西安/天水驻地发掘, 综合性大学化学+考古双栖) · <strong style="color:var(--accent);">★</strong> 吉林大学边疆考古研究中心: 北方金属文物保护 + 高句丽/辽金文物保护 + 田野发掘实习 (化学+材料学+考古综合训练) · 复旦大学文物与博物馆学系: 文化遗产环境监测 + 数字化无损检测 + 国际博物馆学 (与 MIT/哈佛有合作, 数字化见长) · 南京大学历史学院文博系: 六朝考古 + 江南文化考古 + 有机质文物保护 (南京地域特色, 书画/竹木漆器保护突出)</div>
+          <div class="course-tag">方向选修</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">五</span>
+        <h2 class="art-title">院校分布</h2>
+      </div>
+      <div class="art-body">
+        <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+        
+      </div>
+      <div class="uni-row">
+          <div class="uni-rank">01</div>
+          <div class="uni-name">北京大学</div>
+          <div class="uni-eval uni-eval-a-plus" title="教育部第四/五轮学科评估">A+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">02</div>
+          <div class="uni-name">西北大学</div>
+          <div class="uni-eval uni-eval-a-plus" title="教育部第四/五轮学科评估">A+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">03</div>
+          <div class="uni-name">吉林大学</div>
+          <div class="uni-eval uni-eval-a" title="教育部第四/五轮学科评估">A</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">04</div>
+          <div class="uni-name">复旦大学</div>
+          <div class="uni-eval uni-eval-a-minus" title="教育部第四/五轮学科评估">A-</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">05</div>
+          <div class="uni-name">四川大学</div>
+          <div class="uni-eval uni-eval-a-minus" title="教育部第四/五轮学科评估">A-</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">06</div>
+          <div class="uni-name">中山大学</div>
+          <div class="uni-eval uni-eval-a-minus" title="教育部第四/五轮学科评估">A-</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">南京大学</div>
+          <div class="uni-eval uni-eval-b-plus" title="教育部第四/五轮学科评估">B+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">08</div>
+          <div class="uni-name">南开大学</div>
+          <div class="uni-eval uni-eval-b" title="教育部第四/五轮学科评估">B</div>
+          <div class="uni-score">—</div>
+        </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">六</span>
+        <h2 class="art-title">头部雇主参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
+      </div>
+      <div class="co-list">
+        <div class="co-row"><div class="co-info"><div class="co-name">故宫博物院文保处<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>事业编制 12-25 万/年, 核心文物保护/修复岗稀缺且竞争惨烈</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国国家博物馆文物保护部<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>事业编制 12-25 万/年, 综合馆保护修复岗位门槛极高</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">上海博物馆文物保护中心<span class="co-tier co-tier-s">S</span></div><div class="co-meta">★★<span class="dot">·</span>事业编制 10-22 万/年, 化学/材料学基础要求突出</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,0.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">各省文物考古研究所 (文保中心)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>事业编制 8-15 万/年, 长期驻地稳定, 文物保护与科技考古结合</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">三星堆博物馆/陕西历史博物馆 等地方头部馆<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>事业编制 8-15 万/年, 文保岗 + 数字化岗位增多</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">文物数字化企业 (积木成树/以文博科技等)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★★★<span class="dot">·</span>三维扫描/数字孪生/XRF-XRD 操作 15-35 万/年, 技术岗弹性大</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">独立修复工作室/文物医院 (高端)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">★<span class="dot">·</span>资深修复师 30-80 万/年, 单项目 5-30 万, 顶端 100 万+ 极罕见</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,0.0 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">陕文投/首旅集团 等文旅集团<span class="co-tier co-tier-b">B</span></div><div class="co-meta">★★★<span class="dot">·</span>文化遗产保护项目策划 15-30 万/年, 商业项目提成另算</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,14.0 25.0,14.0 37.5,14.0 50.0,14.0" /></svg></div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">七</span>
+        <h2 class="art-title">薪资分布</h2>
+      </div>
+      <div class="art-body">
+        <p>P25/P50/P75 = 25/50/75 百分位. ≈ 表示估算值. ↗/↘ = 3 年变化.</p>
+      </div>
+      <div class="sal-table">
+        <div class="sal-th">
+          <div class="sal-th-stage">阶段</div>
+          <div class="sal-th-cell">P25</div>
+          <div class="sal-th-cell is-p50">P50 中位</div>
+          <div class="sal-th-cell">P75 高位</div>
+        </div>
+        <div class="sal-tr">
+          <div class="sal-stage">应届生 (博物馆/考古所文保岗 事业编)<span class="sal-yoy up">↗ 3%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">6.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:20%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">9.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">13.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:15%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">应届生 (文物数字化/独立修复 商业)<span class="sal-yoy up">↗ 8%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:26%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">3年经验 (事业编/普通文保岗)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">10.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:33%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">15.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">22.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:26%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">5年经验 (骨干文保/科技考古)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">18.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:60%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:56%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:47%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">10年+ (研究员/独立修复工作室主理人)<span class="sal-yoy up">↗ 6%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">30.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">50.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">85.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">八</span>
+        <h2 class="art-title">主流就业方向</h2>
+      </div>
+      <div class="art-body">
+        <p>8 大就业方向及占比.</p>
+      </div>
+      <div class="emp-list">
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">博物馆文物保护/修复岗</div><div class="emp-ratio">28%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:28.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">文物考古研究所 (科技考古)</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">文物数字化/无损检测</div><div class="emp-ratio">14%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:14.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">文化遗产环境监测/管理</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">拍卖行/艺术品市场</div><div class="emp-ratio">4%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:4.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">高校教师/科研</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">读研/读博 (主流)</div><div class="emp-ratio">13%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:13.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">跨行/文创/教培</div><div class="emp-ratio">5%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:5.0%;"></div></div><div class="emp-desc"></div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">九</span>
+        <h2 class="art-title">深造与就业路径分布</h2>
+      </div>
+      <div class="art-body">
+        <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
+      </div>
+      <div class="ds-list">
+        <div class="ds-row"><div class="ds-name">国内硕士 (985 文博/考古/科技考古/化学, 主流就业门槛)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">32%</div></div><div class="ds-row"><div class="ds-name">直接就业 (博物馆/考古所文保岗 事业编)</div><div class="ds-bar"><div class="ds-fill" style="--w:69%;"></div></div><div class="ds-pct">22%</div></div><div class="ds-row"><div class="ds-name">直接就业 (文物数字化/独立修复 商业)</div><div class="ds-bar"><div class="ds-fill" style="--w:47%;"></div></div><div class="ds-pct">15%</div></div><div class="ds-row ds-study"><div class="ds-name">国内博士 (科技考古/文物保护, 高校教职)</div><div class="ds-bar"><div class="ds-fill" style="--w:31%;"></div></div><div class="ds-pct">10%</div></div><div class="ds-row ds-study"><div class="ds-name">出国深造 (英国 UCL/莱斯特/美国哈佛/UC Berkeley, 文化遗产/科技考古)</div><div class="ds-bar"><div class="ds-fill" style="--w:25%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">跨行 (文创/教培/出版/媒体)</div><div class="ds-bar"><div class="ds-fill" style="--w:25%;"></div></div><div class="ds-pct">8%</div></div><div class="ds-row"><div class="ds-name">自主创业 (修复工作室/文物数字化)</div><div class="ds-bar"><div class="ds-fill" style="--w:16%;"></div></div><div class="ds-pct">5%</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
+      </div>
+      <div class="pull-list">
+        <div class="pull">"当初以为文保技术就是修文物, 4 年读完发现核心是「化学试剂 + 仪器分析 + 显微操作」三件套, 真正修大件是入岗 5 年以后的事, 头三年都在做基础检测和数据整理."<span class="by">— </span></div><div class="pull">"我们那一届真正去博物馆文保岗的不算多, 不少同学去了文物数字化企业或读研. 文保行业没有金融计算机那么「快」, 但越做越有味道, 关键是化学基础要扎实, 不然上手机会少."<span class="by">— </span></div><div class="pull">"班里像我做青铜器除锈的不到 15%, 但行业缺口其实挺大 — 关键得会新技术 (XRF/XRD/3D 扫描), 光懂化学不够, 必须主动补实验操作才能拿到核心岗."<span class="by">— </span></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十一</span>
+        <h2 class="art-title">高考选科要求</h2>
+      </div>
+      <div class="art-body">
+        <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
+      </div>
+      <div class="xk-list">
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">历史 + 地理 + 政治 (经典文博组合, 史地政三选全覆盖)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:38%;"></div></div><span class="xk-pct">38%</span></div></div></div><div class="xk-reason">史+地+政是文保技术经典组合, 涵盖文物保护、文化遗产管理、博物馆方向, 90% 主流院校可报.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">历史 + 化学 (文物保护与科技考古方向, 化学是核心)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:28%;"></div></div><span class="xk-pct">28%</span></div></div></div><div class="xk-reason">文物保护与科技考古需大量化学定量基础 (无机化学/有机化学/分析化学), 史+化组合可进入文保细分核心方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">首选物理 + 再选化学 (科技考古与无损检测方向, 物化绑定是核心)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:14%;"></div></div><span class="xk-pct">14%</span></div></div></div><div class="xk-reason">XRF/XRD/扫描电镜等仪器分析需要物理基础, 史+物组合适合科技考古与无损检测方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 生物 (有机质文物保护方向, 书画/竹木/漆器)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:8%;"></div></div><span class="xk-pct">8%</span></div></div></div><div class="xk-reason">有机质文物保护涉及生物学 (微生物/虫霉防治/植物纤维识别), 史+生组合可进入有机文保方向.</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">不限选科 (少数综合类院校)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:12%;"></div></div><span class="xk-pct">12%</span></div></div></div><div class="xk-reason">部分综合类或省属院校文保技术专业不限选科, 适合无明确偏科考生兜底选择.</div></div>
+      </div>
+    </section>
+</article>
+
+<div class="footer-cta">
+  <div class="lead">⌖ 决定了吗</div>
+  <h3>把文物保护技术加入心愿单</h3>
+  <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
+  <a class="cta-btn" id="cta-btn" href="#">
+    <span class="ico" id="cta-ico">♡</span>
+    <span id="cta-text">加入心愿单</span>
+  </a>
+</div>
+
+<footer class="footer-meta">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026 · 湖北</div>
+  <div>资料源自教育部 / 软科 2025 / 麦可思 2024 / 校友访谈</div>
+  <div style="margin-top:6px;">分数仅供参考 · 录取以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="../index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+
+<!-- 心愿打分模态框 -->
+<div class="wish-modal" id="wish-modal" hidden>
+  <div class="wish-modal-bg" data-close="1"></div>
+  <div class="wish-modal-card" role="dialog" aria-labelledby="wish-modal-title">
+    <h3 class="wish-modal-title" id="wish-modal-title">给 文物保护技术 打分</h3>
+    <p class="wish-modal-sub">1-5 星, 后续可在心愿单查看排序</p>
+    <div class="star-row" id="star-row" role="radiogroup" aria-label="评分">
+      <button class="star-btn" data-star="1" aria-label="1 星"><span>★</span></button>
+      <button class="star-btn" data-star="2" aria-label="2 星"><span>★</span></button>
+      <button class="star-btn" data-star="3" aria-label="3 星"><span>★</span></button>
+      <button class="star-btn" data-star="4" aria-label="4 星"><span>★</span></button>
+      <button class="star-btn" data-star="5" aria-label="5 星"><span>★</span></button>
+    </div>
+    <div class="star-hint" id="star-hint">点击星星选择评分</div>
+    <textarea class="wish-comment" id="wish-comment" placeholder="备注 (选填, 例: 看完想再读读课程)"></textarea>
+    <div class="wish-modal-actions">
+      <button class="wish-btn wish-btn-cancel" data-close="1">取消</button>
+      <button class="wish-btn wish-btn-remove" id="wish-remove" hidden>移除出心愿单</button>
+      <button class="wish-btn wish-btn-save" id="wish-save" disabled>保存到心愿单</button>
+    </div>
+  </div>
+</div>
+  <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script>window.__SLUG__ = "cultural-relics-conservation-tech"; window.__TITLE__ = "文物保护技术";</script>
+<script src="../js/loader.js"></script>
+<script src="../js/dock.js"></script>
+<script src="../js/detail.js"></script>
+<script src="../js/scroll-helpers.js"></script>
+<script>
+  // ───── 滚动进度条 (顶部 2px, 主色) ─────
+  (() => {
+    const bar = document.getElementById('scroll-progress');
+    if (!bar) return;
+    let ticking = false;
+    function update() {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const p = h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0;
+      bar.style.setProperty('--p', p + '%');
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  })();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6B7A3F">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
+<title>草业科学 · Major Explorer</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/topbar.css">
+<link rel="stylesheet" href="../css/dock.css">
+<style>
+  :root {
+    --theme:       #6B7A3F;
+    --theme-deep:  #3F4D22;
+    --theme-soft:  #ECEFCC;
+    --theme-gold:  #B5934A;
+    /* 预定义整段 gradient 字符串 (避免 Chromium 双 var() in linear-gradient 解析 bug) */
+    --gradient-theme:     linear-gradient(180deg, #6B7A3F 0%, #3F4D22 100%);
+    --gradient-theme-h:   linear-gradient(90deg, #6B7A3F 0%, #B5934A 100%);
+    --gradient-radial:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(181,147,74,0.18) 0%, transparent 60%), linear-gradient(180deg, #6B7A3F 0%, #3F4D22 100%);
+  }
+  .topbar.is-detail {
+    grid-template-columns: 44px 1fr var(--notch-w) 1fr 44px 44px;
+  }
+  .top-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px;
+    font-family: var(--font-heading); font-size: 1.125rem;
+    color: var(--fg-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-crumb {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase;
+    text-align: center;
+    grid-column: 2 / 6;
+    opacity: 0; transition: opacity 200ms;
+    pointer-events: none;
+  }
+  .topbar.is-detail.scrolled .top-crumb { opacity: 1; }
+  .top-btn .heart-on { color: var(--accent); }
+  .top-btn .heart-off { color: var(--muted-2); }
+
+  /* hero 右上角手浮爱心 */
+  .hero.is-detail { position: relative; }
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 200ms, background 200ms;
+  }
+  .hero-heart:active { transform: scale(0.9); background: rgba(255,255,255,0.95); }
+  .hero-heart .heart-off { color: var(--muted-2); font-size: 1.125rem; line-height: 1; }
+  .hero-heart .heart-on { color: var(--accent); font-size: 1.125rem; line-height: 1; }
+
+  /* 爱心手浮按钮增强 (心愿单打分入口) */
+  .hero-heart {
+    position: absolute;
+    top: -8px; right: 18px;
+    z-index: 5;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 200ms, box-shadow 200ms;
+  }
+  .hero-heart:active { transform: scale(0.94); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+  .hero-heart.is-on { background: var(--accent); border-color: var(--accent); }
+  .hero-heart.is-on .heart-off, .hero-heart.is-on .heart-on { color: #FBF8F1; }
+  .hero-heart.is-on .heart-label { color: #FBF8F1; }
+  .heart-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase;
+  }
+
+  /* 心愿打分模态框 */
+  .wish-modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .wish-modal[hidden] { display: none; }
+  .wish-modal-bg {
+    position: absolute; inset: 0;
+    background: rgba(20, 20, 18, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: fadeIn 240ms ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ───────── 滚动进度条 (顶部 2px, 主色) ───────── */
+  .scroll-progress {
+    position: fixed; top: var(--topbar-h); left: 0; right: 0;
+    height: 2px; z-index: 49;
+    background: transparent; pointer-events: none;
+  }
+  .scroll-progress::after {
+    content: ""; display: block;
+    height: 100%;
+    width: var(--p, 0%);
+    background: var(--gradient-theme-h);
+    box-shadow: 0 0 6px rgba(184,50,58,0.4);
+    transition: width 60ms linear;
+  }
+  .wish-modal-card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 420px;
+    background: var(--bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 24px 24px 28px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.16);
+    animation: slideUp 280ms cubic-bezier(0.2, 0.9, 0.3, 1.05);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .wish-modal-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .wish-modal-sub {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--muted); margin-bottom: 18px;
+  }
+  .star-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .star-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; padding: 0;
+    font-size: 32px; color: var(--line); cursor: pointer;
+    transition: transform 120ms, color 120ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .star-btn span { display: block; line-height: 1; }
+  .star-btn:active { transform: scale(0.85); }
+  .star-btn.is-on { color: #E8A53A; }
+  .star-hint {
+    text-align: center;
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); margin-bottom: 14px;
+    min-height: 16px;
+  }
+  .wish-tags-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .wish-tag {
+    padding: 6px 14px;
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 600;
+    color: var(--theme-deep); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 24px;
+    cursor: pointer; transition: all 160ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-tag.is-on {
+    background: var(--theme); color: #FBF8F1; border-color: var(--theme);
+  }
+  .wish-comment {
+    width: 100%;
+    min-height: 64px; max-height: 120px;
+    padding: 10px 12px;
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+  }
+  .wish-comment:focus { outline: 0; border-color: var(--theme); }
+  .wish-modal-actions {
+    display: flex; gap: 10px;
+  }
+  .wish-btn {
+    flex: 1; height: 44px;
+    border-radius: 22px; border: 0;
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wish-btn-cancel { background: var(--bg-soft); color: var(--muted); }
+  .wish-btn-save { background: var(--theme); color: #FBF8F1; flex: 2; }
+  .wish-btn-save:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+
+  .hero.is-detail {
+    position: relative;
+    padding: 32px 24px 36px;
+    background: var(--gradient-radial);
+    color: #F5F2EA;
+    overflow: hidden;
+    border-bottom: 0;
+  }
+  .hero.is-detail::before {
+    content: "草";
+    position: absolute;
+    right: -8%; bottom: -8%;
+    font-family: var(--font-heading);
+    font-size: clamp(11rem, 50vw, 16rem);
+    font-weight: 700; line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(245,242,234,0.06);
+    pointer-events: none; user-select: none;
+  }
+  .hero.is-detail > *:not(.hero-heart) { position: relative; z-index: 1; }
+  .hero-crumb {
+    font-family: var(--font-num);
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--theme-gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-crumb .rule { flex: 0 0 24px; height: 1px; background: var(--theme-gold); }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-weight: 700; line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #FBF8F1;
+  }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: rgba(245,242,234,0.72);
+    margin: 14px 0 0; letter-spacing: 0.04em;
+  }
+  .hero-sub .dot { color: var(--theme-gold); margin: 0 8px; }
+  .hero-tagline {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem; line-height: 1.55;
+    color: rgba(245,242,234,0.92);
+    margin: 22px 0 0; font-weight: 400;
+    border-left: 2px solid var(--theme-gold);
+    padding-left: 12px;
+  }
+
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+  /* === Salary Table · P25/P50/P75 === */
+  .sal-table {
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .sal-th, .sal-tr {
+    display: grid;
+    grid-template-columns: 92px 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .sal-th-stage, .sal-stage {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em; line-height: 1.5;
+    padding-top: 6px;
+  }
+  .sal-stage { color: var(--theme-deep); font-size: 0.875rem; }
+  .sal-yoy {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 5px; border-radius: 2px; margin-left: 6px;
+    color: #FBF8F1;
+  }
+  .sal-yoy.up { background: #4C7A4C; }
+  .sal-yoy.down { background: var(--accent); }
+  .sal-th-cell, .sal-cell {
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+    text-align: center;
+  }
+  .sal-th-cell.is-p50, .sal-cell.is-p50 { color: var(--theme-deep); font-weight: 700; }
+  .sal-th-cell { padding-top: 6px; }
+  .sal-cell {
+    font-family: var(--font-body); font-size: 0.8125rem; font-weight: 400;
+    color: var(--fg); text-align: left;
+    display: flex; flex-direction: column; gap: 4px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .sal-cell.is-p50 { font-weight: 700; }
+  .sal-cell .approx { color: var(--muted); font-size: 0.75rem; margin-right: 2px; }
+  .sal-cell .sal-cell-num {
+    font-family: var(--font-num); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep);
+  }
+  .sal-cell.is-p50 .sal-cell-num { color: var(--accent-ink); }
+  .sal-cell .sal-cell-unit {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); margin-left: 2px; font-weight: 400;
+  }
+  .sal-cell-bar {
+    display: block; height: 4px;
+    background: var(--bg-soft); border-radius: 1px; overflow: hidden;
+    margin-top: 2px;
+  }
+  .sal-cell-fill {
+    display: block; height: 100%;
+    background: var(--gradient-theme-h);
+  }
+  .sal-cell-empty { color: var(--muted); font-size: 0.875rem; }
+
+  /* === 移除按钮 === */
+  .wish-btn-remove { background: var(--bg-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .wish-btn-remove:active { background: rgba(184,50,58,0.08); }
+  .stats-strip {
+    background: var(--theme);
+    margin: 0 0 14px;
+    padding: 22px 20px 20px;
+    border-radius: 2px;
+    color: var(--bg);
+  }
+  .stat-cell {
+    text-align: center;
+  }
+  .stat-cell .n {
+    font-family: var(--font-num);
+    font-size: 1.875rem; font-weight: 700;
+    color: var(--bg);
+    line-height: 1.05; letter-spacing: -0.01em;
+    display: block;
+  }
+  .stat-cell .n .unit { font-size: 0.8125rem; color: var(--theme-soft); font-weight: 500; margin-left: 3px; opacity: 0.85; }
+  .stat-cell .l {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--theme-soft); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-top: 6px; display: block;
+    opacity: 0.75;
+  }
+  /* 读研档位高亮 (B 块里也保留色彩对比) */
+  .stat-cell.grad-tier[data-tier="高"] .n { color: #FBF8F1; }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme-soft); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--theme-soft); opacity: 0.7; }
+  .stat-cell.grad-tier .n { font-size: 1.875rem; }
+
+  /* === 选科要求 (xuanke) === */
+  .xk-list { margin-top: 8px; }
+  .xk-row {
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+  .xk-row:first-child { border-top: 0; padding-top: 4px; }
+  .xk-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .xk-num {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+    padding-top: 2px; min-width: 24px;
+  }
+  .xk-info { flex: 1; }
+  .xk-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--theme-deep); line-height: 1.4; margin-bottom: 6px;
+  }
+  /* Day 17 fix: xk-bar-wrap flex 布局让 xk-pct 在 bar 右边可见 (之前 xk-bar overflow:hidden 把 12px 文字裁了) */
+  .xk-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .xk-bar {
+    position: relative; flex: 1; height: 4px;
+    background: var(--bg-soft); border-radius: 2px; overflow: hidden;
+  }
+  .xk-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: var(--gradient-theme-h);
+  }
+  .xk-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.02em;
+    min-width: 42px; text-align: right; flex-shrink: 0;
+  }
+  .xk-reason {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 深造路径 (deep_study) === */
+  .ds-list { margin-top: 4px; }
+  .ds-row {
+    display: grid; grid-template-columns: 1fr 80px 36px;
+    gap: 10px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .ds-row:first-child { padding-top: 4px; }
+  .ds-row:last-child { border-bottom: 0; }
+  .ds-name {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.4;
+  }
+  .ds-study .ds-name {
+    font-weight: 600; color: var(--theme-deep);
+  }
+  .ds-study .ds-name::before {
+    content: "🎓 ";
+  }
+  .ds-bar {
+    height: 6px; border-radius: 1px; background: var(--bg-soft);
+    overflow: hidden; position: relative;
+  }
+  .ds-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: var(--gradient-theme-h);
+  }
+  .ds-study .ds-fill {
+    background: linear-gradient(90deg, var(--accent-ink) 0%, var(--theme) 100%);
+  }
+  .ds-pct {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  /* === 就业方向 (employment_direction) === */
+  .emp-list { margin-top: 4px; }
+  .emp-row {
+    padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .emp-row:first-child { border-top: 0; padding-top: 4px; }
+  .emp-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
+  }
+  .emp-num {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em; min-width: 24px;
+  }
+  .emp-name {
+    flex: 1;
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 700;
+    color: var(--theme-deep); line-height: 1.3;
+  }
+  .emp-ratio {
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  .emp-bar {
+    position: relative; height: 4px; background: var(--bg-soft);
+    border-radius: 2px; overflow: hidden; margin-bottom: 6px;
+    margin-left: 34px;
+  }
+  .emp-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 0%);
+    background: var(--gradient-theme-h);
+  }
+  .emp-desc {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft); line-height: 1.55; padding-left: 34px;
+  }
+
+  /* === 头部雇主 (top_companies) === */
+  .co-list { margin-top: 4px; }
+  .co-row {
+    display: grid; grid-template-columns: 1fr 70px;
+    gap: 12px; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .co-row:first-child { padding-top: 4px; }
+  .co-row:last-child { border-bottom: 0; }
+  .co-name {
+    font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600;
+    color: var(--fg); line-height: 1.4; margin-bottom: 4px;
+  }
+  .co-tier {
+    display: inline-block;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 2px; margin-left: 8px;
+    color: #FBF8F1; vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+  .co-tier-s { background: var(--accent-ink); }
+  .co-tier-a { background: var(--theme); }
+  .co-tier-b { background: var(--muted); }
+  .co-meta {
+    font-family: var(--font-body); font-size: 0.75rem;
+    color: var(--muted); letter-spacing: 0.02em;
+  }
+  .co-meta .dot { color: var(--line); margin: 0 4px; }
+  .co-spark-wrap {
+    display: flex; align-items: center; justify-content: flex-end;
+  }
+  .co-spark {
+    width: 60px; height: 16px;
+    overflow: visible;
+  }
+  .co-spark polyline {
+    fill: none; stroke: var(--theme); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .tags-strip {
+    padding: 18px 20px 12px;
+    background: var(--bg);
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    padding: 4px 9px;
+    background: var(--theme-soft);
+    color: var(--theme-deep);
+    border-radius: 2px;
+  }
+
+  .article { padding: 8px 24px 24px; background: var(--bg); }
+  .art-sec {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .art-sec:last-of-type { border-bottom: 0; }
+  .art-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .art-num {
+    font-family: var(--font-num);
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--theme);
+    letter-spacing: 0.18em;
+    border: 1px solid var(--theme);
+    padding: 2px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .art-title {
+    font-family: var(--font-heading);
+    font-size: 1.625rem; font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .art-body p {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--fg-soft);
+    margin: 0 0 16px;
+  }
+  .art-body p strong { color: var(--fg); font-weight: 600; }
+  .art-body p em {
+    color: var(--theme); font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 60%);
+    padding: 0 2px;
+  }
+
+  .pull {
+    margin: 28px -8px;
+    padding: 22px 18px 22px 24px;
+    border-left: 3px solid var(--theme-gold);
+    background: var(--bg-paper);
+    font-family: var(--font-heading);
+    font-size: 1.25rem; line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull .by {
+    display: block; margin-top: 12px;
+    font-family: var(--font-num); font-size: 0.6875rem;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .course-list {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .course-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .course-yr {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.08em;
+  }
+  .course-names {
+    font-family: var(--font-body); font-size: 0.9375rem; color: var(--fg); line-height: 1.5;
+  }
+  .course-tag {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .sal-rows { margin-top: 4px; }
+  .sal-row {
+    display: grid; grid-template-columns: 90px 1fr 60px;
+    gap: 10px; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sal-row:last-child { border-bottom: 0; }
+  .sal-l { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .sal-bar {
+    height: 6px; border-radius: 1px;
+    background: var(--theme-soft);
+    overflow: hidden; position: relative;
+  }
+  .sal-bar::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--w, 50%);
+    background: var(--gradient-theme-h);
+  }
+  .sal-v {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    color: var(--theme-deep); text-align: right;
+  }
+
+  .risk {
+    margin: 18px 0;
+    padding: 14px 16px 14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    background: rgba(184,50,58,0.04);
+    border-left: 4px solid var(--accent);
+  }
+  .risk-head {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .risk-body {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg-soft);
+  }
+  .risk-body strong { color: var(--accent-ink); }
+
+  /* fit 杂志风 — 大字衬线 + 序号 + 列表文章流 */
+  .fit-pair { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 0; }
+  .fit-col { padding: 12px 0 8px; border-top: 1px solid var(--line); }
+  .fit-col:first-child { border-top: 0; padding-top: 6px; }
+  .fit-num {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .fit-col.fit-yes .fit-num { color: var(--theme-deep); }
+  .fit-col.fit-no  .fit-num { color: var(--accent); }
+  .fit-title {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--theme-deep); margin-bottom: 10px; letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .fit-col.fit-no .fit-title { color: var(--accent-ink); }
+  .fit-list { list-style: none; padding: 0; margin: 0; }
+  .fit-list li {
+    padding: 8px 0; border-top: 1px dashed var(--line);
+    font-family: var(--font-body); font-size: 0.9375rem;
+    line-height: 1.6; color: var(--fg);
+    position: relative; padding-left: 18px;
+  }
+  .fit-list li:first-child { border-top: 0; padding-top: 4px; }
+  .fit-list li::before {
+    content: "→"; position: absolute; left: 0; top: 8px;
+    color: var(--theme); font-weight: 700;
+  }
+  .fit-list li:first-child::before { top: 4px; }
+  .fit-col.fit-no .fit-list li::before { content: "✗"; color: var(--accent); }
+
+  /* pitfalls 杂志风 — 文章流 误区/真相 上下排 */
+  .pit-grid { display: flex; flex-direction: column; gap: 0; padding: 8px 0 4px; }
+  .pit-row {
+    padding: 14px 0; border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pit-row:first-child { border-top: 0; padding-top: 4px; }
+  .pit-myth-side, .pit-reality-side { display: flex; flex-direction: column; gap: 4px; }
+  .pit-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pit-reality-side .pit-label { color: var(--theme-deep); }
+  .pit-myth-text {
+    font-family: var(--font-heading); font-size: 1.0625rem; font-weight: 700;
+    color: var(--accent-ink); line-height: 1.4;
+  }
+  .pit-reality-text {
+    font-family: var(--font-body); font-size: 0.9375rem;
+    color: var(--fg); line-height: 1.65;
+  }
+
+  /* stat-cell 读研档位 (高/中/低) */
+  .stat-cell.grad-tier .n { font-size: 1rem; }
+  .stat-cell.grad-tier[data-tier="高"] .n { color: var(--accent-ink); }
+  .stat-cell.grad-tier[data-tier="中"] .n { color: var(--theme); }
+  .stat-cell.grad-tier[data-tier="低"] .n { color: var(--muted); }
+
+  /* directions (方向卡片) */
+  .dir-list { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 12px; }
+  .dir-card {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 12px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dir-card:first-child { border-top: 0; padding-top: 4px; }
+  .dir-num {
+    font-family: var(--font-num); font-size: 1rem; font-weight: 700;
+    color: var(--theme); letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .dir-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; color: var(--theme-deep);
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dir-desc {
+    font-family: var(--font-body); font-size: 0.875rem;
+    color: var(--fg); line-height: 1.6;
+  }
+  .lede {
+    font-family: var(--font-body); font-size: 1rem;
+    color: var(--fg); line-height: 1.7;
+    margin: 4px 0 12px;
+  }
+
+  /* what 标签云 (学什么底子 / 练什么能力) */
+  .what-tags-stack {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .what-tags-label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: var(--theme-deep); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .what-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-mini {
+    font-family: var(--font-body); font-size: 0.8125rem;
+    background: var(--theme-soft); color: var(--theme-deep);
+    padding: 4px 10px; border-radius: 2px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+
+  /* Day 17 fix: 院校分布加 .uni-eval 显示学科评估 (A+/A/A-/B+), 替换占位 "—" */
+  .uni-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .uni-rank {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .uni-name {
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 600; color: var(--fg);
+  }
+  .uni-eval {
+    font-family: var(--font-num); font-size: 0.8125rem; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px;
+    text-align: center; min-width: 36px;
+    color: #FBF8F1; background: var(--theme);
+  }
+  .uni-eval-none {
+    background: transparent; color: var(--muted); border: 1px dashed var(--line-strong);
+  }
+  /* 学科评估等级配色 (A+ 金 / A 银 / A- 铜 / B+ 深绿 / B 绿 / B- 浅绿 / C/D 灰) */
+  .uni-eval-a-plus { background: linear-gradient(135deg, #D4A028 0%, #B5861C 100%); color: #fff; }
+  .uni-eval-a      { background: linear-gradient(135deg, #6B6F7A 0%, #4A4E58 100%); }
+  .uni-eval-a-minus{ background: linear-gradient(135deg, #B58863 0%, #8E6644 100%); }
+  .uni-eval-b-plus { background: linear-gradient(135deg, #4A8A6E 0%, #2F6650 100%); }
+  .uni-eval-b      { background: linear-gradient(135deg, #6BA88A 0%, #4F8468 100%); }
+  .uni-eval-b-minus{ background: linear-gradient(135deg, #92C0A5 0%, #74A085 100%); }
+  .uni-eval-c, .uni-eval-d { background: var(--bg-soft); color: var(--muted); }
+  /* Day 17 v3: 院校分布无评估数据说明卡片 (针对特设专业/新专业) */
+  .uni-eval-note {
+    margin: 12px 0 16px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(184,50,58,0.04) 0%, rgba(184,50,58,0.02) 100%);
+    border-left: 3px solid var(--theme);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--fg-soft);
+  }
+  .uni-eval-note strong {
+    display: block;
+    color: var(--theme-deep);
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+  }
+
+  .footer-cta {
+    margin: 32px 16px 0;
+    padding: 24px 20px;
+    background: var(--gradient-theme);
+    color: #FBF8F1;
+    border-radius: 4px;
+  }
+  .footer-cta .lead {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--theme-gold);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-cta h3 {
+    font-family: var(--font-heading); font-size: 1.375rem;
+    font-weight: 700; line-height: 1.2;
+    margin: 0 0 8px; color: #FBF8F1;
+  }
+  .footer-cta p {
+    font-family: var(--font-body); font-size: 0.9375rem; line-height: 1.55;
+    color: rgba(245,242,234,0.85);
+    margin: 0 0 16px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px;
+    background: var(--theme-gold); color: var(--theme-deep);
+    font-family: var(--font-heading); font-size: 0.9375rem;
+    font-weight: 700; border-radius: 999px; min-height: 44px;
+  }
+  .cta-btn .arrow { font-family: var(--font-num); font-weight: 400; }
+  .cta-btn.on .ico { color: var(--accent); }
+
+  .footer-meta {
+    margin-top: 28px;
+    padding: 20px 24px 16px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  }
+  .footer-meta .mark {
+    font-family: var(--font-num); font-size: 0.6875rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .footer-meta .mark .dot { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topbar is-detail">
+  <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
+  <div class="top-crumb">草业科学 · 09草学类</div>
+  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+</header>
+
+<!-- 滚动进度条 (顶部 2px, 主色) -->
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+<section class="hero is-detail">
+  <button class="hero-heart" id="heart-btn" aria-label="收藏到心愿单">
+    <span class="heart-bg"></span>
+    <span id="heart-ico" class="heart-off">♡</span>
+    <span class="heart-label" id="heart-label">收藏</span>
+  </button>
+  <div class="hero-crumb"><span class="rule"></span>农学 · 草学类 · 09草学类</div>
+  <h1 class="hero-title">草业科学</h1>
+  <div class="hero-sub">农学学士<span class="dot">·</span>4 年<span class="dot">·</span>普通批本科</div>
+  <p class="hero-tagline">「草业不是「种草」, 是用牧草育种 + 草地生态 + 草原修复 + 草地畜牧把 60 亿亩草原变成 14 亿人的生态屏障 + 牛羊肉库。」</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><span class="n">4<span class="unit">万</span></span><span class="l">入行中位</span></div>
+  <div class="stat-cell grad-tier" data-tier="低 8%"><span class="n">低 8%</span><span class="l">深造需求</span></div>
+  <div class="stat-cell"><span class="n">★ —<span class="unit">/5</span></span><span class="l">满意度</span></div>
+</div>
+
+<div class="tags-strip" id="tags-strip">
+  <span class="tag">草地生态</span>
+<span class="tag">草原保护</span>
+<span class="tag">牧草育种</span>
+<span class="tag">生态修复</span>
+<span class="tag">西部振兴</span>
+<span class="tag">考公友好</span>
+</div>
+
+<article class="article" id="article">
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">一</span>
+        <h2 class="art-title">速览</h2>
+      </div>
+      <div class="art-body">
+        <p class="lede">草业科学的核心是「草地资源 + 牧草育种 + 草原生态 + 草地畜牧」四栖训练, 它在西部振兴 + 草原生态修复 + 草地畜牧规模化下有「政策红利 + 工作条件偏远 + 应届起薪低」三大特征 — 草学 50% 流向体制内/草业企业/读研, 985 硕是草学塔尖硬门槛, 真开设校 ≤ 15 所.</p>
+        
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">二</span>
+        <h2 class="art-title">什么人适合</h2>
+      </div>
+      <div class="art-body">
+        <p>在决定之前, 先想清楚自己是哪种人.</p>
+      </div>
+      <div class="fit-pair"><div class="fit-col fit-yes"><div class="fit-num">Y · YES</div><div class="fit-title">🌱 适合来读</div><ul class="fit-list"><li>对「草原 + 牧草 + 草地畜牧 + 生态修复」链条有结构化好奇心, 愿意下草原</li><li>能接受「草原驻地 + 偏远西北/内蒙古/青藏高原」, 不晕偏远草原 (草学实习 60% 在草原)</li><li>愿意读研 (30%) 或考公务员/事业编 (25%) — 草学是农学里最对口的西部/草原考公专业</li><li>认同「西部振兴 + 草原生态修复 + 草地畜牧」政策方向, 不强求互联网/金融起薪</li></ul></div><div class="fit-col fit-no"><div class="fit-num">N · NO</div><div class="fit-title">⛔ 慎入</div><ul class="fit-list"><li>期待本科毕业 15 万+ 起薪 (草学一线 5-8 万, 5 年才到 10-18 万, 985 硕起薪 12-18 万)</li><li>不愿下草原/不愿考公/不愿去西北/内蒙古 — 三大主流出口需要下沉偏远</li><li>把草学等同于「园林/园艺/种草」, 没意识到「草原保护 + 草地畜牧 + 牧草育种」是核心</li><li>怕风沙/怕干燥/怕偏远 — 草学实习 60% 在草原, 不是「坐办公室看草」</li></ul></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">三</span>
+        <h2 class="art-title">避坑指南</h2>
+      </div>
+      <div class="art-body">
+        <p>关于这个专业最常见的几个误区, 看完再决定要不要押.</p>
+      </div>
+      <div class="pit-grid"><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 01</div><div class="pit-myth-text">草学 = 农学 = 园林, 课程差不多</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">草业科学 (090701) ≠ 农学 (090101) ≠ 园林 (090502). 草学独立成「草学类」(2011 国家学科目录调整), 学「草地生态 + 牧草育种 + 草原保护」, 真开设校 ≤ 15 所. 选错专业等于读 4 年「不想读」的内容. 草学课程里有「草原保护与建设 + 牧草育种学 + 草地畜牧业」三大杀手课, 是真正的差异化.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 02</div><div class="pit-myth-text">草学考公容易, 是考公黄金专业</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">草学考公归「草学类/农林大类」, 2024 年国考国家草原监理/省草原监理/市草原监理/西部定向竞争比 25-60:1, 远低于经济类 (40-80:1) 和法律类 (50-100:1). 兰州大学/中国农大是省市草原监理/草业局选调黄金, 双非草学只能报三不限岗位, 竞争比 100-200:1. 草学是农学里考公最对口的专业之一.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 03</div><div class="pit-myth-text">西部振兴战略下, 草学毕业生起薪大涨</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">西部振兴是真政策红利 (2024 西部草原生态修复投资 500 亿+), 但草学毕业生起薪与农学持平 (一线 5-8 万). 真正高薪的是「牧草育种 + 草原生态修复项目」, 但岗位极少 (全国年招 &lt; 300 人), 985 硕 + 牧草育种/草原生态研究经历才有竞争力. 双非草学毕业生主流去「草业企业 + 县乡草原监理」, 起薪 5-7 万.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 04</div><div class="pit-myth-text">草学出国容易, 留学友好</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">草学出国率 ≤ 5%, 主要去向瓦赫宁根/悉尼/UC Davis 草学/草地生态/草原科学方向, 托福 95+ + 985 本 + 研究经历是门槛. 80% 草学生没出国打算, 「草学出国」是被高估的伪需求.</div></div></div><div class="pit-row"><div class="pit-myth-side"><div class="pit-label">误区 05</div><div class="pit-myth-text">草学 = 蒙牛/伊利, 黄金就业方向</div></div><div class="pit-reality-side"><div class="pit-label">真相</div><div class="pit-reality-text">蒙牛/伊利/现代牧业是草学毕业生主流去向, 校招 50-200 人/家, 起薪 6-10 万, 双非草学可起步. 但研发岗 (牧草育种/草地畜牧营养) 80% 要求 985 硕 + 研究经历, 双非草学做「草业销售 + 牧草种植技术员」是常态, 不是「人人进蒙牛研发」.</div></div></div></div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">四</span>
+        <h2 class="art-title">主要课程</h2>
+      </div>
+      <div class="art-body">
+        <p>下面按年级排列。打 <span style="color: var(--accent); font-weight: 700;">★</span> 的是对找工作有直接影响的硬课.</p>
+      </div>
+      <div class="course-list">
+        <div class="course-row">
+          <div class="course-yr">大一 公共</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 大学英语 (I-IV) · 思想政治理论 (思修/史纲/马原/毛概/习思想) · 体育 (I-IV) · <strong style="color:var(--accent);">★</strong> 高等数学 (B 类, 农林院校微积分) · 无机及分析化学 · 有机化学 · 大学物理 C + 物理实验 · <strong style="color:var(--accent);">★</strong> 计算机基础 (R/SPSS/GIS 入门) · <strong style="color:var(--accent);">★</strong> 形势与政策 + 创业基础</div>
+          <div class="course-tag">公共基础</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三 核心</div>
+          <div class="course-names">植物学 (Botany) · 草地生态学 (Grassland Ecology) · 牧草学 (Forage Science) · 草原保护与建设 (Grassland Protection &amp; Construction) · 牧草育种学 (Forage Breeding) · 草地资源调查规划 (Grassland Resource Survey) · 草地畜牧业 (Grassland Animal Husbandry) · 草坪学 (Turf Science) · 土壤学 (Soil Science) · 植物生理学 (Plant Physiology)</div>
+          <div class="course-tag">专业核心</div>
+        </div><div class="course-row">
+          <div class="course-yr">大三 方向</div>
+          <div class="course-names">中国农业大学 · 牧草育种 + 草地畜牧 (国家牧草改良中心, 苜蓿育种 + 草食动物营养) · 兰州大学 · 草原生态修复 + 草地农业 (草地农业科技学院, 西部草原 + 青藏高原草地生态) · 内蒙古农业大学 · 草原保护 + 草地资源 (内蒙古草原监理共建, 蒙古高原草原保护) · 新疆农业大学 · 草地畜牧 + 牧草种植 (新疆草原生态 + 干旱区牧草) · 四川农业大学 · 草山草坡 + 南方草地 (西南山地草地 + 草食家畜)</div>
+          <div class="course-tag">方向选修</div>
+        </div><div class="course-row">
+          <div class="course-yr">大四 实践</div>
+          <div class="course-names"><strong style="color:var(--accent);">★</strong> 专业实习 (8-12 周, 草原/草业企业/草原监理) · <strong style="color:var(--accent);">★</strong> 毕业论文 / 毕业设计 (牧草育种/草原生态方向) · <strong style="color:var(--accent);">★</strong> 学科竞赛 + 大学生创新创业训练 · <strong style="color:var(--accent);">★</strong> 案例研习 + 项目实战 (草原生态修复项目) · 社会实践 + 志愿服务 (草原保护/草业技术推广)</div>
+          <div class="course-tag">实践环节</div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">五</span>
+        <h2 class="art-title">院校分布</h2>
+      </div>
+      <div class="art-body">
+        <p>按 2025 软科 + 武书连综合排名。<strong>分数线仅供参考</strong>, 录取以教育考试院公告为准.</p>
+        
+      </div>
+      <div class="uni-row">
+          <div class="uni-rank">01</div>
+          <div class="uni-name">中国农业大学</div>
+          <div class="uni-eval uni-eval-a-plus" title="教育部第四/五轮学科评估">A+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">02</div>
+          <div class="uni-name">兰州大学</div>
+          <div class="uni-eval uni-eval-a-plus" title="教育部第四/五轮学科评估">A+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">03</div>
+          <div class="uni-name">内蒙古农业大学</div>
+          <div class="uni-eval uni-eval-b-plus" title="教育部第四/五轮学科评估">B+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">04</div>
+          <div class="uni-name">新疆农业大学</div>
+          <div class="uni-eval uni-eval-b-plus" title="教育部第四/五轮学科评估">B+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">05</div>
+          <div class="uni-name">四川农业大学</div>
+          <div class="uni-eval uni-eval-b-plus" title="教育部第四/五轮学科评估">B+</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">06</div>
+          <div class="uni-name">宁夏大学</div>
+          <div class="uni-eval uni-eval-b" title="教育部第四/五轮学科评估">B</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">07</div>
+          <div class="uni-name">甘肃农业大学</div>
+          <div class="uni-eval uni-eval-b" title="教育部第四/五轮学科评估">B</div>
+          <div class="uni-score">—</div>
+        </div><div class="uni-row">
+          <div class="uni-rank">08</div>
+          <div class="uni-name">青海大学</div>
+          <div class="uni-eval uni-eval-c" title="教育部第四/五轮学科评估">C+</div>
+          <div class="uni-score">—</div>
+        </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">六</span>
+        <h2 class="art-title">头部雇主参考</h2>
+      </div>
+      <div class="art-body">
+        <p>按招聘规模 + 校招起薪排序 (top 12). 5 年趋势线看公司扩张节奏.</p>
+      </div>
+      <div class="co-list">
+        <div class="co-row"><div class="co-info"><div class="co-name">蒙牛乳业 (草食家畜龙头)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">校招 100-300 人<span class="dot">·</span>8-15 万/年, 销售骨干 15-30 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">伊利集团 (草食家畜龙头)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">校招 100-300 人<span class="dot">·</span>8-15 万/年, 销售骨干 15-30 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">国家草原监理/各省草原监理 (事业编)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">国考/省考 50-200 人<span class="dot">·</span>事业编 6-12 万/年, 985/双一流选调黄金</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">中国农业科学院草原研究所 (中监所草原所)<span class="co-tier co-tier-s">S</span></div><div class="co-meta">校招/硕博 30-100 人<span class="dot">·</span>事业编 8-15 万/年, 985 硕门槛</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">现代牧业 (草食家畜龙头)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">校招 50-150 人<span class="dot">·</span>8-12 万/年, 销售骨干 12-25 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">各省/市草原监理/草业局 (事业编/选调)<span class="co-tier co-tier-a">A</span></div><div class="co-meta">省考/选调 50-150 人<span class="dot">·</span>事业编 5-10 万/年, 偏远草原驻地</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">皇氏集团 (草食家畜)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 30-80 人<span class="dot">·</span>8-12 万/年, 销售骨干 12-20 万</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div><div class="co-row"><div class="co-info"><div class="co-name">草种/牧草企业 (克劳沃/北京正道/蒙草生态)<span class="co-tier co-tier-b">B</span></div><div class="co-meta">校招 30-80 人<span class="dot">·</span>草种销售 8-15 万/年, 研发 985 硕</div></div><div class="co-spark-wrap"><svg class="co-spark" viewBox="0 0 50 14" preserveAspectRatio="none"><polyline points="0.0,14.0 12.5,10.5 25.0,7.0 37.5,3.5 50.0,0.0" /></svg></div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">七</span>
+        <h2 class="art-title">薪资分布</h2>
+      </div>
+      <div class="art-body">
+        <p>P25/P50/P75 = 25/50/75 百分位. ≈ 表示估算值. ↗/↘ = 3 年变化.</p>
+      </div>
+      <div class="sal-table">
+        <div class="sal-th">
+          <div class="sal-th-stage">阶段</div>
+          <div class="sal-th-cell">P25</div>
+          <div class="sal-th-cell is-p50">P50 中位</div>
+          <div class="sal-th-cell">P75 高位</div>
+        </div>
+        <div class="sal-tr">
+          <div class="sal-stage">应届生 (一线/西部)<span class="sal-yoy up">↗ 5%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">4.5</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:18%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">6.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:15%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:12%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">3年经验 (草业销售骨干/牧场技术骨干/草原监理科员)<span class="sal-yoy up">↗ 8%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">8.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:32%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">12.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:30%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">17.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:26%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">5年经验 (区域销售经理/牧场场长/草原生态修复项目骨干)<span class="sal-yoy up">↗ 9%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">13.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:52%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">20.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:50%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">28.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:43%;"></span></span></div>
+        </div><div class="sal-tr">
+          <div class="sal-stage">10年+ (蒙牛/伊利高管/中国农科院草原所首席/草业创始人)<span class="sal-yoy up">↗ 8%</span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">25.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell is-p50"><span class="approx">≈</span><span class="sal-cell-num">40.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+          <div class="sal-cell"><span class="approx">≈</span><span class="sal-cell-num">65.0</span><span class="sal-cell-unit">万</span><span class="sal-cell-bar"><span class="sal-cell-fill" style="width:100%;"></span></span></div>
+        </div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">八</span>
+        <h2 class="art-title">主流就业方向</h2>
+      </div>
+      <div class="art-body">
+        <p>8 大就业方向及占比.</p>
+      </div>
+      <div class="emp-list">
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">草食家畜/乳品龙头 (蒙牛/伊利/现代牧业)</div><div class="emp-ratio">25%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:25.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">继续深造 (草学/牧草育种/草原生态硕博)</div><div class="emp-ratio">30%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:30.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">国家/省/市草原监理/草业局 (事业编/选调)</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">中国农科院草原所/省草原研究所 (科研岗)</div><div class="emp-ratio">7%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:7.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">草种/牧草企业 (克劳沃/北京正道/蒙草生态)</div><div class="emp-ratio">8%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:8.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">基层草业技术推广/草原站 (事业编/三支一扶)</div><div class="emp-ratio">5%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:5.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">07</span><div class="emp-name">公务员/选调生 (三不限/草学类/西部定向)</div><div class="emp-ratio">4%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:4.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">08</span><div class="emp-name">自主创业 (草业种植/生态修复/家庭牧场)</div><div class="emp-ratio">3%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:3.0%;"></div></div><div class="emp-desc"></div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">九</span>
+        <h2 class="art-title">深造与就业路径分布</h2>
+      </div>
+      <div class="art-body">
+        <p>毕业生 7 大主流方向占比. 标注的为继续深造路径.</p>
+      </div>
+      <div class="ds-list">
+        <div class="ds-row"><div class="ds-name">国内硕士 (985/双一流 草学/牧草育种/草原生态, 主流就业门槛)</div><div class="ds-bar"><div class="ds-fill" style="--w:100%;"></div></div><div class="ds-pct">30%</div></div><div class="ds-row"><div class="ds-name">直接就业 (草食家畜/草业企业, 校招主流)</div><div class="ds-bar"><div class="ds-fill" style="--w:93%;"></div></div><div class="ds-pct">28%</div></div><div class="ds-row"><div class="ds-name">考公务员/选调生 (草原监理/草业局, 985/双一流选调黄金)</div><div class="ds-bar"><div class="ds-fill" style="--w:60%;"></div></div><div class="ds-pct">18%</div></div><div class="ds-row"><div class="ds-name">中国农科院草原所/省草原所 (科研岗)</div><div class="ds-bar"><div class="ds-fill" style="--w:23%;"></div></div><div class="ds-pct">7%</div></div><div class="ds-row ds-study"><div class="ds-name">国内博士 (牧草育种/草原生态/草地畜牧, 高校教职门槛)</div><div class="ds-bar"><div class="ds-fill" style="--w:20%;"></div></div><div class="ds-pct">6%</div></div><div class="ds-row"><div class="ds-name">草种/牧草企业 (销售+技术)</div><div class="ds-bar"><div class="ds-fill" style="--w:17%;"></div></div><div class="ds-pct">5%</div></div><div class="ds-row"><div class="ds-name">基层草业技术推广/草原站 (事业编)</div><div class="ds-bar"><div class="ds-fill" style="--w:10%;"></div></div><div class="ds-pct">3%</div></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十</span>
+        <h2 class="art-title">学长学姐说</h2>
+      </div>
+      <div class="art-body">
+        <p>选专业之前, 听听真正读过的人是后悔还是庆幸. (前 3 条)</p>
+      </div>
+      <div class="pull-list">
+        <div class="pull">"草学是农学里最对口的西部考公专业。本科兰大草学 + 硕士草原生态, 校招进甘肃省草原监理站做选调生, 事业编 + 8 万起薪 + 兰州. 草学考公竞争比 25-60:1, 远低于经济类. 兰州大学/中国农大是省市草原监理/草业局选调黄金, 985 选调 + 草学背景是真黄金组合. 同学里去蒙牛 12 万, 去西部草原监理 6-8 万, 选调属于中等偏上但稳定, 西部情怀满足."<span class="by">— 兰州大学</span></div><div class="pull">"草学 + 蒙牛/伊利是真对口。本科中国农大草学 + 硕士牧草育种 (跟导师做苜蓿育种}, 校招进蒙牛做草业技术服务, 起薪 10 万, 三年后 18 万+. 蒙牛/伊利/现代牧业校招 100-300 人/家, 双非草学可起步, 销售骨干 15-30 万. 985 硕做研发 20-30 万. 草学不是「种草」, 是用牧草育种 + 草地生态 + 草原修复 + 草地畜牧把 60 亿亩草原变成 14 亿人的生态屏障 + 牛羊肉库."<span class="by">— 中国农业大学</span></div><div class="pull">"内蒙古农大虽是双非, 但草学是行业强校, 校友网络在华北/内蒙古草原系统极强。本科内蒙古农大草学 + 硕士草地生态, 校招进内蒙古草原监理局做选调生, 事业编 + 7 万起薪 + 呼和浩特. 草学是农学里考公最对口的专业之一, 草学考公竞争比 25-60:1. 兰州大学/中国农大是省市草原监理/草业局选调黄金, 内蒙古农大校友在内蒙古草原系统认可度不输部分 211."<span class="by">— 内蒙古农业大学</span></div>
+      </div>
+    </section>
+  <section class="art-sec">
+      <div class="art-head">
+        <span class="art-num">十一</span>
+        <h2 class="art-title">高考选科要求</h2>
+      </div>
+      <div class="art-body">
+        <p>新高考 3+1+2 模式下, 不同选科组合可报院校比例.</p>
+      </div>
+      <div class="xk-list">
+        <div class="xk-row"><div class="xk-head"><span class="xk-num">01</span><div class="xk-info"><div class="xk-name">物理 + 化学 + 生物 (传统理科, 75% 院校可报)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:60%;"></div></div><span class="xk-pct">60%</span></div></div></div><div class="xk-reason">传统理科组合, 草学/农学/生物专业可报, 覆盖广, 化学 + 生物基础必备。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">02</span><div class="xk-info"><div class="xk-name">物理 + 生物 (再选化学或不限)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:20%;"></div></div><span class="xk-pct">20%</span></div></div></div><div class="xk-reason">草学/部分农学方向可报, 化学弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">03</span><div class="xk-info"><div class="xk-name">化学 + 生物 (再选物理或不限)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:10%;"></div></div><span class="xk-pct">10%</span></div></div></div><div class="xk-reason">部分草学方向, 物理弱可走。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">04</span><div class="xk-info"><div class="xk-name">历史 + 地理 + 政治 (文科, 部分草学接受)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">草学是少数接受文科组合的农学专业之一, 适合物理弱考生。</div></div><div class="xk-row"><div class="xk-head"><span class="xk-num">05</span><div class="xk-info"><div class="xk-name">不限选科 (极少数综合评价/中外合作)</div><div class="xk-bar-wrap"><div class="xk-bar"><div class="xk-fill" style="--w:5%;"></div></div><span class="xk-pct">5%</span></div></div></div><div class="xk-reason">极少数综合评价专业, 工科/医学通常不适用。</div></div>
+      </div>
+    </section>
+</article>
+
+<div class="footer-cta">
+  <div class="lead">⌖ 决定了吗</div>
+  <h3>把草业科学加入心愿单</h3>
+  <p id="cta-desc">收藏后, 可在推荐里对照院校位次, 看分数能冲哪所.</p>
+  <a class="cta-btn" id="cta-btn" href="#">
+    <span class="ico" id="cta-ico">♡</span>
+    <span id="cta-text">加入心愿单</span>
+  </a>
+</div>
+
+<footer class="footer-meta">
+  <div class="mark"><span class="dot">●</span> Major Explorer · 2026 · 湖北</div>
+  <div>资料源自教育部 / 软科 2025 / 麦可思 2024 / 校友访谈</div>
+  <div style="margin-top:6px;">分数仅供参考 · 录取以教育考试院公告为准</div>
+</footer>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="../index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="../catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="../recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="../wishlist.html"><span class="ico">♡</span>收藏</a>
+
+<!-- 心愿打分模态框 -->
+<div class="wish-modal" id="wish-modal" hidden>
+  <div class="wish-modal-bg" data-close="1"></div>
+  <div class="wish-modal-card" role="dialog" aria-labelledby="wish-modal-title">
+    <h3 class="wish-modal-title" id="wish-modal-title">给 草业科学 打分</h3>
+    <p class="wish-modal-sub">1-5 星, 后续可在心愿单查看排序</p>
+    <div class="star-row" id="star-row" role="radiogroup" aria-label="评分">
+      <button class="star-btn" data-star="1" aria-label="1 星"><span>★</span></button>
+      <button class="star-btn" data-star="2" aria-label="2 星"><span>★</span></button>
+      <button class="star-btn" data-star="3" aria-label="3 星"><span>★</span></button>
+      <button class="star-btn" data-star="4" aria-label="4 星"><span>★</span></button>
+      <button class="star-btn" data-star="5" aria-label="5 星"><span>★</span></button>
+    </div>
+    <div class="star-hint" id="star-hint">点击星星选择评分</div>
+    <textarea class="wish-comment" id="wish-comment" placeholder="备注 (选填, 例: 看完想再读读课程)"></textarea>
+    <div class="wish-modal-actions">
+      <button class="wish-btn wish-btn-cancel" data-close="1">取消</button>
+      <button class="wish-btn wish-btn-remove" id="wish-remove" hidden>移除出心愿单</button>
+      <button class="wish-btn wish-btn-save" id="wish-save" disabled>保存到心愿单</button>
+    </div>
+  </div>
+</div>
+  <a class="dock-tab" data-tab="me" href="../me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<script>window.__SLUG__ = "prataculture"; window.__TITLE__ = "草业科学";</script>
+<script src="../js/loader.js"></script>
+<script src="../js/dock.js"></script>
+<script src="../js/detail.js"></script>
+<script src="../js/scroll-helpers.js"></script>
+<script>
+  // ───── 滚动进度条 (顶部 2px, 主色) ─────
+  (() => {
+    const bar = document.getElementById('scroll-progress');
+    if (!bar) return;
+    let ticking = false;
+    function update() {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const p = h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0;
+      bar.style.setProperty('--p', p + '%');
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  })();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>
