@@ -164,6 +164,7 @@ footer .data-source { color: #2A4A75; }
 .path-card:hover { border-color: #2A4A75; transform: translateY(-2px); }
 .path-pct { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; color: #0F1F33; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: var(--font-heading); color: #2A4A75; font-size: 0.875rem; margin-top: 8px; }
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 28px 32px 24px; background: rgba(250, 250, 246, 0.55); border: 1px solid rgba(212, 175, 55, 0.25); border-left: 4px solid #D4AF37; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
 .quote:hover { border-left-width: 12px; transform: translateX(4px); }

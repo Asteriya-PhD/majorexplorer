@@ -180,6 +180,8 @@ footer .data-source { color: #999; }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #6B5D43; margin-top: 8px; }
 
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
+
 /* === 学长学姐说 === */
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #D6D2C5; border-left: 4px solid #B83A2A; border-radius: 0 3px 3px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
