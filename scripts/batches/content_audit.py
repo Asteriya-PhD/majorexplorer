@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scf"))
 
-from synth.llm import M3Client  # noqa: E402
+from synth.llm import DeepSeekClient as M3Client  # noqa: E402
 
 CUR = ROOT / "skills/gaokao-major-explorer/data/curated"
 
@@ -76,8 +76,8 @@ def audit_one(client: M3Client, slug: str, title: str, style: str) -> dict:
     if "top_schools" in data_copy and isinstance(data_copy["top_schools"], list):
         data_copy["top_schools"] = data_copy["top_schools"][:10]
     json_str = json.dumps(data_copy, ensure_ascii=False, indent=2)
-    if len(json_str) > 6000:
-        json_str = json_str[:6000] + "\n... (truncated)"
+    if len(json_str) > 12000:
+        json_str = json_str[:12000] + "\n... (truncated)"
 
     prompt = AUDIT_PROMPT.format(title=title, style=style, json_str=json_str)
     payload = client._call({
@@ -127,8 +127,8 @@ def main():
     if args.limit:
         pairs = pairs[:args.limit]
 
-    client = M3Client(enable_thinking=True)
-    print(f"🔍 内容质量审计: {len(pairs)} 篇, auditor=m3, enable_thinking=True")
+    client = M3Client(enable_thinking=False)
+    print(f"🔍 内容质量审计: {len(pairs)} 篇, auditor=deepseek")
     print(f"{'='*80}")
 
     results = []
