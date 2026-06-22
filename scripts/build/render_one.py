@@ -4,11 +4,11 @@ import sys, json
 from pathlib import Path
 
 # Ensure package context
-sys.path.insert(0, str(Path(__file__).parent.parent / "skills" / "gaokao-major-explorer" / "scripts"))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "skills" / "gaokao-major-explorer" / "scripts"))
 
 from v4_styles.render import render_v4  # type: ignore
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).parent.parent.parent
 CURATION = ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
 PUBLIC = ROOT / "public"
 
