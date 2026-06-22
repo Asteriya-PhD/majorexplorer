@@ -152,11 +152,38 @@ section.tab h2 { color: #F8FAFC; }
 section.tab p { color: #F8FAFC; }
 section.tab p.lede { color: #94A3B8; line-break: strict; }
 section.tab h3 { color: #F8FAFC; }
-/* 修复 2026-06-22: cs 主题深色背景, 默认 var(--ink, #1A1A1A) 不可见, 覆盖 12 处 var(--ink) 文字类 */
+/* 修复 2026-06-22: cs 主题深色背景全面 redesign 适配 */
+/* 1. 全局 var(--ink) 浅色 (12 处 fallback #1A1A1A → 浅色) */
 :root { --ink: #F8FAFC; --rule: #1F2937; }
-/* a1b9ebc6 的 !important #1A1A1A 硬编码需要 theme override */
-section.tab .ovv-simple-fit-list li { color: #F8FAFC !important; }
-section.tab .ovv-pit { background: rgba(34, 197, 94, 0.04); border-color: #1F2937; }
+/* 2. fit-check section redesign — 原 is-yes/is-no 用 0.03 浅色 bg 在深主题格格不入 */
+section.tab .ovv-simple-fit-col {
+  padding: 24px 24px 20px; border-radius: 4px;
+  background: rgba(11, 17, 32, 0.4); border: 1px solid #1F2937;
+}
+section.tab .ovv-simple-fit-col.is-yes {
+  border-left: 3px solid #22C55E;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(11, 17, 32, 0.4));
+}
+section.tab .ovv-simple-fit-col.is-no {
+  border-left: 3px solid #F87171;
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08), rgba(11, 17, 32, 0.4));
+}
+section.tab .ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #22C55E; }
+section.tab .ovv-simple-fit-col.is-no .ovv-simple-fit-label { color: #F87171; }
+section.tab .ovv-simple-fit-list li {
+  color: #F8FAFC !important; /* override a1b9ebc6 !important #1A1A1A */
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+/* 3. pit-reality card 背景适配深主题 */
+section.tab .ovv-pit {
+  background: rgba(11, 17, 32, 0.4); border-color: #1F2937;
+}
+section.tab .ovv-pit-reality { color: #F8FAFC; }
+/* 4. lede 段落 (其他 section 标题下小字) */
+section.tab p.lede { color: #94A3B8; }
+section.tab .section-num { color: #22C55E; }
+/* 5. watkermark 背景水印数字 */
+section.tab .watermark { color: #22C55E; opacity: 0.04; }
 footer { background: rgba(11, 17, 32, 0.6); border-top: 1px solid #1F2937; }
 footer .label { color: #22C55E; }
 footer .data-source { color: #94A3B8; }
