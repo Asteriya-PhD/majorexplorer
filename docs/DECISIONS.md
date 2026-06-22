@@ -476,6 +476,110 @@ EdgeOne Pages 的"国内加速优势"在新场景下 = 0。需要在"国内访�
 
 ---
 
+## ADR-021: 删除 FastAPI v0.2.0 MVP 栈
+
+**日期**: 2026-06-22
+**状态**: ✅ 锁定
+**对应**: Phase 3 精简 (PRELAUNCH_CLEANUP_ANALYSIS_2026-06-22.md C5)
+
+### 上下文
+项目从 v0.2.0 "96 志愿推荐 MVP" 转型为 "专业 dashboard + LLM 按需合成"。96 志愿推荐算法已移到 `public/js/recommender.js` 客户端纯 JS 实现, 无 `/api/` 调用。
+
+FastAPI 栈 (`api/` + `core/` + `tests/` + `cli_demo.py` + `frontend/index.html` + `Dockerfile` + `docker-compose.yml` + `DOCKER.md` + `requirements-backend.txt`) 无外部部署, 死代码。
+
+证据:
+- `public/js/recommender.js` 0 个 `fetch('/api/')` 调用
+- `wrangler.toml` + `functions/*.ts` 全无 `api/main.py` / `core/` 引用
+- `api/main.py` 只被 `tests/test_api_pdf.py` 引用
+- `frontend/index.html` 未被任何部署脚本引用
+
+### 决定
+**整栈删除** (8 个顶层条目 + 1 目录):
+- `api/` (main.py + pdf_report.py + __init__.py)
+- `core/` (7 纯函数算法 + __init__.py)
+- `tests/` (9 个 test_*.py + __init__.py, 全测 core/)
+- `cli_demo.py` + `frontend/index.html`
+- `Dockerfile` + `docker-compose.yml` + `DOCKER.md` + `requirements-backend.txt`
+
+`tests/test_3llm_synth.py` 归档到 `scripts/_archive/2026-Q2-prelaunch/` (测 scf.synth 生产路径, LLM 选型实验已出报告)。
+
+### 后果
+- ✅ repo 精简 ~140K 代码 + 4 个根级配置文件 + 1 个目录
+- ✅ 架构清晰: 生产路径只剩 CF Pages + GH Action
+- ✅ `docs/ARCHITECTURE.md` §1-10 重写为当前架构
+- ⚠️ 96 志愿推荐算法失去 Python "参考实现" (客户端 JS 是唯一实现)
+- ⚠️ 未来若要恢复后端推荐, 需重新写 FastAPI (不从历史恢复)
+
+---
+
+## ADR-022: SCF 部署弃用, LLM 合成 100% 走 GH Action
+
+**日期**: 2026-06-22
+**状态**: ✅ 锁定
+**替代**: ADR-012 (SCF 香港地域部署)
+
+### 上下文
+ADR-012 (2026-06-11) 决定 LLM 合成后端走腾讯云 SCF 香港地域。ADR-017 (2026-06-12) 改 CF Pages 后, 实际 LLM 合成由 GH Action cron */1 跑 `scripts/synth_queue_worker.py` 调 `scf/synth/main.py:worker` 作为 Python 模块, 不依赖 SCF 部署。
+
+SCF 部署模板 (`scf/deploy.sh` + `scf/template.yaml`) 孤悬, 无线上实例。
+
+### 决定
+**SCF 部署弃用**:
+- `scf/deploy.sh` + `scf/template.yaml` 归档到 `scf/_archive/`
+- `scf/synth/*.py` (Python 模块) **保留**, GH Action worker 在用
+- LLM 合成 100% 走 GH Action (公开仓库 unlimited minutes)
+
+### 后果
+- ✅ 部署架构简化: CF Pages + GH Action, 无腾讯云依赖
+- ✅ 0 SCF 成本 (免费层也不用了)
+- ✅ D1 队列 + GH Action worker 模式, 冷启动 0 (GH Action runner 每次新)
+- ⚠️ GH Action cron */1 有 2-5min 调度延迟 (repository_dispatch 可消除, CF Pages Function 入队后立即触发)
+- ⚠️ 未来若 SCF 香港地域有独特优势 (如更低延迟), 可恢复部署
+
+---
+
+## ADR-023: 70+ → 475 专业, README 项目结构图同步
+
+**日期**: 2026-06-22
+**状态**: ✅ 锁定
+
+### 上下文
+README.md 仍写 "70+ 个热门本科专业", 但 `public/data/manifest.json` 实际含 475 个 slug, `public/sitemap.xml` 含 485 URL, `public/` 有 499 PC HTML + 488 Mobile HTML。Day 3 Team B 47 篇 + Day 5-27 持续补缺 + LLM 合成, 专业数从 70+ 增长到 475。
+
+项目结构图未提 `functions/` / `migrations/` / `.github/workflows/` (CF Pages + GH Action 架构), 仍提 `core/` (已删)。
+
+### 决定
+- README.md "70+ 个专业" → "475 个专业" (3 处)
+- README.md 项目结构图重写: 删 `core/`, 加 `functions/` + `migrations/` + `.github/workflows/`, 更新 `scf/synth/` 描述
+- `CLAUDE.md` 项目目录速查同步: 删 `deploy_to_public.py` 引用, 删已归档的 `PLAN_day3_team_b_handcode.md` / `PROGRESS_day3_team_b.md`
+
+### 后果
+- ✅ README 与实际对齐
+- ✅ 项目结构图反映 Phase 3 精简后状态
+- ⚠️ "475 个专业" 是动态数字, 未来 LLM 合成会继续增长, 需定期同步
+
+---
+
+## ADR-024: scripts/ 子目录重组延后 (D1 不在 Phase 3 做)
+
+**日期**: 2026-06-22
+**状态**: ⏳ pending
+
+### 上下文
+`scripts/` 顶层 52 个 active .py (Phase 3 归档 37 个后) 仍平铺, 找东西难。D1 建议按职能分子目录 (build/audit/synth/schema-fix/deploy/)。
+
+但 D1 改动大: 50 个脚本移动 + 改 `docs/` 里所有 `scripts/xxx.py` 路径引用 + 改脚本间 `from <module> import` 互引用。
+
+### 决定
+**Phase 3 不做 D1**, 单独立项。Phase 3 只做 C4 归档 (移到 `_archive/`), 顶层保持平铺。
+
+### 后果
+- ✅ Phase 3 风险可控, 不破坏 import
+- ⚠️ `scripts/` 顶层 52 个 .py 仍平铺, 找东西难
+- ⏳ D1 单独立项时, 需同步改 docs 路径引用 + 脚本间 import
+
+---
+
 ## 如何添加新 ADR
 
 ## 如何添加新 ADR

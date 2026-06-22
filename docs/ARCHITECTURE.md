@@ -1,285 +1,265 @@
 # ARCHITECTURE.md — 系统架构
 
-> 给架构师/资深 agent 看的全景。开发日常问题看 `AGENTS.md`;决策动机看 `DECISIONS.md`;数据细节看 `DATA.md`。
+> 给架构师/资深 agent 看的全景。2026-06-22 Phase 3 精简后重写 (FastAPI 栈已删, 详见 DECISIONS.md ADR-021)。
+>
+> 历史版本描述的 `core/` + `api/` FastAPI 96 志愿推荐 MVP 栈已于 2026-06-22 删除。当前产品形态是**专业 dashboard + LLM 按需合成**, 推荐算法在客户端 JS 跑。
 
-## 1. 系统流图(文字版)
+## 1. 系统流图 (文字版)
 
 ```
                           ┌──────────────────────────┐
-                          │     User Input            │
-                          │ rank + 选科 + 体检 + 偏好 │
-                          │ + 省份/年份/科类          │
+                          │     User (高三生/家长)    │
+                          │  PC / Mobile (UA sniff)   │
                           └──────────┬───────────────┘
-                                     │ RecommendRequest (Pydantic)
+                                     │ HTTPS
                                      ▼
-            ┌────────────────────────────────────────────────┐
-            │  core/recommender.recommend(req)               │
-            │  ──────────────────────────────────────────     │
-            │  1. load_admission_table(prov, subj, year)     │
-            │  2. filter_schools (3 层硬过滤)                │
-            │       ├─ 选科 (match_xuanke, mode=自动)        │
-            │       ├─ 体检 (check_medical_constraints)      │
-            │       └─ 学费 (<= max_tuition)                 │
-            │  3. 排除 avoid_schools / avoid_special          │
-            │  4. 算 _city_score (偏好城市加权)              │
-            │  5. estimate_admission_probability (per row)   │
-            │       └─ historical_min_rank (3 年)            │
-            │  6. 算 _layer_score (985/211/普通/专科)        │
-            │  7. sort by _sort_key                          │
-            │     = city·100k + layer·1万 + prob·10          │
-            │  8. 冲/稳/保 top 32/32/32                       │
-            │  9. _build_advice + _build_strategy_note        │
-            │ 10. 拼 RecommendResponse                        │
-            └─────────────┬──────────────────────────────────┘
-                          │
-            ┌─────────────┴─────────────┐
-            ▼                           ▼
-   ┌─────────────────┐         ┌─────────────────┐
-   │  CLI 入口       │         │  FastAPI 入口   │
-   │  cli_demo.py    │         │  api/main.py    │
-   │  (argparse)     │         │  7 endpoints    │
-   └─────────────────┘         └────────┬────────┘
-                                        │
-                          ┌─────────────┴──────────┐
-                          ▼                        ▼
-                  ┌──────────────┐         ┌──────────────┐
-                  │ JSON resp   │         │ PDF resp     │
-                  │ POST        │         │ POST         │
-                  │ /api/recommend│       │ /api/recommend│
-                  │              │         │ /pdf         │
-                  └──────────────┘         └──────────────┘
+                ┌──────────────────────────────────────────┐
+                │  Cloudflare Pages (海外, 优选 IP 30-100ms) │
+                │  ──────────────────────────────────────  │
+                │  functions/_middleware.ts                │
+                │    └─ UA mobile → 302 /m/                │
+                │                                          │
+                │  public/ (499 PC HTML + 488 Mobile HTML) │
+                │    ├─ index.html (主页, SSR 13 学科门类)  │
+                │    ├─ {slug}.html (专业 dashboard)       │
+                │    ├─ m/majors/{slug}.html (Mobile)      │
+                │    ├─ css/ js/ data/                     │
+                │    │   ├─ recommender.js (客户端推荐)     │
+                │    │   ├─ major-search.js (搜索)         │
+                │    │   ├─ wishlist-store.js (心愿单)     │
+                │    │   └─ manifest.json (475 majors)     │
+                │    ├─ sitemap.xml (485 URL)              │
+                │    └─ 404.html (真静态 404)              │
+                │                                          │
+                │  functions/api/ (Pages Functions, TS)    │
+                │    ├─ synth/generate.ts (入队 D1)        │
+                │    ├─ synth/status.ts (查 D1)            │
+                │    ├─ synth/[[slug]].ts (查 done)        │
+                │    └─ report.js (反馈 → GH Issue)        │
+                └─────────────┬────────────────────────────┘
+                              │
+                ┌─────────────┴─────────────┐
+                ▼                           ▼
+       ┌──────────────────┐         ┌──────────────────┐
+       │  Cloudflare D1   │         │  GitHub Action   │
+       │  (synth-jobs)    │         │  cron */1        │
+       │  migrations/     │         │  synth.yml       │
+       │  0001_init.sql   │         │  ↓               │
+       └──────────────────┘         │  synth_queue_    │
+                ▲                   │  worker.py       │
+                │                   │  ↓               │
+                └───────────────────┤  scf/synth/      │
+                                    │  main.py:worker  │
+                                    │  (7 步 pipeline) │
+                                    │  ↓               │
+                                    │  git push → CF   │
+                                    │  Pages 自动部署  │
+                                    └──────────────────┘
+                                             │
+                                             ▼
+                                    ┌──────────────────┐
+                                    │  DeepSeek API    │
+                                    │  (LLM 合成)      │
+                                    └──────────────────┘
 ```
 
 ## 2. 模块依赖图
 
-**codegraph 索引**: 26 文件 364 节点 584 边,7 routes。本节所有行号已通过 `codegraph_node` / `grep` 验证。
-
 ```
-CLI / API
+浏览器 (用户)
     │
-    ├── cli_demo.py:main (L51) ─────────► RecommendRequest (core/recommender.py:L16)
-    │                                         │
-    │                                         ▼
-    │                                   recommend() (L63) ◄── api_recommend (L131), api_recommend_pdf (L143)
-    │                                         │
-    │                              ┌──────────┼──────────┐
-    │                              ▼          ▼          ▼
-    │                       load_admission_  filter_    estimate_admission_
-    │                       table            schools    probability
-    │                       (data_loader     (filter    (probability
-    │                        L50)            L146)      L23)
-    │                              │           │            │
-    │                              │           │            ▼
-    │                              │           │      historical_min_rank
-    │                              │           │      (equivalent L42)
-    │                              │           │            │
-    │                              │           │            ▼
-    │                              │           │      load_admission_table (recursive,
-    │                              │           │      跨年查 2023-2025)
-    │                              │           │
-    │                              │           ▼
-    │                              │     match_xuanke (filter L60)
-    │                              │           │
-    │                              │           ├── get_xuanke_mode (L27) → "3+1+2" / "3+3"
-    │                              │           ├── _match_xuanke_3_plus_1_plus_2 (L82)  ◄── 湖北/广东/江苏
-    │                              │           └── _match_xuanke_3_plus_3 (L104)         ◄── 京/沪/津/浙/鲁/琼
-    │                              │           │
-    │                              │           ▼
-    │                              │     check_medical_constraints (filter L132)
-    │                              │           │
-    │                              │           ▼
-    │                              │     [max_tuition <= req.max_tuition]
-    │                              │
-    │                              └──► ──► RecommendResponse
-    │                                          │
-    │                                          ├── _build_advice (L205)
-    │                                          └── _build_strategy_note (L223)
-    │                                              │
-    │                                              └──► strategy_bonus (strategy L93) [advisory, NOT in sort key]
-
-scripts/ ──fetchers──► data/*.csv  (独立 CLI, 写产物)
-                            │
-                            └───────────► load_admission_table (cached) ◄─── api_recommend / recommend
+    ├── public/js/recommender.js ─► public/data/manifest.json (475 majors)
+    │                                  │
+    │                                  └─► public/data/curated/ (已删, Phase 2)
+    │
+    ├── public/js/major-search.js ─► public/data/manifest.json + 同义词表
+    │
+    └── (未收录专业) → fetch /api/synth/generate
+                              │
+                              ▼
+                    functions/api/synth/generate.ts
+                              │
+                              ▼
+                    D1 synth_jobs (INSERT queued)
+                              │
+                              ▼ (GH Action cron */1 pull)
+                    scripts/synth_queue_worker.py
+                              │
+                              ▼
+                    scf/synth/main.py:worker(run_id, title, slug, style)
+                              │
+                              ├─ scf/synth/validator.py (validate_is_major)
+                              ├─ scf/synth/search.py (search_multi, 4 路 web search)
+                              ├─ scf/synth/prompts.py (route_style + synthesize prompt)
+                              ├─ scf/synth/llm.py (DeepSeek client)
+                              ├─ scf/synth/validator.py (score_quality)
+                              ├─ scf/synth/render_bridge.py (subprocess generate_dashboard.py)
+                              └─ scf/synth/manifest_ops.py (append manifest)
+                              │
+                              ▼
+                    public/{slug}.html + public/m/majors/{slug}.html
+                    + public/data/manifest.json (append)
+                              │
+                              ▼
+                    git add + commit + push (GH Action token)
+                              │
+                              ▼
+                    CF Pages 监到 push → 30s 自动重新部署
 ```
 
 **关键依赖原则**:
-- `core/` 全是纯函数,无 IO,无网络
-- `scripts/` 可写 data,可读 _cache
-- `api/` 只读 data (via data_loader)
-- `tests/` 只通过 `cli_demo` / `recommend` 测试,不直接 mock 内部
-- **`strategy_bonus` 不被 `recommend` 调用进入排序** (ADR-005)— 只 advisory text
+- `public/` 全是静态资源, 客户端 JS 跑推荐算法 (无后端调用)
+- `functions/` 只做入队 + 状态查询 + 反馈, 不跑 LLM
+- `scf/synth/` 是 Python 模块, 被 GH Action 调, 不部署到 SCF (ADR-022)
+- `scripts/` 是工具脚本, build/inject/audit/synth 分类清晰
+- `data/` 是 canonical CSV (投档表 + 一分一段表), `*_real_*` 中间产物已归档
 
 ## 3. 数据流
 
 ```
-外部源                   抓取脚本                  产物
-──────                   ────────                  ────
-gk100.com ──────────────► fetch_admission.py ────► hubei_admission_物理_2025.csv
-eol.cn ─────────────────► fetch_real_data.py ─────► hubei_rank_*.csv
-555edu (135 校) ────────► fetch_555edu_hubei.py ──► hubei_admission_*_2024_real_555edu.csv
-dxsbb.com/6261 ─────────► fetch_dxsbb_6261.py ────► hubei_admission_*_2024_real_dxsbb6261.csv
-硬编码锚点 ─────────────► fetch_2024_2023_anchors.py (in-script dict)
-555edu (2023 校) ───────► fetch_555edu_2023.py ───► hubei_admission_*_2023_real_555edu.csv
-555edu (GD/JS 校) ──────► fetch_555edu_guangdong_jiangsu.py ──► {guangdong,jiangsu}_admission_*.csv
-锚点 + 插值 ────────────► generate_sample_rank_gd_js.py ─────► {guangdong,jiangsu}_rank_*.csv
+外部源                   抓取脚本 (已归档)              产物 (canonical)
+─────                    ────────────────              ─────────────
+gk100.com ──────────────► fetch_admission.py ────────► hubei_admission_物理_2025.csv (已归档脚本)
+eol.cn ─────────────────► fetch_real_data.py ────────► hubei_rank_*.csv
+555edu (135 校) ────────► fetch_555edu_hubei.py ───► hubei_admission_*_2024.csv
+dxsbb.com/6261 ─────────► fetch_dxsbb_6261.py ─────► (合并到 canonical)
+硬编码锚点 ─────────────► fetch_2024_2023_anchors.py
+555edu (GD/JS 校) ──────► fetch_555edu_guangdong_jiangsu.py
 
-合并 ──────────────────► merge_real_2024.py ─────► hubei_admission_*_2024.csv (canonical)
+合并 ──────────────────► merge_real_2024.py ─────► {province}_admission_{subject}_{year}.csv (canonical)
+                                                       (中间产物 *_real_*.csv 已归档到 data/_archive/)
 
-                                  │
-                                  ▼
-                          core/data_loader
-                                  │
-                                  ▼
-                        core/recommender.recommend
-                                  │
-                                  ▼
-                          RecommendResponse / PDF
+                                   │
+                                   ▼
+                           public/data/manifest.json (475 majors)
+                           public/data/colleges.json + school_*.json
+                                   │
+                                   ▼
+                         public/js/recommender.js (客户端跑)
+                         public/js/major-search.js
+                                   │
+                                   ▼
+                         用户看到的 dashboard + 推荐 + 搜索
 ```
 
-## 4. API 表面 (7 endpoints)
+**LLM 合成数据流** (未收录专业):
+```
+用户搜 "治安学" → manifest 无 → fetch /api/synth/generate
+  → D1 queued → GH Action pull → scf/synth 7 步
+  → public/gongzhi-xue.html + manifest append → git push → CF 部署
+```
 
-**codegraph 路由清单** (来自 `codegraph_context` 输出):
+## 4. API 表面 (Cloudflare Pages Functions)
 
 | Method | Path | Handler | 位置 |
 |---|---|---|---|
-| POST | `/api/score-to-rank` | `api_score_to_rank` | `api/main.py:57` |
-| POST | `/api/rank-to-score` | `api_rank_to_score` | `api/main.py:80` |
-| POST | `/api/equivalent` | `api_equivalent` | `api/main.py:103` |
-| GET | `/api/meta` | `api_meta` | `api/main.py:116` |
-| POST | `/api/recommend` | `api_recommend` | `api/main.py:131` |
-| POST | `/api/recommend/pdf` | `api_recommend_pdf` | `api/main.py:143` |
-| GET | `/` | `serve_index` | `api/main.py:179` (仅 frontend/index.html 存在时 mount) |
+| POST | `/api/synth/generate` | `onRequest` | `functions/api/synth/generate.ts` |
+| GET | `/api/synth/status` | `onRequest` | `functions/api/synth/status.ts` |
+| GET | `/api/synth/{slug}` | `onRequest` | `functions/api/synth/[[slug]].ts` |
+| POST | `/api/report` | `onRequest` | `functions/api/report.js` |
+| * | `/*` (UA mobile) | `onRequest` | `functions/_middleware.ts` (302 到 /m/) |
 
-**请求/响应形状** (从 `codegraph_node` 验证):
+**请求/响应形状**:
 
 | Endpoint | Request | Response |
 |---|---|---|
-| `score-to-rank` | `ScoreToRankRequest{province, score, subject, year}` | `ScoreToRankResponse{province, score, rank}` |
-| `rank-to-score` | `RankToScoreRequest{province, rank, subject, year}` | `RankToScoreResponse{province, rank, score}` |
-| `equivalent` | `EquivalentRequest{province, rank, subject}` | `EquivalentResponse{province, rank, subject, equivalent_scores: {year: score}}` (year=2025 硬编码) |
-| `meta` | query `?province=` | `{provinces, subjects, years, xuanke_options, current_province}` |
-| `recommend` | `RecommendRequest` (17 字段 Pydantic) | `RecommendResponse.model_dump()` (404 with fetch-script hint on FileNotFoundError) |
-| `recommend/pdf` | `RecommendRequest` | `application/pdf` (Content-Disposition: `volunteer_report_{prov}_{subj}_{year}.pdf`) |
+| `synth/generate` | `{title, slug?, style?, email?}` | `{run_id, status_url}` (D1 INSERT queued) |
+| `synth/status` | `?run_id=xxx` | `{run_id, status, step, progress, title, slug, output_url?, error?}` |
+| `synth/{slug}` | `?slug=xxx` | `{run_id, status, output_url?}` (查 done) |
+| `report` | `{type, name?, text?, source}` | `{ok, issue_url, number}` (GH Issue) |
 
-**CORS**: `allow_origins=["*"]` (dev only — production 应锁定)
-**Version**: 硬编码 `version="0.2.0"` in `api/main.py`
-
-**CORS**: `allow_origins=["*"]` (dev only — production should lock down)
-**Version**: 硬编码 `version="0.2.0"` in `api/main.py`
-**Filename ASCII mapping**: PDF 文件名用 `prov.replace(" ", "_")` 限制 ASCII
-
-## 5. 多省份 / 多模式架构
-
-```
-CLI / API 请求
-    province="hubei"  →  get_xuanke_mode() → "3+1+2"
-                        load_admission_table("hubei", "历史", 2024) → CSV
-                        filter_schools(df, xuanke, ti_eye, max_tuition, province="hubei")
-                        3+1+2 逻辑: 首选匹配 + 再选任一
-
-    province="beijing" →  get_xuanke_mode() → "3+3"
-                        load_admission_table("beijing", "物理", 2024) → CSV (无则 404)
-                        filter_schools(df, xuanke, ti_eye, max_tuition, province="beijing")
-                        3+3 逻辑: 选考 3 门,专业组要求 "X,Y" (任一) 或 "X+Y" (都需)
+**D1 schema** (`migrations/0001_init.sql`):
+```sql
+CREATE TABLE synth_jobs (
+  run_id TEXT PRIMARY KEY,
+  status TEXT NOT NULL DEFAULT 'queued',  -- queued|running|done|failed|dead
+  step TEXT, progress REAL, title TEXT, slug TEXT, style TEXT, email TEXT,
+  error TEXT, attempts INTEGER, output_url TEXT, html_size INTEGER,
+  quality_score REAL, cost_cny REAL,
+  started_at TEXT, updated_at TEXT, finished_at TEXT, created_at TEXT
+);
 ```
 
-**省份支持矩阵**:
+**Rate limit**: in-memory Map (60s/IP), KV 未绑定 (H12 预留)。
+**CORS**: `Access-Control-Allow-Origin: *` (synth 端点)。
+
+## 5. 多省份 / 多模式 (客户端 JS)
+
+推荐算法在 `public/js/recommender.js` 客户端跑, 无后端调用。
+
+**省份支持矩阵** (数据在 `public/data/` + `data/`):
 
 | 省份 | 模式 | 数据状态 | 备注 |
 |---|---|---|---|
 | 湖北 | 3+1+2 | ✅ 全 (2023-2025 物理+历史) | 生产 |
 | 广东 | 3+1+2 | ⚠️ 2024 锚点级 (~70 行) | |
 | 江苏 | 3+1+2 | ⚠️ 2024 锚点级 (~80 行) | |
-| 北京 | 3+3 | ❌ 无数据,代码 ready | |
-| 上海 | 3+3 | ❌ 无数据,代码 ready | |
-| 天津 | 3+3 | ❌ 无数据,代码 ready | |
-| 浙江 | 3+3 | ❌ 无数据,代码 ready | |
-| 山东 | 3+3 | ❌ 无数据,代码 ready | |
-| 海南 | 3+3 | ❌ 无数据,代码 ready | |
-
-加新省 = 加 `{prov}_rank_*.csv` + `{prov}_admission_*.csv` + 校准 fetcher (见 `docs/DATA.md` 4 步 onboarding)。
+| 北京/上海/天津/浙江/山东/海南 | 3+3 | ❌ 无数据 | 代码 ready |
 
 ## 6. 扩展点
 
-### 加新 endpoint
-- 在 `api/main.py` 现有 7 个后面加
-- 保持 FastAPI 风格 (`@app.post` / `@app.get`)
-- `RecommendRequest` 已 17 字段,新增字段加 Pydantic 校验
+### 加新专业 (静态)
+- 写 `skills/gaokao-major-explorer/data/curated/{slug}.json` (18 字段 schema)
+- 跑 `scripts/render_mobile.py` + `scripts/inject_*.py` 生成 HTML
+- 跑 `scripts/build_sitemap.py` 更新 sitemap
+- 跑 `scripts/smart_audit.py` 验证 ≥7 分
+- git commit + push → CF Pages 自动部署
 
-### 加新模式 (除 3+1+2 / 3+3)
-- 在 `core/filter.py` 加 `PROVINCES_NEWMODE` 集合
-- 加 `match_xuanke_newmode()` 和 `_match_xuanke_newmode()`
-- `filter_schools` 加分支
-- 扩展点已存在,无需改 `recommender` / `data_loader`
+### 加新专业 (LLM 合成)
+- 用户前端搜未收录专业 → POST /api/synth/generate
+- D1 入队 → GH Action cron */1 pull → scf/synth 7 步
+- 自动 git push → CF 部署
 
-### 加新省
-- 4 步 (见 `docs/DATA.md` 新省 onboarding)
+### 加新 Pages Function
+- 在 `functions/api/` 加 `.ts` 文件
+- 遵循现有 `synth/*.ts` 模式 (D1 binding via env.DB)
+- `wrangler.toml` 已配 D1 binding
 
 ### 加新数据源
-- 写新 fetcher 到 `scripts/`
-- 若 schema 不同,加新解析器分支到 `merge_real_2024.py` 的 `normalize()`
-- 若新源权威更高,调整 `merge_real_2024.py` 的 `_priority` dict
+- 写新 fetcher 到 `scripts/` (参考已归档的 `fetch_*.py`)
+- 合并到 canonical `data/{prov}_admission_*.csv`
+- 跑 `scripts/build_all_majors.py` 重建 manifest
 
-## 7. 排序公式 (核心)
+## 7. 排序公式 (客户端 JS)
 
-```python
-_sort_key = (
-    _city_score * 100_000    # 城市偏好 (权重最大,但只 0/1/2)
-  + _layer_score * 10_000    # 学校层次 (主导,985=4, 211=3, 普通=2, 专科=1)
-  + probability * 10         # 概率 (微调,不影响层次)
-)
+`public/js/recommender.js` 客户端跑, 逻辑等效于原 `core/recommender.py` (已删):
+
+```javascript
+_sortKey = cityScore * 100000 + layerScore * 10000 + probScore * 10
+// city: 0/1/2, layer: 985=4/211=3/普通=2/专科=1, prob: 0-1
 ```
 
-**关键**: `strategy_bonus` **不参与排序** (ADR-005)。它只影响 `VolunteerItem.strategy_note` 文字。
+**关键**: `strategyBonus` **不参与排序** (ADR-005), 只影响 `strategyNote` 文字。
 
-## 8. 概率模型 (核心)
+## 8. 概率模型 (客户端 JS)
 
-**codegraph 验证**: 函数 `estimate_admission_probability` 在 `core/probability.py:23`。**实际公式**(从 codegraph 拿到的源码,不是文档里的"应该是什么"):
+`public/js/recommender.js` 实现等效 Gaussian CDF (ADR-004):
 
-```python
-def estimate_admission_probability(student_rank, school_name, group_id, province, subject):
-    hist = historical_min_rank(school_name, group_id, province, subject)
-    if not hist:
-        return {probability: 0.5, category: "稳", warning: "无历史数据"}
-
-    ranks = list(hist.values())
-    min_rank = float(min(ranks))                          # ⚠️ 用 min 不是 median (高考"边缘"语义)
-    median_rank = float(np.median(ranks))
-    std_rank = float(np.std(ranks)) if len(ranks) > 1 else 0
-
-    # 数据 <3 年时 std=0 → 25% min_rank 兜底
-    if std_rank < min_rank * 0.05:
-        std_rank = min_rank * 0.25
-
-    z = (student_rank - min_rank) / std_rank
-    P = 0.5 * (1 + erf((-z + 0.7) / sqrt(2)))              # Gaussian CDF +0.7 偏置
-    category = "冲" if P<0.30 else "稳" if P<0.70 else "保"
-    return {probability, category, historical_ranks, median_rank, std_rank}
+```javascript
+σ = stdRank >= minRank * 0.05 ? stdRank : minRank * 0.25
+z = (studentRank - minRank) / σ
+P = 0.5 * (1 + erf((-z + 0.7) / sqrt(2)))
+category = P < 0.30 ? '冲' : P < 0.70 ? '稳' : '保'
 ```
-
-**实测概率分布** (来自代码注释):
-- 1.0x (student=min_rank) → 0.76 (保)
-- 1.1x → 0.62 (稳)
-- 1.2x → 0.46 (稳)
-- 1.5x → 0.10 (冲)
-
-详见 ADR-004。
 
 ## 9. 已知性能/资源约束
 
-- `load_admission_table` 用 `@lru_cache(maxsize=64)` — 适合 CLI/单次 API,但并发高时可能 OOM
-- `pdf_report` 一次性加载 96 行 + 渲染,A4 单文件,毫秒级
-- fetcher 走 `data/_cache/` GBK 编码,典型 135 校 = 2564 个 HTML 文件 (~200 MB)
+- `public/data/manifest.json` 432 KB, 客户端 fetch 后缓存
+- `public/js/recommender.js` 21 KB, 纯客户端无后端
+- CF Pages 免费层: 5 万次访问/月 + 1GB 存储 (够个人站)
+- D1 免费层: 5M reads/天 + 100K writes/天 (synth 队列够用)
+- GH Action 公开仓库 unlimited minutes (cron */1 跑 synth worker)
 
 ## 10. 部署形态
 
 | 形态 | 现状 |
 |---|---|
-| 本地 CLI (`cli_demo.py`) | ✅ 工作 |
-| 本地 FastAPI + 静态前端 | ✅ 工作 (`uvicorn` + `frontend/`) |
-| Docker | ❌ 无 Dockerfile |
-| 生产部署 (gunicorn/nginx) | ❌ 未配置 |
-| 定时数据更新 cron | ✅ `scripts/install_cron_6_25.sh` (6/25 高考出分日) |
+| 静态站 (CF Pages) | ✅ 生产, git push 自动部署, 优选 IP 30-100ms |
+| Pages Functions (TS) | ✅ 生产, D1 binding |
+| LLM 合成 (GH Action) | ✅ 生产, cron */1 + repository_dispatch |
+| SCF 部署 (腾讯云) | ❌ 弃用 (ADR-022), 代码保留在 scf/synth/ 作 GH Action 模块 |
+| FastAPI (Docker) | ❌ 删除 (ADR-021), v0.2.0 MVP 遗留 |
+| 本地预览 | `cd public && python3 -m http.server 8000` |
 
 ## 11. OCR 架构规定 (MinerU SDK 锁定) ⭐⭐⭐
 
@@ -295,7 +275,6 @@ def estimate_admission_probability(student_rank, school_name, group_id, province
 | Token 消耗 | - | Flash 模式免 token, VLM 模式需 |
 | 单页速度 | 30-60s (含容器启动) | 15-20s (Flash) |
 | 表格识别 | 需后处理 | `enable_table=True` 直接出 HTML |
-| 代码行数 | scripts/paddleocr_ocr.py ~50 行 | `client.flash_extract(...)` 1 行 |
 
 ### 11.2 唯一 API
 
@@ -321,10 +300,9 @@ r = client.flash_extract(
 )
 
 md = r.markdown                        # 完整 HTML <table>...</table>
-# state=done, err_code, error 也可查
 ```
 
-### 11.3 大 PNG 切 chunk 模板 (必做)
+### 11.3 大 PNG 切 chunk 模板
 
 ```python
 from PIL import Image
@@ -341,34 +319,51 @@ while start < h:
 # 每 part 分别 flash_extract → 合并 HTML → dedup (chunk 重叠)
 ```
 
-### 11.4 适用范围
-
-| 场景 | 数据源 | 走法 |
-|---|---|---|
-| 投档表 PDF (eea.gd 等) | `huaue.com` 镜像 | `flash_extract(page_range, enable_table=True)` |
-| 投档表 PNG 截图 (gk100) | `p1.gk100.com/article/...` | 切 chunk + `flash_extract(is_ocr=True, enable_table=True)` |
-| 考试院 JPG 公告 (jseea) | `jseea.cn/webfile/upload/...jpg` | 优先 XLS, 退化 PNG 切 chunk |
-| 手写 / 复杂版式 | 任意 | MinerU VLM 模式 (需 token, 走 `MinerU.extract` 不是 `flash_extract`) |
-
-### 11.5 反模式 (禁止)
+### 11.4 反模式 (禁止)
 
 - ❌ 新加 `scripts/*_ocr.py` 用 PaddleOCR / Tesseract / EasyOCR
-- ❌ Dockerfile 加 paddleocr target 或 docker-compose ocr profile
+- ❌ Dockerfile 加 paddleocr target 或 docker-compose ocr service
 - ❌ 把 OCR 容器化 (PaddlePaddle 在 Mac 没 wheel, 容器启动慢, 5-10x 慢于 MinerU)
 - ❌ 用 `pdfplumber` / `camelot` 解析表格 (对扫描版 PDF 失效, MinerU 内部已含这些)
 - ❌ 不切 chunk 直接对 567x7922 大 PNG OCR (返空)
 
-### 11.6 模板脚本 (直接复用)
+### 11.5 模板脚本 (已归档, 保留参考)
 
-- `scripts/mineru_eeagd.py` — PDF 分批模板 (20 页/批)
-- `scripts/parse_gk100_hb_2025_phys_full.py` — PNG 切 chunk 模板 (5 chunk → 394 行)
+- `scripts/_archive/2026-Q2-prelaunch/mineru_eeagd.py` — PDF 分批模板 (20 页/批)
+- `scripts/_archive/2026-Q2-prelaunch/parse_gk100_hb_2025_phys_full.py` — PNG 切 chunk 模板 (5 chunk → 394 行)
 
-### 11.7 实测 (2026-06-08)
+### 11.6 实测 (2026-06-08)
 
 - gk100 HB 2025 物理 PNG (567x7922, 1.2MB) 切 5 chunk → 394 行 0 错行
 - eea.gd GD 2024 PDF (29/58 页) → 4500 行 0 错行
 - 全程 ~110s, Flash 模式免 token
 
-### 11.8 升级记录
+## 12. Phase 3 精简后状态 (2026-06-22)
 
-- **2026-06-08**: 删 `scripts/paddleocr_ocr.py` + `scripts/parse_dxsbb_ocr.py`, 删 `Dockerfile` paddleocr target, 删 `docker-compose.yml` paddleocr service. `requirements.txt` 加 `mineru`. 锁定为项目架构级规定.
+详见 `PRELAUNCH_CLEANUP_ANALYSIS_2026-06-22.md` + DECISIONS.md ADR-021/022/023。
+
+**删除**:
+- FastAPI v0.2.0 MVP 栈 (api/ core/ tests/ + cli_demo.py + Dockerfile + docker-compose.yml + DOCKER.md + requirements-backend.txt + frontend/index.html)
+- 5 个 orphan HTML + 30 个 public/data/curated/ + scripts_link 死链
+- scripts/deploy_to_public.py (ROOT bug, 不再用)
+
+**归档**:
+- 37 个历史 scripts → scripts/_archive/2026-Q2-prelaunch/
+- 26 个 data/*_real_*.csv → data/_archive/2026-Q2/
+- scf/deploy.sh + template.yaml → scf/_archive/
+- 16 个 PLAN_day*/HANDOFF docs → docs/_archive/2026-Q2/
+- 2 个 chsi docs + 3 截因子目录 → docs/_archive/2026-Q2/
+
+**保留 (生产路径)**:
+- public/ (499 PC + 488 Mobile HTML + 客户端 JS)
+- functions/ (CF Pages Functions, TS)
+- scf/synth/ (Python 模块, GH Action 跑)
+- scripts/ (52 active: build_sitemap / inject_* / smart_audit / synth_* / backfill_* / fix_* 等)
+- data/ (canonical CSV + audit_registry.json)
+- skills/gaokao-major-explorer/ (478 curated JSON + 491 HTML)
+- docs/ (10 active .md)
+- migrations/ + wrangler.toml + .github/workflows/
+
+**后续待办** (Phase 4, 上线后):
+- D1 scripts/ 子目录重组 (build/audit/synth/schema-fix/deploy/) — 单独立项
+- D3 Mobile/PC 双轨 → 响应式单轨 — 1000 文件重构, 不做

@@ -41,17 +41,23 @@
 gaokao-hubei-mvp/                ← 项目根
 ├── public/                      ← 静态站 (Cloudflare Pages 部署目标)
 │   ├── index.html               ← 主页
-│   ├── {475 slug}.html          ← 精品专业 dashboard
-│   ├── css/, js/, data/         ← 静态资源
-│   ├── sitemap.xml              ← SEO
+│   ├── {475 slug}.html          ← 精品专业 dashboard (PC)
+│   ├── m/majors/{slug}.html     ← 精品专业 dashboard (Mobile)
+│   ├── css/, js/, data/         ← 静态资源 (客户端纯 JS 跑推荐)
+│   ├── sitemap.xml              ← SEO (485 URL)
 │   └── robots.txt               ← SEO
-├── scf/synth/                   ← LLM 按需生成后端 (Python 3.11, 待部署)
-├── data/                        ← 投档表 / 一分一段表
-├── core/                        ← 纯函数算法 (filter / probability / strategy)
-├── scripts/                     ← 工具脚本 (build_sitemap / inject_seo / fetcher)
+├── functions/                   ← Cloudflare Pages Functions (TypeScript)
+│   ├── _middleware.ts           ← 手机 UA → /m/ 自动跳转
+│   └── api/                     ← synth 入队 + status 查询 + report 反馈
+├── scf/synth/                   ← LLM 按需合成 pipeline (Python, GH Action 跑)
+├── migrations/                  ← D1 schema (synth_jobs 队列)
+├── .github/workflows/           ← GH Action cron */1 跑 synth_queue_worker
+├── data/                        ← 投档表 / 一分一段表 (canonical CSV)
+├── scripts/                     ← 工具脚本 (build_sitemap / inject_* / smart_audit / synth_*)
 ├── skills/                      ← Claude skill 化的 prompts + 模板
 ├── docs/                        ← 文档
 ├── deploy/                      ← 部署脚本 (Cloudflare Pages 指南 + 优选 IP)
+├── wrangler.toml                ← CF Pages 配置 + D1 binding
 ├── LICENSE                      ← AGPL-3.0 全文
 ├── TRADEMARK.md                 ← 商标政策
 └── README.md

@@ -83,18 +83,16 @@ python3 scripts/update_audit_registry.py --rebuild
 
 ---
 
-## 7 个已知坑 (避免重复踩)
+## 6 个已知坑 (避免重复踩)
 
-1. **`scripts/deploy_to_public.py` ROOT 写死 `gaokao-hubei-mvp`**, 不能用于本项目.
-   绕过: 手动 `re.sub(r'(src|href)="\.\./\.\./((?:js|css)/[^"]+)"', r'\1="/\2"', src)`
-2. **`scripts/batches/content_audit.py` slug 用文件名**, 不用 JSON 内 slug.
+1. **`scripts/batches/content_audit.py` slug 用文件名**, 不用 JSON 内 slug.
    例: `computational-linguistics.json` → `--slugs computational-linguistics:humanities`
    **批量 (≥10 篇) 用 `scripts/smart_audit.py` 替代**, 不要全量跑 content_audit.
-3. **m3 audit "字段截断" 是显示 bug**, 数据完整即可, 不要因此改.
-4. **m3 audit 评分主观** (同一篇 ±1 分波动), 取多次 audit 平均.
-5. **CC Write 在某些 worktree 会被 revert**, 启动前用 `echo test > file && cat file` 测试.
-6. **session merge 时可能有 working tree 残留** → `git stash` 后再 `git merge --no-ff`.
-7. **C session 习惯性留 "自主创业/其他" 占位 + salary string schema**, 合并后必清理.
+2. **m3 audit "字段截断" 是显示 bug**, 数据完整即可, 不要因此改.
+3. **m3 audit 评分主观** (同一篇 ±1 分波动), 取多次 audit 平均.
+4. **CC Write 在某些 worktree 会被 revert**, 启动前用 `echo test > file && cat file` 测试.
+5. **session merge 时可能有 working tree 残留** → `git stash` 后再 `git merge --no-ff`.
+6. **C session 习惯性留 "自主创业/其他" 占位 + salary string schema**, 合并后必清理.
 
 ---
 
@@ -104,7 +102,7 @@ python3 scripts/update_audit_registry.py --rebuild
 1. Audit Driven (必读 m3 audit issues)
 2. Anti-Pollution 4 Rules (前置必避)
 3. Hand-Write JSON (按专业逐字段, 完整 18 字段 schema)
-4. Render + Deploy (绕过 deploy_to_public.py ROOT bug)
+4. Render + Deploy (wrangler pages deploy public/ 或 git push 自动部署)
 5. Audit Verify (≥7 才继续)
 6. Tier 1/2/3 Retry:
    - Tier 1 (5-10min): 补 weak field
@@ -161,13 +159,11 @@ gaokao-team-b/
 │   ├── scripts/                     # 渲染 + audit 工具
 │   └── SKILL.md                     # 技能定义 (379 行)
 ├── public/                          # 部署镜像 (CF Pages serve)
-├── scripts/                         # deploy_to_public.py 等
+├── scripts/                         # build_sitemap / inject_* / smart_audit / synth_*
 │   └── batches/content_audit.py    # m3 audit 主入口
 ├── test_results/                    # audit 历史 JSON
 ├── docs/
 │   ├── PIPELINE_major_quality.md    # ⭐ 质量流水线 (必读)
-│   ├── PLAN_day3_team_b_handcode.md
-│   ├── PROGRESS_day3_team_b.md
 │   └── DEPLOY_HYBRID.md
 └── .claude/settings.json            # SessionStart hook (自动提醒读 PIPELINE)
 ```
