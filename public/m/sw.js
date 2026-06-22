@@ -3,11 +3,11 @@
  *   - HTML 文档 (text/html, navigation): network-first, 不缓存 (让 CF middleware 处理 302)
  *   - 静态资源 (CSS/JS/PNG/JPG/WOFF): stale-while-revalidate
  *   - 数据 (manifest.json, hierarchy): stale-while-revalidate
- *   - 网络失败 HTML 请求 → fallback 到 /m/offline.html
+ *   - 网络失败 HTML 请求 → fallback 到 /m/offline (CF Pages 308 去掉 .html, 直接缓存最终 URL)
  * 版本号: 改这里强制升级
  */
-const CACHE_NAME = "m-explorer-v3-20260621";
-const OFFLINE_URL = "/m/offline.html";
+const CACHE_NAME = "m-explorer-v3-20260622a";
+const OFFLINE_URL = "/m/offline";
 const SHELL = [
   "/m/",
   "/m/index.html",
@@ -16,7 +16,7 @@ const SHELL = [
   "/m/search.html",
   "/m/wishlist.html",
   "/m/me.html",
-  "/m/offline.html",
+  "/m/offline",
   "/m/manifest.json",
   "/m/css/base.css",
   "/m/css/topbar.css",

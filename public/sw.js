@@ -3,11 +3,11 @@
  *   - HTML 文档: network-first, 不缓存
  *   - 静态资源 (/js/, /css/, /assets/): stale-while-revalidate
  *   - 数据 (/data/): stale-while-revalidate
- *   - HTML 网络失败 → fallback 到 /offline.html
+ *   - HTML 网络失败 → fallback 到 /offline (CF Pages 308 去掉 .html, 直接缓存最终 URL)
  * 版本号: 改这里强制升级
  */
-const CACHE_NAME = "explorer-v1-20260621";
-const OFFLINE_URL = "/offline.html";
+const CACHE_NAME = "explorer-v1-20260622a";
+const OFFLINE_URL = "/offline";
 const SHELL = [
   "/",
   "/index.html",
@@ -16,7 +16,7 @@ const SHELL = [
   "/wishlist.html",
   "/preferences.html",
   "/recommendations.html",
-  "/offline.html",
+  "/offline",
   "/manifest.json",
   "/css/shared.css",
   "/js/data-loader.js",

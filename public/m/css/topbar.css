@@ -20,8 +20,9 @@
   border-bottom: 1px solid transparent;
 }
 .topbar.scrolled { border-bottom-color: var(--line); }
-.top-left  { justify-self: start; display: inline-flex; align-items: center; }
-.top-right { justify-self: end;   display: inline-flex; align-items: center; }
+/* 显式 grid placement: 避免 auto-flow 把 .top-right 放进 col 2 (--notch-w: 0 时塌缩) 导致搜索 icon 漂在中央 */
+.top-left  { grid-column: 1; justify-self: start; display: inline-flex; align-items: center; }
+.top-right { grid-column: 3; justify-self: end;   display: inline-flex; align-items: center; }
 
 /* ─── v2 detail: 6 列 ─── */
 .topbar.is-detail {
