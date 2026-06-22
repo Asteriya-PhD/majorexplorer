@@ -8,9 +8,9 @@
 # 流程:
 #   - checkout 仓库
 #   - 设 DEEPSEEK_API_KEY from secret
-#   - python scripts/synth_queue_worker.py
+#   - python scripts/synth/synth_queue_worker.py
 #     - 拉 D1 status='queued' 排头 1 个
-#     - 跑 synth_trigger.py 1 篇 (~5-15min)
+#     - 跑 scripts/synth/synth_trigger.py 1 篇 (~5-15min)
 #     - 自动写 public/{slug}.html + manifest.json
 #     - 自动 git add + commit + push (用 GH Actions token)
 #   - CF Pages 监到 push → 30s 自动重新部署
@@ -83,14 +83,14 @@ jobs:
           echo "=== synth worker start: $(date -Iseconds) ==="
           if [ -n "${RUN_TITLE:-}" ]; then
             echo "workflow_dispatch 模式: title=$RUN_TITLE slug=$RUN_SLUG"
-            python scripts/synth_trigger.py \
+            python scripts/synth/synth_trigger.py \
               --title "$RUN_TITLE" \
               --slug "${RUN_SLUG:-}"
             # workflow_dispatch 模式下不自动 push, 用户 review 后手动 push
             exit 0
           fi
           # 正常模式: 跑 worker, 内部会 claim next + 跑 synth + push
-          python scripts/synth_queue_worker.py
+          python scripts/synth/synth_queue_worker.py
           echo "=== synth worker end ==="
 
       - name: Auto-commit + push (if changed)

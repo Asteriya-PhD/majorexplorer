@@ -33,12 +33,12 @@ warn_only=0
 # ─────────────────────────────────────────────
 echo ""
 echo -e "${BLUE}[1/3] 检查 curated/ 5 字段 (discipline/sub_discipline/menjia_moe/menjia_name/theme_color)${NC}"
-if python3 scripts/backfill_manifest_fields.py --check 2>&1 | tail -10; then
-  if python3 scripts/backfill_manifest_fields.py --check --json 2>/dev/null | python3 -c "import sys, json; d=json.load(sys.stdin); sys.exit(0 if d['needs_count']==0 else 1)" 2>/dev/null; then
+if python3 scripts/schema-fix/backfill_manifest_fields.py --check 2>&1 | tail -10; then
+  if python3 scripts/schema-fix/backfill_manifest_fields.py --check --json 2>/dev/null | python3 -c "import sys, json; d=json.load(sys.stdin); sys.exit(0 if d['needs_count']==0 else 1)" 2>/dev/null; then
     echo -e "${GREEN}  ✅ 5 字段 100% 填全${NC}"
   else
     echo -e "${RED}  ❌ 有 major 缺 5 字段${NC}"
-    echo -e "${YELLOW}     修法: python3 scripts/backfill_manifest_fields.py --apply${NC}"
+    echo -e "${YELLOW}     修法: python3 scripts/schema-fix/backfill_manifest_fields.py --apply${NC}"
     failed=1
   fi
 fi
@@ -52,7 +52,7 @@ echo -e "${BLUE}[2/3] L1 启发式 (check_major.py --staged, 6 anti-pollution ru
 STAGED_JSON=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "curated/.*\.json$" | grep -v "manifest.json" || true)
 if [ -n "$STAGED_JSON" ]; then
   # ✅ Day 5 Batch 4 fix: PIPESTATUS 拿 check_major.py 的真实 exit, 不被 tail 0 掩盖
-  python3 scripts/check_major.py --staged 2>&1 | tail -30
+  python3 scripts/audit/check_major.py --staged 2>&1 | tail -30
   L1_EXIT=${PIPESTATUS[0]}
   if [ "$L1_EXIT" -eq 0 ]; then
     echo -e "${GREEN}  ✅ L1 全过 (含 6 anti-pollution: lede/who_fits_no/deep_study/curriculum/xuanke_3plus1plus2/salary_p50)${NC}"
@@ -70,14 +70,14 @@ fi
 # ─────────────────────────────────────────────
 echo ""
 echo -e "${BLUE}[3/3] 检查 manifest 漂移 (curated/ vs public/data/manifest.json)${NC}"
-if python3 scripts/rebuild_manifest.py --check 2>&1 | tail -5 | grep -q "✅ 完全一致"; then
+if python3 scripts/schema-fix/rebuild_manifest.py --check 2>&1 | tail -5 | grep -q "✅ 完全一致"; then
   echo -e "${GREEN}  ✅ manifest 完全同步${NC}"
-elif python3 scripts/rebuild_manifest.py --check 2>&1 | tail -10 | grep -qE "(新增|移除) \("; then
+elif python3 scripts/schema-fix/rebuild_manifest.py --check 2>&1 | tail -10 | grep -qE "(新增|移除) \("; then
   echo -e "${RED}  ❌ manifest 有漂移 (见 rebuild_manifest.py --check 顶部)${NC}"
-  echo -e "${YELLOW}     修法: python3 scripts/rebuild_manifest.py (写入后 git add public/data/manifest.json 重 commit)${NC}"
+  echo -e "${YELLOW}     修法: python3 scripts/schema-fix/rebuild_manifest.py (写入后 git add public/data/manifest.json 重 commit)${NC}"
   failed=1
 else
-  echo -e "${YELLOW}  ⚠️  manifest check 异常, 请手动跑 python3 scripts/rebuild_manifest.py --check${NC}"
+  echo -e "${YELLOW}  ⚠️  manifest check 异常, 请手动跑 python3 scripts/schema-fix/rebuild_manifest.py --check${NC}"
   warn_only=1
 fi
 

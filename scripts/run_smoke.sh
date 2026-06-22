@@ -17,7 +17,7 @@ echo ""
 
 # 跑 fixtures: 期望 4 通过 (3 GOOD + 1 BAD-with-only-WARNING), 1 失败 (BAD CRITICAL), 1 警告 (BAD WARNING)
 # check_major.py --fixtures 退出码: 0=全过, 1=有失败
-python3 scripts/check_major.py --fixtures scripts/smoke_fixtures
+python3 scripts/audit/check_major.py --fixtures scripts/smoke_fixtures
 SMOKE_EXIT=$?
 
 echo ""
@@ -30,7 +30,7 @@ echo "  • smoke_salary_4_finance_BAD    → ⚠️  WARNING 应届 P50=35万�
 echo "  • smoke_salary_5_cs_GOOD        → ✓ 通过 (0 false positive)"
 echo ""
 echo "🔁 何时跑:"
-echo "  1. 新加/改 m3 synth prompt 模板时 (scripts/batch_synth.py)"
+echo "  1. 新加/改 m3 synth prompt 模板时 (scripts/synth/batch_synth.py)"
 echo "  2. 改 check_major.py 任何 anti-pollution 规则时"
 echo "  3. 加新 style 模板校准数据时 (fix_xuanke_salary_batch.py)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
