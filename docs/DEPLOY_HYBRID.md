@@ -29,9 +29,9 @@ Cloudflare D1 (synth-jobs table)
   ↓ 1 分钟 cron claim
 GitHub Action (ubuntu-latest, 20min timeout)
   ↓ SELECT next queued
-Python scripts/synth_queue_worker.py
+Python scripts/synth/synth_queue_worker.py
   ↓ subprocess
-Python scripts/synth_trigger.py (7 步 pipeline)
+Python scripts/synth/synth_trigger.py (7 步 pipeline)
   ↓ 写 public/{slug}.html + manifest.json
 Git auto-commit + push
   ↓ CF Pages 监到 push → 30s 自动重新部署
@@ -219,12 +219,12 @@ done
 | `functions/api/synth/status.ts` | 60 | GET /api/synth/status handler |
 | `functions/api/synth/[[slug]].ts` | 63 | GET /api/synth/{slug} 动态 fallback |
 | `.github/workflows/synth.yml` | 108 | 1min cron + workflow_dispatch |
-| `scripts/synth_queue_worker.py` | ~250 | 拉 D1 → 跑 synth_trigger → 更新状态 |
+| `scripts/synth/synth_queue_worker.py` | ~250 | 拉 D1 → 跑 synth_trigger → 更新状态 |
 
 ## 复用 100% 不动
 
 - `scf/synth/*.py` (10 个文件, 2306 行) — 0 重依赖
-- `scripts/synth_trigger.py` — 7 步 pipeline, 通过 subprocess 调
+- `scripts/synth/synth_trigger.py` — 7 步 pipeline, 通过 subprocess 调
 - 70 精品 HTML + manifest.json
 - `docs/DEPLOYMENT.md` v2 — 原 v2 部署文档, 静态站仍生效
 

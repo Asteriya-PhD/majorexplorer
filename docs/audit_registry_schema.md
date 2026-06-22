@@ -2,8 +2,8 @@
 
 > 单一真相: `data/audit_registry.json` (git tracked)
 > 替代: `test_results/content_audit_*.json` (gitignore, 跨 session 失同步)
-> 写入工具: `scripts/update_audit_registry.py`
-> 消费者: `scripts/smart_audit.py` (Layer 2 路由决策依赖此文件)
+> 写入工具: `scripts/audit/update_audit_registry.py`
+> 消费者: `scripts/audit/smart_audit.py` (Layer 2 路由决策依赖此文件)
 
 ## 解决的问题
 
@@ -81,13 +81,13 @@
 
 ```bash
 # 自动模式: content_audit.py 跑完后
-python3 scripts/update_audit_registry.py --from-file test_results/content_audit_xxx.json
+python3 scripts/audit/update_audit_registry.py --from-file test_results/content_audit_xxx.json
 
 # 批量: 整个目录
-python3 scripts/update_audit_registry.py --from-dir test_results/
+python3 scripts/audit/update_audit_registry.py --from-dir test_results/
 
 # 全量重建 (初始化或 schema 升级)
-python3 scripts/update_audit_registry.py --rebuild
+python3 scripts/audit/update_audit_registry.py --rebuild
 ```
 
 ### 2. smart_audit.py 路由决策 (已接入)
@@ -105,7 +105,7 @@ Layer 2 触发条件:
 
 ```bash
 # 看当前统计
-python3 scripts/update_audit_registry.py --stats
+python3 scripts/audit/update_audit_registry.py --stats
 
 # jq 查 8 分以上但已超过 7 天没 audit 的 (可能 stale)
 jq '.majors | to_entries | map(select(.value.current_score >= 8)) | length' data/audit_registry.json
@@ -117,8 +117,8 @@ jq '.majors["actuarial-science"]' data/audit_registry.json
 ## 集成 checklist
 
 - [x] `data/audit_registry.json` 创建 (从 test_results/ 110 个 content_audit_*.json import)
-- [x] `scripts/update_audit_registry.py` 工具 (--rebuild/--from-file/--from-dir/--from-stdin/--stats)
-- [x] `scripts/smart_audit.py` 优先读 registry, fallback test_results/
+- [x] `scripts/audit/update_audit_registry.py` 工具 (--rebuild/--from-file/--from-dir/--from-stdin/--stats)
+- [x] `scripts/audit/smart_audit.py` 优先读 registry, fallback test_results/
 - [ ] `scripts/batches/content_audit.py` 跑完自动调 update_audit_registry (TODO: 下次 PR, 当前手动)
 - [ ] CLAUDE.md 引用本文件 (TODO: 下次 PR)
 - [ ] 任何 agent 写新 major 后, 跑 `update_audit_registry.py --rebuild` 同步

@@ -2,7 +2,7 @@
 
 > 写于 2026-06-17, 47 篇验证: 平均 7.69/10, 100% ≥7, 64% ≥8.
 > 目标: 后续主题稳定达到 **平均 8.0/10** 水准.
-> 2026-06-18 v1.1: 新增 `scripts/smart_audit.py` 智能混合审计 (Layer 1 启发式 + 智能 Layer 2 LLM), batch 审计从 9.3h/¥140 降到 2-3h/¥40.
+> 2026-06-18 v1.1: 新增 `scripts/audit/smart_audit.py` 智能混合审计 (Layer 1 启发式 + 智能 Layer 2 LLM), batch 审计从 9.3h/¥140 降到 2-3h/¥40.
 > 2026-06-18 v1.2: 新增 m3 audit 升级套路 (修 audit 5-6 硬伤 > 追主观波动), E 阶段 7 篇 7→8/10 验证 3 audit iterations 7.14→7.43→8.00.
 > 2026-06-19 v1.4: 新增 §"在线按需合成 SOP" (CF Pages Function + D1 + GH Action + 跨 provider fallback + rate limit + 失败死信上报), 用户搜未收录专业一键 🔄 实时生成. Session 1-2 实测成功, 端到端验证待 Session 3 Playwright.
 
@@ -12,7 +12,7 @@
 
 **问题**: 老 `scripts/batches/content_audit.py` 全量 LLM 审计 277 篇 ~9.3h / ¥140, 不敢对全量 HTML 跑.
 
-**解法**: `scripts/smart_audit.py` 用 2 层架构:
+**解法**: `scripts/audit/smart_audit.py` 用 2 层架构:
 
 ```
 Layer 1 (100% 跑, 0¥, 1s/篇)
@@ -40,19 +40,19 @@ Layer 2 触发条件 (满足任一):
 
 ```bash
 # 1. 全 277 篇智能路由 (默认推荐)
-python3 scripts/smart_audit.py
+python3 scripts/audit/smart_audit.py
 
 # 2. dry-run: 只列候选, 不真跑 m3
-python3 scripts/smart_audit.py --dry-run
+python3 scripts/audit/smart_audit.py --dry-run
 
 # 3. 只审某 category (eng / law / humanities / ...)
-python3 scripts/smart_audit.py --category eng
+python3 scripts/audit/smart_audit.py --category eng
 
 # 4. 限 N 篇 (快速 sanity check)
-python3 scripts/smart_audit.py --limit 20
+python3 scripts/audit/smart_audit.py --limit 20
 
 # 5. JSON 输出给 pipe (jq / python 二次处理)
-python3 scripts/smart_audit.py --dry-run --json | jq '.candidates[:5]'
+python3 scripts/audit/smart_audit.py --dry-run --json | jq '.candidates[:5]'
 ```
 
 **何时仍用老 `content_audit.py`**:
@@ -76,10 +76,10 @@ python3 scripts/smart_audit.py --dry-run --json | jq '.candidates[:5]'
 
 ```bash
 # Dry-run 先看
-python3 scripts/repair_top_schools_rank.py --dry-run
+python3 scripts/schema-fix/repair_top_schools_rank.py --dry-run
 
 # 真跑 (会写回 JSON)
-python3 scripts/repair_top_schools_rank.py
+python3 scripts/schema-fix/repair_top_schools_rank.py
 ```
 
 **规整规则** (canonical = `"★★★★☆ (A+)"` 星+括号):
@@ -106,9 +106,9 @@ python3 scripts/batches/content_audit.py --slugs <slug>:<style>
 ```bash
 source .env
 # 1. dry-run 看候选
-python3 scripts/smart_audit.py --dry-run
+python3 scripts/audit/smart_audit.py --dry-run
 # 2. 真跑 (只跑 Layer 2 候选, ~30% 总数)
-python3 scripts/smart_audit.py
+python3 scripts/audit/smart_audit.py
 ```
 
 读 audit 输出:
@@ -233,7 +233,7 @@ ENTREPRENEUR_MAP = {
 ```bash
 source .env
 # 全 277 篇智能路由, 只审 30% (~80 篇)
-python3 scripts/smart_audit.py
+python3 scripts/audit/smart_audit.py
 # 验证全部 ≥7, 修不合格篇
 # Push 到 origin
 git push origin day3-team-b
@@ -389,7 +389,7 @@ Fix 2 audit → 8.00/10 ✓
 **自动化校验**:
 ```bash
 # 跑 5 篇 smoke test fixture
-python3 scripts/check_major.py <slug_smoke_1> <slug_smoke_2> ...
+python3 scripts/audit/check_major.py <slug_smoke_1> <slug_smoke_2> ...
 
 # 期望: 0 CRITICAL (xuanke 冲突) + 0 WARNING (P50 > 20万)
 ```
@@ -400,7 +400,7 @@ python3 scripts/check_major.py <slug_smoke_1> <slug_smoke_2> ...
 bash scripts/run_smoke.sh
 
 # 方式 2: 直接调 check_major 的 --fixtures 分支
-python3 scripts/check_major.py --fixtures scripts/smoke_fixtures
+python3 scripts/audit/check_major.py --fixtures scripts/smoke_fixtures
 
 # 调 m3 / DeepSeek 生成新 fixture 时, 用同 --fixtures 校验, 不通过则改 prompt
 ```
@@ -439,8 +439,8 @@ python3 scripts/check_major.py --fixtures scripts/smoke_fixtures
 | 动态 fallback | `functions/api/synth/[[slug]].ts` | ✅ 已实装 (CF Pages rebuild 间隙保护) |
 | D1 客户端 | `functions/api/_synth/d1.ts` | ✅ 已实装 |
 | D1 schema | `migrations/0001_init.sql` | ✅ `synth_jobs` 表 + 2 索引 |
-| Worker 7 步 | `scripts/synth_trigger.py` | ✅ 实装 + 跨 provider fallback (m3 → deepseek) |
-| 队列拉取 | `scripts/synth_queue_worker.py` | ✅ 实装 + dead 时 GH Issue 上报 |
+| Worker 7 步 | `scripts/synth/synth_trigger.py` | ✅ 实装 + 跨 provider fallback (m3 → deepseek) |
+| 队列拉取 | `scripts/synth/synth_queue_worker.py` | ✅ 实装 + dead 时 GH Issue 上报 |
 | GH Action cron | `.github/workflows/synth.yml` | ✅ `*/1`, 20min timeout |
 | Wrangler D1 binding | `wrangler.toml:12-16` | ✅ `database_name="synth-jobs"` |
 
@@ -467,7 +467,7 @@ python3 scripts/check_major.py --fixtures scripts/smoke_fixtures
 | 2 | rate limit (60s/IP) | 防用户刷 slug |
 | 3 | `scf/synth/validator.py:validate` | 18 字段 schema 完整性 |
 | 4 | `scf/synth/llm.py:get_client_with_fallback` | m3 fail 自动降级 deepseek |
-| 5 | `scripts/smart_audit.py` (后续可挂) | 已生成 major 的 m3 audit 复检 |
+| 5 | `scripts/audit/smart_audit.py` (后续可挂) | 已生成 major 的 m3 audit 复检 |
 
 ### 4 道失败降级
 
@@ -489,10 +489,10 @@ python3 scripts/check_major.py --fixtures scripts/smoke_fixtures
 
 ```bash
 # 端到端 1 篇 (skip-search, 单轮)
-python3 scripts/synth_trigger.py --title "翻译" --slug translation --style humanities --skip-search --max-retries 1
+python3 scripts/synth/synth_trigger.py --title "翻译" --slug translation --style humanities --skip-search --max-retries 1
 
 # 端到端 5 篇
-python3 scripts/synth_trigger.py --batch synth_smoke.txt --skip-search
+python3 scripts/synth/synth_trigger.py --batch synth_smoke.txt --skip-search
 ```
 
 ### 已知坑

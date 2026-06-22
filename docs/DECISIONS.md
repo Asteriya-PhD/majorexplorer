@@ -519,7 +519,7 @@ FastAPI 栈 (`api/` + `core/` + `tests/` + `cli_demo.py` + `frontend/index.html`
 **替代**: ADR-012 (SCF 香港地域部署)
 
 ### 上下文
-ADR-012 (2026-06-11) 决定 LLM 合成后端走腾讯云 SCF 香港地域。ADR-017 (2026-06-12) 改 CF Pages 后, 实际 LLM 合成由 GH Action cron */1 跑 `scripts/synth_queue_worker.py` 调 `scf/synth/main.py:worker` 作为 Python 模块, 不依赖 SCF 部署。
+ADR-012 (2026-06-11) 决定 LLM 合成后端走腾讯云 SCF 香港地域。ADR-017 (2026-06-12) 改 CF Pages 后, 实际 LLM 合成由 GH Action cron */1 跑 `scripts/synth/synth_queue_worker.py` 调 `scf/synth/main.py:worker` 作为 Python 模块, 不依赖 SCF 部署。
 
 SCF 部署模板 (`scf/deploy.sh` + `scf/template.yaml`) 孤悬, 无线上实例。
 

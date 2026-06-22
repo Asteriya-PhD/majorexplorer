@@ -47,7 +47,7 @@
   sitemap.xml:   70 <loc> entries (含首页 + 69 详情页)
   ```
 - **修复**: 重新生成 sitemap.xml — 遍历 manifest.json `majors[].slug` 全部加入
-- **文件**: `scripts/build_sitemap.py` (估计存在, 是否在 deploy pipeline 里跑过?)
+- **文件**: `scripts/build/build_sitemap.py` (估计存在, 是否在 deploy pipeline 里跑过?)
 
 ---
 

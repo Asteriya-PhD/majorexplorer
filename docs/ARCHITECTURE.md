@@ -83,7 +83,7 @@
                     D1 synth_jobs (INSERT queued)
                               │
                               ▼ (GH Action cron */1 pull)
-                    scripts/synth_queue_worker.py
+                    scripts/synth/synth_queue_worker.py
                               │
                               ▼
                     scf/synth/main.py:worker(run_id, title, slug, style)
@@ -200,9 +200,9 @@ CREATE TABLE synth_jobs (
 
 ### 加新专业 (静态)
 - 写 `skills/gaokao-major-explorer/data/curated/{slug}.json` (18 字段 schema)
-- 跑 `scripts/render_mobile.py` + `scripts/inject_*.py` 生成 HTML
-- 跑 `scripts/build_sitemap.py` 更新 sitemap
-- 跑 `scripts/smart_audit.py` 验证 ≥7 分
+- 跑 `scripts/build/render_mobile.py` + `scripts/build/inject_*.py` 生成 HTML
+- 跑 `scripts/build/build_sitemap.py` 更新 sitemap
+- 跑 `scripts/audit/smart_audit.py` 验证 ≥7 分
 - git commit + push → CF Pages 自动部署
 
 ### 加新专业 (LLM 合成)
@@ -218,7 +218,7 @@ CREATE TABLE synth_jobs (
 ### 加新数据源
 - 写新 fetcher 到 `scripts/` (参考已归档的 `fetch_*.py`)
 - 合并到 canonical `data/{prov}_admission_*.csv`
-- 跑 `scripts/build_all_majors.py` 重建 manifest
+- 跑 `scripts/build/build_all_majors.py` 重建 manifest
 
 ## 7. 排序公式 (客户端 JS)
 
