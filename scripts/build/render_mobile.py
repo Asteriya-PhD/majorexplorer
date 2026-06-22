@@ -735,7 +735,18 @@ def render_one(slug, data, theme_color, chsi_sat=None, chsi_fallback=None):
     ov2 = data.get("overview_v2", {})
     sec1 = render_overview_v2(ov2)
     # 二·什么人适合 (fit) — 杂志风
-    sec2 = _render_fit_section(ov2.get("fit"))
+    # 兼容 2 种 schema: 老 JSON fit={yes:[],no:[]} 字典 / 新 JSON who_fits_yes/no 顶层 list
+    # 修 2026-06-23 Bug: PC 端 pitfalls 修复后 (commit 481fba9b) overview_v2 字段统一为
+    # who_fits_yes/no list, mobile 仍读 fit 字典 → 488 篇 "适合谁" 整段消失
+    fit_dict = ov2.get("fit")
+    if not isinstance(fit_dict, dict):
+        yes_l = ov2.get("who_fits_yes") or []
+        no_l = ov2.get("who_fits_no") or []
+        if yes_l or no_l:
+            fit_dict = {"yes": list(yes_l), "no": list(no_l)}
+        else:
+            fit_dict = {}
+    sec2 = _render_fit_section(fit_dict)
     # 三·避坑指南 (pitfalls) — 杂志风
     sec3 = _render_pitfalls_section(ov2.get("pitfalls"))
     # 四·主要课程
