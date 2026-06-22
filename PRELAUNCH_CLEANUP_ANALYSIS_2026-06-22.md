@@ -494,18 +494,54 @@ docs/
 └── pwa-tier1-screenshots/       ← 待 Phase 3 决定
 ```
 
-### J.7 Phase 3 待办 (Launch 后 1-2 周立项)
+### J.7 Phase 3 完成 (Launch 后 1-2 周立项, 2026-06-22 执行)
 
-- [ ] **C4**: ~50 个历史 scripts 归档 (fetch_*/merge_*/parse_*/crawl_*/calibrate_*/render_og_*/build_og_image 等)
-- [ ] **C5**: FastAPI 栈整栈删 (api/ + core/ + tests/ + cli_demo.py + frontend/index.html + Dockerfile + docker-compose.yml + DOCKER.md + requirements-backend.txt)
-- [ ] **C6**: scf/deploy.sh + scf/template.yaml 归档到 scf/_archive/
-- [ ] **G5/D6**: data/*_real_*.csv (20+ 个) 归档到 data/_archive/2026-Q2/
-- [ ] **D1**: scripts/ 子目录重组 (build/audit/synth/schema-fix/deploy/) — C4 完成后
-- [ ] **D2**: docs/AGENTS.md 删 + docs/ 重组 (chsi-scraper-design.md / recommender-chsi-ab-report.md 归档; 3 个截图子目录决定)
-- [ ] **E 剩余**: ARCHITECTURE.md 重写 + DECISIONS.md 补 ADR-021+ + CLAUDE.md 删 deploy_to_public.py trap 条目 + AGENTS.md (root) 同步
-- [ ] **deploy_to_public.py**: git rm (用户已确认删)
+| 项 | 动作 | 结果 |
+|---|---|---|
+| C4 | git mv 37 个历史 scripts → scripts/_archive/2026-Q2-prelaunch/ | 37 R, scripts/ 顶层 89 → 52 |
+| C5 | git rm FastAPI 栈 (api/ core/ tests/ + 5 根级文件) | 27 D + 1 R (test_3llm_synth 归档) |
+| C6 | git mv scf/deploy.sh + template.yaml → scf/_archive/ | 2 R |
+| G5/D6 | git mv 26 个 data/*_real_*.csv → data/_archive/2026-Q2/ | 26 R |
+| deploy_to_public | git rm scripts/deploy_to_public.py | 1 D |
+| D2 | git rm docs/AGENTS.md + git mv 2 chsi docs + 3 截因子目录 → docs/_archive/2026-Q2/ | 1 D + 12 R |
+| E | ARCHITECTURE.md 重写 + DECISIONS.md 补 ADR-021~024 + CLAUDE.md/README.md 同步 | 4 M |
 
-### J.8 Phase 4 待办 (上线后再说, 或不做)
+**5 个 commit**:
+- `bab67e01` C4 归档 37 个历史 scripts
+- `9b6dd7cc` C5 删除 FastAPI v0.2.0 MVP 栈
+- `6a69e8f4` C6 SCF 部署归档 + G5 data 中间产物归档 + 删 deploy_to_public.py
+- `b3d29b5a` D2 docs 重组 — 删 AGENTS.md + 归档 chsi docs + 3 截因子目录
+- `6418c23e` E 文档修订 — ARCHITECTURE 重写 + DECISIONS 补 ADR-021~024 + CLAUDE/README 同步
 
+**D1 不在 Phase 3 做** (ADR-024, 单独立项)。
+
+### J.8 Phase 3 后最终状态
+
+```
+gaokao-hubei-mvp/                 (git status clean)
+├── public/                       (499 PC + 488 Mobile HTML, 客户端 JS)
+├── functions/                    (CF Pages Functions, TS)
+├── scf/synth/                    (Python 模块, GH Action 跑)
+├── scf/_archive/                 (deploy.sh + template.yaml 归档)
+├── migrations/                   (D1 schema)
+├── .github/workflows/            (synth.yml cron */1)
+├── data/                         (26 canonical CSV + audit_registry.json)
+├── data/_archive/2026-Q2/        (26 个 *_real_*.csv 中间产物归档)
+├── scripts/                      (52 active .py)
+├── scripts/_archive/2026-Q2-prelaunch/  (38 个历史脚本归档)
+├── scripts/batches/              (content_audit.py 等)
+├── skills/gaokao-major-explorer/ (478 curated JSON + 491 HTML)
+├── docs/                         (10 active .md)
+├── docs/_archive/2026-Q2/        (36 个归档: 16 PLAN/HANDOFF + 2 chsi + 3 截图 + 15 原有)
+├── deploy/                       (cloudflare-pages.md + optimal-cf-ip.sh)
+├── wrangler.toml                 (CF Pages 配置)
+├── README.md / CLAUDE.md / AGENTS.md (root, 精简后同步)
+├── LICENSE / TRADEMARK.md / LEGAL.md
+└── PRELAUNCH_CLEANUP_ANALYSIS_2026-06-22.md (本报告)
+```
+
+### J.9 Phase 4 待办 (上线后再说, 或不做)
+
+- [ ] **D1**: scripts/ 子目录重组 (build/audit/synth/schema-fix/deploy/) — ADR-024, 单独立项
 - [ ] **D3**: Mobile/PC 双轨 → 响应式单轨 (1000 文件重构, 不做)
-- [ ] **A.2**: README 全量重写 (跟随 C5 决策, 可在 Phase 3 同步做)
+- [ ] **A.2**: README 全量重写 (已在 Phase 3 E 同步做, 后续跟随专业数增长定期更新)
