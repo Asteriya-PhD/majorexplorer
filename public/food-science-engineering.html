@@ -406,8 +406,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -654,11 +655,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1092,81 +1095,7 @@ footer .data-source { color: #78716C; }
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
         <div class="curriculum-block fade-up"><div class="curriculum-title">capstone</div>
-          <div class="course"><span class="course-name">毕</span></div>
-          <div class="course"><span class="course-name">业</span></div>
-          <div class="course"><span class="course-name">设</span></div>
-          <div class="course"><span class="course-name">计</span></div>
-          <div class="course"><span class="course-name">通</span></div>
-          <div class="course"><span class="course-name">常</span></div>
-          <div class="course"><span class="course-name">为</span></div>
-          <div class="course"><span class="course-name">某</span></div>
-          <div class="course"><span class="course-name">一</span></div>
-          <div class="course"><span class="course-name">类</span></div>
-          <div class="course"><span class="course-name">食</span></div>
-          <div class="course"><span class="course-name">品</span></div>
-          <div class="course"><span class="course-name">(</span></div>
-          <div class="course"><span class="course-name">乳</span></div>
-          <div class="course"><span class="course-name">制</span></div>
-          <div class="course"><span class="course-name">品</span></div>
-          <div class="course"><span class="course-name">、</span></div>
-          <div class="course"><span class="course-name">肉</span></div>
-          <div class="course"><span class="course-name">制</span></div>
-          <div class="course"><span class="course-name">品</span></div>
-          <div class="course"><span class="course-name">、</span></div>
-          <div class="course"><span class="course-name">饮</span></div>
-          <div class="course"><span class="course-name">料</span></div>
-          <div class="course"><span class="course-name">、</span></div>
-          <div class="course"><span class="course-name">烘</span></div>
-          <div class="course"><span class="course-name">焙</span></div>
-          <div class="course"><span class="course-name">等</span></div>
-          <div class="course"><span class="course-name">)</span></div>
-          <div class="course"><span class="course-name">的</span></div>
-          <div class="course"><span class="course-name">工</span></div>
-          <div class="course"><span class="course-name">厂</span></div>
-          <div class="course"><span class="course-name">工</span></div>
-          <div class="course"><span class="course-name">艺</span></div>
-          <div class="course"><span class="course-name">设</span></div>
-          <div class="course"><span class="course-name">计</span></div>
-          <div class="course"><span class="course-name">或</span></div>
-          <div class="course"><span class="course-name">新</span></div>
-          <div class="course"><span class="course-name">产</span></div>
-          <div class="course"><span class="course-name">品</span></div>
-          <div class="course"><span class="course-name">研</span></div>
-          <div class="course"><span class="course-name">发</span></div>
-          <div class="course"><span class="course-name">,</span></div>
-          <div class="course"><span class="course-name">需</span></div>
-          <div class="course"><span class="course-name">包</span></div>
-          <div class="course"><span class="course-name">含</span></div>
-          <div class="course"><span class="course-name">物</span></div>
-          <div class="course"><span class="course-name">料</span></div>
-          <div class="course"><span class="course-name">衡</span></div>
-          <div class="course"><span class="course-name">算</span></div>
-          <div class="course"><span class="course-name">、</span></div>
-          <div class="course"><span class="course-name">设</span></div>
-          <div class="course"><span class="course-name">备</span></div>
-          <div class="course"><span class="course-name">选</span></div>
-          <div class="course"><span class="course-name">型</span></div>
-          <div class="course"><span class="course-name">、</span></div>
-          <div class="course"><span class="course-name">H</span></div>
-          <div class="course"><span class="course-name">A</span></div>
-          <div class="course"><span class="course-name">C</span></div>
-          <div class="course"><span class="course-name">C</span></div>
-          <div class="course"><span class="course-name">P</span></div>
-          <div class="course"><span class="course-name">风</span></div>
-          <div class="course"><span class="course-name">险</span></div>
-          <div class="course"><span class="course-name">分</span></div>
-          <div class="course"><span class="course-name">析</span></div>
-          <div class="course"><span class="course-name">、</span></div>
-          <div class="course"><span class="course-name">成</span></div>
-          <div class="course"><span class="course-name">本</span></div>
-          <div class="course"><span class="course-name">核</span></div>
-          <div class="course"><span class="course-name">算</span></div>
-          <div class="course"><span class="course-name">等</span></div>
-          <div class="course"><span class="course-name">工</span></div>
-          <div class="course"><span class="course-name">程</span></div>
-          <div class="course"><span class="course-name">环</span></div>
-          <div class="course"><span class="course-name">节</span></div>
-          <div class="course"><span class="course-name">。</span></div>
+          <div class="course"><span class="course-name">毕业设计通常为某一类食品(乳制品、肉制品、饮料、烘焙等)的工厂工艺设计或新产品研发,需包含物料衡算、设备选型、HACCP 风险分析、成本核算等工程环节</span></div>
         </div>
         <div class="curriculum-block fade-up"><div class="curriculum-title">core_courses</div>
           <div class="course"><span class="course-name">食品工程原理</span></div>

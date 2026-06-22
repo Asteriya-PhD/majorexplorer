@@ -407,8 +407,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -655,11 +656,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
