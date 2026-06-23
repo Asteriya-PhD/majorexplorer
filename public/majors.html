@@ -332,6 +332,30 @@
         slugByTitle[m.title] = m.slug;
       });
 
+      // Day 24 fix: 按 title 反查 hierarchy 求真实门类 code
+      // 旧逻辑依赖 manifest.menjia_moe 字段,该字段 34 处错填导致门类精品数显示不准
+      // (例: 哲学门下 4 个精品, 但 menjia_moe=05 导致门类只显示 ✦1)
+      // 回退: 28 个 2026 新增专业的 title 暂未收录进 hierarchy, 此时用 menjia_moe 兜底
+      const curatedByDiscipline = Object.create(null);
+      const seenTitleByHier = Object.create(null);
+      Object.entries(disciplines).forEach(([dcode, d]) => {
+        const subs = d.sub_classes || {};
+        Object.values(subs).forEach((sc) => {
+          (sc.majors || []).forEach((name) => {
+            seenTitleByHier[name] = true;
+            if (slugByTitle[name]) {
+              curatedByDiscipline[dcode] = (curatedByDiscipline[dcode] || 0) + 1;
+            }
+          });
+        });
+      });
+      // 兜底: hierarchy 找不到的孤儿 title 用 menjia_moe (这些是 2026 新增专业)
+      (manifest.majors || []).forEach((m) => {
+        if (seenTitleByHier[m.title]) return;
+        const dcode = m.menjia_moe || '';
+        if (dcode) curatedByDiscipline[dcode] = (curatedByDiscipline[dcode] || 0) + 1;
+      });
+
       // Build title → chsi satisfaction map (e.g. "区块链工程" → 5.0). 493/868 have ratings.
       const satByTitle = Object.create(null);
       (chsiMajors || []).forEach((m) => {
@@ -350,14 +374,6 @@
       const disciplines = hier.门类;
       const codes = Object.keys(disciplines).sort();
 
-      // Day 21.1 fix: 按 menjia_moe 精品计数 (修 hierarchy 命名漂移)
-      const curatedByMenjia = Object.create(null);
-      (manifest.majors || []).forEach((m) => {
-        const code = m.menjia_moe || '';
-        if (!code) return;
-        curatedByMenjia[code] = (curatedByMenjia[code] || 0) + 1;
-      });
-
       // Compute counts
       let totalCurated = 0;
       const dStats = {};
@@ -369,8 +385,8 @@
         Object.values(subs).forEach((sc) => {
           (sc.majors || []).forEach(() => { majorCount += 1; });
         });
-        // 精品按 menjia_moe 算; 但截断到 ≤ majorCount (避免 ✦42 > 28 这种视觉异常)
-        const curatedRaw = curatedByMenjia[code] || 0;
+        // 精品数 = curatedByDiscipline[code]; 截断到 ≤ majorCount (避免 ✦42 > 28 视觉异常)
+        const curatedRaw = curatedByDiscipline[code] || 0;
         const curatedCount = Math.min(curatedRaw, majorCount);
         dStats[code] = { subCount, majorCount, curatedCount };
         totalCurated += curatedCount;
