@@ -262,14 +262,19 @@ def render_fit(fit):
 
 
 def render_pitfalls(pitfalls):
-    """pitfalls = [{myth, reality}, ...] → 杂志风列表"""
+    """pitfalls = [{myth, reality}, ...] → 杂志风列表
+
+    兼容 2 种 key alias:
+      - 标准: {myth, reality}
+      - 别名: {myth, realty} (拼写错误, safety-engineering 早期 7 篇)
+    """
     if not pitfalls:
         return ""
     rows = []
     for i, p in enumerate(pitfalls[:5], 1):
         if isinstance(p, dict):
             myth = p.get("myth", "")
-            reality = p.get("reality", "")
+            reality = p.get("reality") or p.get("realty") or ""
         else:
             myth, reality = "", str(p)
         if not (myth or reality):
@@ -542,12 +547,40 @@ def render_quote(quote_data, title=""):
 
 
 def render_companies(companies):
-    """top_companies = [{name, sparkline, headcount, salary, tier}] → 头部雇主 (tier=S/A/B top 12)"""
+    """top_companies = [{name, sparkline, headcount, salary, tier}] → 头部雇主 (tier=S/A/B top 12)
+
+    兼容 2 种 key alias:
+      - 标准: {name, sparkline, headcount, salary, tier}
+      - 别名: {company, position, salary_range, note} (公管/公务员类常错用)
+        映射: company→name, position→headcount, salary_range→salary, note→(拼接)
+    """
     if not companies:
         return ""
     tier_order = {"S": 0, "A": 1, "B": 2, "C": 3}
+    # 先做 alias 规整
+    normalized = []
+    for c in companies:
+        if not isinstance(c, dict):
+            continue
+        item = dict(c)
+        if "name" not in item and "company" in item:
+            item["name"] = item["company"]
+        if "headcount" not in item and "position" in item:
+            item["headcount"] = item["position"]
+        if "salary" not in item and "salary_range" in item:
+            item["salary"] = item["salary_range"]
+        # tier 缺失时按 position 字段推断 (S=部委/A=大企/B=其他)
+        if "tier" not in item:
+            pos = (item.get("position") or "") + (item.get("name") or "")
+            if any(kw in pos for kw in ["部委", "国", "国务院", "选调生", "国考"]):
+                item["tier"] = "S"
+            elif any(kw in pos for kw in ["央企", "大企", "集团", "总部"]):
+                item["tier"] = "A"
+            else:
+                item["tier"] = "B"
+        normalized.append(item)
     sorted_co = sorted(
-        [c for c in companies if isinstance(c, dict)],
+        normalized,
         key=lambda c: tier_order.get(c.get("tier", "C"), 4)
     )
     rows = []

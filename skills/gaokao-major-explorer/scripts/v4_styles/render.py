@@ -409,16 +409,28 @@ def get_discipline_css() -> str:
 
 
 def _coerce_named(items, name_key: str = "name"):
-    """Normalize each item: dict→as-is, str→{name_key: str}, drop empty/non-str-or-dict.
+    """Normalize each item: dict→as-is (with alias), str→{name_key: str}, drop empty.
 
     Defensive shim for schemas where top_schools/top_companies/alumni_quotes/etc.
     come back as bare-string lists (LLM drift) — code downstream calls `.get(...)`
     and would otherwise crash.
+
+    For top_companies only: also remap {company→name, position→headcount,
+    salary_range→salary} so the public-affairs management schema (which uses
+    {company, position, salary_range, note}) renders correctly.
     """
     out = []
     for it in items or []:
         if isinstance(it, dict):
-            out.append(it)
+            normalized = dict(it)
+            if name_key == "name":
+                if "name" not in normalized and "company" in normalized:
+                    normalized["name"] = normalized["company"]
+                if "headcount" not in normalized and "position" in normalized:
+                    normalized["headcount"] = normalized["position"]
+                if "salary" not in normalized and "salary_range" in normalized:
+                    normalized["salary"] = normalized["salary_range"]
+            out.append(normalized)
         elif isinstance(it, str) and it.strip():
             out.append({name_key: it.strip()})
     return out

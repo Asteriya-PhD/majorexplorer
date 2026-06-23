@@ -108,7 +108,8 @@ def render_pitfalls_v2(data: dict) -> str:
     for i, p in enumerate(pitfalls, 1):
         if isinstance(p, dict):
             myth = p.get("myth", "")
-            reality = p.get("reality", "")
+            # 兼容拼写错误别名: realty (早期 safety-engineering 7 篇用错)
+            reality = p.get("reality") or p.get("realty") or ""
         else:
             myth = str(p)
             reality = ""
