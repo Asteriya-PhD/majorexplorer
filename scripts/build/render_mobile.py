@@ -594,7 +594,13 @@ def render_companies(companies):
 
 
 def render_xuanke(xuanke_list):
-    """xuanke_req_list = [{name, course, pct, reason}] → 选科要求"""
+    """xuanke_req_list = [{name, course, pct, reason}] → 选科要求
+
+    reason 字段兼容 3 种 schema:
+      - str  (e.g. "医学类主流组合, 涵盖解剖...")
+      - bool (True/False — 表示是否必选; 渲染时跳过, 不显示字面 True/False)
+      - None (无说明)
+    """
     if not xuanke_list:
         return ""
     rows = []
@@ -603,7 +609,9 @@ def render_xuanke(xuanke_list):
             continue
         name = x.get("name", "")
         pct = x.get("pct", 0)
-        reason = x.get("reason", "")
+        raw_reason = x.get("reason", "")
+        # 只在 reason 是非空字符串时显示; bool/None 都跳过
+        reason = raw_reason if isinstance(raw_reason, str) and raw_reason.strip() else ""
         rows.append(
             f'<div class="xk-row">'
             f'<div class="xk-head">'
@@ -878,8 +886,14 @@ def main():
         sys.exit(1)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--slug", help="仅渲染单个 slug (e.g. tcm-orthopedics)")
+    args, _unknown = parser.parse_known_args()
+
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    slugs = [m["slug"] for m in manifest["majors"]]
+    all_slugs = [m["slug"] for m in manifest["majors"]]
+    slugs = [args.slug] if args.slug else all_slugs
     styles = {m["slug"]: m.get("style", "cs") for m in manifest["majors"]}
 
     # 满意度字典: sub_discipline (4 位 menjia+subclass) → {name: satisfaction}
