@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 """
-build_sitemap.py — One-shot sitemap generator for Major Explorer.
+build_sitemap.py — Sitemap generator for Major Explorer (production).
 
-Scans skills/gaokao-major-explorer/data/curated/*.html (excluding *-demo.html
-and manifest), and emits sitemap.xml at the project root.
+Reads public/data/manifest.json (single source of truth) and emits
+public/sitemap.xml covering:
+  - Homepage + 6 top-level pages (priority 1.0 / 0.9)
+  - All 616 major detail pages (PC, /<slug>.html) — priority 0.8
+  - 14 mobile top-level pages (m/...) — priority 0.5
+  - 3 legal pages — priority 0.3
+
+Replaces the v1 implementation that read skills/.../curated/ (now legacy).
+Lastmod per URL is the file mtime (most accurate build-time signal).
 
 Usage:
-    python3 scripts/build_sitemap.py
-    python3 scripts/build_sitemap.py --base-url https://example.cn --output sitemap.xml
-
-The base URL default is https://[PLACEHOLDER_DOMAIN] — replace at deploy time.
+    python3 scripts/build/build_sitemap.py
+    python3 scripts/build/build_sitemap.py --base-url https://example.com
+    python3 scripts/build/build_sitemap.py --output /tmp/test.xml
 """
 from __future__ import annotations
 
@@ -17,58 +23,69 @@ import argparse
 import json
 import re
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-CURATED = REPO_ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
+PUBLIC = REPO_ROOT / "public"
+MANIFEST = PUBLIC / "data" / "manifest.json"
 
-DEFAULT_BASE = "https://[PLACEHOLDER_DOMAIN]"
+DEFAULT_BASE = "https://majorexplorer.com"
 
-# Legal / support pages (priority 0.3) — site root paths
+# Top-level pages — priority 0.9
+TOP_PAGES = [
+    "majors.html",
+    "search.html",
+    "wishlist.html",
+    "preferences.html",
+    "recommendations.html",
+]
+
+# Mobile top-level pages — priority 0.5
+MOBILE_PAGES = [
+    "m/index.html",
+    "m/majors.html",
+    "m/search.html",
+    "m/wishlist.html",
+    "m/preferences.html",
+    "m/recommendations.html",
+]
+
+# Legal / support pages — priority 0.3
 LEGAL_PAGES = [
     "privacy.html",
     "terms.html",
     "disclaimer.html",
 ]
 
-# YYYY-MM or YYYY-MM-DD -> YYYY-MM-DD (lastmod); first-of-month for partial dates
-DATE_RE = re.compile(r"^(\d{4})-(\d{2})(?:-(\d{2}))?$")
 
-
-def to_iso_lastmod(raw: str | None) -> str:
-    """Normalize a JSON updated_at string to ISO YYYY-MM-DD."""
-    if not raw:
+def file_mtime_iso(path: Path) -> str:
+    """Return file mtime as YYYY-MM-DD; today if path is missing."""
+    if not path.is_file():
         return date.today().isoformat()
-    m = DATE_RE.match(raw.strip())
-    if not m:
-        return date.today().isoformat()
-    y, mo, d = m.group(1), m.group(2), m.group(3) or "01"
-    return f"{y}-{mo}-{d}"
+    return datetime.fromtimestamp(path.stat().st_mtime).date().isoformat()
 
 
-def collect_major_slugs() -> list[str]:
-    """Return sorted list of curated major slugs (no demo / manifest)."""
-    slugs: list[str] = []
-    for p in sorted(CURATED.glob("*.html")):
-        name = p.stem
-        if name == "manifest" or name.endswith("-demo"):
+def collect_major_slugs() -> list[dict]:
+    """Return [{slug, title}, ...] from public/data/manifest.json.
+
+    Slug ordering matches manifest (MOE codes first, then alpha).
+    """
+    with MANIFEST.open("r", encoding="utf-8") as f:
+        m = json.load(f)
+    out: list[dict] = []
+    for entry in m.get("majors", []):
+        slug = entry.get("slug")
+        if not slug:
             continue
-        slugs.append(name)
-    return slugs
+        out.append({"slug": slug, "title": entry.get("title", slug)})
+    return out
 
 
 def major_lastmod(slug: str) -> str:
-    """Pull updated_at from the matching JSON if present, else today."""
-    j = CURATED / f"{slug}.json"
-    if j.is_file():
-        try:
-            with j.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-            return to_iso_lastmod(data.get("updated_at"))
-        except (OSError, json.JSONDecodeError):
-            pass
-    return date.today().isoformat()
+    """Use the detail HTML mtime (most accurate last-modified signal)."""
+    html = PUBLIC / f"{slug}.html"
+    return file_mtime_iso(html)
 
 
 def _esc(s: str) -> str:
@@ -81,43 +98,57 @@ def _esc(s: str) -> str:
     )
 
 
-def build_sitemap_xml(base: str) -> str:
-    """Render the full sitemap.xml as a string."""
-    lines: list[str] = [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-        # 1. Homepage — priority 1.0
+def _url_block(loc: str, lastmod: str, changefreq: str, priority: str) -> list[str]:
+    return [
         "  <url>",
-        f"    <loc>{_esc(base + '/')}</loc>",
-        f"    <lastmod>{date.today().isoformat()}</lastmod>",
-        "    <changefreq>weekly</changefreq>",
-        "    <priority>1.0</priority>",
+        f"    <loc>{_esc(loc)}</loc>",
+        f"    <lastmod>{lastmod}</lastmod>",
+        f"    <changefreq>{changefreq}</changefreq>",
+        f"    <priority>{priority}</priority>",
         "  </url>",
     ]
 
-    # 2. Curated major pages — priority 0.8
-    for slug in collect_major_slugs():
-        loc = f"{base}/skills/gaokao-major-explorer/data/curated/{slug}.html"
-        lines.extend([
-            "  <url>",
-            f"    <loc>{_esc(loc)}</loc>",
-            f"    <lastmod>{major_lastmod(slug)}</lastmod>",
-            "    <changefreq>monthly</changefreq>",
-            "    <priority>0.8</priority>",
-            "  </url>",
-        ])
 
-    # 3. Legal pages — priority 0.3
+def build_sitemap_xml(base: str) -> str:
+    """Render the full sitemap.xml as a string."""
+    today = date.today().isoformat()
+    lines: list[str] = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+
+    # 1. Homepage — priority 1.0
+    lines.extend(_url_block(f"{base}/", today, "weekly", "1.0"))
+
+    # 2. PC top-level pages — priority 0.9
+    for page in TOP_PAGES:
+        loc = f"{base}/{page}"
+        lines.extend(_url_block(
+            loc, file_mtime_iso(PUBLIC / page), "weekly", "0.9",
+        ))
+
+    # 3. Major detail pages (PC /<slug>.html) — priority 0.8
+    majors = collect_major_slugs()
+    for entry in majors:
+        slug = entry["slug"]
+        loc = f"{base}/{slug}.html"
+        lines.extend(_url_block(
+            loc, major_lastmod(slug), "monthly", "0.8",
+        ))
+
+    # 4. Mobile top-level pages — priority 0.5
+    for page in MOBILE_PAGES:
+        loc = f"{base}/{page}"
+        lines.extend(_url_block(
+            loc, file_mtime_iso(PUBLIC / page), "monthly", "0.5",
+        ))
+
+    # 5. Legal / support pages — priority 0.3
     for page in LEGAL_PAGES:
         loc = f"{base}/{page}"
-        lines.extend([
-            "  <url>",
-            f"    <loc>{_esc(loc)}</loc>",
-            f"    <lastmod>{date.today().isoformat()}</lastmod>",
-            "    <changefreq>yearly</changefreq>",
-            "    <priority>0.3</priority>",
-            "  </url>",
-        ])
+        lines.extend(_url_block(
+            loc, file_mtime_iso(PUBLIC / page), "yearly", "0.3",
+        ))
 
     lines.append("</urlset>")
     return "\n".join(lines) + "\n"
@@ -128,12 +159,12 @@ def main() -> int:
     parser.add_argument(
         "--base-url",
         default=DEFAULT_BASE,
-        help="Base URL prefix (default: placeholder; replace at deploy).",
+        help=f"Base URL prefix (default: {DEFAULT_BASE}).",
     )
     parser.add_argument(
         "--output",
-        default=str(REPO_ROOT / "sitemap.xml"),
-        help="Output path (default: <repo>/sitemap.xml).",
+        default=str(PUBLIC / "sitemap.xml"),
+        help="Output path (default: <repo>/public/sitemap.xml).",
     )
     args = parser.parse_args()
 
@@ -142,17 +173,16 @@ def main() -> int:
     xml = build_sitemap_xml(args.base_url)
     out.write_text(xml, encoding="utf-8")
 
-    # Quick stats from the rendered text
+    # Quick stats
     url_lines = [l for l in xml.splitlines() if l.strip() == "<url>"]
-    majors = sum(1 for l in xml.splitlines() if "/curated/" in l and "<loc>" in l)
-    legal = sum(
-        1 for l in xml.splitlines()
-        if "<loc>" in l and any(p in l for p in LEGAL_PAGES)
-    )
-    home = len(url_lines) - majors - legal
+    majors_count = len(collect_major_slugs())
+    legal_count = len([l for l in xml.splitlines() if "<loc>" in l and any(p in l for p in LEGAL_PAGES)])
+    top_count = len([l for l in xml.splitlines() if "<loc>" in l and any(p in l for p in TOP_PAGES)])
+    mobile_count = len([l for l in xml.splitlines() if "/m/" in l and "<loc>" in l])
     print(
         f"Wrote {out} — {len(url_lines)} URLs "
-        f"(home={home}, majors={majors}, legal={legal})"
+        f"(home=1, top={top_count}, majors={majors_count}, "
+        f"mobile={mobile_count}, legal={legal_count})"
     )
     return 0
 
