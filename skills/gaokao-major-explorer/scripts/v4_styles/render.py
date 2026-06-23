@@ -424,6 +424,29 @@ def _coerce_named(items, name_key: str = "name"):
     return out
 
 
+def _normalize_xuanke(items):
+    """Defensive: 早期 59 篇 JSON 用 {subject, pct, required} 别名 schema.
+    渲染层统一规整为标准 {name, course, pct, reason} 形态.
+    Bug: 城乡规划 (urban-planning) 等 59 篇组合名渲染为空 — Day 28 修.
+    """
+    out = []
+    for it in items or []:
+        if not isinstance(it, dict):
+            continue
+        normalized = dict(it)  # 浅拷贝, 不修改原 dict
+        # subject → name (组合名, e.g. "物理 + 化学 (90% 老八校要求)")
+        if "name" not in normalized and "subject" in normalized:
+            normalized["name"] = normalized["subject"]
+        # required → reason (原因/院校要求, e.g. "全国 90% 院校城乡规划 首选物理")
+        if "reason" not in normalized and "required" in normalized:
+            normalized["reason"] = normalized["required"]
+        # course 兼容: 别名 schema 没 course, 给默认
+        if "course" not in normalized:
+            normalized["course"] = "3+1+2 选科组合"
+        out.append(normalized)
+    return out
+
+
 def _path_item_text(item) -> str:
     """Render one deep_study path-list item — supports dict({name,desc}) or str."""
     if isinstance(item, dict):
@@ -463,7 +486,7 @@ def render_v4(data: dict, style: str) -> str:
     directions = _coerce_named(data.get("employment_direction", []), "name")
     deep_study = data.get("deep_study", {})
     quotes = _coerce_named(_dedup_by_name(data.get("alumni_quotes", []), "current"), "current")
-    xuanke = _coerce_named(data.get("xuanke_req_list", []), "name")
+    xuanke = _normalize_xuanke(data.get("xuanke_req_list", []))
     national_strategy_tags = data.get("national_strategy_tags", [])
 
     # ── 课程 ──

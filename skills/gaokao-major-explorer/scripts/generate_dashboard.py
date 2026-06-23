@@ -1019,7 +1019,7 @@ def render_html(data: dict, style: str) -> str:
     directions = data.get("employment_direction", [])
     deep_study = data.get("deep_study", {})
     quotes = data.get("alumni_quotes", [])
-    xuanke = data.get("xuanke_req_list", [])
+    xuanke = _normalize_xuanke(data.get("xuanke_req_list", []))
     data_source = data.get("data_source", "实时整合")
     updated_at = data.get("updated_at", "2026-06")
 
@@ -1518,6 +1518,7 @@ def generate_dashboard(data: dict, style: str, output_path: str | None = None) -
             print(f"[warn] strategy/discipline inject failed for {data.get('slug', '?')}: {e}")
     elif style in ("cs", "humanities", "administration", "finance", "law", "education", "sci", "eng", "agri", "arts", "gongan", "business"):
         from v4_styles import render_v4
+        from v4_styles.render import _normalize_xuanke
         html = render_v4(data, style)
     else:
         html = render_html(data, style)
