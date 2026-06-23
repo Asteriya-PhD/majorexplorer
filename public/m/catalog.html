@@ -43,6 +43,41 @@
 <meta property="og:image" content="https://majorexplorer.com/og-image.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://majorexplorer.com/m/catalog.html">
+
+  <!-- BEGIN_PLAUSIBLE -->
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-JoO60gAuRbbJLQt8opHkb.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+  <script>
+(function(){
+  if (!window.addEventListener) return;
+  function report(kind, msg, src, ln, col, err) {
+    try {
+      var payload = JSON.stringify({
+        kind: kind, msg: String(msg || '').slice(0, 500),
+        src: src || '', line: ln || 0, col: col || 0,
+        url: location.href, ua: navigator.userAgent
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/report', new Blob([payload], {type: 'application/json'}));
+      } else if (fetch) {
+        fetch('/api/report', {method: 'POST', body: payload, keepalive: true}).catch(function(){});
+      }
+    } catch (e) {}
+  }
+  window.addEventListener('error', function(e){
+    report('error', e.message, e.filename, e.lineno, e.colno, e.error);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    var r = (e && e.reason) || {};
+    report('reject', r.message || r.toString(), '', 0, 0, r);
+  });
+})();
+</script>
+  <!-- END_PLAUSIBLE -->
 </head>
 <body>
 

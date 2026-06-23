@@ -2,17 +2,15 @@
 """
 inject_plausible.py — Inject Plausible Analytics into all top-level public/ pages.
 
-What it does:
-  - Adds <script defer data-domain="<DOMAIN>" src="https://plausible.io/js/script.js">
-    into <head> of every public/*.html + public/m/*.html (not 616 detail pages —
-    those are too numerous; Plausible auto-aggregates).
-  - Adds an error reporter (window.onerror + unhandledrejection → POST /api/report)
-    for client-side bug visibility.
-  - Idempotent: re-runs are no-op if marker comment is present.
+Uses the verbatim Plausible-provided snippet (Pro plan: pa-XXXXX.js custom
+endpoint, NOT the default data-domain pattern). Errors are reported via
+window.onerror + unhandledrejection → POST /api/report (CF Pages function).
+
+Idempotent: re-runs are no-op if marker comment is present.
 
 Usage:
-    python3 scripts/build/inject_plausible.py --domain majorexplorer.com
-    python3 scripts/build/inject_plausible.py --domain majorexplorer.com --dry-run
+    python3 scripts/build/inject_plausible.py
+    python3 scripts/build/inject_plausible.py --dry-run
 """
 from __future__ import annotations
 
@@ -27,13 +25,18 @@ PUBLIC = REPO_ROOT / "public"
 PLAUSIBLE_MARKER = "<!-- BEGIN_PLAUSIBLE -->"
 PLAUSIBLE_END = "<!-- END_PLAUSIBLE -->"
 
-PLAUSIBLE_SCRIPT = (
-    '<script defer data-domain="{domain}" src="https://plausible.io/js/script.js">'
-    '</script>'
-)
+# Plausible Pro plan snippet (verbatim from dashboard, 2026-06-23).
+# Re-derive from dashboard if rotating. Do NOT edit inline.
+PLAUSIBLE_SNIPPET = """\
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-JoO60gAuRbbJLQt8opHkb.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>"""
 
-# Optional error reporter — sends to /api/report if it exists.
-ERROR_REPORTER = """
+# Client-side error reporter — sendBeacon to /api/report (CF Pages function).
+ERROR_REPORTER = """\
 <script>
 (function(){
   if (!window.addEventListener) return;
@@ -59,18 +62,19 @@ ERROR_REPORTER = """
     report('reject', r.message || r.toString(), '', 0, 0, r);
   });
 })();
-</script>
-""".strip()
+</script>"""
 
 
-def build_block(domain: str) -> str:
-    return f"{PLAUSIBLE_MARKER}\n  {PLAUSIBLE_SCRIPT.format(domain=domain)}\n  {ERROR_REPORTER}\n  {PLAUSIBLE_END}"
+def build_block() -> str:
+    return (
+        f"{PLAUSIBLE_MARKER}\n  {PLAUSIBLE_SNIPPET}\n  "
+        f"{ERROR_REPORTER}\n  {PLAUSIBLE_END}"
+    )
 
 
 def list_targets() -> list[Path]:
     """Top-level pages (PC + mobile), excludes 616 detail slugs."""
     out: list[Path] = []
-    # PC top-level
     for name in (
         "index.html", "majors.html", "search.html", "wishlist.html",
         "preferences.html", "recommendations.html", "404.html",
@@ -79,21 +83,18 @@ def list_targets() -> list[Path]:
         p = PUBLIC / name
         if p.is_file():
             out.append(p)
-    # Mobile top-level
     m_dir = PUBLIC / "m"
     if m_dir.is_dir():
         for p in sorted(m_dir.glob("*.html")):
-            # Skip the 586 detail pages (m/majors/*.html)
             if "/m/majors/" in str(p):
                 continue
             out.append(p)
     return out
 
 
-def inject(html: str, domain: str) -> tuple[str, int]:
+def inject(html: str) -> tuple[str, int]:
     """Inject Plausible block. Returns (new_html, byte_delta)."""
-    block = build_block(domain)
-    # Strip existing if any.
+    block = build_block()
     pattern = re.compile(
         r"[ \t]*\n?[ \t]*" + re.escape(PLAUSIBLE_MARKER)
         + r".*?" + re.escape(PLAUSIBLE_END),
@@ -109,12 +110,6 @@ def inject(html: str, domain: str) -> tuple[str, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Inject Plausible analytics + error reporter.",
-    )
-    parser.add_argument(
-        "--domain",
-        required=True,
-        help="Plausible data-domain (e.g. 'majorexplorer.com'). "
-             "Set after registering at plausible.io.",
     )
     parser.add_argument(
         "--dry-run",
@@ -137,7 +132,7 @@ def main() -> int:
             if PLAUSIBLE_MARKER in html:
                 skipped += 1
                 continue
-            new_html, delta = inject(html, args.domain)
+            new_html, delta = inject(html)
             if not args.dry_run:
                 path.write_text(new_html, encoding="utf-8")
             injected += 1
