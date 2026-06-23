@@ -9,13 +9,13 @@
 <link rel="dns-prefetch" href="https://fonts.loli.net">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>🎯</text></svg>">
 <title>志愿推荐 Top 36 · Major Explorer 2026 高考</title>
-<meta name="description" content="冲档拼一拼, 稳档重点关注, 保档稳妥兜底。共 20 张推荐卡, 每张附推荐理由。">
+<meta name="description" content="冲档拼一拼, 稳档重点关注, 保档稳妥兜底。共 36 张推荐卡, 每张附推荐理由。">
   <!-- SEO: canonical + Open Graph -->
   <link rel="canonical" href="https://majorexplorer.com/recommendations.html">
   <meta property="og:url" content="https://majorexplorer.com/recommendations.html">
   <meta property="og:site_name" content="Major Explorer">
   <meta property="og:title" content="志愿推荐 Top 36 · Major Explorer 2026 高考">
-  <meta property="og:description" content="冲档拼一拼, 稳档重点关注, 保档稳妥兜底。共 20 张推荐卡, 每张附推荐理由。">
+  <meta property="og:description" content="冲档拼一拼, 稳档重点关注, 保档稳妥兜底。共 36 张推荐卡, 每张附推荐理由。">
   <meta property="og:type" content="article">
 
 <meta name="robots" content="noindex">
@@ -446,6 +446,10 @@
       // 头部 stats
       const totalShown = result["冲"].length + result["稳"].length + result["保"].length;
       $("#head-title").textContent = "志愿推荐 Top " + totalShown;
+      // 同步更新 <title> 和 og:title, 跟实际渲染数量保持一致
+      document.title = "志愿推荐 Top " + totalShown + " · Major Explorer 2026 高考";
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute("content", "志愿推荐 Top " + totalShown + " · Major Explorer 2026 高考");
       $("#stats-bar").innerHTML = [
         '<div class="stat"><span class="label">位次</span><span class="value num"><em>' + result.stats.user_rank + '</em></span></div>',
         '<div class="stat"><span class="label">分数</span><span class="value num"><em>' + (user.score || "—") + '</em></span></div>',

@@ -294,9 +294,9 @@
       "强稳": 6, "中稳": 6, "弱稳": 4,
       "强保": 4, "中保": 3, "兜底": 1,
     }, opts.subQuotas || {});
-    const topChong = opts.topChong || 6;
-    const topWen = opts.topWen || 8;
-    const topBao = opts.topBao || 6;
+    const topChong = opts.topChong || 12;
+    const topWen = opts.topWen || 16;
+    const topBao = opts.topBao || 8;
 
     const { collegesById, collegesByEid, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms, chsiByEduId } = data;
     if ((!collegesById && !collegesByEid) || !schoolHistory || !groupsLatest || !specialties || !yfyd) {

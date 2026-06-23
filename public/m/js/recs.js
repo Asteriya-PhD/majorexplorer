@@ -313,9 +313,9 @@
     try {
       // 加载 PC 全部数据 (light 295KB + heavy 3.4MB, IDB 缓存后 <200ms)
       const data = await window.DataLoader.loadAll();
-      // 3 档共 20 张: 冲 6 + 稳 8 + 保 6
+      // 3 档共 36 张: 冲 12 + 稳 16 + 保 8
       const result = window.Recommender.recommend(user, data, {
-        topChong: 6, topWen: 8, topBao: 6,
+        topChong: 12, topWen: 16, topBao: 8,
       });
       out.innerHTML = CATS.map(c => renderBucket(c, result[c.key])).join("");
     } catch (e) {
