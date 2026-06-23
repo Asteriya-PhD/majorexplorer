@@ -593,24 +593,58 @@ def render_companies(companies):
     </section>'''
 
 
+def _normalize_xuanke_mobile(items):
+    """统一 4 种 xuanke schema 为标准 {name, course, pct, reason} 形态.
+
+    Schema A (new, 多数):    {name, course, pct, reason}
+    Schema B (Day 28 修 1):  {subject, pct, required}   → subject→name, required→reason
+    Schema C (新发现 17 篇): {combo, pct, note}        → combo→name, note→reason
+    Schema D (新发现 5 篇):  {item, pct, rationale}    → item→name, rationale→reason
+    """
+    out = []
+    for it in items or []:
+        if not isinstance(it, dict):
+            continue
+        normalized = dict(it)
+        # name 字段: 4 种 schema 兼容
+        if "name" not in normalized:
+            for alias in ("subject", "combo", "item"):
+                if alias in normalized:
+                    normalized["name"] = normalized[alias]
+                    break
+        # reason 字段: 4 种 schema 兼容
+        if "reason" not in normalized:
+            for alias in ("required", "note", "rationale"):
+                if alias in normalized:
+                    normalized["reason"] = normalized[alias]
+                    break
+        # course 字段: 缺失时默认
+        if "course" not in normalized:
+            normalized["course"] = "3+1+2 选科组合"
+        out.append(normalized)
+    return out
+
+
 def render_xuanke(xuanke_list):
     """xuanke_req_list = [{name, course, pct, reason}] → 选科要求
 
-    reason 字段兼容 3 种 schema:
-      - str  (e.g. "医学类主流组合, 涵盖解剖...")
-      - bool (True/False — 表示是否必选; 渲染时跳过, 不显示字面 True/False)
-      - None (无说明)
+    兼容 4 种 JSON schema (经 _normalize_xuanke_mobile 规整):
+      - 标准 {name, course, pct, reason}
+      - 别名 {subject, pct, required}   (Day 28 修过的 59 篇)
+      - 别名 {combo, pct, note}         (新发现 17 篇)
+      - 别名 {item, pct, rationale}     (新发现 5 篇)
+    reason 字段兼容 str/bool/None (bool/None 不渲染).
     """
-    if not xuanke_list:
+    normalized = _normalize_xuanke_mobile(xuanke_list)
+    if not normalized:
         return ""
     rows = []
-    for i, x in enumerate(xuanke_list[:6], 1):
+    for i, x in enumerate(normalized[:6], 1):
         if not isinstance(x, dict):
             continue
         name = x.get("name", "")
         pct = x.get("pct", 0)
         raw_reason = x.get("reason", "")
-        # 只在 reason 是非空字符串时显示; bool/None 都跳过
         reason = raw_reason if isinstance(raw_reason, str) and raw_reason.strip() else ""
         rows.append(
             f'<div class="xk-row">'
