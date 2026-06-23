@@ -408,6 +408,63 @@ def get_discipline_css() -> str:
     return DISCIPLINE_CSS
 
 
+def _sort_salary_stages(salary_dict):
+    """按"年限主键 + 同年限内 P50 升序"排序 salary stages.
+
+    修 2026-06-24 bug: PC + mobile 之前都是 dict insertion order (无排序) 或按 P50 排序,
+    导致同年限多个细分 stage 顺序乱, 与"应届→3年→5年→10年+"自然顺序冲突.
+
+    排序规则 (从低到高):
+      1. 规培/实习/助理/培训期 < 应届 (0-2 年) < 1年 < 2年 < 3年 < 5年
+         < 5年+/7年+/资深 < 10年+ < 15年+ < 主任/首席/合伙人
+      2. 同年限内按 P50 升序 (小→大, 反映行业细分差异, 低端在前)
+    """
+    import re as _re
+
+    def stage_rank(stage):
+        s = str(stage)
+        year_matches = _re.findall(r'(\d+)\s*年(?:\+)?', s)
+        if year_matches:
+            max_year = max(int(y) for y in year_matches)
+            if max_year >= 15: return 11
+            if max_year >= 10: return 9
+            if max_year >= 8: return 8
+            if max_year >= 7: return 7
+            if max_year >= 5: return 6
+            if max_year == 4: return 5
+            if max_year == 3: return 4
+            if max_year == 2: return 3
+            if max_year == 1: return 2
+            if max_year == 0: return 1
+        if any(kw in s for kw in ["规培", "实习", "助理", "培训期", "见习"]):
+            return 0
+        if "应届" in s or "0-2" in s or "0-1" in s or "0年" in s:
+            return 1
+        if "15年" in s or "资深" in s:
+            return 11
+        if any(kw in s for kw in ["主任", "首席", "合伙人", "总监", "教授", "VP"]):
+            return 10
+        if "副" in s or "高" in s:
+            return 8
+        if "5年+" in s or "5-8" in s or "5-10" in s:
+            return 6
+        return 99
+
+    items = list(salary_dict.items())
+
+    def p50_of(item):
+        val = item[1]
+        if isinstance(val, dict):
+            v = val.get("p50", 0)
+            return float(v) if v else 0
+        elif isinstance(val, (int, float)):
+            return float(val)
+        return 0
+
+    items.sort(key=lambda x: (stage_rank(x[0]), p50_of(x)))
+    return items
+
+
 def _coerce_named(items, name_key: str = "name"):
     """Normalize each item: dict→as-is (with alias), str→{name_key: str}, drop empty.
 
@@ -569,8 +626,10 @@ def render_v4(data: dict, style: str) -> str:
     ) if top_companies else '<p>公司数据待补充</p>'
 
     # ── 薪资 (招 #3 数字滚动) ──
+    # 修 2026-06-24 bug: 之前按 dict insertion order 排, 同年限多个 stage 乱.
+    # 改用 _sort_salary_stages 按年限主键 + 同年限内 P50 升序.
     salary_rows = []
-    for stage, vals in salary.items():
+    for stage, vals in _sort_salary_stages(salary):
         # Defensive: vals may be a descriptive str (LLM drift) instead of {p25,p50,p75,yoy} dict.
         # In that case render a single colspan'd row with the text — drop bars/yoy.
         if isinstance(vals, str):

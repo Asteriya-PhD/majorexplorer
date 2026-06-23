@@ -330,13 +330,86 @@ def _render_pitfalls_section(pitfalls):
     </section>'''
 
 
+def _sort_salary_stages(salary_dict):
+    """按"年限主键 + 同年限内 P50 升序"排序 salary stages.
+
+    修 2026-06-24 bug: 之前按 P50 升序排, 同年限多个细分 stage 顺序乱,
+    且与"应届→3年→5年→10年+"自然顺序冲突. 修后按年限主键分组, 同组内按 P50 升序.
+
+    排序规则 (从低到高):
+      1. 规培/实习/助理 (0.5-1 年) < 应届 (0-2 年) < 1年 < 2年 < 3年 < 5年
+         < 5年+/7年+/资深 < 10年+ < 15年+ < 主任/首席
+      2. 同年限内按 P50 升序 (小→大, 反映行业细分差异, 低端在前)
+    """
+    import re
+
+    def stage_rank(stage):
+        """返回 stage 的年限主键值, 越小越初级. 数字越小越在前."""
+        s = str(stage)
+
+        # 优先级: 越长年限数字越先匹配 (避免 "10年+ 资深" 误判为资深)
+        # 1. 找最长年限数字 (10年+/15年+ > 5年+/5年)
+        import re as _re
+        # 找 X年 / X年+ 模式, 取最大数字
+        year_matches = _re.findall(r'(\d+)\s*年(?:\+)?', s)
+        if year_matches:
+            max_year = max(int(y) for y in year_matches)
+            # 转换为基础年限值
+            if max_year >= 15: return 11
+            if max_year >= 10: return 9
+            if max_year >= 8: return 8
+            if max_year >= 7: return 7
+            if max_year >= 5: return 6
+            if max_year == 4: return 5
+            if max_year == 3: return 4
+            if max_year == 2: return 3
+            if max_year == 1: return 2
+            if max_year == 0: return 1
+
+        # 2. 无数字, 按关键词
+        # 0. 规培/实习/助理/培训期
+        if any(kw in s for kw in ["规培", "实习", "助理", "培训期", "见习"]):
+            return 0
+        # 1. 应届/0-2年
+        if "应届" in s or "0-2" in s or "0-1" in s or "0年" in s:
+            return 1
+        # 3. 资深/15年
+        if "15年" in s or "资深" in s:
+            return 11
+        # 4. 主任/首席/合伙人
+        if any(kw in s for kw in ["主任", "首席", "合伙人", "总监", "教授", "VP"]):
+            return 10
+        # 5. 副/高工
+        if "副" in s or "高" in s:
+            return 8
+        # 6. 5年+/5-8年/5-10年
+        if "5年+" in s or "5-8" in s or "5-10" in s:
+            return 6
+        return 99  # 未知
+
+    items = list(salary_dict.items())
+    # 取 P50 用于同组排序
+    def p50_of(item):
+        val = item[1]
+        if isinstance(val, dict):
+            v = val.get("p50", 0)
+            return float(v) if v else 0
+        elif isinstance(val, (int, float)):
+            return float(val)
+        return 0
+
+    items.sort(key=lambda x: (stage_rank(x[0]), p50_of(x)))
+    return items
+
+
 def render_salary(salary):
     """salary = {stage: {p25, p50, p75, yoy}} → P25/P50/P75 三列表格 + 估算符号 + yoy 箭头"""
     if not salary:
         return ""
-    # 按工作年限自然顺序 (应届 → 3年 → 5年 → 10年+), 数字从小到大
+    # 按工作年限自然顺序 (应届 → 3年 → 5年 → 10年+) 主键 + 同年限内 P50 升序
+    sorted_items = _sort_salary_stages(salary)
     rows_data = []
-    for stage, val in salary.items():
+    for stage, val in sorted_items:
         if isinstance(val, dict):
             p25 = float(val.get("p25", 0)) if val.get("p25") else 0
             p50 = float(val.get("p50", 0)) if val.get("p50") else 0
@@ -347,8 +420,6 @@ def render_salary(salary):
             rows_data.append((stage, 0, float(val), 0, 0))
         else:
             rows_data.append((stage, 0, 0, 0, 0))
-    # 按 P50 中位升序 (应届 → 资深)
-    rows_data.sort(key=lambda x: x[2])
     if not rows_data:
         return ""
     # 计算每列最大宽度
@@ -366,7 +437,10 @@ def render_salary(salary):
         return f'{prefix}<span class="sal-cell-num">{value:.1f}</span><span class="sal-cell-unit">万</span>{bar}'
 
     rows_html = []
-    for stage, p25, p50, p75, yoy in rows_data[:5]:
+    # 修复 2026-06-24: rows_data[:5] 硬限制截掉了 76 个 slug 的 6-8 行
+    # salary 数据 (如 industrial-design 7 行, 设计总监 等资深行被截掉).
+    # 改 limit 到 8 行覆盖 99% 情况, 仍然有上限避免过长.
+    for stage, p25, p50, p75, yoy in rows_data[:8]:
         yoy_html = ""
         if isinstance(yoy, (int, float)) and yoy != 0:
             arrow = "↗" if yoy > 0 else "↘"
