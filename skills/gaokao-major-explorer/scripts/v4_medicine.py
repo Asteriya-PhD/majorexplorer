@@ -497,6 +497,26 @@ def _dedup_by_name(items: list, key: str = "name") -> list:
         seen.add(k); kept.append(it)
     return kept
 
+
+def _normalize_xuanke(items):
+    """Defensive: 早期 59 篇 JSON 用 {subject, pct, required} 别名 schema.
+    渲染层统一规整为标准 {name, course, pct, reason} 形态.
+    Bug: 城乡规划 (urban-planning) 等 59 篇组合名渲染为空 — Day 28 修.
+    """
+    out = []
+    for it in items or []:
+        if not isinstance(it, dict):
+            continue
+        normalized = dict(it)
+        if "name" not in normalized and "subject" in normalized:
+            normalized["name"] = normalized["subject"]
+        if "reason" not in normalized and "required" in normalized:
+            normalized["reason"] = normalized["required"]
+        if "course" not in normalized:
+            normalized["course"] = "3+1+2 选科组合"
+        out.append(normalized)
+    return out
+
 _SOFT_BREAK_PAT = re.compile(r'(医学院|医学中心|大学|学院|学校|学部)(?=.)')
 def soft_break_name(name: str) -> str:
     if not name:
@@ -531,7 +551,7 @@ def render_v4_medicine(data: dict) -> str:
     directions = data.get("employment_direction", [])
     deep_study = data.get("deep_study", {})
     quotes = _dedup_by_name(data.get("alumni_quotes", []), "current")
-    xuanke = data.get("xuanke_req_list", [])
+    xuanke = _normalize_xuanke(data.get("xuanke_req_list", []))
     timeline = data.get("timeline", [])
 
     # ── vitals (Mayo: 1 个故意 ALERT) ──
