@@ -82,6 +82,27 @@ else
 fi
 
 # ─────────────────────────────────────────────
+# 4. aggregates drift (Day 27+: 数字单一真相)
+# ─────────────────────────────────────────────
+echo ""
+echo -e "${BLUE}[4/4] 检查 aggregates drift (manifest ↔ aggregates.json)${NC}"
+if [ -f public/data/aggregates.json ] && [ -f public/data/manifest.json ]; then
+  AGG_RESULT=$(python3 scripts/build/build_aggregates.py --check 2>&1)
+  AGG_EXIT=$?
+  if [ $AGG_EXIT -eq 0 ]; then
+    echo -e "${GREEN}  ✅ aggregates 与 manifest 一致 (curated + 各门类数)${NC}"
+  else
+    echo -e "${RED}  ❌ aggregates 漂移:${NC}"
+    echo "$AGG_RESULT" | head -5
+    echo -e "${YELLOW}     修法: python3 scripts/build/build_all.py 自动 rebuild${NC}"
+    # 自动 rebuild + 自动 add
+    python3 scripts/build/build_all.py --skip-seo >/dev/null 2>&1 || true
+    git add public/data/aggregates.json public/majors.html public/index.html 2>/dev/null || true
+    failed=1
+  fi
+fi
+
+# ─────────────────────────────────────────────
 # 总结
 # ─────────────────────────────────────────────
 echo ""
@@ -90,7 +111,7 @@ if [ $failed -eq 0 ]; then
   if [ $warn_only -eq 1 ]; then
     echo -e "${YELLOW}⚠️  pre-commit 有 warning (不阻断)${NC}"
   else
-    echo -e "${GREEN}✅ pre-commit 3 检查全过${NC}"
+    echo -e "${GREEN}✅ pre-commit 4 检查全过${NC}"
   fi
   echo -e "${GREEN}   继续 commit...${NC}"
   exit 0

@@ -8,13 +8,14 @@
 <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.loli.net">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📚</text></svg>">
-<title>专业目录 · 13 学科门类 · Major Explorer 2026 高考 (湖北)</title>
-<meta name="description" content="教育部《普通高等学校本科专业目录》全量 2 层结构: 13 学科门类 / 92 专业类 / ~880 专业。已收录 457 精品专业可直接点开看深度报告。">
+<title>专业目录 · Major Explorer 2026 高考 (湖北)</title>
+<!-- AGGREGATES_META_DESCRIPTION: build_aggregates.py 注入, runtime 不要改 -->
+<meta name="description" content="教育部《普通高等学校本科专业目录》全量: 13 学科门类 / 92 专业类 / ~880 种本科专业 (2026 新增 38 种). 我们已为 602 主流专业写了深度精品报告 (68.4% 覆盖率).">
 <link rel="canonical" href="https://majorexplorer.com/majors.html">
 <meta property="og:url" content="https://majorexplorer.com/majors.html">
 <meta property="og:site_name" content="Major Explorer">
 <meta property="og:title" content="专业目录 · 13 学科门类 · Major Explorer">
-<meta property="og:description" content="教育部《普通高等学校本科专业目录》全量 2 层结构: 13 学科门类 / 92 专业类 / ~880 专业。">
+<meta property="og:description" content="教育部《普通高等学校本科专业目录》全量: 13 学科门类 / 92 专业类 / ~880 种本科专业 (2026 新增 38 种). 我们已为 602 主流专业写了深度精品报告 (68.4% 覆盖率).">
 <meta property="og:type" content="article">
 <link rel="stylesheet" href="/css/shared.css">
 <style>
@@ -257,19 +258,17 @@
     <div class="page-head">
       <div class="eyebrow">Catalog · 教育部 2026.4.28</div>
       <h1>专业目录</h1>
-      <p class="lede">
-        《普通高等学校本科专业目录》全量 2 层结构 ——
-        <strong>13 个学科门类</strong> · <strong>92 个专业类</strong> · <strong>约 880 种本科专业</strong> (2026 年新增 38 种)。
-        我们已为 <strong style="color: #B8323A;" id="js-curated-count">457+ 个</strong> 主流专业写了深度精品报告 (✦ 标记可点开);
-        其余专业附 <strong style="color: #C99A2A;">阳光高考官方满意度评分</strong> (493 个有评分)。
+      <!-- AGGREGATES_LEDE: build_aggregates.py 注入 (295 chars) -->
+      <p class="lede" id="agg-lede">
+        《普通高等学校本科专业目录》全量 2 层结构 —— <strong>13 个学科门类</strong> · <strong>92 个专业类</strong> · <strong>约 880 种本科专业</strong> (2026 年新增 38 种)。我们已为 <strong style="color: #B8323A;" id="js-curated-count">602+ 个</strong> 主流专业写了深度精品报告 (✦ 标记可点开); 其余专业附 <strong style="color: #C99A2A;">阳光高考官方满意度评分</strong> (868 个有评分)。
       </p>
     </div>
 
-    <!-- 数据小结 -->
+    <!-- 数据小结: build_aggregates.py 注入 13/92/880/精品 真实数字 -->
     <div class="summary-bar" id="summary-bar">
-      <div><span class="stat-num">13</span>学科门类</div>
-      <div><span class="stat-num">92</span>专业类</div>
-      <div><span class="stat-num">880+</span>本科专业</div>
+      <div><span class="stat-num" id="stat-menjia">—</span>学科门类</div>
+      <div><span class="stat-num" id="stat-subclass">—</span>专业类</div>
+      <div><span class="stat-num" id="stat-major">—</span>本科专业</div>
       <div><span class="stat-num accent" id="curated-count">—</span>精品收录</div>
     </div>
 
@@ -308,62 +307,58 @@
   const zone = document.getElementById('discipline-zone');
   const curatedCountEl = document.getElementById('curated-count');
 
+  // Day 27+: 单一数据源 = aggregates.json (build-time 算好, ~3KB, 不再 fetch 4 个 1.4MB 文件)
+  // 数字 (13/92/880/精品) 都从 aggregates.totals/by_menjia 取, 永远与 manifest 一致
   Promise.all([
+    fetch('/data/aggregates.json', { cache: 'no-cache' }).then((r) => r.json()),
     fetch('/data/discipline_hierarchy.json', { cache: 'no-cache' }).then((r) => r.json()),
-    fetch('/data/manifest.json', { cache: 'no-cache' }).then((r) => r.json()),
-    // chsi_majors.json may not exist on older deploys — degrade gracefully.
+    // chsi_majors.json 用于 sat badge (阳光高考评分), 可选, 老 deploy 降级
     fetch('/data/chsi_majors.json', { cache: 'no-cache' })
       .then((r) => (r.ok ? r.json() : []))
       .catch(() => []),
-    // chsi_major_details.json — bundled subset for chip popover (Step 3.3)
-    fetch('/data/chsi_major_details.json', { cache: 'no-cache' })
-      .then((r) => (r.ok ? r.json() : {}))
-      .catch(() => ({})),
   ])
-    .then(([hier, manifest, chsiMajors, chsiDetails]) => {
+    .then(([agg, hier, chsiMajors]) => {
+      if (!agg || !agg.totals) {
+        zone.innerHTML = '<p style="text-align:center;color:var(--muted);padding:48px;">学科目录加载失败</p>';
+        return;
+      }
+
+      // 1. summary-bar: 从 aggregates.totals 直填
+      const t = agg.totals;
+      document.getElementById('stat-menjia').textContent = t.menjia_count;
+      document.getElementById('stat-subclass').textContent = t.subclass_count;
+      document.getElementById('stat-major').textContent = t.major_count + '+';
+      curatedCountEl.textContent = t.curated_count;
+
+      // 2. lede: 从 aggregates.human.lead 注入 (build-time 也注入 HTML, 这里 runtime 兜底)
+      const ledeEl = document.getElementById('agg-lede');
+      if (ledeEl && agg.human && agg.human.lead) {
+        ledeEl.innerHTML = agg.human.lead;
+      }
+
+      // 3. meta description (runtime 注入: 部署后无需 rebuild 即可更新)
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && agg.human && agg.human.meta_description) {
+        metaDesc.setAttribute('content', agg.human.meta_description);
+      }
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc && agg.human && agg.human.meta_description) {
+        ogDesc.setAttribute('content', agg.human.meta_description);
+      }
+
+      // 4. hierarchy 渲染 (chip + section)
       if (!hier || !hier.门类) {
         zone.innerHTML = '<p style="text-align:center;color:var(--muted);padding:48px;">学科目录加载失败</p>';
         return;
       }
 
-      // Build title → slug map from manifest (curated majors)
-      const slugByTitle = Object.create(null);
-      (manifest.majors || []).forEach((m) => {
-        slugByTitle[m.title] = m.slug;
-      });
-
-      // Day 24 fix: 按 title 反查 hierarchy 求真实门类 code
-      // 旧逻辑依赖 manifest.menjia_moe 字段,该字段 34 处错填导致门类精品数显示不准
-      // (例: 哲学门下 4 个精品, 但 menjia_moe=05 导致门类只显示 ✦1)
-      // 回退: 28 个 2026 新增专业的 title 暂未收录进 hierarchy, 此时用 menjia_moe 兜底
-      const curatedByDiscipline = Object.create(null);
-      const seenTitleByHier = Object.create(null);
-      Object.entries(disciplines).forEach(([dcode, d]) => {
-        const subs = d.sub_classes || {};
-        Object.values(subs).forEach((sc) => {
-          (sc.majors || []).forEach((name) => {
-            seenTitleByHier[name] = true;
-            if (slugByTitle[name]) {
-              curatedByDiscipline[dcode] = (curatedByDiscipline[dcode] || 0) + 1;
-            }
-          });
-        });
-      });
-      // 兜底: hierarchy 找不到的孤儿 title 用 menjia_moe (这些是 2026 新增专业)
-      (manifest.majors || []).forEach((m) => {
-        if (seenTitleByHier[m.title]) return;
-        const dcode = m.menjia_moe || '';
-        if (dcode) curatedByDiscipline[dcode] = (curatedByDiscipline[dcode] || 0) + 1;
-      });
-
-      // Build title → chsi satisfaction map (e.g. "区块链工程" → 5.0). 493/868 have ratings.
+      // chsi 满意度 map
       const satByTitle = Object.create(null);
       (chsiMajors || []).forEach((m) => {
         if (m.name && typeof m.satisfaction === 'number') {
           satByTitle[m.name] = m.satisfaction;
         }
       });
-
       function satBadge(name) {
         const sat = satByTitle[name];
         if (typeof sat !== 'number') return '';
@@ -371,29 +366,36 @@
         return `<span class="chip-sat ${cls}" title="阳光高考用户评分 ${sat}/5">${sat.toFixed(1)}</span>`;
       }
 
+      // 5. slugByTitle: 从 aggregates.slug_by_title 拿 (build-time 内嵌, 0 网络请求)
+      const slugByTitle = agg.slug_by_title || {};
+      // chsiDetails 懒加载: 鼠标 hover has-chsi chip 时再 fetch (避免初始 1MB fetch)
+      let chsiDetails = null;
+      let chsiDetailsLoading = null;
+      function ensureChsiDetails() {
+        if (chsiDetails) return Promise.resolve(chsiDetails);
+        if (chsiDetailsLoading) return chsiDetailsLoading;
+        chsiDetailsLoading = fetch('/data/chsi_major_details.json', { cache: 'force-cache' })
+          .then((r) => (r.ok ? r.json() : {}))
+          .catch(() => ({}))
+          .then((d) => { chsiDetails = d; return d; });
+        return chsiDetailsLoading;
+      }
+
       const disciplines = hier.门类;
       const codes = Object.keys(disciplines).sort();
 
-      // Compute counts
-      let totalCurated = 0;
+      // 6. 各门类 stats (从 aggregates.by_menjia)
       const dStats = {};
       codes.forEach((code) => {
+        const a = (agg.by_menjia || {})[code] || {};
         const d = disciplines[code];
         const subs = d.sub_classes || {};
-        const subCount = Object.keys(subs).length;
-        let majorCount = 0;
-        Object.values(subs).forEach((sc) => {
-          (sc.majors || []).forEach(() => { majorCount += 1; });
-        });
-        // 精品数 = curatedByDiscipline[code]; 截断到 ≤ majorCount (避免 ✦42 > 28 视觉异常)
-        const curatedRaw = curatedByDiscipline[code] || 0;
-        const curatedCount = Math.min(curatedRaw, majorCount);
-        dStats[code] = { subCount, majorCount, curatedCount };
-        totalCurated += curatedCount;
+        dStats[code] = {
+          subCount: a.subclass_count || Object.keys(subs).length,
+          majorCount: a.pool || 0,
+          curatedCount: a.curated || 0,
+        };
       });
-
-      // summary-bar 总精品 = 13 chip ✦ 加总 (保证数字自洽)
-      curatedCountEl.textContent = totalCurated;
 
       // Render TOC pills
       tocHost.insertAdjacentHTML(
@@ -433,27 +435,11 @@ const chips = majors
               .map((mn) => {
                 const slug = slugByTitle[mn];
                 const sat = satBadge(mn);
-                const chsi = chsiDetails[mn];
                 if (slug) {
                   return `<a class="major-chip curated" href="/${encodeURIComponent(slug)}.html">${mn}${sat}</a>`;
                 }
-                // 灰 chip: 有 chsi 详情就加 has-chsi 类 + popover
-                const hasChsi = chsi && (chsi.careers?.length || chsi.similar_majors?.length || chsi.opening_schools_count);
-                if (hasChsi) {
-                  const careers = (chsi.careers || []).slice(0, 4);
-                  const similar = (chsi.similar_majors || []).slice(0, 4);
-                  const schools = chsi.opening_schools_count || 0;
-                  const popover = `
-                    <div class="chsi-popover" role="tooltip">
-                      <div class="pp-title">${_esc(mn)} · chsi 速览</div>
-                      ${careers.length ? `<div class="pp-row"><strong>就业方向:</strong><div class="pp-list">${careers.map(c => `<span>${_esc(c)}</span>`).join('')}</div></div>` : ''}
-                      ${similar.length ? `<div class="pp-row"><strong>相近专业:</strong><div class="pp-list">${similar.map(c => `<span>${_esc(c)}</span>`).join('')}</div></div>` : ''}
-                      ${schools ? `<div class="pp-row"><strong>开设院校:</strong> ${schools} 所</div>` : ''}
-                      <div class="pp-source">数据: 阳光高考 (chsi.com.cn)</div>
-                    </div>`;
-                  return `<span class="major-chip uncurated has-chsi" tabindex="0">${mn}${sat}${popover}</span>`;
-                }
-                return `<span class="major-chip uncurated" title="未收录精品, 想看请在顶栏点「反馈」告诉我们">${mn}${sat}</span>`;
+                // 灰 chip: 先渲染空 popover, 后台 fetch chsiDetails 后注入
+                return `<span class="major-chip uncurated has-chsi" tabindex="0" data-major-name="${_esc(mn)}">${mn}${sat}<span class="chsi-popover" role="tooltip" data-injected="false"></span></span>`;
               })
               .join('');
             const statTxt = scCurated > 0
@@ -486,6 +472,31 @@ const chips = majors
       });
 
       zone.innerHTML = sections.join('');
+
+      // 后台 fetch chsiDetails (500KB, 懒加载) + 注入所有 popover
+      function injectPopovers(details) {
+        const _esc = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        zone.querySelectorAll('.major-chip.has-chsi[data-injected="false"], .major-chip.has-chsi span[data-injected="false"]').forEach((el) => {
+          const chip = el.classList.contains('major-chip') ? el : el.closest('.major-chip');
+          if (!chip) return;
+          const mn = chip.dataset.majorName;
+          const chsi = details[mn];
+          if (!chsi) return;
+          const careers = (chsi.careers || []).slice(0, 4);
+          const similar = (chsi.similar_majors || []).slice(0, 4);
+          const schools = chsi.opening_schools_count || 0;
+          const popover = chip.querySelector('.chsi-popover');
+          if (!popover || popover.dataset.injected === 'true') return;
+          popover.innerHTML = `
+            <div class="pp-title">${_esc(mn)} · chsi 速览</div>
+            ${careers.length ? `<div class="pp-row"><strong>就业方向:</strong><div class="pp-list">${careers.map(c => `<span>${_esc(c)}</span>`).join('')}</div></div>` : ''}
+            ${similar.length ? `<div class="pp-row"><strong>相近专业:</strong><div class="pp-list">${similar.map(c => `<span>${_esc(c)}</span>`).join('')}</div></div>` : ''}
+            ${schools ? `<div class="pp-row"><strong>开设院校:</strong> ${schools} 所</div>` : ''}
+            <div class="pp-source">数据: 阳光高考 (chsi.com.cn)</div>`;
+          popover.dataset.injected = 'true';
+        });
+      }
+      ensureChsiDetails().then(injectPopovers);
 
       // 移动端 tap 退化 (touch 没有 hover): 点 chip toggle popover, 点外面关闭
       if ('ontouchstart' in window) {
