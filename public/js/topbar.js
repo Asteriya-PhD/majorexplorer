@@ -161,7 +161,7 @@
   }
 
   function syncWishlist() {
-    var list = (window.WishlistStore && window.WishlistStore.getAll) ? window.WishlistStore.getAll() : [];
+    var list = (window.WishlistStore && window.WishlistStore.all) ? window.WishlistStore.all() : [];
     var count = list.length || 0;
     var right = document.querySelector('.topbar .topbar-right');
     if (!right) return;

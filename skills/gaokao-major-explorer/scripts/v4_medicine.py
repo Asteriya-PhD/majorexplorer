@@ -900,11 +900,10 @@ def render_v4_medicine(data: dict) -> str:
 {_wl_related(slug, _WL_MANIFEST) if _WL_MANIFEST else ""}
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
     <div class="data-source">数据源: {data_source}</div>
