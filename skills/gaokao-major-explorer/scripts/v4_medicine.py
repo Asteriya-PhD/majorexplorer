@@ -308,15 +308,34 @@ section.tab p.lede { color: #475569; font-size: 1.0625rem; line-height: 1.75; ma
 .xuanke-bar-fill { height: 100%; background: #0C4A6E; border-radius: 4px; }
 .xuanke-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; }
 
-/* ── timeline (临床 5+3+X) ── */
-.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 32px; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; position: relative; z-index: 1; }
-.tl-item { padding: 32px 24px; background: white; border-right: 1px solid #E2E8F0; position: relative; }
-.tl-item:nth-child(2) { background: #FEF3C7; }
+/* ── timeline (临床 5+3+X · 方案 A: 病历卡网格 + 移动单列压缩, Day 29) ── */
+.timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; margin-top: 32px; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; position: relative; z-index: 1; }
+.tl-item { padding: 24px 20px; background: white; border-right: 1px solid #E2E8F0; }
 .tl-item:last-child { border-right: none; }
-.tl-year { font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; font-weight: 600; color: #0C4A6E; margin-bottom: 8px; letter-spacing: -0.01em; }
-.tl-stage { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
+.tl-item.warn { background: #FEF3C7; }
+.tl-item.critical { background: #FEE2E2; }
+.tl-year { font-family: 'IBM Plex Mono', monospace; font-size: 1.375rem; font-weight: 700; color: #0C4A6E; margin-bottom: 6px; letter-spacing: -0.01em; }
+.tl-item.warn .tl-year { color: #92400E; }
+.tl-item.critical .tl-year { color: #7F1D1D; }
+.tl-stage { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9375rem; font-weight: 600; color: #0F172A; margin-bottom: 10px; line-height: 1.3; min-height: 38px; }
 .tl-income { font-size: 0.8125rem; color: #475569; line-height: 1.5; }
-.tl-warning { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #B45309; margin-top: 8px; padding: 4px 8px; background: rgba(180, 83, 9, 0.08); border-radius: 4px; display: inline-block; letter-spacing: 0.08em; }
+.tl-income strong { color: #0C4A6E; font-family: 'IBM Plex Mono', monospace; font-size: 0.875rem; font-weight: 700; display: block; margin-top: 2px; }
+.tl-item.warn .tl-income strong { color: #B45309; }
+.tl-item.critical .tl-income strong { color: #991B1B; }
+.tl-warning { font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #B45309; margin-top: 10px; padding: 3px 8px; background: rgba(180, 83, 9, 0.10); border-radius: 3px; display: inline-block; letter-spacing: 0.08em; font-weight: 600; }
+.tl-item.critical .tl-warning { color: #991B1B; background: rgba(153, 27, 27, 0.10); }
+/* 移动端: 单列压缩 */
+@media (max-width: 768px) {
+  .timeline { grid-template-columns: 1fr; gap: 8px; border: none; border-radius: 0; background: transparent; }
+  .tl-item { padding: 12px 14px; border: 1px solid #E2E8F0; border-radius: 10px; display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; min-height: 0; }
+  .tl-item.warn, .tl-item.critical { border-width: 1.5px; }
+  .tl-year { font-size: 0.875rem; margin-bottom: 0; }
+  .tl-stage { font-size: 0.8125rem; margin-bottom: 0; min-height: 0; }
+  .tl-stage::after { content: " · " attr(data-note); font-size: 0.6875rem; color: #94A3B8; font-weight: 400; }
+  .tl-income { font-size: 0; line-height: 0; }
+  .tl-income strong { font-size: 0.8125rem; margin-top: 0; text-align: right; }
+  .tl-warning { grid-column: 2 / 3; margin-top: 4px; font-size: 0.625rem; }
+}
 
 /* ── CTA ── */
 .cta-block { margin-top: 32px; padding: 64px 48px; background: #0F172A; color: white; border: 1px solid #0C4A6E; border-radius: 16px; text-align: center; position: relative; overflow: hidden; }
@@ -714,9 +733,39 @@ def render_v4_medicine(data: dict) -> str:
         for x in xuanke
     ) if xuanke else '<p style="color:var(--muted)">选科数据待补充</p>'
 
-    # ── timeline (5+3+X 临床) — 已下线 2026-06-24, 40 个 medicine majors JSON 全缺 timeline 字段
-    # 后台: synth 给 12 个 5 年制专业补 timeline 后重新启用
+    # ── timeline (5+3+X · 方案 A 病历卡网格, Day 29 恢复) ──
     timeline_html = ""
+    if duration == 5 and timeline:
+        items_html = []
+        for i, t in enumerate(timeline):
+            level = t.get("level", "")  # "warn" / "critical" / "" (normal)
+            item_cls = "tl-item"
+            if level in ("warn", "critical"):
+                item_cls += f" {level}"
+            warning = ""
+            if level == "warn":
+                warning = f'<div class="tl-warning">⚠ {t.get("warning", "低收入期")}</div>'
+            elif level == "critical":
+                warning = f'<div class="tl-warning">⚡ {t.get("warning", "关键转折点")}</div>'
+            items_html.append(
+                f'      <div class="{item_cls} fade-up" data-delay="{i * 80}">'
+                f'<div class="tl-year">{t.get("year", "")}</div>'
+                f'<div class="tl-stage" data-note="{t.get("note", "")}">{t.get("stage", "")}</div>'
+                f'<div class="tl-income">{t.get("income_label", "")}<strong>{t.get("income", "")}</strong></div>'
+                f'{warning}</div>'
+            )
+        timeline_html = f'''
+<section class="tab" id="timeline">
+  <div class="watermark">05</div>
+  <div class="container">
+    <div class="section-num">05 / 9 · 时间轴</div>
+    <h2>学制时间轴 · 5+3+X</h2>
+    <p class="lede drop-cap">临床医学 5 年起步, 3+X 才是真正的开始。家里能撑住 10 年低收入吗? 建议: 报志愿前先跟家里摊开这个时间表。</p>
+    <div class="timeline">
+{chr(10).join(items_html)}
+    </div>
+  </div>
+</section>'''
 
     # ── vitals panel + ECG ──
     vital_html = "\n".join(
@@ -795,7 +844,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="overview">
   <div class="watermark">01</div>
   <div class="container">
-    <div class="section-num">01 / 8 · 速览</div>
+    <div class="section-num">01 / 9 · 速览</div>
     <h2>速览</h2>
     <p class="lede drop-cap">{summary}</p>
     {f'<h3>这个专业学什么?</h3><p>{data.get("what_you_learn", "")}</p>' if data.get("what_you_learn") else ''}
@@ -807,7 +856,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="curriculum">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 8 · 课程</div>
+    <div class="section-num">02 / 9 · 课程</div>
     <h2>主要课程 · 含前序依赖</h2>
     <p class="curriculum-lede">{curriculum_note}</p>
     <div class="curriculum-grid">
@@ -819,7 +868,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="schools">
   <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">03 / 8 · 院校</div>
+    <div class="section-num">03 / 9 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -831,7 +880,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="companies">
   <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">04 / 8 · 头部雇主</div>
+    <div class="section-num">04 / 9 · 头部雇主</div>
     <h2>头部医院 · 含 peer review</h2>
     <p class="lede">S = 三甲顶级 (顶级薪资+大量校招), A = 三甲稳定校招, B = 大量招 (中等门槛)。✓ 校友核实 = 已被 3 位以上校友核实。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -843,7 +892,7 @@ def render_v4_medicine(data: dict) -> str:
 {timeline_html}
 
 <section class="tab" id="salary">
-  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 9 · 薪资</div>
     <h2>薪资分布 · 含 3 年变化</h2>
     <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -858,7 +907,7 @@ def render_v4_medicine(data: dict) -> str:
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 9 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -870,7 +919,7 @@ def render_v4_medicine(data: dict) -> str:
 <!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 9 · 学长学姐说</div>
     <h2>学长学姐说 · 含 Mayo 引文</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -880,7 +929,7 @@ def render_v4_medicine(data: dict) -> str:
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
+  <div class="watermark">09</div><div class="container"><div class="section-num">09 / 9 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
