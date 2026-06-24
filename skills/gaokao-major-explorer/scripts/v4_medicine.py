@@ -267,14 +267,16 @@ section.tab p.lede { color: #475569; font-size: 1.0625rem; line-height: 1.75; ma
 .yoy.flat { color: #475569; background: #F1F5F9; }
 .approx { font-family: 'IBM Plex Mono', monospace; color: #94A3B8; margin-right: 4px; }
 
-/* ── directions ── */
-.direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E2E8F0; }
+/* ── directions (方案 G 2026-06-24, 跟 base.py 一致: 2 列 + name+sub inline 单行 + 按 pct 排序) ── */
+.direction-list { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 40px; margin-top: 32px; max-width: none; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 76px 1fr; align-items: center; gap: 16px; padding: 12px 0; border-bottom: none; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-weight: 500; font-size: 0.9375rem; line-break: strict; }
-.direction-bar { height: 10px; background: #F1F5F9; border-radius: 5px; overflow: hidden; }
-.direction-bar-fill { height: 100%; background: #0C4A6E; border-radius: 5px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-.direction-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #0F172A; }
+.direction-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 700; text-align: right; font-size: 1.5rem; color: #0F172A; }
+.direction-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.direction-name { font-weight: 600; font-size: 0.9375rem; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.direction-name .direction-sub { font-weight: 400; font-size: 0.75rem; opacity: 0.65; margin-left: 4px; }
+.direction-bar { height: 8px; background: #F1F5F9; border-radius: 4px; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #0C4A6E; border-radius: 4px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
 
 /* ── deep study ── */
 .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
@@ -663,14 +665,26 @@ def render_v4_medicine(data: dict) -> str:
         )
     salary_html = "\n".join(salary_rows) if salary_rows else '<tr><td colspan="4" style="color:#475569">薪资数据待补充</td></tr>'
 
+    # 07 就业方向 — 方案 G (2026-06-24, 跟 render.py 一致)
+    # 2 列 + name 粗体大字 + sub 灰小不粗体 inline 单行 + 按 pct 排序
+    import re as _re_med
+    from html import escape as _esc_med
+    def _split_for_g_med(full: str) -> str:
+        m = _re_med.match(r"^(.+?)[\s]*[（(](.+?)[）)]\s*$", full)
+        if m:
+            return f'{_esc_med(m.group(1).strip())} <span class="direction-sub">{_esc_med(m.group(2).strip())}</span>'
+        return _esc_med(full)
+    sorted_directions = sorted(directions, key=lambda x: -x.get("pct", 0))
     direction_html = "\n".join(
         f'''        <div class="direction">
-          <div class="direction-name">{d.get("name", "")}</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:{d.get("pct", 0)}%"></div></div>
           <div class="direction-pct">{d.get("pct", 0)}%</div>
+          <div class="direction-body">
+            <div class="direction-name">{_split_for_g_med(d.get("name", ""))}</div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:{d.get("pct", 0)}%"></div></div>
+          </div>
         </div>'''
-        for d in directions
-    ) if directions else '<p style="color:#475569">就业方向待补充</p>'
+        for d in sorted_directions
+    ) if sorted_directions else '<p style="color:#475569">就业方向待补充</p>'
 
     # 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做
     path_html = ""

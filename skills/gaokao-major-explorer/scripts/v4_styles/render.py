@@ -650,14 +650,30 @@ def render_v4(data: dict, style: str) -> str:
         )
     salary_html = "\n".join(salary_rows) if salary_rows else '<tr><td colspan="4">薪资数据待补充</td></tr>'
 
+    # 07 就业方向 — 方案 G (2026-06-24):
+    # 2 列 grid + name 大字 (粗体) + sub 灰小不粗体 inline 单行
+    # 智能切括号: "国家电网 (27 省网市局)" → "国家电网 <span sub>(27 省网市局)</span>"
+    # 按 pct 递减排序, 长名 nowrap+ellipsis 截断
+    import re as _re
+    def _split_for_g(full: str) -> str:
+        """'国家电网 (27 省网市局)' → '国家电网 <span class="direction-sub">(27 省网市局)</span>'
+        无括号原样返回. 内部 escape 防止 XSS."""
+        from html import escape as _esc
+        m = _re.match(r"^(.+?)[\s]*[（(](.+?)[）)]\s*$", full)
+        if m:
+            return f'{_esc(m.group(1).strip())} <span class="direction-sub">{_esc(m.group(2).strip())}</span>'
+        return _esc(full)
+    sorted_directions = sorted(directions, key=lambda x: -x.get("pct", 0))
     direction_html = "\n".join(
         f'''        <div class="direction">
-          <div class="direction-name">{d.get("name", "")}</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:{d.get("pct", 0)}%"></div></div>
           <div class="direction-pct">{d.get("pct", 0)}%</div>
+          <div class="direction-body">
+            <div class="direction-name">{_split_for_g(d.get("name", ""))}</div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:{d.get("pct", 0)}%"></div></div>
+          </div>
         </div>'''
-        for d in directions
-    ) if directions else '<p>就业方向待补充</p>'
+        for d in sorted_directions
+    ) if sorted_directions else '<p>就业方向待补充</p>'
 
     # ── 深造路径 (08 section 已下线 2026-06-24, 与 07 重复. 后台重做) ──
     # 留 deep_study 字段读取供未来 debug, 渲染置空

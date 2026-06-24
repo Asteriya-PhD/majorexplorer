@@ -115,12 +115,16 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 .path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
 
 /* ============================================================
-   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
-   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   07 就业方向 — 方案 G (2026-06-24, name+sub inline 单行 + 按 pct 排序)
+   2 列 grid + name 粗体大字 + sub 灰小不粗体, 全 1 行 (nowrap+ellipsis).
+   数据驱动: 智能切括号 — 复用现有 JSON, 无需 synth.
    ============================================================ */
-.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 18px 40px !important; max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid !important; grid-template-columns: 76px 1fr !important; align-items: center; gap: 16px !important; padding: 12px 0 !important; border-bottom: none !important; }
 .direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-body { display: flex !important; flex-direction: column !important; gap: 6px !important; min-width: 0 !important; }
+.direction-name { font-size: 0.9375rem !important; font-weight: 600 !important; line-height: 1.3 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+.direction-name .direction-sub { font-weight: 400 !important; font-size: 0.75rem !important; opacity: 0.65 !important; margin-left: 4px !important; }
 .direction-bar { height: 8px !important; border-radius: 4px !important; }
 .direction-bar-fill { border-radius: 4px !important; }
 
@@ -1396,44 +1400,60 @@ footer .data-source { color: #78716C; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">兵器集团 (兵工/兵装) 兵器总体/弹药</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:32%"></div></div>
           <div class="direction-pct">32%</div>
+          <div class="direction-body">
+            <div class="direction-name">兵器集团 (兵工/兵装) 兵器总体/弹药</div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:32%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">航天科工/航天科技 (智能弹药/巡飞弹/导弹)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
           <div class="direction-pct">22%</div>
+          <div class="direction-body">
+            <div class="direction-name">航天科工/航天科技 <span class="direction-sub">智能弹药/巡飞弹/导弹</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:22%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">电子科技集团 (探测制导+雷达+电子战)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct">12%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">中船重工 (水中兵器+舰载武器+海军装备)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
-          <div class="direction-pct">6%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">装备论证/试验 (军委装备发展部 + 基地)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
-          <div class="direction-pct">5%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">读研/读博/博后 (985 兵器/航天/控制硕博)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
           <div class="direction-pct">18%</div>
+          <div class="direction-body">
+            <div class="direction-name">读研/读博/博后 <span class="direction-sub">985 兵器/航天/控制硕博</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">商业航天/智能武器 (民营/地方军工)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:3%"></div></div>
+          <div class="direction-pct">12%</div>
+          <div class="direction-body">
+            <div class="direction-name">电子科技集团 <span class="direction-sub">探测制导+雷达+电子战</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">6%</div>
+          <div class="direction-body">
+            <div class="direction-name">中船重工 <span class="direction-sub">水中兵器+舰载武器+海军装备</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:6%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">5%</div>
+          <div class="direction-body">
+            <div class="direction-name">装备论证/试验 <span class="direction-sub">军委装备发展部 + 基地</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:5%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
           <div class="direction-pct">3%</div>
+          <div class="direction-body">
+            <div class="direction-name">商业航天/智能武器 <span class="direction-sub">民营/地方军工</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:3%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">跨行 (CS/AI/控制/机器人/无人机) 或考公/选调</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:2%"></div></div>
           <div class="direction-pct">2%</div>
+          <div class="direction-body">
+            <div class="direction-name">跨行 (CS/AI/控制/机器人/无人机) 或考公/选调</div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:2%"></div></div>
+          </div>
         </div>
     </div>
   </div>

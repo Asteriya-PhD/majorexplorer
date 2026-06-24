@@ -115,12 +115,16 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 .path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
 
 /* ============================================================
-   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
-   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   07 就业方向 — 方案 G (2026-06-24, name+sub inline 单行 + 按 pct 排序)
+   2 列 grid + name 粗体大字 + sub 灰小不粗体, 全 1 行 (nowrap+ellipsis).
+   数据驱动: 智能切括号 — 复用现有 JSON, 无需 synth.
    ============================================================ */
-.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 18px 40px !important; max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid !important; grid-template-columns: 76px 1fr !important; align-items: center; gap: 16px !important; padding: 12px 0 !important; border-bottom: none !important; }
 .direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-body { display: flex !important; flex-direction: column !important; gap: 6px !important; min-width: 0 !important; }
+.direction-name { font-size: 0.9375rem !important; font-weight: 600 !important; line-height: 1.3 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+.direction-name .direction-sub { font-weight: 400 !important; font-size: 0.75rem !important; opacity: 0.65 !important; margin-left: 4px !important; }
 .direction-bar { height: 8px !important; border-radius: 4px !important; }
 .direction-bar-fill { border-radius: 4px !important; }
 
@@ -1290,39 +1294,53 @@ footer .data-source { color: #78716C; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">红圈所/精品所体育娱乐业务组</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct">12%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">中型所/地方所体育法团队</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
-          <div class="direction-pct">18%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">体育组织法务 (中超/CBA/足协/单项协会)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
-          <div class="direction-pct">15%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">俱乐部法务 (中超/CBA/电竞俱乐部)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
-          <div class="direction-pct">12%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">央国企法务 (中体产业/华体/地方文体集团)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
-          <div class="direction-pct">10%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">娱乐法/知识产权法/争议解决 (转方向)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:13%"></div></div>
-          <div class="direction-pct">13%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">考法律硕士 JM (985 法学硕士)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:20%"></div></div>
           <div class="direction-pct">20%</div>
+          <div class="direction-body">
+            <div class="direction-name">考法律硕士 JM <span class="direction-sub">985 法学硕士</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:20%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">18%</div>
+          <div class="direction-body">
+            <div class="direction-name">中型所/地方所体育法团队</div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:18%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">15%</div>
+          <div class="direction-body">
+            <div class="direction-name">体育组织法务 <span class="direction-sub">中超/CBA/足协/单项协会</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">13%</div>
+          <div class="direction-body">
+            <div class="direction-name">娱乐法/知识产权法/争议解决 <span class="direction-sub">转方向</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:13%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">12%</div>
+          <div class="direction-body">
+            <div class="direction-name">红圈所/精品所体育娱乐业务组</div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">12%</div>
+          <div class="direction-body">
+            <div class="direction-name">俱乐部法务 <span class="direction-sub">中超/CBA/电竞俱乐部</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">10%</div>
+          <div class="direction-body">
+            <div class="direction-name">央国企法务 <span class="direction-sub">中体产业/华体/地方文体集团</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          </div>
         </div>
     </div>
   </div>

@@ -115,12 +115,16 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 .path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
 
 /* ============================================================
-   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
-   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   07 就业方向 — 方案 G (2026-06-24, name+sub inline 单行 + 按 pct 排序)
+   2 列 grid + name 粗体大字 + sub 灰小不粗体, 全 1 行 (nowrap+ellipsis).
+   数据驱动: 智能切括号 — 复用现有 JSON, 无需 synth.
    ============================================================ */
-.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 18px 40px !important; max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid !important; grid-template-columns: 76px 1fr !important; align-items: center; gap: 16px !important; padding: 12px 0 !important; border-bottom: none !important; }
 .direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-body { display: flex !important; flex-direction: column !important; gap: 6px !important; min-width: 0 !important; }
+.direction-name { font-size: 0.9375rem !important; font-weight: 600 !important; line-height: 1.3 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+.direction-name .direction-sub { font-weight: 400 !important; font-size: 0.75rem !important; opacity: 0.65 !important; margin-left: 4px !important; }
 .direction-bar { height: 8px !important; border-radius: 4px !important; }
 .direction-bar-fill { border-radius: 4px !important; }
 
@@ -1314,44 +1318,60 @@ footer .data-source { color: #5A6A7A; }
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
         <div class="direction">
-          <div class="direction-name">央企施工 (中建/中铁/中交/中铁建) 项目管理</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
           <div class="direction-pct">25%</div>
+          <div class="direction-body">
+            <div class="direction-name">央企施工 (中建/中铁/中交/中铁建) 项目管理</div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:25%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">设计院/建筑事务所 (中建国际/同济/华东建筑设计院)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
           <div class="direction-pct">15%</div>
+          <div class="direction-body">
+            <div class="direction-name">设计院/建筑事务所 <span class="direction-sub">中建国际/同济/华东建筑设计院</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:15%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">房地产投拓 (华润/龙湖/招商蛇口/中海) </div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
+          <div class="direction-body">
+            <div class="direction-name">房地产投拓 <span class="direction-sub">华润/龙湖/招商蛇口/中海</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">工程造价咨询 (利比/威宁谢/中价协/广联达)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
           <div class="direction-pct">12%</div>
+          <div class="direction-body">
+            <div class="direction-name">工程造价咨询 <span class="direction-sub">利比/威宁谢/中价协/广联达</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:12%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">海外工程承包 (中建国际/中铁建海外/中交海外)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
           <div class="direction-pct">10%</div>
+          <div class="direction-body">
+            <div class="direction-name">海外工程承包 <span class="direction-sub">中建国际/中铁建海外/中交海外</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">产业园/政府平台 (临港集团/苏州工业园/张江高科)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
-          <div class="direction-pct">8%</div>
-        </div>
-        <div class="direction">
-          <div class="direction-name">继续深造 (管理科学与工程/土木水利/工管MBA)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
           <div class="direction-pct">10%</div>
+          <div class="direction-body">
+            <div class="direction-name">继续深造 <span class="direction-sub">管理科学与工程/土木水利/工管MBA</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:10%"></div></div>
+          </div>
         </div>
         <div class="direction">
-          <div class="direction-name">BIM/智慧工地/造价软件 (广联达/鲁班/品茗)</div>
-          <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
           <div class="direction-pct">8%</div>
+          <div class="direction-body">
+            <div class="direction-name">产业园/政府平台 <span class="direction-sub">临港集团/苏州工业园/张江高科</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          </div>
+        </div>
+        <div class="direction">
+          <div class="direction-pct">8%</div>
+          <div class="direction-body">
+            <div class="direction-name">BIM/智慧工地/造价软件 <span class="direction-sub">广联达/鲁班/品茗</span></div>
+            <div class="direction-bar"><div class="direction-bar-fill" style="width:8%"></div></div>
+          </div>
         </div>
     </div>
   </div>

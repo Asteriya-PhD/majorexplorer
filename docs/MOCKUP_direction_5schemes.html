@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>07 就业方向 · 5 方案对比 (mockup)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #FBF6E9; color: #1A1A1A; padding: 40px 24px 80px; }
+  h1 { text-align: center; font-size: 28px; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 48px; font-size: 13px; }
+  .group { max-width: 1280px; margin: 0 auto 64px; }
+  .group h2 { font-size: 20px; color: #B83A2A; margin-bottom: 8px; padding-left: 12px; border-left: 4px solid #B83A2A; }
+  .group .desc { color: #666; font-size: 13px; margin-bottom: 16px; padding-left: 16px; }
+  .label { display: inline-block; padding: 2px 8px; background: #B83A2A; color: #fff; font-size: 11px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+
+  /* 共用: bar 元素 */
+  .bar { height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #B83A2A, #E0734A); border-radius: 4px; }
+
+  /* ────────────────────── 方案 A: 1 列宽 (医学式) ────────────────────── */
+  .A { padding: 24px; background: #fff; border: 1px solid #D6D2C5; border-radius: 4px; }
+  .A-list { display: flex; flex-direction: column; }
+  .A-row { display: grid; grid-template-columns: 280px 1fr 80px; gap: 24px; padding: 14px 0; align-items: center; border-bottom: 1px solid #E7DCC8; }
+  .A-row:last-child { border-bottom: none; }
+  .A-name { font-size: 0.9375rem; white-space: nowrap; }
+  .A-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: #B83A2A; text-align: right; }
+
+  /* ────────────────────── 方案 B: 2 列 nowrap+ellipsis (现在丑版) ────────────────────── */
+  .B { padding: 24px; background: #fff; border: 1px solid #D6D2C5; border-radius: 4px; }
+  .B-list { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 40px; }
+  .B-row { display: grid; grid-template-columns: 76px 1fr 60px; gap: 16px; align-items: center; padding: 12px 0; }
+  .B-name { font-size: 0.9375rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .B-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: #B83A2A; text-align: right; }
+
+  /* ────────────────────── 方案 C: 2 列 wrap 自动换行 ────────────────────── */
+  .C { padding: 24px; background: #fff; border: 1px solid #D6D2C5; border-radius: 4px; }
+  .C-list { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 40px; }
+  .C-row { display: grid; grid-template-columns: 76px 1fr 60px; gap: 16px; align-items: center; padding: 12px 0; }
+  .C-name { font-size: 0.9375rem; line-height: 1.3; }
+  .C-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: #B83A2A; text-align: right; }
+
+  /* ────────────────────── 方案 D: 2 列 name + sub 双行 (08 path-bar 式) ────────────────────── */
+  .D { padding: 24px; background: #fff; border: 1px solid #D6D2C5; border-radius: 4px; }
+  .D-list { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 40px; }
+  .D-row { display: grid; grid-template-columns: 76px 1fr 60px; gap: 16px; align-items: start; padding: 8px 0; }
+  .D-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: #B83A2A; text-align: right; padding-top: 2px; }
+  .D-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .D-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.3; word-break: keep-all; }
+  .D-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.4; word-break: keep-all; }
+  .D-bar { margin-top: 4px; }
+
+  /* ────────────────────── 方案 E: 2 列 1fr + name 全显 + sub 显括号内容 ────────────────────── */
+  .E { padding: 24px; background: #fff; border: 1px solid #D6D2C5; border-radius: 4px; }
+  .E-list { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 40px; }
+  .E-row { display: grid; grid-template-columns: 70px 1fr 60px; gap: 14px; align-items: center; padding: 12px 0; }
+  .E-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.2; }
+  .E-sub { font-size: 0.7rem; opacity: 0.65; line-height: 1.3; margin-top: 2px; word-break: keep-all; }
+  .E-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: #B83A2A; text-align: right; }
+
+  /* ────────────────────── 方案 F: 2 列 + name 完整 + 智能切括号 (8 字+8 字 sub, 仅当含括号时) ────────────────────── */
+  /* 复用现有 JSON 数据, 不重新生成; 有括号就拆, 无括号就 1 行. 极简, 数据驱动. */
+  .F { padding: 24px; background: #fff; border: 1px solid #D6D2C5; border-radius: 4px; }
+  .F-list { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 40px; }
+  .F-row { display: grid; grid-template-columns: 76px 1fr 60px; gap: 16px; align-items: start; padding: 6px 0; }
+  .F-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: #B83A2A; text-align: right; padding-top: 2px; }
+  .F-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .F-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.3; word-break: keep-all; }
+  .F-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.4; word-break: keep-all; }
+  .F-bar { height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .F-bar-fill { height: 100%; background: linear-gradient(90deg, #B83A2A, #E0734A); border-radius: 4px; }
+  .F-bar-track { height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+
+  /* ────────────────────── 方案 G: 2 列 + name+sub 单行 (sub 灰小不粗体, 不换行) ────────────────────── */
+  /* name 粗体大字 + 空格 + sub 灰小不粗体, 全 1 行. 紧凑, 横条长. */
+  .G { padding: 24px; background: #fff; border: 1px solid #D6D2C5; border-radius: 4px; }
+  .G-list { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 40px; }
+  .G-row { display: grid; grid-template-columns: 76px 1fr 60px; gap: 16px; align-items: center; padding: 12px 0; }
+  .G-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: #B83A2A; text-align: right; }
+  .G-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .G-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .G-name .sub-inline { font-weight: 400; font-size: 0.75rem; opacity: 0.65; margin-left: 4px; }
+  .G-bar { height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<h1>07 就业方向 · 5 方案对比 (mockup)</h1>
+<p class="subtitle">数据样本: 电气工程 / 8 项长名 (括号补充易超宽) · 偶数项, 2 列会成 4+4 整齐</p>
+
+<!-- 8 项数据 (name + pct) -->
+<!-- A 单列宽 (医学式) -->
+<div class="group">
+  <h2><span class="label">A</span>单列宽 (医学式)</h2>
+  <p class="desc">1 列 / 280px 名字栏 / nowrap 1 行 / 8 行垂直堆叠</p>
+  <div class="A">
+    <div class="A-list">
+      <div class="A-row">
+        <div class="A-name">国家电网 (27 省网市局)</div>
+        <div class="bar"><div class="bar-fill" style="width:25%"></div></div>
+        <div class="A-pct">25%</div>
+      </div>
+      <div class="A-row">
+        <div class="A-name">南方电网 (5 省网市局)</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="A-pct">12%</div>
+      </div>
+      <div class="A-row">
+        <div class="A-name">华为数字能源 / 中兴通讯</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="A-pct">12%</div>
+      </div>
+      <div class="A-row">
+        <div class="A-name">比亚迪 / 宁德时代 / 阳光电源 (新能源车 + 储能)</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="A-pct">12%</div>
+      </div>
+      <div class="A-row">
+        <div class="A-name">五大发电集团 (华能/大唐/华电/国电投/国能投)</div>
+        <div class="bar"><div class="bar-fill" style="width:10%"></div></div>
+        <div class="A-pct">10%</div>
+      </div>
+      <div class="A-row">
+        <div class="A-name">电力设计院 (华东/西北/中南/西南/华北)</div>
+        <div class="bar"><div class="bar-fill" style="width:8%"></div></div>
+        <div class="A-pct">8%</div>
+      </div>
+      <div class="A-row">
+        <div class="A-name">电力设备龙头 (许继/平高/南瑞/思源/特变电工)</div>
+        <div class="bar"><div class="bar-fill" style="width:8%"></div></div>
+        <div class="A-pct">8%</div>
+      </div>
+      <div class="A-row">
+        <div class="A-name">继续深造 (国内 985 硕博)</div>
+        <div class="bar"><div class="bar-fill" style="width:13%"></div></div>
+        <div class="A-pct">13%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B 2 列 nowrap+ellipsis (现在丑) -->
+<div class="group">
+  <h2><span class="label">B</span>2 列 + nowrap+ellipsis 截断 (当前)</h2>
+  <p class="desc">2 列 / 76+1fr+60 / 名字 ellipsis 截断 / "国家电…" 太丑</p>
+  <div class="B">
+    <div class="B-list">
+      <div class="B-row">
+        <div class="B-name">国家电网 (27 省网市局)</div>
+        <div class="bar"><div class="bar-fill" style="width:25%"></div></div>
+        <div class="B-pct">25%</div>
+      </div>
+      <div class="B-row">
+        <div class="B-name">南方电网 (5 省网市局)</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="B-pct">12%</div>
+      </div>
+      <div class="B-row">
+        <div class="B-name">华为数字能源 / 中兴通讯</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="B-pct">12%</div>
+      </div>
+      <div class="B-row">
+        <div class="B-name">比亚迪 / 宁德时代 / 阳光电源 (新能源车 + 储能)</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="B-pct">12%</div>
+      </div>
+      <div class="B-row">
+        <div class="B-name">五大发电集团 (华能/大唐/华电/国电投/国能投)</div>
+        <div class="bar"><div class="bar-fill" style="width:10%"></div></div>
+        <div class="B-pct">10%</div>
+      </div>
+      <div class="B-row">
+        <div class="B-name">电力设计院 (华东/西北/中南/西南/华北)</div>
+        <div class="bar"><div class="bar-fill" style="width:8%"></div></div>
+        <div class="B-pct">8%</div>
+      </div>
+      <div class="B-row">
+        <div class="B-name">电力设备龙头 (许继/平高/南瑞/思源/特变电工)</div>
+        <div class="bar"><div class="bar-fill" style="width:8%"></div></div>
+        <div class="B-pct">8%</div>
+      </div>
+      <div class="B-row">
+        <div class="B-name">继续深造 (国内 985 硕博)</div>
+        <div class="bar"><div class="bar-fill" style="width:13%"></div></div>
+        <div class="B-pct">13%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C 2 列 wrap 自动换行 -->
+<div class="group">
+  <h2><span class="label">C</span>2 列 + wrap 自动换行</h2>
+  <p class="desc">2 列 / name 区域允许 wrap / 长名 2-3 行 / 行高不齐, 可能丑</p>
+  <div class="C">
+    <div class="C-list">
+      <div class="C-row">
+        <div class="C-name">国家电网 (27 省网市局)</div>
+        <div class="bar"><div class="bar-fill" style="width:25%"></div></div>
+        <div class="C-pct">25%</div>
+      </div>
+      <div class="C-row">
+        <div class="C-name">南方电网 (5 省网市局)</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="C-pct">12%</div>
+      </div>
+      <div class="C-row">
+        <div class="C-name">华为数字能源 / 中兴通讯</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="C-pct">12%</div>
+      </div>
+      <div class="C-row">
+        <div class="C-name">比亚迪 / 宁德时代 / 阳光电源 (新能源车 + 储能)</div>
+        <div class="bar"><div class="bar-fill" style="width:12%"></div></div>
+        <div class="C-pct">12%</div>
+      </div>
+      <div class="C-row">
+        <div class="C-name">五大发电集团 (华能/大唐/华电/国电投/国能投)</div>
+        <div class="bar"><div class="bar-fill" style="width:10%"></div></div>
+        <div class="C-pct">10%</div>
+      </div>
+      <div class="C-row">
+        <div class="C-name">电力设计院 (华东/西北/中南/西南/华北)</div>
+        <div class="bar"><div class="bar-fill" style="width:8%"></div></div>
+        <div class="C-pct">8%</div>
+      </div>
+      <div class="C-row">
+        <div class="C-name">电力设备龙头 (许继/平高/南瑞/思源/特变电工)</div>
+        <div class="bar"><div class="bar-fill" style="width:8%"></div></div>
+        <div class="C-pct">8%</div>
+      </div>
+      <div class="C-row">
+        <div class="C-name">继续深造 (国内 985 硕博)</div>
+        <div class="bar"><div class="bar-fill" style="width:13%"></div></div>
+        <div class="C-pct">13%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- D 2 列 name + sub 双行 (08 path-bar 式) -->
+<div class="group">
+  <h2><span class="label">D</span>2 列 + name + sub 双行 (推荐 ⭐)</h2>
+  <p class="desc">2 列 / 智能切括号 / "国家电网" 大字 + "27 省网市局" 灰小字 / 跟 08 path-bar 一致</p>
+  <div class="D">
+    <div class="D-list">
+      <div class="D-row">
+        <div class="D-pct">25%</div>
+        <div class="D-body">
+          <div class="D-name">国家电网</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:100%"></div></div></div>
+          <div class="D-sub">27 省网市局</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="D-row">
+        <div class="D-pct">12%</div>
+        <div class="D-body">
+          <div class="D-name">南方电网</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:48%"></div></div></div>
+          <div class="D-sub">5 省网市局</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="D-row">
+        <div class="D-pct">12%</div>
+        <div class="D-body">
+          <div class="D-name">华为数字能源 / 中兴通讯</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:48%"></div></div></div>
+          <div class="D-sub">985 硕 + 电力电子方向</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="D-row">
+        <div class="D-pct">12%</div>
+        <div class="D-body">
+          <div class="D-name">比亚迪 / 宁德时代 / 阳光电源</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:48%"></div></div></div>
+          <div class="D-sub">新能源车 + 储能</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="D-row">
+        <div class="D-pct">10%</div>
+        <div class="D-body">
+          <div class="D-name">五大发电集团</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:40%"></div></div></div>
+          <div class="D-sub">华能/大唐/华电/国电投/国能投</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="D-row">
+        <div class="D-pct">8%</div>
+        <div class="D-body">
+          <div class="D-name">电力设计院</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:32%"></div></div></div>
+          <div class="D-sub">华东/西北/中南/西南/华北</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="D-row">
+        <div class="D-pct">8%</div>
+        <div class="D-body">
+          <div class="D-name">电力设备龙头</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:32%"></div></div></div>
+          <div class="D-sub">许继/平高/南瑞/思源/特变电工</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="D-row">
+        <div class="D-pct">13%</div>
+        <div class="D-body">
+          <div class="D-name">继续深造</div>
+          <div class="D-bar"><div class="bar"><div class="bar-fill" style="width:52%"></div></div></div>
+          <div class="D-sub">国内 985 硕博</div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- E 2 列 1fr + name 全显 + sub 显括号内容 -->
+<div class="group">
+  <h2><span class="label">E</span>2 列 + name+sub 同列 (单 cell, 无切分)</h2>
+  <p class="desc">2 列 / name 大字 + sub 灰小字堆叠 / 比 D 简单, bar 跟在 name 后</p>
+  <div class="E">
+    <div class="E-list">
+      <div class="E-row">
+        <div class="E-pct">25%</div>
+        <div>
+          <div class="E-name">国家电网 (27 省网市局)</div>
+          <div class="E-sub">电网市局主流去向</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:100%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="E-row">
+        <div class="E-pct">12%</div>
+        <div>
+          <div class="E-name">南方电网 (5 省网市局)</div>
+          <div class="E-sub">南方五省就业</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="E-row">
+        <div class="E-pct">12%</div>
+        <div>
+          <div class="E-name">华为数字能源 / 中兴通讯</div>
+          <div class="E-sub">985 硕 + 电力电子方向</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="E-row">
+        <div class="E-pct">12%</div>
+        <div>
+          <div class="E-name">比亚迪 / 宁德时代 / 阳光电源 (新能源车 + 储能)</div>
+          <div class="E-sub">新能源车企主流去向</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="E-row">
+        <div class="E-pct">10%</div>
+        <div>
+          <div class="E-name">五大发电集团 (华能/大唐/华电/国电投/国能投)</div>
+          <div class="E-sub">发电央企</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:40%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="E-row">
+        <div class="E-pct">8%</div>
+        <div>
+          <div class="E-name">电力设计院 (华东/西北/中南/西南/华北)</div>
+          <div class="E-sub">设计院体系</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:32%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="E-row">
+        <div class="E-pct">8%</div>
+        <div>
+          <div class="E-name">电力设备龙头 (许继/平高/南瑞/思源/特变电工)</div>
+          <div class="E-sub">设备制造商</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:32%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="E-row">
+        <div class="E-pct">13%</div>
+        <div>
+          <div class="E-name">继续深造 (国内 985 硕博)</div>
+          <div class="E-sub">考研主流方向</div>
+          <div class="bar" style="margin-top:6px"><div class="bar-fill" style="width:52%"></div></div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- F 2 列 + name 完整 + 智能切括号 (复用 JSON 数据) -->
+<div class="group">
+  <h2><span class="label">F</span>2 列 + name 完整 + 智能切括号 (复用 JSON ⭐)</h2>
+  <p class="desc">2 列 / 有括号就拆 name+sub 双行, 无括号就 1 行. 纯数据驱动, 不重新生成. sub 灰小字+8px bar</p>
+  <div class="F">
+    <div class="F-list">
+      <div class="F-row">
+        <div class="F-pct">25%</div>
+        <div class="F-body">
+          <div class="F-name">国家电网</div>
+          <div class="F-sub">27 省网市局</div>
+          <div class="F-bar-track"><div class="F-bar-fill" style="width:100%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="F-row">
+        <div class="F-pct">12%</div>
+        <div class="F-body">
+          <div class="F-name">南方电网</div>
+          <div class="F-sub">5 省网市局</div>
+          <div class="F-bar-track"><div class="F-bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="F-row">
+        <div class="F-pct">12%</div>
+        <div class="F-body">
+          <div class="F-name">华为数字能源 / 中兴通讯</div>
+          <!-- 无括号: 不渲染 F-sub -->
+          <div class="F-bar-track" style="margin-top:8px"><div class="F-bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="F-row">
+        <div class="F-pct">12%</div>
+        <div class="F-body">
+          <div class="F-name">比亚迪 / 宁德时代 / 阳光电源</div>
+          <div class="F-sub">新能源车 + 储能</div>
+          <div class="F-bar-track"><div class="F-bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="F-row">
+        <div class="F-pct">10%</div>
+        <div class="F-body">
+          <div class="F-name">五大发电集团</div>
+          <div class="F-sub">华能/大唐/华电/国电投/国能投</div>
+          <div class="F-bar-track"><div class="F-bar-fill" style="width:40%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="F-row">
+        <div class="F-pct">8%</div>
+        <div class="F-body">
+          <div class="F-name">电力设计院</div>
+          <div class="F-sub">华东/西北/中南/西南/华北</div>
+          <div class="F-bar-track"><div class="F-bar-fill" style="width:32%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="F-row">
+        <div class="F-pct">8%</div>
+        <div class="F-body">
+          <div class="F-name">电力设备龙头</div>
+          <div class="F-sub">许继/平高/南瑞/思源/特变电工</div>
+          <div class="F-bar-track"><div class="F-bar-fill" style="width:32%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="F-row">
+        <div class="F-pct">13%</div>
+        <div class="F-body">
+          <div class="F-name">继续深造</div>
+          <div class="F-sub">国内 985 硕博</div>
+          <div class="F-bar-track"><div class="F-bar-fill" style="width:52%"></div></div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- G 2 列 + name+sub 单行 (sub 灰小不粗体, 不换行) -->
+<div class="group">
+  <h2><span class="label">G</span>2 列 + name+sub 单行 (sub 灰小不粗体, 不换行) ⭐</h2>
+  <p class="desc">2 列 / name 粗体大字 + 灰小不粗体 sub 单行 / 全 1 行 / 横条长 / 紧凑不换行</p>
+  <div class="G">
+    <div class="G-list">
+      <div class="G-row">
+        <div class="G-pct">25%</div>
+        <div class="G-body">
+          <div class="G-name">国家电网 <span class="sub-inline">(27 省网市局)</span></div>
+          <div class="G-bar"><div class="bar-fill" style="width:100%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="G-row">
+        <div class="G-pct">12%</div>
+        <div class="G-body">
+          <div class="G-name">南方电网 <span class="sub-inline">(5 省网市局)</span></div>
+          <div class="G-bar"><div class="bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="G-row">
+        <div class="G-pct">12%</div>
+        <div class="G-body">
+          <div class="G-name">华为数字能源 / 中兴通讯</div>
+          <div class="G-bar"><div class="bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="G-row">
+        <div class="G-pct">12%</div>
+        <div class="G-body">
+          <div class="G-name">比亚迪 / 宁德时代 / 阳光电源 <span class="sub-inline">(新能源车 + 储能)</span></div>
+          <div class="G-bar"><div class="bar-fill" style="width:48%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="G-row">
+        <div class="G-pct">10%</div>
+        <div class="G-body">
+          <div class="G-name">五大发电集团 <span class="sub-inline">(华能/大唐/华电/国电投/国能投)</span></div>
+          <div class="G-bar"><div class="bar-fill" style="width:40%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="G-row">
+        <div class="G-pct">8%</div>
+        <div class="G-body">
+          <div class="G-name">电力设计院 <span class="sub-inline">(华东/西北/中南/西南/华北)</span></div>
+          <div class="G-bar"><div class="bar-fill" style="width:32%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="G-row">
+        <div class="G-pct">8%</div>
+        <div class="G-body">
+          <div class="G-name">电力设备龙头 <span class="sub-inline">(许继/平高/南瑞/思源/特变电工)</span></div>
+          <div class="G-bar"><div class="bar-fill" style="width:32%"></div></div>
+        </div>
+        <div></div>
+      </div>
+      <div class="G-row">
+        <div class="G-pct">13%</div>
+        <div class="G-body">
+          <div class="G-name">继续深造 <span class="sub-inline">(国内 985 硕博)</span></div>
+          <div class="G-bar"><div class="bar-fill" style="width:52%"></div></div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
