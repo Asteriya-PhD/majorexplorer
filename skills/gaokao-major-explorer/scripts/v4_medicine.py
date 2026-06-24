@@ -700,29 +700,9 @@ def render_v4_medicine(data: dict) -> str:
         for x in xuanke
     ) if xuanke else '<p style="color:var(--muted)">选科数据待补充</p>'
 
-    # ── timeline (5+3+X 临床, 第 2 个黄色) ──
+    # ── timeline (5+3+X 临床) — 已下线 2026-06-24, 40 个 medicine majors JSON 全缺 timeline 字段
+    # 后台: synth 给 12 个 5 年制专业补 timeline 后重新启用
     timeline_html = ""
-    if duration == 5 and timeline:
-        items_html = []
-        for i, t in enumerate(timeline):
-            warning = ""
-            if i == 1:
-                warning = '<div class="tl-warning">⚠ 低收入期</div>'
-            elif i == 2:
-                warning = '<div class="tl-warning">⚠ 关键转折点</div>'
-            items_html.append(f'      <div class="tl-item fade-up" data-delay="{i * 80}"><div class="tl-year">{t.get("year")}</div><div class="tl-stage">{t.get("stage")}</div><div class="tl-income">{t.get("income", "")}</div>{warning}</div>')
-        timeline_html = f'''
-<section class="tab" id="timeline">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 9 · 时间轴</div>
-    <h2>学制时间轴 · 5+3+X</h2>
-    <p class="lede drop-cap">临床医学 5 年起步, 3+X 才是真正的开始。家里能撑住 10 年低收入吗? 建议: 报志愿前先跟家里摊开这个时间表。</p>
-    <div class="timeline">
-{chr(10).join(items_html)}
-    </div>
-  </div>
-</section>'''
 
     # ── vitals panel + ECG ──
     vital_html = "\n".join(
@@ -801,7 +781,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="overview">
   <div class="watermark">01</div>
   <div class="container">
-    <div class="section-num">01 / 9 · 速览</div>
+    <div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     <p class="lede drop-cap">{summary}</p>
     {f'<h3>这个专业学什么?</h3><p>{data.get("what_you_learn", "")}</p>' if data.get("what_you_learn") else ''}
@@ -813,7 +793,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="curriculum">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 9 · 课程</div>
+    <div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程 · 含前序依赖</h2>
     <p class="curriculum-lede">{curriculum_note}</p>
     <div class="curriculum-grid">
@@ -825,7 +805,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="schools">
   <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">03 / 9 · 院校</div>
+    <div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -837,7 +817,7 @@ def render_v4_medicine(data: dict) -> str:
 <section class="tab" id="companies">
   <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">04 / 9 · 头部雇主</div>
+    <div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部医院 · 含 peer review</h2>
     <p class="lede">S = 三甲顶级 (顶级薪资+大量校招), A = 三甲稳定校招, B = 大量招 (中等门槛)。✓ 校友核实 = 已被 3 位以上校友核实。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -849,9 +829,7 @@ def render_v4_medicine(data: dict) -> str:
 {timeline_html}
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 9 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布 · 含 3 年变化</h2>
     <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -866,9 +844,7 @@ def render_v4_medicine(data: dict) -> str:
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 9 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -880,7 +856,7 @@ def render_v4_medicine(data: dict) -> str:
 <!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 9 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说 · 含 Mayo 引文</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -890,7 +866,7 @@ def render_v4_medicine(data: dict) -> str:
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">09</div><div class="container"><div class="section-num">09 / 9 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
