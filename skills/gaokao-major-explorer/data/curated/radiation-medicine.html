@@ -250,11 +250,11 @@ section.tab p.lede { color: #475569; font-size: 1.0625rem; line-height: 1.75; ma
 .direction-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #0F172A; }
 
 /* ── deep study ── */
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; text-align: center; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
 .path-card:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
 .path-pct { font-family: 'IBM Plex Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #0C4A6E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
-.path-name { color: #475569; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; line-break: strict; }
+.path-name { color: #475569; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; line-break: strict; word-break: break-word; hyphens: auto; }
 
 /* ── quotes (Mayo 引文) ── */
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
@@ -540,119 +540,6 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 .wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
 .wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
-
-/* ⭐ 标题旁国家战略徽章 */
-.strategy-badge {
-  display: inline-block; margin-left: 14px;
-  font-family: 'Songti SC', 'SimSun', '宋体', serif;
-  font-size: 0.75rem; color: #B8323A;
-  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
-  border: 1px solid rgba(184,50,58,0.3);
-  padding: 4px 12px; border-radius: 4px;
-  letter-spacing: 0.08em; font-weight: 600;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
-.strategy-fit-card {
-  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
-  border: 1px solid rgba(184,50,58,0.2);
-  border-radius: 8px;
-  padding: 18px 22px; margin: 0 0 24px 0;
-}
-.strategy-fit-header {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.strategy-fit-icon { font-size: 1.1rem; }
-.strategy-fit-title {
-  font-weight: 600; color: #B8323A;
-  font-family: 'Songti SC', 'SimSun', serif;
-  font-size: 1rem; letter-spacing: 0.05em;
-}
-.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
-.strategy-fit-list {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
-}
-.strategy-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 7px 14px; background: white;
-  border: 1px solid rgba(184,50,58,0.3);
-  border-radius: 6px; text-decoration: none;
-  color: #1A1A1A; font-size: 0.8125rem;
-  transition: all 0.2s;
-}
-.strategy-link:hover {
-  background: rgba(184,50,58,0.06);
-  border-color: #B8323A; transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
-}
-.strategy-link-name { font-weight: 500; }
-.strategy-link-tier {
-  color: #D97706; font-size: 0.6875rem; font-weight: 500;
-  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
-}
-.strategy-fit-tip {
-  font-size: 0.75rem; color: #8B7355;
-  margin-top: 4px; font-style: italic;
-}
-@media (max-width: 600px) {
-  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
-}
-
-/* 📚 学科定位 breadcrumb(hero 标题下方) */
-.discipline-breadcrumb {
-  max-width: 880px; margin: -16px auto 24px; padding: 0 24px;
-  font-size: 0.875rem; color: var(--c-muted, #6B7280);
-  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
-}
-.discipline-breadcrumb a {
-  color: #2A6F4F; text-decoration: none;
-  border-bottom: 1px dotted rgba(42,111,79,0.4);
-  transition: all 0.2s;
-}
-.discipline-breadcrumb a:hover {
-  background: rgba(42,111,79,0.06);
-  border-bottom-color: #2A6F4F;
-}
-.bc-sep { margin: 0 8px; color: #ccc; }
-.bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
-@media (max-width: 600px) {
-  .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
-}
-
-/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
-.hero-stats .chsi-rating-cell {
-  grid-column: 1 / -1;
-  display: flex; align-items: baseline; gap: 14px;
-  padding: 12px 16px; margin-top: 6px;
-  border-top: 1px dashed currentColor;
-  opacity: 0.92;
-  font-feature-settings: "tnum" 1;
-}
-.hero-stats .chsi-rating-cell .chsi-label {
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 0.625rem; letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.hero-stats .chsi-rating-cell .chsi-score {
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
-  margin-left: auto;
-}
-.hero-stats .chsi-rating-cell .chsi-meta {
-  font-size: 0.6875rem; opacity: 0.7;
-}
-/* law 主题: 印章下方 mini-badge (无 hero-stats) */
-.hero .chsi-rating-badge {
-  display: inline-flex; align-items: baseline; gap: 8px;
-  margin-top: 12px; padding: 6px 14px;
-  border: 1px solid currentColor; border-radius: 4px;
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 0.75rem; opacity: 0.85;
-}
-.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
-
 </style>
 </head>
 <body>
@@ -696,14 +583,13 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       <div>
         <div class="hero-decor">▶ 放射医学 · 权威数据源</div>
         <h1>放射医学</h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=10#majors">医学</a><span class="bc-sep">›</span><a href="/?discipline=10&sub=临床医学类#majors">临床医学类</a><span class="bc-sep">›</span><span class="bc-current">放射医学</span></div>
         <p class="hero-tagline">严谨 · 冷静 · 鸟瞰 — 放射医学是临床医学下的「辐射防护+放射生物+放疗剂量+核素治疗」特设专业, 走「5+3 规培+CDC/职防院/放疗科/核医学」四条路, 适合对辐射/核技术感兴趣 + 能接受就业面窄 + 不怕职业被污名</p>
         <div class="hero-tags">
           <span class="tag primary">放射医学</span><span class="tag primary">辐射防护</span><span class="tag primary">放射生物学</span>
           <span class="tag">放疗剂量</span><span class="tag">核医学</span><span class="tag">辐射监测</span><span class="tag">职业卫生</span>
         </div>
         <div class="hero-stats">
-          <div class="stat"><div class="stat-label">学科门类<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">★ 4.3/5</span></div></div><div class="stat-value">医学 · 临床医学类 (特设)</div></div>
+          <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">医学 · 临床医学类 (特设)</div></div>
           <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">5年 · 医学学士</div></div>
           <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★★</div></div>
           <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
@@ -716,19 +602,19 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="overview">
   <div class="watermark">01</div>
   <div class="container">
-    <div class="section-num">01 / 11 · 速览</div>
+    <div class="section-num">01 / 9 · 速览</div>
     <h2>速览</h2>
     <p class="lede drop-cap">放射医学是临床医学下的「辐射防护+放射生物+放疗剂量+核素治疗」特设专业, 走「5+3 规培+CDC/职防院/放疗科/核医学」四条路, 适合对辐射/核技术感兴趣 + 能接受就业面窄 + 不怕职业被污名化的医学生.</p>
     
     
-    
+    <h3>避坑指南</h3><div class="m-pits"><div class="m-pit"><div class="m-pit-num">误区 01</div><div class="m-pit-myth">❌ 放射医学 = 医学影像学, 毕业去影像科</div><div class="m-pit-reality">✓ 放射医学 (100705TK) ≠ 医学影像学 (100203TK), 前者是辐射防护+放射生物+放疗剂量+核素治疗, 后者是写 CT/MRI 报告 + 介入; 放射医学毕业生 70%+ 走 CDC 监测/职防院/放疗科/核医学, 真去影像科写报告的不超过 10%, 选校前必须看清「放射医学」与「医学影像学」区别.</div></div><div class="m-pit"><div class="m-pit-num">误区 02</div><div class="m-pit-myth">❌ 就业面广, 三甲医院随便进</div><div class="m-pit-reality">✓ 2024 年全国放射医学本科毕业生约 1500 人, 但 80% 进 CDC/职防院/放疗科/核医学, 三甲放疗科名额每年不到 300 个, 招聘严格 (985 硕博 + 海外经历 + 国家级课题); 大量毕业生下沉到县市级 CDC/职防院, 起薪 8-15 万, 与临床医学 18-30 万差距明显.</div></div><div class="m-pit"><div class="m-pit-num">误区 03</div><div class="m-pit-myth">❌ 辐射防护轻松, 不需要学临床</div><div class="m-pit-reality">✓ 放射医学 5 年本科 + 3 年规培, 临床课程与临床医学完全一致, 第 5 年才分流; 辐射防护/放射生物/放疗剂量是真硬核, 但「执业医师」必须考, 临床通识 5 年不能少; 想转疾控/职防院可以, 但要补公共卫生硕士 (MPH) 才能升职.</div></div><div class="m-pit"><div class="m-pit-num">误区 04</div><div class="m-pit-myth">❌ 相亲婚恋会被歧视, 找不到对象</div><div class="m-pit-reality">✓ 「辐射恐惧」是社会普遍偏见, 相亲时「我在核电站/CDC 监测」常被误解为「有辐射危险」; 实际职业暴露年剂量 < 5 mSv (公众限值 1 mSv 的 5 倍), 远低于一次 CT 扫描 (10-20 mSv); 但社会认知短期难改, 心理承受力弱的慎选.</div></div><div class="m-pit"><div class="m-pit-num">误区 05</div><div class="m-pit-myth">❌ 5 年毕业对标临床 25-40 万</div><div class="m-pit-reality">✓ 本科 5 年毕业去县市级 CDC/职防院起薪 8-15 万, 三甲放疗科/核医学要硕博; 985 放射医学硕博 + 规培 (8 年) 后 25-50 万, 与临床医学接近; 但就业面比临床医学窄 50%, 不是「同薪多岗」.</div></div><div class="m-pit"><div class="m-pit-num">误区 06</div><div class="m-pit-myth">❌ 核电站事故/战争会爆火</div><div class="m-pit-reality">✓ 核电站事故/战争时放射医学确实吃香, 但「和平年代 99% 时间」就业稳定但薪资一般; 2024 年全国核电站 50+ 座, 每家招放射医学毕业生不超过 5 人/年, 不是「风口专业」, 选校要看「放射医学」是不是真特设专业 (全国不到 10 校开设).</div></div></div>
   </div>
 </section>
 
 <section class="tab" id="curriculum">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 11 · 课程</div>
+    <div class="section-num">02 / 9 · 课程</div>
     <h2>主要课程 · 含前序依赖</h2>
     <p class="curriculum-lede">全国 5 年制通用框架, 不同高校在大三/大四有不同方向分流 (临床/口腔/影像/儿科等)。↳ = 前序必修课。</p>
     <div class="curriculum-grid">
@@ -772,7 +658,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="schools">
   <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">03 / 11 · 院校</div>
+    <div class="section-num">03 / 9 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -831,7 +717,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="companies">
   <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">04 / 11 · 头部雇主</div>
+    <div class="section-num">04 / 9 · 头部雇主</div>
     <h2>头部医院 · 含 peer review</h2>
     <p class="lede">S = 三甲顶级 (顶级薪资+大量校招), A = 三甲稳定校招, B = 大量招 (中等门槛)。✓ 校友核实 = 已被 3 位以上校友核实。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -963,7 +849,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="salary">
   <div class="watermark">06</div>
   <div class="container">
-    <div class="section-num">06 / 11 · 薪资</div>
+    <div class="section-num">06 / 9 · 薪资</div>
     <h2>薪资分布 · 含 3 年变化</h2>
     <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1003,7 +889,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="directions">
   <div class="watermark">07</div>
   <div class="container">
-    <div class="section-num">07 / 11 · 就业方向</div>
+    <div class="section-num">07 / 9 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1046,48 +932,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 11 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">25%</div>
-          <div class="path-name">国内读研 (5+3 一体化, 8 年毕业拿规培证)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">20%</div>
-          <div class="path-name">国内读研 (放射医学硕/博, 985 苏州大学/吉林大学/北大)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">10%</div>
-          <div class="path-name">国内读研 (公共卫生 MPH, 适合 CDC/职防院方向)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">25%</div>
-          <div class="path-name">直接就业 (县级 CDC/职防院, 5 年本科毕业)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10%</div>
-          <div class="path-name">央企就业 (中核/中广核核电站, 5 年本科毕业)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">5%</div>
-          <div class="path-name">出国 (美国医学物理 MS/PhD, 回国 30-50 万)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5%</div>
-          <div class="path-name">考公/事业编 (CDC/卫健委, 5 年本科)</div>
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 11 · 学长学姐说</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 9 · 学长学姐说</div>
     <h2>学长学姐说 · 含 Mayo 引文</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1151,9 +999,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 11 · 选科要求</div>
+  <div class="watermark">09</div><div class="container"><div class="section-num">09 / 9 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1236,11 +1082,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
     <div class="data-source">数据源: 人工精编 (教育部第四轮学科评估 2024 + 苏州大学核医学院/吉林大学白求恩/北大放射医学系培养方案 + 国家卫健委《中国卫生健康统计年鉴 2024》 + 中国原子能科学研究院招聘启事 + 5 位放射医学校友访谈 @ 北京/上海/南京/浙江/广东)</div>

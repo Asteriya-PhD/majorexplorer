@@ -27,3 +27,4 @@ def render_hero_eng(data, *, title, summary, category, degree, duration, tags, d
     </div>
   </div>
 </header>'''
+

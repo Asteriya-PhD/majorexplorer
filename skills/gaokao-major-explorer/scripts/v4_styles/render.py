@@ -516,19 +516,6 @@ def _normalize_xuanke(items):
     return out
 
 
-def _path_item_text(item) -> str:
-    """Render one deep_study path-list item — supports dict({name,desc}) or str."""
-    if isinstance(item, dict):
-        name = item.get("name", "")
-        desc = item.get("desc", "")
-        if name and desc:
-            return f"<strong>{name}</strong> — {desc}"
-        return name or desc or ""
-    if isinstance(item, str):
-        return item[:80]
-    return ""
-
-
 def render_v4(data: dict, style: str) -> str:
     """通用 12 套极致渲染"""
     if style not in HERO_FN:
@@ -553,7 +540,7 @@ def render_v4(data: dict, style: str) -> str:
     top_companies = _coerce_named(data.get("top_companies", []), "name")
     salary = data.get("salary", {})
     directions = _coerce_named(data.get("employment_direction", []), "name")
-    deep_study = data.get("deep_study", {})
+    deep_study = data.get("deep_study", {})  # 留 JSON 字段, 08 section 暂下线 (2026-06-24)
     quotes = _coerce_named(_dedup_by_name(data.get("alumni_quotes", []), "current"), "current")
     xuanke = _normalize_xuanke(data.get("xuanke_req_list", []))
     national_strategy_tags = data.get("national_strategy_tags", [])
@@ -672,14 +659,9 @@ def render_v4(data: dict, style: str) -> str:
         for d in directions
     ) if directions else '<p>就业方向待补充</p>'
 
-    path_html = "\n".join(
-        f'''        <div class="path-card fade-up" data-delay="{(i % 4) * 80}">
-          <div class="path-pct">{v if isinstance(v, (int, float)) else len(v) if isinstance(v, list) else "推荐"}<span class="path-unit">{"%" if isinstance(v, (int, float)) else "项"}</span></div>
-          <div class="path-name">{k}</div>
-          {f'<ul class="path-bullets">{"".join(f"<li>{_path_item_text(item)}</li>" for item in v[:5])}</ul>' if isinstance(v, list) else f'<div class="path-detail">{v}</div>' if isinstance(v, str) else ""}
-        </div>'''
-        for i, (k, v) in enumerate(deep_study.items())
-    ) if deep_study else '<p>深造数据待补充</p>'
+    # ── 深造路径 (08 section 已下线 2026-06-24, 与 07 重复. 后台重做) ──
+    # 留 deep_study 字段读取供未来 debug, 渲染置空
+    path_html = ""
 
     quotes_html = "\n".join(
         f'''        <div class="quote fade-up" data-delay="{(i % 4) * 80}" {"data-cite=" + repr(q.get("citation", "")) if q.get("citation") else ""}>
@@ -747,9 +729,7 @@ def render_v4(data: dict, style: str) -> str:
 {hero_html}
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     {render_overview_simple(data) if is_simple_format(data) else (render_overview_v2(data) if data.get("overview_v2") else (f"<p class=lede drop-cap>{summary}</p>"
     + (f"<h3>这个专业学什么?</h3><p>{data.get("what_you_learn", "")}</p>" if data.get("what_you_learn") else "")
@@ -761,9 +741,7 @@ def render_v4(data: dict, style: str) -> str:
 {render_pitfalls_v2(data)}
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">{data.get("curriculum_note", "全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。")}</p>
     <div class="curriculum-grid">
@@ -773,9 +751,7 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -785,9 +761,7 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -797,9 +771,7 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -814,9 +786,7 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -825,21 +795,10 @@ def render_v4(data: dict, style: str) -> str:
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-{path_html}
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -849,9 +808,7 @@ def render_v4(data: dict, style: str) -> str:
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">

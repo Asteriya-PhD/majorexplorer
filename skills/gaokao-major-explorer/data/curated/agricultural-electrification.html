@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -406,8 +433,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -654,11 +682,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1064,18 +1094,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">农业电气化的核心是「电力系统 + 农业场景 + 自动化控制」三栖, 它是电气工程在「三农」场景下的垂直应用, 与电气工程及其自动化的差异是「低压农网 + 温室大棚 + 畜禽舍环境 + 农村光伏」; 在「乡村振兴 + 农村电网升级 + 设施农业 + 农业物联网」政策风口下需求稳定, 但「电网校招要求 985 硕博 + 农网方向待遇低于城网 + 行业认知度低于电气工程」是该专业三大现实约束.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 电路原理; 大二核心: 模拟电子技术 / 数字电子技术 / 电机与拖动 / 自动控制原理 / 电力系统分析 / 单片机原理; 大三方向分流: 农村电网与配电 / 设施农业电气控制 / 农业物联网与传感 / 农村新能源 (光伏/风电) 四选一; 大四毕设 + 电网/农业装备公司实习 + PLC/组态软件/物联网平台实战. 4 年下来, 既要能读懂农网规划, 也要能做温室大棚控制系统.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 电路/电机/控制啃得动, 对「电气 + 农业」跨界有兴趣</li><li>对农村电网升级/温室大棚控制/设施农业/农业物联网/光伏农业有底层好奇心</li><li>能接受工作环境带「县域 + 田间地头」属性, 不排斥下乡出差与县市就业</li><li>愿意走电网/农网/农业装备/智慧农业公司, 不期待一二线互联网/金融高薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>排斥下乡/田间作业/县域就业, 想纯留一二线城市 — 农网与设施农业多在县市</li><li>期望「一二线 30 万+」— 国家电网主流薪资 8-15 万, 与互联网/金融有显著差距</li><li>对农艺/作物/畜禽养殖毫无兴趣 — 设施农业需理解作物生理+畜禽环境, 纯电气背景会持续劝退</li><li>把农业电气化等同于电气工程 — 农业电气化在电网校招中认知度低于电气工程, 选岗时需主动解释专业含金量</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">农业电气化 = 电气工程及其自动化</div><div class="ovv-simple-pit-reality">农业电气化是电气工程在「三农」场景下的垂直应用, 偏低压农网 + 温室大棚 + 畜禽舍环境 + 农村光伏; 电气工程偏发输变配 + 工业控制. 课程与就业差异 20-30%, 不要混淆选专业.</div></li><li><div class="ovv-simple-pit-myth">国家电网校招, 农业电气化和电气工程一视同仁</div><div class="ovv-simple-pit-reality">国家电网校招中, 农业电气化专业认知度低于电气工程, 部分省份电网校招「专业目录」明确写「电气工程及其自动化」, 农业电气化需以「农业工程类」或「电气类」报名, 网申/笔试阶段被卡概率高于电气工程 20-30%.</div></li><li><div class="ovv-simple-pit-myth">农村电网升级, 农网方向稳定高薪</div><div class="ovv-simple-pit-reality">农网方向 (县市级供电公司) 稳定 + 事业编 + 待遇中下 (应届 8-12 万), 显著低于城网/变电/检修核心岗 (12-18 万); 985 硕博校招主流去城网/省网, 农网多留给本科生, 晋升渠道窄, 跨省调动难度大.</div></li><li><div class="ovv-simple-pit-myth">设施农业 = 现代化大棚, 钱景无限</div><div class="ovv-simple-pit-reality">设施农业 (温室大棚 + 畜禽舍) 确实是 2024+ 风口 (中央财政 300 亿专项), 但 70% 就业在山东寿光 / 河北馆陶 / 辽宁海城等设施农业大县, 校招薪资 6-12 万, 显著低于互联网/智能制造; 设施装备企业 (京鹏园艺/上海都市绿色/东方英宝) 是主要去向.</div></li><li><div class="ovv-simple-pit-myth">农业物联网 = 互联网 + 农业, 薪资对标互联网</div><div class="ovv-simple-pit-reality">农业物联网 (托普云农/慧云信息/农信通/极飞科技) 是 2022+ 风口, 但 70% 岗位在县域/农场/示范园, 一线算法岗被 985 CS/AI/物联网院抢走, 农业电气化本科多走 PLC 编程 + 传感网络部署 + 田间测试, 校招薪资 8-15 万, 比互联网算法低 40-60%.</div></li><li><div class="ovv-simple-pit-myth">光伏农业 = 新能源风口, 毕业抢手</div><div class="ovv-simple-pit-reality">光伏农业 (农光互补/渔光互补/光伏温室) 是「双碳 + 乡村振兴」双政策风口, 但 70% 岗位在光伏企业 (隆基/晶科/天合/阳光电源), 农业电气化专业与新能源/光伏工程专业竞争同一岗位, 校招薪资 8-15 万, 主流去向是 EPC 总包 + 运维, 设计岗要求 985 硕博.</div></li><li><div class="ovv-simple-pit-myth">农业电气化对口体制内, 稳定躺平</div><div class="ovv-simple-pit-reality">体制内 (电网/农网/农业农村局) 是稳定选项, 但 985 硕博校招主流去省网/城网, 农网/县市局留给本科生, 晋升周期 8-12 年, 跨省调动难; 想拿电网高薪需硕博 + 电气工程 / 农业电气化双背景.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">农业电气化的核心是「电力系统 + 农业场景 + 自动化控制」三栖, 它是电气工程在「三农」场景下的垂直应用, 与电气工程及其自动化的差异是「低压农网 + 温室大棚 + 畜禽舍环境 + 农村光伏」; 在「乡村振兴 + 农村电网升级 + 设施农业 + 农业物联网」政策风口下需求稳定, 但「电网校招要求 985 硕博 + 农网方向待遇低于城网 + 行业认知度低于电气工程」是该专业三大现实约束.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 电路原理; 大二核心: 模拟电子技术 / 数字电子技术 / 电机与拖动 / 自动控制原理 / 电力系统分析 / 单片机原理; 大三方向分流: 农村电网与配电 / 设施农业电气控制 / 农业物联网与传感 / 农村新能源 (光伏/风电) 四选一; 大四毕设 + 电网/农业装备公司实习 + PLC/组态软件/物联网平台实战. 4 年下来, 既要能读懂农网规划, 也要能做温室大棚控制系统.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 电路/电机/控制啃得动, 对「电气 + 农业」跨界有兴趣</li><li>对农村电网升级/温室大棚控制/设施农业/农业物联网/光伏农业有底层好奇心</li><li>能接受工作环境带「县域 + 田间地头」属性, 不排斥下乡出差与县市就业</li><li>愿意走电网/农网/农业装备/智慧农业公司, 不期待一二线互联网/金融高薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>排斥下乡/田间作业/县域就业, 想纯留一二线城市 — 农网与设施农业多在县市</li><li>期望「一二线 30 万+」— 国家电网主流薪资 8-15 万, 与互联网/金融有显著差距</li><li>对农艺/作物/畜禽养殖毫无兴趣 — 设施农业需理解作物生理+畜禽环境, 纯电气背景会持续劝退</li><li>把农业电气化等同于电气工程 — 农业电气化在电网校招中认知度低于电气工程, 选岗时需主动解释专业含金量</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1085,9 +1113,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1131,9 +1157,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1196,9 +1220,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1351,9 +1373,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1361,6 +1381,12 @@ footer .data-source { color: #78716C; }
         <tr><th>阶段</th><th>P25</th><th>P50 中位</th><th>P75 高位</th></tr>
       </thead>
       <tbody>
+        <tr>
+          <td class="salary-stage">应届生 (设施农业装备/光伏 EPC)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
         <tr>
           <td class="salary-stage">应届生 (国家电网 农网/城网)</td>
           <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +4%</span></td>
@@ -1378,12 +1404,6 @@ footer .data-source { color: #78716C; }
           <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +8%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.0%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
-        </tr>
-        <tr>
-          <td class="salary-stage">应届生 (设施农业装备/光伏 EPC)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="7" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:71.42857142857143%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (中级电气/智慧农业工程师)</td>
@@ -1409,9 +1429,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1459,60 +1477,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">28<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (985 农工/电气工程强校)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (双一流 农工强校, 中国农大/华南农大/东北农大)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (农业工程/电气工程, 高校教职路径)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">22<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (国家电网/南方电网 农网/城网)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (智慧农业算法/嵌入式)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (设施农业装备/光伏 EPC)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (县市农机推广站, 事业编/公务员)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (美国/欧洲/日本, 农业工程/电气工程)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1551,9 +1519,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1618,10 +1584,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card eng" href="/radiation-protection-nuclear-safety.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">辐射防护与核安全</span><span class="wl-hook">辐射防护与核安全</span></a>
-      <a class="wl-card eng" href="/industrial-intelligence.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">工业智能</span><span class="wl-hook">工业智能</span></a>
-      <a class="wl-card eng" href="/civil-hydraulic-marine-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">土木、水利与海洋工程</span><span class="wl-hook">土木、水利与海洋工程</span></a>
-      <a class="wl-card eng" href="/theoretical-and-applied-mechanics.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">理论与应用力学</span><span class="wl-hook">理论与应用力学</span></a>
+      <a class="wl-card eng" href="/engineering-mechanics.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">工程力学</span><span class="wl-hook">工程力学</span></a>
+      <a class="wl-card eng" href="/fine-chemicals.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">精细化工</span><span class="wl-hook">精细化工</span></a>
+      <a class="wl-card eng" href="/hydrology-water-resources-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">水文与水资源工程</span><span class="wl-hook">水文与水资源工程</span></a>
+      <a class="wl-card eng" href="/aerospace-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">航空航天工程</span><span class="wl-hook">航空航天工程</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1636,11 +1602,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 中国农大/华南农大/东北农大/西北农林/江苏大学培养方案 + 2024-2025 国家电网/南方电网/大疆农业/极飞校招 offer 墙 + 校友访谈 @ 广州/深圳/北京)</div>

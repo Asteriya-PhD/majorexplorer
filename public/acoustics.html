@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -1065,9 +1092,7 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     <div class="ovv-simple"><p class="ovv-simple-lede">声学的核心是「水声工程 + 超声医疗 + 电声/建筑声学」三栖, 它是物理学里偏工程应用最深的「小众重器」方向 (与物理学其他理论方向形成对比); 强数学物理 + 信号处理是硬门槛, 在海洋强国战略 + 国产化高端医疗设备 + 消费电子声学三层风口下, 2024-2026 行业薪资稳步上行, 但「声学学科过小导致就业面窄」「水声方向涉密岗位地理限制」「超声医疗是医疗器械大风口但需生物医学交叉」是该专业三大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图; 大二核心: 理论力学 / 数学物理方法 / 电路基础 / 模拟电子技术 / 信号与系统 / 振动与声学基础; 大三方向分流: 水声工程 / 超声医疗与换能器 / 电声与建筑声学 / 噪声振动控制 四选一; 大四毕设 + 实验实战 (水声测量 / 消声室测试 / 换能器设计). 4 年下来, 既要能推导声波方程, 也要会用声学仿真软件 (COMSOL/Actran/Virtual.Lab).</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 数学物理方法/波动方程/信号处理啃得动</li><li>对水声/超声医疗/电声/MEMS 麦克风/降噪算法有底层好奇心</li><li>接受「涉密方向 + 地理限制」(水声方向主要集中在北京/上海/哈尔滨/武汉/西安/无锡, 体制内或军工单位偏多)</li><li>能扛「小众学科」心理压力 — 全国声学本科每年招生不足 1500 人, 同学圈小但人均待遇扎实</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥数学物理方法/复变函数 — 声学核心课业会持续劝退</li><li>只想去互联网大厂做纯软件 — 声学对口岗位集中在硬件/信号处理/嵌入式, 不要「曲线救国」来声学</li><li>不愿接受涉密/体制内方向 — 水声工程很多项目涉密, 出国和互联网大厂机会被卡</li><li>不愿补数学物理方法 + 英文文献 — 声学顶级期刊 JASA/JSV 全英文, 物理图像不补 = 35 岁天花板明显</li></ul></div></div></div></div>
   </div>
@@ -1076,7 +1101,7 @@ footer .data-source { color: #78716C; }
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1086,9 +1111,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1126,9 +1149,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1197,9 +1218,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1336,9 +1355,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1382,9 +1399,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1427,55 +1442,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">30<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (中科院声学所/985 物理学院声学方向)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (哈工程水声/中科大近代物理)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (声学超材料/凝聚态声学/量子声学, 高校教职路径)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (水声/超声医疗/电声/噪声振动 研发岗)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (声学测试/NVH 工程师/建筑声学设计)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">7<span class="path-unit">%</span></div>
-          <div class="path-name">跨行 (语音算法/CS/数据分析, 需自学补 CS 课)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (美国/欧洲/日本, 海洋声学/医学超声)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1514,9 +1484,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">

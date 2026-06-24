@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -406,8 +433,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -654,11 +682,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1064,18 +1094,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">航空航天系统工程是给「力学 + 飞行器 + 系统工程」三栖考生准备的硬核国防 + 商业风口学科, 强力学 + 强系统工程是硬门槛; 2024-2026 C919 国产大飞机 + 商业航天 + 低空经济是持续 10 年的产业风口, 但「对口研究所门槛极高 + 国防七子 vs 普通院校资源鸿沟 + 商业航天/eVTOL 落地 3-5 年 + 总师岗位万里挑一」是该专业四大结构性坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 理论力学; 大二核心: 材料力学 / 结构力学 / 空气动力学 / 飞行力学 / 自动控制原理 / 飞行器总体设计; 大三方向分流: 飞行器设计 (固定翼/旋翼/无人机) / 卫星与火箭设计 / 发动机与推进 / 飞行控制与航电 / 低空经济与 eVTOL 五选一; 大四毕设 + 主机院/航发院实习 + ANSYS/MATLAB/Simulink 仿真实战. 4 年下来, 既要懂空气动力学, 也要能跑飞行器总体设计.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理 + 力学基础扎实, 空气动力学/结构力学/控制理论啃得动, 强力学 + 强系统两栖</li><li>对飞机/火箭/卫星/无人机/低空经济有底层好奇心, 接受「国防 + 商业」双轨就业</li><li>接受「硬核」课业 + 主机院/航发院实习, 愿意主动加航模队/挑战赛/导师课题组</li><li>能扛长周期投入 — 头部主机院/航发院/商业航天要 985 硕博, 本科多走工艺/装配/外协测试</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥力学/控制 — 该专业硬核课业会持续劝退</li><li>期望「本科毕业 30 万+」— 头部主机院/航发院要 985 硕博, 本科起薪 8-15 万是常态</li><li>不愿补英文文献阅读 — 行业 AIAA/JAS/J. Aircraft 全英文, 国际标准英文能力直接卡天花板</li><li>不能接受军工保密 + 国防七子就业集中 — 不在 985 强校/北航北理工哈工大西交国防科大系, 头部主机院校招渠道非常窄</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">航空航天系统工程 = 航空航天工程</div><div class="ovv-simple-pit-reality">航空航天系统工程是航空航天工程的「系统集成」升级版, 偏飞行器总体+系统工程+总师路径; 传统航空航天工程偏机体/发动机/航电分系统. 课程结构差异 20-30%, 就业方向更偏总体设计 + 总师.</div></li><li><div class="ovv-simple-pit-myth">本科毕业就能去主机院/航发院做设计</div><div class="ovv-simple-pit-reality">主机院 (中国商飞/航空工业成都所/沈阳所/西飞/哈飞) + 航发院 (中国航发商发/航发动力/航发南方) 核心设计岗 90%+ 要求 985 硕博, 本科主要走工艺/装配/外协测试; 想拿总师/副总师核心岗基本必须读研.</div></li><li><div class="ovv-simple-pit-myth">C919 国产大飞机量产, 毕业抢手</div><div class="ovv-simple-pit-reality">C919 国产大飞机 2024-2026 刚进入小批量交付, 2026 年规划年产 50 架, 总装/设计岗位集中在上海/西安/成都/沈阳, 真正核心岗 (总体/气动/航电) 招人极少, 主流是分系统供应商; 不要被「C919 量产」宣传误导.</div></li><li><div class="ovv-simple-pit-myth">商业航天 (卫星/火箭) 风口, 毕业抢手</div><div class="ovv-simple-pit-reality">商业航天 (蓝箭航天/星际荣耀/星河动力/银河航天/长光卫星) 是 2024+ 风口, 但 70% 岗位在北京/酒泉/西安, 真正核心岗 (总体/姿轨控/动力) 招人极少, 多数毕业生走的还是传统航天科技/科工集团.</div></li><li><div class="ovv-simple-pit-myth">低空经济/eVTOL 风口, 本科毕业就能进</div><div class="ovv-simple-pit-reality">低空经济 (eVTOL) 是 2024+ 风口, 头部企业 (亿航/小鹏汇天/沃飞长空/峰飞/时的) 真正核心岗 (飞控/航电/总布置) 90%+ 要求 985 硕博 (航空航天/EE/CS), 本科反而是边缘; 真正落地仍需 3-5 年, 不要被短期热度误导.</div></li><li><div class="ovv-simple-pit-myth">国防七子 vs 普通航空航天院校差距不大</div><div class="ovv-simple-pit-reality">国防七子 (北航/北理工/哈工大/西工大/哈工程/南航/南理工) 主机院校招渠道差距巨大, 航空工业/航天科技/航天科工校招宣讲几乎只去这 7 所 + 清华/上交/西交/国防科大; 普通航空航天院校 (沈航/郑航/桂航/西华) 只能去中航工业下属三/四级公司.</div></li><li><div class="ovv-simple-pit-myth">总师/副总师是航空航天毕业生的主流归宿</div><div class="ovv-simple-pit-reality">总师/副总师是万里挑一的位置, 一个 200 人研发团队 5-10 年才出 1 个总师, 绝大多数毕业生 (60%+) 在主机院/航发院做分系统设计/工艺/测试/外协, 30% 走读研/转行 (CS/EE/汽车), 总师梦别太当真.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">航空航天系统工程是给「力学 + 飞行器 + 系统工程」三栖考生准备的硬核国防 + 商业风口学科, 强力学 + 强系统工程是硬门槛; 2024-2026 C919 国产大飞机 + 商业航天 + 低空经济是持续 10 年的产业风口, 但「对口研究所门槛极高 + 国防七子 vs 普通院校资源鸿沟 + 商业航天/eVTOL 落地 3-5 年 + 总师岗位万里挑一」是该专业四大结构性坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 理论力学; 大二核心: 材料力学 / 结构力学 / 空气动力学 / 飞行力学 / 自动控制原理 / 飞行器总体设计; 大三方向分流: 飞行器设计 (固定翼/旋翼/无人机) / 卫星与火箭设计 / 发动机与推进 / 飞行控制与航电 / 低空经济与 eVTOL 五选一; 大四毕设 + 主机院/航发院实习 + ANSYS/MATLAB/Simulink 仿真实战. 4 年下来, 既要懂空气动力学, 也要能跑飞行器总体设计.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理 + 力学基础扎实, 空气动力学/结构力学/控制理论啃得动, 强力学 + 强系统两栖</li><li>对飞机/火箭/卫星/无人机/低空经济有底层好奇心, 接受「国防 + 商业」双轨就业</li><li>接受「硬核」课业 + 主机院/航发院实习, 愿意主动加航模队/挑战赛/导师课题组</li><li>能扛长周期投入 — 头部主机院/航发院/商业航天要 985 硕博, 本科多走工艺/装配/外协测试</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥力学/控制 — 该专业硬核课业会持续劝退</li><li>期望「本科毕业 30 万+」— 头部主机院/航发院要 985 硕博, 本科起薪 8-15 万是常态</li><li>不愿补英文文献阅读 — 行业 AIAA/JAS/J. Aircraft 全英文, 国际标准英文能力直接卡天花板</li><li>不能接受军工保密 + 国防七子就业集中 — 不在 985 强校/北航北理工哈工大西交国防科大系, 头部主机院校招渠道非常窄</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1085,9 +1113,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1128,9 +1154,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1199,9 +1223,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1338,9 +1360,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1349,16 +1369,16 @@ footer .data-source { color: #78716C; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (主机院/航发院研发, 985 硕博)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.714285714285715%"></span></span><span class="yoy up">↗ +5%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="24" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.57142857142857%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
-        </tr>
-        <tr>
           <td class="salary-stage">应届生 (主机厂工艺/装配/外协)</td>
           <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:50.0%"></span></span><span class="yoy flat">→ 0%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:75.0%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">应届生 (主机院/航发院研发, 985 硕博)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="16" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.714285714285715%"></span></span><span class="yoy up">↗ +5%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="24" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.57142857142857%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (中级飞机/航天器工程师)</td>
@@ -1384,9 +1404,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1429,65 +1447,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">30<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (985 国防七子航空航天强校)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (211 航空航天强校, 北航/西工大/南航)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (航空航天/航天器/推进, 高校教职路径)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (主机院/航发院 985 硕博)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">14<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (主机厂/航天 工艺/装配)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (商业航天/eVTOL 风口)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (美国/欧洲/日本/俄罗斯, 航空航天, 美/法/俄 Top 30)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">跨行 (CS/EE/汽车/机器人, 慎入)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">考公/选调 (航天口/航空工业 极少, 多走三不限)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1536,9 +1499,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1603,10 +1564,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card eng" href="/intelligent-molecular-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智能分子工程</span><span class="wl-hook">智能分子工程</span></a>
-      <a class="wl-card eng" href="/smart-perception-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智能感知工程</span><span class="wl-hook">智能感知工程</span></a>
-      <a class="wl-card eng" href="/agricultural-intelligent-equipment-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">农林智能装备工程</span><span class="wl-hook">农林智能装备工程</span></a>
-      <a class="wl-card eng" href="/polymer-materials-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">高分子材料与工程</span><span class="wl-hook">高分子材料与工程</span></a>
+      <a class="wl-card eng" href="/ammunition-explosion-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">弹药工程与爆炸技术</span><span class="wl-hook">弹药工程与爆炸技术</span></a>
+      <a class="wl-card eng" href="/printing-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">印刷工程</span><span class="wl-hook">印刷工程</span></a>
+      <a class="wl-card eng" href="/intelligent-marine-equipment-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智能海洋装备工程</span><span class="wl-hook">智能海洋装备工程</span></a>
+      <a class="wl-card eng" href="/soft-matter-science-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">软物质科学与工程</span><span class="wl-hook">软物质科学与工程</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1621,11 +1582,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 北航/西工大/哈工大/国防科大/南航培养方案 + 2024-2025 中国商飞/航发/航天科技/航空工业校招 offer 墙 + 校友访谈 @ 上海/西安/沈阳/北京)</div>

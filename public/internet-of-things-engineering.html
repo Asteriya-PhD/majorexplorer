@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -1067,9 +1094,7 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     <div class="ovv-simple"><p class="ovv-simple-lede">物联网工程的核心是「嵌入式 + 通信 + 传感 + 云平台」四合一, 它是工科里少数「端-边-云」全栈培养的交叉专业, 但课程表横跨硬件/软件/通信/云, 杂而不精是常态; 2024+ 智能家居 + 工业互联网 + 智慧城市 + 智能汽车 (车-路-云) 风口大, 但「万金油被 CS/EE/通信抢饭碗」「行业极度碎片化选错细分等于白学」「很多 IoT 岗位实际被 CS/EE 科班降维打击」「课程宽口径学不深」是该专业四大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 电路分析基础 / C 语言程序设计; 大二核心: 模拟电子技术 / 数字电子技术 / 信号与系统 / 单片机原理与接口 / 嵌入式系统 / 通信原理 / 传感器原理与应用; 大三方向分流: 嵌入式固件开发 / 无线通信与协议 / 工业互联网 (IIoT) / 智能硬件与产品 / 云平台后台 五选一; 大四毕设 + 实战 (STM32/Arduino/树莓派/ZigBee/BLE/LoRa/NB-IoT/5G RedCap). 4 年下来, 既会焊电路写固件, 也会调通信协议 + 云端接口.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 电路/信号/通信/编程啃得动</li><li>对智能硬件/智能家居/工业互联网/智能汽车有底层好奇心</li><li>接受「端-边-云」全栈课业, 大二起选定 1-2 个细分 (固件/通信/云/工业/硬件) 死磕</li><li>能动手 — 焊接/示波器调试/单片机开发/通信协议抓包是家常便饭</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥编程/电路 — IoT 核心是「嵌入式 + 通信」, 编程和电路躲不过</li><li>只想做纯软件/算法 — 建议直接选 CS/软工, IoT 的算法深度不及</li><li>怕硬件怕焊接怕 24V 以上强电 — 嵌入式调试和电气接线是必过门槛</li><li>期望「本科毕业 30 万+」— 头部大厂 (华为/小米/海康) 985 硕 25-35 万是常态, 本科起薪 10-18 万, 且容易被 CS/EE 卡学历</li></ul></div></div></div></div>
   </div>
@@ -1078,7 +1103,7 @@ footer .data-source { color: #78716C; }
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1088,9 +1113,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1133,9 +1156,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1204,9 +1225,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1359,9 +1378,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1399,9 +1416,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1449,70 +1464,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">26<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (985 计算机/电子 A+: 哈工大/电子科大/清华/浙大/西交/东南)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (211 计算机/通信强校: 北邮/南邮/西电/合工大)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">4<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (物联网/嵌入式/计算机, 高校/研究院路径)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (嵌入式固件/驱动开发)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (IoT 平台/云端后台)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">16<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (智能家居/工业互联网/车联网 IoT)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (无线通信/协议栈)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">4<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (AIoT/边缘 AI 算法, 多为硕博)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (美国/欧洲/新加坡, 物联网/CS/EE)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">跨行转产品经理 (IoT/智能硬件产品)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1551,9 +1506,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">

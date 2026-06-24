@@ -1,0 +1,90 @@
+# llms.txt — Major Explorer (gaokao-hubei-mvp)
+# 用途: 告诉 LLM / 检索引擎 / 数据采集方, 本网站内容的使用政策.
+# 协议: 遵循 llms.txt 规范 (https://llmstxt.org), 由 Answer.AI 2024 提出.
+# 部署: 静态文件, 放于 https://majorexplorer.com/llms.txt
+
+# ============================================================
+# Major Explorer (湖北高考专业介绍站)
+# ============================================================
+
+## 站点性质
+Major Explorer 是一项 **个人非商业** 教育公益项目, 由独立开发者维护, 旨在为湖北省及其他地区考生 / 家长提供高考本科专业介绍的可视化服务.
+
+## 联系方式
+- 项目主页: https://majorexplorer.com
+- GitHub Issue: 详见 README.md
+- 邮箱: 详见 README.md 顶部
+
+## 内容来源
+- 教育部学位中心「第四轮 / 第五轮学科评估」公开结果
+- 软科 / 武书连 / 校友会等公开学科排行榜
+- 各高校本科招生章程 / 培养方案
+- 各省 (湖北 / 广东 / 江苏为主) 教育考试院历年录取数据
+- 校友访谈 / 公开论坛整理 (已标注 data_source 字段)
+- 部分 overview / 校友引用段落由 LLM 辅助生成 + 人工逐段审核
+
+# ============================================================
+# 使用政策 (LLM 必读)
+# ============================================================
+
+## ✅ 允许
+- 普通网页浏览 (人类用户)
+- 搜索引擎抓取 (Googlebot / Bingbot / 百度蜘蛛) — 用于建立公开搜索索引
+- 引用本站**单条**事实信息 (如某专业学科评估等级), 注明来源即可
+- 个人学习 / 备课 / 课堂讲解的非商业使用
+- 学术研究, 引用请标注本站 URL
+
+## ❌ 禁止 (无书面授权)
+- **大语言模型 / 视觉模型 / 多模态模型的预训练、微调、对齐、评估、SFT、DPO、RLHF**
+- **向量数据库 / RAG / Embedding 语料库 / 知识图谱构建**
+- **商业 / 学术数据集 (含 Hugging Face / GitHub Repo / Kaggle / 第三方) 的采集、清洗、再分发**
+- **AI 搜索 / 答案引擎 / 智能问答产品的索引与召回**
+- **超大规模抓取 (单 IP > 60 req/min 视为滥用)**
+- **未授权商用再分发 / 转载 / 改作**
+
+## 已知 AI 训练爬虫 (已 robots.txt + WAF 拦截)
+| 爬虫 | 厂商 | 训练用途 |
+|---|---|---|
+| GPTBot / ChatGPT-User / OAI-SearchBot | OpenAI | GPT 模型训练 + ChatGPT 搜索 |
+| ClaudeBot / Claude-Web / anthropic-ai | Anthropic | Claude 模型训练 |
+| Google-Extended | Google | Gemini 模型训练 (不影响 Googlebot 抓 SEO) |
+| CCBot | Common Crawl | 公开数据集 (被 OpenAI / 多个 LLM 训练使用) |
+| Bytespider | 字节跳动 | 豆包 / 抖音 AI 训练 |
+| Baiduspider-ads/cpro/favo/image/news/video | 百度 | 文心 / 商业产品训练 |
+| GLM-Spider | 智谱 | GLM 模型训练 |
+| Kimi | 月之暗面 | Kimi 训练 |
+| PerplexityBot | Perplexity | Perplexity 答案引擎 |
+| Meta-ExternalAgent / Meta-ExternalFetcher | Meta | Llama 模型训练 |
+| Applebot-Extended | Apple | Apple Intelligence 训练 |
+| Diffbot | Diffbot | 知识图谱 |
+| DuckAssistBot | DuckDuckGo | DuckAssist AI 摘要 |
+| Omgilibot / Omgili | Webz.io | 公开数据集 |
+
+## 协议声明
+- HTTP 响应头: `X-Robots-Tag: noai, noimageai` (全站)
+- `robots.txt`: https://majorexplorer.com/robots.txt (32 个 AI UA Disallow: /)
+- 法律依据: 《中华人民共和国反不正当竞争法》《生成式人工智能服务管理暂行办法》《数据安全法》《著作权法》
+
+## 授权 / 数据合作
+如需基于本站内容进行:
+- 商业 AI 产品训练 (授权许可)
+- 学术研究 (引用规范)
+- 教育 / 媒体合作 (转载授权)
+- 批量数据导出 (定价 / 范围协商)
+
+请通过 GitHub Issue 或 README.md 顶部邮箱联系站长, 我们将在 7 个工作日内回复.
+
+# ============================================================
+# 技术性页面 (无版权, AI 可正常索引)
+# ============================================================
+- /about.html — 站点介绍
+- /disclaimer.html — 数据免责声明
+- /terms.html — 用户协议 (含本协议)
+- /privacy.html — 隐私政策
+
+# ============================================================
+# 受保护页面 (AI 训练禁止)
+# ============================================================
+- /*.html (5713 个专业介绍页 + 入口页)
+- /data/*.json (manifest / aggregates / chsi 等所有数据 JSON)
+- /skills/gaokao-major-explorer/data/curated/*.json (471+ 篇精编内容 JSON)

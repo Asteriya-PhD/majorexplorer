@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -1088,9 +1115,7 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     <div class="ovv-simple"><p class="ovv-simple-lede">小学教育的核心是「语文+数学+英语+儿童心理+班级管理」五栖全科训练, 它既不靠学科深度 (那是中学师范), 也不靠博士门槛, 而靠「教师资格证 + 普通话二甲 + 试讲实战 + 一线小学 16 周实习」四重硬功夫 — 在公费师范扩招 + 编内竞争 30:1 时代, 「部属师范 + 学科竞赛 + 班主任实战」是这门专业最大的护城河.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 教育学原理 / 普通心理学 / 儿童发展心理学 / 教育心理学 / 中外教育史 / 大学语文 / 高等数学基础. 大二核心: 小学语文课程与教学论 / 小学数学课程与教学论 / 小学英语课程与教学论 / 小学班级管理 / 现代教育技术 / 教师口语与书写 / 小学综合实践活动设计. 大三方向分流: 学科教学 (语文/数学/英语) / 班级管理 / 心理健康教育 / 小学科学教育 四选一. 大四毕业实习 (小学 16 周顶岗 + 班主任实战 + 试讲考核 + 毕业论文).</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>真心喜欢小孩子, 愿意陪伴 6-12 岁儿童成长 (这是入场券, 不是「考不上研的备胎」)</li><li>普通话标准 (二甲及以上) + 表达清晰 + 书写工整 — 教师资格证硬门槛</li><li>愿意寒暑假 + 早 7:30 到岗 + 批改作业到晚上 9 点 — 小学教师真实作息</li><li>接受公费师范生 6 年定向 (违约赔 1.5 倍学费) 或自费师范通过教招考编</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标金融/CS 起薪 (一线小学教师编内 6-10 万, 二三线 4-7 万是真实水平)</li><li>讨厌小孩子/坐不住/急躁 — 小学教师每天 4-6 节课 + 2 小时批改 + 家长群沟通, 没有耐心做不来</li><li>把小学教育当「考不上研的保底」 — 实际教师资格证 + 教招考编 + 16 周实习, 难度逐年上升</li><li>不愿做班主任/家校沟通/课后服务 — 班主任补贴每月 800-2000 元但工作量是普通教师 1.5 倍</li></ul></div></div></div></div>
   </div>
@@ -1099,7 +1124,7 @@ footer .data-source { color: #78716C; }
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1109,9 +1134,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1155,9 +1178,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1226,9 +1247,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1397,9 +1416,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1443,9 +1460,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1493,55 +1508,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">50<span class="path-unit">%</span></div>
-          <div class="path-name">公办小学教师 (编制, 主流)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">民办/国际学校教师 (双语 IB)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">教培行业 (双减后转型)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">教育局/教研室/教科院 (公考)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (教育学/小学教育硕博)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">教育科技/教育出版/内容 (师范+互联网)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">4<span class="path-unit">%</span></div>
-          <div class="path-name">高校专科师范/海外深造/IB 协调员</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1600,9 +1570,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">

@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -407,8 +434,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -655,11 +683,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1085,18 +1115,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">电子竞技运动与管理的核心是「电竞产业 + 赛事运营 + 俱乐部管理 + 电竞新媒体」四栖训练, 它与传统体育管理的差别是「数字体育 + IP 运营 + Z 世代文化」. 在 2023 杭州亚运会电竞正式项目 + 中国电竞市场 2024 年规模超 2000 亿背景下, 该专业填补了电竞产业管理人才缺口, 但「行业波动大、退役年龄早、特设专业身份模糊、家长偏见大」是四大结构性风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 体育学概论/管理学概论/电竞产业概论/大学英语/计算机基础; 大二核心: 电竞赛事运营与策划/电竞俱乐部管理与运营/电竞心理学/电竞解说与主持/电竞新媒体运营/体育营销; 大三方向分流: 电竞赛事运营/电竞俱乐部管理/电竞新媒体与内容/游戏厂商运营 四选一; 大四毕业实习 + 毕业论文. 4 年下来, 既能做电竞赛事策划, 也能做俱乐部管理, 还能做电竞内容创作.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对电竞产业/体育产业/IP 运营/数字内容有真实兴趣, 不只是把它当打游戏</li><li>能接受赛事运营的高强度 (加班/出差/周末节假日工作)</li><li>愿意走「电竞俱乐部 + 赛事公司 + 游戏厂商 + 电竞媒体」多元路径</li><li>对「电竞文化 + 体育产业 + Z 世代消费」有商业敏感度</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把电竞专业理解为「打游戏 + 上课」— 它是「电竞产业管理 + 体育商业 + 内容运营」复合训练</li><li>期待本科毕业对标 CS 应届起薪 (15-25 万)</li><li>对「电竞行业加班文化 + 不稳定 + 退役年龄早」完全没准备</li><li>对家长偏见 (「学电竞就是不务正业」) 心理准备不足</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">电子竞技 = 打游戏</div><div class="ovv-simple-pit-reality">电子竞技运动与管理专业培养的是电竞产业的管理者, 不是职业电竞选手. 毕业生主要去: 电竞俱乐部 (运营/管理/数据分析/品牌) 、赛事公司 (赛事策划/执行/解说主持) 、电竞媒体 (内容创作/主播/编辑) 、游戏厂商 (电竞运营/赛事合作). 职业电竞选手是另一条路径, 全国年招 < 100 人.</div></li><li><div class="ovv-simple-pit-myth">电竞专业 = 体育单招</div><div class="ovv-simple-pit-reality">电竞专业不是体育单招, 它是教育学门类下体育学类的特设专业, 走普通高考志愿通道. 体能测试不强制, 但「电竞项目实战」会作为专业基础课之一. 真正想做职业选手需要走 LPL/KPL/PUBG 等俱乐部青训体系, 不是大学能培养的.</div></li><li><div class="ovv-simple-pit-myth">电竞行业稳定高薪</div><div class="ovv-simple-pit-reality">电竞行业 2024 年规模超 2000 亿是真, 但「高薪」集中在头部: 顶级俱乐部选手年薪百万+, 但行业平均薪资低于互联网; 赛事策划/俱乐部运营应届 8-15 万, 资深 18-30 万; 行业波动大 (俱乐部欠薪/解散/转会是常态), 不是「稳定高薪」.</div></li><li><div class="ovv-simple-pit-myth">电竞专业毕业生都去当选手</div><div class="ovv-simple-pit-reality">电竞专业毕业生 90%+ 走「赛事运营 + 俱乐部管理 + 电竞媒体 + 游戏厂商」管理路径, 不是职业选手. 真正成为职业选手的比例 < 5%, 且需要大学前就达到青训水平 (国服前 100), 不是大学 4 年能培养. 主流路径是「电竞产业管理者」.</div></li><li><div class="ovv-simple-pit-myth">电竞专业考公/考编容易</div><div class="ovv-simple-pit-reality">电竞专业是教育学门类下体育学类特设专业, 考公/考编可报「体育学类」岗位, 但岗位极少 (2024 国考体育学类 < 200 个岗位, 全国); 真正稳定的是「高校电竞专业教师 (硕博起步) + 体育局事业单位 + 主流电竞教育公司」. 想考公基本要走「体育学硕士」.</div></li><li><div class="ovv-simple-pit-myth">电竞行业寿命短</div><div class="ovv-simple-pit-reality">电竞行业「职业选手」退役年龄早 (20-25 岁) 是真, 但「电竞产业管理者 (赛事/俱乐部/媒体/厂商)」退役晚, 30-50 岁仍是黄金期. 想做长线, 应走「电竞产业管理者」路径, 不是「职业选手」. 头部赛事公司/俱乐部高管 50-100 万年薪真实存在.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">电子竞技运动与管理的核心是「电竞产业 + 赛事运营 + 俱乐部管理 + 电竞新媒体」四栖训练, 它与传统体育管理的差别是「数字体育 + IP 运营 + Z 世代文化」. 在 2023 杭州亚运会电竞正式项目 + 中国电竞市场 2024 年规模超 2000 亿背景下, 该专业填补了电竞产业管理人才缺口, 但「行业波动大、退役年龄早、特设专业身份模糊、家长偏见大」是四大结构性风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 体育学概论/管理学概论/电竞产业概论/大学英语/计算机基础; 大二核心: 电竞赛事运营与策划/电竞俱乐部管理与运营/电竞心理学/电竞解说与主持/电竞新媒体运营/体育营销; 大三方向分流: 电竞赛事运营/电竞俱乐部管理/电竞新媒体与内容/游戏厂商运营 四选一; 大四毕业实习 + 毕业论文. 4 年下来, 既能做电竞赛事策划, 也能做俱乐部管理, 还能做电竞内容创作.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对电竞产业/体育产业/IP 运营/数字内容有真实兴趣, 不只是把它当打游戏</li><li>能接受赛事运营的高强度 (加班/出差/周末节假日工作)</li><li>愿意走「电竞俱乐部 + 赛事公司 + 游戏厂商 + 电竞媒体」多元路径</li><li>对「电竞文化 + 体育产业 + Z 世代消费」有商业敏感度</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把电竞专业理解为「打游戏 + 上课」— 它是「电竞产业管理 + 体育商业 + 内容运营」复合训练</li><li>期待本科毕业对标 CS 应届起薪 (15-25 万)</li><li>对「电竞行业加班文化 + 不稳定 + 退役年龄早」完全没准备</li><li>对家长偏见 (「学电竞就是不务正业」) 心理准备不足</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1106,9 +1134,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1145,9 +1171,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1210,9 +1234,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1349,9 +1371,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1395,9 +1415,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1445,55 +1463,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (体育学/体育产业管理, 主流就业门槛)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (新闻传播/新媒体, 跨专业方向)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (体育学/体育产业, 高校教职)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">45<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (电竞俱乐部/赛事公司/游戏厂商)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (电竞媒体/互联网公司电竞业务)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">自主创业 (电竞自媒体/电竞赛事工作室)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (体育管理/电竞, 港新英美 Top 50)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1542,9 +1515,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1632,11 +1603,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第五轮学科评估 2024 + 中传/上海体大/西安体院电竞专业培养方案 + 2024-2025 电竞俱乐部/赛事公司/游戏厂商校招样本 + 校友访谈 @ 上海/北京/成都)</div>

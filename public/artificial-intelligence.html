@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -1058,9 +1085,7 @@ footer .data-source { color: #94A3B8; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     <p class="lede drop-cap ovv-lede">AI 等于数学加算法加算力加数据。应届生年薪 28.7 万领跑全行业, 大模型算法岗月薪 6.8 万, 顶尖 AI 科学家月薪 13 万。但课程硬核, 60% 算法岗要求硕博, 35 岁危机加算力瓶颈加赛道饱和三把刀同时悬着。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 02</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>高等数学 A</span></div><div class="ovv-tl-step"><span>线性代数</span></div><div class="ovv-tl-step"><span>概率论与数理统计</span></div><div class="ovv-tl-step"><span>程序设计基础</span></div><div class="ovv-tl-step"><span>数据结构与算法</span></div><div class="ovv-tl-step"><span>计算机组成原理与操作系统</span></div><div class="ovv-tl-step"><span>离散数学</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">智能机器人与具身智能</div><div class="ovv-dir-desc">清华大学 特色方向, 把大模型塞进机器人身体, 服务工业和家庭场景。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">机器学习理论与数据挖掘</div><div class="ovv-dir-desc">南京大学 LAMDA 学派, 偏学术, 是周志华带出来的算法理论高地。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">智能图像理解与雷达信号 AI</div><div class="ovv-dir-desc">西安电子科技大学 特色, 电子信息底座加 AI, 服务国防和工业视觉。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">医学影像 AI 与智慧医疗</div><div class="ovv-dir-desc">上海交通大学 特色, AI 加医疗影像诊断, 走卓越人才试点班路线。</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">脑机接口与神经形态计算</div><div class="ovv-dir-desc">浙江大学 特色, AI 加脑科学交叉, 押注下一代人机交互。</div></div></div><div class="ovv-skills"><span class="ovv-skill">PyTorch 与 TensorFlow 深度学习框架</span><span class="ovv-skill">Transformer 与大模型微调</span><span class="ovv-skill">Kaggle 与天池竞赛实操</span><span class="ovv-skill">顶会论文复现</span><span class="ovv-skill">CUDA 与 GPU 算子优化</span><span class="ovv-skill">OpenCV 与 YOLO 视觉部署</span></div><div class="ovv-bonus">大模型与多模态在 2025 年起成为头部院校选修课, 但课堂教的是 2018 年的 CNN, 真正落地靠自学。核心铁律: 数学占 50%, 编程占 30%, 业务场景占 20%, 缺一项就掉队。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 02</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>数学不反感, 大一线代听不懂后面就别想了</li><li>能接受自学 60% 以上, 课堂内容远落后业界</li><li>能顶住算力焦虑, 没 GPU 集群只能调小模型</li><li>心理素质强, 论文 10 次有 9 次跑不通</li><li>能熬 35 岁危机, 算法岗 5 年就换代一轮</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>只想稳定躺平拿高薪, 2025 年算法岗投录比已 200 比 1</li><li>数学一碰就头疼, AI 5 门数学是后续所有核心课的前置</li><li>讨厌自学, 课堂教的是 2018 年的 CNN, 现在是 LLM 与 Agent</li></ul></div></div></div>
   </div>
@@ -1069,7 +1094,7 @@ footer .data-source { color: #94A3B8; }
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1079,9 +1104,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国 4 年制通用框架, 总学分 ≈ 160 (公共课 60 + 数理基础 25 + 专业核心 50 + 选修 25)。AI 专业比普通 CS 多 4-5 门数学, 课业强度排名前 3。前 2 年打数学编程基础, 大三才进入真正的 AI 核心课。大模型时代的「半学期速通」课 (如大模型微调 / Agent 开发) 在 2025 年起在头部院校普及, 但 90% 知识仍要自学。</p>
     <div class="curriculum-grid">
@@ -1123,9 +1146,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1200,9 +1221,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1371,9 +1390,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1411,9 +1428,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     
@@ -1472,45 +1487,10 @@ footer .data-source { color: #94A3B8; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">30<span class="path-unit">%</span></div>
-          <div class="path-name">大厂算法 (字节豆包 / 阿里通义)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">30<span class="path-unit">%</span></div>
-          <div class="path-name">AI 创业 / 大模型初创</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">机器人 / 具身智能 (风口)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">海外 AI 顶校 PhD 后回</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (AI 硕博)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1569,9 +1549,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">

@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -407,8 +434,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -655,11 +683,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1085,18 +1115,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">家庭教育的核心是「教育学 + 儿童发展心理学 + 婚姻家庭咨询」三栖训练, 在 2022《家庭教育促进法》落地 + 2023 教育部特设专业 + 三孩政策叠加下 — 应届起薪偏低 (一线 8-15 万), 但「家庭教育指导师 + 中小学心理/德育教师」双重编制通道 + 「民办咨询 + 社区工作」市场化补充 是该专业四大出路, 「慎用全职妈妈路线」是该专业最易踩坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 教育学原理/发展心理学/社会学概论/普通心理学/家庭教育学概论; 大二核心: 儿童心理发展/亲职教育/婚姻家庭咨询/家庭治疗基础/教育心理学; 大三方向分流: 家庭教育指导 / 学校心理与德育 / 社区与民政工作 / 婚姻家庭咨询 四选一; 大四毕业实习 + 毕业论文. 4 年训练后, 既能做家庭教育个案辅导, 也能讲家长课堂, 也能进中小学做心理/德育教师.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对儿童发展/亲职教育/婚姻家庭有真实兴趣, 不只是「想找稳定工作」</li><li>愿意读研 — 应届直接就业多走社区/早教/咨询, 头部学校心理教师 + 高校教师 均要求硕博</li><li>接受 5 年长跑 (本科 + 硕士 + 教师资格证/婚姻家庭咨询师证)</li><li>愿意走体制内 (中小学心理教师/德育主任/妇联/民政) 或民办咨询, 不期待互联网高薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把「家庭教育」等同于「全职妈妈培训」, 这是社会偏见, 不是专业出口</li><li>期待 4 年本科对标 CS 应届 (25-40 万), 本专业薪资结构是教育学区间 (应届一线 8-15 万)</li><li>不愿做中小学教师/社区工作/咨询 — 本专业 70% 毕业生走这三类岗位</li><li>把家庭教育指导师证当成「包过万能证」 — 2017 年心理咨询师证被国务院取消后, 「家庭教育指导师」是培训证 (非职业资格证), 含金量大幅缩水</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">家庭教育 = 全职妈妈/贤妻良母培训</div><div class="ovv-simple-pit-reality">这是社会偏见, 不是专业培养目标. 毕业生 70% 走中小学心理教师/社区工作/民办咨询/妇联/民政 4 条线, 不是「培训回家当贤妻良母」; 该专业本质是「教育学 + 心理学 + 社会工作」复合, 培养能做家长指导/儿童咨询/学校心理的专业人才.</div></li><li><div class="ovv-simple-pit-myth">家庭教育指导师证 = 职业资格证</div><div class="ovv-simple-pit-reality">2017 年国务院取消心理咨询师职业资格证后, 「家庭教育指导师」是培训机构发的培训证 (非国家职业资格), 含金量比心理咨询师证取消前大幅缩水; 想从业仍需读研 + 学校/社区/咨询机构实战积累, 不能靠一证通吃.</div></li><li><div class="ovv-simple-pit-myth">毕业对标教育学硕博起薪 12-25 万</div><div class="ovv-simple-pit-reality">本专业是教育学学士 (代码 040115T), 应届一线 p50 在 8-12 万, 想拿 p75 的 15-22 万需要扎实实习 + 教师资格证 + 学校心理教师编; 头部学校心理教师岗 (北京/上海重点中学) 985 硕士 + 心理咨询师证是硬门槛.</div></li><li><div class="ovv-simple-pit-myth">三孩政策 = 家庭教育需求爆发</div><div class="ovv-simple-pit-reality">三孩政策落地后生育率不升反降 (2023 出生人口 902 万, 2024 进一步下滑), 「家庭教育市场需求爆发」预期被证伪; 真正稳定的就业仍是「学校心理/德育教师编制」+ 「社区/民政工作」, 不是「市场化一对一家长咨询」.</div></li><li><div class="ovv-simple-pit-myth">民办家庭教育机构高薪</div><div class="ovv-simple-pit-reality">头部民办机构 (如新东方家庭教育/学而思家长课堂/简单心理/壹心理) 真正「家庭教育背景」岗少, 多数要求心理咨询师/儿童心理学硕士; 应届起薪 10-18 万, 头部咨询师 3 年 25-50 万, 但需硕士 + 1000+ 小时个案积累.</div></li><li><div class="ovv-simple-pit-myth">本专业 = 学前教育/早教</div><div class="ovv-simple-pit-reality">本专业是「家庭教育」 (4 年本科, 代码 040115T), 不是学前教育 (代码 040106) 也不是小学教育 (代码 040107); 培养方向是「家长指导 + 家庭咨询 + 学校心理」, 不是「幼儿园老师 + 早教老师」, 想做幼教请选学前教育.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">家庭教育的核心是「教育学 + 儿童发展心理学 + 婚姻家庭咨询」三栖训练, 在 2022《家庭教育促进法》落地 + 2023 教育部特设专业 + 三孩政策叠加下 — 应届起薪偏低 (一线 8-15 万), 但「家庭教育指导师 + 中小学心理/德育教师」双重编制通道 + 「民办咨询 + 社区工作」市场化补充 是该专业四大出路, 「慎用全职妈妈路线」是该专业最易踩坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 教育学原理/发展心理学/社会学概论/普通心理学/家庭教育学概论; 大二核心: 儿童心理发展/亲职教育/婚姻家庭咨询/家庭治疗基础/教育心理学; 大三方向分流: 家庭教育指导 / 学校心理与德育 / 社区与民政工作 / 婚姻家庭咨询 四选一; 大四毕业实习 + 毕业论文. 4 年训练后, 既能做家庭教育个案辅导, 也能讲家长课堂, 也能进中小学做心理/德育教师.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对儿童发展/亲职教育/婚姻家庭有真实兴趣, 不只是「想找稳定工作」</li><li>愿意读研 — 应届直接就业多走社区/早教/咨询, 头部学校心理教师 + 高校教师 均要求硕博</li><li>接受 5 年长跑 (本科 + 硕士 + 教师资格证/婚姻家庭咨询师证)</li><li>愿意走体制内 (中小学心理教师/德育主任/妇联/民政) 或民办咨询, 不期待互联网高薪</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把「家庭教育」等同于「全职妈妈培训」, 这是社会偏见, 不是专业出口</li><li>期待 4 年本科对标 CS 应届 (25-40 万), 本专业薪资结构是教育学区间 (应届一线 8-15 万)</li><li>不愿做中小学教师/社区工作/咨询 — 本专业 70% 毕业生走这三类岗位</li><li>把家庭教育指导师证当成「包过万能证」 — 2017 年心理咨询师证被国务院取消后, 「家庭教育指导师」是培训证 (非职业资格证), 含金量大幅缩水</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1106,9 +1134,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1149,9 +1175,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1208,9 +1232,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1347,9 +1369,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1358,16 +1378,16 @@ footer .data-source { color: #78716C; }
       </thead>
       <tbody>
         <tr>
-          <td class="salary-stage">应届生 (中小学心理/德育教师在编)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="6" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +4%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
-        </tr>
-        <tr>
           <td class="salary-stage">应届生 (社区/妇联/民政/早教机构)</td>
           <td class="num"><span class="approx">≈</span><span data-count="5" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:41.66666666666667%"></span></span><span class="yoy up">↗ +3%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="8" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
+          <td class="salary-stage">应届生 (中小学心理/德育教师在编)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="6" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:40.0%"></span></span><span class="yoy up">↗ +4%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="10" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:66.66666666666666%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="15" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3年经验 (学校心理教师/家庭教育讲师/助理咨询师)</td>
@@ -1393,9 +1413,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1438,60 +1456,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">30<span class="path-unit">%</span></div>
-          <div class="path-name">国内读研 (本校/对口校教育学/心理学硕)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">国内读博 (教育学/心理学 PhD, 目标高校教职)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (中小学心理/德育教师在编)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">14<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (家庭教育讲师/课程设计师)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (社区/妇联/民政事业编)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (婚姻家庭/儿童心理咨询)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">出国读硕 (家庭治疗/婚姻家庭咨询, 港新英美 Top 50)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">跨行 (早教/亲子机构/出版/教培)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1540,9 +1508,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1630,11 +1596,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第四轮学科评估 2017 + 第五轮 2024 + 北师/华东师/南师/华南师/华中师家庭教育培养方案 + 简单心理/新东方家庭教育 2024-2025 校招 + 校友访谈 @ 北京/上海/广州)</div>

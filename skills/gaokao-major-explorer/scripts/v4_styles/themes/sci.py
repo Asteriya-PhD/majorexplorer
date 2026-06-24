@@ -25,3 +25,4 @@ def render_hero_sci(data, *, title, summary, category, degree, duration, tags, d
     </div>
   </div>
 </header>'''
+

@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -1229,9 +1256,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     <p class="lede drop-cap ovv-lede">公安情报学的核心是「公安情报+情报分析+反恐情报+网络情报+情报技术」五栖, 在国家安全+反恐+网络安全风口下稳定出口 (公安部/国安/省厅情报部门), 但体制内出口窄+情报系统涉密+联考机制主导+政审直系亲属连坐是四大现实约束。</p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 02</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div><div class="ovv-foundations"><div class="ovv-foundations-label">前 2 年基础课</div><div class="ovv-timeline"><div class="ovv-tl-step"><span>公安情报学导论</span></div><div class="ovv-tl-step"><span>情报学导论</span></div><div class="ovv-tl-step"><span>公安学概论</span></div><div class="ovv-tl-step"><span>犯罪学概论</span></div><div class="ovv-tl-step"><span>统计学与数据挖掘</span></div><div class="ovv-tl-step"><span>公安情报技术</span></div><div class="ovv-tl-step"><span>法理学 + 行政法总论</span></div><div class="ovv-tl-step"><span>政治学概论</span></div></div></div><div class="ovv-directions-label">大三大四 · 5 大方向分流</div><div class="ovv-directions"><div class="ovv-dir"><div class="ovv-dir-num">F.01</div><div class="ovv-dir-name">公安情报搜集</div><div class="ovv-dir-desc">人力情报(HUMINT)/技术情报/开源情报(OSINT)/信号情报(SIGINT)</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.02</div><div class="ovv-dir-name">公安情报分析</div><div class="ovv-dir-desc">案件串并/关联图谱/异常检测/数据可视化</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.03</div><div class="ovv-dir-name">网络安全情报</div><div class="ovv-dir-desc">网络舆情/电子取证/数据警务/网安情报</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.04</div><div class="ovv-dir-name">反诈/反洗钱情报</div><div class="ovv-dir-desc">资金流分析/止付指令/反诈模型</div></div><div class="ovv-dir"><div class="ovv-dir-num">F.05</div><div class="ovv-dir-name">反恐/涉外情报</div><div class="ovv-dir-desc">跨境情报协作/国家安全/涉密研判</div></div></div><div class="ovv-skills"><span class="ovv-skill">Python / SQL 编程</span><span class="ovv-skill">统计分析 + 数据挖掘</span><span class="ovv-skill">关联图谱绘制 (Neo4j/关系网络)</span><span class="ovv-skill">网络舆情分析</span><span class="ovv-skill">情报产品写作 (简报/专报)</span><span class="ovv-skill">保密管理 + 纪律执行</span></div><div class="ovv-bonus">公安情报学是公安学类里「最偏数据」的方向, 课程里统计学和编程的权重远高于治安/侦查/公安管理, 适合喜欢「在屏幕前推理 + 玩数据」的人。毕业走公安联考入警, 也可走网络安全企业 + 互联网风控转型路径。</div></div><div class="ovv-card is-blue fade-up"><div class="ovv-card-head"><span class="ovv-card-num">02 / 02</span><h3 class="ovv-card-title">什么人适合?</h3><span class="ovv-card-tag">Fit Check</span></div><div class="ovv-fit-grid"><div class="ovv-fit-col is-yes"><div class="ovv-fit-label">✓ 适合</div><ul class="ovv-fit-list"><li>政治立场坚定 + 政治审查能过 (情报岗要查本人+直系亲属)</li><li>逻辑思维严谨, 喜欢关联分析 + 数据挖掘</li><li>数学/统计学/编程 (Python/SQL) 不抗拒, 甚至喜欢</li><li>性格沉稳细致, 能长时间盯屏幕做研判</li><li>能接受警务化管理和保密纪律约束</li></ul></div><div class="ovv-fit-col is-no"><div class="ovv-fit-label">✗ 不适合</div><ul class="ovv-fit-list"><li>完全学不进代码/数学 (情报岗硬性要求编程 + 统计)</li><li>想拿高薪 (公安起薪 5-8k, 涉密津贴有限)</li><li>想自由出境/出国 (情报岗出境受纪律约束)</li><li>期待「学完当黑客」 (公安情报 ≠ 网络安全攻防)</li><li>期待工作「刺激 + 跑外勤」 (情报岗 70% 时间盯屏幕)</li></ul></div></div></div>
   </div>
@@ -1240,7 +1265,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1250,9 +1275,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国 4 年制, 总学分通常 150-170。公安情报学是 2017 年新设特设专业(代码 030610TK), 开设院校仅 4-5 所, 课程介于「公安学+情报学+数据科学」三角之间, 是公安学类里最偏数据的方向。</p>
     <div class="curriculum-grid">
@@ -1291,9 +1314,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1356,9 +1377,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1495,9 +1514,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1535,9 +1552,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1585,45 +1600,10 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">32<span class="path-unit">%</span></div>
-          <div class="path-name">公安学硕士 (情报学方向)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">国家安全学 / 国际关系 (涉外情报)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">数据科学 / 统计学 / 大数据分析</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">网络安全 / 电子信息 (技术情报)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (情报研究 / 国际安全 / 数据分析)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1692,9 +1672,7 @@ body.biz-body .biz-hero + section.tab .path-name, body.biz-body .biz-hero ~ sect
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">

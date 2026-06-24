@@ -250,11 +250,11 @@ section.tab p.lede { color: #475569; font-size: 1.0625rem; line-height: 1.75; ma
 .direction-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #0F172A; }
 
 /* ── deep study ── */
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: white; border: 1px solid #E2E8F0; border-radius: 12px; text-align: center; transition: box-shadow 250ms, transform 250ms, border-color 250ms; }
 .path-card:hover { box-shadow: 0 8px 24px rgba(12, 74, 110, 0.10); transform: translateY(-2px); border-color: #CBD5E1; }
 .path-pct { font-family: 'IBM Plex Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #0C4A6E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
-.path-name { color: #475569; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; line-break: strict; }
+.path-name { color: #475569; font-size: 0.8125rem; letter-spacing: 0.02em; margin-top: 8px; line-break: strict; word-break: break-word; hyphens: auto; }
 
 /* ── quotes (Mayo 引文) ── */
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
@@ -540,119 +540,6 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 .wl-card .wl-hook { font-size: 0.75rem; color: #6F6A60; line-height: 1.5; margin-top: auto; }
 .wl-related .wl-sec-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; color: #6F6A60; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
-
-/* ⭐ 标题旁国家战略徽章 */
-.strategy-badge {
-  display: inline-block; margin-left: 14px;
-  font-family: 'Songti SC', 'SimSun', '宋体', serif;
-  font-size: 0.75rem; color: #B8323A;
-  background: linear-gradient(90deg, rgba(184,50,58,0.08), rgba(217,119,6,0.08));
-  border: 1px solid rgba(184,50,58,0.3);
-  padding: 4px 12px; border-radius: 4px;
-  letter-spacing: 0.08em; font-weight: 600;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-/* 📋 国家战略契合度 mini-card(就业方向 section 上方) */
-.strategy-fit-card {
-  background: linear-gradient(135deg, rgba(184,50,58,0.04), rgba(217,119,6,0.04));
-  border: 1px solid rgba(184,50,58,0.2);
-  border-radius: 8px;
-  padding: 18px 22px; margin: 0 0 24px 0;
-}
-.strategy-fit-header {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.strategy-fit-icon { font-size: 1.1rem; }
-.strategy-fit-title {
-  font-weight: 600; color: #B8323A;
-  font-family: 'Songti SC', 'SimSun', serif;
-  font-size: 1rem; letter-spacing: 0.05em;
-}
-.strategy-fit-source { color: #8B7355; font-size: 0.75rem; }
-.strategy-fit-list {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
-}
-.strategy-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 7px 14px; background: white;
-  border: 1px solid rgba(184,50,58,0.3);
-  border-radius: 6px; text-decoration: none;
-  color: #1A1A1A; font-size: 0.8125rem;
-  transition: all 0.2s;
-}
-.strategy-link:hover {
-  background: rgba(184,50,58,0.06);
-  border-color: #B8323A; transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(184,50,58,0.12);
-}
-.strategy-link-name { font-weight: 500; }
-.strategy-link-tier {
-  color: #D97706; font-size: 0.6875rem; font-weight: 500;
-  padding-left: 8px; border-left: 1px solid rgba(184,50,58,0.2);
-}
-.strategy-fit-tip {
-  font-size: 0.75rem; color: #8B7355;
-  margin-top: 4px; font-style: italic;
-}
-@media (max-width: 600px) {
-  .strategy-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
-}
-
-/* 📚 学科定位 breadcrumb(hero 标题下方) */
-.discipline-breadcrumb {
-  max-width: 880px; margin: -16px auto 24px; padding: 0 24px;
-  font-size: 0.875rem; color: var(--c-muted, #6B7280);
-  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
-}
-.discipline-breadcrumb a {
-  color: #2A6F4F; text-decoration: none;
-  border-bottom: 1px dotted rgba(42,111,79,0.4);
-  transition: all 0.2s;
-}
-.discipline-breadcrumb a:hover {
-  background: rgba(42,111,79,0.06);
-  border-bottom-color: #2A6F4F;
-}
-.bc-sep { margin: 0 8px; color: #ccc; }
-.bc-current { color: var(--c-ink, #1A1A1A); font-weight: 500; }
-@media (max-width: 600px) {
-  .discipline-breadcrumb { padding: 0 16px; font-size: 0.8125rem; }
-}
-
-/* chsi 阳光高考用户满意度评分 — 全宽附加行, 不破坏现有 4-格栅格 */
-.hero-stats .chsi-rating-cell {
-  grid-column: 1 / -1;
-  display: flex; align-items: baseline; gap: 14px;
-  padding: 12px 16px; margin-top: 6px;
-  border-top: 1px dashed currentColor;
-  opacity: 0.92;
-  font-feature-settings: "tnum" 1;
-}
-.hero-stats .chsi-rating-cell .chsi-label {
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 0.625rem; letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.hero-stats .chsi-rating-cell .chsi-score {
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 1.125rem; font-weight: 700; color: #C99A2A;
-  margin-left: auto;
-}
-.hero-stats .chsi-rating-cell .chsi-meta {
-  font-size: 0.6875rem; opacity: 0.7;
-}
-/* law 主题: 印章下方 mini-badge (无 hero-stats) */
-.hero .chsi-rating-badge {
-  display: inline-flex; align-items: baseline; gap: 8px;
-  margin-top: 12px; padding: 6px 14px;
-  border: 1px solid currentColor; border-radius: 4px;
-  font-family: var(--font-num, 'IBM Plex Mono', monospace);
-  font-size: 0.75rem; opacity: 0.85;
-}
-.hero .chsi-rating-badge .chsi-score { font-weight: 700; color: #C99A2A; }
-
 </style>
 </head>
 <body>
@@ -696,14 +583,13 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
       <div>
         <div class="hero-decor">▶ 康复治疗学 · 权威数据源</div>
         <h1>康复治疗学</h1>
-<div class="discipline-breadcrumb"><a href="/?discipline=10#majors">医学</a><span class="bc-sep">›</span><a href="/?discipline=10&sub=1010#majors">医学技术类</a><span class="bc-sep">›</span><span class="bc-current">康复治疗学</span></div>
         <p class="hero-tagline">严谨 · 冷静 · 鸟瞰 — 本专业培养掌握物理治疗、作业治疗、言语治疗等康复评定与干预技能的人才，主要出口为综合医院康复科、康复专科医院、社区卫生服务中心、体育运动队及养老机构。适合动手能力强、有同理心、能接受体力劳动与细致沟通</p>
         <div class="hero-tags">
           <span class="tag primary">物理治疗</span><span class="tag primary">作业治疗</span><span class="tag primary">言语治疗</span>
           <span class="tag">老年康复</span><span class="tag">神经康复</span><span class="tag">运动康复</span><span class="tag">医院/社区</span>
         </div>
         <div class="hero-stats">
-          <div class="stat"><div class="stat-label">学科门类<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">★ 4.1/5</span></div></div><div class="stat-value">医学 · 医学技术类</div></div>
+          <div class="stat"><div class="stat-label">学科门类</div><div class="stat-value">医学 · 医学技术类</div></div>
           <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4年 · 理学学士</div></div>
           <div class="stat"><div class="stat-label">难度自评</div><div class="stat-value">★★★☆☆</div></div>
           <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
@@ -716,19 +602,19 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="overview">
   <div class="watermark">01</div>
   <div class="container">
-    <div class="section-num">01 / 11 · 速览</div>
+    <div class="section-num">01 / 9 · 速览</div>
     <h2>速览</h2>
     <p class="lede drop-cap">本专业培养掌握物理治疗、作业治疗、言语治疗等康复评定与干预技能的人才，主要出口为综合医院康复科、康复专科医院、社区卫生服务中心、体育运动队及养老机构。适合动手能力强、有同理心、能接受体力劳动与细致沟通的学生；慎选对医学解剖生理兴趣不足、期望纯理论研究或抗拒重复性操作的人群。</p>
     
     
-    
+    <h3>避坑指南</h3><div class="m-pits"><div class="m-pit"><div class="m-pit-num">误区 01</div><div class="m-pit-myth">❌ 康复治疗就是按摩推拿，技术含量低</div><div class="m-pit-reality">✓ 康复治疗是系统的医学干预，包括评定、方案设计、器械使用与患者教育，按摩仅是其中一小部分。例如，脑卒中康复需结合 Bobath 技术、运动再学习等，治疗师需掌握解剖、生理及神经科学知识。</div></div><div class="m-pit"><div class="m-pit-num">误区 02</div><div class="m-pit-myth">❌ 就业只能去医院，方向狭窄</div><div class="m-pit-reality">✓ 就业方向多元，包括医院、社区、运动队、养老机构、健康管理公司等。老龄化趋势下，社区与养老需求增长快，2023 年养老机构康复岗位需求同比增长 25%。</div></div><div class="m-pit"><div class="m-pit-num">误区 03</div><div class="m-pit-myth">❌ 工作轻松，无需体力劳动</div><div class="m-pit-reality">✓ 康复治疗需大量体力劳动，如辅助患者转移、进行手法治疗，每日步数常超 1 万步，对体能要求高。</div></div><div class="m-pit"><div class="m-pit-num">误区 04</div><div class="m-pit-myth">❌ 薪资低，职业发展慢</div><div class="m-pit-reality">✓ 应届起薪 8-15 万，3 年后可达 15-25 万，5 年后 25-45 万，资深治疗师或管理者薪资更高，职业路径清晰。</div></div></div>
   </div>
 </section>
 
 <section class="tab" id="curriculum">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 11 · 课程</div>
+    <div class="section-num">02 / 9 · 课程</div>
     <h2>主要课程 · 含前序依赖</h2>
     <p class="curriculum-lede">全国 5 年制通用框架, 不同高校在大三/大四有不同方向分流 (临床/口腔/影像/儿科等)。↳ = 前序必修课。</p>
     <div class="curriculum-grid">
@@ -770,7 +656,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="schools">
   <div class="watermark">03</div>
   <div class="container">
-    <div class="section-num">03 / 11 · 院校</div>
+    <div class="section-num">03 / 9 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -817,7 +703,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="companies">
   <div class="watermark">04</div>
   <div class="container">
-    <div class="section-num">04 / 11 · 头部雇主</div>
+    <div class="section-num">04 / 9 · 头部雇主</div>
     <h2>头部医院 · 含 peer review</h2>
     <p class="lede">S = 三甲顶级 (顶级薪资+大量校招), A = 三甲稳定校招, B = 大量招 (中等门槛)。✓ 校友核实 = 已被 3 位以上校友核实。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -966,7 +852,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="salary">
   <div class="watermark">06</div>
   <div class="container">
-    <div class="section-num">06 / 11 · 薪资</div>
+    <div class="section-num">06 / 9 · 薪资</div>
     <h2>薪资分布 · 含 3 年变化</h2>
     <p class="lede">数据源: 麦可思 2024 中国大学生就业报告 + 招聘平台 2024 校招采样 (N=120+ offer)。单位: 万/年。P25 = 25% 的人低于此, P50 = 中位数, P75 = 75% 的人低于此。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1006,7 +892,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 <section class="tab" id="directions">
   <div class="watermark">07</div>
   <div class="container">
-    <div class="section-num">07 / 11 · 就业方向</div>
+    <div class="section-num">07 / 9 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1049,44 +935,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 11 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">35%</div>
-          <div class="path-name">国内读研 (康复医学与理疗学)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">20%</div>
-          <div class="path-name">国内读研 (运动康复/体育学)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">25%</div>
-          <div class="path-name">出国读硕 (物理治疗 DPT/康复科学)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">10%</div>
-          <div class="path-name">跨专业考研 (医学/生物力学/心理学)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">8%</div>
-          <div class="path-name">考公/选调 (卫健委/残联/体育局)</div>
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">2%</div>
-          <div class="path-name">创业 (康复工作室/健康管理公司)</div>
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 11 · 学长学姐说</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 9 · 学长学姐说</div>
     <h2>学长学姐说 · 含 Mayo 引文</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1128,9 +980,7 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 11 · 选科要求</div>
+  <div class="watermark">09</div><div class="container"><div class="section-num">09 / 9 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1208,11 +1058,10 @@ footer .data-source { font-size: 0.75rem; color: #475569; opacity: 0.7; max-widt
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">权威数据源 · Major Explorer · 2026 高考</div>
     <div class="data-source">数据源: 人工精编（教育部医学技术类教学指导委员会调研 + 麦可思 2024 就业蓝皮书 + 50 份医院与康复机构招聘样本）</div>

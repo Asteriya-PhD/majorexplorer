@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -407,8 +434,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -546,11 +574,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #78350F; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'EB Garamond', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #D6D3D1; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #78350F; transform: translateY(-2px); }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.75rem; font-weight: 500; color: #1C1917; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'EB Garamond', serif; color: #57534E; font-size: 0.875rem; letter-spacing: 0.04em; margin-top: 8px; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 36px 40px 32px; background: #FFFBEB; border: 1px solid #D6D3D1; border-left: 4px double #D97706; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -942,18 +972,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">经济法是法学门类下「法学+商法+金融法+经济法」四栖交叉复合专业. 2024 互联网反垄断+数据合规+ESG 三风口, 头部红圈所反垄断起薪 30-50 万是真实溢价; 但 95% 中位数岗位 (中小所/基层公务员/普通法务) 应届 10-12 万 + 法考 A 证通过率 13-15% 硬门槛 + 「非诉 vs 诉讼」两极分化, 是该专业最大的二八结构风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一: 法理学 + 宪法学 + 中国法制史 + 民法学总论 + 高等数学 + 大学英语. 大二: 经济法总论 + 商法总论与公司法 + 民法 (物权+债权+合同+侵权) + 刑法总论+分论 + 国际法+国际私法. 大三: 证券法与资本市场法治 + 金融法 (银行+保险+信托+基金) + 竞争法 (反垄断+反不正当竞争) + 财税法 (预算法+税法) + 知识产权法. 大四: 劳动与社会保障法 + 环境资源法 + 国际经济法 (WTO) + 经济法前沿 (数字经济+平台监管+数据合规+ESG) + 模拟法庭 + 律所/法院/监管机构实习.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对「法律+经济+金融+商业」真正感兴趣, 经济法核心是「法律+经济复合」, 缺商业感知学不来</li><li>愿意考「法律职业资格考试 (A 证)」, 通过率 13-15%, 红圈所/法院/律所 90% 要 A 证</li><li>对「反垄断+数据合规+ESG+金融监管」风口有使命感, 2024 互联网反垄断+数据合规+ESG 是真实风口</li><li>能接受「红圈所/金融监管局/央国企/大厂反垄断」高强度, 经济法头部 5% 顶端加班+压力是常态</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把经济法当「法学简单方向」, 实际经济法是「法学最难复合」之一, 经济法+金融+商法 三栖</li><li>不愿考法考, 法考 (A 证, 通过率 13-15%) 是 90% 律所/法院/法务/监管 硬门槛, 没 A 证就业天花板极低</li><li>期待校招月薪过万 (一线红圈所反垄断/金融起薪 30-50 万是真的, 但只 1% 顶尖校; 普通律所/法务 应届 8-15 万), 薪资天花板在 30-80 万 (5 年合伙人/法务总监)</li><li>完全不愿做反垄断+数据合规+ESG+金融监管复合, 经济法核心是「法律+经济金融复合」, 缺金融学不来</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">经济法 = 法学热门好就业</div><div class="ovv-simple-pit-reality">实际经济法是「法学头部 5% 顶端」, 真正「红圈所反垄断+金融监管+央国企法务+大厂反垄断」岗位仅 5%, 95% 同学是「中小所+公司法务+法院基层+公务员」. 想做经济法头部, 需顶尖法学院校 (北大/清华/人大/政法/复旦/武大) + 法考 A 证 + 顶律所/金融监管实习 + 3-5 年沉淀.</div></li><li><div class="ovv-simple-pit-myth">校招进红圈所 (金杜/中伦/君合) 反垄断 = 高薪</div><div class="ovv-simple-pit-reality">红圈所反垄断+金融+税法团队起薪 30-50 万是真的, 但 100h/周+IPO 节奏紧+反垄断申报/经营者集中审查+并购项目. 3 年资深 60-150 万是真的, 5 年合伙人 300-1500 万是真的, 但 70% 律师 5 年跳槽/转法务/独立案源.</div></li><li><div class="ovv-simple-pit-myth">考「法考 (A 证)」= 高薪</div><div class="ovv-simple-pit-reality">法考 (A 证, 通过率 13-15%) 是 5 年内入行门槛不是涨薪器, 真正高薪是「A 证 + 985 法学硕 + 红圈所 5-10 年 + 独立案源 + 反垄断/金融/数据合规方向」. 仅 A 证 12-22 万停滞.</div></li><li><div class="ovv-simple-pit-myth">互联网大厂反垄断+政府事务+合规 = 风口</div><div class="ovv-simple-pit-reality">阿里/腾讯/字节/美团/京东/拼多多 2021-2024 反垄断专项团队 应届 35-60 万是真的, 5 年后法务总监 80-150 万是真的, 但 35+ 危机+IPO 节奏紧+加班重. 真正高薪是「大厂反垄断+政府事务+数据合规」三栖, 适合长期主义+愿做政府关系.</div></li><li><div class="ovv-simple-pit-myth">国家市场监督管理总局/国税局/金融监管局 公务员 = 稳定对口</div><div class="ovv-simple-pit-reality">市监局/国税局/金融监管局/财政部/发改委 公务员 校招 100:1+ 竞争, 应届 12-22 万+编, 适合求稳+服务+监管. 真正对口是「公务员+法考 A 证+985 法学硕+5 年监管经验+反垄断/数据合规/金融监管」, 缺一项只是普通科员.</div></li><li><div class="ovv-simple-pit-myth">四大反垄断+税法咨询 = 高薪稳定</div><div class="ovv-simple-pit-reality">普华永道/德勤/安永/毕马威 税法+反垄断咨询 校招 18-28 万是真的, 5 年后合伙人 100-400 万是真的, 但 100h/周+项目压力+全国出差. 真正高薪是「四大学+红圈所/大厂法务/反垄断 5-8 年复合」, 缺一项只是基础咨询.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">经济法是法学门类下「法学+商法+金融法+经济法」四栖交叉复合专业. 2024 互联网反垄断+数据合规+ESG 三风口, 头部红圈所反垄断起薪 30-50 万是真实溢价; 但 95% 中位数岗位 (中小所/基层公务员/普通法务) 应届 10-12 万 + 法考 A 证通过率 13-15% 硬门槛 + 「非诉 vs 诉讼」两极分化, 是该专业最大的二八结构风险.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一: 法理学 + 宪法学 + 中国法制史 + 民法学总论 + 高等数学 + 大学英语. 大二: 经济法总论 + 商法总论与公司法 + 民法 (物权+债权+合同+侵权) + 刑法总论+分论 + 国际法+国际私法. 大三: 证券法与资本市场法治 + 金融法 (银行+保险+信托+基金) + 竞争法 (反垄断+反不正当竞争) + 财税法 (预算法+税法) + 知识产权法. 大四: 劳动与社会保障法 + 环境资源法 + 国际经济法 (WTO) + 经济法前沿 (数字经济+平台监管+数据合规+ESG) + 模拟法庭 + 律所/法院/监管机构实习.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对「法律+经济+金融+商业」真正感兴趣, 经济法核心是「法律+经济复合」, 缺商业感知学不来</li><li>愿意考「法律职业资格考试 (A 证)」, 通过率 13-15%, 红圈所/法院/律所 90% 要 A 证</li><li>对「反垄断+数据合规+ESG+金融监管」风口有使命感, 2024 互联网反垄断+数据合规+ESG 是真实风口</li><li>能接受「红圈所/金融监管局/央国企/大厂反垄断」高强度, 经济法头部 5% 顶端加班+压力是常态</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把经济法当「法学简单方向」, 实际经济法是「法学最难复合」之一, 经济法+金融+商法 三栖</li><li>不愿考法考, 法考 (A 证, 通过率 13-15%) 是 90% 律所/法院/法务/监管 硬门槛, 没 A 证就业天花板极低</li><li>期待校招月薪过万 (一线红圈所反垄断/金融起薪 30-50 万是真的, 但只 1% 顶尖校; 普通律所/法务 应届 8-15 万), 薪资天花板在 30-80 万 (5 年合伙人/法务总监)</li><li>完全不愿做反垄断+数据合规+ESG+金融监管复合, 经济法核心是「法律+经济金融复合」, 缺金融学不来</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -963,9 +991,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1014,9 +1040,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1085,9 +1109,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1224,9 +1246,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1270,9 +1290,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1320,60 +1338,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">22<span class="path-unit">%</span></div>
-          <div class="path-name">红圈所/精品所经济法+金融律师 (金杜/中伦/君合/方达/海问)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">国家市监局/国税局/金融监管局/财政部/发改委 (公务员)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">央国企法务+合规+战略部 (国家电网/中石化/华润/招商局/中国移动)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">互联网大厂反垄断+政府事务+合规 (阿里/腾讯/字节/美团/京东/拼多多)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">四大+本土八大 税法+反垄断+合规咨询 (普华/德勤/EY/KPMG/中汇/立信)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">公司法务 (互联网+金融+央企+上市公司) [反垄断+数据合规+ESG]</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">法院/检察院商事审判 (公考)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造 (法学硕士/LLM/JD/法律博士)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1432,29 +1400,27 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">首选历史 + 再选政治 (传统文科法学, 90% 校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:70%"></div></div>
           <div class="xuanke-pct">70%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">首选历史 + 再选地理 (灵活法学, 80% 校接受)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:18%"></div></div>
           <div class="xuanke-pct">18%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">首选政治 + 再选历史 (财经政法校, 部分校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:8%"></div></div>
           <div class="xuanke-pct">8%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">不限选科 (极少数综合评价/高校专项)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:4%"></div></div>
           <div class="xuanke-pct">4%</div>
         </div>
@@ -1517,11 +1483,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编</div>

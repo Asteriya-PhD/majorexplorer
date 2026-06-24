@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -406,8 +433,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -654,11 +682,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1064,18 +1094,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">邮政工程是物流工程在邮政场景下的窄化, 其稀缺性源于邮政系统的国营属性 + 强合规要求 + 国家邮政局直属体系 — 区别于通用物流工程的开放市场化, 邮政工程培养的是既能搞智能分拣硬件 + 无人机配送运营, 又能适配邮政国营体系合规与邮政 EMS 网络规划的复合人才, 这是该专业最容易被误解的隐藏点.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 大学英语; 大二核心: 邮政系统概论 / 物流系统规划 / 物流自动化 / 智能分拣技术 / 数据库与 SQL; 大三方向分流: 邮政自动化方向 (智能分拣/自动传输/AGV 机器人) / 邮政网络规划方向 (网络优化/路径规划/最后一公里) / 无人机配送方向 (无人机物流/无人车/末端配送) / 邮政信息化方向 (大数据/物联网/区块链溯源); 大四实习 (中国邮政/顺丰/京东/菜鸟/极兔/邮政科技) + 毕业论文. 4 年下来, 既要能设计物流网络, 也要能搞智能分拣系统.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对邮政 + 物流 + 智能分拣 + 无人机配送有强烈兴趣, 不排斥技术性 + 物流一线工作</li><li>接受 4 年专业训练 (邮政系统 + 物流自动化 + 智能分拣), 数学 + 计算机基础好, 心理承压能力好</li><li>愿意走中国邮政/顺丰/京东/菜鸟/极兔/邮政科技, 不期待写字楼/坐班</li><li>化学/物理/计算机基础扎实, 能啃物流系统规划 + 智能分拣 + 无人机配送</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把邮政工程等同于'送快递的''分拣工' — 该专业是工学学位, 走的是邮政系统 + 物流自动化 + 智能分拣 + 无人机配送路径, 服务于邮政科技 + 物流科技</li><li>对物流/快递/自动化/无人机无兴趣 — 该专业 50% 课程是物流系统 + 智能分拣 + 自动化 + 计算机, 不接受物流行业的人不适合</li><li>期望稳定轻松 — 物流/快递/邮政是 24/7 行业, 双11/618/春节高峰期高强度, 不接受高强度者不适合</li><li>对户外工作/分拣中心一线有强烈抵触 — 邮政工程部分岗位 (分拣中心规划/无人机配送) 涉及一线工作环境</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">邮政工程 = 邮政管理 / 物流管理</div><div class="ovv-simple-pit-reality">邮政管理/物流管理是管理学门类, 偏邮政/物流管理 + 供应链; 邮政工程是工学门类, 偏邮政系统 + 智能分拣 + 物流自动化 + 无人机配送; 两个专业方向完全不同, 课程体系 (工学 vs 管理学) 与就业去向 (技术 vs 管理) 差异显著, 高考志愿必须分清.</div></li><li><div class="ovv-simple-pit-myth">邮政工程 = 邮政 EMS, 国企稳定</div><div class="ovv-simple-pit-reality">中国邮政 (邮政集团/邮政 EMS) 是核心就业方向之一, 但 2024+ 邮政科技 + 民营快递 (顺丰/京东/菜鸟/极兔/中通/圆通/申通/韵达) + 无人机配送 (大疆/顺丰丰翼/京东无人机) + 智能分拣 (中科微至/科捷智能) 需求井喷; 邮政工程毕业生能进邮政 + 民营快递 + 物流科技 + 无人机公司, 通道广.</div></li><li><div class="ovv-simple-pit-myth">邮政工程 = 冷门, 难就业</div><div class="ovv-simple-pit-reality">2024+ 中国快递业务量 1300+ 亿件, 年增 20%+, 连续 10 年世界第一; 智能分拣 (中科微至/科捷智能/华章科技) + 无人机配送 (顺丰丰翼/京东无人机/大疆) + 无人车配送 (新石器/行深智能) + 物流科技 (菜鸟/京东物流/顺丰科技) 2024+ 高速增长, 邮政工程人才需求井喷.</div></li><li><div class="ovv-simple-pit-myth">邮政工程薪资 = 5K 月薪</div><div class="ovv-simple-pit-reality">邮政集团/邮政 EMS 8-15 万/年, 资深 20-40 万; 顺丰/京东/菜鸟/极兔 12-25 万, 资深 30-60 万, 高管 60-150 万; 无人机配送 (顺丰丰翼/京东无人机) 12-30 万, 资深 30-60 万; 智能分拣公司 (中科微至/科捷智能) 12-25 万, 资深 30-60 万; 不是 5K, 是行业薪资 + 上升空间明确.</div></li><li><div class="ovv-simple-pit-myth">邮政工程开设院校很多</div><div class="ovv-simple-pit-reality">全国开设「邮政工程」本科专业院校 < 5 所, 集中在南京邮电大学 / 北京邮电大学 / 重庆邮电大学 / 西安邮电大学等少数邮电类院校, 真正形成稳定培养体系 + 邮政 + 物流科技 + 无人机实习资源 < 5 所, 选校前务必核实是否有真实邮政/物流科技实习.</div></li><li><div class="ovv-simple-pit-myth">邮政工程 = 邮政 + 物流, 学不到技术</div><div class="ovv-simple-pit-reality">实际就业有 6 大方向: 中国邮政 (邮政集团/邮政 EMS/邮政科技) 、民营快递 (顺丰/京东/菜鸟/极兔/中通/圆通/申通/韵达) 、物流科技 (菜鸟/京东物流/顺丰科技/极兔科技) 、无人机配送 (大疆/顺丰丰翼/京东无人机/新石器) 、智能分拣公司 (中科微至/科捷智能/华章科技) 、邮政科研院所 (中国邮政研究院/国家邮政局发展研究中心) . 技术含量 + 上升空间明确, 不是低端岗位.</div></li><li><div class="ovv-simple-pit-myth">邮政工程不读研也能去头部</div><div class="ovv-simple-pit-reality">邮政科技 + 物流科技 + 无人机配送 + 智能分拣公司核心研发岗要求硕士; 中国邮政研究院 + 国家邮政局发展研究中心核心岗要求硕士 + 多年经验; 高校教职要求博士. 学术和研发高端岗仍需读研, 本科主要走邮政技术员 + 物流科技工程师 + 智能分拣工程师 + 无人机配送运营.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">邮政工程是物流工程在邮政场景下的窄化, 其稀缺性源于邮政系统的国营属性 + 强合规要求 + 国家邮政局直属体系 — 区别于通用物流工程的开放市场化, 邮政工程培养的是既能搞智能分拣硬件 + 无人机配送运营, 又能适配邮政国营体系合规与邮政 EMS 网络规划的复合人才, 这是该专业最容易被误解的隐藏点.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 大学英语; 大二核心: 邮政系统概论 / 物流系统规划 / 物流自动化 / 智能分拣技术 / 数据库与 SQL; 大三方向分流: 邮政自动化方向 (智能分拣/自动传输/AGV 机器人) / 邮政网络规划方向 (网络优化/路径规划/最后一公里) / 无人机配送方向 (无人机物流/无人车/末端配送) / 邮政信息化方向 (大数据/物联网/区块链溯源); 大四实习 (中国邮政/顺丰/京东/菜鸟/极兔/邮政科技) + 毕业论文. 4 年下来, 既要能设计物流网络, 也要能搞智能分拣系统.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对邮政 + 物流 + 智能分拣 + 无人机配送有强烈兴趣, 不排斥技术性 + 物流一线工作</li><li>接受 4 年专业训练 (邮政系统 + 物流自动化 + 智能分拣), 数学 + 计算机基础好, 心理承压能力好</li><li>愿意走中国邮政/顺丰/京东/菜鸟/极兔/邮政科技, 不期待写字楼/坐班</li><li>化学/物理/计算机基础扎实, 能啃物流系统规划 + 智能分拣 + 无人机配送</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把邮政工程等同于'送快递的''分拣工' — 该专业是工学学位, 走的是邮政系统 + 物流自动化 + 智能分拣 + 无人机配送路径, 服务于邮政科技 + 物流科技</li><li>对物流/快递/自动化/无人机无兴趣 — 该专业 50% 课程是物流系统 + 智能分拣 + 自动化 + 计算机, 不接受物流行业的人不适合</li><li>期望稳定轻松 — 物流/快递/邮政是 24/7 行业, 双11/618/春节高峰期高强度, 不接受高强度者不适合</li><li>对户外工作/分拣中心一线有强烈抵触 — 邮政工程部分岗位 (分拣中心规划/无人机配送) 涉及一线工作环境</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1085,9 +1113,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1129,9 +1155,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1146,9 +1170,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1253,9 +1275,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1270,6 +1290,12 @@ footer .data-source { color: #78716C; }
           <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
+          <td class="salary-stage">应届生 (智能分拣设备商, 中科微至/科捷智能)</td>
+          <td class="num"><span class="approx">≈</span><span data-count="11" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.83333333333333%"></span></span><span class="yoy up">↗ +10%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="17" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.83333333333334%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="24" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+        </tr>
+        <tr>
           <td class="salary-stage">应届生 (顺丰/京东/菜鸟/极兔, 头部民营)</td>
           <td class="num"><span class="approx">≈</span><span data-count="12" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:46.15384615384615%"></span></span><span class="yoy up">↗ +8%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="18" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:69.23076923076923%"></span></span></td>
@@ -1280,12 +1306,6 @@ footer .data-source { color: #78716C; }
           <td class="num"><span class="approx">≈</span><span data-count="14" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:43.75%"></span></span><span class="yoy up">↗ +15%</span></td>
           <td class="num"><span class="approx">≈</span><span data-count="22" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:68.75%"></span></span></td>
           <td class="num"><span class="approx">≈</span><span data-count="32" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
-        </tr>
-        <tr>
-          <td class="salary-stage">应届生 (智能分拣设备商, 中科微至/科捷智能)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="11" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:45.83333333333333%"></span></span><span class="yoy up">↗ +10%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="17" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:70.83333333333334%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="24" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
         <tr>
           <td class="salary-stage">3-5年经验 (邮政技术骨干/物流科技工程师/分拣工程师)</td>
@@ -1311,9 +1331,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1356,65 +1374,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (物流工程/交通运输/邮政工程)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (物流工程/交通运输/邮政工程, 高校教职)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">22<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (中国邮政/邮政 EMS/邮政科技)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (顺丰/京东/菜鸟/极兔, 物流科技)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (无人机配送, 大疆/顺丰丰翼/京东无人机)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (智能分拣公司, 中科微至/科捷智能)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">11<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (中通/圆通/申通/韵达, 通达系)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (中国邮政研究院/国家邮政局)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (物流工程/供应链, 欧美)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1453,9 +1416,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1525,10 +1486,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card eng" href="/radiation-protection-nuclear-safety.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">辐射防护与核安全</span><span class="wl-hook">辐射防护与核安全</span></a>
-      <a class="wl-card eng" href="/urban-planning.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">城乡规划</span><span class="wl-hook">城乡规划</span></a>
-      <a class="wl-card eng" href="/intelligent-construction.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">智能建造</span><span class="wl-hook">智能建造</span></a>
-      <a class="wl-card eng" href="/textile-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">纺织工程</span><span class="wl-hook">纺织工程</span></a>
+      <a class="wl-card eng" href="/chemical-safety-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">化工安全工程</span><span class="wl-hook">化工安全工程</span></a>
+      <a class="wl-card eng" href="/marine-robotics.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">海洋机器人</span><span class="wl-hook">海洋机器人</span></a>
+      <a class="wl-card eng" href="/land-remediation-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">土地整治工程</span><span class="wl-hook">土地整治工程</span></a>
+      <a class="wl-card eng" href="/brewing-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">酿酒工程</span><span class="wl-hook">酿酒工程</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1543,11 +1504,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (南京邮电大学/北京邮电大学/重庆邮电大学/西安邮电大学/北京交通大学邮政工程/物流工程培养方案 + 2024-2025 中国邮政/顺丰/京东/菜鸟/极兔/中科微至/大疆校招 offer 墙 + 国家邮政局数据 (2024 快递 1300+ 亿件) + 校友访谈 @ 上海/深圳/重庆)</div>

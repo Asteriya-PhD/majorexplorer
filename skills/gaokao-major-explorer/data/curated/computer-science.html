@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -410,8 +437,9 @@ body { cursor: text; }
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -551,11 +579,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #22C55E; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; font-size: 0.9375rem; color: #F8FAFC; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-radius: 4px; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #22C55E; transform: translateY(-2px); }
 .path-pct { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; font-weight: 700; color: #22C55E; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
 .path-name { font-family: 'JetBrains Mono', monospace; color: #94A3B8; font-size: 0.75rem; letter-spacing: 0.08em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 28px 32px 24px; background: rgba(11, 17, 32, 0.6); border: 1px solid #1F2937; border-left: 2px solid #22C55E; border-radius: 0 4px 4px 0; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
@@ -603,6 +633,85 @@ section.tab h2 { color: #F8FAFC; }
 section.tab p { color: #F8FAFC; }
 section.tab p.lede { color: #94A3B8; line-break: strict; }
 section.tab h3 { color: #F8FAFC; }
+/* 修复 2026-06-22: cs 主题深色背景全面 redesign 适配 */
+/* 1. 全局 var(--ink) 浅色 (12 处 fallback #1A1A1A → 浅色) */
+:root { --ink: #F8FAFC; --rule: #1F2937; }
+/* 2. fit-check section redesign — 原 is-yes/is-no 用 0.03 浅色 bg 在深主题格格不入 */
+section.tab .ovv-simple-fit-col {
+  padding: 24px 24px 20px; border-radius: 4px;
+  background: rgba(11, 17, 32, 0.4); border: 1px solid #1F2937;
+}
+section.tab .ovv-simple-fit-col.is-yes {
+  border-left: 3px solid #22C55E;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(11, 17, 32, 0.4));
+}
+section.tab .ovv-simple-fit-col.is-no {
+  border-left: 3px solid #F87171;
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08), rgba(11, 17, 32, 0.4));
+}
+section.tab .ovv-simple-fit-col.is-yes .ovv-simple-fit-label { color: #22C55E; }
+section.tab .ovv-simple-fit-col.is-no .ovv-simple-fit-label { color: #F87171; }
+section.tab .ovv-simple-fit-list li {
+  color: #F8FAFC !important; /* override a1b9ebc6 !important #1A1A1A */
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+/* 3. pit-reality card 背景适配深主题 */
+section.tab .ovv-pit {
+  background: rgba(11, 17, 32, 0.4); border-color: #1F2937;
+}
+section.tab .ovv-pit-reality { color: #F8FAFC; }
+/* 4. lede 段落 (其他 section 标题下小字) */
+section.tab p.lede { color: #94A3B8; }
+section.tab .section-num { color: #22C55E; }
+/* 5. watkermark 背景水印数字 */
+section.tab .watermark { color: #22C55E; opacity: 0.04; }
+/* 6. overview_v2 redesign — AI 等 cs 主题深色背景 (Day 23 06-22 二次发现: 速览 Foundations section 还是浅色) */
+section.tab .ovv-card {
+  background: rgba(11, 17, 32, 0.5); border-color: #1F2937;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+section.tab .ovv-card::before { background: #22C55E; }
+section.tab .ovv-card.is-blue::before { background: #22C55E; }
+section.tab .ovv-card.is-orange::before { background: #F87171; }
+section.tab .ovv-card-head { border-bottom-color: rgba(255, 255, 255, 0.1); }
+section.tab .ovv-card-num { color: #22C55E; }
+section.tab .ovv-card-title { color: #F8FAFC; }
+section.tab .ovv-card-tag { color: #94A3B8; }
+section.tab .ovv-foundations-label,
+section.tab .ovv-directions-label { color: #94A3B8; }
+section.tab .ovv-timeline::before { background: linear-gradient(90deg, transparent, #22C55E 20%, #22C55E 80%, transparent); }
+section.tab .ovv-tl-step::before { background: #0B1120; border-color: #22C55E; }
+section.tab .ovv-tl-step span { color: #F8FAFC; }
+section.tab .ovv-dir {
+  background: rgba(11, 17, 32, 0.4); border-color: #1F2937;
+}
+section.tab .ovv-dir:hover { border-color: #22C55E; background: rgba(34, 197, 94, 0.06); }
+section.tab .ovv-dir-num { color: #22C55E; }
+section.tab .ovv-dir-name { color: #F8FAFC; }
+section.tab .ovv-dir-desc { color: #94A3B8; }
+section.tab .ovv-skill {
+  background: rgba(11, 17, 32, 0.4); border-color: #22C55E; color: #22C55E;
+}
+section.tab .ovv-bonus {
+  background: rgba(184, 144, 42, 0.08); border-left-color: #B8902A; color: #F8FAFC;
+}
+/* v2 fit-check (与 simple 不同的类名 .ovv-fit-col 不是 .ovv-simple-fit-col) */
+section.tab .ovv-fit-col {
+  background: rgba(11, 17, 32, 0.4); border-color: #1F2937;
+}
+section.tab .ovv-fit-col.is-yes {
+  border-left: 3px solid #22C55E;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(11, 17, 32, 0.4));
+}
+section.tab .ovv-fit-col.is-no {
+  border-left: 3px solid #F87171;
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08), rgba(11, 17, 32, 0.4));
+}
+section.tab .ovv-fit-col.is-yes .ovv-fit-label { color: #22C55E; }
+section.tab .ovv-fit-col.is-no .ovv-fit-label { color: #F87171; }
+section.tab .ovv-fit-list li {
+  color: #F8FAFC; border-bottom-color: rgba(255, 255, 255, 0.08);
+}
 footer { background: rgba(11, 17, 32, 0.6); border-top: 1px solid #1F2937; }
 footer .label { color: #22C55E; }
 footer .data-source { color: #94A3B8; }
@@ -976,18 +1085,16 @@ footer .data-source { color: #94A3B8; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">计算机科学与技术的核心是「算法 + 系统 + 软件工程」三栖, 它是工科里唯一打通「底层硬件 (体系结构) → 中间层 (操作系统/数据库) → 上层应用 (Web/AI)」的全栈学科; 在 2022-2024 互联网深度回调后 2025-2026 趋于理性 (AI/芯片/自动驾驶/量化等新赛道缺口扩大), 它仍是工科起薪最高 + 天花板最宽的赛道, 但「35 岁危机」「算法岗 985 硕 + 顶会硬门槛」「996 加班文化」「AI 编程 (Copilot) 对初级岗的替代」「简历筛 985 + 顶实习 + 顶项目三道关」是五大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学/线性代数/概率论/离散数学/C 语言程序设计; 大二核心: 数据结构与算法/计算机组成原理/操作系统/计算机网络/数据库系统; 大三方向分流 (五选一): AI/机器学习 / 后端开发 (Java/Go) / 前端+全栈 / 系统与底层 (编译/分布式) / 数据科学; 大四毕设 + 刷 LeetCode 200+ + 大厂实习 8-12 周. 4 年下来, 既要能写代码, 也要能讲清楚 TCP 三次握手 + 进程线程 + SQL 优化.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对编程有发自内心的兴趣, 课余时间愿意写代码/做项目/刷算法题</li><li>逻辑思维强, 喜欢解谜/系统性思考/抽象建模, 数学 (尤其线代/概率) 不排斥</li><li>能接受持续学习 — 技术栈 3-5 年一轮迭代 (Spring→SpringBoot→云原生→LLM 框架)</li><li>抗压能力好, 接受项目 deadline/on-call/996 是大厂常态</li><li>有自学能力 + 信息检索能力, 不依赖课堂教所有东西</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把计算机当「修电脑/装系统」 — 实际 90% 时间在写代码 + 调 bug + 读英文文档</li><li>数学/逻辑思维弱, 抽象概念 (递归/动态规划/分布式一致性) 缺乏耐心</li><li>追求朝九晚五、工作生活严格分开 — 大厂核心岗加班是常态</li><li>把「年薪百万」当入场券 — 头部大厂 30-55 万是 985 + 顶实习 + 顶项目三关之后的结果, 双非本直接就业 12-20 万是常态</li><li>排斥持续学习 — 入行后 5-10 年不迭代技术栈 (LLM/Rust/云原生) 容易被淘汰</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">毕业 = 自动高薪</div><div class="ovv-simple-pit-reality">CS 是工科起薪最高 (985 本硕 25-50 万) 但**学历分层最严**的赛道, 双非本科直接就业 12-20 万是常态, 想拿到 985 头部 (字节/阿里/腾讯) 算法岗 30-55 万必须 985 硕 + 顶会论文 (ACL/EMNLP/SIGIR) + 大厂顶实习, 三关缺一不可.</div></li><li><div class="ovv-simple-pit-myth">算法岗是 CS 应届最优解</div><div class="ovv-simple-pit-reality">2022-2024 互联网深度回调后算法岗严重紧缩, 头部大厂 (字节/阿里/腾讯/百度) 算法岗 2024 校招 HC 比 2020 砍 50%+, 985 硕 + 顶会论文是硬门槛; 应届入场算法岗竞争激烈, 反而后端/前端/数据/测开 HC 稳定, 资深后端 5 年 + 60-100 万是常态.</div></li><li><div class="ovv-simple-pit-myth">35 岁危机不存在</div><div class="ovv-simple-pit-reality">35 岁危机在 CS 行业真实存在 — 大厂 P7 (技术专家) 是分水岭, 升不上去面临「被优化」; 真实路径是「P7 技术专家」或「P8-P9 管理岗」或「跳槽到外企/独角兽/创业公司」, 三选一; 一线大厂核心岗 35+ 占比不到 15%, 35 岁前必须完成技术深度沉淀 + 管理能力 / 行业资源积累.</div></li><li><div class="ovv-simple-pit-myth">学 CS 不用读研</div><div class="ovv-simple-pit-reality">985 本科直接就业 22-35 万 (一线大厂后端) 是真实的, 但**头部算法岗/AI Lab/量化核心岗** 90% 要求 985 硕 + 顶会论文; 想走 AI/算法/量化方向建议直接 985 硕, 走工程 (后端/前端/数据) 可以本科直接就业; 海外硕 (CMU/MIT/Stanford/UIUC) 校招 70-150 万是另一条路.</div></li><li><div class="ovv-simple-pit-myth">AI 编程 (Copilot) 不会替代初级程序员</div><div class="ovv-simple-pit-reality">GitHub Copilot + Cursor + Claude Code 在 2024-2026 已经能完成**基础 CRUD + 简单功能模块**的 60-80% 代码量, 初级 CRUD 岗 (1-3 年经验) 受冲击最大; 真正稀缺的是「系统设计 + 复杂问题拆解 + AI 工程化落地」能力, 纯写代码的岗位正在被压缩, 选方向要避开「纯 CRUD」.</div></li><li><div class="ovv-simple-pit-myth">外企是 CS 避风港</div><div class="ovv-simple-pit-reality">微软 / Google / Meta / Amazon / Apple 等外企 2023+ 在中国大幅缩招 (微软中国撤掉多个产品线, Google 中国只剩广告销售), 想进外企核心岗基本必须海外硕 (CMU/MIT/Stanford/UIUC) + 顶会 + 美国实习; 留在国内走外企路径的难度 5 年前是 985 本, 现在是海外硕起步.</div></li><li><div class="ovv-simple-pit-myth">996 是互联网常态</div><div class="ovv-simple-pit-reality">996 (早 9 晚 9 周 6) 在头部大厂 (字节/拼多多/快手) 核心部门 (抖音/TikTok/电商) 真实存在, 但 2024+ 大厂反 996 政策收紧, 实际工作时长 10-10-5 (早 10 晚 10 周 5) 是常态; 选部门比选公司重要 — 字节 TikTok/抖音 vs 字节 Lark/飞书, 工作强度天差地别.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">计算机科学与技术的核心是「算法 + 系统 + 软件工程」三栖, 它是工科里唯一打通「底层硬件 (体系结构) → 中间层 (操作系统/数据库) → 上层应用 (Web/AI)」的全栈学科; 在 2022-2024 互联网深度回调后 2025-2026 趋于理性 (AI/芯片/自动驾驶/量化等新赛道缺口扩大), 它仍是工科起薪最高 + 天花板最宽的赛道, 但「35 岁危机」「算法岗 985 硕 + 顶会硬门槛」「996 加班文化」「AI 编程 (Copilot) 对初级岗的替代」「简历筛 985 + 顶实习 + 顶项目三道关」是五大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学/线性代数/概率论/离散数学/C 语言程序设计; 大二核心: 数据结构与算法/计算机组成原理/操作系统/计算机网络/数据库系统; 大三方向分流 (五选一): AI/机器学习 / 后端开发 (Java/Go) / 前端+全栈 / 系统与底层 (编译/分布式) / 数据科学; 大四毕设 + 刷 LeetCode 200+ + 大厂实习 8-12 周. 4 年下来, 既要能写代码, 也要能讲清楚 TCP 三次握手 + 进程线程 + SQL 优化.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对编程有发自内心的兴趣, 课余时间愿意写代码/做项目/刷算法题</li><li>逻辑思维强, 喜欢解谜/系统性思考/抽象建模, 数学 (尤其线代/概率) 不排斥</li><li>能接受持续学习 — 技术栈 3-5 年一轮迭代 (Spring→SpringBoot→云原生→LLM 框架)</li><li>抗压能力好, 接受项目 deadline/on-call/996 是大厂常态</li><li>有自学能力 + 信息检索能力, 不依赖课堂教所有东西</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>把计算机当「修电脑/装系统」 — 实际 90% 时间在写代码 + 调 bug + 读英文文档</li><li>数学/逻辑思维弱, 抽象概念 (递归/动态规划/分布式一致性) 缺乏耐心</li><li>追求朝九晚五、工作生活严格分开 — 大厂核心岗加班是常态</li><li>把「年薪百万」当入场券 — 头部大厂 30-55 万是 985 + 顶实习 + 顶项目三关之后的结果, 双非本直接就业 12-20 万是常态</li><li>排斥持续学习 — 入行后 5-10 年不迭代技术栈 (LLM/Rust/云原生) 容易被淘汰</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -997,9 +1104,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1041,9 +1146,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1112,9 +1215,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1315,9 +1416,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1355,9 +1454,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1405,60 +1502,10 @@ footer .data-source { color: #94A3B8; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">国内 985 硕士 (CS/AI/系统/软工方向)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">海外硕士 (CMU/MIT/Stanford/UIUC, AI/CS)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (AI/系统/理论 CS PhD, 高校教职路径)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">35<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (大厂后端/算法/前端, 985 本科)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">外企海外 (微软/Google/Meta, 海外硕)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">金融科技/量化 (九坤/明汯/蚂蚁, 数学双强)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">继续培训讲师/IT 外包/银行券商 IT (稳定但偏低薪)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">公务员/选调/事业编 (信通院/银联/工信部)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1517,9 +1564,7 @@ footer .data-source { color: #94A3B8; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1584,10 +1629,10 @@ footer .data-source { color: #94A3B8; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
+      <a class="wl-card cs" href="/data-science-big-data.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">数据科学与大数据技术</span><span class="wl-hook">数据驱动决策的语言</span></a>
       <a class="wl-card cs" href="/artificial-intelligence.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">人工智能</span><span class="wl-hook">算法堆顶, 博士起步</span></a>
-      <a class="wl-card cs" href="/communication-engineering.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">通信工程</span><span class="wl-hook">5G/6G 双风口</span></a>
+      <a class="wl-card cs" href="/artificial-intelligence-cross.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">人工智能(交叉)</span><span class="wl-hook">人工智能(交叉)</span></a>
       <a class="wl-card cs" href="/network-space-security.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">网络空间安全</span><span class="wl-hook">网络空间安全</span></a>
-      <a class="wl-card cs" href="/digital-twin-technology.html" data-tag="同主题"><span class="wl-badge">计算机</span><span class="wl-title">数字孪生技术</span><span class="wl-hook">数字孪生技术</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
       <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
@@ -1602,11 +1647,10 @@ footer .data-source { color: #94A3B8; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 基于教育部学科评估(第五轮)、软科2025中国大学专业排名、职友集/看准网薪资数据、知乎/牛客网/小红书学长学姐反馈(2021-2025)综合提炼</div>

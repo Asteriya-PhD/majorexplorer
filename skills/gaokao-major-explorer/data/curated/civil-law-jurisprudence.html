@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -407,8 +434,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -546,11 +574,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #78350F; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'EB Garamond', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #D6D3D1; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #78350F; transform: translateY(-2px); }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.75rem; font-weight: 500; color: #1C1917; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'EB Garamond', serif; color: #57534E; font-size: 0.875rem; letter-spacing: 0.04em; margin-top: 8px; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 36px 40px 32px; background: #FFFBEB; border: 1px solid #D6D3D1; border-left: 4px double #D97706; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -942,18 +972,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">民法的核心是物权+合同+侵权+婚姻继承四栖, 它在律所非诉/法务/法官/公证赛道需求最广, 但"法考A证+案源积累+学历门槛"是最大风险 — 头部律所基本只招 985 法学硕+司考A证, 应届起薪差距 3-5 倍.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 法理学/宪法学/中国法制史/民法总则/大学英语/思政系列; 大二核心: 物权法/合同法/侵权责任法/人格权法/婚姻家庭法/继承法/商法总论/民事诉讼法; 大三方向分流: 民商法实务/知识产权法/国际私法/法律检索与文书写作/案例分析实训; 大四: 毕业实习 (律所/法院/检察院/公司法务 12-16 周) + 毕业论文. 4 年下来, 既要能起草合同/审查协议, 也要能在法庭上完成民事案件代理.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>逻辑严密, 喜欢从法条/案例/判例切入</li><li>文字能力强, 法律文书/合同起草过硬</li><li>能熬过法考A证 (通过率约 18%) + 3-5 年案源积累</li><li>对民商法有真兴趣 (合同/物权/侵权等核心)</li><li>愿意读研 (头部律所基本只招 985 法学硕)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待毕业直接年薪 30 万, 律师前 3 年 8-15 万是常态</li><li>背诵能力差, 法条+司法解释记不住</li><li>不能接受前期低收入+案源积累期</li><li>想"做律师赚钱快", 民商律师需要 5-8 年沉淀</li><li>排斥长时间学习+考试, 法学是持续学习型专业</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">法学本科毕业就能进红圈所</div><div class="ovv-simple-pit-reality">金杜/中伦/君合/方达等红圈所民商事团队基本只招 985/政法类法学硕士+法考A证, 本科多为实习留用或外所合作所派遣, 应届起薪差距 3-5 倍 (红圈 25-45 万 vs 普通所 8-15 万).</div></li><li><div class="ovv-simple-pit-myth">民法 = 万金油, 啥方向都能干</div><div class="ovv-simple-pit-reality">民法细分为民商法 (合同/公司股权)、知识产权法、婚姻家事法、侵权责任法、环境侵权, 各方向实务差异极大; 民商律师做不了专利诉讼, 婚姻家事律师转不了公司并购 — 选方向就是选终身职业.</div></li><li><div class="ovv-simple-pit-myth">法官是铁饭碗</div><div class="ovv-simple-pit-reality">省高级法院/最高法院法官助理 12-18 万/年起步, 晋升法官需 5-8 年员额制考试; 基层法院员额饱和 (东部地区已满员), 中西部地区月入 5-8 千, 基层派出法庭工作压力大.</div></li><li><div class="ovv-simple-pit-myth">公司法务比律师轻松</div><div class="ovv-simple-pit-reality">互联网大厂/央国企法务虽不坐班开庭, 但合同审查 (日均 30-50 份) + 诉讼管理 (外包律所) + 合规审核 (数据/反垄断/反舞弊) 工作饱和度极高, 资深 30-50 万, 但天花板低于头部律所合伙人.</div></li><li><div class="ovv-simple-pit-myth">法考A证通过就有工作</div><div class="ovv-simple-pit-reality">法考A证通过率约 18%, 但有证不等于有案源; 律师前 3 年案源 100% 依赖团队/律所指派, 独立接案通常需要 5-8 年沉淀, 2024 年律协新规要求实习律师考核通过率已不足 50%.</div></li><li><div class="ovv-simple-pit-myth">民法典颁布后民法课程会减少</div><div class="ovv-simple-pit-reality">民法典 (2021 生效) 把原 9 部单行法整合为 7 编 1260 条, 反而催生新型纠纷 (数据权益/居住权/人格权侵害惩罚性赔偿), 课程从'法条背诵'升级为'法典体系+司法解释+典型案例'三层训练, 学习强度不降反升.</div></li><li><div class="ovv-simple-pit-myth">民法和商法一样</div><div class="ovv-simple-pit-reality">民法调整平等主体财产关系和人身关系 (个人之间), 商法调整商事主体经营关系 (公司/合伙/票据/证券), 二者在'主体-法律行为-责任'三维度差异明显; 民商法硕才是交叉, 本科阶段民法侧重民事.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">民法的核心是物权+合同+侵权+婚姻继承四栖, 它在律所非诉/法务/法官/公证赛道需求最广, 但"法考A证+案源积累+学历门槛"是最大风险 — 头部律所基本只招 985 法学硕+司考A证, 应届起薪差距 3-5 倍.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 法理学/宪法学/中国法制史/民法总则/大学英语/思政系列; 大二核心: 物权法/合同法/侵权责任法/人格权法/婚姻家庭法/继承法/商法总论/民事诉讼法; 大三方向分流: 民商法实务/知识产权法/国际私法/法律检索与文书写作/案例分析实训; 大四: 毕业实习 (律所/法院/检察院/公司法务 12-16 周) + 毕业论文. 4 年下来, 既要能起草合同/审查协议, 也要能在法庭上完成民事案件代理.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>逻辑严密, 喜欢从法条/案例/判例切入</li><li>文字能力强, 法律文书/合同起草过硬</li><li>能熬过法考A证 (通过率约 18%) + 3-5 年案源积累</li><li>对民商法有真兴趣 (合同/物权/侵权等核心)</li><li>愿意读研 (头部律所基本只招 985 法学硕)</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待毕业直接年薪 30 万, 律师前 3 年 8-15 万是常态</li><li>背诵能力差, 法条+司法解释记不住</li><li>不能接受前期低收入+案源积累期</li><li>想"做律师赚钱快", 民商律师需要 5-8 年沉淀</li><li>排斥长时间学习+考试, 法学是持续学习型专业</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -963,9 +991,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1018,9 +1044,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1089,9 +1113,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1228,9 +1250,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1268,9 +1288,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1318,55 +1336,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">35<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (民商事诉讼/民商律师助理)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">考研深造 (民商法/经济法/民法硕士, 北大/人大/政法大)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">20<span class="path-unit">%</span></div>
-          <div class="path-name">公司法务 (民商/合同/合规方向)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">银行/金融机构风控合规</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">考公 (基层法院/司法所/派出法庭)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">继续深造/法律硕士 (JM 实务)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">海外 LLM/留学</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1405,9 +1378,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1490,11 +1461,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 基于教育部第四轮学科评估、各高校官网及2024年公开就业数据综合估算</div>

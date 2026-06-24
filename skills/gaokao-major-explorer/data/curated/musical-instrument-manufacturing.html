@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -406,8 +433,9 @@ section.tab { background: transparent; }
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -628,6 +656,8 @@ footer .data-source { color: #999; }
 .path-card:hover { border-color: #B83A2A; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184, 58, 42, 0.08); }
 .path-pct { font-family: 'EB Garamond', serif; font-size: 2.5rem; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.875rem; color: #6B5D43; margin-top: 8px; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 /* === 学长学姐说 === */
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
@@ -1061,18 +1091,16 @@ footer .data-source { color: #999; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">乐器智造的实质是「声学物理+木材/金属工艺+智能制造+音乐声学」四栖训练, 它依托国内中高端乐器制造产业链 (珠江钢琴/星海钢琴/扬州民族乐器/广州提琴集群), 在 AI 与智能制造冲击下, 「手工调律+真材实料声学经验」是这门专业最难被替代的护城河, 但最大风险是「行业小众+院校少+学历硕士稀缺」三重门槛, 真正能进头部乐器企业研发的不超过 1/5.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 大学物理 (声学) / 工程制图 / C 语言程序设计 / 音乐基础理论; 大二核心: 声学基础 / 木材学 / 材料力学 / 金属材料工艺 / 乐音心理学 / 钢琴 (或提琴/民族乐器) 结构学; 大三方向分流: 钢琴方向 (钢琴调律/钢琴击弦机/键盘机/音源系统) / 提琴方向 (提琴木材处理/油漆工艺/音柱音梁) / 民族乐器方向 (古筝/二胡/琵琶制作) / 智能乐器方向 (电声乐器/数字音频/MIDI 系统); 大四毕业实习 (通常要求赴珠江钢琴/星海/扬州民族乐器厂实习 2-3 个月) + 毕业设计. 4 年训练后, 你既能给钢琴调律, 也能做提琴音柱调试, 还能做电声乐器的 DSP 信号处理.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对乐器演奏/声学/手工工艺有持久兴趣, 愿意 5-10 年沉淀冷门艺术工科</li><li>有一定乐器演奏基础 (钢琴/提琴/民乐), 理解乐器发声原理</li><li>动手能力强 + 不怕粉尘/化学试剂 (油漆/胶水), 能适应工厂+车间环境</li><li>接受「行业窄+院校少」, 愿意在珠江/星海/扬州乐器产业集群就业</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标艺术设计/数字媒体起薪 (12-20 万) — 乐器智造应届起薪普遍 6-10 万</li><li>把乐器智造误以为「学了能做演奏家」— 演奏专业是音乐表演, 本专业偏制造工艺</li><li>女生担心体力门槛 — 钢琴搬运+提琴木工+油漆工序男性占比 75%+</li><li>短期变现焦虑 (3 年回本) — 头部岗 (珠江钢琴研发/星海调律) 校招流程长, 起薪低</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">毕业能进珠江钢琴做工程师</div><div class="ovv-simple-pit-reality">珠江钢琴 (国内最大钢琴厂) 校招集中「机械工程+木材科学+工业设计+音乐声学」, 「乐器智造」特设专业 2020 年后才陆续有毕业生, 实际进入珠江集团研发/工艺岗比例不超过毕业生 18%, 多数毕业生走钢琴调律+售后服务+销售岗.</div></li><li><div class="ovv-simple-pit-myth">乐器智造可以走智能制造高薪方向</div><div class="ovv-simple-pit-reality">智能乐器 (电吉他/电子鼓/MIDI 键盘/数字钢琴) 方向核心岗位在罗兰 (Roland)/雅马哈 (Yamaha)/卡西欧 (Casio), 但这些公司在中国主要招「电子工程+计算机+数字音频处理」, 「乐器智造」特设专业进入头部电声乐器企业比例不足 8%.</div></li><li><div class="ovv-simple-pit-myth">钢琴调律是高薪自由职业</div><div class="ovv-simple-pit-reality">钢琴调律师按台计价 (200-500 元/台), 月均 30-50 台, 月收入 8000-15000 元, 但钢琴调律旺季 (寒暑假+年底) 工作强度极大 (每天 8-10 小时), 淡季收入骤降; 真正做到「名师工作室」年收入 30 万+ 不到从业者 5%.</div></li><li><div class="ovv-simple-pit-myth">民族乐器制作是文化传承金饭碗</div><div class="ovv-simple-pit-reality">扬州古筝/苏州二胡/北京琵琶等民族乐器制作有「非遗」光环, 但行业规模极小 (全国民族乐器年产值 < 30 亿), 大部分为家族作坊 (3-5 人), 应届毕业生实际进入大型民族乐器企业 (上海民族乐器一厂/扬州金韵/北京乐海) 比例不足 10%, 多数进入小型作坊或转行.</div></li><li><div class="ovv-simple-pit-myth">提琴制作可以走国际路线</div><div class="ovv-simple-pit-reality">提琴制作 (小提琴/中提琴/大提琴) 是国内新兴方向, 主要集中在广州和江苏 (广州提琴产业集群占全球产量 30%+), 但高端手工提琴仍以意大利 (克雷莫纳) 和德国 (米腾瓦尔德) 为主, 国内高端手工提琴市场极小, 本科毕业生多数做中低端提琴量产+质检.</div></li><li><div class="ovv-simple-pit-myth">乐器智造考公可走文化系统</div><div class="ovv-simple-pit-reality">国考/省考中「乐器智造」可报考岗位极少, 多数毕业生考公以「艺术学/工业设计/材料工程」大类报名, 真正进入文化系统 (文化和旅游部非遗司/省文化厅) 从事乐器非遗保护的毕业生不到 2%.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">乐器智造的实质是「声学物理+木材/金属工艺+智能制造+音乐声学」四栖训练, 它依托国内中高端乐器制造产业链 (珠江钢琴/星海钢琴/扬州民族乐器/广州提琴集群), 在 AI 与智能制造冲击下, 「手工调律+真材实料声学经验」是这门专业最难被替代的护城河, 但最大风险是「行业小众+院校少+学历硕士稀缺」三重门槛, 真正能进头部乐器企业研发的不超过 1/5.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 大学物理 (声学) / 工程制图 / C 语言程序设计 / 音乐基础理论; 大二核心: 声学基础 / 木材学 / 材料力学 / 金属材料工艺 / 乐音心理学 / 钢琴 (或提琴/民族乐器) 结构学; 大三方向分流: 钢琴方向 (钢琴调律/钢琴击弦机/键盘机/音源系统) / 提琴方向 (提琴木材处理/油漆工艺/音柱音梁) / 民族乐器方向 (古筝/二胡/琵琶制作) / 智能乐器方向 (电声乐器/数字音频/MIDI 系统); 大四毕业实习 (通常要求赴珠江钢琴/星海/扬州民族乐器厂实习 2-3 个月) + 毕业设计. 4 年训练后, 你既能给钢琴调律, 也能做提琴音柱调试, 还能做电声乐器的 DSP 信号处理.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对乐器演奏/声学/手工工艺有持久兴趣, 愿意 5-10 年沉淀冷门艺术工科</li><li>有一定乐器演奏基础 (钢琴/提琴/民乐), 理解乐器发声原理</li><li>动手能力强 + 不怕粉尘/化学试剂 (油漆/胶水), 能适应工厂+车间环境</li><li>接受「行业窄+院校少」, 愿意在珠江/星海/扬州乐器产业集群就业</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>期待本科毕业对标艺术设计/数字媒体起薪 (12-20 万) — 乐器智造应届起薪普遍 6-10 万</li><li>把乐器智造误以为「学了能做演奏家」— 演奏专业是音乐表演, 本专业偏制造工艺</li><li>女生担心体力门槛 — 钢琴搬运+提琴木工+油漆工序男性占比 75%+</li><li>短期变现焦虑 (3 年回本) — 头部岗 (珠江钢琴研发/星海调律) 校招流程长, 起薪低</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1082,9 +1110,7 @@ footer .data-source { color: #999; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1123,9 +1149,7 @@ footer .data-source { color: #999; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1176,9 +1200,7 @@ footer .data-source { color: #999; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1315,9 +1337,7 @@ footer .data-source { color: #999; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1355,9 +1375,7 @@ footer .data-source { color: #999; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1405,55 +1423,10 @@ footer .data-source { color: #999; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (音乐声学/乐器声学)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (材料工程/木材科学)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (工业设计/产品设计)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (乐器制作/声学)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">博士 (音乐声学)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">65<span class="path-unit">%</span></div>
-          <div class="path-name">就业直接入职 (乐器企业/调律/销售)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">6<span class="path-unit">%</span></div>
-          <div class="path-name">其他 (自由职业/转行/创业)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1512,26 +1485,29 @@ footer .data-source { color: #999; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
         <div class="xuanke">
-          <div class="xuanke-name"></div>
+          <div class="xuanke-name">物理 + 化学 (乐器智造工科, 60% 院校)</div>
           <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:60%"></div></div>
           <div class="xuanke-pct">60%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:30%"></div></div>
-          <div class="xuanke-pct">30%</div>
+          <div class="xuanke-name">物理 + 化学 + 生物 (双一流扩展, 20% 校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:20%"></div></div>
+          <div class="xuanke-pct">20%</div>
         </div>
         <div class="xuanke">
-          <div class="xuanke-name"></div>
-          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:85%"></div></div>
-          <div class="xuanke-pct">85%</div>
+          <div class="xuanke-name">音乐(乐器演奏) + 历史 + 地理 (艺术特长生, 15%)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:15%"></div></div>
+          <div class="xuanke-pct">15%</div>
+        </div>
+        <div class="xuanke">
+          <div class="xuanke-name">不限选科 (极少数综合院校)</div>
+          <div class="xuanke-bar"><div class="xuanke-bar-fill" style="width:5%"></div></div>
+          <div class="xuanke-pct">5%</div>
         </div>
     </div>
   </div>
@@ -1574,10 +1550,10 @@ footer .data-source { color: #999; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card arts" href="/film-television-technology.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">影视技术</span><span class="wl-hook">影视技术</span></a>
-      <a class="wl-card arts" href="/packaging-design.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">包装设计</span><span class="wl-hook">包装设计</span></a>
-      <a class="wl-card arts" href="/dance-choreography.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">舞蹈编导</span><span class="wl-hook">舞蹈编导</span></a>
+      <a class="wl-card arts" href="/aviation-service-arts-management.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">航空服务艺术与管理</span><span class="wl-hook">航空服务艺术与管理</span></a>
       <a class="wl-card arts" href="/digital-media-arts.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">数字媒体艺术</span><span class="wl-hook">影视 + 游戏 + 交互</span></a>
+      <a class="wl-card arts" href="/arts-crafts.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">工艺美术</span><span class="wl-hook">工艺美术</span></a>
+      <a class="wl-card arts" href="/dance-performance.html" data-tag="同主题"><span class="wl-badge">艺术</span><span class="wl-title">舞蹈表演</span><span class="wl-hook">舞蹈表演</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1592,11 +1568,10 @@ footer .data-source { color: #999; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编</div>

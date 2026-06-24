@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -406,8 +433,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -654,11 +682,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1064,18 +1094,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">葡萄与葡萄酒工程的核心是「葡萄栽培与品种选育 + 葡萄酒酿造工艺 + 品酒鉴赏与产区管理」三栖，它在中国葡萄酒消费升级 + 宁夏/新疆/烟台产区崛起背景下有特色发展空间，但「行业体量小（全国葡萄酒规模 <500 亿）+ 薪资天花板低（应届 7-14 万）+ 工作地点偏远（宁夏贺兰/新疆石河子）」是该专业三大现实风险。</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识：高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 化学基础。大二核心：葡萄品种学 / 葡萄栽培学 / 葡萄酒酿造学 / 葡萄酒化学 / 微生物学与发酵学 / 葡萄酒品尝学。大三方向分流：红葡萄酒酿造工艺 / 白葡萄酒与起泡酒酿造 / 葡萄酒庄管理 / 葡萄园风土与 terroir / 果酒与特种葡萄酒研发。大四毕设 + 葡萄酒企业（张裕/长城/威龙/宁夏贺兰山酒庄群）实习 + 葡萄酒酿造/品酒实战。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对「葡萄酒是怎么酿出来的、为什么产区风味不同」有好奇心，喜欢农业和食品的交叉</li><li>化学/生物基础较好，对发酵微生物学和农产品加工有兴趣</li><li>能接受「酒庄/葡萄园在郊区/农村（宁夏/新疆/烟台）」工作环境</li><li>关注国际酒文化，对品酒/WSET 认证/产区制度有兴趣</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>对农业/农村工作环境有强烈排斥 — 葡萄种植/酿酒需要经常在葡萄园和酒庄</li><li>追求高薪资向往互联网/金融 — 葡萄酒行业规模小，薪资低于大多数工科</li><li>不能接受工作地点偏远 — 酒庄集中在宁夏贺兰山东麓/新疆天山北麓/山东烟台</li><li>对酒精/品酒有心理/宗教障碍 — 品酒环节是核心学习内容</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">葡萄与葡萄酒工程 = 品酒 / 卖酒</div><div class="ovv-simple-pit-reality">葡萄与葡萄酒工程是「葡萄种植 + 葡萄酒酿造」的全产业链工程学科，不是品酒卖酒。需要懂葡萄品种学（赤霞珠/美乐/霞多丽）、葡萄栽培学（修剪/架势/土壤管理）、葡萄酒酿造学（浸渍/发酵/橡木桶陈酿）、葡萄酒化学（酯/醛/酸的化学变化），是正经农学和食品工程交叉学科。</div></li><li><div class="ovv-simple-pit-myth">葡萄酒行业很有钱途</div><div class="ovv-simple-pit-reality">中国葡萄酒行业 2024 年规模约 500 亿，仅占酒类市场 2-3%，体量远小于白酒（7000 亿）和啤酒（2000 亿）。行业薪资整体偏低：酒庄酿酒师应届 7-14 万，3-5 年后 15-25 万，高于白酒但行业规模限制了职业发展空间。</div></li><li><div class="ovv-simple-pit-myth">葡萄酒工程只能去酒庄</div><div class="ovv-simple-pit-reality">葡萄与葡萄酒工程就业比想象宽：张裕/长城/威龙（国产龙头）+ 宁夏贺兰山酒庄群（精品葡萄酒）+ 新疆天山北麓酒庄群 + 进口葡萄酒贸易/代理商 + WSET 培训机构 + 葡萄酒媒体（知酒/酒斛）+ 酒店/餐厅酒水管理 + 葡萄酒电商 + 高校/科研院所。</div></li><li><div class="ovv-simple-pit-myth">WSET 认证是入行必需</div><div class="ovv-simple-pit-reality">WSET（葡萄酒与烈酒教育基金会）认证是品酒师/销售类岗位的加分项，但不是入行必需。酿酒师/农艺师等技术岗位更看重葡萄学和酿造学背景。WSET 3 级以上在进口商/培训/媒体领域有竞争优势。</div></li><li><div class="ovv-simple-pit-myth">宁夏/新疆葡萄酒不如法国</div><div class="ovv-simple-pit-reality">宁夏贺兰山东麓（长城天赋/西鸽/贺兰晴雪）和新疆天山北麓（张裕巴保男爵/中信国安）已获 WSI 认可，多款葡萄酒获国际金奖。宁夏产区已被《世界葡萄酒地图》收录，产区制度逐步完善。国产葡萄酒在高端化方向有机会。</div></li><li><div class="ovv-simple-pit-myth">葡萄与葡萄酒工程考公很难</div><div class="ovv-simple-pit-reality">葡萄与葡萄酒工程有「农业农村局/葡萄酒产区管理机构」等对口事业单位，每年有固定岗位招聘农学/食品专业。另外，食品药品监督管理局也有对口岗位。相比三不限岗位，竞争较小。</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">葡萄与葡萄酒工程的核心是「葡萄栽培与品种选育 + 葡萄酒酿造工艺 + 品酒鉴赏与产区管理」三栖，它在中国葡萄酒消费升级 + 宁夏/新疆/烟台产区崛起背景下有特色发展空间，但「行业体量小（全国葡萄酒规模 <500 亿）+ 薪资天花板低（应届 7-14 万）+ 工作地点偏远（宁夏贺兰/新疆石河子）」是该专业三大现实风险。</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识：高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / 化学基础。大二核心：葡萄品种学 / 葡萄栽培学 / 葡萄酒酿造学 / 葡萄酒化学 / 微生物学与发酵学 / 葡萄酒品尝学。大三方向分流：红葡萄酒酿造工艺 / 白葡萄酒与起泡酒酿造 / 葡萄酒庄管理 / 葡萄园风土与 terroir / 果酒与特种葡萄酒研发。大四毕设 + 葡萄酒企业（张裕/长城/威龙/宁夏贺兰山酒庄群）实习 + 葡萄酒酿造/品酒实战。</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>对「葡萄酒是怎么酿出来的、为什么产区风味不同」有好奇心，喜欢农业和食品的交叉</li><li>化学/生物基础较好，对发酵微生物学和农产品加工有兴趣</li><li>能接受「酒庄/葡萄园在郊区/农村（宁夏/新疆/烟台）」工作环境</li><li>关注国际酒文化，对品酒/WSET 认证/产区制度有兴趣</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>对农业/农村工作环境有强烈排斥 — 葡萄种植/酿酒需要经常在葡萄园和酒庄</li><li>追求高薪资向往互联网/金融 — 葡萄酒行业规模小，薪资低于大多数工科</li><li>不能接受工作地点偏远 — 酒庄集中在宁夏贺兰山东麓/新疆天山北麓/山东烟台</li><li>对酒精/品酒有心理/宗教障碍 — 品酒环节是核心学习内容</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 6 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1085,9 +1113,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1124,9 +1150,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1183,9 +1207,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1306,9 +1328,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1352,9 +1372,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1402,65 +1420,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (葡萄与葡萄酒/食品科学/园艺学方向)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (葡萄分子生物学/葡萄酒化学/产区风土方向)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">25<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (国产葡萄酒企业酿造/质量)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (宁夏/新疆精品酒庄)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">12<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (进口葡萄酒贸易/代理)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">8<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (WSET 培训/葡萄酒媒体)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (酒店/餐厅酒水管理)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (公务员/产区管理)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">3<span class="path-unit">%</span></div>
-          <div class="path-name">跨行 (食品工程/饮料研发)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1499,9 +1462,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1530,48 +1491,64 @@ footer .data-source { color: #78716C; }
 </section>
 
 
-<!-- 心意框 fallback (slug 不在 manifest: viticulture-enology) -->
+<!-- 心意框 — 看完一个专业后必出的明显 CTA (替代旧"关联志愿"section) -->
 <section class="wl-decide" id="wl-decide">
   <div class="container">
     <div class="wl-decide-eyebrow">看完了, 怎么想?</div>
-    <h2 class="wl-decide-title">「这个专业」<br>是你愿意学 4 年的方向吗?</h2>
+    <h2 class="wl-decide-title">「葡萄与葡萄酒工程」<br>是你愿意学 4 年的方向吗?</h2>
     <div class="wl-decide-grid">
       <button class="wl-decide-card primary" data-act="add">
         <span class="wl-decide-emoji">🌟</span>
         <span class="wl-decide-h">心仪 · 加入心愿单</span>
         <span class="wl-decide-sub">打 1-5 颗星, 凑齐 4 个跑志愿推荐</span>
       </button>
-      <a class="wl-decide-card" href="/majors.html">
-        <span class="wl-decide-emoji">📚</span>
-        <span class="wl-decide-h">返回专业目录</span>
-        <span class="wl-decide-sub">浏览全部 365 个精品专业报告</span>
+      <a class="wl-decide-card" href="#wl-related">
+        <span class="wl-decide-emoji">🔄</span>
+        <span class="wl-decide-h">再看看别的专业</span>
+        <span class="wl-decide-sub">下方搜其他专业 / 浏览 12 个相关主题</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- 底部兜底导航 (Bug 3 L3 死链修复) -->
 <section class="wl-related" id="wl-related">
   <div class="container">
     <div class="wl-eyebrow">More to explore</div>
     <h2>没找到想看的? 搜一下别的专业</h2>
     <p class="wl-lede">目前精品报告覆盖工科 / 医学 / 财经 / 法律 / 教育 / 艺术 / 农学 等主流方向, 持续扩充中. 暂未覆盖? 留邮箱等更新.</p>
     <div class="wl-chat-host" id="wl-chat-host" style="margin-bottom: 32px;"></div>
+
+    <div class="wl-eyebrow" style="margin-top: 8px;">Related majors · 同主题 / 热门 / 跨界</div>
+    <h3 style="font-family: 'Source Han Serif SC', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;">继续逛 12 个相关主题</h3>
+    <p class="wl-lede">把感兴趣的攒到心愿单, 凑齐 4 个就能跑湖北 1008 所院校 + 4 年位次推荐.</p>
     <div class="wl-cta-bar">
-      <a class="wl-primary" href="/majors.html">📚 浏览全部 365 个专业 →</a>
+      <a class="wl-primary" href="/#majors">📚 浏览精品报告 →</a>
       <a class="wl-ghost" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
+    </div>
+    <div class="wl-grid">
+      <a class="wl-card eng" href="/brewing-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">酿酒工程</span><span class="wl-hook">酿酒工程</span></a>
+      <a class="wl-card eng" href="/mechanical-process-technology.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">机械工艺技术</span><span class="wl-hook">机械工艺技术</span></a>
+      <a class="wl-card eng" href="/civil-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">土木工程</span><span class="wl-hook">基建脊梁, 工地+工程师</span></a>
+      <a class="wl-card eng" href="/transportation-construction-equipment.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">交通建设与装备</span><span class="wl-hook">交通建设与装备</span></a>
+      <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
+      <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
+      <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
+      <a class="wl-card eng" href="/electrical-engineering-automation.html" data-tag="热门"><span class="wl-badge">工科</span><span class="wl-title">电气工程及其自动化</span><span class="wl-hook">国家电网的最爱</span></a>
+      <a class="wl-card arts" href="/fine-arts.html" data-tag="跨界"><span class="wl-badge">艺术</span><span class="wl-title">美术学</span><span class="wl-hook">九大美院, 央美国美</span></a>
+      <a class="wl-card administration" href="/public-administration.html" data-tag="跨界"><span class="wl-badge">公管</span><span class="wl-title">行政管理</span><span class="wl-hook">公务员对口, 万金油</span></a>
+      <a class="wl-card agri" href="/agronomy.html" data-tag="跨界"><span class="wl-badge">农学</span><span class="wl-title">农学</span><span class="wl-hook">袁隆平精神, 国之根基</span></a>
+      <a class="wl-card medicine" href="/anesthesiology.html" data-tag="跨界"><span class="wl-badge">医学</span><span class="wl-title">麻醉学</span><span class="wl-hook">手术台的幕后守护者</span></a>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (西北农林科技大学/宁夏大学/山东农大培养方案 + 张裕/长城 2024-2025 校招数据 + 中国葡萄酒协会 + 宁夏产区 + 校友访谈)</div>

@@ -96,6 +96,34 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 视觉强化 (2026-06-24, 跟 08 path-bar 同步语言)
+   不动主题色, 只调 grid / 字号 / bar 粗细, 让就业板块有"主舞台感".
+   ============================================================ */
+.direction-list { max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid; grid-template-columns: 100px 1fr 80px !important; align-items: center; gap: 28px !important; padding: 18px 0 !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +137,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -406,8 +433,9 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   margin-top: 16px;
 }
 .ovv-simple-fit-col { padding: 20px 0; }
-.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; }
-.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; }
+.ovv-simple-fit-col.is-yes { border-left: 3px solid #2E7D32; padding-left: 20px; background: rgba(46, 125, 50, 0.03); }
+.ovv-simple-fit-col.is-no  { border-left: 3px solid #B8323A; padding-left: 20px; background: rgba(184, 50, 58, 0.03); }
+.ovv-simple-fit-list li { color: #1A1A1A !important; } /* 修复 2026-06-22: defensive 防止任何 theme 下看不清 */
 .ovv-simple-fit-label {
   font-family: var(--font-heading);
   font-size: 0.8125rem; font-weight: 700;
@@ -654,11 +682,13 @@ section.tab:first-of-type { border-top: none; }
 .direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
 
-.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
 .path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
 .path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
 .path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
 .path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
+.path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
 
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
 .quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
@@ -1064,18 +1094,16 @@ footer .data-source { color: #78716C; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
-    <div class="ovv-simple"><p class="ovv-simple-lede">机器人工程的核心是「机械本体 + 运动控制 + 嵌入式 + 机器视觉 + AI」五栖交叉, 它既不是纯机械也不是纯 CS, 课程表是最拥挤的工科之一; 2024-2026 人形机器人 (优必选/宇树/智元/特斯拉 Optimus/Figure) + 工业机器人国产化 (埃斯顿/汇川/新松) 双重风口, 应届硕士 25-40 万是头部常态, 但「五栖都学一点都不精」「实验室资源头部 985 集中」「硬件调试自学门槛高」是该专业三大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / C 语言; 大二核心: 电路原理 / 模拟电子技术 / 数字电子技术 / 理论力学 / 材料力学 / 机械设计基础 / 自动控制原理; 大三方向分流: 工业机器人 / 移动机器人 / 嵌入式与感知 / 机器视觉 / 具身智能 五选一; 大四毕设 + 实战 (ROS/Gazebo/MATLAB Simulink/C++/Python/Pytorch). 4 年下来, 既要会拧螺丝画图纸, 也要会写代码调 PID.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 力学/控制/电路/编程啃得动</li><li>对机器人/无人机/自动驾驶/具身智能有底层好奇心</li><li>接受「跨学科」课业 + 长周期项目实战 (机器人队/大创/导师课题), 愿意主动加 ROS/嵌入式/视觉自学</li><li>能扛动手实践 — 焊接/调 PID/示教器编程/机械装拆是家常便饭</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥编程调参 — 机器人工程的核心作业全是代码+仿真</li><li>只想做纯机械或纯软件 — 建议直接选机械设计或 CS, 不要「曲线救国」来机器人</li><li>怕硬件怕焊接怕 24V 以上强电 — 嵌入式调试和电气接线是必过门槛</li><li>期望「本科毕业 30 万+」— 头部具身智能/算法岗要硕博, 本科起薪 12-22 万是常态, 且很难进核心算法岗</li></ul></div></div></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">03</span>避坑指南</h3><ul class="ovv-simple-pitfalls"><li><div class="ovv-simple-pit-myth">机器人工程 = 机械工程</div><div class="ovv-simple-pit-reality">机械偏结构与传动 (画图 + 车铣刨磨), 机器人偏「感知-决策-执行」闭环 (控制 + 嵌入式 + 视觉 + AI); 课程与就业差异显著, 不要混淆选专业.</div></li><li><div class="ovv-simple-pit-myth">本科毕业就能做人形机器人算法</div><div class="ovv-simple-pit-reality">头部具身智能公司 (优必选/宇树/智元/特斯拉 Optimus 中国团队/Figure) 核心算法岗 90% 要求硕士及以上 + ROS/强化学习/模仿学习实战; 本科主要走机器人调试/示教/应用集成/视觉实施岗, 想拿核心算法岗基本必须读研.</div></li><li><div class="ovv-simple-pit-myth">课程五栖, 工作随便挑</div><div class="ovv-simple-pit-reality">五栖课程表 = 什么都学一点什么都不精, 校招时反而被「自动化/电子/CS/机械」四个专业抢饭碗; 必须大二起选定 1-2 个细分方向 (如视觉/运动控制/嵌入式) 死磕项目, 否则毕业沦为「机器人调试员」.</div></li><li><div class="ovv-simple-pit-myth">实验室资源校内外差不多</div><div class="ovv-simple-pit-reality">985 + 头部研究所 (哈工大机器人所/北航机器人所/上交 MARS Lab/浙大机器人研究院/中科院自动化所) 与普通院校资源差距巨大 — 真实机器人/机械臂/AGV/工业 4.0 产线、机器人队 (RoboMaster/RoboCon)、大创项目都向头部集中, 双非学生大量靠自学 + 网课 (古月居/鱼香ROS/深蓝学院) 补足.</div></li><li><div class="ovv-simple-pit-myth">工业机器人岗位饱和了</div><div class="ovv-simple-pit-reality">传统汽车焊接机器人 (KUKA/ABB/发那科) 增速放缓, 但 2024+ 新能源汽车 (比亚迪/特斯拉/小米 SU7 工厂) + 3C 锂电 (宁德/比亚迪电子) + 仓储 AGV (极智嘉/海康机器人/京东物流) + 协作机器人 (节卡/越疆/遨博) 四大场景需求井喷, 工业机器人应用工程师缺口 30 万+, 但「调试示教」薪资低, 「集成 + 视觉」薪资高.</div></li><li><div class="ovv-simple-pit-myth">学机器人工程就有机器人可玩</div><div class="ovv-simple-pit-reality">大部分院校机器人实验室资源有限, 本科生真正上手机器人的机会集中在机器人队/导师课题组/大创项目; 大量同学毕业时只摸过仿真 (Gazebo/Webots) + 简单 Arduino/STM32 开发板, 简历上「机器人项目」含金量靠自学 + 实习补救.</div></li><li><div class="ovv-simple-pit-myth">机器人工程比 CS 好就业</div><div class="ovv-simple-pit-reality">CS 头部大厂 (字节/腾讯/阿里/百度) 算法岗 30-50k×16 是常态, 机器人头部算法岗普遍 25-40 万 (因为公司毛利更薄); 真正赚钱的是「CS 能力 + 机器人场景」复合岗 (如自动驾驶决策/机器人视觉 SLAM), 纯机器人工程本科起薪并不突出.</div></li></ul></div></div>
+    <div class="ovv-simple"><p class="ovv-simple-lede">机器人工程的核心是「机械本体 + 运动控制 + 嵌入式 + 机器视觉 + AI」五栖交叉, 它既不是纯机械也不是纯 CS, 课程表是最拥挤的工科之一; 2024-2026 人形机器人 (优必选/宇树/智元/特斯拉 Optimus/Figure) + 工业机器人国产化 (埃斯顿/汇川/新松) 双重风口, 应届硕士 25-40 万是头部常态, 但「五栖都学一点都不精」「实验室资源头部 985 集中」「硬件调试自学门槛高」是该专业三大隐藏坑.</p><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">01</span>这个专业学什么?</h3><p class="ovv-simple-body">大一通识: 高等数学 / 线性代数 / 概率论 / 大学物理 / 工程制图 / C 语言; 大二核心: 电路原理 / 模拟电子技术 / 数字电子技术 / 理论力学 / 材料力学 / 机械设计基础 / 自动控制原理; 大三方向分流: 工业机器人 / 移动机器人 / 嵌入式与感知 / 机器视觉 / 具身智能 五选一; 大四毕设 + 实战 (ROS/Gazebo/MATLAB Simulink/C++/Python/Pytorch). 4 年下来, 既要会拧螺丝画图纸, 也要会写代码调 PID.</p></div><div class="ovv-simple-section"><h3 class="ovv-simple-h"><span class="ovv-num">02</span>什么人适合?</h3><div class="ovv-simple-fit"><div class="ovv-simple-fit-col is-yes"><div class="ovv-simple-fit-label">✓ 适合</div><ul class="ovv-simple-fit-list"><li>数学物理基础扎实, 力学/控制/电路/编程啃得动</li><li>对机器人/无人机/自动驾驶/具身智能有底层好奇心</li><li>接受「跨学科」课业 + 长周期项目实战 (机器人队/大创/导师课题), 愿意主动加 ROS/嵌入式/视觉自学</li><li>能扛动手实践 — 焊接/调 PID/示教器编程/机械装拆是家常便饭</li></ul></div><div class="ovv-simple-fit-col is-no"><div class="ovv-simple-fit-label">✗ 不适合</div><ul class="ovv-simple-fit-list"><li>数学物理薄弱 + 排斥编程调参 — 机器人工程的核心作业全是代码+仿真</li><li>只想做纯机械或纯软件 — 建议直接选机械设计或 CS, 不要「曲线救国」来机器人</li><li>怕硬件怕焊接怕 24V 以上强电 — 嵌入式调试和电气接线是必过门槛</li><li>期望「本科毕业 30 万+」— 头部具身智能/算法岗要硕博, 本科起薪 12-22 万是常态, 且很难进核心算法岗</li></ul></div></div></div></div>
   </div>
 </section>
 
 <section class="tab" id="pitfalls">
   <div class="watermark">02</div>
   <div class="container">
-    <div class="section-num">02 / 10 · 避坑</div>
+    <div class="section-num">避坑指南</div>
     <h2>避坑指南</h2>
     <p class="lede">选专业前最容易踩的 7 个误区, 每条都来自真实咨询案例。</p>
     <div class="ovv-pits">
@@ -1085,9 +1113,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -1127,9 +1153,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -1198,9 +1222,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1353,9 +1375,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1393,9 +1413,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1443,60 +1461,10 @@ footer .data-source { color: #78716C; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">32<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (985 机器人强校: 哈工大/北航/浙大/上交/华科/清华)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">10<span class="path-unit">%</span></div>
-          <div class="path-name">国内硕士 (自动化/控制/机械强校, 非机器人工程本专业)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">5<span class="path-unit">%</span></div>
-          <div class="path-name">国内博士 (机器人/控制/人工智能, 高校教职/研究院路径)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">18<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (工业机器人应用/调试/集成)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="0">
-          <div class="path-pct">15<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (机器视觉/嵌入式/AGV 算法)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="80">
-          <div class="path-pct">14<span class="path-unit">%</span></div>
-          <div class="path-name">直接就业 (具身智能/自动驾驶算法, 多为硕博)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="160">
-          <div class="path-pct">4<span class="path-unit">%</span></div>
-          <div class="path-name">出国深造 (美国/欧洲/日本/港新, 机器人/CS/EE)</div>
-          
-        </div>
-        <div class="path-card fade-up" data-delay="240">
-          <div class="path-pct">2<span class="path-unit">%</span></div>
-          <div class="path-name">跨行转产品经理 (机器人/硬科技产品经理)</div>
-          
-        </div>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1535,9 +1503,7 @@ footer .data-source { color: #78716C; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
@@ -1602,10 +1568,10 @@ footer .data-source { color: #78716C; }
       <a class="wl-ghost" href="/preferences.html">📝 直接填偏好</a>
     </div>
     <div class="wl-grid">
-      <a class="wl-card eng" href="/bionic-science-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">仿生科学与工程</span><span class="wl-hook">仿生科学与工程</span></a>
+      <a class="wl-card eng" href="/marine-robotics.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">海洋机器人</span><span class="wl-hook">海洋机器人</span></a>
+      <a class="wl-card eng" href="/vehicle-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">车辆工程</span><span class="wl-hook">新能源车的核心</span></a>
+      <a class="wl-card eng" href="/naval-architecture-and-ocean-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">船舶与海洋工程</span><span class="wl-hook">船舶与海洋工程</span></a>
       <a class="wl-card eng" href="/additive-manufacturing-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">增材制造工程</span><span class="wl-hook">增材制造工程</span></a>
-      <a class="wl-card eng" href="/machinery-electrical-technology-education.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">机电技术教育</span><span class="wl-hook">机电技术教育</span></a>
-      <a class="wl-card eng" href="/mining-engineering.html" data-tag="同主题"><span class="wl-badge">工科</span><span class="wl-title">采矿工程</span><span class="wl-hook">采矿工程</span></a>
       <a class="wl-card cs" href="/computer-science.html" data-tag="热门"><span class="wl-badge">计算机</span><span class="wl-title">计算机科学与技术</span><span class="wl-hook">代码是术, 数学是道</span></a>
       <a class="wl-card medicine" href="/clinical-medicine.html" data-tag="热门"><span class="wl-badge">医学</span><span class="wl-title">临床医学</span><span class="wl-hook">5+3+X, 35 岁后越值钱</span></a>
       <a class="wl-card finance" href="/finance.html" data-tag="热门"><span class="wl-badge">财经</span><span class="wl-title">金融学</span><span class="wl-hook">高薪, 名校导向, 资源敏感</span></a>
@@ -1620,11 +1586,10 @@ footer .data-source { color: #78716C; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
-      <a class="footer-nav-link" href="/preferences.html">📝 偏好推荐</a>
-      <a class="footer-nav-link" href="/#majors">🏠 主页专业入口</a>
+      <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
     </div>
     <div class="label">Major Explorer · 2026 高考专业指南</div>
     <div class="data-source">数据源: 人工精编 (教育部第四轮机械工程/控制科学与工程学科评估 2024 + 哈工大/北航/浙大/上交/华科培养方案 + 2024-2025 优必选/宇树/智元/海康机器人/大疆校招 offer 墙 + 校友访谈 @ 北京/深圳/上海)</div>

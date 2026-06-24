@@ -125,7 +125,7 @@ def render_pitfalls_v2(data: dict) -> str:
         f'<section class="tab" id="pitfalls">\n'
         f'  <div class="watermark">02</div>\n'
         f'  <div class="container">\n'
-        f'    <div class="section-num">02 / 10 · 避坑</div>\n'
+        f'    <div class="section-num">避坑指南</div>\n'
         f'    <h2>避坑指南</h2>\n'
         f'    <p class="lede">选专业前最容易踩的 {len(pitfalls)} 个误区, 每条都来自真实咨询案例。</p>\n'
         f'    <div class="ovv-pits">\n'
