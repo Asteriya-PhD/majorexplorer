@@ -458,14 +458,10 @@
 
     function _render(list, query) {
       results.innerHTML = "";
-      // Day 7 fix: 相似命中但无字面匹配也显示 CTA (避免硬匹配误导用户)
-      // 例: 搜「人类学」命中「民族学」(tags 含「文化人类学」) — 应同时提示用户「人类学」未收录可合成
-      const f = (query || "").toLowerCase();
-      const hasExactMatch = list.some((r) => {
-        const t = (r.title || "").toLowerCase();
-        return t === f || t.includes(f);
-      });
-      const showSynthCTA = list.length === 0 || !hasExactMatch;
+      // Bug fix (2026-06-25): 「未收录/想看」CTA 仅在 0 命中时展示.
+      // 之前 list 相似命中但无字面匹配时也展示 (Day 7 fix), 导致搜「教师」命中 6 条相关 (汉语言文学/学前教育等) 时仍出现「未收录「教师」」CTA, 误导用户误点上报 (issue #9-#14 多条都是这种误触发).
+      // 命中 ≥1 条时让用户正常浏览, 真要反馈走顶栏「反馈」入口.
+      const showSynthCTA = list.length === 0;
 
       // CTA 卡片 (Day 21 改造: 取消"现场合成", 只留"想看 xx 专业"反馈)
       if (showSynthCTA) {

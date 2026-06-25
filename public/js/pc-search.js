@@ -178,15 +178,10 @@
       }))});
     }
 
-    // Day 7 fix v2: 只在有相似 major 命中但无字面匹配时显示 CTA
-    // 例: 搜「人类学」命中「民族学」(major), 没字面 → 显示 CTA
-    // 反例: 搜「地矿类」(纯大类名, 无 major 命中) → 不显示 CTA, 引导用户去 /majors.html
-    const hasExactMatch = majors.some((m) => {
-      const t = (m.title || "").toLowerCase();
-      return t === f || t.includes(f);
-    });
-    const showCTA = majors.length > 0 && !hasExactMatch;  // 必须有 major 相似命中但无字面才显示
-    const noResultHtml = (!sections.length || showCTA) ? renderNoResult(query) : "";
+    // Bug fix (2026-06-25): 「未收录/想看」CTA 仅在 0 命中时展示.
+    // 之前 majors 相似命中但无字面匹配时也展示, 误导用户误点上报 (issue #11 医生/#12 考公/#14 公费师范 等都是这种误触发).
+    // 命中 ≥1 条时, 让用户正常浏览结果; 真想反馈走顶栏「反馈」入口.
+    const noResultHtml = sections.length === 0 ? renderNoResult(query) : "";
 
     if (!sections.length) {
       results.innerHTML = noResultHtml;
