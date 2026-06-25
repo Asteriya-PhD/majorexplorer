@@ -122,7 +122,7 @@
       <div class="eyebrow">Step 3 · Recommendations</div>
       <h1 id="head-title">志愿推荐</h1>
     <div style="padding: 12px 16px; background: #FFF8E1; border: 1px solid #E8C766; border-left: 4px solid #D4AF37; border-radius: 8px; margin: 16px 0; font-size: 0.875rem; line-height: 1.6; color: #5C4A1F;">
-      <strong style="color: #8B6914;">⚠️ 暂时只支持湖北志愿推荐</strong> · 专业介绍页全国通用, 但<strong>位次匹配和录取概率</strong>目前只覆盖湖北省 1008 所院校 4 年数据。其他省份暂未接入。
+      志愿推荐支持 3 省 (湖北/广东/江苏), 顶部下拉切换省份即可。
     </div>
       <p class="lede" id="head-lede">
         冲档拼一拼,稳档重点关注,保档稳妥兜底。每张卡附推荐理由。
@@ -168,15 +168,15 @@
 
 <footer class="site">
   <div class="container">
-    <div class="caps">Major Explorer · 2026 高考 · 湖北</div>
+    <div class="caps">Major Explorer · 2026 高考 · <span data-prov-text="{prov}">{prov}</span></div>
     <div>数据存储于浏览器本地, 不上传服务器</div>
   </div>
 </footer>
 
 <script src="/js/wishlist-store.js"></script>
 <script src="/js/ui-helpers.js"></script>
-<script src="/js/data-loader.js"></script>
-<script src="/js/recommender.js?v=36"></script>
+<script src="/js/data-loader.js?v=20260625a"></script>
+<script src="/js/recommender.js?v=37"></script>
 <script>
 (function () {
   "use strict";
@@ -431,7 +431,15 @@
   (async function run() {
     const t0 = performance.now();
     try {
-      const data = await window.DataLoader.loadAll();
+      // 2026-06-25 省份切换: 按 sessionStorage('gk.province.v1') 路由
+      let prov = "hubei";
+      try {
+        const raw = sessionStorage.getItem("gk.province.v1");
+        if (raw && ["hubei", "guangdong", "jiangsu"].includes(raw)) prov = raw;
+      } catch (e) {}
+      const data = window.DataLoader.getDataForProvince
+        ? await window.DataLoader.getDataForProvince(prov)
+        : await window.DataLoader.loadAll();
       window.__data = data;
       // 灰度: ?source=chsi 启用 chsi 满意度维度 (Step 2.3, 10% 权重)
       const useChsi = new URLSearchParams(window.location.search).get("source") === "chsi";

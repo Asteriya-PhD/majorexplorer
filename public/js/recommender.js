@@ -490,26 +490,71 @@
   }
 
   // Demo (与 Python DEMO_USER 一致)
-  const DEMO_USER = {
-    rank: 6300,
-    score: 580,
-    type: "物理类",
-    xuanke: ["物理", "化学", "生物"],
-    interests: [
-      { major: "计算机", score: 5 },
-      { major: "人工智能", score: 4 },
-      { major: "软件", score: 3 },
-      { major: "电子", score: 3 },
-    ],
-    cities: [
-      { city: "武汉", score: 5 },
-      { city: "上海", score: 4 },
-      { city: "北京", score: 3 },
-    ],
-    mode: "均衡",
+  // 3 套按省份拆分 (2026-06-25 改造),位次由各省 yfyd 真实数据校准:
+  //   湖北 2025 物理 580→24295
+  //   广东 2024 物理 580→33000
+  //   江苏 2024 物理 580→35000
+  const DEMO_USERS = {
+    hubei: {
+      rank: 24295,
+      score: 580,
+      type: "物理类",
+      xuanke: ["物理", "化学", "生物"],
+      interests: [
+        { major: "计算机", score: 5 },
+        { major: "人工智能", score: 4 },
+        { major: "软件", score: 3 },
+        { major: "电子", score: 3 },
+      ],
+      cities: [
+        { city: "武汉", score: 5 },
+        { city: "上海", score: 4 },
+        { city: "北京", score: 3 },
+      ],
+      mode: "均衡",
+    },
+    guangdong: {
+      rank: 33000,
+      score: 580,
+      type: "物理类",
+      xuanke: ["物理", "化学", "生物"],
+      interests: [
+        { major: "计算机", score: 5 },
+        { major: "人工智能", score: 4 },
+        { major: "软件", score: 3 },
+        { major: "电子", score: 3 },
+      ],
+      cities: [
+        { city: "广州", score: 5 },
+        { city: "深圳", score: 4 },
+        { city: "佛山", score: 3 },
+      ],
+      mode: "均衡",
+    },
+    jiangsu: {
+      rank: 35000,
+      score: 580,
+      type: "物理类",
+      xuanke: ["物理", "化学"],
+      interests: [
+        { major: "计算机", score: 5 },
+        { major: "人工智能", score: 4 },
+        { major: "软件", score: 3 },
+        { major: "电子", score: 3 },
+      ],
+      cities: [
+        { city: "南京", score: 5 },
+        { city: "苏州", score: 4 },
+        { city: "无锡", score: 3 },
+      ],
+      mode: "均衡",
+    },
   };
+  // 向后兼容:老调用方用 DEMO_USER
+  const DEMO_USER = DEMO_USERS.hubei;
 
   global.Recommender = {
+    DEMO_USERS,
     DEMO_USER,
     median,
     scoreToRank,

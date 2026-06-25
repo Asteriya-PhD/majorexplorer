@@ -325,9 +325,9 @@ test("10.2 recommend 主流程: DEMO_USER 不崩", () => {
     const key = c.chsi_edu_id ? String(c.chsi_edu_id) : (c.school_id != null ? `sch_${c.school_id}` : null);
     if (key) byEid[key] = c;
   }
-  const yfyd = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/yfyd_2025.json"), "utf-8"));
+  const yfyd = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/yfyd_hubei_2025.json"), "utf-8"));
   const schoolHistory = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/school_history.json"), "utf-8"));
-  const groupsLatest = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/groups_latest.json"), "utf-8"));
+  const groupsLatest = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/groups_latest_hubei_2025.json"), "utf-8"));
   const specialties = JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/school_specialties.json"), "utf-8"));
   const data = { colleges, collegesById: byId, collegesByEid: byEid, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors: sam, majorSynonyms: syn };
   const r = Rec.recommend(Rec.DEMO_USER, data);
@@ -336,4 +336,64 @@ test("10.2 recommend 主流程: DEMO_USER 不崩", () => {
   // 9 档梯度: 至少 4 个不同 sub_tier
   const allSubs = new Set([...r["冲"], ...r["稳"], ...r["保"]].map((c) => c.sub_tier));
   assert.ok(allSubs.size >= 4, `期望 ≥4 个 sub_tier, 实有 ${[...allSubs].join(",")}`);
+});
+
+// ══════════════════════════════════════════════════════
+// 11. 三省 scoreToRank (2026-06-25 省份切换)
+// ══════════════════════════════════════════════════════
+const yfydByProv = {
+  hubei: JSON.parse(fs.readFileSync(path.join(ROOT, "data/yfyd_hubei_2025.json"), "utf-8")),
+  guangdong: JSON.parse(fs.readFileSync(path.join(ROOT, "data/yfyd_guangdong_2024.json"), "utf-8")),
+  jiangsu: JSON.parse(fs.readFileSync(path.join(ROOT, "data/yfyd_jiangsu_2024.json"), "utf-8")),
+};
+
+test("11.1 湖北 580 分 → 位次 24295 (2025 yfyd)", () => {
+  const r = Rec.scoreToRank(580, "物理类", yfydByProv.hubei);
+  assert.ok(r >= 23000 && r <= 25500, `期望 23000-25500, 实有 ${r}`);
+});
+
+test("11.2 广东 580 分 → 位次 33000 (2024 yfyd)", () => {
+  const r = Rec.scoreToRank(580, "物理类", yfydByProv.guangdong);
+  assert.ok(r >= 31000 && r <= 35000, `期望 31000-35000, 实有 ${r}`);
+});
+
+test("11.3 江苏 580 分 → 位次 35000 (2024 yfyd)", () => {
+  const r = Rec.scoreToRank(580, "物理类", yfydByProv.jiangsu);
+  assert.ok(r >= 33000 && r <= 37000, `期望 33000-37000, 实有 ${r}`);
+});
+
+// ══════════════════════════════════════════════════════
+// 12. DEMO_USERS 3 套存在 + 字段完整
+// ══════════════════════════════════════════════════════
+test("12.1 DEMO_USERS.hubei/guangdong/jiangsu 全存在", () => {
+  assert.ok(Rec.DEMO_USERS.hubei, "缺 hubei");
+  assert.ok(Rec.DEMO_USERS.guangdong, "缺 guangdong");
+  assert.ok(Rec.DEMO_USERS.jiangsu, "缺 jiangsu");
+  for (const prov of ["hubei", "guangdong", "jiangsu"]) {
+    const u = Rec.DEMO_USERS[prov];
+    assert.ok(u.rank && u.score && u.type && u.xuanke && u.interests && u.cities && u.mode,
+      `${prov} DEMO 字段不全`);
+  }
+});
+
+test("12.2 DEMO_USER alias 兼容老调用方", () => {
+  assert.equal(Rec.DEMO_USER, Rec.DEMO_USERS.hubei, "DEMO_USER 应等价 DEMO_USERS.hubei");
+});
+
+// ══════════════════════════════════════════════════════
+// 13. passesXuanke 跨省 sg_info 兼容 (粤苏 CSV 转 sg_info 后能命中)
+// ══════════════════════════════════════════════════════
+test("13.1 广东 sg_info '首选物理，再选不限' 命中 物理类用户选 物化生", () => {
+  const ok = Rec.passesXuanke("首选物理，再选不限", new Set(["物理", "化学", "生物"]), "物理类");
+  assert.equal(ok, true);
+});
+
+test("13.2 江苏 sg_info '首选物理，再选物理和化学' 命中 物理类用户选 物化", () => {
+  const ok = Rec.passesXuanke("首选物理，再选物理和化学", new Set(["物理", "化学"]), "物理类");
+  assert.equal(ok, true);
+});
+
+test("13.3 广东 sg_info '首选物理，再选化学' 不命中 物生地 (无化学)", () => {
+  const ok = Rec.passesXuanke("首选物理，再选化学", new Set(["物理", "生物", "地理"]), "物理类");
+  assert.equal(ok, false);
 });

@@ -1,6 +1,7 @@
 /* topbar.js — 全站固定顶部导航 (主页 / 126 精品详情 / 工具页通用)
    渲染位置: <body> 第一个子元素. 自动高亮当前页. 自动同步心愿单计数.
    反馈入口: 顶栏右上"反馈"按钮, 弹 modal → POST /api/report (source="pc")
+   省份切换: 顶栏 select, 写到 sessionStorage('gk.province.v1'), reload 应用
    依赖: shared.css (.topbar / .topbar-feedback / .feedback-modal 样式)
          + window.WishlistStore (可选, 没加载也不报错)
 */
@@ -12,6 +13,21 @@
   var path = location.pathname;
   var slugMatch = path.match(/\/([a-z][a-z0-9-]*)\.html$/);
   var slug = slugMatch ? slugMatch[1] : '';
+
+  // ── 省份 (2026-06-25 改造) ──
+  var PROVINCES = [
+    { key: 'hubei',    display: '湖北' },
+    { key: 'guangdong', display: '广东' },
+    { key: 'jiangsu',   display: '江苏' },
+  ];
+  var currentProv = (function () {
+    try {
+      var raw = sessionStorage.getItem('gk.province.v1');
+      if (raw && PROVINCES.some(function (p) { return p.key === raw; })) return raw;
+    } catch (e) {}
+    return 'hubei';
+  })();
+  var provDisplay = (PROVINCES.find(function (p) { return p.key === currentProv; }) || PROVINCES[0]).display;
 
   // 决定哪个链接 active
   function activeKey() {
@@ -36,9 +52,17 @@
     '<header class="topbar">' +
     '  <div class="container">' +
     '    <a class="brand" href="/">' +
-    '      Major Explorer<span class="sub">2026 高考 · 湖北 · 先专业, 后志愿</span>' +
+    '      Major Explorer<span class="sub" id="topbar-prov-sub">2026 高考 · ' + provDisplay + ' · 先专业, 后志愿</span>' +
     '    </a>' +
     '    <div class="topbar-right">' +
+    '      <label class="topbar-prov-picker" for="topbar-prov-select" aria-label="切换省份">' +
+    '        <span class="topbar-prov-label">省份</span>' +
+    '        <select id="topbar-prov-select" class="topbar-prov-select">' +
+    PROVINCES.map(function (p) {
+      return '<option value="' + p.key + '"' + (p.key === currentProv ? ' selected' : '') + '>' + p.display + '</option>';
+    }).join('') +
+    '        </select>' +
+    '      </label>' +
     '      <nav class="nav-links" aria-label="主导航">' +
     '        <a href="/" class="' + (active === 'home' ? 'active' : '') + '">首页</a>' +
     '        <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">专业目录</a>' +
@@ -84,6 +108,8 @@
     // 隐藏页面原有的 .wl-chip (顶部右上浮动) — 已被新 topbar 取代
     var oldChips = document.querySelectorAll('a.wl-chip');
     oldChips.forEach(function (c) { c.style.display = 'none'; });
+    // 省份 dropdown
+    bindProvPicker();
     // 心愿单计数 chip
     syncWishlist();
     if (window.WishlistStore && window.WishlistStore.subscribe) {
@@ -91,6 +117,22 @@
     }
     // 反馈按钮 + modal 事件绑定
     bindFeedback();
+    // 注入省份文字到带 data-prov-text 属性的元素 (替换 {prov} 占位符)
+    document.querySelectorAll('[data-prov-text]').forEach(function (el) {
+      el.textContent = el.dataset.provText.replace('{prov}', provDisplay);
+    });
+  }
+
+  // ── 省份 picker (→ sessionStorage + reload) ──
+  function bindProvPicker() {
+    var sel = document.getElementById('topbar-prov-select');
+    if (!sel) return;
+    sel.addEventListener('change', function () {
+      var newProv = sel.value;
+      try { sessionStorage.setItem('gk.province.v1', newProv); } catch (e) {}
+      // 切换省份后 reload (data-loader 按 sessionStorage 加载对应 yfyd/groups)
+      location.reload();
+    });
   }
 
   // ── 反馈 modal 事件 (→ /api/report type: feedback, source: "pc") ──

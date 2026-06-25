@@ -5,15 +5,22 @@
  *
  * 轻包 ≈ 295 KB, 用于首页 / 心愿单 / 偏好页:
  *   - colleges.json          (1008 校 基础信息)
- *   - province_lines.json    (本一/特控线)
- *   - yfyd_2025.json         (一分一段)
+ *   - province_lines.json    (本一/特控线, 3 省嵌套)
+ *   - yfyd_index.json        (一分一段路由, 新)
+ *   - yfyd_{prov}_{year}.json (一分一段实际数据, 按省 + 年路由)
+ *   - chsi_schools.json
  *
  * 重包 ≈ 3.4 MB, 用于推荐结果页:
- *   - school_history.json    (4 年位次)
- *   - groups_latest.json     (2025 专业组+选科)
+ *   - school_history.json    (4 年位次, 全国聚合)
+ *   - groups_index.json      (groups_latest 路由, 新)
+ *   - groups_latest_{prov}_{year}.json (2024/2025 专业组+选科, 按省 + 年路由)
  *   - school_specialties.json (院校主打专业)
  *   - school_all_majors.json  (128 校 × 3 年合并, 完整专业清单) — majorMatch 主源
  *   - major_synonyms.json     (20 类目同义词) — majorMatch 展开用户兴趣
+ *
+ * 省份路由 (2026-06-25 改造):
+ *   getDataForProvince(prov) → 按 yfyd_index/groups_index 加载对应省份数据
+ *   兼容老 loadLight/loadHeavy/loadAll: 走 hubei 默认
  *
  * 缓存策略:
  *   1) 首次 fetch → 写 IndexedDB (objstore "files", key = name)
@@ -21,21 +28,26 @@
  *   3) URL 带 ?v=<DATA_VERSION>; 改版本号清缓存
  *
  * 公开 API (window.DataLoader):
- *   await loadLight()    → {colleges, provinceLines, yfyd}
- *   await loadHeavy()    → {schoolHistory, groupsLatest, specialties, schoolAllMajors, majorSynonyms}
- *   await loadAll()      → 合并两批
+ *   await loadLight()    → {colleges, provinceLines, yfyd}     [hubei 默认]
+ *   await loadHeavy()    → {schoolHistory, groupsLatest, ...}  [hubei 默认]
+ *   await loadAll()      → 合并两批                            [hubei 默认]
+ *   await getDataForProvince(prov) → 完整 data 对象, 按省路由
  *   await clear()        → 清缓存
  * ==================================================================== */
 
 (function (global) {
   "use strict";
 
-  // 改这里来强制全量重取 (例: 2026-06-13 加 school_all_majors + major_synonyms → 20260613a)
-  const DATA_VERSION = "20260613a";
+  // 改这里来强制全量重取 (2026-06-25 加省份路由 → 20260625a)
+  const DATA_VERSION = "20260625a";
   const DATA_DIR = "/data";
   const DB_NAME = "gk.dataCache.v1";
   const DB_STORE = "files";
 
+  // 兼容旧引用: 仍列出 yfyd_2025.json 作为湖北默认, 但新代码用 getDataForProvince(prov)
+  // 2026-06-25 改造: 实际路径是 yfyd_hubei_2025.json (湖北 default)
+  // 注: loadLight 走老路径, 老 HTML 可能直接读 yfyd_2025.json — 保持兼容
+  // 实际新代码应使用 getDataForProvince(prov)
   const LIGHT_FILES = ["colleges.json", "province_lines.json", "yfyd_2025.json", "chsi_schools.json"];
   const HEAVY_FILES = [
     "school_history.json",
@@ -167,6 +179,76 @@
     return Object.assign({}, light, heavy);
   }
 
+  // ─────────────── 省份路由 (2026-06-25 新增) ───────────────
+  // 加载 yfyd_index + groups_index, 按省份路由 yfyd / groups_latest 文件
+  // 老 API (loadLight/loadHeavy/loadAll) 走 hubei 默认不破坏兼容
+  async function getDataForProvince(prov = "hubei") {
+    // Load indices
+    const [yfydIndex, groupsIndex] = await Promise.all([
+      loadFile("yfyd_index.json"),
+      loadFile("groups_index.json"),
+    ]);
+
+    const provKey = yfydIndex.provinces[prov] ? prov : (yfydIndex.default_province || "hubei");
+    const provDisplay = (yfydIndex.provinces[provKey] && yfydIndex.provinces[provKey].display) || "湖北";
+
+    const yfCfg = yfydIndex.provinces[provKey];
+    const gCfg = groupsIndex.provinces[provKey];
+
+    const yfydFile = yfCfg.files[yfCfg.latest];
+    const groupsFile = gCfg.files[gCfg.latest_year];
+
+    // Parallel: light (3 省无关 + yfyd 按省) + heavy (school_history 省无关 + groups 按省 + 3 通用品)
+    const [colleges, provinceLinesAll, yfyd, chsiSchools, schoolHistory, groupsLatest, specialties, schoolAllMajors, majorSynonyms] = await Promise.all([
+      loadFile("colleges.json"),
+      loadFile("province_lines.json"),
+      loadFile(yfydFile),
+      loadFile("chsi_schools.json"),
+      loadFile("school_history.json"),
+      loadFile(groupsFile),
+      loadFile("school_specialties.json"),
+      loadFile("school_all_majors.json"),
+      loadFile("major_synonyms.json"),
+    ]);
+
+    // Build indices (跟 loadLight 一样)
+    const byId = {};
+    const byEid = {};
+    for (const c of colleges) {
+      if (c.school_id != null) byId[c.school_id] = c;
+      const eid = c.chsi_edu_id;
+      const key = eid ? String(eid) : (c.school_id != null ? `sch_${c.school_id}` : null);
+      if (key) byEid[key] = c;
+    }
+    const chsiByEduId = {};
+    for (const s of (chsiSchools || [])) {
+      if (s.edu_id) chsiByEduId[String(s.edu_id)] = s;
+    }
+
+    // Extract province-specific provinceLines (新 schema 是 {hubei:{...}, guangdong:{...}, jiangsu:{...}})
+    const provinceLines = provinceLinesAll.provinces
+      ? provinceLinesAll.provinces[provKey] || {}
+      : provinceLinesAll;  // 老 schema 兜底
+
+    return {
+      province: provKey,
+      provinceDisplay: provDisplay,
+      colleges,
+      collegesById: byId,
+      collegesByEid: byEid,
+      provinceLines,
+      provinceLinesAll,
+      yfyd,
+      chsiSchools,
+      chsiByEduId,
+      schoolHistory,
+      groupsLatest,
+      specialties,
+      schoolAllMajors,
+      majorSynonyms,
+    };
+  }
+
   async function clear() {
     await _idbClear();
   }
@@ -180,6 +262,7 @@
     loadLight,
     loadHeavy,
     loadAll,
+    getDataForProvince,
     clear,
   };
 })(typeof window !== "undefined" ? window : globalThis);

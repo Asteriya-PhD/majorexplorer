@@ -20,15 +20,39 @@
   "use strict";
 
   const KEY_USER = "gk.user.v1";
-  const HUBEI_CITIES = [
-    "武汉", "上海", "北京", "广州", "深圳", "南京", "杭州", "成都",
-    "西安", "天津", "重庆", "苏州", "厦门", "长沙", "合肥", "济南",
-    "青岛", "宁波", "大连", "沈阳", "哈尔滨", "郑州", "福州", "昆明",
-    "石家庄", "太原", "兰州", "贵阳", "南宁", "海口", "南昌",
-    "黄石", "宜昌", "襄阳", "荆州", "十堰", "孝感", "黄冈", "鄂州", "咸宁",
-  ];
+  // 3 省城市池 (2026-06-25 改造)
+  const CITIES_BY_PROV = {
+    hubei: [
+      "武汉", "上海", "北京", "广州", "深圳", "南京", "杭州", "成都",
+      "西安", "天津", "重庆", "苏州", "厦门", "长沙", "合肥", "济南",
+      "青岛", "宁波", "大连", "沈阳", "哈尔滨", "郑州", "福州", "昆明",
+      "石家庄", "太原", "兰州", "贵阳", "南宁", "海口", "南昌",
+      "黄石", "宜昌", "襄阳", "荆州", "十堰", "孝感", "黄冈", "鄂州", "咸宁",
+    ],
+    guangdong: [
+      "广州", "深圳", "佛山", "东莞", "珠海", "中山", "惠州", "汕头",
+      "湛江", "江门", "肇庆", "茂名", "揭阳", "潮州", "梅州", "清远",
+      "韶关", "阳江", "河源", "云浮",
+      "上海", "北京", "武汉", "南京", "杭州", "成都", "西安",
+    ],
+    jiangsu: [
+      "南京", "苏州", "无锡", "常州", "徐州", "南通", "扬州", "盐城",
+      "淮安", "连云港", "镇江", "泰州", "宿迁",
+      "上海", "北京", "杭州", "合肥", "武汉",
+    ],
+  };
+  // 向后兼容老代码
+  const HUBEI_CITIES = CITIES_BY_PROV.hubei;
 
   const XUANKE = ["物理", "历史", "化学", "生物", "地理", "政治"];
+
+  function _getCurrentProv() {
+    try {
+      var raw = sessionStorage.getItem('gk.province.v1');
+      if (raw && CITIES_BY_PROV[raw]) return raw;
+    } catch (e) {}
+    return 'hubei';
+  }
 
   function _read() {
     try { return JSON.parse(sessionStorage.getItem(KEY_USER) || "null") || {}; }
@@ -39,12 +63,15 @@
   }
 
   function defaultUser() {
+    const prov = _getCurrentProv();
+    const defaultCity = ({ hubei: "武汉", guangdong: "广州", jiangsu: "南京" })[prov] || "武汉";
     return {
+      province: prov,
       score: null,
       rank: null,
       type: "物理类",
-      xuanke: ["物理", "化学", "生物"],
-      cities: [{ city: "武汉", score: 5 }],
+      xuanke: prov === "jiangsu" ? ["物理", "化学"] : ["物理", "化学", "生物"],
+      cities: [{ city: defaultCity, score: 5 }],
       mode: "均衡",
     };
   }
