@@ -282,26 +282,35 @@
 .ms-shell.compact .ms-send { height: 36px; padding: 0 12px; font-size: 0.875rem; }
 
 .ms-chips {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  margin-top: 22px; justify-content: center;
+  display: flex; flex-wrap: nowrap; gap: 8px;
+  margin-top: 22px; justify-content: flex-start;
   max-height: 200px; opacity: 1;
   transition: max-height 240ms ease, opacity 180ms ease, margin-top 180ms ease;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* hero mode 下让 chips 单行, 节省页面高度 */
 }
 .ms-chips::-webkit-scrollbar { display: none; }
 .ms-chip { flex-shrink: 0; }
-.ms-shell.compact .ms-chips { justify-content: flex-start; }
+/* 移动端窄屏允许换行 */
+@media (max-width: 640px) {
+  .ms-chips { flex-wrap: wrap; overflow-x: visible; justify-content: center; }
+}
+.ms-shell.compact .ms-chips { justify-content: flex-start; flex-wrap: nowrap; }
 /* 下拉打开时折叠 chips, 让 results 紧贴 input 下方 */
 .ms-shell[data-active="true"] .ms-chips {
   max-height: 0; opacity: 0; margin-top: 0; pointer-events: none;
 }
 .ms-chip {
   display: inline-block;
-  font-size: 0.8125rem; padding: 7px 14px; border-radius: 999px;
+  font-size: 0.8125rem; padding: 7px 12px; border-radius: 999px;
   background: #FAFAF7; color: #14110D; border: 1px solid #E2DFD5;
   cursor: pointer; transition: all 160ms;
   font-family: 'Inter', 'PingFang SC', sans-serif;
   text-decoration: none;
   line-height: 1.4;
+  white-space: nowrap;
 }
 .ms-chip:hover { border-color: #14110D; transform: translateY(-1px); text-decoration: none; }
 .ms-chip:visited { color: #14110D; }
