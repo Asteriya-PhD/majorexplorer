@@ -24,10 +24,11 @@
   #     We do not use eval() anywhere. Tighten with nonces when migrating.
   #   * 'unsafe-inline' for style-src is required because the per-page
   #     theme CSS is inline (<style> in <head>).
-  #   * fonts.loli.net is the only 3rd-party font source (Bohdi+Inter+JB Mono).
+  #   * fonts.loli.net 是主字体 CDN (Bohdi+Inter+JB Mono)
+  #   * gstatic.loli.net 是 Google Fonts 镜像 (Inter 字体在某些浏览器走 gstatic 重定向)
   #   * data: images used by favicon and noise-texture backgrounds.
   #   * Plausible analytics endpoint whitelisted in connect-src.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.loli.net; font-src 'self' https://fonts.loli.net data:; img-src 'self' data: https:; connect-src 'self' https://plausible.io https://majorexplorer.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.loli.net; font-src 'self' https://fonts.loli.net https://gstatic.loli.net data:; img-src 'self' data: https:; connect-src 'self' https://plausible.io https://majorexplorer.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
 
   # ── AI 训练 / 数据采集 UA 黑名单 ─────────────
   # robots.txt 是软协议, _headers 也无法做 UA match (Pages 不支持).
