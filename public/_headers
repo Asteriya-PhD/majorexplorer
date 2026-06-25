@@ -54,12 +54,15 @@
   X-Robots-Tag: noai, noimageai
 
 # Long-cache static assets (CSS / JS — content-hashed by version stamp)
+# 1h + must-revalidate: 浏览器/Etag 1h 内用 cache, 1h 后重新校验, 没改就用 304, 改了 fetch 新版。
+# 牺牲一点首次加载性能, 换可维护性 — 不再需要每次手动 cache-bust (?v=)。
+# 如果发现某个 commit 后 CDN 没刷, 见 docs/DEPLOY_HYBRID.md (CF API purge 备用)
 /css/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 /js/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 /data/aggregates.json
   Cache-Control: public, max-age=3600, must-revalidate
 /data/manifest.json
