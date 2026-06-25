@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 # scripts/deploy.sh — 自动 bump cache-bust query + 验证 + push
 #
-# 解决问题 (Day 31 教训):
+# 解决问题 (Day 31 + Day 32 教训):
 #   - 每次改 JS 都必须手动 sed 所有 HTML 的 ?v= query
 #   - 漏 add public/data/ modified files → 部署失败
 #   - 老 cache-bust query 在 CF CDN 命中老 etag → 必须再 bump 一次
+#   - sw.js 缓存老 HTML/JS → client 看不到新版 (Day 32 v4 教训)
 #
 # 这个脚本:
 #   1. git status --short 必查, 阻止 modified files 漏 commit
 #   2. 自动生成 cache-bust query (基于 git short SHA, 保证唯一)
-#   3. sed 替换所有 HTML 的 ?v=XXXX 引用
-#   4. 验证替换完整 (无残留老 query)
-#   5. commit + push
+#   3. sed 替换所有 HTML 的 ?v=XXXX 引用 (PC + Mobile 一起)
+#   4. sw.js CACHE_NAME 升版 (强制 client cache 失效, 关键 Day 32 修复)
+#   5. 验证替换完整 (无残留老 query / 老 CACHE_NAME)
+#   6. commit + push
 #
 # 用法:
 #   ./scripts/deploy.sh "feat: yfyd 2026 更新"   # 自动 commit + push
@@ -68,25 +70,42 @@ if grep -rqE '\?v=[a-zA-Z0-9]+' public/*.html 2>/dev/null; then
   fi
 fi
 
-# ── 4. 替换 HTML 引用的 cache-bust query ──
+# ── 4. 替换 HTML 引用的 cache-bust query (PC + Mobile 两套) ──
 if [ -n "$OLD_QUERY" ] && [ "$OLD_QUERY" != "$NEW_QUERY" ]; then
   log "4. 替换 HTML ?v=$OLD_QUERY → ?$NEW_QUERY..."
-  COUNT=$(grep -rl "\?v=$OLD_QUERY" public/*.html | wc -l | tr -d ' ')
-  sed -i.bak "s|?v=$OLD_QUERY|?$NEW_QUERY|g" public/*.html
-  rm -f public/*.bak
-  log "   ✅ 替换 $COUNT 个 HTML 文件"
+  PC_COUNT=$(grep -rl "\?v=$OLD_QUERY" public/*.html 2>/dev/null | wc -l | tr -d ' ')
+  M_COUNT=$(grep -rl "\?v=$OLD_QUERY" public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
+  sed -i.bak "s|?v=$OLD_QUERY|?$NEW_QUERY|g" public/*.html public/m/*.html 2>/dev/null
+  rm -f public/*.bak public/m/*.bak 2>/dev/null
+  log "   ✅ 替换 PC $PC_COUNT 个 + Mobile $M_COUNT 个 HTML 文件"
 else
   log "4. 无老 query 或无变化, 跳过替换"
 fi
 
+# ── 4.5 sw.js CACHE_NAME 升版 (Day 32 关键修复) ──
+log "4.5 sw.js CACHE_NAME 升版 (强制 client cache 失效)..."
+for sw in public/sw.js public/m/sw.js; do
+  [[ -f "$sw" ]] || continue
+  NEW_CACHE="explorer-v$((${NEW_QUERY#v=}:0:1))-${NEW_QUERY#v=}"
+  sed -i.bak -E "s/const CACHE_NAME = \"[a-zA-Z-]*-v[0-9]+-[a-z0-9]+\"/const CACHE_NAME = \"$NEW_CACHE\"/" "$sw"
+  rm -f "${sw}.bak"
+  echo "   ✓ $sw → $NEW_CACHE"
+done
+
 # ── 5. 验证替换完整 (无残留) ──
 log "5. 验证替换..."
-REMAINING=$(grep -l "?v=$OLD_QUERY" public/*.html 2>/dev/null | wc -l | tr -d ' ')
+REMAINING=$(grep -l "?v=$OLD_QUERY" public/*.html public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
 if [ "$REMAINING" -gt 0 ]; then
   err "$REMAINING 个 HTML 还有老 ?v=$OLD_QUERY 残留, 部署失败"
 fi
-HAS_NEW=$(grep -l "&$NEW_QUERY\|?$NEW_QUERY" public/*.html 2>/dev/null | wc -l | tr -d ' ')
+HAS_NEW=$(grep -l "&$NEW_QUERY\|?$NEW_QUERY" public/*.html public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
 log "   ✅ $HAS_NEW 个 HTML 已带新 ?$NEW_QUERY"
+# sw.js 验证
+OLD_CACHES=$(grep -E 'const CACHE_NAME' public/sw.js public/m/sw.js 2>/dev/null | grep -v "explorer-v[0-9]+-${NEW_QUERY#v=}" | head -3 || true)
+if [ -n "$OLD_CACHES" ]; then
+  err "sw.js CACHE_NAME 还有老值: $OLD_CACHES"
+fi
+log "   ✅ sw.js CACHE_NAME 已升版"
 
 # ── 6. git add + commit + push ──
 MSG="${1:-deploy: bump cache-bust $NEW_QUERY}"
