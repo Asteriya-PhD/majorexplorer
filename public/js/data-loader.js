@@ -40,7 +40,7 @@
 
   // 改这里来强制全量重取 (2026-06-25 加省份路由 → 20260625a)
   // bump: 每次改数据 schema 必须 bump, 否则用户 IDB cache 不刷新
-  const DATA_VERSION = "20260625e";
+  const DATA_VERSION = "20260625f";
   const DATA_DIR = "/data";
   const DB_NAME = "gk.dataCache.v1";
   const DB_STORE = "files";
