@@ -560,16 +560,16 @@
               ? '本站只收 13 门类本科专业. 您可能是想看:'
               : '告诉我们你想看哪个专业, 我们优先收录 (精品收录持续扩充中)');
         const synBlock = syns.length > 0
-          ? '<div class="ms-synonyms" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">' +
+          ? '<div class="ms-synonyms" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">' +
               syns.slice(0, 6).map(s => {
                 const ico = STYLE_ICON[s.style] || '📚';
-                return '<a class="ms-syn" href="/' + _escapeHtml(s.slug) + '.html" style="display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:8px;border-left:4px solid ' + _escapeHtml(s.theme || 'var(--accent)') + ';text-decoration:none;color:var(--fg);box-shadow:0 1px 3px rgba(20,17,13,0.03);">' +
-                  '<span style="width:36px;height:36px;border-radius:8px;background:' + _escapeHtml(s.theme || 'var(--accent)') + ';color:#fff;font-size:1.125rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.08);">' + _escapeHtml(ico) + '</span>' +
+                return '<a class="ms-syn" href="/' + _escapeHtml(s.slug) + '.html" style="display:grid;grid-template-columns:28px 1fr 14px;align-items:center;gap:10px;padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:6px;border-left:3px solid ' + _escapeHtml(s.theme || 'var(--accent)') + ';text-decoration:none;color:var(--fg);">' +
+                  '<span style="width:28px;height:28px;border-radius:6px;background:' + _escapeHtml(s.theme || 'var(--accent)') + ';color:#fff;font-size:0.9375rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + _escapeHtml(ico) + '</span>' +
                   '<span style="min-width:0;">' +
-                    '<span style="display:block;font-weight:700;font-size:0.9375rem;color:var(--fg);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escapeHtml(s.title) + '</span>' +
-                    '<span style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escapeHtml(s.category) + '</span>' +
+                    '<span style="display:block;font-weight:700;font-size:0.875rem;color:var(--fg);line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escapeHtml(s.title) + '</span>' +
+                    '<span style="display:block;font-size:0.625rem;font-weight:600;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escapeHtml(s.category) + '</span>' +
                   '</span>' +
-                  '<span style="color:var(--muted);font-size:1rem;flex-shrink:0;">→</span>' +
+                  '<span style="color:var(--muted);font-size:0.875rem;flex-shrink:0;">→</span>' +
                 '</a>';
               }).join("") +
             '</div>'

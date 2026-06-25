@@ -233,66 +233,65 @@
   }
   .no-result-report .nrr-fallback a { color: var(--accent); text-decoration: underline; }
 
-  /* 同义词推荐 (2026-06-25 新增, Day 32 v2: 加 emoji 分类 + 强 hover + 加大 padding) */
-  .no-result-report .nrr-synonyms { max-width: 640px; margin: 0 auto 22px; text-align: left; }
+  /* 同义词推荐 (Day 32 v3: 紧凑版 — 容器 max-width 缩到 480px, icon 28px, padding 减半) */
+  .no-result-report .nrr-synonyms { max-width: 480px; margin: 0 auto 20px; text-align: left; }
   .no-result-report .nrr-syn-label {
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-family: var(--font-num); font-size: 0.75rem; font-weight: 600;
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
     color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .no-result-report .nrr-syn-label::before,
   .no-result-report .nrr-syn-label::after {
-    content: ""; flex: 0 0 24px; height: 1px; background: var(--accent); opacity: 0.4;
+    content: ""; flex: 0 0 20px; height: 1px; background: var(--accent); opacity: 0.4;
   }
-  .no-result-report .nrr-syn-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .no-result-report .nrr-syn-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
   @media (max-width: 640px) {
-    .no-result-report .nrr-syn-list { grid-template-columns: 1fr; gap: 8px; }
+    .no-result-report .nrr-syn-list { grid-template-columns: 1fr; gap: 6px; }
   }
   .no-result-report .nrr-syn {
     display: grid;
-    grid-template-columns: 36px 1fr auto;
-    align-items: center; gap: 12px;
-    padding: 14px 16px; background: #fff;
-    border: 1px solid var(--line); border-radius: 8px;
+    grid-template-columns: 28px 1fr 14px;
+    align-items: center; gap: 10px;
+    padding: 8px 10px; background: #fff;
+    border: 1px solid var(--line); border-radius: 6px;
     text-decoration: none; color: var(--fg);
-    transition: all 200ms;
-    border-left: 4px solid var(--theme, var(--accent));
-    box-shadow: 0 1px 3px rgba(20,17,13,0.03);
+    transition: all 180ms;
+    border-left: 3px solid var(--theme, var(--accent));
   }
   .no-result-report .nrr-syn:hover {
     border-color: var(--theme, var(--accent));
     background: linear-gradient(135deg, #fff 0%, var(--theme-bg, #FCFAF3) 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(184,50,58,0.12), 0 0 0 1px var(--theme, var(--accent));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(184,50,58,0.08), 0 0 0 1px var(--theme, var(--accent));
   }
   .no-result-report .nrr-syn-icon {
-    width: 36px; height: 36px; border-radius: 8px;
+    width: 28px; height: 28px; border-radius: 6px;
     background: var(--theme, var(--accent));
-    color: #fff; font-size: 1.125rem;
+    color: #fff; font-size: 0.9375rem;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
   .no-result-report .nrr-syn-body { min-width: 0; }
   .no-result-report .nrr-syn-title {
-    font-family: var(--font-heading); font-size: 1rem; font-weight: 700;
-    color: var(--fg); margin-bottom: 2px;
+    font-family: var(--font-heading); font-size: 0.875rem; font-weight: 700;
+    color: var(--fg); margin-bottom: 1px; line-height: 1.25;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .no-result-report .nrr-syn-cat {
-    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
-    color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .no-result-report .nrr-syn-arrow {
-    color: var(--muted); font-family: var(--font-num); font-size: 1rem;
-    transition: transform 200ms, color 200ms;
+    color: var(--muted); font-family: var(--font-num); font-size: 0.875rem;
+    transition: transform 180ms, color 180ms;
     flex-shrink: 0;
   }
   .no-result-report .nrr-syn:hover .nrr-syn-arrow {
     color: var(--theme, var(--accent));
-    transform: translateX(3px);
+    transform: translateX(2px);
   }
 </style>
 
