@@ -39,10 +39,13 @@
   "use strict";
 
   // 改这里来强制全量重取 (2026-06-25 加省份路由 → 20260625a)
-  const DATA_VERSION = "20260625a";
+  // bump: 每次改数据 schema 必须 bump, 否则用户 IDB cache 不刷新
+  const DATA_VERSION = "20260625d";
   const DATA_DIR = "/data";
   const DB_NAME = "gk.dataCache.v1";
   const DB_STORE = "files";
+  // cache 最大寿命 (小时) — 超过强制重 fetch, 避免版本号没 bump 时用户卡老数据
+  const CACHE_MAX_AGE_HOURS = 24;
 
   // 兼容旧引用: 仍列出 yfyd_2025.json 作为湖北默认, 但新代码用 getDataForProvince(prov)
   // 2026-06-25 改造: 实际路径是 yfyd_hubei_2025.json (湖北 default)
@@ -120,8 +123,16 @@
   async function loadFile(name, { force } = {}) {
     if (!force) {
       const cached = await _idbGet(name);
-      if (cached && cached.version === DATA_VERSION) {
-        return cached.payload;
+      if (cached) {
+        // 1) 版本不匹配 → 重 fetch
+        // 2) 版本匹配但 cache 太老 (CACHE_MAX_AGE_HOURS+) → 重 fetch
+        //    防止 version 没 bump 时用户卡老数据 (Day 31 教训)
+        const versionMatch = cached.version === DATA_VERSION;
+        const ageHours = cached.savedAt ? (Date.now() - cached.savedAt) / 3600000 : Infinity;
+        const tooOld = ageHours > CACHE_MAX_AGE_HOURS;
+        if (versionMatch && !tooOld) {
+          return cached.payload;
+        }
       }
     }
     const url = DATA_DIR + "/" + name + "?v=" + DATA_VERSION;
