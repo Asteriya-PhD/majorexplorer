@@ -284,6 +284,7 @@
         cat: m.category || "",
         theme: _styleColor(m.style),
         style: m.style || "",   // Day 32 v2: 给 emoji icon lookup 用
+        icon: STYLE_ICON[m.style] || "📘",  // Day 32 v4: emoji 圆徽
       });
     }
     return out;
@@ -305,12 +306,15 @@
           : `告诉我们你想看哪个专业, 我们优先收录 (精品报告持续扩充中).`);
     const synBlock = syns.length > 0 ? `
       <div class="nrr-synonyms">
-        <div class="nrr-syn-label">可能是想看 →</div>
+        <div class="nrr-syn-label">可能是想看 <span>(${syns.length} 个)</span></div>
         <div class="nrr-syn-list">
           ${syns.slice(0, 6).map(s => `
             <a class="nrr-syn" href="/${_esc(s.slug)}.html" style="--theme:${_esc(s.theme)};">
-              <span class="nrr-syn-title">${_esc(s.title)}</span>
-              <span class="nrr-syn-cat">${_esc(s.cat)}</span>
+              <span class="nrr-syn-emoji" aria-hidden="true">${_esc(s.icon || "📘")}</span>
+              <span class="nrr-syn-text">
+                <span class="nrr-syn-title">${_esc(s.title)}</span>
+                <span class="nrr-syn-cat">${_esc(s.cat)}</span>
+              </span>
             </a>
           `).join("")}
         </div>

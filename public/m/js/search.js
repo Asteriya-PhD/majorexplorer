@@ -152,15 +152,97 @@
   }
   function esc(s) { return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"})[c]); }
 
-  // 0 命中: "尚未收录「{query}」" 卡片 (Day 21 改造: 取消"实时生成", 只留"想看 xx" 反馈)
+  // 0 命中: 「不是本科专业名」+ 同义词推荐 (Day 32 v4 与 PC 同步)
+  //   复用 PC 端 INTENT_SYNONYMS 字典 (MajorSearch.SYNONYMS 或自定义)
+  const INTENT_SYNONYMS = {
+    "医生":   ["clinical-medicine","stomatology","traditional-chinese-medicine","nursing","basic-medicine","preventive-medicine"],
+    "医师":   ["clinical-medicine","stomatology","traditional-chinese-medicine","psychiatry"],
+    "护士":   ["nursing","midwifery"],
+    "考公":   ["law","public-administration","chinese-language-literature","accounting","financial-management","economics"],
+    "公务员": ["law","public-administration","chinese-language-literature","accounting","financial-management","economics"],
+    "教师":   ["chinese-language-literature","mathematics","english","physics","history","pedagogy","preschool-education"],
+    "老师":   ["chinese-language-literature","mathematics","english","pedagogy","preschool-education"],
+    "律师":   ["law","intellectual-property","prison-studies"],
+    "警察":   ["public-order","criminal-investigation","police-management"],
+    "心理咨询师": ["psychology","applied-psychology","psychiatry"],
+    "会计":   ["accounting","financial-management","auditing"],
+    "银行":   ["finance","economics","financial-engineering","insurance"],
+    "码农":   ["computer-science","software-engineering","data-science-big-data","artificial-intelligence","network-engineering","information-security"],
+    "程序员": ["computer-science","software-engineering","data-science-big-data","artificial-intelligence"],
+    "建筑":   ["architecture","urban-planning","civil-engineering","engineering-management"],
+  };
+  const STYLE_ICON_M = {
+    cs:'💻', medicine:'🩺', finance:'💰', law:'⚖️', education:'📚',
+    humanities:'📖', sci:'🔬', eng:'⚙️', administration:'🏛️',
+    agri:'🌱', arts:'🎨', gongan:'🛡️',
+  };
+  // style key → theme 色 (复用 M.themeForStyle / 直接从 manifestBySlug 取)
+  function _styleColorM(style) {
+    if (window.M && typeof M.themeForStyle === "function") return M.themeForStyle(style);
+    // 兜底: 跟 PC 端 _styleColor 同款 default 顺序
+    const map = { cs:'#3B5BDB', medicine:'#0E7C66', finance:'#8B5A1A', law:'#5B2C6B', education:'#7A4F2C',
+      humanities:'#6B5A2E', sci:'#2C6B7A', eng:'#4A4A4A', administration:'#7A2C2C',
+      agri:'#4A6B2C', arts:'#8B3A62', gongan:'#2C4A7A' };
+    return map[style] || "#5B2C6B";
+  }
+  function resolveSynonymsM(query) {
+    const q = (query || "").trim();
+    const slugs = INTENT_SYNONYMS[q];
+    if (!slugs) return [];
+    const out = [];
+    const seen = new Set();
+    for (const slug of slugs) {
+      if (seen.has(slug)) continue;
+      const m = M.manifestBySlug?.[slug];
+      if (!m) continue;
+      seen.add(slug);
+      out.push({
+        title: m.title,
+        slug: m.slug,
+        cat: m.category || "",
+        theme: _styleColorM(m.style),
+        icon: STYLE_ICON_M[m.style] || "📘",
+      });
+    }
+    return out;
+  }
   function renderNoResult(query) {
+    const syns = resolveSynonymsM(query);
+    const isLikelyIntent = syns.length > 0;
+    const title = isLikelyIntent
+      ? `「<strong>${esc(query)}</strong>」不是本科专业名`
+      : `尚未收录「<strong>${esc(query)}</strong>」`;
+    const desc = syns.length > 0
+      ? `本站只收 13 门类本科专业. 您可能是想看:`
+      : `告诉我们你想看这个专业, 我们优先收录 (精品报告持续扩充中).`;
+    const synBlock = syns.length > 0 ? `
+      <div class="nrr-synonyms">
+        <div class="nrr-syn-label">可能是想看 <span>(${syns.length} 个)</span></div>
+        <div class="nrr-syn-list">
+          ${syns.slice(0, 6).map(s => `
+            <a class="nrr-syn" href="/${esc(s.slug)}.html" style="--theme:${esc(s.theme)};">
+              <span class="nrr-syn-emoji" aria-hidden="true">${esc(s.icon || "📘")}</span>
+              <span class="nrr-syn-text">
+                <span class="nrr-syn-title">${esc(s.title)}</span>
+                <span class="nrr-syn-cat">${esc(s.cat)}</span>
+              </span>
+            </a>
+          `).join("")}
+        </div>
+      </div>
+    ` : "";
+    const showReportBtn = !isLikelyIntent;
+    const reportBlock = showReportBtn ? `
+      <div class="nrr-actions">
+        <button class="nrr-btn" type="button">💡 想看「${esc(query)}」</button>
+      </div>
+    ` : "";
     return `
       <div class="no-result-report" data-q="${esc(query)}">
-        <div class="nrr-title">尚未收录「<strong>${esc(query)}</strong>」</div>
-        <div class="nrr-desc">告诉我们你想看这个专业, 我们优先收录 (精品报告持续扩充中)。</div>
-        <div class="nrr-actions">
-          <button class="nrr-btn" type="button">💡 想看「${esc(query)}」</button>
-        </div>
+        <div class="nrr-title">${title}</div>
+        <div class="nrr-desc">${desc}</div>
+        ${synBlock}
+        ${reportBlock}
         <div class="nrr-synth-status"></div>
       </div>
     `;
