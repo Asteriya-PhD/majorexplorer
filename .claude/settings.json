@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; echo '⚠️  gaokao-team-b session started'; echo '📄 写/改 major JSON 前必读: docs/PIPELINE_major_quality.md'; echo '📌 4 anti-pollution rules: lede/who_fits_no/deep_study/curriculum'; echo '🎯 P0 优秀案例: computational-linguistics / electronic-science-technology / health-law / cultural-relics-museology'; echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'"
+            "command": "echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; echo '⚠️  gaokao-team-b session started'; echo '📄 写/改 major JSON 前必读: docs/PIPELINE_major_quality.md'; echo '📌 4 anti-pollution rules: lede/who_fits_no/deep_study/curriculum'; echo '🎯 P0 优秀案例: computational-linguistics / electronic-science-technology / health-law / cultural-relics-museology'; echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; echo '🚀 部署 JS/HTML/CSS 前必读: docs/DEPLOYMENT.md 末节「Cache 三层陷阱」'; echo '🔧 永远跑 `bash scripts/deploy.sh \"<msg>\"` 别手动 `git push` (Day 32 教训)'; echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'"
           }
         ]
       }
@@ -18,6 +18,17 @@
           {
             "type": "command",
             "command": "grep -lE 'major|JSON|专业|批量|hand.?code|精品' <<< \"$CLAUDE_USER_PROMPT\" > /dev/null 2>&1 && echo '💡 提示: 写/改 major JSON 前必读 docs/PIPELINE_major_quality.md' || true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); if echo \"$INPUT\" | grep -qE '\"command\"[[:space:]]*:[[:space:]]*\"git push origin main\"'; then echo '⚠️  [Day 32 cache trap] 手动 git push 绕过 deploy.sh 会漏 sw.js CACHE_NAME 升版 → 用户浏览器还看老版. 改跑: bash scripts/deploy.sh \"<msg>\"' >&2; fi; echo \"$INPUT\""
           }
         ]
       }

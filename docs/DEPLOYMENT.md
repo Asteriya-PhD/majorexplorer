@@ -282,3 +282,97 @@ done
 - **AI (我)**: 文档 + 部署指南 + 优选 IP 脚本 ✅
 - **联调**: 用户 git push → Cloudflare Pages 自动部署 → 验证 → 优选 IP → 完成
 - **目标时间线**: 6/12 当天 `https://majorexplorer.com` 可访问, 抢 6/13-6/25 高考结束-出分空档
+
+---
+
+## ⚠️ 强制必读: Cache 三层陷阱 & 部署 SOP (2026-06-25 Day 32 新增)
+
+**这一节是血泪教训, 任何改 JS/HTML/CSS 的部署前必读.**
+
+### 症状: 代码改了, 用户看不到
+
+部署某次 commit 后, 作者自己看是新版, 用户的浏览器还显示老版. 强刷 (`Cmd+Shift+R`) 才看到. **这不是用户问题, 是部署漏了 cache 失效步骤.**
+
+### 根因: 3 层 cache 同时锁死
+
+| 层 | 谁管 | 怎么失效 |
+|---|---|---|
+| 1. **CF 边缘 cache** | Cloudflare | cache-bust `?v=<新 hash>` 让 URL 不同 |
+| 2. **浏览器 disk cache** | 浏览器 | `Cmd+Shift+R` / Disable cache / 隐身窗口 |
+| 3. **Service Worker cache** | `public/sw.js` `CACHE_NAME` | **唯一强制升级的钩子**: 改 `CACHE_NAME` |
+
+**关键事实**: `?v=` query 只解决"新 URL → 新 file", 解决不了"SW 不会重新 fetch 旧 URL". 如果 `sw.js` 的 `CACHE_NAME` 不变, SW 不会升级, `staleWhileRevalidate` 把 `?v=75c850e2` 老 JS 永远锁在 disk cache.
+
+### 解决: 永远跑 `scripts/deploy.sh`
+
+```bash
+# ✅ 正确: 一行部署, 自动 bump cache-bust + sw.js CACHE_NAME
+bash scripts/deploy.sh "fix(search): xxx"
+
+# ❌ 错误: 手动 git push 绕过, 漏 SW 升版
+git add -A && git commit -m "fix" && git push origin main
+```
+
+`scripts/deploy.sh` 自动完成 7 步 (Day 31 + Day 32 增强):
+1. 检查 git 状态 (有未提交改动?)
+2. 检查 `public/data/` modified files 漏 add (CF Pages serve 老版致命)
+3. 生成 cache-bust query (`?v=<git short SHA>` 永久唯一)
+4. 替换所有 HTML 的 `?v=老值` → `?v=<新 SHA>` (PC + Mobile 一起)
+5. **🆕 Day 32: 升版 `sw.js` CACHE_NAME → `explorer-v?<SHA>`** ← 关键
+6. 验证替换完整 (无残留老 query / 老 CACHE_NAME)
+7. `git add + commit + push origin main` → CF Pages auto deploy
+
+### 验证部署成功 (4 步)
+
+```bash
+# 1. 确认 git push 成功
+git log --oneline -3  # 看到自己刚 commit
+
+# 2. 确认 CF sw.js 已升版 (等 1-2 min)
+curl -s https://majorexplorer.com/sw.js | grep CACHE_NAME
+# 期望: const CACHE_NAME = "explorer-v?-<新 SHA>"
+
+# 3. 确认 cache-bust 已替换
+curl -sL https://majorexplorer.com/search.html | grep "pc-search.js"
+# 期望: /js/pc-search.js?v=<新 SHA>
+
+# 4. 用户浏览器清 SW (一次性, 部署后第一次访问)
+# F12 → Application → Service Workers → 勾 "Update on reload" → 刷新
+# 或: 隐身窗口 (Cmd+Shift+N) 打开 → 必看新版
+```
+
+### 用户报"看不到新版" 排查 4 步
+
+```bash
+# Step 1: CF 有新 file 吗?
+curl -sI https://majorexplorer.com/js/pc-search.js | head -3
+# 期望: HTTP/2 200
+
+# Step 2: SW CACHE_NAME 升版了吗?
+curl -s https://majorexplorer.com/sw.js | grep CACHE_NAME
+# 期望: 含最新 SHA, 不含 "explorer-v1-20260622a" 老值
+
+# Step 3: HTML 引用新 cache-bust 吗?
+curl -sL https://majorexplorer.com/index.html | grep "pc-search.js"
+# 期望: ?v=<新 SHA>
+
+# Step 4: 用户 SW 升级了吗? (DevTools → Application → Service Workers)
+# 看到 SW 是 "activated and is running" + 最新 CACHE_NAME → OK
+# 看到 SW 还是老 CACHE_NAME → 让用户点 "Unregister" + 刷新
+```
+
+### Day 32 真实案例 (2026-06-25)
+
+| Commit | 改了什么 | 漏了什么 | 后果 |
+|---|---|---|---|
+| `804c9568` | v4 同义词卡片 (8px 色块 + emoji 圆徽) | sw.js CACHE_NAME 没动 | Chrome 用户看不到 v4, Orca 干净环境看到 |
+| `0cae3039` | sw.js CACHE_NAME → `v2-day32v4` | — | ✅ 所有用户下次 navigation 自动看到 v4 |
+
+**关键 takeaway**: cache-bust query 是必要不充分条件, **必须配 sw.js CACHE_NAME 升版**. 两者缺一不可.
+
+### 关联
+
+- `~/.claude/projects/.../memory/day32-cache-trap-sw-cachename.md` — 完整 memory
+- `scripts/deploy.sh` — 一键部署脚本 (Day 32 增强)
+- `public/sw.js` / `public/m/sw.js` — CACHE_NAME 升版是关键
+- 关联 commit: `804c9568` (v4 内容) + `0cae3039` (sw 升版)
