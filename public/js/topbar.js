@@ -11,7 +11,8 @@
   window.__TOPBAR_MOUNTED__ = true;
 
   var path = location.pathname;
-  var slugMatch = path.match(/\/([a-z][a-z0-9-]*)\.html$/);
+  // slug 解析: 同时支持 .html 后缀 (老 URL) 和无后缀 (308 redirect 后)
+  var slugMatch = path.match(/\/([a-z][a-z0-9-]*)(?:\.html)?$/);
   var slug = slugMatch ? slugMatch[1] : '';
 
   // ── 省份 (2026-06-25 改造) ──
