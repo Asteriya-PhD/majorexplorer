@@ -69,8 +69,12 @@
   Cache-Control: public, max-age=600, must-revalidate
 
 # HTML must revalidate (we want edits to take effect within ~1 min)
+# Day 32 v2 (2026-06-25): 显式 /search.html no-store, 避免 CF 边缘 cache 308 redirect + 老 HTML 内容
+# search.html 是 GitHub 上 308 redirect 的源, 默认会被 cache. no-store 强制每次重新 fetch.
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
+/search.html
+  Cache-Control: no-store
 
 # robots hints
 /sitemap.xml
