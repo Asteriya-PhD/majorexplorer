@@ -107,6 +107,25 @@ if [ -n "$OLD_CACHES" ]; then
 fi
 log "   ✅ sw.js CACHE_NAME 已升版"
 
+# ── 5.5 _headers 验证 (Day 32 v5 必备) ──
+log "5.5 _headers /sw.js no-store 验证..."
+if ! grep -qE '^/sw\.js$|^\/sw\.js\s*$' public/_headers 2>/dev/null; then
+  err "_headers 缺 /sw.js 路由, 4h 兜底 cache 会锁老 SW, 用户看不到新版. 加:
+/sw.js
+  Cache-Control: no-store
+/m/sw.js
+  Cache-Control: no-store
+参考: docs/DEPLOYMENT.md 末节「Cache 三层陷阱」"
+fi
+if ! grep -qE 'no-store' public/_headers 2>/dev/null; then
+  err "_headers 缺 no-store 配置, sw.js 走兜底 max-age=14400 4h 锁死"
+fi
+# 验证 /sw.js 路由真的设了 no-store
+if ! awk '/^\/sw\.js$/{f=1; next} f && /no-store/{exit 0} f && /^[A-Z]/{exit 1}' public/_headers | grep -q .; then
+  err "_headers /sw.js 路由没设 no-store (或被覆盖), 部署失败"
+fi
+log "   ✅ /sw.js /m/sw.js 都设了 no-store"
+
 # ── 6. git add + commit + push ──
 MSG="${1:-deploy: bump cache-bust $NEW_QUERY}"
 log "6. git add + commit + push..."
