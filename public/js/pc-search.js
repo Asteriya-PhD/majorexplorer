@@ -223,16 +223,98 @@
     if ($nAllBtn) $nAllBtn.textContent = nAll;
   }
 
+  // ── 同义词词典 (2026-06-25 新增) ──
+  // 搜索 0 命中时, 用户经常搜的是职业/政策/城市 而非本科专业名.
+  // 这里把常见"非专业名"映射到对口本科专业 slug, 引导用户跳转, 减少误上报.
+  // slug 必须与 manifest.json 中真实存在一致 (改前用 curl 验过).
+  const INTENT_SYNONYMS = {
+    "医生":   ["clinical-medicine","stomatology","traditional-chinese-medicine","nursing","basic-medicine","preventive-medicine"],
+    "医师":   ["clinical-medicine","stomatology","traditional-chinese-medicine","psychiatry"],
+    "护士":   ["nursing","midwifery"],
+    "考公":   ["law","public-administration","chinese-language-literature","accounting","financial-management","economics"],
+    "公务员": ["law","public-administration","chinese-language-literature","accounting","financial-management","economics"],
+    "教师":   ["chinese-language-literature","mathematics","english","physics","history","pedagogy","preschool-education"],
+    "老师":   ["chinese-language-literature","mathematics","english","pedagogy","preschool-education"],
+    "律师":   ["law","intellectual-property","prison-studies"],
+    "警察":   ["public-order","criminal-investigation","police-management"],
+    "心理咨询师": ["psychology","applied-psychology","psychiatry"],
+    "会计":   ["accounting","financial-management","auditing"],
+    "银行":   ["finance","economics","financial-engineering","insurance"],
+    "码农":   ["computer-science","software-engineering","data-science-big-data","artificial-intelligence","network-engineering","information-security"],
+    "程序员": ["computer-science","software-engineering","data-science-big-data","artificial-intelligence"],
+    "建筑":   ["architecture","urban-planning","civil-engineering","engineering-management"],
+  };
+  // 政策/城市/技术领域: 不是本科专业, 给一段引导说明
+  const INTENT_GUIDANCE = {
+    "深圳": "「深圳」是城市, 不是本科专业. 想了解深圳的大学或具体专业, 直接看 /majors.html 或选个学科门类.",
+    "北京": "「北京」是城市, 不是本科专业. 想了解北京的大学或具体专业, 直接看 /majors.html.",
+    "上海": "「上海」是城市, 不是本科专业. 想了解上海的大学或具体专业, 直接看 /majors.html.",
+    "公费师范": "「公费师范」是国家政策 (6 所部属师范院校), 不是单一本科专业. 想读师范专业? 看「教师」相关的 6 个对口专业.",
+    "考公": "「考公」是就业方向. 想提高考公竞争力, 选对口专业 (法学/行政管理/汉语言文学 等).",
+    "全部": "输入专业名 (例: 临床医学) 或学科门类 (例: 医学) — 不支持搜「全部」.",
+  };
+
+  // 在已加载的 manifest 中, 把同义词 slug 解析成 {title, slug, theme}
+  function resolveSynonyms(query) {
+    const q = (query || "").trim();
+    const slugs = INTENT_SYNONYMS[q];
+    if (!slugs) return [];
+    const out = [];
+    const seen = new Set();
+    for (const slug of slugs) {
+      if (seen.has(slug)) continue;
+      const m = manifestBySlug[slug];
+      if (!m) continue;
+      seen.add(slug);
+      out.push({
+        title: m.title,
+        slug: m.slug,
+        cat: m.category || "",
+        theme: _styleColor(m.style),
+      });
+    }
+    return out;
+  }
+
   // ── 0 命中: "尚未收录「{query}」" 卡片 (PC 大字号版, source="pc")
-  //    Day 21 改造: 取消"实时生成", 只留"想看 xx 专业" 反馈
+  //    2026-06-25 改造: 标题/描述改为「职业/政策/城市 引导」+ 同义词推荐, 减少散户误上报.
   function renderNoResult(query) {
+    const syns = resolveSynonyms(query);
+    const guidance = INTENT_GUIDANCE[query];
+    const isLikelyIntent = !!guidance || syns.length > 0;
+    const title = isLikelyIntent
+      ? `「<strong>${_esc(query)}</strong>」不是本科专业名`
+      : `尚未收录「<strong>${_esc(query)}</strong>」`;
+    const desc = guidance
+      ? guidance
+      : (syns.length > 0
+          ? `本站只收 13 门类本科专业. 您可能是想看:`
+          : `告诉我们你想看哪个专业, 我们优先收录 (精品报告持续扩充中).`);
+    const synBlock = syns.length > 0 ? `
+      <div class="nrr-synonyms">
+        <div class="nrr-syn-label">可能是想看 →</div>
+        <div class="nrr-syn-list">
+          ${syns.slice(0, 6).map(s => `
+            <a class="nrr-syn" href="/${_esc(s.slug)}.html" style="--theme:${_esc(s.theme)};">
+              <span class="nrr-syn-title">${_esc(s.title)}</span>
+              <span class="nrr-syn-cat">${_esc(s.cat)}</span>
+            </a>
+          `).join("")}
+        </div>
+      </div>
+    ` : "";
+    const showReportBtn = !isLikelyIntent;  // 是职业/政策/城市就别再诱导用户想看 XX 了
+    const reportBlock = showReportBtn ? `
+      <div class="nrr-actions">
+        <button class="nrr-btn" type="button">💡 想看「${_esc(query)}」</button>
+      </div>
+    ` : "";
     return `
       <div class="no-result-report" data-q="${_esc(query)}">
-        <div class="nrr-title">尚未收录「<strong>${_esc(query)}</strong>」</div>
-        <div class="nrr-desc">告诉我们你想看这个专业, 我们优先收录 (精品报告持续扩充中)。</div>
-        <div class="nrr-actions">
-          <button class="nrr-btn" type="button">💡 想看「${_esc(query)}」</button>
-        </div>
+        <div class="nrr-title">${title}</div>
+        <div class="nrr-desc">${_esc(desc)}</div>
+        ${synBlock}
+        ${reportBlock}
         <div class="nrr-synth-status"></div>
       </div>
     `;
@@ -241,6 +323,7 @@
     const card = root.querySelector(".no-result-report");
     if (!card) return;
     const btn = card.querySelector(".nrr-btn");
+    if (!btn) return;  // 2026-06-25: 职业/政策/城市类不再展示「想看 XX」按钮, 跳过 event 绑定
     btn.addEventListener("click", async () => {
       btn.disabled = true;
       btn.textContent = "发送中...";

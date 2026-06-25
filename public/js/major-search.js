@@ -98,21 +98,21 @@
 
     // 法律
     "法律": ["law"],
-    "律师": ["law"],
     "法学": ["law"],
     "法考": ["law"],
+    // "律师" 已迁移到 INTENT_SYNONYMS (职业意图词 → 走 0 命中同义词推荐)
 
     // 教育 + 人文 + 设计
-    "教师": ["education", "chinese-language-literature", "english", "psychology", "history"],
-    "老师": ["education"],
+    // "教师"/"老师" 已迁移到 INTENT_SYNONYMS (职业意图词)
     "师范": ["education", "english", "chinese-language-literature"],
-    "公费师范": ["education"],
+    // "公费师范" 已迁移到 INTENT_GUIDANCE (政策引导)
     "心理": ["psychology", "applied-psychology"],
     "心理学": ["psychology", "applied-psychology"],
     "心理咨询": ["psychology", "applied-psychology"],
+    // "心理咨询师" 已迁移到 INTENT_SYNONYMS (职业意图词)
     "新闻": ["journalism-communication"],
     "传媒": ["journalism-communication"],
-    "记者": ["journalism-communication"],
+    // "记者" 已迁移到 INTENT_SYNONYMS (职业意图词)
     "短视频": ["journalism-communication", "digital-media-arts"],
     "汉语言": ["chinese-language-literature"],
     "中文": ["chinese-language-literature"],
@@ -124,8 +124,7 @@
     "工业设计": ["industrial-design"],
 
     // 公管 / 图情
-    "公务员": ["public-administration", "law", "library-science", "financial-management"],
-    "考公": ["public-administration", "law", "library-science", "chinese-language-literature"],
+    // "公务员"/"考公" 已迁移到 INTENT_SYNONYMS (职业意图词)
     "行政管理": ["public-administration"],
     "图书馆": ["library-science"],
     "档案": ["library-science", "information-management-systems"],
@@ -456,6 +455,48 @@
       });
     }
 
+    // ── 0 命中引导用同义词/政策词典 (2026-06-25 新增) ──
+  // 跟 pc-search.js INTENT_SYNONYMS 一致; 放在 IIFE 顶部, _render 调用.
+  const INTENT_SYNONYMS = {
+    "医生":   ["clinical-medicine","stomatology","traditional-chinese-medicine","nursing","basic-medicine","preventive-medicine"],
+    "医师":   ["clinical-medicine","stomatology","traditional-chinese-medicine","psychiatry"],
+    "护士":   ["nursing","midwifery"],
+    "考公":   ["law","public-administration","chinese-language-literature","accounting","financial-management","economics"],
+    "公务员": ["law","public-administration","chinese-language-literature","accounting","financial-management","economics"],
+    "教师":   ["chinese-language-literature","mathematics","english","physics","history","pedagogy","preschool-education"],
+    "老师":   ["chinese-language-literature","mathematics","english","pedagogy","preschool-education"],
+    "律师":   ["law","intellectual-property","prison-studies"],
+    "警察":   ["public-order","criminal-investigation","police-management"],
+    "心理咨询师": ["psychology","applied-psychology","psychiatry"],
+    "会计":   ["accounting","financial-management","auditing"],
+    "银行":   ["finance","economics","financial-engineering","insurance"],
+    "码农":   ["computer-science","software-engineering","data-science-big-data","artificial-intelligence","network-engineering","information-security"],
+    "程序员": ["computer-science","software-engineering","data-science-big-data","artificial-intelligence"],
+    "建筑":   ["architecture","urban-planning","civil-engineering","engineering-management"],
+  };
+  const INTENT_GUIDANCE = {
+    "深圳": "「深圳」是城市, 不是本科专业. 想了解深圳的大学或具体专业, 直接看 /majors.html.",
+    "北京": "「北京」是城市, 不是本科专业. 想了解北京的大学或具体专业, 直接看 /majors.html.",
+    "上海": "「上海」是城市, 不是本科专业. 想了解上海的大学或具体专业, 直接看 /majors.html.",
+    "公费师范": "「公费师范」是国家政策 (6 所部属师范院校), 不是单一本科专业. 想读师范专业? 看「教师」相关的 6 个对口专业.",
+    "考公": "「考公」是就业方向. 想提高考公竞争力, 选对口专业 (法学/行政管理/汉语言文学 等).",
+    "全部": "输入专业名 (例: 临床医学) 或学科门类 (例: 医学) — 不支持搜「全部」.",
+  };
+  function _resolveIntentSynonyms(query) {
+    const slugs = INTENT_SYNONYMS[query];
+    if (!slugs || !_manifest) return [];
+    const out = [];
+    const seen = new Set();
+    for (const slug of slugs) {
+      if (seen.has(slug)) continue;
+      const m = (_manifest.majors || []).find(x => x && x.slug === slug);
+      if (!m) continue;
+      seen.add(slug);
+      out.push({ title: m.title, slug: m.slug, style: m.style, category: m.category || "" });
+    }
+    return out;
+  }
+
     function _render(list, query) {
       results.innerHTML = "";
       // Bug fix (2026-06-25): 「未收录/想看」CTA 仅在 0 命中时展示.
@@ -463,20 +504,46 @@
       // 命中 ≥1 条时让用户正常浏览, 真要反馈走顶栏「反馈」入口.
       const showSynthCTA = list.length === 0;
 
-      // CTA 卡片 (Day 21 改造: 取消"现场合成", 只留"想看 xx 专业"反馈)
+      // CTA 卡片 (2026-06-25 改造: 加「职业/政策/城市 引导」+ 同义词推荐, 减少散户误上报)
       if (showSynthCTA) {
+        const syns = _resolveIntentSynonyms(query);
+        const guidance = INTENT_GUIDANCE[query];
+        const isLikelyIntent = !!guidance || syns.length > 0;
+        const title = isLikelyIntent
+          ? '「<strong>' + _escapeHtml(query) + '</strong>」不是本科专业名'
+          : '未收录「<strong>' + _escapeHtml(query) + '</strong>」';
+        const desc = guidance
+          ? guidance
+          : (syns.length > 0
+              ? '本站只收 13 门类本科专业. 您可能是想看:'
+              : '告诉我们你想看哪个专业, 我们优先收录 (精品收录持续扩充中)');
+        const synBlock = syns.length > 0
+          ? '<div class="ms-synonyms" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">' +
+              syns.slice(0, 6).map(s =>
+                '<a class="ms-syn" href="/' + _escapeHtml(s.slug) + '.html" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--fg);">' +
+                '  <span style="font-weight:600;font-size:14px;">' + _escapeHtml(s.title) + '</span>' +
+                '  <span style="font-size:11px;color:var(--muted);">' + _escapeHtml(s.category) + '</span>' +
+                '</a>'
+              ).join("") +
+            '</div>'
+          : "";
+        const showReportBtn = !isLikelyIntent;
+        const reportBlock = showReportBtn
+          ? '<div class="nrr-actions" style="display:flex;gap:8px;flex-wrap:wrap;">' +
+              '<button type="button" class="ms-report-btn nrr-btn" style="flex:1;min-width:160px;padding:8px 14px;background:#1f2937;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;">💡 想看「' + _escapeHtml(query) + '」</button>' +
+              '</div>'
+          : "";
         const ctaHtml =
           '<div class="ms-no-result no-result-report" data-q="' + _escapeHtml(query) + '" style="padding:14px 16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#fef9f2,#fff);">' +
-          '  <div style="font-weight:600;font-size:14px;margin-bottom:6px;color:#92400e;">未收录「<strong>' + _escapeHtml(query) + '</strong>」</div>' +
-          '  <div style="font-size:12px;color:#6b5d4f;margin-bottom:10px;line-height:1.5;">告诉我们你想看哪个专业, 我们优先收录 (精品收录持续扩充中)</div>' +
-          '  <div class="nrr-actions" style="display:flex;gap:8px;flex-wrap:wrap;">' +
-          '    <button type="button" class="ms-report-btn nrr-btn" style="flex:1;min-width:160px;padding:8px 14px;background:#1f2937;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;">💡 想看「' + _escapeHtml(query) + '」</button>' +
-          '  </div>' +
+          '  <div style="font-weight:600;font-size:14px;margin-bottom:6px;color:#92400e;">' + title + '</div>' +
+          '  <div style="font-size:12px;color:#6b5d4f;margin-bottom:10px;line-height:1.5;">' + _escapeHtml(desc) + '</div>' +
+            synBlock +
+            reportBlock +
           '  <div class="nrr-synth-status" style="margin-top:8px;font-size:12px;color:#6b5d4f;"></div>' +
           '</div>';
         results.innerHTML = ctaHtml;
-        // 绑定 CTA handler (只剩 report)
-        _bindDropdownCTA(query);
+        // 绑定 CTA handler (只剩 report, 没按钮就不绑)
+        if (showReportBtn) _bindDropdownCTA(query);
       }
 
       if (list.length === 0) {
