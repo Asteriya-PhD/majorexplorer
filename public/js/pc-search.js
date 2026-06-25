@@ -187,6 +187,8 @@
       results.innerHTML = noResultHtml;
       bindReportCard(results, query);
       updateFilterCounts(0, 0);
+      // Day 32 v2 (#10): 0 命中也要上报搜索词, 看哪些词是真 0 命中 (后续补 manifest)
+      if (window.trackSearch) window.trackSearch(query, 0, 'pc-search');
       return;
     }
     results.innerHTML = noResultHtml + sections.map((s) => `
@@ -209,6 +211,10 @@
     if (noResultHtml) bindReportCard(results, query);
 
     updateFilterCounts(majors.length, cats.length);
+    // Day 32 v2 (#10): 上报搜索词 + 命中数 + 是否意图词
+    if (window.trackSearch) {
+      window.trackSearch(query, majors.length + cats.length, 'pc-search');
+    }
   }
 
   function updateFilterCounts(nM, nC) {
@@ -244,6 +250,12 @@
     "程序员": ["computer-science","software-engineering","data-science-big-data","artificial-intelligence"],
     "建筑":   ["architecture","urban-planning","civil-engineering","engineering-management"],
   };
+  // style key → emoji (用于同义词卡片左侧 icon, Day 32 v2)
+  const STYLE_ICON = {
+    cs:'💻', medicine:'🩺', finance:'💰', law:'⚖️', education:'📚',
+    humanities:'📖', sci:'🔬', eng:'⚙️', administration:'🏛️',
+    agri:'🌱', arts:'🎨', gongan:'🛡️',
+  };
   // 政策/城市/技术领域: 不是本科专业, 给一段引导说明
   const INTENT_GUIDANCE = {
     "深圳": "「深圳」是城市, 不是本科专业. 想了解深圳的大学或具体专业, 直接看 /majors.html 或选个学科门类.",
@@ -254,7 +266,7 @@
     "全部": "输入专业名 (例: 临床医学) 或学科门类 (例: 医学) — 不支持搜「全部」.",
   };
 
-  // 在已加载的 manifest 中, 把同义词 slug 解析成 {title, slug, theme}
+  // 在已加载的 manifest 中, 把同义词 slug 解析成 {title, slug, theme, style}
   function resolveSynonyms(query) {
     const q = (query || "").trim();
     const slugs = INTENT_SYNONYMS[q];
@@ -271,6 +283,7 @@
         slug: m.slug,
         cat: m.category || "",
         theme: _styleColor(m.style),
+        style: m.style || "",   // Day 32 v2: 给 emoji icon lookup 用
       });
     }
     return out;
@@ -292,14 +305,20 @@
           : `告诉我们你想看哪个专业, 我们优先收录 (精品报告持续扩充中).`);
     const synBlock = syns.length > 0 ? `
       <div class="nrr-synonyms">
-        <div class="nrr-syn-label">可能是想看 →</div>
+        <div class="nrr-syn-label">可能是想看</div>
         <div class="nrr-syn-list">
-          ${syns.slice(0, 6).map(s => `
+          ${syns.slice(0, 6).map(s => {
+            const ico = STYLE_ICON[s.style] || '📚';
+            return `
             <a class="nrr-syn" href="/${_esc(s.slug)}.html" style="--theme:${_esc(s.theme)};">
-              <span class="nrr-syn-title">${_esc(s.title)}</span>
-              <span class="nrr-syn-cat">${_esc(s.cat)}</span>
+              <span class="nrr-syn-icon">${ico}</span>
+              <span class="nrr-syn-body">
+                <span class="nrr-syn-title">${_esc(s.title)}</span>
+                <span class="nrr-syn-cat">${_esc(s.cat)}</span>
+              </span>
+              <span class="nrr-syn-arrow">→</span>
             </a>
-          `).join("")}
+          `;}).join("")}
         </div>
       </div>
     ` : "";

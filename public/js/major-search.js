@@ -25,6 +25,33 @@
   let _manifest = null;
   let _loadPromise = null;
 
+  // ── Plausible 搜索词事件 (Day 32 v2, #10) ──
+  // 用法: trackSearch(q, hitCount, source), 由 doSearch / chip click 调用.
+  // - event 'search': 通用搜索事件, 接 q + hits + source props
+  // - 节流: 同一 query 1 分钟内只报 1 次 (避免用户连续打字刷)
+  // - is_intent: 是否职业/政策意图词 (1=是, 0=否), 后续分析"职业词流量"用
+  function trackSearch(q, hitCount, source) {
+    try {
+      const key = `${q}|${source}`;
+      if (window.__searchTracked && window.__searchTracked.has(key)) return;
+      if (!window.__searchTracked) window.__searchTracked = new Set();
+      window.__searchTracked.add(key);
+      setTimeout(() => window.__searchTracked.delete(key), 60_000);
+      if (typeof plausible === 'function') {
+        plausible('search', {
+          props: {
+            q: (q || '').slice(0, 60),
+            hits: hitCount || 0,
+            source: source || 'unknown',   // 'mobile-search' | 'home-hero' | 'detail-compact' 等
+            is_intent: INTENT_SYNONYMS[q] ? 1 : 0,
+          }
+        });
+      }
+    } catch (e) {}
+  }
+  // 暴露到 window 方便 pc-search.js 复用
+  global.trackSearch = trackSearch;
+
   // ── 关键词 / 同义词 → slug 列表 (高频项) ────────────────────
   // 同义词加分: title 包含 = 5, tag 包含 = 3, category 包含 = 2, 同义词 = 4
   const SYNONYMS = {
@@ -414,6 +441,7 @@
         if (e.metaKey || e.ctrlKey || e.button === 1) return;
         e.preventDefault();
         input.value = c.q; doSearch(); input.focus();
+        trackSearch(c.q, 0, 'home-hero');   // Day 32 v2: chip 点击也上报 (会再被 doSearch 内上报一次, 节流去掉重复)
       });
       chipBar.appendChild(a);
     });
@@ -480,6 +508,12 @@
     "程序员": ["computer-science","software-engineering","data-science-big-data","artificial-intelligence"],
     "建筑":   ["architecture","urban-planning","civil-engineering","engineering-management"],
   };
+  // Day 32 v2: style key → emoji (同义词卡片左侧 icon, mobile+pc 一致)
+  const STYLE_ICON = {
+    cs:'💻', medicine:'🩺', finance:'💰', law:'⚖️', education:'📚',
+    humanities:'📖', sci:'🔬', eng:'⚙️', administration:'🏛️',
+    agri:'🌱', arts:'🎨', gongan:'🛡️',
+  };
   const INTENT_GUIDANCE = {
     "深圳": "「深圳」是城市, 不是本科专业. 想了解深圳的大学或具体专业, 直接看 /majors.html.",
     "北京": "「北京」是城市, 不是本科专业. 想了解北京的大学或具体专业, 直接看 /majors.html.",
@@ -498,7 +532,9 @@
       const m = (_manifest.majors || []).find(x => x && x.slug === slug);
       if (!m) continue;
       seen.add(slug);
-      out.push({ title: m.title, slug: m.slug, style: m.style, category: m.category || "" });
+      // Day 32 v2: 找该 style 的 primary 色做 theme
+      const theme = (m.theme_color && m.theme_color.primary) || _styleColor(m.style);
+      out.push({ title: m.title, slug: m.slug, style: m.style, category: m.category || "", theme: theme });
     }
     return out;
   }
@@ -524,13 +560,18 @@
               ? '本站只收 13 门类本科专业. 您可能是想看:'
               : '告诉我们你想看哪个专业, 我们优先收录 (精品收录持续扩充中)');
         const synBlock = syns.length > 0
-          ? '<div class="ms-synonyms" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">' +
-              syns.slice(0, 6).map(s =>
-                '<a class="ms-syn" href="/' + _escapeHtml(s.slug) + '.html" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--fg);">' +
-                '  <span style="font-weight:600;font-size:14px;">' + _escapeHtml(s.title) + '</span>' +
-                '  <span style="font-size:11px;color:var(--muted);">' + _escapeHtml(s.category) + '</span>' +
-                '</a>'
-              ).join("") +
+          ? '<div class="ms-synonyms" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">' +
+              syns.slice(0, 6).map(s => {
+                const ico = STYLE_ICON[s.style] || '📚';
+                return '<a class="ms-syn" href="/' + _escapeHtml(s.slug) + '.html" style="display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:8px;border-left:4px solid ' + _escapeHtml(s.theme || 'var(--accent)') + ';text-decoration:none;color:var(--fg);box-shadow:0 1px 3px rgba(20,17,13,0.03);">' +
+                  '<span style="width:36px;height:36px;border-radius:8px;background:' + _escapeHtml(s.theme || 'var(--accent)') + ';color:#fff;font-size:1.125rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.08);">' + _escapeHtml(ico) + '</span>' +
+                  '<span style="min-width:0;">' +
+                    '<span style="display:block;font-weight:700;font-size:0.9375rem;color:var(--fg);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escapeHtml(s.title) + '</span>' +
+                    '<span style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escapeHtml(s.category) + '</span>' +
+                  '</span>' +
+                  '<span style="color:var(--muted);font-size:1rem;flex-shrink:0;">→</span>' +
+                '</a>';
+              }).join("") +
             '</div>'
           : "";
         const showReportBtn = !isLikelyIntent;
@@ -595,6 +636,7 @@
       loadManifest().then(() => {
         const list = search(q);
         _render(list, q);
+        trackSearch(q, list.length, 'mobile-search');   // Day 32 v2: 上报搜索词
       });
     }
 
