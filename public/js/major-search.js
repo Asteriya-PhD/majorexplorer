@@ -161,20 +161,17 @@
     "室内设计": ["environmental-design"],
   };
 
-  // 主页 chat 栏下方默认快捷 chip
+  // 主页 chat 栏下方默认快捷 chip (2026-06-25 改造: 全部改为本科专业名, 不再引导搜职业/政策)
+// 选 8 个: 覆盖理工文法商医艺农 7 门类 + 用户最高频搜索意图
   const DEFAULT_CHIPS = [
-    { label: "🧑‍💻 编程", q: "编程" },
-    { label: "🩺 当医生", q: "医生" },
-    { label: "📚 当老师", q: "教师" },
-    { label: "💰 金融", q: "金融" },
-    { label: "⚖️ 法律", q: "法律" },
-    { label: "🎨 设计", q: "设计" },
-    { label: "🏛️ 考公", q: "考公" },
-    { label: "🧠 心理", q: "心理" },
+    { label: "🧑‍💻 计算机科学与技术", q: "计算机科学与技术" },
+    { label: "🩺 临床医学", q: "临床医学" },
+    { label: "⚖️ 法学", q: "法学" },
+    { label: "💰 金融学", q: "金融学" },
+    { label: "📚 汉语言文学", q: "汉语言文学" },
     { label: "🤖 人工智能", q: "人工智能" },
-    { label: "🚗 新能源车", q: "新能源车" },
-    { label: "🌱 农学", q: "农学" },
-    { label: "🎬 动画游戏", q: "游戏" },
+    { label: "🔬 物理学", q: "物理学" },
+    { label: "🎨 视觉传达设计", q: "视觉传达设计" },
   ];
 
   function loadManifest() {
@@ -375,7 +372,7 @@
 
     const compact = opts.size === "compact";
     const placeholder = opts.placeholder ||
-      (compact ? "搜其他专业 (比如「编程」「医生」「金融」)…" : "想了解什么专业?  比如「编程」「医生」「教师」「设计」…");
+      (compact ? "搜其他专业 (比如「计算机」「临床医学」「金融学」)…" : "想了解什么专业?  比如「计算机」「临床医学」「法学」…");
     const chips = opts.chips || DEFAULT_CHIPS;
 
     const shell = document.createElement("div");
