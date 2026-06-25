@@ -305,20 +305,14 @@
           : `告诉我们你想看哪个专业, 我们优先收录 (精品报告持续扩充中).`);
     const synBlock = syns.length > 0 ? `
       <div class="nrr-synonyms">
-        <div class="nrr-syn-label">可能是想看</div>
+        <div class="nrr-syn-label">可能是想看 →</div>
         <div class="nrr-syn-list">
-          ${syns.slice(0, 6).map(s => {
-            const ico = STYLE_ICON[s.style] || '📚';
-            return `
+          ${syns.slice(0, 6).map(s => `
             <a class="nrr-syn" href="/${_esc(s.slug)}.html" style="--theme:${_esc(s.theme)};">
-              <span class="nrr-syn-icon">${ico}</span>
-              <span class="nrr-syn-body">
-                <span class="nrr-syn-title">${_esc(s.title)}</span>
-                <span class="nrr-syn-cat">${_esc(s.cat)}</span>
-              </span>
-              <span class="nrr-syn-arrow">→</span>
+              <span class="nrr-syn-title">${_esc(s.title)}</span>
+              <span class="nrr-syn-cat">${_esc(s.cat)}</span>
             </a>
-          `;}).join("")}
+          `).join("")}
         </div>
       </div>
     ` : "";
