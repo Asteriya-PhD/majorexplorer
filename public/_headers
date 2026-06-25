@@ -76,6 +76,14 @@
 /search.html
   Cache-Control: no-store
 
+# Service Worker — 必须 no-store (Day 32 v5 终极修复, 2026-06-25)
+# 兜底 /* 是 max-age=14400 (4h), 浏览器 4h 内不会感知 sw.js 变化, 老 SW 一直跑, 老 pc-search.js 锁死.
+# no-store 强制每次重新 fetch sw.js, 浏览器立刻检测到新 CACHE_NAME → activate 新 SW.
+/sw.js
+  Cache-Control: no-store
+/m/sw.js
+  Cache-Control: no-store
+
 # robots hints
 /sitemap.xml
   Cache-Control: public, max-age=3600
