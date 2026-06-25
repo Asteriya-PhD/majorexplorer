@@ -150,7 +150,88 @@
     if (typeof console !== "undefined") {
       console.log("[data-loader] " + label + " loaded in " + elapsed + "ms");
     }
+    // Staleness 检查 — 任何文件被重 fetch (stale >24h 或 version mismatch),
+    // 提示用户刷新 (Day 31 教训: 用户卡老数据不知情)
+    _checkStalenessAndWarn(files);
     return arr;
+  }
+
+  // ─────────────── Staleness banner (2026-06-25 新增) ───────────────
+  // 检查所有 IDB cache entries, 如果 stale (>24h 或 version mismatch), 显示软提示
+  // 用户点 → 清 IDB + reload, 拿到新数据
+  // 不强制 reload, 给用户选择权 (vs Day 31 强 reload 卡 6 小时)
+  async function _checkStalenessAndWarn(files) {
+    try {
+      const db = await _openDB();
+      const tx = db.transaction(DB_STORE, "readonly");
+      const store = tx.objectStore(DB_STORE);
+      const allKeys = await new Promise((resolve) => {
+        const req = store.getAllKeys();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => resolve([]);
+      });
+      let staleCount = 0;
+      for (const key of allKeys) {
+        const entry = await new Promise((resolve) => {
+          const req = store.get(key);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+        if (!entry) continue;
+        const versionMatch = entry.version === DATA_VERSION;
+        const ageHours = entry.savedAt ? (Date.now() - entry.savedAt) / 3600000 : Infinity;
+        if (!versionMatch || ageHours > CACHE_MAX_AGE_HOURS) staleCount++;
+      }
+      if (staleCount > 0) _showStalenessBanner(staleCount);
+    } catch (e) { /* IDB 不可用, 静默 */ }
+  }
+
+  function _showStalenessBanner(staleCount) {
+    if (typeof document === "undefined") return;
+    // 防重复
+    if (document.getElementById("gk-staleness-banner")) return;
+    const banner = document.createElement("div");
+    banner.id = "gk-staleness-banner";
+    banner.style.cssText = [
+      "position: fixed",
+      "top: 12px",
+      "left: 50%",
+      "transform: translateX(-50%)",
+      "z-index: 9999",
+      "background: #FFF8E1",
+      "border: 1px solid #E8C766",
+      "border-left: 4px solid #D4AF37",
+      "border-radius: 8px",
+      "padding: 10px 16px",
+      "font-size: 0.875rem",
+      "color: #5C4A1F",
+      "box-shadow: 0 4px 12px rgba(0,0,0,0.08)",
+      "display: flex",
+      "align-items: center",
+      "gap: 12px",
+      "max-width: calc(100vw - 24px)",
+    ].join(";");
+    banner.innerHTML = [
+      '<span>🔄 检测到 ' + staleCount + ' 个数据文件可能过期</span>',
+      '<button id="gk-staleness-refresh" type="button" style="',
+        'background: #D4AF37; color: #fff; border: none; border-radius: 6px;',
+        'padding: 4px 12px; font-weight: 600; cursor: pointer;',
+      '">刷新数据</button>',
+      '<button id="gk-staleness-dismiss" type="button" aria-label="忽略" style="',
+        'background: transparent; border: none; color: #8B6914; cursor: pointer;',
+        'font-size: 1.125rem; padding: 0 4px;',
+      '">✕</button>',
+    ].join("");
+    document.body.appendChild(banner);
+    document.getElementById("gk-staleness-refresh").addEventListener("click", async () => {
+      // 清 IDB + reload
+      banner.querySelector("button").textContent = "刷新中...";
+      await clear();
+      location.reload();
+    });
+    document.getElementById("gk-staleness-dismiss").addEventListener("click", () => {
+      banner.remove();
+    });
   }
 
   async function loadLight() {
