@@ -48,21 +48,32 @@
   }
   var active = activeKey();
 
+  // 省份切换 tab 只在「志愿推荐相关页」显示 (wishlist/preferences/recommendations)
+  // 首页 / 专业目录 / 专业详情页 不显示 — 专业介绍全国通用, 不需要省份
+  // (Day 31 反馈: 用户误以为网站只服务 3 个省)
+  var showProvPicker = (slug === 'wishlist' || slug === 'preferences' || slug === 'recommendations' ||
+                        path === '/wishlist.html' || path === '/preferences.html' || path === '/recommendations.html');
+
+  // 在没显示省份 tab 的页面, brand.sub 不嵌入省名, 保持原文案
+  var provBlockHtml = showProvPicker
+    ? '<label class="topbar-prov-picker" for="topbar-prov-select" aria-label="切换省份">' +
+        '<span class="topbar-prov-label">省份</span>' +
+        '<select id="topbar-prov-select" class="topbar-prov-select">' +
+        PROVINCES.map(function (p) {
+          return '<option value="' + p.key + '"' + (p.key === currentProv ? ' selected' : '') + '>' + p.display + '</option>';
+        }).join('') +
+        '</select>' +
+      '</label>'
+    : '';
+
   var html = '' +
     '<header class="topbar">' +
     '  <div class="container">' +
     '    <a class="brand" href="/">' +
-    '      Major Explorer<span class="sub" id="topbar-prov-sub">2026 高考 · ' + provDisplay + ' · 先专业, 后志愿</span>' +
+    '      Major Explorer<span class="sub" id="topbar-prov-sub">' + (showProvPicker ? ('2026 高考 · ' + provDisplay + ' · 先专业, 后志愿') : '看清专业, 再谈志愿') + '</span>' +
     '    </a>' +
     '    <div class="topbar-right">' +
-    '      <label class="topbar-prov-picker" for="topbar-prov-select" aria-label="切换省份">' +
-    '        <span class="topbar-prov-label">省份</span>' +
-    '        <select id="topbar-prov-select" class="topbar-prov-select">' +
-    PROVINCES.map(function (p) {
-      return '<option value="' + p.key + '"' + (p.key === currentProv ? ' selected' : '') + '>' + p.display + '</option>';
-    }).join('') +
-    '        </select>' +
-    '      </label>' +
+      provBlockHtml +
     '      <nav class="nav-links" aria-label="主导航">' +
     '        <a href="/" class="' + (active === 'home' ? 'active' : '') + '">首页</a>' +
     '        <a href="/majors.html" class="' + (active === 'majors-list' ? 'active' : '') + '">专业目录</a>' +
