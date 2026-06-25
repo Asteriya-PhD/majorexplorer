@@ -232,6 +232,34 @@
     color: var(--muted);
   }
   .no-result-report .nrr-fallback a { color: var(--accent); text-decoration: underline; }
+
+  /* 同义词推荐 (2026-06-25 新增) */
+  .no-result-report .nrr-synonyms { max-width: 560px; margin: 0 auto 18px; text-align: left; }
+  .no-result-report .nrr-syn-label {
+    font-family: var(--font-num); font-size: 0.75rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 10px; text-align: center;
+  }
+  .no-result-report .nrr-syn-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  @media (max-width: 640px) {
+    .no-result-report .nrr-syn-list { grid-template-columns: 1fr; }
+  }
+  .no-result-report .nrr-syn {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 12px 14px; background: #fff;
+    border: 1px solid var(--line); border-radius: 6px;
+    text-decoration: none; color: var(--fg);
+    transition: all 180ms;
+    border-left: 3px solid var(--theme, var(--accent));
+  }
+  .no-result-report .nrr-syn:hover {
+    border-color: var(--theme, var(--accent));
+    background: #FCFAF3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  .no-result-report .nrr-syn-title { font-family: var(--font-heading); font-size: 0.9375rem; font-weight: 600; color: var(--fg); }
+  .no-result-report .nrr-syn-cat { font-family: var(--font-body); font-size: 0.75rem; color: var(--muted); }
 </style>
 
   <!-- BEGIN_PLAUSIBLE -->
@@ -305,7 +333,7 @@
 </div>
 
 <!-- 复用 PC topbar (left brand + right nav + 心愿单 chip) + 反馈按钮 -->
-<script src="/js/topbar.js?v=20260625a"></script>
+<script src="/js/topbar.js?v=20260625b"></script>
 
 <!-- 复用 PC 算法层 (顺序敏感: data-loader → recommender → major-search → wishlist-store) -->
 <script src="/js/data-loader.js"></script>
