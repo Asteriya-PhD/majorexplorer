@@ -293,17 +293,20 @@ done
 
 部署某次 commit 后, 作者自己看是新版, 用户的浏览器还显示老版. 强刷 (`Cmd+Shift+R`) 才看到. **这不是用户问题, 是部署漏了 cache 失效步骤.**
 
-### 根因: 3 层 cache 同时锁死
+### 根因: 4 层 cache 同时锁死
 
 | 层 | 谁管 | 怎么失效 |
 |---|---|---|
-| 1. **CF 边缘 cache** | Cloudflare | cache-bust `?v=<新 hash>` 让 URL 不同 |
-| 2. **浏览器 disk cache** | 浏览器 | `Cmd+Shift+R` / Disable cache / 隐身窗口 |
-| 3. **Service Worker cache** | `public/sw.js` `CACHE_NAME` | **唯一强制升级的钩子**: 改 `CACHE_NAME` |
+| 1. **CF 边缘 HTML cache** | Cloudflare | cache-bust `?v=<新 hash>` 让 URL 不同 |
+| 2. **CF 边缘 JS 静态资源 cache** | Cloudflare | cache-bust `?v=<git SHA>` 永久唯一,不用语义版本 |
+| 3. **浏览器 disk cache** | 浏览器 | `Cmd+Shift+R` / Disable cache / 隐身窗口 |
+| 4. **Service Worker cache (含 sw.js 自身)** | `public/sw.js` `CACHE_NAME` | **两件事一起**: CACHE_NAME 升版 + `_headers` `/sw.js` 设 `no-store` |
 
-**关键事实**: `?v=` query 只解决"新 URL → 新 file", 解决不了"SW 不会重新 fetch 旧 URL". 如果 `sw.js` 的 `CACHE_NAME` 不变, SW 不会升级, `staleWhileRevalidate` 把 `?v=75c850e2` 老 JS 永远锁在 disk cache.
+**第 4 层子陷阱 (最隐蔽)**: `/sw.js` 路径被 `_headers` 兜底 `/*` 规则设了 `Cache-Control: public, max-age=14400, must-revalidate`. 浏览器 4 小时内不会感知 sw.js 文件变化,即使 sw.js 改了 CACHE_NAME 浏览器也不知道 → 老 SW 一直运行 → staleWhileRevalidate 锁死老 JS.
 
-### 解决: 永远跑 `scripts/deploy.sh`
+**为什么隐身窗口能看**: Safari/Chrome 隐私模式**禁用整个 Service Worker API**,所有 fetch 走网络. 这反而成了**诊断工具** — 隐身能看到 ≠ 真修复.
+
+### 解决: 永远跑 `scripts/deploy.sh` + `_headers` 必备
 
 ```bash
 # ✅ 正确: 一行部署, 自动 bump cache-bust + sw.js CACHE_NAME
@@ -361,18 +364,31 @@ curl -sL https://majorexplorer.com/index.html | grep "pc-search.js"
 # 看到 SW 还是老 CACHE_NAME → 让用户点 "Unregister" + 刷新
 ```
 
-### Day 32 真实案例 (2026-06-25)
+### Day 32 真实案例 (2026-06-25, 4 commit 递进)
 
-| Commit | 改了什么 | 漏了什么 | 后果 |
+| Commit | 改了什么 | 修哪层 | 后果 |
 |---|---|---|---|
-| `804c9568` | v4 同义词卡片 (8px 色块 + emoji 圆徽) | sw.js CACHE_NAME 没动 | Chrome 用户看不到 v4, Orca 干净环境看到 |
-| `0cae3039` | sw.js CACHE_NAME → `v2-day32v4` | — | ✅ 所有用户下次 navigation 自动看到 v4 |
+| `804c9568` | v4 同义词卡片 (8px 色块 + emoji 圆徽) | 内容本身 | 仅 Orca 干净环境看到 |
+| `0cae3039` | `sw.js` CACHE_NAME → `v2-day32v4` + `deploy.sh` Step 4.5 | 第 4 层 (SW 自身) | 部分用户看到 |
+| `ce7dec61` | `?v=day32v4` → `?v=<git SHA>` (永久唯一) | 第 2 层 (CF 边缘 JS) | 更多用户看到 |
+| `da74453d` | `_headers` `/sw.js` `/m/sw.js` 设 `no-store` | 第 4 层子陷阱 (4h 兜底) | ✅ Chrome/Firefox 4h 内也能感知 SW 变化 |
 
-**关键 takeaway**: cache-bust query 是必要不充分条件, **必须配 sw.js CACHE_NAME 升版**. 两者缺一不可.
+**关键 takeaway**: 4 层 cache 必须**同时**失效,缺任一层用户都看不到.
+
+### `_headers` 必备 2 个 no-store 路由
+
+```text
+/sw.js
+  Cache-Control: no-store
+/m/sw.js
+  Cache-Control: no-store
+```
+
+如果 `_headers` 漏了这两条,所有 v1-v4 的 SW 升级都白搭 — 浏览器 4h 内不感知 sw.js 文件变化.
 
 ### 关联
 
-- `~/.claude/projects/.../memory/day32-cache-trap-sw-cachename.md` — 完整 memory
-- `scripts/deploy.sh` — 一键部署脚本 (Day 32 增强)
-- `public/sw.js` / `public/m/sw.js` — CACHE_NAME 升版是关键
-- 关联 commit: `804c9568` (v4 内容) + `0cae3039` (sw 升版)
+- `~/.claude/projects/.../memory/day32-cache-trap-4layers.md` — 完整 4 层 memory
+- `scripts/deploy.sh` — 一键部署脚本 (Step 4/4.5/5 自动 bump + 验证)
+- `public/_headers` — 必备 2 个 no-store 路由
+- 关联 commit: `804c9568` (内容) + `0cae3039` (SW 升版) + `ce7dec61` (SHA cache-bust) + `da74453d` (_headers no-store)
