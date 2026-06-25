@@ -532,8 +532,8 @@
       const m = (_manifest.majors || []).find(x => x && x.slug === slug);
       if (!m) continue;
       seen.add(slug);
-      // Day 32 v2: 找该 style 的 primary 色做 theme
-      const theme = (m.theme_color && m.theme_color.primary) || _styleColor(m.style);
+      // Day 32 v2: 找该 style 的 primary 色做 theme (fallback var(--accent))
+      const theme = (m.theme_color && m.theme_color.primary) || 'var(--accent)';
       out.push({ title: m.title, slug: m.slug, style: m.style, category: m.category || "", theme: theme });
     }
     return out;
