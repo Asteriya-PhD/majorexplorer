@@ -389,45 +389,40 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
 <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;">
   <thead>
     <tr style="border-bottom:2px solid var(--accent);">
-      <th style="text-align:left;padding:8px;font-family:var(--serif-cn);width:60px;">Step</th>
-      <th style="text-align:left;padding:8px;font-family:var(--serif-cn);">动作</th>
-      <th style="text-align:left;padding:8px;font-family:var(--serif-cn);">目的</th>
+      <th style="text-align:left;padding:8px;font-family:var(--serif-cn);width:50px;">步骤</th>
+      <th style="text-align:left;padding:8px;font-family:var(--serif-cn);">做什么</th>
+      <th style="text-align:left;padding:8px;font-family:var(--serif-cn);">为什么</th>
     </tr>
   </thead>
   <tbody style="color:var(--fg-muted);">
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">0</td><td>Auto-Repair Rank 字段</td><td>长期治理数据漂移</td></tr>
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">1</td><td>Audit Driven</td><td>必读历史 m3 audit issues</td></tr>
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">2</td><td>Anti-Pollution 4 Rules</td><td>前置必避的 4 大污染</td></tr>
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">3</td><td>Hand-Write JSON</td><td>按专业逐字段手填</td></tr>
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">4</td><td>Render + Deploy</td><td>单篇渲染 + 部署</td></tr>
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">5</td><td>Audit Verify</td><td><strong>≥7 才继续</strong>, 否则进 Step 6</td></tr>
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">6</td><td>Tier Retry (1/2/3)</td><td>Tier 1 5-10min 补字段 → Tier 2 15-20min 重写 → Tier 3 标记 irreducible 跳过</td></tr>
-    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">7</td><td>Single Commit Per Major</td><td>单专业单 commit, 可回滚</td></tr>
-    <tr><td style="padding:6px;color:var(--accent);font-family:var(--mono);">8/9</td><td>Schema Cleanup + Full Batch Audit</td><td>合并后批量: 拆 entrepreneur + 统一 salary, 全量重审</td></tr>
+    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">0</td><td><strong>自动修复</strong>专业代码字段</td><td>长期治理数据漂移 (Day 17 加入)</td></tr>
+    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">1</td><td><strong>读历史</strong>: 必读历史审计问题清单</td><td>避免重复踩坑</td></tr>
+    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">2</td><td><strong>反污染</strong>: 前置必避的 4 大套路</td><td>模板套话 / 串台 / 占位 / 课名错位</td></tr>
+    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">3</td><td><strong>手写数据</strong>: 按专业逐字段填 JSON</td><td>每篇独立内容, 不批量生成</td></tr>
+    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">4</td><td><strong>渲染并部署</strong>: 跑脚本 + git push</td><td>每篇单独部署, 立即可见</td></tr>
+    <tr style="border-bottom:1px solid var(--line);background:#FEF6EC;"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">5</td><td colspan="2" style="padding:6px;">
+      <strong>质量验证</strong>: LLM 审计打分 <strong>≥7 分才继续</strong>, 否则进入步骤 6 重做。
+      <br><br>
+      <span style="font-size:13px;color:var(--accent-ink);">💡 <strong>这一步用了「智能路由」机制</strong> — 不是每篇都跑 LLM(太贵太慢),而是先用 1 秒启发式检查, 只对需要深审的篇才调 LLM:</span>
+      <br>
+      <span style="font-size:13px;">
+        <strong>第一关 (1秒/篇, 免费)</strong>: 启发式脚本检查字段完整性 + 反污染规则
+        <br>
+        <strong>第二关 (2分钟/篇, ¥0.5)</strong>: 大模型深度审计 — <em>只对触发以下任一条件的篇跑</em>:
+        <br>① 第一关报错 &nbsp; ② 第一关警告 &nbsp; ③ 没审计历史 &nbsp; ④ 上次分 < 7 &nbsp; ⑤ 最近改过
+      </span>
+      <br><br>
+      <span style="font-size:13px;color:var(--ok);">混合模式: 第一关 100% + 第二关 ~30% = 全 600 篇 2-3 小时, ¥40, 覆盖率 95%+。朴素全审要 9.3 小时, ¥140。</span>
+    </td></tr>
+    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">6</td><td><strong>分级重做</strong> (1/2/3 档)</td><td>档 1 5-10 分钟补字段 → 档 2 15-20 分钟整篇重写 → 档 3 标记为"难做"跳过</td></tr>
+    <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">7</td><td><strong>一篇一提交</strong>: 单专业单独 commit</td><td>出问题可单独回滚, 不污染其他篇</td></tr>
+    <tr><td style="padding:6px;color:var(--accent);font-family:var(--mono);">8/9</td><td><strong>收尾清理</strong>: 字段统一 + 全量复查</td><td>合并后批量: 拆分"其他"占位 + 统一薪资字段 + 全量再审一遍</td></tr>
   </tbody>
 </table>
 
-<h3>Smart Audit Router(Step 5 的执行器)</h3>
-<p>Step 5 不是朴素全审,而是 <strong>Layer 1 启发式 + 智能路由 Layer 2 LLM</strong> 的两层架构:</p>
-
-<pre><code>Layer 1: check_major.py 启发式 (1s/篇, 0¥)
-   ↓
-智能路由决策: 哪些篇需要 Layer 2?
-   触发条件 (满足任一):
-     1. L1-error  (污染/缺失)
-     2. L1-warning
-     3. 无历史 audit
-     4. 历史 score &lt; 7
-     5. 改过
-   ↓
-Layer 2: m3 LLM audit (2min/篇, ¥0.5, thinking=ON)
-
-混合模式: L1 100% + L2 ~30% = 2-3h / ¥40, 覆盖率 95%+
-朴素全审: 9.3h / ¥140, 100%</code></pre>
-
 <div class="callout note">
-  <span class="label">核心洞察</span>
-  9 步流水线 + Smart Router 才是 loop engineering 的核心。渲染引擎只是 Step 4 的执行器 — <strong>没有 Step 0-3 的输入治理和 Step 5-9 的反馈闭环,内容质量会停在 5-6 分</strong>。
+  <span class="label">为什么这套流程能跑通</span>
+  9 步流水线 + 步骤 5 的智能路由才是 loop engineering 的核心。渲染引擎只是步骤 4 的执行器 — <em>没有步骤 0-3 的输入治理和步骤 5-9 的反馈闭环, 内容质量会停在 5-6 分</em>。
 </div>
 
 <!-- ═══════════════ 9. 5 条经验 ═══════════════ -->
