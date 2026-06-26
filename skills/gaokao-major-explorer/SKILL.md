@@ -1,6 +1,6 @@
 ---
 name: gaokao-major-explorer
-description: Generates major-explorer dashboards for high-school students choosing a college major. Two modes — (1) curated: 50 hand-crafted dashboards for popular majors (CS, finance, medicine, law, education...) used as SEO magnets on homepage; (2) long-tail: real-time web search → template render for the other ~700 majors. Use when user says "XX 专业怎么样", "学 XX 有前途吗", "CS/金融/医学/法学/师范 专业介绍", "专业就业", "专业薪资", "专业课程", "帮我做个XX专业的分析", "写个XX专业的介绍页面".
+description: Generates major-explorer dashboards for high-school students choosing a college major. Curated mode — 600+ hand-crafted dashboards rendered from JSON in `data/curated/`, covering 12 disciplines across 8 visual themes (CS/finance/medicine/law/education/engineering/science/humanities/business/agriculture/arts/public-security). Each dashboard shows curriculum, top schools, salary tiers, employment direction, alumni quotes, xuanke requirements. Use when user says "XX 专业怎么样", "学 XX 有前途吗", "CS/金融/医学/法学/师范 专业介绍", "专业就业", "专业薪资", "专业课程", "帮我做个XX专业的分析", "写个XX专业的介绍页面".
 ---
 
 # gaokao-major-explorer
@@ -16,14 +16,15 @@ description: Generates major-explorer dashboards for high-school students choosi
 - "CS/计算机/金融/医学/法学/师范 专业介绍"
 - "高考选专业 / 什么专业好"
 
-## 两种模式
+## 当前模式
 
-| 模式 | 数据源 | 耗时 | 触发条件 |
-|---|---|---|---|
-| **精品** | 人工精编 JSON (`data/curated/{slug}.json`) | < 1s | 已有 JSON 的 5 个专业直接渲染 |
-| **长尾** | 5-query web search → 填 JSON → 渲染 | 5-15s | 其他 ~700 专业, 从搜索实录填 schema 再渲染 |
+**精品模式** — 人工精编 JSON (`data/curated/{slug}.json`) → 渲染 HTML
 
-**视觉一致**: 1 套 JSON schema, 5 套设计风格 (CS 黑客/金融黑金/医学临床/法学卷宗/师范暖橙), 精品和长尾看不出区别。
+- **数据规模**: 1268 个 JSON (含 600+ 完整精品字段 + 600+ 基线), 8 套视觉风格, **0 自动生成**
+- **新专业接入**: 手工填 JSON 后跑 `generate_dashboard.py` (10 min/篇)
+- **视觉一致**: 1 套 JSON schema + 12 主题 (CS 黑客/金融黑金/医学临床/法学卷宗/师范暖橙/工程蓝图/理学光谱/人文卷轴/工商烫金/农林土壤/艺术画室/公安档案)
+
+> **历史备注**: SKILL.md 早期曾描述「长尾模式 = 5-query web search 自动生成」, 但实际从未实现 — 上线 600+ 专业均为本地手编。当前仅精品模式。
 
 ---
 
@@ -77,7 +78,7 @@ python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py \
 
 ## JSON Schema 完整参考
 
-> 精品/长尾填同一份 schema。**标 `*` 的为必填字段**, 其余可选或用默认值。
+> 精品模式填同一份 schema。**标 `*` 的为必填字段**, 其余可选或用默认值。
 
 ### 顶层字段
 
@@ -313,24 +314,8 @@ python3 scripts/audit/update_audit_registry.py --stats   # 查 8+/7-8/6-7/<6 分
 
 **目标**: 平均 8.0+, 100% ≥7, 80%+ ≥8, 0 strong 字段 ≤5% (详见 `../../docs/PIPELINE_major_quality.md`)
 
-## 长尾模式工作流
+### 精品模式字段来源参考 (人工填 JSON 时查)
 
-搜索新专业:
-
-```
-1. 确定 style (查映射表)
-2. 5 query 并行 web search:
-   a. "{major} 主要课程 培养方案"
-   b. "{major} 就业方向 头部公司 薪资"
-   c. "{major} 学科评估 哪些学校开设"
-   d. "{major} 选科要求 高考 招生"
-   e. "{major} 学长学姐 知乎 体验"
-3. 从搜索结果提取数据 → 填入 JSON
-4. 跑 generate_dashboard.py
-5. 另存 JSON 到 data/curated/{slug}.json (可选, 用于缓存)
-```
-
-### 数据提取优先级
 | 字段 | 一级源 | 二级源 | 三级源 |
 |---|---|---|---|
 | 课程 | 高校官网培养方案 | 知乎/学长 | 学职平台 |
@@ -380,7 +365,7 @@ python3 scripts/audit/update_audit_registry.py --stats   # 查 8+/7-8/6-7/<6 分
 
 ```
 scripts/
-├── generate_dashboard.py    # 核心引擎 + entry (精品/长尾共用)
+├── generate_dashboard.py    # 核心引擎 + entry (精品模式入口)
 ├── v4_styles/               # 12 文件包: render.py + themes/ + base.py
 ├── v4_medicine.py           # 医学独立: Mayo Clinic 级
 public/data/manifest.json    # 已收录专业索引 (1268 专业)
@@ -420,13 +405,14 @@ generate_dashboard.py
 
 ---
 
-## 示例: 一句话触发
+## 示例: 手工接入新专业
 
 > 用户: "帮我做个心理学专业的分析页面"
 
 AI 执行:
 1. 确定 style = `education` (心理学偏教育/社科)
-2. 5 query web search 心理学课程/就业/院校/选科/校友
-3. 从搜索结果提取 → 填入 JSON
-4. `python3 scripts/generate_dashboard.py --data /tmp/psychology.json --style education --output /tmp/psychology.html`
-5. 返回 HTML 路径 + 关键数据摘要
+2. 按上方「精品模式字段来源参考」表, 人工查高校官网/麦可思/阳光高考 等来源
+3. 填 JSON 模板 (见「JSON Schema 完整参考」章节)
+4. `python3 scripts/generate_dashboard.py --data skills/gaokao-major-explorer/data/curated/psychology.json --style education --output skills/gaokao-major-explorer/data/curated/psychology.html`
+5. 跑审计: `python3 scripts/batches/content_audit.py --slugs psychology:education` → 目标 ≥7 分
+6. 返回 HTML 路径 + 关键数据摘要
