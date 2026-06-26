@@ -1,0 +1,154 @@
+# gaokao-major-explorer 技术架构 · 30 天演化
+
+> Technical Architecture · 一个高考专业介绍页生成器的 loop engineering 沉淀
+> 2026-06-26 · Python 单进程 + 12 主题 · 1268 JSON · 600 完整精品 · v4.0
+
+> 配套 HTML 长图版:
+> - 桌面优先: [`docs/retrospectives/2026-06-26_skill-architecture.html`](2026-06-26_skill-architecture.html)
+> - 公众号推送: [`docs/retrospectives/2026-06-26_skill-architecture_wechat.html`](2026-06-26_skill-architecture_wechat.html)
+
+---
+
+## 00. 一句话定位
+
+**输入**: 一份手编 JSON(18 字段, 70KB, 描述一个高考专业)
+**输出**: 一份 60-100KB 的单文件 HTML 长图文, 内嵌 CSS + JS, 双击可开
+**中间**: Python 单进程, 从 12 套主题里选一套, 把 JSON 字段装配成设计版面
+
+| 指标 | 值 | 备注 |
+|---|---|---|
+| 数据规模 | 1268 | JSON 文件数 |
+| 完整精品 | 600+ | 篇 (其余为基线) |
+| 视觉主题 | 12 | 套 |
+| 平均渲染 | <1 | 秒/篇 |
+| 质量分 | 8.0+ | avg (m3 LLM 审计) |
+| 代码量 | ~300 | KB |
+
+---
+
+## 01. 全景:从输入到输出
+
+整个系统只有 **3 层**: 数据、引擎、产出。质量层和部署层围绕这三层运转。
+
+![架构全景图](assets/skill-arch-2026-06-26/ascii_1.png)
+
+> **核心命题**: 渲染引擎本身只占代码量 30%, 剩下 70% 是**质量审计链**。这才是 loop engineering 的真正价值 — 不是把 AI 生成一次到位, 而是建一套反馈闭环让内容持续逼近目标分。
+
+---
+
+## 02. 模块依赖图
+
+入口 `generate_dashboard.py` 只做一件事: **按 style 字段路由**。
+
+![模块依赖图](assets/skill-arch-2026-06-26/ascii_2.png)
+
+**v4_styles 包内部**关键设计 — 一切都是 Python 包, 主题是子目录:
+
+![主题目录](assets/skill-arch-2026-06-26/ascii_3.png)
+
+> **关键洞察**: 加一个新主题只需要 1 个 `.py` 文件(几十行 CSS + 1 个 HERO_FN), **完全不用改**任何渲染函数。这就是下面要讲的"主题差异化最小化"原则。
+
+---
+
+## 03. 4 层架构:数据 → 代码 → 质量 → 部署
+
+把视野拉到全局, 有 4 层相互配合:
+
+![4 层架构图](assets/skill-arch-2026-06-26/ascii_4.png)
+
+---
+
+## 04. 3 个核心设计模式
+
+### ① 主题差异化最小化
+
+12 套主题, 共享所有 30+ 渲染函数, 只换 3 块 CSS + 1 个 HERO 函数。
+
+```
+所有主题共用:  ─────────────────────────────
+                30+ 渲染函数 (render_xxx)
+                JSON schema 解析
+                数据归一化 (salary/xuanke/curriculum)
+
+主题差异化:    ─────────────────────────────
+                3 个 CSS 块 (base + body_bg + theme)
+                1 个 HERO_FN 函数 (每个主题一个)
+```
+
+### ② HTML 后处理管道化
+
+Cross-cutting concerns(战略 chip、学科评估、面包屑)从渲染逻辑里抽出来, 做 HTML 后处理。
+
+```
+JSON → render_v4() 装配 HTML
+            ↓
+      apply_strategy_tags()        ← 国家战略 chip
+            ↓
+      apply_chsi_rating()          ← 学科评估标签
+            ↓
+      apply_discipline_breadcrumb() ← 学科面包屑
+            ↓
+      写出文件
+```
+
+### ③ Schema 容错漏斗
+
+30 天里 JSON schema 演化过 N 次。容错层吸收所有差异, 渲染函数对历史脏数据完全免疫。
+
+```
+JSON 原始输入
+    ↓
+_coerce_named()        ← 字符串/对象兼容
+    ↓
+_normalize_xuanke()     ← 4 种 schema 变体统一
+    ↓
+_sort_salary_stages()   ← 主+次键排序
+    ↓
+_dedup_by_name()        ← schools 去重
+    ↓
+渲染函数  ← 此时 schema 已稳定
+```
+
+> **工程教训**: 没有这层容错, 30 天里每次 schema 调整都要改几十个渲染函数。漏斗模型让渲染函数**对历史脏数据免疫**, 这是 loop engineering 中"演进友好"的关键。
+
+---
+
+## 05. 单篇 JSON 的 1 秒旅程
+
+以 `computer-science.json` 为例:
+
+![端到端时序](assets/skill-arch-2026-06-26/ascii_5.png)
+
+单篇 **< 1 秒**, 600 篇全量重渲染 ~5 分钟。
+
+---
+
+## 06. 30 天演化时间线
+
+| 阶段 | 里程碑 | 数据量 |
+|---|---|---:|
+| Day 1 | 49 篇首批 + 5 套主题 | 49 |
+| Day 2-7 | 扩到 365 篇 + normalizer | 365 |
+| Day 8-15 | 智能审计 + Tier 2 重写 | 500+ |
+| Day 16-25 | 100% 审计覆盖, 8+ 比例 58% → 97% | ~600 |
+| Day 26-30 | polish 冲刺, 清零 ≤7 残余 | 600+ |
+| Day 31+ | 多省 recommender + SEO + 移动端 | 1268 |
+
+---
+
+## 07. Loop Engineering 沉淀的 5 条经验
+
+1. **文档要诚实, 代码要小气** — 早期 SKILL.md 吹了"长尾模式", 代码里 0 行实现。删文档比补代码诚实得多。
+2. **schema 容错比严格重要** — 30 天 schema 必演化, 提前建漏斗比反复改 schema 划算 10 倍。
+3. **主题差异化最小化** — 从 4 套扩到 12 套, 渲染代码一行没动。
+4. **Cross-cutting 后处理化** — 战略 chip / 学科评估 / 面包屑都不该污染渲染函数。
+5. **质量闭环 = 单一真理表** — `audit_registry.json` git tracked, 所有 agent 行动前先 pull, 避免重复审计浪费 ¥。
+
+> **一句话总结**: 这个 skill 真正的护城河不是 12 套主题, 是围绕它们建了 30 天的**质量反馈闭环**。引擎是骨架, 流水线是肌肉, registry 是神经。
+
+---
+
+· · · · ·
+
+*gaokao-major-explorer · v4.0 · 2026-06-26*
+*本文是 30 天 loop engineering 实践的技术沉淀, 如有反馈欢迎在 GitHub Issue 交流。*
