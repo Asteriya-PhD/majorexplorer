@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>OG Card · gaokao-major-explorer 技术架构</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #2A2520; font-family: 'Noto Sans SC', 'PingFang SC', sans-serif; }
+  .og {
+    width: 1200px;
+    height: 630px;
+    background: #FBF7F1;
+    position: relative;
+    overflow: hidden;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(180,140,100,0.05) 40px),
+      radial-gradient(ellipse at top right, rgba(210,105,30,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom left, rgba(92,124,58,0.10) 0%, transparent 60%);
+  }
+  /* 顶部装饰条 */
+  .og::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, #D2691E 0%, #8B3A00 100%);
+  }
+  /* 右上角标记 */
+  .brand {
+    position: absolute;
+    top: 50px; right: 70px;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: #8B3A00;
+    text-transform: uppercase;
+  }
+  /* 主标题 */
+  .title {
+    position: absolute;
+    top: 130px;
+    left: 80px;
+    right: 80px;
+    font-family: 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #2B1810;
+    letter-spacing: -0.01em;
+  }
+  .title .accent {
+    color: #8B3A00;
+    position: relative;
+    display: inline-block;
+  }
+  .title .accent::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -4px;
+    height: 4px;
+    background: #D2691E;
+  }
+  /* 副标题 */
+  .subtitle {
+    position: absolute;
+    top: 360px;
+    left: 80px;
+    right: 80px;
+    font-size: 26px;
+    line-height: 1.5;
+    color: #6B5A4A;
+    font-weight: 400;
+  }
+  /* 数据墙 */
+  .stats {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    right: 80px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: #FFFFFF;
+    border: 1px solid #E8DCC8;
+    border-left: 4px solid #D2691E;
+    border-radius: 4px;
+    padding: 18px 0;
+  }
+  .stat {
+    text-align: center;
+    border-right: 1px solid #E8DCC8;
+  }
+  .stat:last-child { border-right: none; }
+  .stat .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: #9C8B7A;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .stat .v {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 38px;
+    color: #8B3A00;
+    font-weight: 700;
+  }
+  .stat .v small {
+    font-size: 14px;
+    color: #6B5A4A;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  /* 底部 URL */
+  .url {
+    position: absolute;
+    bottom: 32px;
+    left: 80px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: #6B5A4A;
+    letter-spacing: 0.05em;
+  }
+  /* 右下角日期 */
+  .date {
+    position: absolute;
+    bottom: 32px;
+    right: 80px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #9C8B7A;
+  }
+</style>
+</head>
+<body>
+<div class="og">
+  <div class="brand">技术架构 · 30 天沉淀</div>
+  <div class="title">高考专业介绍页<span class="accent">生成器</span>的演化</div>
+  <div class="subtitle">16 天, 从 60 篇到 1268 篇, 质量分从 7.0 拉到 9.05</div>
+  <div class="stats">
+    <div class="stat"><div class="k">数据</div><div class="v">1268<small>篇</small></div></div>
+    <div class="stat"><div class="k">视觉主题</div><div class="v">12<small>套</small></div></div>
+    <div class="stat"><div class="k">平均分</div><div class="v">9.05<small>/10</small></div></div>
+    <div class="stat"><div class="k">9 步流水线</div><div class="v">100<small>% 覆盖</small></div></div>
+  </div>
+  <div class="url">gaokao-major-explorer</div>
+  <div class="date">2026-06-26</div>
+</div>
+</body>
+</html>

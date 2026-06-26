@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""
+推送到微信公众号草稿箱。
+读 .env 中 WECHAT_APPID / WECHAT_SECRET, 调 API 上传封面图 + 创建草稿。
+
+按 wechat-article-layout skill 5 步:
+  1. 拿 access_token
+  2. 上传封面图 (拿到 thumb_media_id)
+  3. 组装 content (用 docs/retrospectives/2026-06-26_wechat-parents-push.html)
+  4. POST /cgi-bin/draft/add
+  5. 验证
+
+注意事项 (按 skill "血泪踩坑实录"):
+  - 中文必须 ensure_ascii=False
+  - body 手动构造 + Content-Type: application/json; charset=utf-8
+  - 不要 requests.post(json=payload) 默认会 ensure_ascii=True
+  - access_token 2 小时有效, 每次操作前重新拿
+"""
+import os
+import sys
+import json
+import requests
+from pathlib import Path
+from dotenv import load_dotenv  # pip install python-dotenv (项目 .env 已存在)
+
+ROOT = Path(__file__).parent.parent.parent
+ENV = ROOT / ".env"
+load_dotenv(ENV)
+
+APPID = os.environ.get("WECHAT_APPID")
+SECRET = os.environ.get("WECHAT_SECRET")
+
+if not APPID or not SECRET:
+    print("ERR: WECHAT_APPID 或 WECHAT_SECRET 未设置", file=sys.stderr)
+    print(f"  请在 {ENV} 加:", file=sys.stderr)
+    print("    WECHAT_APPID=xxx", file=sys.stderr)
+    print("    WECHAT_SECRET=xxx", file=sys.stderr)
+    sys.exit(1)
+
+# 配置
+TITLE = '600 个专业的 3 段真话'
+AUTHOR = '一位开发者'
+DIGEST = '600 个高考专业, 我只推荐家长认真看 3 段。这 3 段, 比任何 AI 推的 36 个学校都准。'
+CONTENT_FILE = ROOT / "docs/retrospectives/2026-06-26_wechat-parents-push.html"
+COVER_FILE = ROOT / "docs/retrospectives/assets/wechat-cover-final.png"
+# 备用封面 (项目原图)
+COVER_BACKUP = ROOT / "public/marketing/1-hero.png"
+
+API_BASE = "https://api.weixin.qq.com/cgi-bin"
+
+
+def get_token() -> str:
+    """1. 拿 access_token (2h 有效, 每次重新拿)"""
+    url = f"{API_BASE}/token"
+    params = {
+        "grant_type": "client_credential",
+        "appid": APPID,
+        "secret": SECRET,
+    }
+    r = requests.get(url, params=params, timeout=15)
+    r.raise_for_status()
+    data = r.json()
+    if "access_token" not in data:
+        print(f"ERR 拿 token 失败: {data}", file=sys.stderr)
+        sys.exit(1)
+    return data["access_token"]
+
+
+def upload_cover(token: str) -> str:
+    """2. 上传封面图, 拿到 thumb_media_id"""
+    cover = COVER_FILE if COVER_FILE.exists() else COVER_BACKUP
+    if not cover.exists():
+        print(f"ERR: 封面图 {cover} 不存在", file=sys.stderr)
+        sys.exit(1)
+
+    url = f"{API_BASE}/material/add_material?access_token={token}&type=image"
+    with open(cover, "rb") as f:
+        r = requests.post(
+            url,
+            files={"media": (cover.name, f, "image/jpeg")},
+            timeout=30,
+        )
+    r.raise_for_status()
+    data = r.json()
+    if "media_id" not in data:
+        print(f"ERR 上传封面失败: {data}", file=sys.stderr)
+        sys.exit(1)
+    return data["media_id"]
+
+
+def build_article_html() -> str:
+    """3. 读 push 版 HTML, 加封面图在最前"""
+    if not CONTENT_FILE.exists():
+        print(f"ERR: 内容文件 {CONTENT_FILE} 不存在", file=sys.stderr)
+        sys.exit(1)
+    body = CONTENT_FILE.read_text()
+    # 已经在 inline_styles.py 处理过, 不再需要 wrap class
+    # 微信 content 最外层不需要 html/body
+    return body
+
+
+def create_draft(token: str, thumb_media_id: str, content_html: str) -> str:
+    """4. 创建草稿"""
+    url = f"{API_BASE}/draft/add?access_token={token}"
+
+    payload = {
+        "articles": [
+            {
+                "title": TITLE,
+                "author": AUTHOR,
+                "digest": DIGEST,
+                "content": content_html,
+                "content_source_url": "",
+                "thumb_media_id": thumb_media_id,
+                "need_open_comment": 0,
+                "only_fans_can_comment": 0,
+            }
+        ]
+    }
+
+    # 关键: ensure_ascii=False + 手动 body + 显式 charset=utf-8
+    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+
+    r = requests.post(url, data=body, headers=headers, timeout=30)
+    r.raise_for_status()
+    data = r.json()
+    if "media_id" not in data:
+        print(f"ERR 创建草稿失败: {data}", file=sys.stderr)
+        sys.exit(1)
+    return data["media_id"]
+
+
+def verify_draft(token: str, media_id: str) -> bool:
+    """5. 验证草稿 (从 API 读回, 检查中文不乱码 + 关键内容存在)"""
+    url = f"{API_BASE}/draft/get?access_token={token}"
+    r = requests.post(url, json={"media_id": media_id}, timeout=15)
+    r.raise_for_status()
+    data = r.json()
+    if "news_item" not in data:
+        print(f"ERR 验证失败: {data}", file=sys.stderr)
+        return False
+
+    # 关键: 读回的 content 是 Latin-1 编码, 要先 encode('latin1').decode('utf-8')
+    raw_content = data["news_item"][0]["content"]
+    try:
+        decoded = raw_content.encode("latin1").decode("utf-8")
+    except UnicodeDecodeError:
+        print("ERR: 读回的 content 不是 latin1 编码", file=sys.stderr)
+        return False
+
+    # 关键文本断言 (防止乱码)
+    key_phrases = [
+        "帮 600 个高考专业",
+        "志愿填报",
+        "9 道关",
+        "案例 1",
+        "电影制作",
+    ]
+    for phrase in key_phrases:
+        if phrase not in decoded:
+            print(f"ERR 验证: 关键文本 '{phrase}' 不在内容中 (可能乱码)", file=sys.stderr)
+            return False
+
+    print("  验证通过: 关键文本 5/5 都在, 中文无乱码")
+    print(f"  内容长度: {len(decoded)} chars")
+    return True
+
+
+def main():
+    print("=== 推送公众号草稿 ===")
+    print(f"APPID: {APPID[:8]}...")
+    print(f"标题: {TITLE}")
+    print(f"封面: {COVER_FILE if COVER_FILE.exists() else COVER_BACKUP}")
+    print(f"内容: {CONTENT_FILE} ({CONTENT_FILE.stat().st_size if CONTENT_FILE.exists() else 0} bytes)")
+    print()
+
+    print("Step 1: 拿 access_token ...")
+    token = get_token()
+    print(f"  OK, token 前 8 位: {token[:8]}...")
+    print()
+
+    print("Step 2: 上传封面图 ...")
+    thumb_id = upload_cover(token)
+    print(f"  OK, thumb_media_id: {thumb_id}")
+    print()
+
+    print("Step 3: 读内容 HTML ...")
+    content_html = build_article_html()
+    print(f"  OK, {len(content_html)} chars")
+    print()
+
+    print("Step 4: 创建草稿 ...")
+    media_id = create_draft(token, thumb_id, content_html)
+    print(f"  OK, media_id: {media_id}")
+    print()
+
+    print("Step 5: 验证草稿 (检查中文无乱码 + 关键内容) ...")
+    if verify_draft(token, media_id):
+        print()
+        print("=" * 50)
+        print(f"✅ 草稿已创建: {media_id}")
+        print("=" * 50)
+        print()
+        print("下一步:")
+        print("  1. 登录微信公众平台 → 草稿箱")
+        print("  2. 找到这篇, 检查预览")
+        print(f"  3. 注意: API 标题限 32 字节 (10 汉字), 实际标题 {len(TITLE.encode('utf-8'))} 字节")
+        if len(TITLE.encode("utf-8")) > 32:
+            print(f"     超 32 字节, 在微信编辑器里手动改成短标题")
+        return 0
+    else:
+        print("❌ 验证失败, 草稿已创建但内容可能有乱码, 建议删除重试")
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
