@@ -249,6 +249,9 @@
       const titleL = (m.title || "").toLowerCase();
       const catL = (m.category || "").toLowerCase();
       const tagsL = (m.tags || []).map((t) => (t || "").toLowerCase());
+      // search_aliases (manifest 内置别名, 兜底 SYNONYMS 词典未覆盖的细分方向/缩写)
+      // 命中权重 5 (略低于 tag=4 + 同义词=6, 但高于纯 category=3, 让别名能跻身前列)
+      const aliasesL = (m.search_aliases || []).map((a) => (a || "").toLowerCase()).filter(Boolean);
 
       // title 完全相等 = 100
       if (titleL === lower) s += 100;
@@ -259,6 +262,10 @@
       if (catL.includes(lower)) s += 3;
       // tag 子串 = 4
       tagsL.forEach((t) => { if (t && (t.includes(lower) || lower.includes(t))) s += 4; });
+
+      // search_aliases 子串命中 = 5 (任何 alias 与 query 双向包含即加分)
+      // 例: alias="机电" + q="机械电子" → 双向不命中; alias="机械电子" + q="机械电子" → 命中
+      if (aliasesL.some((a) => a && (a.includes(lower) || lower.includes(a)))) s += 5;
 
       // 同义词命中 = 6
       if (synSet.has(m.slug)) s += 6;
