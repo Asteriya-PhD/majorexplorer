@@ -3,16 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>gaokao-major-explorer 技术架构 · 30 天演化</title>
-<meta name="theme-color" content="#FBF7F1">
+<title>一句 prompt 出本科专业精品介绍 · 我怎么搭这个高考 skill 的</title>
 <style>
-  /* 师范暖橙 · 公众号移动端优先版 (≤640px 主战场) */
+  /* 师范暖橙 · 公众号手机版 v2 — 重写 */
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
   body {
     background: #FBF7F1;
     color: #2B1810;
-    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
     font-size: 17px;
     line-height: 1.85;
     -webkit-font-smoothing: antialiased;
@@ -20,76 +19,99 @@
   }
   .wrap { max-width: 640px; margin: 0 auto; padding: 24px 18px 60px; }
 
-  /* ── Hero ── */
+  /* Hero — 钩子开局 */
   .hero {
     background: #FFFFFF;
     border: 1px solid #E8DCC8;
     border-top: 4px solid #D2691E;
-    padding: 22px 20px;
+    padding: 24px 20px 20px;
     margin-bottom: 28px;
-    border-radius: 4px;
+    border-radius: 6px;
   }
   .eyebrow {
-    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-family: "JetBrains Mono", "SF Mono", monospace;
     font-size: 11px;
     letter-spacing: 0.18em;
     color: #D2691E;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .hero h1 {
-    font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
-    font-size: 26px;
-    line-height: 1.3;
-    margin: 0 0 10px;
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    font-size: 24px;
+    line-height: 1.35;
+    margin: 0 0 12px;
     color: #8B3A00;
     font-weight: 700;
   }
   .hero .subtitle {
     font-size: 15px;
     color: #6B5A4A;
-    margin: 0 0 14px;
+    margin: 0 0 16px;
+    line-height: 1.65;
+  }
+  .hero .demo {
+    background: #FEF6EC;
+    border-left: 3px solid #D2691E;
+    padding: 12px 14px;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
+    color: #6B5A4A;
+    font-family: "JetBrains Mono", "SF Mono", monospace;
     line-height: 1.6;
   }
+  .hero .demo strong { color: #8B3A00; }
   .hero .meta {
     font-family: "JetBrains Mono", monospace;
     font-size: 11px;
     color: #9C8B7A;
     border-top: 1px dashed #E8DCC8;
     padding-top: 10px;
-    margin-top: 12px;
+    margin-top: 16px;
   }
-  .hero .meta span { margin-right: 12px; }
 
-  /* ── 章节 ── */
+  /* Lead */
+  .lead {
+    font-size: 16px;
+    color: #6B5A4A;
+    border-left: 3px solid #D2691E;
+    padding: 6px 0 6px 14px;
+    margin: 24px 0 28px;
+    background: #FFFFFF;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* H2 — 章节 */
   h2 {
     font-family: "Songti SC", "STSong", "SimSun", serif;
-    font-size: 21px;
+    font-size: 22px;
     line-height: 1.35;
     margin: 40px 0 16px;
-    padding: 14px 0 8px;
+    padding: 16px 0 8px;
     border-top: 1px solid #E8DCC8;
     color: #8B3A00;
     font-weight: 700;
   }
   h2::before {
-    content: "❘";
-    color: #D2691E;
-    margin-right: 8px;
-    font-weight: 400;
+    content: attr(data-icon);
+    display: inline-block;
+    margin-right: 10px;
+    font-family: -apple-system, sans-serif;
   }
   h2 .num {
     font-family: "JetBrains Mono", monospace;
     color: #D2691E;
     font-size: 13px;
     margin-right: 6px;
+    font-weight: 400;
   }
   h3 {
     font-family: "Songti SC", serif;
     font-size: 18px;
-    line-height: 1.4;
-    margin: 28px 0 10px;
+    line-height: 1.45;
+    margin: 26px 0 10px;
     color: #2B1810;
+    font-weight: 600;
   }
 
   p { margin: 12px 0; }
@@ -102,20 +124,9 @@
     border-radius: 2px;
   }
 
-  /* ── Lead 引言 ── */
-  .lead {
-    font-size: 16px;
-    color: #6B5A4A;
-    border-left: 3px solid #D2691E;
-    padding: 4px 0 4px 14px;
-    margin: 20px 0 28px;
-    background: #FFFFFF;
-    border-radius: 0 4px 4px 0;
-  }
-
-  /* ── 代码 (ASCII 图 + 代码块) ── */
+  /* Code — 短小,不用 ASCII 大图 */
   code {
-    font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    font-family: "JetBrains Mono", "SF Mono", monospace;
     font-size: 14px;
   }
   :not(pre) > code {
@@ -123,25 +134,23 @@
     color: #8B3A00;
     padding: 1px 5px;
     border-radius: 3px;
-    font-size: 0.9em;
     word-break: break-word;
   }
   pre {
     background: #2A2520;
     color: #F0E5D5;
-    padding: 14px 14px;
+    padding: 14px;
     border-radius: 6px;
     overflow-x: auto;
     line-height: 1.55;
-    font-size: 11.5px;        /* 微信手机屏适配 */
-    margin: 14px 0 20px;
+    font-size: 12.5px;
+    margin: 14px 0 18px;
     border-left: 4px solid #D2691E;
     -webkit-overflow-scrolling: touch;
   }
-  pre code { color: inherit; background: none; padding: 0; font-size: inherit; }
-  pre.ascii { white-space: pre; line-height: 1.5; }
+  pre code { color: inherit; background: none; padding: 0; }
 
-  /* ── Callout ── */
+  /* Callout */
   .callout {
     background: #FFFFFF;
     border: 1px solid #E8DCC8;
@@ -151,8 +160,8 @@
     border-radius: 4px;
     font-size: 15px;
   }
-  .callout.note  { border-left-color: #5C7C3A; }
-  .callout.warn  { border-left-color: #B8741A; }
+  .callout.note { border-left-color: #5C7C3A; }
+  .callout.warn { border-left-color: #B8741A; }
   .callout .label {
     font-family: "JetBrains Mono", monospace;
     font-size: 10px;
@@ -165,22 +174,87 @@
   .callout.note .label { color: #5C7C3A; }
   .callout.warn .label { color: #B8741A; }
 
-  /* ── Fact 数字墙 ── */
+  /* 单列流程卡片 — 替代复杂表格 */
+  .steps { margin: 16px 0; padding: 0; list-style: none; }
+  .steps li {
+    background: #FFFFFF;
+    border: 1px solid #E8DCC8;
+    border-left: 3px solid #D2691E;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    font-size: 15px;
+  }
+  .steps li strong { display: block; color: #8B3A00; margin-bottom: 4px; font-size: 15px; }
+  .steps li .meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #9C8B7A;
+    margin-bottom: 6px;
+  }
+  .steps li.score {
+    background: #FEF6EC;
+    border-left-color: #D2691E;
+  }
+  .steps li.score .v { color: #5C7C3A; font-weight: 600; }
+
+  /* 列表 */
+  ul, ol { margin: 12px 0; padding-left: 22px; }
+  li { margin: 6px 0; }
+  li::marker { color: #D2691E; }
+
+  /* 时间线 — 单列竖向卡片 */
+  .timeline { margin: 16px 0; padding: 0; list-style: none; }
+  .timeline li {
+    background: #FFFFFF;
+    border: 1px solid #E8DCC8;
+    border-left: 3px solid #D2691E;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .timeline li.star {
+    background: #FEF6EC;
+    border-left-color: #B8741A;
+    border-left-width: 4px;
+  }
+  .timeline li .date {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: #D2691E;
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 40px;
+  }
+  .timeline li .what {
+    flex: 1;
+    color: #2B1810;
+  }
+  .timeline li .score {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #5C7C3A;
+    flex-shrink: 0;
+  }
+  .timeline li .score.low { color: #B8741A; }
+
+  /* 关键事实墙 — 移动端 2 列 */
   .fact-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1px;
     background: #E8DCC8;
     border: 1px solid #E8DCC8;
-    margin: 20px 0;
+    margin: 18px 0;
     border-radius: 4px;
     overflow: hidden;
   }
-  .fact {
-    background: #FFFFFF;
-    padding: 12px 10px;
-    text-align: center;
-  }
+  .fact { background: #FFFFFF; padding: 12px 10px; text-align: center; }
   .fact .k {
     font-family: "JetBrains Mono", monospace;
     font-size: 10px;
@@ -191,56 +265,22 @@
   }
   .fact .v {
     font-family: "Songti SC", serif;
-    font-size: 20px;
+    font-size: 22px;
     color: #8B3A00;
     font-weight: 700;
   }
-  .fact .v small {
-    font-size: 11px;
-    color: #6B5A4A;
-    font-weight: 400;
-    margin-left: 3px;
-  }
+  .fact .v small { font-size: 11px; color: #6B5A4A; font-weight: 400; margin-left: 3px; }
 
-  /* ── 表格 ── */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 14px 0;
-    font-size: 14px;
-    background: #FFFFFF;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  th, td {
-    padding: 8px 10px;
-    text-align: left;
-    border-bottom: 1px solid #E8DCC8;
-  }
-  th {
-    background: #F4D9C0;
-    color: #8B3A00;
-    font-family: "Songti SC", serif;
-    font-weight: 600;
-    border-bottom: 2px solid #D2691E;
-  }
-  tbody { color: #2B1810; }
-
-  /* ── 列表 ── */
-  ul, ol { margin: 10px 0; padding-left: 22px; }
-  li { margin: 5px 0; }
-  li::marker { color: #D2691E; }
-
-  /* ── 分隔 ── */
+  /* Divider */
   .divider {
     text-align: center;
-    margin: 36px 0 24px;
+    margin: 36px 0 20px;
     color: #C4B299;
     letter-spacing: 1em;
     font-size: 13px;
   }
 
-  /* ── Footer ── */
+  /* Footer */
   .footer {
     text-align: center;
     color: #9C8B7A;
@@ -250,326 +290,264 @@
     border-top: 1px dashed #E8DCC8;
   }
 
-  /* ── 响应式 (公众号 iPad 720) ── */
+  /* 隐藏 ASCII 图 — 移动端根本不能看 */
+  .hide-mobile { display: none; }
+
+  /* iPad 适配 */
   @media (min-width: 640px) {
     body { font-size: 16px; }
     .hero h1 { font-size: 28px; }
-    h2 { font-size: 22px; }
-    pre { font-size: 12.5px; }
-    .fact-row { grid-template-columns: repeat(6, 1fr); }
-    .fact { padding: 14px 12px; }
+    h2 { font-size: 23px; }
+    .fact-row { grid-template-columns: repeat(4, 1fr); }
+    pre { font-size: 12px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<!-- ═══════════════ Hero ═══════════════ -->
+<!-- ═══════════ Hero ═══════════ -->
 <header class="hero">
-  <div class="eyebrow">Technical Architecture · 30 天 loop engineering</div>
-  <h1>gaokao-major-explorer 技术架构</h1>
-  <p class="subtitle">一个高考专业介绍页生成器 — 从 49 篇首批到 600+ 篇上线内容,30 天演化的完整架构沉淀。</p>
-  <div class="meta">
-    <span>2026-06-26</span>
-    <span>Python 单进程 + 16 天演化</span>
-    <span>v3.0 → v4.0</span>
+  <div class="eyebrow">高考志愿 · AI 工具</div>
+  <h1>一句 prompt 出本科专业精品介绍</h1>
+  <p class="subtitle">我搭了一个 skill, 输入"计算机科学与技术"这种高考专业名, 自动生成一篇带视觉设计的精品介绍 HTML。30 天、1268 个专业、视觉评分稳定在 9 分以上。</p>
+  <div class="demo">
+    <strong>👇 你可以这样问 AI:</strong><br>
+    "帮我做一个<strong>心理学专业</strong>的分析页面"
   </div>
+  <div class="meta">2026-06-26 · v3.0 → v4.0 · 16 天搭完</div>
 </header>
 
-<!-- ═══════════════ 引言 ═══════════════ -->
 <p class="lead">
-  这是我过去 30 天亲手搭建并迭代的 skill。本文从三个层面展开:整体架构、9 步质量闭环、以及踩过的几个关键教训。
+  这篇文章讲清楚三件事: 这个 skill 是什么、怎么做到的、为什么质量稳定在 9 分。
 </p>
 
-<!-- ═══════════════ 00 一句话 ═══════════════ -->
-<h2><span class="num">00.</span>一句话定位</h2>
+<!-- ═══════════ §1 项目能做什么 ═══════════ -->
+<h2 data-icon="①"><span class="num">01.</span>它能做什么:输入一个专业名,出一篇精品介绍</h2>
 
-<p>
-  <strong>输入</strong>:一份手编 JSON(18 字段,70KB,描述一个高考专业)。<br>
-  <strong>输出</strong>:一份 60-100KB 的单文件 HTML 长图文,内嵌 CSS + JS,双击可开。<br>
-  <strong>中间</strong>:Python 单进程,从 12 套主题里选一套,把 JSON 字段装配成设计版面。
-</p>
+<p>很多人搜"心理学怎么样"、"CS 学什么"会被一堆文字淹掉。我做的是把每个本科专业做成一页<strong>视觉设计长图文</strong>。</p>
+
+<p>举个例子。打开 gaokao-major-explorer 搜「心理学」,看到的是:</p>
+
+<ul>
+  <li><strong>顶部一句话定位</strong>:这专业到底干嘛的</li>
+  <li><strong>课程表</strong>:公共必修 + 专业核心 + 5 校特色选修</li>
+  <li><strong>院校分布</strong>:教育部第四轮学科评估结果</li>
+  <li><strong>头部公司</strong>:毕业后去哪、薪资多少(P25/P50/P75)</li>
+  <li><strong>避坑指南</strong>:这专业最大的 3 个坑</li>
+  <li><strong>学长学姐说</strong>:知乎真实评价</li>
+</ul>
+
+<p>整页是<strong>设计好的长图文</strong>,不是密密麻麻的文字表格。每个专业一种视觉风格,计算机是黑客终端,医学是手术仪表,法学是羊皮卷宗 — 共 <strong>12 套</strong>。</p>
+
+<!-- ═══════════ §2 项目是什么 ═══════════ -->
+<h2 data-icon="②"><span class="num">02.</span>它是什么:高考专业的精品介绍平台</h2>
+
+<p>如果你是家长或考生, 它就是<strong>查专业的工具</strong>。如果你是开发者, 它就是一个 skill + 600 多篇手编数据 + 一个 Python 渲染引擎。</p>
 
 <div class="fact-row">
-  <div class="fact"><div class="k">数据规模</div><div class="v">1268<small>JSON</small></div></div>
-  <div class="fact"><div class="k">完整精品</div><div class="v">600+<small>篇</small></div></div>
+  <div class="fact"><div class="k">已收录专业</div><div class="v">1268</div></div>
+  <div class="fact"><div class="k">完整精品</div><div class="v">600<small>+</small></div></div>
   <div class="fact"><div class="k">视觉主题</div><div class="v">12<small>套</small></div></div>
-  <div class="fact"><div class="k">平均渲染</div><div class="v">&lt;1<small>秒</small></div></div>
-  <div class="fact"><div class="k">质量分</div><div class="v">8.0+<small>avg</small></div></div>
-  <div class="fact"><div class="k">代码量</div><div class="v">~300<small>KB</small></div></div>
+  <div class="fact"><div class="k">平均分</div><div class="v">9.05<small>/10</small></div></div>
 </div>
 
-<!-- ═══════════════ 01 全景图 ═══════════════ -->
-<h2><span class="num">01.</span>全景:从输入到输出</h2>
+<p>已经覆盖了 13 个学科门类、92 个专业类。无论是计算机、临床医学这种大热门,还是草学、监狱学、邮政工程这种小冷门,都有详细介绍。</p>
 
-<p>整个系统只有 <strong>3 层</strong>:数据、引擎、产出。质量层和部署层围绕这三层运转。</p>
+<!-- ═══════════ §3 怎么做到的 ═══════════ -->
+<h2 data-icon="③"><span class="num">03.</span>它怎么做的:把 JSON 翻译成设计长图文</h2>
 
-<pre class="ascii">   ┌──────────┐    ┌──────────────────────────────────────┐    ┌──────────┐
-   │ JSON 数据 │ →  │     渲染引擎 (Python 单进程)          │ →  │  HTML    │
-   │ 70KB/篇  │    │                                       │    │ 102KB/篇 │
-   └────┬─────┘    │  ┌─────────────┐    ┌──────────────┐ │    └────┬─────┘
-        │          │  │generate_    │ →  │  v4_styles/  │ │         │
-        │          │  │dashboard.py │    │  (11 主题)   │ │         │
-        │          │  │  (入口路由) │    └──────┬───────┘ │         │
-        │          │  └─────────────┘           │         │         │
-        │          │                            ▼         │         │
-        │          │                    ┌───────────────┐ │         │
-        │          │                    │ 30+ 渲染函数  │ │         │
-        │          │                    │ + 12 主题 CSS  │ │         │
-        │          │                    │ + HTML 后处理 │ │         │
-        │          │                    └───────────────┘ │         │
-        │          │                                       │         │
-        │          │  ┌─────────────┐    ┌──────────────┐ │         │
-        │          │  │v4_medicine  │    │ wishlist_    │ │         │
-        │          │  │.py          │    │ inject.py    │ │         │
-        │          │  │ (医学独立)  │    │ (心愿单)     │ │         │
-        │          │  └─────────────┘    └──────────────┘ │         │
-        │          └──────────────────────────────────────┘         │
-        │                                                            │
-        ▼                                                            ▼
-   ┌─────────────┐                                            ┌──────────┐
-   │ 质量层      │                                            │ 部署层    │
-   │ smart_audit │                                            │ CF Pages │
-   │ content_    │                                            │ 4 层 cache│
-   │   audit.py  │                                            └──────────┘
-   └─────────────┘                                                   │
-                                                                      ▼
-                                                                 ┌──────────┐
-                                                                 │ 用户浏览器│
-                                                                 └──────────┘</pre>
+<p>整个流程可以理解为<strong>三步</strong>:</p>
 
-<div class="callout note">
-  <span class="label">核心命题</span>
-  渲染引擎本身只占代码量 30%,剩下 70% 是<strong>质量审计链</strong>。这才是 loop engineering 的真正价值 — <em>不期望能一次生成到位,而是建一套反馈闭环让内容持续逼近目标分</em>。
-</div>
-
-<!-- ═══════════════ 02 模块依赖图 ═══════════════ -->
-<h2><span class="num">02.</span>模块依赖图</h2>
-
-<p>入口 <code>generate_dashboard.py</code> 只做一件事:<strong>按 style 字段路由</strong>。</p>
-
-<pre class="ascii">                      generate_dashboard.py  (77KB, 入口)
-                              │
-                              │ style = "medicine"?
-                              ├──── 是 → v4_medicine.render_v4_medicine()
-                              │           (独立引擎, 56KB, 不走 v4_styles)
-                              │
-                              │ style = 其他 11 主题?
-                              └──── 是 → v4_styles.render_v4()
-                                            │
-                                            ▼
-                                    ┌───────────────────────┐
-                                    │  v4_styles/  包       │
-                                    │  (12 文件 = 11 主题)  │
-                                    ├───────────────────────┤
-                                    │  __init__.py          │
-                                    │    ├─ base.py         │  ← 字体/CSS 常量/工具
-                                    │    ├─ body_bg.py      │  ← 背景纹理
-                                    │    ├─ overview_v2.py  │  ← 速览+避坑 v2
-                                    │    ├─ overview_simple │  ← 速览简版 (兼容)
-                                    │    ├─ render.py       │  ← 装配车间 (核心)
-                                    │    └─ themes/         │  ← 12 主题 CSS+HERO
-                                    └───────────────────────┘</pre>
-
-<p><strong>v4_styles 包内部</strong>关键设计 — 一切都是 Python 包,主题是子目录:</p>
-
-<pre class="ascii">themes/  (12 主题 = 12 个 .py 文件)
-    ├── cs.py / eng.py / finance.py / medicine.py   ← Day 1 早期 4 套
-    ├── law.py / education.py / sci.py / humanities.py
-    └── administration.py / agri.py / arts.py / business.py / gongan.py
-                                                          ← 后续 8 套扩到 12</pre>
+<ol class="steps">
+  <li>
+    <strong>① 准备数据</strong>
+    <div class="meta">人工 + 半自动</div>
+    每篇专业一份 JSON, 18 个字段(课程、院校、薪资、避坑、学长说……), 平均 70 KB。<br>
+    <strong>为什么不全自动?</strong> 试过, 大模型生成的都"长得像", 缺专业个性。<strong>人写初稿 + AI 校验</strong> 是当前性价比最高的组合。
+  </li>
+  <li>
+    <strong>② 渲染 HTML</strong>
+    <div class="meta">Python 脚本 · &lt;1 秒</div>
+    跑一个 Python 脚本, 把 JSON 翻译成视觉长图文。根据专业的学科门类选 12 套视觉风格之一(CS → 黑客终端, 医学 → 手术仪表)。
+  </li>
+  <li>
+    <strong>③ 部署上线</strong>
+    <div class="meta">git push · 自动</div>
+    推到 Cloudflare Pages, 立即可访问, 手机端适配。
+  </li>
+</ol>
 
 <div class="callout">
-  <span class="label">关键洞察</span>
-  加一个新主题只需要 1 个 <code>.py</code> 文件(几十行 CSS + 1 个 HERO_FN),<strong>完全不用改</strong>任何渲染函数。这就是下面要讲的"主题差异化最小化"原则。
+  <span class="label">关键设计</span>
+  12 套视觉风格 <strong>共用</strong>所有渲染函数, 只换 3 块 CSS(配色 + 字体 + 背景纹理)。所以从 4 套主题扩到 12 套, 渲染代码<strong>一行没动</strong>。
 </div>
 
-<!-- ═══════════════ 03 4 层架构 ═══════════════ -->
-<h2><span class="num">03.</span>4 层架构</h2>
+<!-- ═══════════ §4 项目演化 ═══════════ -->
+<h2 data-icon="④"><span class="num">04.</span>16 天演化:质量分从 7.0 拉到 9.05</h2>
 
-<p>把视野拉到全局,有 4 层相互配合:</p>
+<p>整个项目只用了 16 天。前 8 天是<strong>手工业</strong>(一个人写数据、写 CSS、慢慢出 HTML), 后 8 天突然<strong>质量井喷</strong>,核心原因是下面第 5 节要讲的"质量管线"。</p>
 
-<pre class="ascii">┌─────────────────────────────────────────────────────────┐
-│              【数据层】 (git tracked)                   │
-│                                                         │
-│  data/curated/{slug}.json     ← 600+ 手编精品 JSON     │
-│       18 字段 schema, 70KB/篇                           │
-│  public/data/manifest.json   ← 1268 专业索引           │
-│  references/                                              │
-│    ├─ data-sources.md         ← 字段来源指南           │
-│    └─ curation-checklist.md   ← 精品写作 SOP           │
-└─────────────────────────────────────────────────────────┘
-                         ↕
-┌─────────────────────────────────────────────────────────┐
-│              【代码层】 (渲染引擎)                      │
-│                                                         │
-│  scripts/generate_dashboard.py    ← 入口 (77KB)        │
-│  scripts/v4_styles/               ← 11 主题 package    │
-│  scripts/v4_medicine.py          ← 医学独立 (56KB)    │
-│  scripts/wishlist_inject.py      ← 心愿单注入 (33KB)   │
-└─────────────────────────────────────────────────────────┘
-                         ↕
-┌─────────────────────────────────────────────────────────┐
-│              【质量层】 (围绕精品 JSON)                 │
-│                                                         │
-│  scripts/audit/smart_audit.py              ← 智能路由  │
-│  scripts/audit/update_audit_registry.py    ← Registry  │
-│  scripts/batches/content_audit.py         ← 单篇深审  │
-│  docs/PIPELINE_major_quality.md            ← 精品 SOP │
-│  data/audit_registry.json                  ← 真理表   │
-└─────────────────────────────────────────────────────────┘
-                         ↕
-┌─────────────────────────────────────────────────────────┐
-│              【部署层】 (上线)                          │
-│                                                         │
-│  scripts/deploy.sh                  ← 4 步验证 + push│
-│  docs/DEPLOYMENT.md                  ← 4 层 cache SOP│
-│  .wrangler/ / functions/             ← CF 部署配置   │
-└─────────────────────────────────────────────────────────┘</pre>
-
-<!-- ═══════════════ 04 3 个设计模式 ═══════════════ -->
-<h2><span class="num">04.</span>3 个核心设计模式</h2>
-
-<h3>① 主题差异化最小化</h3>
-<p>12 套主题,共享所有 30+ 渲染函数,只换 3 块 CSS + 1 个 HERO 函数。</p>
-<pre><code>所有主题共用:
-    30+ 渲染函数 (render_xxx)
-    JSON schema 解析
-    数据归一化 (salary/xuanke/curriculum)
-
-主题差异化:
-    3 个 CSS 块 (base + body_bg + theme)
-    1 个 HERO_FN 函数 (每个主题一个)</code></pre>
-
-<h3>② HTML 后处理管道化</h3>
-<p>Cross-cutting concerns(战略 chip、学科评估、面包屑)从渲染逻辑里抽出来,做 HTML 后处理。</p>
-<pre><code>JSON → render_v4() 装配 HTML
-            ↓
-      apply_strategy_tags()        ← 国家战略 chip
-            ↓
-      apply_chsi_rating()          ← 学科评估标签
-            ↓
-      apply_discipline_breadcrumb() ← 学科面包屑
-            ↓
-      写出文件</code></pre>
-
-<h3>③ Schema 容错漏斗</h3>
-<p>30 天里 JSON schema 演化过 N 次。容错层吸收所有差异,渲染函数对历史脏数据完全免疫。</p>
-<pre><code>JSON 原始输入
-    ↓
-_coerce_named()        ← 字符串/对象兼容
-    ↓
-_normalize_xuanke()     ← 4 种 schema 变体统一
-    ↓
-_sort_salary_stages()   ← 主+次键排序
-    ↓
-_dedup_by_name()        ← schools 去重
-    ↓
-渲染函数  ← 此时 schema 已稳定</code></pre>
-
-<div class="callout warn">
-  <span class="label">工程教训</span>
-  没有这层容错,30 天里每次 schema 调整都要改几十个渲染函数。漏斗模型让渲染函数<em>对历史脏数据免疫</em>,这是 loop engineering 中"演进友好"的关键。
-</div>
-
-<!-- ═══════════════ 05 端到端时序 ═══════════════ -->
-<h2><span class="num">05.</span>单篇 JSON 的 1 秒旅程</h2>
-
-<p>以 <code>computer-science.json</code> 为例:</p>
-
-<pre class="ascii">T+0.0s  python3 generate_dashboard.py --data cs.json --style cs
-T+0.1s  解析 CLI, 加载 cs.json (70KB)
-T+0.2s  路由: style="cs" → v4_styles.render_v4()
-T+0.3s  schema 归一化 (coerce / normalize / sort / dedup)
-T+0.4s  CSS 装配 (base + body_bg + theme + strategy/chsi/discipline)
-T+0.5s  30 个渲染函数依次输出 HTML 片段
-T+0.8s  HTML 后处理 (3 个 apply_* 函数)
-T+1.0s  写出 cs.html (102KB) ✅</pre>
-
-<p>单篇 <strong>&lt; 1 秒</strong>,600 篇全量重渲染 ~5 分钟。</p>
-
-<!-- ═══════════════ 06 时间线 ═══════════════ -->
-<h2><span class="num">06.</span>16 天演化:质量分从 7.0 拉到 9.0</h2>
-
-<table>
-  <thead>
-    <tr><th style="width:55px;">日期</th><th>发生了什么</th><th style="text-align:right;width:75px;">平均分</th></tr>
-  </thead>
-  <tbody>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/10</td><td>第一版渲染引擎上线,做出第一篇 CS 长图文</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">~7.0</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/12</td><td>引擎重构:单文件拆成 12 文件 package,主题 4 → 12 套</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">~7.0</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/17</td><td>扩量冲刺完成,篇数 78 → 367</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#B8741A;">~7.0</td></tr>
-    <tr style="background:#FEF6EC;"><td style="font-family:JetBrains Mono,monospace;color:#D2691E;font-weight:bold;">6/18 ★</td><td><strong>质量管线上线</strong>(即第 7 章步骤 5):智能路由审计</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">7.0 → 7.6</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/19</td><td>16 篇缺审计的篇目补审完工</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">7.31</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/20</td><td>30 篇合并,质量分持续爬坡</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">7.57</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/21</td><td>14 篇精修推到 ≥8</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">~8.0</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/22</td><td>60 篇用智能路由批量审计</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">9.05</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/23</td><td>多批缺口补全 + 抽查复核</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">8.87</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/24</td><td>22 篇医学 5 年制完美恢复</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">9.05</td></tr>
-  </tbody>
-</table>
+<ul class="timeline">
+  <li>
+    <span class="date">6/10</span>
+    <span class="what">第一版渲染引擎上线,做出第一篇 CS 长图文</span>
+    <span class="score low">~7.0</span>
+  </li>
+  <li>
+    <span class="date">6/12</span>
+    <span class="what">引擎重构:单文件拆成 12 文件包,主题 4 套 → 12 套</span>
+    <span class="score low">~7.0</span>
+  </li>
+  <li>
+    <span class="date">6/17</span>
+    <span class="what">扩量冲刺,篇数 78 → 367</span>
+    <span class="score low">~7.0</span>
+  </li>
+  <li class="star">
+    <span class="date">6/18 ★</span>
+    <span class="what"><strong>质量管线上线</strong>:智能路由审计,1 秒启发式 + 大模型深审</span>
+    <span class="score">7.0→7.6</span>
+  </li>
+  <li>
+    <span class="date">6/19</span>
+    <span class="what">16 篇缺审计的篇目补审完工</span>
+    <span class="score">7.31</span>
+  </li>
+  <li>
+    <span class="date">6/20</span>
+    <span class="what">30 篇合并,质量分持续爬坡</span>
+    <span class="score">7.57</span>
+  </li>
+  <li>
+    <span class="date">6/21</span>
+    <span class="what">14 篇精修推到 ≥8</span>
+    <span class="score">~8.0</span>
+  </li>
+  <li>
+    <span class="date">6/22</span>
+    <span class="what">60 篇用智能路由批量审计</span>
+    <span class="score">9.05</span>
+  </li>
+  <li>
+    <span class="date">6/23</span>
+    <span class="what">多批缺口补全 + 抽查复核</span>
+    <span class="score">8.87</span>
+  </li>
+  <li>
+    <span class="date">6/24</span>
+    <span class="what">22 篇医学 5 年制完美恢复</span>
+    <span class="score">9.05</span>
+  </li>
+</ul>
 
 <div class="callout note">
   <span class="label">关键拐点</span>
   <strong>6/18 质量管线上线</strong>是分水岭 —— 之后质量分 6 天从 7.6 爬到 9.05。接下来详细说说质量管线如何工作的。
 </div>
 
-<!-- ═══════════════ 07 9 步流水线 ═══════════════ -->
-<h2><span class="num">07.</span>9 步质量闭环</h2>
+<!-- ═══════════ §5 质量管控 ═══════════ -->
+<h2 data-icon="⑤"><span class="num">05.</span>质量管控:9 步流水线 + 智能路由</h2>
 
-<p>渲染引擎只是骨架。下面这套 9 步流水线才是让 600+ 篇精品稳定 ≥7 分的关键 — 藏在 <code>docs/PIPELINE_major_quality.md</code>(v1.4) 里。</p>
+<p>质量管控不是单点检查, 是<strong>9 步流水线</strong>。每写完一篇专业, 按顺序走这 9 步:</p>
 
-<table>
-  <thead>
-    <tr><th style="width:50px;">步骤</th><th>做什么</th><th>为什么</th></tr>
-  </thead>
-  <tbody>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">0</td><td><strong>自动修复</strong>专业代码字段</td><td>长期治理数据漂移</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">1</td><td><strong>读历史</strong>: 必读历史审计清单</td><td>避免重复踩坑</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">2</td><td><strong>反污染</strong>: 前置必避 4 大套路</td><td>模板套话/串台/占位/错位</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">3</td><td><strong>手写数据</strong>: 按专业逐字段填 JSON</td><td>每篇独立内容, 不批量</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">4</td><td><strong>渲染并部署</strong>: 跑脚本 + git push</td><td>每篇单独部署, 立即可见</td></tr>
-    <tr style="background:#FEF6EC;"><td style="font-family:JetBrains Mono,monospace;color:#D2691E;font-weight:bold;">5★</td><td><strong>质量验证</strong>: LLM 审计打分 ≥7 才继续</td><td>否则进步骤 6 重做 (见下方智能路由详解)</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">6</td><td><strong>分级重做</strong> (1/2/3 档)</td><td>补字段 → 整篇重写 → 标记跳过</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">7</td><td><strong>一篇一提交</strong></td><td>出问题可单独回滚</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">8/9</td><td><strong>收尾清理</strong>: 字段统一 + 全量复查</td><td>合并后批量: 字段统一 + 全量再审一遍</td></tr>
-  </tbody>
-</table>
-
-<div class="callout note">
-  <span class="label">★ 步骤 5 详解 — 智能路由机制</span>
-  不是每篇都跑 LLM(太贵太慢), 而是先用 1 秒启发式检查, <strong>只对需要深审的篇才调 LLM</strong>:
-  <br><br>
-  <strong>第一关 (1秒/篇, 免费)</strong>: 启发式脚本检查字段完整 + 反污染规则
-  <br>
-  <strong>第二关 (2分钟/篇, ¥0.5)</strong>: 大模型深度审计 — <em>只对触发以下任一条件的篇跑</em>:
-  <br>① 第一关报错 &nbsp; ② 第一关警告 &nbsp; ③ 没审计历史
-  <br>④ 上次分 < 7 &nbsp; ⑤ 最近改过
-  <br><br>
-  <span style="color:#5C7C3A;">混合: 第一关 100% + 第二关 ~30% = 全 600 篇 2-3 小时, ¥40, 覆盖率 95%+。朴素全审 9.3 小时, ¥140。</span>
-</div>
-
-<!-- ═══════════════ 08 5 条经验 ═══════════════ -->
-<h2><span class="num">08.</span>5 条经验沉淀</h2>
-
-<ol>
-  <li><strong>9 步流水线比渲染引擎重要</strong> — 引擎只占代码量 30%, 流水线贡献 70% 的质量提升。Loop engineering 的本质是建反馈闭环。</li>
-  <li><strong>schema 容错比严格重要</strong> — 30 天 schema 必演化, 提前建漏斗比反复改 schema 划算 10 倍。</li>
-  <li><strong>主题差异化最小化</strong> — 从 4 套扩到 12 套, 渲染代码一行没动。</li>
-  <li><strong>Cross-cutting 后处理化</strong> — 战略 chip / 学科评估 / 面包屑都不该污染渲染函数。</li>
-  <li><strong>所有 agent 共享一张质量表</strong> — 项目里维护一份 <code>audit_registry.json</code>(每篇专业的最新质量分),所有 agent 行动前先 pull 查表, 避免重复审计同一篇浪费钱。</li>
+<ol class="steps">
+  <li>
+    <strong>① 自动修复</strong>专业代码字段
+    <div class="meta">Step 0 · 长期治理数据漂移</div>
+  </li>
+  <li>
+    <strong>② 读历史</strong>:必读历史审计问题清单
+    <div class="meta">Step 1 · 避免重复踩坑</div>
+  </li>
+  <li>
+    <strong>③ 反污染</strong>:前置必避的 4 大套路
+    <div class="meta">Step 2 · 模板套话 / 串台 / 占位 / 错位</div>
+  </li>
+  <li>
+    <strong>④ 手写数据</strong>:按专业逐字段填 JSON
+    <div class="meta">Step 3 · 每篇独立内容, 不批量生成</div>
+  </li>
+  <li>
+    <strong>⑤ 渲染并部署</strong>:跑脚本 + git push
+    <div class="meta">Step 4 · 每篇单独部署, 立即可见</div>
+  </li>
+  <li class="score">
+    <strong>⑥ 质量验证 ★</strong>:LLM 审计打分 ≥7 分才继续
+    <div class="meta">Step 5 · 否则进步骤 7 重做 (见下方智能路由)</div>
+  </li>
+  <li>
+    <strong>⑦ 分级重做</strong>(1/2/3 档)
+    <div class="meta">Step 6 · 补字段 → 整篇重写 → 标记跳过</div>
+  </li>
+  <li>
+    <strong>⑧ 一篇一提交</strong>:单专业单独 commit
+    <div class="meta">Step 7 · 出问题可单独回滚</div>
+  </li>
+  <li>
+    <strong>⑨ 收尾清理</strong>:字段统一 + 全量复查
+    <div class="meta">Step 8/9 · 合并后批量: 字段统一 + 全量再审一遍</div>
+  </li>
 </ol>
 
+<h3>★ 步骤 6 详解:智能路由(质量管线的核心)</h3>
+
+<p>不是每篇都跑大模型(太贵太慢), 而是先用 1 秒启发式检查, <strong>只对需要深审的篇才调 LLM</strong>:</p>
+
+<pre><code>第一关 (1 秒/篇, 免费)
+  启发式脚本检查字段完整 + 反污染规则
+
+第二关 (2 分钟/篇, ¥0.5)
+  大模型深度审计, 只对触发以下任一条件的篇跑:
+    ① 第一关报错
+    ② 第一关警告
+    ③ 没有历史审计记录
+    ④ 上次分数 &lt; 7
+    ⑤ 最近改过</code></pre>
+
 <div class="callout note">
-  <span class="label">一句话总结</span>
-  这个 skill 真正的护城河不是 12 套主题,是围绕它们建了 30 天的<strong>质量反馈闭环</strong>。引擎是骨架,流水线是肌肉,registry 是神经。
+  <span class="label">💰 成本对比</span>
+  <strong>混合模式</strong>(第一关 100% + 第二关 ~30%): 全 600 篇 <strong>2-3 小时, ¥40, 覆盖率 95%+</strong><br>
+  <strong>朴素全审</strong>(每篇都跑 LLM): <strong>9.3 小时, ¥140, 100%</strong><br>
+  <strong>智能路由砍掉 70% 成本, 覆盖反而提升</strong>。
 </div>
+
+<div class="callout">
+  <span class="label">为什么这套流程能跑通</span>
+  <strong>9 步流水线 + 智能路由</strong>才是质量保证的核心。渲染引擎只是步骤 ⑤ 的执行器 — 没有步骤 ①-④ 的输入治理和步骤 ⑥-⑨ 的反馈闭环, 内容质量会停在 5-6 分。
+</div>
+
+<!-- ═══════════ §6 踩坑心得 ═══════════ -->
+<h2 data-icon="⑥"><span class="num">06.</span>踩坑心得:5 条经验</h2>
+
+<ol class="steps">
+  <li>
+    <strong>智能路由比全审重要</strong> — 朴素全审 9.3 小时/¥140, 智能路由 2-3 小时/¥40 覆盖率还更高。Loop engineering 的本质是<strong>建反馈闭环</strong>, 不是每篇都重新评估。
+  </li>
+  <li>
+    <strong>Schema 容错比严格重要</strong> — 30 天 JSON 字段必演化, 提前建漏斗(自动容错层)比反复改 schema 划算 10 倍。<strong>渲染函数对历史脏数据免疫</strong>, 这是演进友好的关键。
+  </li>
+  <li>
+    <strong>主题差异化最小化</strong> — 12 套视觉风格共用所有渲染函数, 只换 3 块 CSS + 1 个 hero 函数。从 4 套扩到 12 套, 渲染代码<strong>一行没动</strong>。
+  </li>
+  <li>
+    <strong>跨主题装饰后处理化</strong> — 国家战略 chip、学科评估标签、面包屑导航都不该污染渲染函数。统一在 HTML 输出后用 3 个 <code>apply_*</code> 函数注入。
+  </li>
+  <li>
+    <strong>所有 agent 共享一张质量表</strong> — 项目里维护一份 <code>audit_registry.json</code>(每篇专业的最新质量分), 所有 agent 行动前先 pull 查表, 避免重复审计同一篇浪费钱。
+  </li>
+</ol>
 
 <div class="divider">· · · · ·</div>
 
+<p style="font-size:15px;color:#6B5A4A;text-align:center;">
+  这个 skill 真正的护城河不是 12 套主题, 是围绕它们建的质量反馈闭环。<br>
+  <strong>引擎是骨架, 流水线是肌肉, 登记表是神经。</strong>
+</p>
+
 <div class="footer">
   gaokao-major-explorer · v3.0 → v4.0 · 2026-06-26<br>
-  30 天 loop engineering 实践 · 技术沉淀
+  16 天搭完, 600+ 精品专业, 平均分 9.05
 </div>
 
 </div>
