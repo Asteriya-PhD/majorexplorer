@@ -1,11 +1,11 @@
 # gaokao-major-explorer 技术架构 · 30 天演化
 
 > Technical Architecture · 一个高考专业介绍页生成器的 loop engineering 沉淀
-> 2026-06-26 · Python 单进程 + 12 主题 · 1268 JSON · 600 完整精品 · v4.0
+> 2026-06-26 · Python 单进程 + 12 主题 · 1268 JSON · 600 完整精品 · v3.0 → v4.0
 
 > 配套 HTML 长图版:
-> - 桌面优先: [`docs/retrospectives/2026-06-26_skill-architecture.html`](2026-06-26_skill-architecture.html)
-> - 公众号推送: [`docs/retrospectives/2026-06-26_skill-architecture_wechat.html`](2026-06-26_skill-architecture_wechat.html)
+> - 桌面优先: [`2026-06-26_skill-architecture.html`](2026-06-26_skill-architecture.html)
+> - 公众号推送: [`2026-06-26_skill-architecture_wechat.html`](2026-06-26_skill-architecture_wechat.html)
 
 ---
 
@@ -32,7 +32,7 @@
 
 ![架构全景图](assets/skill-arch-2026-06-26/ascii_1.png)
 
-> **核心命题**: 渲染引擎本身只占代码量 30%, 剩下 70% 是**质量审计链**。这才是 loop engineering 的真正价值 — 不是把 AI 生成一次到位, 而是建一套反馈闭环让内容持续逼近目标分。
+> **核心命题**: 渲染引擎本身只占代码量 30%, 剩下 70% 是**质量审计链**。这才是 loop engineering 的真正价值 — **不期望能一次生成到位**, 而是建一套反馈闭环让内容持续逼近目标分。
 
 ---
 
@@ -123,32 +123,75 @@ _dedup_by_name()        ← schools 去重
 
 ---
 
-## 06. 30 天演化时间线
+## 06. 30 天演化时间线(以真实 commit 为锚)
 
 | 阶段 | 里程碑 | 数据量 |
 |---|---|---:|
-| Day 1 | 49 篇首批 + 5 套主题 | 49 |
-| Day 2-7 | 扩到 365 篇 + normalizer | 365 |
-| Day 8-15 | 智能审计 + Tier 2 重写 | 500+ |
-| Day 16-25 | 100% 审计覆盖, 8+ 比例 58% → 97% | ~600 |
-| Day 26-30 | polish 冲刺, 清零 ≤7 残余 | 600+ |
-| Day 31+ | 多省 recommender + SEO + 移动端 | 1268 |
+| v3.0 引擎 | 单文件 `generate_dashboard.py` + 早期 4 主题 | ~50 |
+| v3.x 扩量 | 主题从 4 → 12, 数据批量补全 | 365+ |
+| v3.x 闭环 | 9 步流水线定型, smart_audit 智能路由 | 500+ |
+| v3.x polish | 8+ 比例 ~58% → 91% (m3 audit 3 轮) | ~600 |
+| v3.x 冲刺 | polish 清零 ≤7 残余, 8+ → 97% | 600+ |
+| v4.0 拆分 | `v4_styles.py` 单文件 → `v4_styles/` package 拆分 (byte-identical) | 1268 |
+
+> ⚠️ **诚实声明**: 上表没有用"Day X"标签 — commit message 里没强制标 Day, 我也没逐日写日记。**真实可锚定的版本号只有 v3.0 → v4.0**(commit `afc5869c`)。其余阶段是按数据量 + 关键 commit 倒推。
+>
+> **教训**: 项目迭代太快, 没空天天维护"Day X 完成 Y"日志。下次类似项目应该用 GitHub Issue / Project Board 跟踪里程碑, 而不是事后回忆。
 
 ---
 
-## 07. Loop Engineering 沉淀的 5 条经验
+## 07. 9 步质量闭环(loop engineering 的核心)
 
-1. **文档要诚实, 代码要小气** — 早期 SKILL.md 吹了"长尾模式", 代码里 0 行实现。删文档比补代码诚实得多。
+渲染引擎只是骨架。下面这套 9 步流水线才是让 600+ 篇精品稳定 ≥7 分的关键 — 藏在 [`docs/PIPELINE_major_quality.md`](../PIPELINE_major_quality.md)(v1.4) 里。
+
+| Step | 动作 | 目的 |
+|:---:|---|---|
+| 0 | Auto-Repair Rank 字段 | 长期治理数据漂移 |
+| 1 | Audit Driven | 必读历史 m3 audit issues |
+| 2 | Anti-Pollution 4 Rules | 前置必避的 4 大污染 |
+| 3 | Hand-Write JSON | 按专业逐字段手填 |
+| 4 | Render + Deploy | 单篇渲染 + 部署 |
+| 5 | Audit Verify | **≥7 才继续**, 否则进 Step 6 |
+| 6 | Tier Retry (1/2/3) | 补字段 → 重写 → 标记跳过 |
+| 7 | Single Commit Per Major | 单专业单 commit, 可回滚 |
+| 8/9 | Schema Cleanup + Full Batch Audit | 合并后批量 + 全量重审 |
+
+### Smart Audit Router (Step 5 的执行器)
+
+Step 5 不是朴素全审, 而是 **Layer 1 启发式 + 智能路由 Layer 2 LLM** 的两层架构:
+
+```
+Layer 1: check_major.py 启发式 (1s/篇, 0¥)
+   ↓
+智能路由决策: 哪些篇需要 Layer 2?
+   触发条件 (满足任一):
+     1. L1-error  (污染/缺失)
+     2. L1-warning
+     3. 无历史 audit
+     4. 历史 score < 7
+     5. 改过
+   ↓
+Layer 2: m3 LLM audit (2min/篇, ¥0.5, thinking=ON)
+
+混合模式: L1 100% + L2 ~30% = 2-3h / ¥40, 覆盖率 95%+
+朴素全审: 9.3h / ¥140, 100%
+```
+
+> **核心洞察**: 9 步流水线 + Smart Router 才是 loop engineering 的核心。渲染引擎只是 Step 4 的执行器 — **没有 Step 0-3 的输入治理和 Step 5-9 的反馈闭环, 内容质量会停在 5-6 分**。
+
+---
+
+## 08. 5 条经验沉淀
+
+1. **9 步流水线比渲染引擎重要** — 引擎只占代码量 30%, 流水线贡献 70% 的质量提升。Loop engineering 的本质是建反馈闭环。
 2. **schema 容错比严格重要** — 30 天 schema 必演化, 提前建漏斗比反复改 schema 划算 10 倍。
 3. **主题差异化最小化** — 从 4 套扩到 12 套, 渲染代码一行没动。
 4. **Cross-cutting 后处理化** — 战略 chip / 学科评估 / 面包屑都不该污染渲染函数。
 5. **质量闭环 = 单一真理表** — `audit_registry.json` git tracked, 所有 agent 行动前先 pull, 避免重复审计浪费 ¥。
 
-> **一句话总结**: 这个 skill 真正的护城河不是 12 套主题, 是围绕它们建了 30 天的**质量反馈闭环**。引擎是骨架, 流水线是肌肉, registry 是神经。
-
 ---
 
 · · · · ·
 
-*gaokao-major-explorer · v4.0 · 2026-06-26*
+*gaokao-major-explorer · v3.0 → v4.0 · 2026-06-26*
 *本文是 30 天 loop engineering 实践的技术沉淀, 如有反馈欢迎在 GitHub Issue 交流。*
