@@ -44,7 +44,7 @@ python3 skills/gaokao-major-explorer/scripts/generate_dashboard.py \
 
 **任何 hand-crafted 精品 JSON 工作, 开始前必读:**
 
-📄 **`/Users/zhewenliu/Claude/gaokao-team-b/docs/PIPELINE_major_quality.md`** (项目根 docs/)
+📄 **`../../docs/PIPELINE_major_quality.md`** (仓库根 docs/)
 
 **核心 4 条 anti-pollution rules** (任 1 条触发 audit ≤6 分):
 
@@ -291,7 +291,27 @@ STYLES = {
 2. 选 style (查映射表)
 3. 跑 generate_dashboard.py
 4. (可选) Playwright 截图验证
+5. (推荐) 跑审计 → 目标 ≥7 分, 见下方「精品审计工具」
 ```
+
+### 精品审计工具 (写完 JSON 必跑)
+
+```bash
+# 1. 智能混合审计: 启发式 L1 100% + LLM L2 ~30%
+python3 scripts/audit/smart_audit.py                 # 全量 (≥10 篇必用)
+python3 scripts/audit/smart_audit.py --dry-run       # 候选预览 (5s, 0¥)
+
+# 2. 单篇深审: m3 LLM 全字段评分
+python3 scripts/batches/content_audit.py --slugs <slug>:<style>
+
+# 3. Registry 同步 (审计后必跑, git tracked)
+python3 scripts/audit/update_audit_registry.py --sync    # 同步 test_results → registry
+python3 scripts/audit/update_audit_registry.py --stats   # 查 8+/7-8/6-7/<6 分布
+```
+
+**审计 schema 必读**: `docs/audit_registry_schema.md` (version/字段/stats/totals)
+
+**目标**: 平均 8.0+, 100% ≥7, 80%+ ≥8, 0 strong 字段 ≤5% (详见 `../../docs/PIPELINE_major_quality.md`)
 
 ## 长尾模式工作流
 
@@ -345,14 +365,14 @@ STYLES = {
 
 > 这些 bug 曾导致渲染崩溃/数据丢失, **编辑 CSS 或 JSON 前必读**。
 
-1. **CSS 括号必须配对** — 编辑 v4_medicine.py / v4_styles.py 时, 每个 `{` 必须配 `}`。括号不配对会吞掉后续大段 CSS。用 `grep -n '\{[^}]*$'` 自查
+1. **CSS 括号必须配对** — 编辑 `v4_medicine.py` / `v4_styles/` 包时, 每个 `{` 必须配 `}`。括号不配对会吞掉后续大段 CSS。用 `grep -n '\{[^}]*$'` 自查
 2. **Python 字符串中 CSS Unicode 转义** — 写 `"\\201C"` 或直接用 `「`, 不要单反斜杠
 3. **模板不要重复拼接字段** — JSON 中 `year` 已是 `"2014 届"`, 模板不要再加「届」字
 4. **JSON 层去重** — `_dedup_by_name()` 已进渲染, 但数据录入时就该去重
 5. **长中文文本 nowrap** — stat-value 默认 nowrap, 长内容要 `!important` 覆盖
 6. **学校名换行** — 用 `soft_break_name()` 在「大学/学院/医学院」后插 `<wbr>`
 7. **`.path-card:nth-child(3n)` 无 translateY** — 已删错位偏移, 别加回来
-8. **CSS Unicode 引号不回退** — v4_styles.py 5 套引号已统一用 `「」`, 不要回退成 `\201C` / `\201D` 转义
+8. **CSS Unicode 引号不回退** — `v4_styles/` 5 套引号已统一用 `「」`, 不要回退成 `\201C` / `\201D` 转义
 
 ---
 
@@ -361,12 +381,9 @@ STYLES = {
 ```
 scripts/
 ├── generate_dashboard.py    # 核心引擎 + entry (精品/长尾共用)
-├── v4_styles.py             # 4 套极致: cs/finance/law/education
+├── v4_styles/               # 12 文件包: render.py + themes/ + base.py
 ├── v4_medicine.py           # 医学独立: Mayo Clinic 级
-data/curated/
-├── manifest.json            # 已收录专业索引
-├── {slug}.json              # 数据文件
-├── {slug}.html              # 渲染输出
+public/data/manifest.json    # 已收录专业索引 (1268 专业)
 references/
 ├── data-sources.md          # 数据源 + 合规指南
 ├── curation-checklist.md    # 精品写作规范
