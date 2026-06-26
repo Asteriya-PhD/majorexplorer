@@ -1,7 +1,7 @@
 # gaokao-major-explorer 技术架构 · 30 天演化
 
 > Technical Architecture · 一个高考专业介绍页生成器的 loop engineering 沉淀
-> 2026-06-26 · Python 单进程 + 12 主题 · 1268 JSON · 600 完整精品 · v3.0 → v4.0
+> 2026-06-26 · Python 单进程 + 12 主题 · 1268 JSON · 600 完整精品 · v3.0 → v4.0 · **真实跨度 16 天**
 
 > 配套 HTML 长图版:
 > - 桌面优先: [`2026-06-26_skill-architecture.html`](2026-06-26_skill-architecture.html)
@@ -123,20 +123,20 @@ _dedup_by_name()        ← schools 去重
 
 ---
 
-## 06. 30 天演化时间线(以真实 commit 为锚)
+## 06. 演化时间线(以 git 实测日期为锚)
 
-| 阶段 | 里程碑 | 数据量 |
+| 真实日期 | 里程碑 | 数据量 |
 |---|---|---:|
-| v3.0 引擎 | 单文件 `generate_dashboard.py` + 早期 4 主题 | ~50 |
-| v3.x 扩量 | 主题从 4 → 12, 数据批量补全 | 365+ |
-| v3.x 闭环 | 9 步流水线定型, smart_audit 智能路由 | 500+ |
-| v3.x polish | 8+ 比例 ~58% → 91% (m3 audit 3 轮) | ~600 |
-| v3.x 冲刺 | polish 清零 ≤7 残余, 8+ → 97% | 600+ |
-| v4.0 拆分 | `v4_styles.py` 单文件 → `v4_styles/` package 拆分 (byte-identical) | 1268 |
+| 2026-06-10 | v3.0 引擎 + rebrand + 早期 4 主题 (commit `e5b0aabd`) | ~50 |
+| 2026-06-12 | **v4.0 拆分**: `v4_styles.py` → `v4_styles/` package (commit `afc5869c`) | ~200 |
+| 2026-06-17 | Day 3 Team B 大批 (47 篇全新 major + 6 polish) | 365+ |
+| 2026-06-18 | **smart_audit.py** 上线 (commit `72d1e7b9`) — L1 启发式 + L2 智能路由 | 500+ |
+| 2026-06-22 | Day 24-25 MED/HIGH polish, 8+ 比例 → 91% | ~600 |
+| 2026-06-25 | Day 30 polish 完工, 8+ → 97% | 600+ |
 
-> ⚠️ **诚实声明**: 上表没有用"Day X"标签 — commit message 里没强制标 Day, 我也没逐日写日记。**真实可锚定的版本号只有 v3.0 → v4.0**(commit `afc5869c`)。其余阶段是按数据量 + 关键 commit 倒推。
+> ⚠️ **诚实声明**: 上表日期**全部来自 `git log --format="%ad"` 实测**, 不是事后回忆。真实跨度 **2026-06-10 → 2026-06-26 = 16 天**(不是 30 天, 也不是 14 天)。版本号真实可锚定的只有 **v3.0 → v4.0**(commit `afc5869c`)。
 >
-> **教训**: 项目迭代太快, 没空天天维护"Day X 完成 Y"日志。下次类似项目应该用 GitHub Issue / Project Board 跟踪里程碑, 而不是事后回忆。
+> **核心教训**: 项目迭代太快, 没空天天维护"Day X 完成 Y"日志, 也没有用 GitHub Issue / Project Board 跟踪里程碑。下次类似项目应该从 Day 1 就建 issue 跟踪, 而不是事后回忆 + git 反查。
 
 ---
 
