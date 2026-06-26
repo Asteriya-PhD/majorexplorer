@@ -364,7 +364,7 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
     <tr style="border-bottom:2px solid var(--accent);">
       <th style="text-align:left;padding:8px;font-family:var(--serif-cn);width:70px;">日期</th>
       <th style="text-align:left;padding:8px;font-family:var(--serif-cn);">发生了什么</th>
-      <th style="text-align:right;padding:8px;font-family:var(--serif-cn);width:90px;">质量</th>
+      <th style="text-align:right;padding:8px;font-family:var(--serif-cn);width:90px;">平均分</th>
     </tr>
   </thead>
   <tbody style="color:var(--fg-muted);">
@@ -400,17 +400,17 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
     </tr>
     <tr style="border-bottom:1px solid var(--line);">
       <td style="padding:8px;font-family:var(--mono);">6/21</td>
-      <td style="padding:8px;">14 篇 polish 推 ≥8</td>
-      <td style="padding:8px;text-align:right;font-family:var(--mono);color:var(--ok);">8+ → 93.4%</td>
+      <td style="padding:8px;">14 篇精修推到 ≥8</td>
+      <td style="padding:8px;text-align:right;font-family:var(--mono);color:var(--ok);">~8.0</td>
     </tr>
     <tr style="border-bottom:1px solid var(--line);">
       <td style="padding:8px;font-family:var(--mono);">6/22</td>
-      <td style="padding:8px;">60 篇用智能路由批量审计,8+ 篇数 337 → 480</td>
+      <td style="padding:8px;">60 篇用智能路由批量审计</td>
       <td style="padding:8px;text-align:right;font-family:var(--mono);color:var(--ok);">9.05</td>
     </tr>
     <tr style="border-bottom:1px solid var(--line);">
       <td style="padding:8px;font-family:var(--mono);">6/23</td>
-      <td style="padding:8px;">多批 gap-fill + variance verify,8+ 篇数 545 → 570</td>
+      <td style="padding:8px;">多批缺口补全 + 抽查复核</td>
       <td style="padding:8px;text-align:right;font-family:var(--mono);color:var(--ok);">8.87</td>
     </tr>
     <tr style="border-bottom:1px solid var(--line);">
@@ -420,15 +420,15 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
     </tr>
     <tr>
       <td style="padding:8px;font-family:var(--mono);">6/25</td>
-      <td style="padding:8px;">Day 30 polish 完工</td>
-      <td style="padding:8px;text-align:right;font-family:var(--mono);color:var(--ok);">8+ → 97%</td>
+      <td style="padding:8px;">最后一轮精修完工</td>
+      <td style="padding:8px;text-align:right;font-family:var(--mono);color:var(--ok);">8.13</td>
     </tr>
   </tbody>
 </table>
 
 <div class="callout note">
   <span class="label">关键拐点</span>
-  <strong>6/18 质量管线上线</strong>是分水岭 —— 之后质量分 7 天从 7.6 爬到 9.05。下面第 7 章展开步骤 5 的智能路由。
+  <strong>6/18 质量管线上线</strong>是分水岭 —— 之后质量分 7 天从 7.6 爬到 9.05。接下来详细说说质量管线如何工作的。
 </div>
 
 <!-- ═══════════════ 8. 9 步质量闭环 ═══════════════ -->
@@ -466,7 +466,7 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
     </td></tr>
     <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">6</td><td><strong>分级重做</strong> (1/2/3 档)</td><td>档 1 5-10 分钟补字段 → 档 2 15-20 分钟整篇重写 → 档 3 标记为"难做"跳过</td></tr>
     <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px;color:var(--accent);font-family:var(--mono);">7</td><td><strong>一篇一提交</strong>: 单专业单独 commit</td><td>出问题可单独回滚, 不污染其他篇</td></tr>
-    <tr><td style="padding:6px;color:var(--accent);font-family:var(--mono);">8/9</td><td><strong>收尾清理</strong>: 字段统一 + 全量复查</td><td>合并后批量: 拆分"其他"占位 + 统一薪资字段 + 全量再审一遍</td></tr>
+    <tr><td style="padding:6px;color:var(--accent);font-family:var(--mono);">8/9</td><td><strong>收尾清理</strong>: 字段统一 + 全量复查</td><td>合并后批量: 字段统一 + 全量再审一遍</td></tr>
   </tbody>
 </table>
 

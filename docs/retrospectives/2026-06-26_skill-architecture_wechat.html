@@ -493,7 +493,7 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
 
 <table>
   <thead>
-    <tr><th style="width:55px;">日期</th><th>发生了什么</th><th style="text-align:right;width:75px;">质量</th></tr>
+    <tr><th style="width:55px;">日期</th><th>发生了什么</th><th style="text-align:right;width:75px;">平均分</th></tr>
   </thead>
   <tbody>
     <tr><td style="font-family:JetBrains Mono,monospace;">6/10</td><td>第一版渲染引擎上线,做出第一篇 CS 长图文</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">~7.0</td></tr>
@@ -502,17 +502,17 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
     <tr style="background:#FEF6EC;"><td style="font-family:JetBrains Mono,monospace;color:#D2691E;font-weight:bold;">6/18 ★</td><td><strong>质量管线上线</strong>(即第 7 章步骤 5):智能路由审计</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">7.0 → 7.6</td></tr>
     <tr><td style="font-family:JetBrains Mono,monospace;">6/19</td><td>16 篇缺审计的篇目补审完工</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">7.31</td></tr>
     <tr><td style="font-family:JetBrains Mono,monospace;">6/20</td><td>30 篇合并,质量分持续爬坡</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">7.57</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/21</td><td>14 篇 polish 推 ≥8</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">8+ → 93.4%</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/22</td><td>60 篇用智能路由批量审计,8+ 篇数 337 → 480</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">9.05</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/23</td><td>多批 gap-fill + variance verify,8+ 篇数 545 → 570</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">8.87</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/21</td><td>14 篇精修推到 ≥8</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">~8.0</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/22</td><td>60 篇用智能路由批量审计</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">9.05</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/23</td><td>多批缺口补全 + 抽查复核</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">8.87</td></tr>
     <tr><td style="font-family:JetBrains Mono,monospace;">6/24</td><td>22 篇医学 5 年制完美恢复</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">9.05</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/25</td><td>Day 30 polish 完工</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">8+ → 97%</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/25</td><td>最后一轮精修完工</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">8.13</td></tr>
   </tbody>
 </table>
 
 <div class="callout note">
   <span class="label">关键拐点</span>
-  <strong>6/18 质量管线上线</strong>是分水岭 —— 之后质量分 7 天从 7.6 爬到 9.05。下面第 7 章展开步骤 5 的智能路由。
+  <strong>6/18 质量管线上线</strong>是分水岭 —— 之后质量分 7 天从 7.6 爬到 9.05。接下来详细说说质量管线如何工作的。
 </div>
 
 <!-- ═══════════════ 07 9 步流水线 ═══════════════ -->
@@ -533,7 +533,7 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
     <tr style="background:#FEF6EC;"><td style="font-family:JetBrains Mono,monospace;color:#D2691E;font-weight:bold;">5★</td><td><strong>质量验证</strong>: LLM 审计打分 ≥7 才继续</td><td>否则进步骤 6 重做 (见下方智能路由详解)</td></tr>
     <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">6</td><td><strong>分级重做</strong> (1/2/3 档)</td><td>补字段 → 整篇重写 → 标记跳过</td></tr>
     <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">7</td><td><strong>一篇一提交</strong></td><td>出问题可单独回滚</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">8/9</td><td><strong>收尾清理</strong>: 字段统一 + 全量复查</td><td>合并后批量: 拆"其他"+ 统一薪资 + 全审</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;color:#D2691E;">8/9</td><td><strong>收尾清理</strong>: 字段统一 + 全量复查</td><td>合并后批量: 字段统一 + 全量再审一遍</td></tr>
   </tbody>
 </table>
 
