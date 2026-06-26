@@ -489,27 +489,37 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
 <p>单篇 <strong>&lt; 1 秒</strong>,600 篇全量重渲染 ~5 分钟。</p>
 
 <!-- ═══════════════ 06 时间线 ═══════════════ -->
-<h2><span class="num">06.</span>16 天演化:从「写出 JSON」到「流水线生产精品」</h2>
+<h2><span class="num">06.</span>16 天演化:质量分从 7.0 拉到 9.0</h2>
 
-<p>整个项目只用了 16 天。前 8 天是<strong>手工业</strong> —— 一个人写 JSON、写 CSS、慢慢出 HTML。后 8 天突然<strong>数据井喷 + 质量改善</strong>,核心原因是<strong>质量管线上线</strong>(对应下面第 7 章的步骤 5),把每篇精品的生产从"凭感觉"变成"可量化、可复制"。</p>
+<p>整个项目 16 天里实际发生了<strong>两件事</strong>,且节奏完全不同:</p>
+
+<ul style="margin:8px 0;padding-left:20px;">
+  <li><strong>6/10-17 扩量期</strong>:篇数从 60 涨到 367,但平均质量分只有 ~7.0 — 这是<strong>产能爬坡</strong>,不是质量改善</li>
+  <li><strong>6/18 质量管线上线</strong>(即下面第 7 章的步骤 5):首批实测 <strong>avg 7.0 → 7.6</strong></li>
+  <li><strong>6/22 之后</strong>:配合智能路由批量精修,质量分突破 <strong>avg 9.0</strong>,8 分以上比例稳定 97%</li>
+</ul>
+
+<p>所以叙事主线是<strong>质量分提升曲线</strong>,不是篇目数量:</p>
 
 <table>
   <thead>
-    <tr><th style="width:55px;">日期</th><th>发生了什么</th><th style="text-align:right;width:80px;">成果</th></tr>
+    <tr><th style="width:55px;">日期</th><th>发生了什么</th><th style="text-align:right;width:75px;">质量</th></tr>
   </thead>
   <tbody>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/10</td><td><strong>第一版渲染引擎上线</strong>:做出第一篇 CS 长图文,定了 4 套视觉风格(计算机/工程/医学/法学)。</td><td style="text-align:right;">~50 篇</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/12</td><td><strong>引擎重构</strong>:单文件拆成 12 文件 package,主题从 4 套扩到 12 套。</td><td style="text-align:right;">~200 篇</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/17</td><td><strong>扩量冲刺</strong>:47 个专业一次性补完。但<strong style="color:#B8741A;">质量参差不齐</strong>,平均 7.5 分。</td><td style="text-align:right;">365+ 篇</td></tr>
-    <tr style="background:#FEF6EC;"><td style="font-family:JetBrains Mono,monospace;color:#D2691E;font-weight:bold;">6/18 ★</td><td><strong>质量管线上线</strong>(即第 7 章的步骤 5):智能路由审计,1 秒启发式 + 大模型深审。<strong style="color:#8B3A00;">成本砍掉 70%,覆盖反而提升</strong>。</td><td style="text-align:right;">500+ 篇</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/22</td><td><strong>流水线全开</strong>:批量精修中等质量的专业。8 分以上比例突破 90%。</td><td style="text-align:right;">~600 篇</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">6/25</td><td><strong>质量冲刺</strong>:8 分以上比例稳定到 97%,质量分数不再波动。</td><td style="text-align:right;">600+ 篇</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/10</td><td><strong>第一版渲染引擎上线</strong>:做出第一篇 CS 长图文,定了 4 套视觉风格。</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">~7.0</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/12</td><td><strong>引擎重构</strong>:单文件拆成 12 文件 package,主题从 4 套扩到 12 套。</td><td style="text-align:right;font-family:JetBrains Mono,monospace;">~7.0</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/17</td><td><strong>扩量冲刺</strong>:篇数 78 → 367,但质量仍是 ~7.0 — <strong style="color:#B8741A;">产能上去了,质量没跟上</strong>。</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#B8741A;">~7.0</td></tr>
+    <tr style="background:#FEF6EC;"><td style="font-family:JetBrains Mono,monospace;color:#D2691E;font-weight:bold;">6/18 ★</td><td><strong>质量管线上线</strong>(即第 7 章的步骤 5):智能路由审计。<strong style="color:#8B3A00;">首批实测 avg 7.0 → 7.6</strong>,证明流水线有效。</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">7.6</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/22</td><td><strong>批量精修</strong>:60 篇用智能路由全审一遍,8 分以上篇数 337 → 480 一次 +143 篇。</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">9.05</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/25</td><td><strong>质量稳定</strong>:8 分以上比例 75% → 97%,分数不再波动(以前 ±1 分常见)。</td><td style="text-align:right;font-family:JetBrains Mono,monospace;color:#5C7C3A;">~9.0</td></tr>
   </tbody>
 </table>
 
 <div class="callout note">
   <span class="label">关键拐点</span>
-  <strong>6/18 质量管线上线</strong>是整个项目的分水岭 —— 之前靠人写得好不好, 之后靠流水线把所有篇都拉到 7+ 分。这正是下面第 7 章要展开的核心。
+  <strong>6/18 质量管线上线</strong>是分水岭 —— 之前篇数上去了质量没变, 之后质量分从 7.0 拉到 9.0。
+  <br><br>
+  <strong>为什么不从篇目数量讲?</strong> 因为扩量在质量管线上线<strong>之前</strong>就开始了 (6/14-16 大量补 JSON),质量改善在管线上线<strong>之后</strong>才发生。两件事节奏不同。
 </div>
 
 <!-- ═══════════════ 07 9 步流水线 ═══════════════ -->
