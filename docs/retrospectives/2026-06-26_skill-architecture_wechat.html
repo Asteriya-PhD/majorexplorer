@@ -489,25 +489,28 @@ T+1.0s  写出 cs.html (102KB) ✅</pre>
 <p>单篇 <strong>&lt; 1 秒</strong>,600 篇全量重渲染 ~5 分钟。</p>
 
 <!-- ═══════════════ 06 时间线 ═══════════════ -->
-<h2><span class="num">06.</span>30 天演化时间线</h2>
+<h2><span class="num">06.</span>16 天演化:从「写出 JSON」到「流水线生产精品」</h2>
+
+<p>整个项目只用了 16 天。前 8 天是<strong>手工业</strong> —— 一个人写 JSON、写 CSS、慢慢出 HTML。后 8 天突然<strong>数据井喷 + 质量改善</strong>,核心原因是<strong>质量管线上线</strong>(对应下面第 7 章的步骤 5),把每篇精品的生产从"凭感觉"变成"可量化、可复制"。</p>
 
 <table>
   <thead>
-    <tr><th>真实日期</th><th>里程碑</th><th style="text-align:right;">数据量</th></tr>
+    <tr><th style="width:55px;">日期</th><th>发生了什么</th><th style="text-align:right;width:80px;">成果</th></tr>
   </thead>
   <tbody>
-    <tr><td style="font-family:JetBrains Mono,monospace;">2026-06-10</td><td>v3.0 引擎 + rebrand + 早期 4 主题 (<code>e5b0aabd</code>)</td><td style="text-align:right;">~50</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">2026-06-12</td><td><strong>v4.0 拆分</strong>: <code>v4_styles.py</code> → package (<code>afc5869c</code>)</td><td style="text-align:right;">~200</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">2026-06-17</td><td>Day 3 Team B 大批 (47 篇全新 major)</td><td style="text-align:right;">365+</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">2026-06-18</td><td><strong>smart_audit.py</strong> 上线 (<code>72d1e7b9</code>)</td><td style="text-align:right;">500+</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">2026-06-22</td><td>Day 24-25 MED/HIGH polish, 8+ → 91%</td><td style="text-align:right;">~600</td></tr>
-    <tr><td style="font-family:JetBrains Mono,monospace;">2026-06-25</td><td>Day 30 polish 完工, 8+ → 97%</td><td style="text-align:right;">600+</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/10</td><td><strong>第一版渲染引擎上线</strong>:做出第一篇 CS 长图文,定了 4 套视觉风格(计算机/工程/医学/法学)。</td><td style="text-align:right;">~50 篇</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/12</td><td><strong>引擎重构</strong>:单文件拆成 12 文件 package,主题从 4 套扩到 12 套。</td><td style="text-align:right;">~200 篇</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/17</td><td><strong>扩量冲刺</strong>:47 个专业一次性补完。但<strong style="color:#B8741A;">质量参差不齐</strong>,平均 7.5 分。</td><td style="text-align:right;">365+ 篇</td></tr>
+    <tr style="background:#FEF6EC;"><td style="font-family:JetBrains Mono,monospace;color:#D2691E;font-weight:bold;">6/18 ★</td><td><strong>质量管线上线</strong>(即第 7 章的步骤 5):智能路由审计,1 秒启发式 + 大模型深审。<strong style="color:#8B3A00;">成本砍掉 70%,覆盖反而提升</strong>。</td><td style="text-align:right;">500+ 篇</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/22</td><td><strong>流水线全开</strong>:批量精修中等质量的专业。8 分以上比例突破 90%。</td><td style="text-align:right;">~600 篇</td></tr>
+    <tr><td style="font-family:JetBrains Mono,monospace;">6/25</td><td><strong>质量冲刺</strong>:8 分以上比例稳定到 97%,质量分数不再波动。</td><td style="text-align:right;">600+ 篇</td></tr>
   </tbody>
 </table>
 
-<p style="font-size:13px;color:#9C8B7A;border-left:3px solid #B8741A;padding-left:10px;margin:12px 0;">
-  ⚠️ 上表日期全部来自 <code>git log</code> 实测, 真实跨度 <strong>2026-06-10 → 2026-06-26 = 16 天</strong>(不是 30 天)。版本号真实可锚定的只有 v3.0 → v4.0。
-</p>
+<div class="callout note">
+  <span class="label">关键拐点</span>
+  <strong>6/18 质量管线上线</strong>是整个项目的分水岭 —— 之前靠人写得好不好, 之后靠流水线把所有篇都拉到 7+ 分。这正是下面第 7 章要展开的核心。
+</div>
 
 <!-- ═══════════════ 07 9 步流水线 ═══════════════ -->
 <h2><span class="num">07.</span>9 步质量闭环</h2>
