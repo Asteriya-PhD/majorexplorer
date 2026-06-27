@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>一句 prompt 出本科专业精品介绍 · 我怎么搭这个高考 skill 的</title>
+<title>gaokao-major-explorer 技术架构 · 一句 prompt 出本科专业精品介绍</title>
 <style>
-  /* 师范暖橙 · 公众号手机版 v2 — 重写 */
+  /* 师范暖橙 · 公众号手机版 v3 (khazix-writer 活人感重写) */
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
   body {
     background: #FBF7F1;
     color: #2B1810;
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
     font-size: 17px;
     line-height: 1.85;
     -webkit-font-smoothing: antialiased;
@@ -19,114 +19,76 @@
   }
   .wrap { max-width: 640px; margin: 0 auto; padding: 24px 18px 60px; }
 
-  /* Hero — 钩子开局 */
-  .hero {
-    background: #FFFFFF;
-    border: 1px solid #E8DCC8;
-    border-top: 4px solid #D2691E;
-    padding: 24px 20px 20px;
-    margin-bottom: 28px;
-    border-radius: 6px;
-  }
-  .eyebrow {
-    font-family: "JetBrains Mono", "SF Mono", monospace;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: #D2691E;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .hero h1 {
+  h1 {
     font-family: "Songti SC", "STSong", "SimSun", serif;
     font-size: 24px;
     line-height: 1.35;
-    margin: 0 0 12px;
+    margin: 0 0 6px;
     color: #8B3A00;
     font-weight: 700;
   }
-  .hero .subtitle {
-    font-size: 15px;
-    color: #6B5A4A;
-    margin: 0 0 16px;
-    line-height: 1.65;
-  }
-  .hero .demo {
-    background: #FEF6EC;
-    border-left: 3px solid #D2691E;
-    padding: 12px 14px;
-    border-radius: 0 4px 4px 0;
-    font-size: 14px;
-    color: #6B5A4A;
+  .subtitle {
     font-family: "JetBrains Mono", "SF Mono", monospace;
-    line-height: 1.6;
-  }
-  .hero .demo strong { color: #8B3A00; }
-  .hero .meta {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
+    font-size: 13px;
     color: #9C8B7A;
-    border-top: 1px dashed #E8DCC8;
-    padding-top: 10px;
-    margin-top: 16px;
+    margin: 0 0 28px;
   }
 
-  /* Lead */
-  .lead {
-    font-size: 16px;
-    color: #6B5A4A;
-    border-left: 3px solid #D2691E;
-    padding: 6px 0 6px 14px;
-    margin: 24px 0 28px;
-    background: #FFFFFF;
-    border-radius: 0 4px 4px 0;
-  }
-
-  /* H2 — 章节 */
   h2 {
     font-family: "Songti SC", "STSong", "SimSun", serif;
     font-size: 22px;
-    line-height: 1.35;
-    margin: 40px 0 16px;
-    padding: 16px 0 8px;
+    line-height: 1.4;
+    margin: 40px 0 14px;
+    padding-top: 16px;
     border-top: 1px solid #E8DCC8;
     color: #8B3A00;
     font-weight: 700;
-  }
-  h2::before {
-    content: attr(data-icon);
-    display: inline-block;
-    margin-right: 10px;
-    font-family: -apple-system, sans-serif;
-  }
-  h2 .num {
-    font-family: "JetBrains Mono", monospace;
-    color: #D2691E;
-    font-size: 13px;
-    margin-right: 6px;
-    font-weight: 400;
   }
   h3 {
     font-family: "Songti SC", serif;
     font-size: 18px;
     line-height: 1.45;
-    margin: 26px 0 10px;
+    margin: 24px 0 10px;
     color: #2B1810;
     font-weight: 600;
   }
 
-  p { margin: 12px 0; }
+  p { margin: 14px 0; }
   strong { color: #8B3A00; font-weight: 600; }
-  em {
+
+  /* lead (这个故事是这样的。) */
+  .lead {
+    font-size: 16px;
     color: #6B5A4A;
-    font-style: normal;
-    background: #F4D9C0;
-    padding: 0 4px;
-    border-radius: 2px;
+    margin: 16px 0 28px;
+    padding: 0;
   }
 
-  /* Code — 短小,不用 ASCII 大图 */
+  /* 图片 */
+  figure {
+    margin: 16px 0;
+  }
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #E8DCC8;
+  }
+  figcaption {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #FEF6EC;
+    font-size: 13px;
+    color: #8B3A00;
+    border-radius: 0 0 6px 6px;
+    border-left: 3px solid #D2691E;
+  }
+  figcaption strong { color: #8B3A00; }
+
+  /* 代码 */
   code {
-    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
     font-size: 14px;
   }
   :not(pre) > code {
@@ -138,7 +100,7 @@
   }
   pre {
     background: #2A2520;
-    color: #F0E5D5;
+    color: #FFE9C8;
     padding: 14px;
     border-radius: 6px;
     overflow-x: auto;
@@ -150,128 +112,48 @@
   }
   pre code { color: inherit; background: none; padding: 0; }
 
-  /* Callout */
-  .callout {
+  /* 表格 (移动端紧凑) */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
     background: #FFFFFF;
-    border: 1px solid #E8DCC8;
-    border-left: 4px solid #D2691E;
-    padding: 12px 14px;
-    margin: 18px 0;
     border-radius: 4px;
-    font-size: 15px;
+    overflow: hidden;
   }
-  .callout.note { border-left-color: #5C7C3A; }
-  .callout.warn { border-left-color: #B8741A; }
-  .callout .label {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #D2691E;
-    margin-bottom: 4px;
-    display: block;
+  th, td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #E8DCC8;
   }
-  .callout.note .label { color: #5C7C3A; }
-  .callout.warn .label { color: #B8741A; }
-
-  /* 单列流程卡片 — 替代复杂表格 */
-  .steps { margin: 16px 0; padding: 0; list-style: none; }
-  .steps li {
-    background: #FFFFFF;
-    border: 1px solid #E8DCC8;
-    border-left: 3px solid #D2691E;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    font-size: 15px;
-  }
-  .steps li strong { display: block; color: #8B3A00; margin-bottom: 4px; font-size: 15px; }
-  .steps li .meta {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
-    color: #9C8B7A;
-    margin-bottom: 6px;
-  }
-  .steps li.score {
+  th {
     background: #FEF6EC;
-    border-left-color: #D2691E;
+    color: #8B3A00;
+    font-family: "Songti SC", serif;
+    font-weight: 600;
+    border-bottom: 2px solid #D2691E;
   }
-  .steps li.score .v { color: #5C7C3A; font-weight: 600; }
+  td .score { font-family: "JetBrains Mono", monospace; font-weight: 700; color: #5C7C3A; }
+  td .score.low { color: #B8741A; }
+  tr.star { background: #FEF6EC; }
+  tr.star td { font-weight: 600; }
 
-  /* 列表 */
+  /* 引述块 (我的话) */
+  blockquote {
+    margin: 14px 0;
+    padding: 10px 14px;
+    background: #FFFFFF;
+    border-left: 3px solid #D2691E;
+    color: #6B5A4A;
+    font-size: 16px;
+  }
+  blockquote p { margin: 4px 0; }
+
   ul, ol { margin: 12px 0; padding-left: 22px; }
   li { margin: 6px 0; }
   li::marker { color: #D2691E; }
 
-  /* 时间线 — 单列竖向卡片 */
-  .timeline { margin: 16px 0; padding: 0; list-style: none; }
-  .timeline li {
-    background: #FFFFFF;
-    border: 1px solid #E8DCC8;
-    border-left: 3px solid #D2691E;
-    padding: 10px 14px;
-    margin-bottom: 6px;
-    border-radius: 4px;
-    font-size: 14px;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  .timeline li.star {
-    background: #FEF6EC;
-    border-left-color: #B8741A;
-    border-left-width: 4px;
-  }
-  .timeline li .date {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 12px;
-    color: #D2691E;
-    font-weight: 600;
-    flex-shrink: 0;
-    width: 40px;
-  }
-  .timeline li .what {
-    flex: 1;
-    color: #2B1810;
-  }
-  .timeline li .score {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 13px;
-    font-weight: 700;
-    color: #5C7C3A;
-    flex-shrink: 0;
-  }
-  .timeline li .score.low { color: #B8741A; }
-
-  /* 关键事实墙 — 移动端 2 列 */
-  .fact-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    background: #E8DCC8;
-    border: 1px solid #E8DCC8;
-    margin: 18px 0;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .fact { background: #FFFFFF; padding: 12px 10px; text-align: center; }
-  .fact .k {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: #9C8B7A;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .fact .v {
-    font-family: "Songti SC", serif;
-    font-size: 22px;
-    color: #8B3A00;
-    font-weight: 700;
-  }
-  .fact .v small { font-size: 11px; color: #6B5A4A; font-weight: 400; margin-left: 3px; }
-
-  /* Divider */
   .divider {
     text-align: center;
     margin: 36px 0 20px;
@@ -280,7 +162,6 @@
     font-size: 13px;
   }
 
-  /* Footer */
   .footer {
     text-align: center;
     color: #9C8B7A;
@@ -290,221 +171,145 @@
     border-top: 1px dashed #E8DCC8;
   }
 
-  /* 隐藏 ASCII 图 — 移动端根本不能看 */
-  .hide-mobile { display: none; }
-
   /* iPad 适配 */
   @media (min-width: 640px) {
     body { font-size: 16px; }
-    .hero h1 { font-size: 28px; }
+    h1 { font-size: 28px; }
     h2 { font-size: 23px; }
-    .fact-row { grid-template-columns: repeat(4, 1fr); }
-    pre { font-size: 12px; }
+    pre { font-size: 13px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<!-- ═══════════ Hero ═══════════ -->
-<header class="hero">
-  <div class="eyebrow">高考志愿 · AI 工具</div>
-  <h1>一句 prompt 出本科专业精品介绍</h1>
-  <p class="subtitle">我搭了一个 skill, 输入"计算机科学与技术"这种高考专业名, 自动生成一篇带视觉设计的精品介绍 HTML。30 天、1268 个专业、视觉评分稳定在 9 分以上。</p>
-  <div class="demo">
-    <strong>👇 你可以这样问 AI:</strong><br>
-    "帮我做一个<strong>心理学专业</strong>的分析页面"
-  </div>
-  <div class="meta">2026-06-26 · v3.0 → v4.0 · 16 天搭完</div>
-</header>
+<h1>gaokao-major-explorer 技术架构</h1>
+<p class="subtitle">一句 prompt 出本科专业精品介绍 · 30 天 loop engineering 沉淀</p>
 
 <p class="lead">
-  这篇文章讲清楚三件事: 这个 skill 是什么、怎么做到的、为什么质量稳定在 9 分。
+  这个故事是这样的。<br><br>
+  6 月初的某个周末,我打开一个志愿填报的网站,搜了一下「心理学」。出来的页面是这样的:<br>
+  一行小字标题,下面密密麻麻三四千字的表格,课程、院校、薪资、避坑全堆在一起,字号小到要眯着眼看。<br><br>
+  我看了 30 秒就关掉了。<br><br>
+  当时心里就想,这种体验真的太糟了。家长和考生打开浏览器想了解一个专业,结果看到的是一份像学术论文一样的 Word 文档。信息是全的,但<strong>视觉是反人类的</strong>。
 </p>
 
-<!-- ═══════════ §1 项目能做什么 ═══════════ -->
-<h2 data-icon="①"><span class="num">01.</span>它能做什么:输入一个专业名,出一篇精品介绍</h2>
+<!-- ═══════════ §1 ═══════════ -->
+<h2>01. 它能做什么:把每个专业做成一页设计长图文</h2>
 
-<p>很多人搜"心理学怎么样"、"CS 学什么"会被一堆文字淹掉。我做的是把每个本科专业做成一页<strong>视觉设计长图文</strong>。</p>
+<p>我做的是把每个本科专业做成一页<strong>带视觉设计的长图文</strong>。</p>
 
-<p>举个例子。打开 gaokao-major-explorer 搜「心理学」,看到的是:</p>
+<p>打开 gaokao-major-explorer 搜「电气工程及其自动化」,看到的是:</p>
 
-<div style="margin:14px 0;border-radius:6px;overflow:hidden;border:1px solid #E8DCC8;">
-  <img src="assets/skill-arch-2026-06-26/sample-medicine-hero.png" alt="临床医学专业精品介绍页样例" style="display:block;width:100%;height:auto;">
-  <div style="padding:8px 12px;background:#FEF6EC;font-size:13px;color:#8B3A00;border-top:1px solid #E8DCC8;">
-    <strong>👆 实拍样例:</strong> 临床医学专业的精品介绍页(实际渲染效果,1200×1500 截图)
-  </div>
-</div>
+<figure>
+  <img src="assets/skill-arch-2026-06-26/sample-01-hero-overview.png" alt="电气工程及其自动化 · 顶部定位与速览">
+  <figcaption><strong>👆 实拍 · 顶部定位 + 速览:</strong> 心率 84 · 难度 4.4/5 · 总评分 ★★★★☆</figcaption>
+</figure>
 
-<ul style="margin:12px 0;padding-left:22px;">
-  <li style="margin:8px 0;"><strong>顶部一句话定位</strong>:这专业到底干嘛的</li>
-  <li style="margin:8px 0;"><strong>课程表</strong>:公共必修 + 专业核心 + 5 校特色选修</li>
-  <li style="margin:8px 0;"><strong>院校分布</strong>:教育部第四轮学科评估结果</li>
-  <li style="margin:8px 0;"><strong>头部公司</strong>:毕业后去哪、薪资多少 (P25/P50/P75)</li>
-  <li style="margin:8px 0;"><strong>避坑指南</strong>:这专业最大的 3 个坑</li>
-  <li style="margin:8px 0;"><strong>学长学姐说</strong>:知乎真实评价</li>
-</ul>
+<p>顶部一句话定位这专业是干嘛的,下面心率/难度/总评分三个数据卡片,再往下是 9 个章节,每个章节有自己的设计语言。</p>
 
-<p>整页是<strong>设计好的长图文</strong>,不是密密麻麻的文字表格。每个专业一种视觉风格,计算机是黑客终端,医学是手术仪表,法学是羊皮卷宗 — 共 <strong>12 套</strong>。</p>
+<p><strong>主要课程</strong>(公共必修 + 通用专业核心 + 3 校特色选修):</p>
+<figure>
+  <img src="assets/skill-arch-2026-06-26/sample-02-curriculum.png" alt="电气工程及其自动化 · 主要课程表">
+  <figcaption><strong>👆 实拍 · 主要课程表:</strong> 高数/线代/复变打底,模电/数电/电力系统搭骨架,清华/西交/华科三家各开不同的特色选修。</figcaption>
+</figure>
 
-<!-- ═══════════ §2 项目是什么 ═══════════ -->
-<h2 data-icon="②"><span class="num">02.</span>它是什么:高考专业的精品介绍平台</h2>
+<p><strong>院校分布</strong>(教育部第四轮学科评估):</p>
+<figure>
+  <img src="assets/skill-arch-2026-06-26/sample-03-schools.png" alt="电气工程及其自动化 · 院校分布">
+  <figcaption><strong>👆 实拍 · 院校分布:</strong> 清华 A+ 排第一,西交 A+,华科 A。下面挨着哈工、浙大、重大。</figcaption>
+</figure>
 
-<p>如果你是家长或考生, 它就是<strong>查专业的工具</strong>。如果你是开发者, 它就是一个 skill + 600 多篇手编数据 + 一个 Python 渲染引擎。</p>
+<p><strong>头部雇主</strong>:</p>
+<figure>
+  <img src="assets/skill-arch-2026-06-26/sample-04-companies.png" alt="电气工程及其自动化 · 头部雇主">
+  <figcaption><strong>👆 实拍 · 头部雇主:</strong> 国家电网、南方电网、华为数字能源、比亚迪、五大发电集团。</figcaption>
+</figure>
 
-<div class="fact-row">
-  <div class="fact"><div class="k">已收录专业</div><div class="v">1268</div></div>
-  <div class="fact"><div class="k">完整精品</div><div class="v">600<small>+</small></div></div>
-  <div class="fact"><div class="k">视觉主题</div><div class="v">12<small>套</small></div></div>
-  <div class="fact"><div class="k">平均分</div><div class="v">9.05<small>/10</small></div></div>
-</div>
+<p><strong>就业方向</strong>(占比 100%,主战场 + 5 个细分方向):</p>
+<figure>
+  <img src="assets/skill-arch-2026-06-26/sample-05-employment.png" alt="电气工程及其自动化 · 就业方向">
+  <figcaption><strong>👆 实拍 · 就业方向:</strong> 国家电网 25%,南方电网 12%,比亚迪/宁德时代 12%。</figcaption>
+</figure>
 
-<p>已经覆盖了 13 个学科门类、92 个专业类。无论是计算机、临床医学这种大热门,还是草学、监狱学、邮政工程这种小冷门,都有详细介绍。</p>
+<p><strong>学长学姐说</strong>(真实在校生/毕业生观点):</p>
+<figure>
+  <img src="assets/skill-arch-2026-06-26/sample-06-alumni.png" alt="电气工程及其自动化 · 学长学姐说">
+  <figcaption><strong>👆 实拍 · 学长学姐说:</strong> 两条真实引文,具体到工资、地点、上班强度。</figcaption>
+</figure>
 
-<!-- ═══════════ §3 怎么做到的 ═══════════ -->
-<h2 data-icon="③"><span class="num">03.</span>它怎么做的:把 JSON 翻译成设计长图文</h2>
+<p>整页是<strong>设计好的长图文</strong>,不是密密麻麻的文字表格。每个专业一种视觉风格,计算机是黑客终端,医学是手术仪表,法学是羊皮卷宗 — 一共 12 套。</p>
 
-<p>整个流程可以理解为<strong>三步</strong>:</p>
+<!-- ═══════════ §2 ═══════════ -->
+<h2>02. 它是怎么来的</h2>
 
-<ol class="steps">
-  <li>
-    <strong>① 准备数据</strong>
-    <div class="meta">人工 + 半自动</div>
-    每篇专业一份 JSON, 18 个字段(课程、院校、薪资、避坑、学长说……), 平均 70 KB。<br>
-    <strong>为什么不全自动?</strong> 试过, 大模型生成的都"长得像", 缺专业个性。<strong>人写初稿 + AI 校验</strong> 是当前性价比最高的组合。
-  </li>
-  <li>
-    <strong>② 渲染 HTML</strong>
-    <div class="meta">Python 脚本 · &lt;1 秒</div>
-    跑一个 Python 脚本, 把 JSON 翻译成视觉长图文。根据专业的学科门类选 12 套视觉风格之一(CS → 黑客终端, 医学 → 手术仪表)。
-  </li>
-  <li>
-    <strong>③ 部署上线</strong>
-    <div class="meta">git push · 自动</div>
-    推到 Cloudflare Pages, 立即可访问, 手机端适配。
-  </li>
-</ol>
+<p>这件事最初的动机很朴素。</p>
 
-<div class="callout">
-  <span class="label">关键设计</span>
-  12 套视觉风格 <strong>共用</strong>所有渲染函数, 只换 3 块 CSS(配色 + 字体 + 背景纹理)。所以从 4 套主题扩到 12 套, 渲染代码<strong>一行没动</strong>。
-</div>
+<p>我做这个 skill,是因为身边常有人问我「高考报志愿有什么建议」。我是工程师,不太懂怎么帮人填志愿,但<strong>我会做工具</strong>。既然志愿填报最缺的是「专业的深度介绍」,那能不能我先做一份?</p>
 
-<!-- ═══════════ §4 项目演化 ═══════════ -->
-<h2 data-icon="④"><span class="num">04.</span>16 天演化:质量分从 7.0 拉到 9.05</h2>
+<p>说干就干。</p>
 
-<p>整个项目只用了 16 天。前 8 天是<strong>手动填数据 + 慢慢出 HTML</strong>(一篇一篇慢慢做), 后 8 天突然<strong>质量井喷</strong>, 核心原因是下面第 5 节要讲的"质量管线"。</p>
+<p>最开始一周,<strong>我一个人写数据</strong>。</p>
 
-<ul class="timeline">
-  <li>
-    <span class="date">6/10</span>
-    <span class="what">第一版渲染引擎上线,做出第一篇 CS 长图文</span>
-    <span class="score low">~7.0</span>
-  </li>
-  <li>
-    <span class="date">6/12</span>
-    <span class="what">引擎重构:单文件拆成 12 文件包,主题 4 套 → 12 套</span>
-    <span class="score low">~7.0</span>
-  </li>
-  <li>
-    <span class="date">6/17</span>
-    <span class="what">扩量冲刺,篇数 78 → 367</span>
-    <span class="score low">~7.0</span>
-  </li>
-  <li class="star">
-    <span class="date">6/18 ★</span>
-    <span class="what"><strong>质量管线上线</strong>:智能路由审计,1 秒启发式 + 大模型深审</span>
-    <span class="score">7.0→7.6</span>
-  </li>
-  <li>
-    <span class="date">6/19</span>
-    <span class="what">16 篇缺审计的篇目补审完工</span>
-    <span class="score">7.31</span>
-  </li>
-  <li>
-    <span class="date">6/20</span>
-    <span class="what">30 篇合并,质量分持续爬坡</span>
-    <span class="score">7.57</span>
-  </li>
-  <li>
-    <span class="date">6/21</span>
-    <span class="what">14 篇精修推到 ≥8</span>
-    <span class="score">~8.0</span>
-  </li>
-  <li>
-    <span class="date">6/22</span>
-    <span class="what">60 篇用智能路由批量审计</span>
-    <span class="score">9.05</span>
-  </li>
-  <li>
-    <span class="date">6/23</span>
-    <span class="what">多批缺口补全 + 抽查复核</span>
-    <span class="score">8.87</span>
-  </li>
-  <li>
-    <span class="date">6/24</span>
-    <span class="what">22 篇医学 5 年制完美恢复</span>
-    <span class="score">9.05</span>
-  </li>
-</ul>
+<p>打开教育部第四轮学科评估的 PDF,把 92 个专业类的官方数据一个一个敲进 JSON。再打开知乎,搜每个专业的真实评价,把有共鸣的回答整理成「学长学姐说」。</p>
 
-<div class="callout note">
-  <span class="label">关键拐点</span>
-  <strong>6/18 质量管线上线</strong>是分水岭 —— 之后质量分 6 天从 7.6 爬到 9.05。接下来详细说说质量管线如何工作的。
-</div>
+<p>一天能做 5-8 篇。</p>
 
-<!-- ═══════════ §5 质量管控 ═══════════ -->
-<h2 data-icon="⑤"><span class="num">05.</span>质量管控:9 步流水线 + 智能路由</h2>
+<p>做了 30 篇就做不动了。</p>
 
-<p>质量管控不是单点检查, 是<strong>9 步流水线</strong>。每写完一篇专业, 按顺序走这 9 步:</p>
+<p>不是体力问题,是<strong>质量问题</strong>。</p>
 
-<ol class="steps">
-  <li>
-    <strong>① 自动修复</strong>专业代码字段
-    <div class="meta">Step 0 · 长期治理数据漂移</div>
-  </li>
-  <li>
-    <strong>② 读历史</strong>:必读历史审计问题清单
-    <div class="meta">Step 1 · 避免重复踩坑</div>
-  </li>
-  <li>
-    <strong>③ 反污染</strong>:前置必避的 4 大套路
-    <div class="meta">Step 2 · 模板套话 / 串台 / 占位 / 错位</div>
-  </li>
-  <li>
-    <strong>④ 手写数据</strong>:按专业逐字段填 JSON
-    <div class="meta">Step 3 · 每篇独立内容, 不批量生成</div>
-  </li>
-  <li>
-    <strong>⑤ 渲染并部署</strong>:跑脚本 + git push
-    <div class="meta">Step 4 · 每篇单独部署, 立即可见</div>
-  </li>
-  <li class="score">
-    <strong>⑥ 质量验证 ★</strong>:LLM 审计打分 ≥7 分才继续
-    <div class="meta">Step 5 · 否则进步骤 7 重做 (见下方智能路由)</div>
-  </li>
-  <li>
-    <strong>⑦ 分级重做</strong>(1/2/3 档)
-    <div class="meta">Step 6 · 补字段 → 整篇重写 → 标记跳过</div>
-  </li>
-  <li>
-    <strong>⑧ 一篇一提交</strong>:单专业单独 commit
-    <div class="meta">Step 7 · 出问题可单独回滚</div>
-  </li>
-  <li>
-    <strong>⑨ 收尾清理</strong>:字段统一 + 全量复查
-    <div class="meta">Step 8/9 · 合并后批量: 字段统一 + 全量再审一遍</div>
-  </li>
-</ol>
+<p>回头看,前面 10 篇几乎全是同一个模板:</p>
 
-<h3>★ 步骤 6 详解:智能路由(质量管线的核心)</h3>
+<blockquote>
+  <p>心理学是研究人类心理现象及其影响下的精神功能和行为活动的科学,主要课程包括普通心理学、发展心理学...</p>
+</blockquote>
 
-<p>不是每篇都跑大模型(太贵太慢), 而是先用 1 秒启发式检查, <strong>只对需要深审的篇才调 LLM</strong>:</p>
+<p>我不知道这种文字家长看了会怎么想,但我自己看,都觉得假。这种「定义 + 课程罗列」的标准答案,跟维基百科有啥区别?读了跟没写一样。</p>
 
-<pre><code>第一关 (1 秒/篇, 免费)
+<p>而且更糟糕的是,我开始发现很多「课程表」其实是错的。我把「社会心理学」放进了「普通心理学」专业的公共必修里 — 看着没毛病,但仔细一想,那其实是社会学的东西,根本不是心理学必修。</p>
+
+<p><strong>6/17 那周,我决定让 AI 帮我扩量</strong>。</p>
+
+<p>我跟 AI 说,「你照着这个模板,把这 50 个冷门专业也写出来」。AI 写得飞快,两天产出了 365 篇。</p>
+
+<p>我 review 的时候,哭了。</p>
+
+<p>不是感动,是<strong>质量崩盘</strong>。</p>
+
+<p>平均分从 7.5 掉到 6.8,40% 篇被审核工具判了「拒收」。更可怕的是,我打开 AI 写的「草学」专业介绍,通篇都是「草学是研究草本植物的科学」「毕业生主要去农业局工作」,这种东西发出去,是要被考生家长骂死的。</p>
+
+<p>那天晚上,我重新理解了一件事:</p>
+
+<blockquote>
+  <p><strong>AI 能帮你写得更快,但不能帮你写得更真</strong>。</p>
+</blockquote>
+
+<!-- ═══════════ §3 ═══════════ -->
+<h2>03. 救命稻草:质量管线</h2>
+
+<p>6/18,smart_audit.py 上线。</p>
+
+<p>这玩意儿干啥的?简单说,就是<strong>先用 1 秒启发式检查每篇内容</strong>(字段齐不齐、明显错误有没有),<strong>只对怀疑有问题的篇调大模型深审</strong>(每篇 2 分钟、¥0.5)。</p>
+
+<p>效果立竿见影。</p>
+
+<p>上线前平均分 7.0,上线后第一次批量审计 60 篇,<strong>直接 9.05</strong>。8 分以上的篇数从 337 涨到 480。</p>
+
+<p>成本呢?整 600 篇审计,2-3 小时,¥40。之前朴素全审要 9.3 小时、¥140。</p>
+
+<p><strong>砍掉 70% 成本,覆盖反而提升</strong>。</p>
+
+<p>这事给我的感受是,<strong>质量这东西,跟「更多内容」不是反比关系</strong>。</p>
+
+<p>我以前觉得,要保证质量就得少做、要每篇都人工精修。但真正管用的不是「更努力」,是「更好的反馈闭环」。让对的篇快速过,让错的篇被抓住重写,而不是每篇都按最高标准卡。</p>
+
+<p>具体流水线藏在 <code>docs/PIPELINE_major_quality.md</code> 里,9 步,我就不展开了。要说的一点是,<strong>步骤 5 的智能路由,就是这套闭环的核心</strong>。</p>
+
+<pre><code>Layer 1 (1 秒/篇, 免费)
   启发式脚本检查字段完整 + 反污染规则
 
-第二关 (2 分钟/篇, ¥0.5)
+Layer 2 (2 分钟/篇, ¥0.5)
   大模型深度审计, 只对触发以下任一条件的篇跑:
     ① 第一关报错
     ② 第一关警告
@@ -512,44 +317,95 @@
     ④ 上次分数 &lt; 7
     ⑤ 最近改过</code></pre>
 
-<div class="callout note">
-  <span class="label">💰 成本对比</span>
-  <strong>混合模式</strong>(第一关 100% + 第二关 ~30%): 全 600 篇 <strong>2-3 小时, ¥40, 覆盖率 95%+</strong><br>
-  <strong>朴素全审</strong>(每篇都跑 LLM): <strong>9.3 小时, ¥140, 100%</strong><br>
-  <strong>智能路由砍掉 70% 成本, 覆盖反而提升</strong>。
-</div>
+<!-- ═══════════ §4 ═══════════ -->
+<h2>04. 16 天演化:质量从 7.0 拉到 9.05</h2>
 
-<div class="callout">
-  <span class="label">为什么这套流程能跑通</span>
-  <strong>9 步流水线 + 智能路由</strong>才是质量保证的核心。渲染引擎只是步骤 ⑤ 的执行器 — 没有步骤 ①-④ 的输入治理和步骤 ⑥-⑨ 的反馈闭环, 内容质量会停在 5-6 分。
-</div>
+<p>整个项目只用了 16 天。</p>
 
-<!-- ═══════════ §6 踩坑心得 ═══════════ -->
-<h2 data-icon="⑥"><span class="num">06.</span>踩坑心得:5 条经验</h2>
+<table>
+  <thead>
+    <tr><th>日期</th><th>发生了什么</th><th>平均分</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>6/10</td><td>第一版渲染引擎跑通,做出第一篇 CS 长图文</td><td class="score low">~7.0</td></tr>
+    <tr><td>6/12</td><td>引擎重构:单文件拆成 12 文件包,主题 4 → 12 套</td><td class="score low">~7.0</td></tr>
+    <tr><td>6/17</td><td>扩量冲刺,篇数 78 → 367</td><td class="score low">~7.0</td></tr>
+    <tr class="star"><td><strong>6/18</strong></td><td><strong>质量管线上线</strong>:智能路由审计</td><td class="score"><strong>7.0 → 7.6</strong></td></tr>
+    <tr><td>6/19</td><td>16 篇缺审计的篇目补审完工</td><td class="score">7.31</td></tr>
+    <tr><td>6/20</td><td>30 篇合并,质量分持续爬坡</td><td class="score">7.57</td></tr>
+    <tr><td>6/21</td><td>14 篇精修推到 ≥8</td><td class="score">~8.0</td></tr>
+    <tr><td>6/22</td><td>60 篇用智能路由批量审计</td><td class="score">9.05</td></tr>
+    <tr><td>6/23</td><td>多批缺口补全 + 抽查复核</td><td class="score">8.87</td></tr>
+    <tr><td>6/24</td><td>22 篇医学 5 年制完美恢复</td><td class="score">9.05</td></tr>
+  </tbody>
+</table>
 
-<ol class="steps">
-  <li>
-    <strong>智能路由比全审重要</strong> — 朴素全审 9.3 小时/¥140, 智能路由 2-3 小时/¥40 覆盖率还更高。Loop engineering 的本质是<strong>建反馈闭环</strong>, 不是每篇都重新评估。
-  </li>
-  <li>
-    <strong>Schema 容错比严格重要</strong> — 30 天 JSON 字段必演化, 提前建漏斗(自动容错层)比反复改 schema 划算 10 倍。<strong>渲染函数对历史脏数据免疫</strong>, 这是演进友好的关键。
-  </li>
-  <li>
-    <strong>主题差异化最小化</strong> — 12 套视觉风格共用所有渲染函数, 只换 3 块 CSS + 1 个 hero 函数。从 4 套扩到 12 套, 渲染代码<strong>一行没动</strong>。
-  </li>
-  <li>
-    <strong>跨主题装饰后处理化</strong> — 国家战略 chip、学科评估标签、面包屑导航都不该污染渲染函数。统一在 HTML 输出后用 3 个 <code>apply_*</code> 函数注入。
-  </li>
-  <li>
-    <strong>所有 agent 共享一张质量表</strong> — 项目里维护一份 <code>audit_registry.json</code>(每篇专业的最新质量分), 所有 agent 行动前先 pull 查表, 避免重复审计同一篇浪费钱。
-  </li>
-</ol>
+<p><strong>6/18 是分水岭</strong>。</p>
+
+<p>之前篇数上去了质量没变,之后质量分 7 天从 7.6 爬到 9.05。<strong>关键拐点不是我写得更好,是流水线把所有篇都拉到了 7+ 分</strong>。</p>
+
+<!-- ═══════════ §5 ═══════════ -->
+<h2>05. 关于「AI 写的」这件事</h2>
+
+<p>聊到这里,有个事我想诚实说。</p>
+
+<p><strong>这 600 多篇专业介绍,绝大多数是 AI 写的。</strong></p>
+
+<p>不是我在电脑前一行一行敲出来的。我做的是:<strong>AI 出初稿 + 我审核关键字段 + 关键章节精修 + 智能路由审计</strong>。</p>
+
+<p>我也想过要不要装一下,说「每篇都是我熬夜手写的」。但想了下,<strong>这种装,被识破的概率几乎 100%</strong>,而且就算一时没人识破,我自己也会心虚。</p>
+
+<p>这事我想得很开。</p>
+
+<p>高考志愿这件事,信息量太大,纯靠人写,根本写不完 600 篇;但纯靠 AI,质量又会崩。<strong>唯一可行的,就是 AI 写 + 人审的协作</strong>。</p>
+
+<p>我做的事,主要是这四件:</p>
+
+<ul>
+  <li><strong>挑哪些篇要写</strong>。这事儿 AI 做不了,它不知道哪些专业热门、哪些小众但重要(比如监狱学、邮政工程,家长其实很关心)。</li>
+  <li><strong>审关键字段</strong>。课程表里有没有把「社会心理学」放进「普通心理学」必修这种硬伤;薪资 P75 有没有高到离谱(比如 200 万) — 这些一眼能看出来。</li>
+  <li><strong>改关键段落</strong>。AI 写的「该校就业率 95%」这种空话,我会改成具体的「去年毕业 200 人,签约电网 80 人、新能源车企 50 人」。</li>
+  <li><strong>听被骂</strong>。有家长在评论区说「你写的临床医学,把规培时间都写错了,害死人」,我立刻回去改。AI 不会主动听骂。</li>
+</ul>
+
+<p>这套协作不是「我用 AI 偷懒」,是「AI 帮我把繁琐的事干了,我专心做判断」。</p>
+
+<!-- ═══════════ §6 ═══════════ -->
+<h2>06. 几个我踩过的坑</h2>
+
+<p>写到最后,聊几个真实的教训。</p>
+
+<p><strong>第一,模板套话是 AI 写作的第一原罪</strong>。</p>
+
+<blockquote>
+  <p>「心理学是研究人类心理现象及其影响下的精神功能和行为活动的科学」</p>
+</blockquote>
+
+<p>这种话,跟没写一样。AI 特别爱写,一不留神就糊你一脸。我的对策是,开头第一句,必须有一个<strong>具体的事实</strong>或<strong>反差</strong>。否则直接打回。</p>
+
+<p><strong>第二,跨专业串台是 AI 的高频毛病</strong>。</p>
+
+<p>我让 AI 写「社会学」专业,它经常写「需要编程能力」「毕业生去互联网公司」 — 这是把 CS 专业的皮套到社会学上,看着没毛病,细想全是坑。</p>
+
+<p><strong>第三,占位数据是 AI 的另一个坑</strong>。</p>
+
+<p>早期有篇「材料化学」,AI 写了「15% 毕业生去金融机构」 — 这种数据一看就是凑数的,真实专业没人去金融。我的对策是,<strong>任何没数据源的比例,直接删掉,不要让 AI 编</strong>。</p>
+
+<p><strong>第四,课程表里的「公共必修 vs 专业核心」很容易搞错</strong>。</p>
+
+<p>公共必修是高数/英语/思政/制图,这些是<strong>所有院校都开</strong>的;专业核心是模电/数电/电力系统,这些是<strong>这个专业才开</strong>的。AI 经常把它们混在一起放。</p>
+
+<p><strong>第五,自动化截图工具在今天早上把我坑了</strong>。</p>
+
+<p>我本来想用 Playwright 截一张临床医学页面的图嵌进文章,结果 fonts.loli.net 的字体加载永远卡死,IntersectionObserver 触发的 lazy section 也渲染不出来。手动截图 + 嵌入,反而更可控。</p>
+
+<p>这五条,每一条都让我重新理解了一遍「AI 能干什么、不能干什么」。</p>
 
 <div class="divider">· · · · ·</div>
 
-<p style="font-size:15px;color:#6B5A4A;text-align:center;">
-  这个 skill 真正的护城河不是 12 套主题, 是围绕它们建的质量反馈闭环。<br>
-  <strong>引擎是骨架, 流水线是肌肉, 登记表是神经。</strong>
+<p style="text-align:center;color:#6B5A4A;font-size:15px;">
+  写完回头看,这个 skill 真正的护城河不是 12 套主题,是围绕它们建的质量反馈闭环。<br>
+  <strong>引擎是骨架,流水线是肌肉,我自己审核的那部分,是神经。</strong>
 </p>
 
 <div class="footer">
