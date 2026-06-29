@@ -309,7 +309,8 @@
       user.rank = scoreToRank(user.score, user.type, yfyd);
     }
     if (user.rank == null) {
-      throw new Error("recommend: 缺少分数或位次");
+      // Day 47.7 P1-11: 不 throw (浏览器白屏), 返 error stats 让前端展示 fallback
+      return { stats: { error: "missing_score_or_rank", cards: [], generated_at: new Date().toISOString() } };
     }
 
     const userSet = new Set(user.xuanke || []);
