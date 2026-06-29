@@ -3,6 +3,10 @@
 # 通配 /m/:slug /m/majors/:slug 301 命中后, 物理文件存在直接 serve.
 # Day 35.7 微信分享链接修复保留.
 # Day 47.5: 数字 slug 兜底 (老 sitemap / 外链引用 050104 这种 MOE 代码)
+# Day 47.5.1: /m/sw.js 直通白名单 — 必须在 /m/:slug 通配之前, target=self 是 rewrite 语义,
+#            CF Pages 会直接 serve 物理 /m/sw.js (而非真的 HTTP 跳转, 无死循环)
+
+/m/sw.js   /m/sw.js   200
 
 /m/:slug  /m/majors/:slug  301
 /m/:slug.html  /m/majors/:slug  301
