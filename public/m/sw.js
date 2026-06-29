@@ -5,8 +5,9 @@
  *   - 数据 (manifest.json, hierarchy): stale-while-revalidate
  *   - 网络失败 HTML 请求 → fallback 到 /m/offline (CF Pages 308 去掉 .html, 直接缓存最终 URL)
  * 版本号: 改这里强制升级
+ * Day 47 bump: v3 → v4 (launch SOP)
  */
-const CACHE_NAME = "explorer-v3-e8e9bffc";
+const CACHE_NAME = "explorer-v4-day47-launch";
 const OFFLINE_URL = "/m/offline";
 const SHELL = [
   "/m/",
