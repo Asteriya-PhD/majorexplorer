@@ -253,30 +253,34 @@
       const text = title + ' — ' + SITE;
 
       // ── PC scheme URL 调起客户端 (Day 35.5.1) ──
-      // 微信/QQ 在 PC Web 唤起后, 不会自动把链接填进聊天框
-      // 修法: 先复制链接 (保证拿到), 再唤起客户端, Toast 提示「链接已复制, 打开 X 粘贴发送」
-      // 不再做"未检测到客户端"误判 — 浏览器唤起客户端本就 100% 不可靠检测
-      if (action === 'wechat' || action === 'qq') {
-        const schemes = {
-          wechat: 'weixin://',
-          qq: 'tencent://message/?Menu=yes&Url=' + encodeURIComponent(url) + '&Title=' + encodeURIComponent(text),
-        };
-        const label = action === 'wechat' ? '微信' : 'QQ';
-        // 1) 先复制链接 (核心目的)
+      // 微信 PC: weixin:// 100% 有效
+      // QQ PC: tencent:// 各版本兼容性差, 用户多装了 NT 新版 QQ
+      //   修法: 微信走 scheme + 复制, QQ 只复制链接 + Toast 引导手动操作
+      //        (避免误报"未检测到", 用户体验更直接)
+      if (action === 'wechat') {
         const ok = await copyLink(url);
-        // 2) Toast 提示 (弹层关掉之后才能看到)
         setTimeout(() => {
           showToast(ok
-            ? `链接已复制, 打开 ${label} 粘贴发送`
+            ? '链接已复制, 打开微信粘贴发送'
             : `请手动复制链接: ${url}`);
         }, 200);
-        // 3) 尝试唤起客户端 (失败也不报错, 用户能用复制的链接)
+        // 唤起微信 PC 客户端
         setTimeout(() => {
-          try {
-            window.location.href = schemes[action];
-          } catch (_) { /* ignore */ }
+          try { window.location.href = 'weixin://'; } catch (_) {}
         }, 100);
-        track('share_' + action);
+        track('share_wechat');
+        closeSheet();
+        return;
+      }
+
+      if (action === 'qq') {
+        // QQ 不尝试唤起 (tencent:// 各版本兼容性差, 误判多)
+        // 直接复制 + 提示, 用户去 QQ 粘贴更可靠
+        const ok = await copyLink(url);
+        showToast(ok
+          ? '链接已复制, 打开 QQ 粘贴发送 (Ctrl+V)'
+          : `请手动复制链接: ${url}`);
+        track('share_qq');
         closeSheet();
         return;
       }
