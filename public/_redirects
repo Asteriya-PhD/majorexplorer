@@ -1,23 +1,30 @@
 # Cloudflare Pages _redirects
-# Day 42 修复: m/ 顶层页 (search/index/catalog/...) 被 m/:slug 通配误吞 → 301 到 m/majors/ 后 404
-# 解决: 在通配前加 6 条白名单, 让 m/search.html 等直达原文件
-/m/search.html       /m/search.html       200
-/m/index.html        /m/index.html        200
-/m/catalog.html      /m/catalog.html      200
-/m/recommendations.html  /m/recommendations.html  200
-/m/wishlist.html     /m/wishlist.html     200
-/m/me.html           /m/me.html           200
-/m/offline.html      /m/offline.html      200
+# Day 42 修复 (4d769656, 不完整): m/ 顶层页 (search/index/catalog/...) 被 m/:slug 通配误吞 → 301 到 m/majors/ 后 404
+# Day 41 完整修复 (a2eea2a8 + 后续): 加 14 条白名单 (.html + 无后缀)
+# CF Pages pretty URL: 自动 .html ↔ 无后缀 308 (先于 _redirects), 必须 .html + 无后缀都加
+/m/search.html          /m/search.html          200
+/m/search               /m/search.html          200
+/m/index.html           /m/index.html           200
+/m/index                /m/index.html           200
+/m/catalog.html         /m/catalog.html         200
+/m/catalog              /m/catalog.html         200
+/m/recommendations.html /m/recommendations.html 200
+/m/recommendations      /m/recommendations.html 200
+/m/wishlist.html        /m/wishlist.html        200
+/m/wishlist             /m/wishlist.html        200
+/m/me.html              /m/me.html              200
+/m/me                   /m/me.html              200
+/m/offline.html         /m/offline.html         200
+/m/offline              /m/offline.html         200
 
 # Day 35.7 修复: 移动 UA 自动 302 路径错误
 # 问题: CF Pages 移动 UA 访问 /{slug} 自动 302 到 /m/{slug} (错的)
 # 实际 mobile 路径是 /m/majors/{slug}
 #
 # 方案: 强制重定向 /m/{slug} 到正确路径 /m/majors/{slug} (兜底)
-/m/:slug  /m/majors/:slug  301
-
-# 同时支持 .html 后缀
-/m/:slug.html  /m/majors/:slug  301
+# target 加 .html 后缀避免 pretty URL 二次 308 死循环
+/m/:slug  /m/majors/:slug.html  301
+/m/:slug.html  /m/majors/:slug.html  301
 
 # 404 兜底: 任何不存在的路径 → 品牌 404.html (不跳出站)
 /*  /404.html  404
