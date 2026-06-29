@@ -349,8 +349,14 @@
     // 优先 share files (iOS 13+ / Android Chrome 75+)
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
-        await navigator.share({ files: [file], title, text, url });
+        // text 包含链接 + 引导文案, 让某些 App (Android) 尝试自动 paste
+        const richText = `${title}\n${url}\n\n长按图片发给朋友, 或复制链接粘贴`;
+        // 同时把链接放剪贴板 (iOS 微信不会自动 paste, 用户切回需手动粘贴)
+        copyLink(url);
+        await navigator.share({ files: [file], title, text: richText, url });
         track('share_native_files');
+        // 用户切回页面 (visibilitychange) 给个 toast 提示
+        onReturnFromShare();
         return;
       } catch (e) {
         // 用户取消 → 结束; 系统拒绝 → 降级
@@ -360,8 +366,11 @@
     // 降级 1: 只分享链接 (无 file 时也能用)
     if (navigator.share) {
       try {
-        await navigator.share({ title, text, url });
+        const richText = `${title}\n${url}\n\n长按发送给朋友, 或复制链接粘贴`;
+        copyLink(url);
+        await navigator.share({ title, text: richText, url });
         track('share_native_url');
+        onReturnFromShare();
         return;
       } catch (e) {
         if (e && e.name === 'AbortError') return;
@@ -369,6 +378,20 @@
     }
     // 降级 2: 自建 2 选项弹层 (复制 + 长图)
     buildMobileFallback();
+  }
+
+  // ── 用户切回页面 (share 后从微信/QQ 回来) 提示 ──
+  function onReturnFromShare() {
+    const handler = () => {
+      if (document.visibilityState === 'visible') {
+        document.removeEventListener('visibilitychange', handler);
+        showToast('已分享 ✓ 到目标 App, 长按粘贴链接');
+        setTimeout(() => {
+          document.querySelector('.share-toast')?.remove();
+        }, 3500);
+      }
+    };
+    document.addEventListener('visibilitychange', handler);
   }
 
   // ── 移动端降级弹层: 复制链接 + 生成长图 ──
