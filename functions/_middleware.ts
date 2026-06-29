@@ -14,30 +14,25 @@ const MOBILE_TOP_PAGES = new Set([
 ]);
 
 export async function onRequest(context) {
-  const { request, next, env } = context;
+  const { request, next } = context;
   const url = new URL(request.url);
 
-  // 1) 已经在 mobile 路径下: 不动 (但要先排除 m/ 顶层页通配)
+  // 1) 已经在 mobile 路径下: 检查 m/ 顶层页通配 (Day 41+)
   if (url.pathname === "/m" || url.pathname.startsWith("/m/")) {
-    // Day 41+: m/ 顶层页 (search/index/catalog/...) 被 _redirects /m/:slug 通配误吞 → 404
-    // 在 middleware 层直接 serve 物理文件, 绕过 _redirects 通配.
+    // /m/{slug} 或 /m/{slug}.html 单段路径, slug 在白名单 → 直接 serve 物理 .html 文件
+    // 绕过 _redirects /m/:slug 通配 (Day 35.7 微信分享修复会误吞)
     const segs = url.pathname.replace(/^\/m\/?/, "").split("/").filter(Boolean);
-    // 只对 /m/{slug} 或 /m/{slug}.html (单段) 拦截, 不动 /m/majors/{x} (双段)
     if (segs.length === 1) {
       let slug = segs[0];
-      // 去掉 .html 后缀
       if (slug.endsWith(".html")) slug = slug.slice(0, -5);
       if (MOBILE_TOP_PAGES.has(slug)) {
-        const target = `/m/${slug}.html`;
-        try {
-          // 用 env.ASSETS 直接拿物理文件 (CF Pages 提供)
-          const assetResp = await env.ASSETS.fetch(new URL(target, url));
-          if (assetResp && assetResp.status === 200) return assetResp;
-        } catch (e) {
-          console.warn("[m-middleware] asset fetch failed", slug, e);
-        }
-        // fallback: 302 浏览器跟 target, 让浏览器拿到 .html
-        return Response.redirect(new URL(target, url), 302);
+        // 不调用 next(), 直接 302 浏览器跟到 .html 物理路径
+        // _redirects 第 4-10 行白名单 (/m/wishlist.html 200) 会命中 → serve 物理文件
+        const target = `/m/${slug}.html${url.search}`;
+        return new Response(null, {
+          status: 301,  // 用 301 而非 302, 浏览器缓存, 减少循环
+          headers: { Location: target },
+        });
       }
     }
     return next();
