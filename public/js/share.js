@@ -322,9 +322,9 @@
   }
 
   // ── Day 35.5 移动端分享: 直接 share files ──
-  // ── Day 35.6 移动端分享: 显示名片 modal 让用户长按保存 ──
-  // iOS Web 不支持 Web Share API 唤起微信 (系统限制), 但支持长按 <img> 保存到相册
-  // 改: 不再 navigator.share, 直接生成 1080×1500 名片图, 显示 modal, 用户长按 → 保存到相册
+  // ── Day 35.8 移动端分享: 直接显示名片 modal ──
+  // 完全不调 navigator.share (iOS 微信内置面板唤不起, 体验差)
+  // 改成直接 showShareCardModal 显示 <img>, 用户长按 → 保存到相册 → 微信选图发送
   async function openMobileShare() {
     const tip = showToast('正在生成分享名片…');
     let blob;
@@ -338,28 +338,7 @@
       return;
     }
     tip.remove();
-    const file = new File([blob], `${location.pathname.split('/').pop().replace('.html', '') || 'major'}-${SITE}.png`, {
-      type: 'image/png',
-    });
-
-    // 优先 navigator.share({files}) — Android Chrome 通常能唤起微信/QQ
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        copyLink(location.href);
-        await navigator.share({
-          files: [file],
-          title: document.title,
-          text: `${document.title}\n${location.href}`,
-        });
-        track('share_native_files');
-        return;
-      } catch (e) {
-        if (e && e.name === 'AbortError') return;
-        // share 失败 → 降级 modal
-      }
-    }
-
-    // 降级: 显示长按 modal (iOS 也能用, 长按图片 → 保存到相册)
+    // 直接显示 modal (iOS/Android 都用, 不再尝试 navigator.share)
     showShareCardModal(blob);
   }
 
