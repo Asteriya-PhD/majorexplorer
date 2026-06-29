@@ -75,9 +75,22 @@ def audit_one(client: M3Client, slug: str, title: str, style: str) -> dict:
                 data_copy["curriculum"][k] = v[:8] + ["..."]
     if "top_schools" in data_copy and isinstance(data_copy["top_schools"], list):
         data_copy["top_schools"] = data_copy["top_schools"][:10]
+    # 优先保留 pitfalls / deep_study / alumni_quotes 后置字段 (Day 43 audit 误判 bug)
+    # 总上限 18000 chars (vs 老 12000), 让 m3/deepseek 看到全部 18 字段
     json_str = json.dumps(data_copy, ensure_ascii=False, indent=2)
-    if len(json_str) > 12000:
-        json_str = json_str[:12000] + "\n... (truncated)"
+    if len(json_str) > 18000:
+        # 截断 curriculum_note / employment_direction 细节 (非 audit critical)
+        for k in ("curriculum_note", "employment_direction", "overview_v2"):
+            if k in data_copy:
+                if isinstance(data_copy[k], dict):
+                    # 保留 overview_v2.pitfalls 关键, 截 employment_direction 数组
+                    if k == "overview_v2":
+                        data_copy[k] = {kk: (vv[:6] + ["..."] if isinstance(vv, list) and len(vv) > 6 else vv) for kk, vv in data_copy[k].items()}
+                elif isinstance(data_copy[k], list) and len(data_copy[k]) > 8:
+                    data_copy[k] = data_copy[k][:8]
+        json_str = json.dumps(data_copy, ensure_ascii=False, indent=2)
+        if len(json_str) > 18000:
+            json_str = json_str[:18000] + "\n... (truncated)"
 
     prompt = AUDIT_PROMPT.format(title=title, style=style, json_str=json_str)
     payload = client._call({
