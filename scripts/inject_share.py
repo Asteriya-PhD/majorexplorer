@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 
 # ── Mobile: 修死代码 + 注入 ──
+# 注: 用 /js/share.js 绝对路径, 不写 ../js/share.js
+# 因为 CF Pages 308 把 .html 删了, 相对路径从 /m/majors/ 解析成 /m/js/ (错) 而不是 /js/ (对)
 MOBILE_TOPBTN_OLD = re.compile(
     r'<a class="top-btn" href="javascript:navigator\.share\?navigator\.share\(\{title:document\.title\}\):void\(0\)" aria-label="分享">↗</a>'
 )
@@ -29,8 +31,8 @@ MOBILE_TOPBTN_NEW = '<button type="button" class="top-btn" data-share-trigger ar
 MOBILE_FAB_AND_SCRIPT = (
     '\n\n<!-- 分享 FAB + 长图导出 (Day 35 share 注入) -->\n'
     '<button type="button" class="share-fab" data-share-trigger aria-label="分享">↗</button>\n'
-    '<link rel="stylesheet" href="../css/share.css">\n'
-    '<script src="../js/share.js" defer></script>\n'
+    '<link rel="stylesheet" href="/css/share.css">\n'
+    '<script src="/js/share.js" defer></script>\n'
 )
 
 # ── PC: 注入 ──

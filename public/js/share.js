@@ -64,67 +64,102 @@
   }
 
   // ── 长图生成 (html2canvas → canvas → blob → 触发下载) ──
+  // 根因 (Day 35 v2): 原 selector 选到 hero 内的 .container, 只截首屏
+  // 修法: 用 wrapper div 临时包住 body 所有子节点, 截 wrapper (html2canvas 官方推荐)
   async function exportImage() {
     const html2canvas = await loadHtml2Canvas();
-    // 选最长一段 (PC: .ovv-container 找不到就用 main, 移动: 整页)
-    const target =
-      document.querySelector('main, .container, .ovv-container') ||
-      document.body;
-
-    // 提示
     const tip = showToast('正在生成图片…');
 
+    // ── 临时 wrapper: 把所有 body 子节点包进一个 div, 让 html2canvas 知道完整尺寸 ──
+    const wrapper = document.createElement('div');
+    wrapper.id = '__share-wrapper-tmp';
+    wrapper.style.cssText = 'position:relative;width:100%;background:#FFFFFF;';
+    // 把 body 的所有子节点先搬进 wrapper (排除 share-sheet 自身 + share-fab)
+    const nodes = Array.from(document.body.children).filter(n =>
+      !n.classList.contains('share-sheet') &&
+      !n.classList.contains('share-fab') &&
+      !n.classList.contains('share-toast') &&
+      !n.classList.contains('share-qr-modal')
+    );
+    const originals = nodes.map(n => ({ node: n, parent: n.parentNode, next: n.nextSibling }));
+    nodes.forEach(n => wrapper.appendChild(n));
+    document.body.appendChild(wrapper);
+
+    // 等 layout settle (字体/图片/SVG 异步加载)
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
+
+    let canvas;
     try {
-      const canvas = await html2canvas(target, {
+      const W = Math.max(wrapper.scrollWidth, document.documentElement.scrollWidth);
+      const H = Math.max(wrapper.scrollHeight, document.documentElement.scrollHeight);
+      canvas = await html2canvas(wrapper, {
         scale: 2,
         useCORS: true,
         backgroundColor: '#FFFFFF',
         logging: false,
-        windowWidth: target.scrollWidth,
-        windowHeight: target.scrollHeight,
+        width: W,
+        height: H,
+        windowWidth: W,
+        windowHeight: H,
+        scrollX: 0,
+        scrollY: 0,
       });
-
-      // 加水印域名 (右下角)
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width, h = canvas.height;
-      const pad = Math.round(w * 0.025);
-      ctx.save();
-      // 背景条
-      ctx.fillStyle = 'rgba(184, 50, 58, 0.92)';
-      const tagH = Math.round(h * 0.04);
-      ctx.fillRect(0, h - tagH, w, tagH);
-      // 文字
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = `600 ${Math.round(tagH * 0.4)}px "Songti SC", "PingFang SC", serif`;
-      ctx.textBaseline = 'middle';
-      ctx.textAlign = 'left';
-      ctx.fillText(SITE, pad, h - tagH / 2);
-      // 右边小字
-      ctx.textAlign = 'right';
-      ctx.font = `${Math.round(tagH * 0.32)}px "PingFang SC", sans-serif`;
-      ctx.fillText('Major Explorer · 高考专业导览', w - pad, h - tagH / 2);
-      ctx.restore();
-
-      // 触发下载
-      canvas.toBlob((blob) => {
-        if (!blob) { tip.textContent = '生成失败'; return; }
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        const slug = location.pathname.split('/').pop().replace('.html', '') || 'major';
-        a.download = `${slug}-${SITE}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tip.textContent = '已保存到下载文件夹';
-        setTimeout(() => tip.remove(), 2200);
-      }, 'image/png', 0.92);
     } catch (e) {
       console.error('[share] export failed', e);
       tip.textContent = '生成失败, 请尝试复制链接';
       setTimeout(() => tip.remove(), 2200);
+      return;
+    } finally {
+      // ── 恢复 DOM: 把节点搬回 body 原位置 ──
+      originals.forEach(({ node, parent, next }) => {
+        if (next && next.parentNode === wrapper) {
+          wrapper.insertBefore(node, next);
+        } else if (next) {
+          parent.insertBefore(node, next);
+        } else {
+          parent.appendChild(node);
+        }
+      });
+      wrapper.remove();
     }
+
+    // 加水印域名 (底部)
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const pad = Math.round(w * 0.025);
+    ctx.save();
+    // 背景条
+    ctx.fillStyle = 'rgba(184, 50, 58, 0.92)';
+    const tagH = Math.round(h * 0.04);
+    ctx.fillRect(0, h - tagH, w, tagH);
+    // 文字
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = `600 ${Math.round(tagH * 0.4)}px "Songti SC", "PingFang SC", serif`;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    ctx.fillText(SITE, pad, h - tagH / 2);
+    // 右边小字
+    ctx.textAlign = 'right';
+    ctx.font = `${Math.round(tagH * 0.32)}px "PingFang SC", sans-serif`;
+    ctx.fillText('Major Explorer · 高考专业导览', w - pad, h - tagH / 2);
+    ctx.restore();
+
+    // 触发下载
+    canvas.toBlob((blob) => {
+      if (!blob) { tip.textContent = '生成失败'; return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const slug = location.pathname.split('/').pop().replace('.html', '') || 'major';
+      a.download = `${slug}-${SITE}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      tip.textContent = '已保存到下载文件夹';
+      setTimeout(() => tip.remove(), 2200);
+    }, 'image/png', 0.92);
   }
 
   // ── Toast ──
@@ -276,7 +311,13 @@
       <div class="share-qr-mask" data-qr-close></div>
       <div class="share-qr-panel">
         <div class="share-qr-hint">${hint}</div>
-        <img class="share-qr-img" alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(url)}">
+        <img class="share-qr-img" alt="QR"
+             src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(url)}"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="share-qr-fallback" style="display:none;">
+          <div class="share-qr-fallback-url">${url}</div>
+          <div class="share-qr-fallback-tip">截图发给朋友, 或在微信粘贴打开</div>
+        </div>
         <div class="share-qr-url">${SITE}</div>
         <button class="share-qr-close" data-qr-close>关闭</button>
       </div>
@@ -285,7 +326,7 @@
     modal.addEventListener('click', (e) => {
       if (e.target.closest('[data-qr-close]')) modal.remove();
     });
-    setTimeout(() => modal.remove(), 60000); // 60s 自动关闭
+    setTimeout(() => modal.remove(), 90000); // 90s 自动关闭
   }
 
   // ── Plausible 事件追踪 ──
