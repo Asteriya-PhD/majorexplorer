@@ -1,14 +1,23 @@
 # Cloudflare Pages _redirects
-# Day 41+ 修复: m/ 顶层页 clean URL → .html (避免 self-rewrite 死循环)
-# 只写 clean→html 一边: 浏览器跟 301 到 .html 后, _redirects 无规则匹配 (因为没写 .html source),
-# CF Pages 直接 serve 物理文件, 不再 308 回去 (物理文件已存在, pretty URL no-op). 无循环.
+# Day 41+ 修复: m/ 顶层页 .html + clean URL 都白名单 (避免通配误吞 → 404)
 # 物理文件 public/m/{search,index,catalog,recommendations,wishlist,me,offline}.html 都存在
+#
+# 关键: target 必须含 .html 后缀 (CF Pages 物理文件路径), 不能是 clean URL.
+# 浏览器跟 301 后 CF Pages 看到 .html, 物理文件存在, 直接 serve, 不触发 pretty URL 308 (no-op).
+# 不写 self-redirect (避免死循环, Day 41 ERR_TOO_MANY_REDIRECTS 教训).
+/m/wishlist.html        /m/wishlist.html        301
 /m/wishlist             /m/wishlist.html        301
+/m/search.html          /m/search.html          301
 /m/search               /m/search.html          301
+/m/index.html           /m/index.html           301
 /m/index                /m/index.html           301
+/m/catalog.html         /m/catalog.html         301
 /m/catalog              /m/catalog.html         301
+/m/recommendations.html /m/recommendations.html 301
 /m/recommendations      /m/recommendations.html 301
+/m/me.html              /m/me.html              301
 /m/me                   /m/me.html              301
+/m/offline.html         /m/offline.html         301
 /m/offline              /m/offline.html         301
 
 # Day 35.7 修复: 移动 UA 自动 302 路径错误
@@ -16,7 +25,6 @@
 # 实际 mobile 路径是 /m/majors/{slug}
 #
 # 方案: 强制重定向 /m/{slug} 到正确路径 /m/majors/{slug} (兜底)
-# 注意: target 不加 .html, 因为 :slug 已经包含 .html 后缀 (来自 :slug.html 通配)
 /m/:slug  /m/majors/:slug  301
 /m/:slug.html  /m/majors/:slug  301
 
