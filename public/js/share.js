@@ -143,10 +143,11 @@
         el.style.transition = transition;
       });
       // ── 恢复 DOM: 把节点搬回 body 原位置 ──
-      originals.forEach(({ node, parent, next }) => {
-        if (next && next.parentNode === wrapper) {
-          wrapper.insertBefore(node, next);
-        } else if (next) {
+      // Day 35.14 修复: 之前循环中后续的 next 可能已被搬走, insertBefore 报错
+      // 修: reverse 循环, 先搬最后一个节点, 保证 next 始终存在
+      originals.slice().reverse().forEach(({ node, parent, next }) => {
+        if (parent !== document.body) return;
+        if (next && next.parentNode === parent) {
           parent.insertBefore(node, next);
         } else {
           parent.appendChild(node);
@@ -664,10 +665,13 @@
       restoreOps.forEach(({ el, opacity, transform, transition }) => {
         el.style.opacity = opacity; el.style.transform = transform; el.style.transition = transition;
       });
-      originals.forEach(({ node, parent, next }) => {
-        if (next && next.parentNode === wrapper) wrapper.insertBefore(node, next);
-        else if (next) parent.insertBefore(node, next);
-        else parent.appendChild(node);
+      originals.slice().reverse().forEach(({ node, parent, next }) => {
+        if (parent !== document.body) return;
+        if (next && next.parentNode === parent) {
+          parent.insertBefore(node, next);
+        } else {
+          parent.appendChild(node);
+        }
       });
       wrapper.remove();
     }
