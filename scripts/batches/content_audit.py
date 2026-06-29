@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scf"))
 
-from synth.llm import DeepSeekClient as M3Client  # noqa: E402
+from synth.llm import get_client as make_client  # noqa: E402  # Day 40: 工厂方法尊重 LLM_PROVIDER env (避免 deepseek key 失效时硬挂)
 
 CUR = ROOT / "skills/gaokao-major-explorer/data/curated"
 
@@ -62,7 +62,7 @@ AUDIT_PROMPT = """你是中国高考专业内容质量评估员. 严格检查下
 """
 
 
-def audit_one(client: M3Client, slug: str, title: str, style: str) -> dict:
+def audit_one(client, slug: str, title: str, style: str) -> dict:
     p = CUR / f"{slug}.json"
     if not p.exists():
         return {"slug": slug, "title": title, "error": "json 缺失"}
@@ -127,7 +127,7 @@ def main():
     if args.limit:
         pairs = pairs[:args.limit]
 
-    client = M3Client(enable_thinking=False)
+    client = make_client(enable_thinking=False)
     print(f"🔍 内容质量审计: {len(pairs)} 篇, auditor=deepseek")
     print(f"{'='*80}")
 
