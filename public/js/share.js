@@ -343,8 +343,9 @@
   }
 
   // ── 移动端名片 modal (iOS 长按保存) ──
+  // Day 35.12 修复: 不用 <img src=blob URL> 触发 onerror, 改用 data URL
+  // 原因: iOS WebKit 对 blob URL 显示偶尔 decode 失败, onerror 兜底频繁触发
   function showShareCardModal(blob) {
-    const url = URL.createObjectURL(blob);
     const slug = location.pathname.split('/').pop().replace('.html', '') || 'major';
     // 自动复制链接兜底
     copyLink(location.href);
@@ -352,33 +353,64 @@
     // 先关闭现有 sheet
     document.querySelectorAll('.share-sheet, .share-card-modal').forEach(el => el.remove());
 
-    const modal = document.createElement('div');
-    modal.className = 'share-card-modal';
-    modal.innerHTML = `
-      <div class="share-card-mask" data-card-close></div>
-      <div class="share-card-panel" role="dialog" aria-label="分享名片">
-        <div class="share-card-handle"></div>
-        <div class="share-card-title">长按图片 → 保存到相册</div>
-        <div class="share-card-tip">然后在微信/朋友圈/小红书选择图片发送, 朋友扫码即可查看完整专业介绍</div>
-        <img class="share-card-img" src="${url}" alt="分享名片" draggable="false"
-             onerror="this.onerror=null;this.outerHTML='<div class=\\'share-card-img-fallback\\'>图片生成失败<br><br>链接已复制, 请直接粘贴分享:<br><b>'+location.href+'</b></div>';">
-        <div class="share-card-actions">
-          <button class="share-card-btn-primary" data-card-close>我已保存, 完成</button>
+    // 用 FileReader 转 data URL (data URL 在 iOS 上比 blob URL 显示更稳)
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      const modal = document.createElement('div');
+      modal.className = 'share-card-modal';
+      modal.innerHTML = `
+        <div class="share-card-mask" data-card-close></div>
+        <div class="share-card-panel" role="dialog" aria-label="分享名片">
+          <div class="share-card-handle"></div>
+          <div class="share-card-title">长按图片 → 保存到相册</div>
+          <div class="share-card-tip">然后在微信/朋友圈/小红书选择图片发送, 朋友扫码即可查看完整专业介绍</div>
+          <img class="share-card-img" src="${dataUrl}" alt="分享名片" draggable="false">
+          <div class="share-card-actions">
+            <button class="share-card-btn-primary" data-card-close>我已保存, 完成</button>
+          </div>
         </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    document.documentElement.classList.add('share-sheet-open');
+      `;
+      document.body.appendChild(modal);
+      document.documentElement.classList.add('share-sheet-open');
 
-    modal.addEventListener('click', (ev) => {
-      if (ev.target.closest('[data-card-close]')) {
-        modal.remove();
-        document.documentElement.classList.remove('share-sheet-open');
-        URL.revokeObjectURL(url);
-      }
-    });
-    setTimeout(() => modal.setAttribute('data-open', 'true'), 16);
-    track('share_card_modal');
+      modal.addEventListener('click', (ev) => {
+        if (ev.target.closest('[data-card-close]')) {
+          modal.remove();
+          document.documentElement.classList.remove('share-sheet-open');
+        }
+      });
+      setTimeout(() => modal.setAttribute('data-open', 'true'), 16);
+      track('share_card_modal');
+    };
+    reader.onerror = () => {
+      // FileReader 失败 → 走 fallback (复制链接 + 提示)
+      const modal = document.createElement('div');
+      modal.className = 'share-card-modal';
+      modal.setAttribute('data-open', 'true');
+      modal.innerHTML = `
+        <div class="share-card-mask" data-card-close></div>
+        <div class="share-card-panel" role="dialog" aria-label="分享名片">
+          <div class="share-card-handle"></div>
+          <div class="share-card-title">分享</div>
+          <div class="share-card-tip">链接已复制到剪贴板, 请直接粘贴到微信/朋友圈/小红书发送给朋友</div>
+          <div class="share-card-fallback-url">${location.href}</div>
+          <div class="share-card-actions">
+            <button class="share-card-btn-primary" data-card-close>我已复制, 完成</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      document.documentElement.classList.add('share-sheet-open');
+      modal.addEventListener('click', (ev) => {
+        if (ev.target.closest('[data-card-close]')) {
+          modal.remove();
+          document.documentElement.classList.remove('share-sheet-open');
+        }
+      });
+      track('share_card_fallback');
+    };
+    reader.readAsDataURL(blob);
   }
 
   // ── 用户切回页面 (share 后从微信/QQ 回来) 提示 ──
