@@ -27,6 +27,12 @@ export async function onRequest(context) {
   ) {
     return next();
   }
+  // 2.5) Day 41: PC 顶层页 (/search.html) 响应式自适应, mobile UA 直通不要 302 到 /m/
+  // 原因: /m/search.html 被 _redirects /m/:slug 通配误吞 → 404
+  // PC /search.html 有 viewport meta + 7 个 @media breakpoint, 移动端宽度自适应
+  if (url.pathname === "/search.html" || url.pathname === "/search") {
+    return next();
+  }
   // 3) ?desktop=1 → 跳过 sniff
   if (url.searchParams.get("desktop") === "1") {
     return next();
