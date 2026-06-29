@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>我 · Major Explorer</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/dock.css">
+<style>
+  .hero { padding: 26px 24px 22px; }
+  .hero::before { content: "我"; font-size: clamp(11rem, 60vw, 16rem); }
+  .hero-title .punct { color: var(--accent); }
+  .hero-lede { font-size: 0.875rem; color: var(--muted); line-height: 1.55; max-width: 24em; }
+
+  .section { padding: 38px 24px 28px; }
+  .section-title { font-size: 1.625rem; letter-spacing: -0.02em; }
+
+  .history { display: flex; flex-direction: column; margin-top: 4px; }
+  .hist-row {
+    display: grid;
+    grid-template-columns: 4px 1fr auto;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    min-height: 54px;
+  }
+  .hist-row::before {
+    content: ""; background: var(--theme, var(--accent));
+    align-self: stretch; border-radius: 1px; margin: 4px 0;
+  }
+  .hist-row:last-child { border-bottom: 0; }
+  .hist-body { min-width: 0; }
+  .hist-cat {
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .hist-cat .star { color: var(--accent); margin-left: 3px; }
+  .hist-title {
+    font-family: var(--font-heading);
+    font-size: 1rem; font-weight: 600; color: var(--fg); line-height: 1.2;
+  }
+  .hist-time {
+    font-family: var(--font-num); font-size: 0.6875rem; color: var(--muted-2);
+    letter-spacing: 0.06em; text-align: right; white-space: nowrap;
+  }
+  .history-clear {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 0; margin-top: 8px;
+    font-family: var(--font-num); font-size: 0.75rem;
+    color: var(--muted-2); cursor: pointer;
+  }
+  .history-clear:hover { color: var(--accent); }
+
+  .about-list { display: flex; flex-direction: column; gap: 18px; }
+  .about-row {
+    display: grid; grid-template-columns: 4px 1fr; gap: 14px;
+    align-items: start;
+  }
+  .about-row::before {
+    content: ""; background: var(--accent);
+    align-self: stretch; border-radius: 1px; min-height: 32px;
+  }
+  .about-row h4 {
+    font-family: var(--font-heading);
+    font-size: 1rem; font-weight: 700; color: var(--fg);
+    margin: 0 0 4px;
+  }
+  .about-row p {
+    font-family: var(--font-body);
+    font-size: 0.875rem; color: var(--fg-soft);
+    line-height: 1.6; margin: 0;
+  }
+  .about-row strong { color: var(--fg); font-weight: 600; }
+
+  .legal-list {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .legal-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-body);
+    font-size: 0.9375rem; color: var(--fg);
+  }
+  .legal-row:last-child { border-bottom: 0; }
+  .legal-row .arrow { color: var(--muted-2); font-family: var(--font-num); }
+
+  .cta-feedback {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    background: var(--fg); color: var(--bg);
+    border-radius: 4px;
+    font-family: var(--font-heading);
+    font-size: 0.9375rem; font-weight: 600;
+    margin-top: 16px;
+  }
+</style>
+<link rel="canonical" href="https://majorexplorer.com/m/me.html">
+<meta property="og:title" content="我的 · Major Explorer">
+<meta property="og:description" content="查看收藏、推荐历史、设置。">
+<meta property="og:image" content="https://majorexplorer.com/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://majorexplorer.com/m/me.html">
+
+  <!-- BEGIN_PLAUSIBLE -->
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-JoO60gAuRbbJLQt8opHkb.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+  <script>
+(function(){
+  if (!window.addEventListener) return;
+  function report(kind, msg, src, ln, col, err) {
+    try {
+      var payload = JSON.stringify({
+        kind: kind, msg: String(msg || '').slice(0, 500),
+        src: src || '', line: ln || 0, col: col || 0,
+        url: location.href, ua: navigator.userAgent
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/report', new Blob([payload], {type: 'application/json'}));
+      } else if (fetch) {
+        fetch('/api/report', {method: 'POST', body: payload, keepalive: true}).catch(function(){});
+      }
+    } catch (e) {}
+  }
+  window.addEventListener('error', function(e){
+    report('error', e.message, e.filename, e.lineno, e.colno, e.error);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    var r = (e && e.reason) || {};
+    report('reject', r.message || r.toString(), '', 0, 0, r);
+  });
+})();
+</script>
+  <!-- END_PLAUSIBLE -->
+</head>
+<body>
+
+<header class="topbar">
+  <div class="top-left">
+    <div class="wordmark">
+      <span class="dot"></span>
+      <span class="stack">
+        <span class="l1">Major</span>
+        <span class="l2">Explorer</span>
+      </span>
+    </div>
+  </div>
+  <div class="top-right">
+    <a class="search-icon" href="/search.html" aria-label="搜索">⌕</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow"><span class="rule"></span>无账号</div>
+  <h1 class="hero-title">走过<span class="punct">。</span></h1>
+  <p class="hero-lede">本站不要求账号。最近读过的专业会自动记在本地, 你可随时清空.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="n" id="hist-count">0</span><span class="l">浏览</span></div>
+    <div class="stat"><span class="n" id="wish-count">0</span><span class="l">收藏</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-num">No. 01 / 浏览</div>
+      <h2 class="section-title">最近<span class="accent">读过</span></h2>
+    </div>
+  </div>
+  <div class="history" id="history">
+    <div class="hist-row">
+      <div class="hist-body">
+        <div class="hist-cat">—</div>
+        <div class="hist-title" style="color: var(--muted);">还没读过任何专业</div>
+      </div>
+    </div>
+  </div>
+  <a class="history-clear" id="hist-clear">清空记录</a>
+</section>
+
+<section class="section alt">
+  <div class="section-head">
+    <div>
+      <div class="section-num">No. 02 / 关于</div>
+      <h2 class="section-title">关于<span class="accent">本站</span></h2>
+    </div>
+  </div>
+  <div class="about-list">
+    <div class="about-row">
+      <div>
+        <h4>写给一无所知的高三生</h4>
+        <p>我们假设你 <strong>18 岁</strong>, 第一次面对"专业"这两个字。所以不堆术语, 不写"前景广阔"这种废话, 只讲<strong>读完 4 年你真的能去哪</strong>。</p>
+      </div>
+    </div>
+    <div class="about-row">
+      <div>
+        <h4>数据来源</h4>
+        <p>教育部第五轮学科评估 · 软科 2025 专业排名 · 校友会 2026 · 麦可思就业蓝皮书 · 阳光高考 100 选科数据库 · 校友访谈。</p>
+      </div>
+    </div>
+    <div class="about-row">
+      <div>
+        <h4>我们不做什么</h4>
+        <p>不替代官方文件, 不卖志愿填报服务, 不收任何费用, 不展示院校广告。所有数据可在文末出处交叉核验.</p>
+      </div>
+    </div>
+  </div>
+  <button class="cta-feedback" id="feedback-btn" type="button">提个反馈 / 报告问题</button>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div>
+      <div class="section-num">No. 03 / 法务</div>
+      <h2 class="section-title">法务<span class="accent">与版权</span></h2>
+    </div>
+  </div>
+  <div class="legal-list">
+    <a class="legal-row" href="/terms.html">服务条款 <span class="arrow">›</span></a>
+    <a class="legal-row" href="/privacy.html">隐私政策 <span class="arrow">›</span></a>
+    <a class="legal-row" href="/disclaimer.html">数据来源声明 <span class="arrow">›</span></a>
+  </div>
+</section>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab active" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<!-- 反馈 modal (Day 21: 加 category 细分) -->
+<div class="feedback-modal" id="feedback-modal" hidden>
+  <div class="feedback-modal-bg" id="feedback-modal-bg"></div>
+  <div class="feedback-modal-card">
+    <div class="feedback-modal-head">提个反馈</div>
+    <div class="feedback-modal-hint">选一类, 1 分钟限 1 次 (写多少都行)</div>
+    <div class="fb-category-row" role="radiogroup" aria-label="反馈类型">
+      <label class="fb-cat-label"><input type="radio" name="m-fb-cat" value="want" checked>💡 想看</label>
+      <label class="fb-cat-label"><input type="radio" name="m-fb-cat" value="bug">🐛 Bug</label>
+      <label class="fb-cat-label"><input type="radio" name="m-fb-cat" value="like">👍 点赞</label>
+    </div>
+    <textarea class="feedback-modal-textarea" id="feedback-text" placeholder="例: 想看「考古学」/ 选科表错了 / 排版很棒…"></textarea>
+    <div class="feedback-modal-actions">
+      <button class="fb-btn fb-cancel" id="fb-cancel" type="button">取消</button>
+      <button class="fb-btn fb-send" id="fb-send" type="button">发送</button>
+    </div>
+  </div>
+</div>
+
+<!-- 复用 PC 算法层 (顺序敏感: data-loader → recommender → major-search → wishlist-store) -->
+<script src="../js/data-loader.js"></script>
+<script src="../js/recommender.js"></script>
+<script src="../js/major-search.js"></script>
+<script src="../js/wishlist-store.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/me.js"></script>
+<script src="js/scroll-helpers.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

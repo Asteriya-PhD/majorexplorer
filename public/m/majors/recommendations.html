@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>志愿推荐 · Major Explorer</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/dock.css">
+<style>
+  .hero { padding: 24px 24px 22px; }
+  .hero::before { content: "推荐"; font-size: clamp(10rem, 50vw, 15rem); }
+  .hero-title .line { display: block; }
+
+  .input-block {
+    padding: 26px 24px 20px;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  .input-row {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .input-row .label {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    display: block; margin-bottom: 6px;
+  }
+  .score-input {
+    flex: 1;
+    font-family: var(--font-heading);
+    font-size: 3.5rem; font-weight: 700;
+    color: var(--fg); line-height: 1;
+    letter-spacing: -0.04em;
+    background: transparent; border: 0; outline: 0;
+    padding: 0;
+    width: 100%;
+  }
+  .score-meta {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+    flex-shrink: 0; padding-bottom: 6px;
+  }
+  .score-meta .rank {
+    font-family: var(--font-num); font-size: 0.875rem; font-weight: 700;
+    color: var(--accent);
+  }
+  .score-meta .rank-l {
+    font-family: var(--font-num); font-size: 0.625rem;
+    color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .pick-row {
+    padding-top: 14px;
+    display: grid; grid-template-columns: auto 1fr; gap: 12px;
+    align-items: baseline;
+  }
+  .pick-row .l {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    padding-top: 4px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { padding: 6px 11px; font-size: 0.8125rem; min-height: 30px; }
+
+  .pref-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding: 12px 0 4px;
+    cursor: pointer;
+  }
+  .pref-toggle .tl {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 600;
+    color: var(--accent); letter-spacing: 0.16em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pref-toggle .tl .rule { width: 18px; height: 1px; background: var(--accent); }
+  .pref-toggle .tr { font-family: var(--font-num); color: var(--muted); font-size: 0.75rem; }
+
+  .pref-panel { display: none; padding: 14px 0 6px; border-top: 1px dashed var(--line); }
+  .pref-panel.open { display: block; }
+  .pref-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px;
+    padding: 10px 0;
+    align-items: center;
+  }
+  .pref-row .pl { font-family: var(--font-body); font-size: 0.875rem; color: var(--fg); }
+  .pref-stars { display: inline-flex; gap: 4px; }
+  .pref-star {
+    width: 26px; height: 26px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-num); color: var(--muted);
+    border: 1px solid var(--line); border-radius: 2px;
+    cursor: pointer; font-size: 0.875rem;
+  }
+  .pref-star.on { background: var(--accent); color: #FBF8F1; border-color: var(--accent); }
+
+  /* 城市/专业 偏好 (PC 同款 list + star) */
+  .pref-row-stack { grid-template-columns: 1fr; }
+  .pl-sub { font-family: var(--font-body); font-size: 0.6875rem; color: var(--muted); font-weight: 400; margin-left: 4px; }
+  .city-input-row { display: flex; gap: 8px; margin-top: 6px; }
+  .city-input { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; font-family: var(--font-body); font-size: 0.875rem; background: #fff; color: var(--fg); }
+  .city-add-btn { padding: 8px 14px; background: var(--fg); color: #FBF8F1; border: none; border-radius: 4px; font-family: var(--font-body); font-size: 0.875rem; font-weight: 600; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .city-add-btn:active { opacity: 0.85; }
+  .city-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .city-list:empty::before { content: "还没选城市 (下方输入或下拉添加)"; display: block; padding: 12px; background: var(--bg-soft); border-radius: 4px; color: var(--muted); font-size: 0.8125rem; text-align: center; }
+  .city-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #fff; border: 1px solid var(--line); border-radius: 4px; font-size: 0.8125rem; }
+  .city-item .city-name { font-family: var(--font-heading); font-weight: 600; min-width: 60px; color: var(--fg); }
+  .city-item .city-stars { flex: 1; display: inline-flex; gap: 3px; }
+  .city-item .city-stars button { width: 22px; height: 22px; font-size: 0.75rem; background: transparent; border: 1px solid var(--line); border-radius: 2px; color: var(--muted); cursor: pointer; padding: 0; -webkit-tap-highlight-color: transparent; }
+  .city-item .city-stars button.on { background: var(--accent); color: #FBF8F1; border-color: var(--accent); }
+  .city-item .del-city { color: var(--muted); background: none; border: none; font-size: 1rem; padding: 4px 6px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .city-item .del-city:active { color: var(--accent); }
+  .wishlist-summary { display: flex; flex-wrap: wrap; gap: 6px; }
+  .wishlist-summary .ws-item { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; background: var(--bg-soft); border-radius: 999px; font-size: 0.75rem; color: var(--fg); }
+  .wishlist-summary .ws-item .ws-name { font-weight: 600; }
+  .wishlist-summary .ws-item .ws-rating { color: var(--accent); font-size: 0.6875rem; }
+  .wishlist-summary .ws-empty { padding: 10px 12px; background: var(--bg-soft); border-radius: 4px; color: var(--accent); font-size: 0.8125rem; text-align: center; width: 100%; }
+  .wishlist-summary .ws-empty a { color: var(--accent); font-weight: 600; text-decoration: underline; }
+
+
+  .seg {
+    display: inline-flex; border: 1px solid var(--line); border-radius: 999px;
+    overflow: hidden; background: #fff;
+  }
+  .seg button {
+    border: 0; background: transparent;
+    padding: 6px 12px;
+    font-family: var(--font-body); font-size: 0.8125rem;
+    color: var(--fg-soft);
+    cursor: pointer;
+  }
+  .seg button.on { background: var(--fg); color: #FBF8F1; font-weight: 600; }
+
+  .run {
+    margin: 20px 24px 0;
+    padding: 16px;
+    background: var(--accent);
+    color: #FBF8F1;
+    border-radius: 4px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 1rem; font-weight: 600;
+    min-height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .run .arrow { font-family: var(--font-num); font-weight: 400; }
+
+  .results { padding: 24px 20px; }
+  .tier-group { margin-bottom: 28px; }
+  .tier-head {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    font-family: var(--font-num); font-size: 0.6875rem; font-weight: 700;
+    color: #FBF8F1; background: var(--tier-color); padding: 3px 9px;
+    border-radius: 2px; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .tier-head .tier-name {
+    font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;
+    color: var(--fg); letter-spacing: -0.02em;
+  }
+  .tier-head .tier-meta {
+    font-family: var(--font-num); font-size: 0.75rem; color: var(--muted);
+    margin-left: auto;
+  }
+
+  .rec {
+    position: relative;
+    display: grid;
+    grid-template-columns: 5px 1fr auto;
+    gap: 12px;
+    padding: 14px 14px 14px 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+  .rec::before { content: ""; background: var(--theme, var(--accent)); margin: -1px 0; }
+  .rec-body { min-width: 0; }
+  .rec-cat {
+    font-family: var(--font-num); font-size: 0.625rem; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .rec-title {
+    font-family: var(--font-heading); font-size: 1.125rem; font-weight: 700;
+    color: var(--fg); line-height: 1.18; letter-spacing: -0.015em;
+    margin: 4px 0 0;
+  }
+  .rec-meta {
+    font-family: var(--font-num); font-size: 0.75rem; color: var(--fg-soft);
+    margin-top: 4px;
+  }
+  .rec-arrow {
+    font-family: var(--font-num); font-size: 1.25rem;
+    color: var(--muted-2); padding-right: 14px;
+  }
+  .empty {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-family: var(--font-body);
+  }
+  .empty h3 {
+    font-family: var(--font-heading); font-size: 1.25rem; color: var(--fg);
+    margin-bottom: 8px;
+  }
+</style>
+<link rel="canonical" href="https://majorexplorer.com/m/recommendations.html">
+<meta property="og:title" content="志愿推荐 · 冲/稳/保 3 档 · Major Explorer">
+<meta property="og:description" content="填分数 + 选科 + 4 个收藏, 30 秒生成冲/稳/保 三档志愿。冲档拼一拼, 稳档重点关注, 保档稳妥兜底, 每张卡附推荐理由。">
+<meta property="og:image" content="https://majorexplorer.com/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://majorexplorer.com/m/recommendations.html">
+
+  <!-- BEGIN_PLAUSIBLE -->
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-JoO60gAuRbbJLQt8opHkb.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+  <script>
+(function(){
+  if (!window.addEventListener) return;
+  function report(kind, msg, src, ln, col, err) {
+    try {
+      var payload = JSON.stringify({
+        kind: kind, msg: String(msg || '').slice(0, 500),
+        src: src || '', line: ln || 0, col: col || 0,
+        url: location.href, ua: navigator.userAgent
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/report', new Blob([payload], {type: 'application/json'}));
+      } else if (fetch) {
+        fetch('/api/report', {method: 'POST', body: payload, keepalive: true}).catch(function(){});
+      }
+    } catch (e) {}
+  }
+  window.addEventListener('error', function(e){
+    report('error', e.message, e.filename, e.lineno, e.colno, e.error);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    var r = (e && e.reason) || {};
+    report('reject', r.message || r.toString(), '', 0, 0, r);
+  });
+})();
+</script>
+  <!-- END_PLAUSIBLE -->
+</head>
+<body>
+
+<header class="topbar">
+  <div class="top-left">
+    <div class="wordmark">
+      <span class="dot"></span>
+      <span class="stack">
+        <span class="l1">Major</span>
+        <span class="l2">Explorer</span>
+      </span>
+    </div>
+  </div>
+  <div class="top-right">
+    <a class="search-icon" href="/search.html" aria-label="搜索">⌕</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow"><span class="rule"></span>输入分数 · 选科 · 偏好</div>
+  <h1 class="hero-title">
+    <span class="line">输分数。</span>
+    <span class="line">出院校<span class="punct">。</span></span>
+  </h1>
+  <p class="hero-lede">填分数 + 选科 + 偏好, 自动出冲 / 稳 / 保 三档志愿. 冲档拼一拼, 稳档重点关注, 保档稳妥兜底, 每张卡附推荐理由.</p>
+</section>
+
+<div style="padding: 12px 24px; background: #FFF8E1; border-bottom: 1px solid #E8C766; font-family: var(--font-body); font-size: 0.8125rem; line-height: 1.55; color: #5C4A1F;">
+  志愿推荐支持 3 省 (湖北/广东/江苏), 顶部下拉切换省份即可。
+</div>
+
+<div class="input-block">
+  <div class="input-row">
+    <div style="flex:1;">
+      <span class="label">预估分数</span>
+      <input id="score" class="score-input" type="number" inputmode="numeric" placeholder="580" value="580" min="0" max="750">
+    </div>
+    <div class="score-meta">
+      <span class="rank" id="rank-out">—</span>
+      <span class="rank-l" data-prov-text="{prov}位次">{prov}位次</span>
+    </div>
+  </div>
+
+  <div class="pick-row">
+    <span class="l">选科</span>
+    <div class="chips" id="pick-chips">
+      <button class="chip on" data-pick="物理"><span class="check">✓</span>物理</button>
+      <button class="chip" data-pick="化学">化学</button>
+      <button class="chip" data-pick="生物">生物</button>
+      <button class="chip" data-pick="历史">历史</button>
+      <button class="chip" data-pick="地理">地理</button>
+      <button class="chip" data-pick="政治">政治</button>
+    </div>
+  </div>
+
+  <div class="pref-toggle" id="pref-toggle">
+    <div class="tl"><span class="rule"></span>偏好 (可选)</div>
+    <div class="tr">城市 ★ · 专业 ★ · 院校/专业</div>
+  </div>
+
+  <div class="pref-panel" id="pref-panel">
+    <div class="pref-row pref-row-stack">
+      <span class="pl">想去哪座城市 <span class="pl-sub">(最多 3 个 · 1-5★ 优先级)</span></span>
+      <div class="city-input-row">
+        <input type="text" id="city-input" placeholder="输入或下拉选城市" list="city-suggest" class="city-input">
+        <button type="button" class="city-add-btn" id="add-city">+ 添加</button>
+      </div>
+      <datalist id="city-suggest">
+        <option value="武汉"><option value="上海"><option value="北京"><option value="广州"><option value="深圳">
+        <option value="南京"><option value="杭州"><option value="成都"><option value="西安"><option value="天津">
+        <option value="重庆"><option value="苏州"><option value="厦门"><option value="长沙"><option value="合肥">
+        <option value="济南"><option value="青岛"><option value="宁波"><option value="大连"><option value="沈阳">
+        <option value="郑州"><option value="福州"><option value="黄石"><option value="宜昌"><option value="襄阳">
+        <option value="荆州"><option value="十堰">
+      </datalist>
+      <div class="city-list" id="city-list"></div>
+    </div>
+    <div class="pref-row">
+      <span class="pl">收藏专业</span>
+      <div class="wishlist-summary" id="wishlist-summary"></div>
+    </div>
+    <div class="pref-row">
+      <span class="pl">院校 vs 专业</span>
+      <span class="seg" data-pref="weight">
+        <button data-v="school" class="on">院校</button>
+        <button data-v="balanced">均衡</button>
+        <button data-v="major">专业</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="run" id="run">
+  生成 3 档推荐 <span class="arrow">→</span>
+</div>
+
+<div class="results" id="results">
+  <div class="empty">
+    <h3>先填分数</h3>
+    <div>输入分数 + 选科后, 这里会出现冲 / 稳 / 保 三档志愿, 每张卡附推荐理由.</div>
+  </div>
+</div>
+
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab active" data-tab="recommendations" href="recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
+</nav>
+
+<!-- 复用 PC 算法层 (顺序敏感: data-loader → recommender → major-search → wishlist-store) -->
+<script src="../js/data-loader.js"></script>
+<script src="../js/recommender.js?v=36"></script>
+<script src="../js/major-search.js"></script>
+<script src="../js/wishlist-store.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/recs.js?v=36"></script>
+<script src="js/scroll-helpers.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => null));
+  }
+</script>
+</body>
+</html>

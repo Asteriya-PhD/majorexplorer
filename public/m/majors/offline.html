@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="manifest" href="manifest.json">
+<title>离线模式 · Major Explorer</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+    background: #F5F2EA;
+    color: #3a3a3a;
+    margin: 0;
+    padding: 80px 24px 40px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .emoji { font-size: 56px; line-height: 1; margin-bottom: 20px; }
+  h1 { font-size: 28px; font-weight: 700; margin: 0 0 10px; color: #2a2a2a; }
+  p { font-size: 15px; color: #666; margin: 6px 0; max-width: 320px; line-height: 1.6; }
+  a.cta {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 14px 28px;
+    background: #B8323A;
+    color: white;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    min-height: 44px;
+  }
+  a.cta:hover { background: #9a2830; }
+</style>
+
+  <!-- BEGIN_PLAUSIBLE -->
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-JoO60gAuRbbJLQt8opHkb.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+  <script>
+(function(){
+  if (!window.addEventListener) return;
+  function report(kind, msg, src, ln, col, err) {
+    try {
+      var payload = JSON.stringify({
+        kind: kind, msg: String(msg || '').slice(0, 500),
+        src: src || '', line: ln || 0, col: col || 0,
+        url: location.href, ua: navigator.userAgent
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/report', new Blob([payload], {type: 'application/json'}));
+      } else if (fetch) {
+        fetch('/api/report', {method: 'POST', body: payload, keepalive: true}).catch(function(){});
+      }
+    } catch (e) {}
+  }
+  window.addEventListener('error', function(e){
+    report('error', e.message, e.filename, e.lineno, e.colno, e.error);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    var r = (e && e.reason) || {};
+    report('reject', r.message || r.toString(), '', 0, 0, r);
+  });
+})();
+</script>
+  <!-- END_PLAUSIBLE -->
+</head>
+<body>
+  <div class="emoji">📡</div>
+  <h1>当前离线</h1>
+  <p>该页面尚未缓存, 联网后可正常访问</p>
+  <p>已缓存页面可继续浏览</p>
+  <a href="./" class="cta">返回首页</a>
+</body>
+</html>

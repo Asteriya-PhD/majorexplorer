@@ -1,17 +1,8 @@
 # Cloudflare Pages _redirects
-# Day 41+ 终极修复: 只写 clean URL → .html 一边 (避免 self-redirect 死循环)
-# 物理文件 public/m/{search,index,catalog,recommendations,wishlist,me,offline}.html 都存在
+# Day 41+ 终极方案: m/ 顶层页物理文件复制到 m/majors/ (同 627 专业详情同路径)
+# 通配 /m/:slug /m/majors/:slug 301 命中后, 物理文件存在直接 serve.
+# Day 35.7 微信分享链接修复保留.
 
-/m/wishlist             /m/wishlist.html        301
-/m/search               /m/search.html          301
-/m/index                /m/index.html           301
-/m/catalog              /m/catalog.html         301
-/m/recommendations      /m/recommendations.html 301
-/m/me                   /m/me.html              301
-/m/offline              /m/offline.html         301
-
-# Day 35.7 修复: 移动 UA 自动 302 路径错误
-# 实际 mobile 路径是 /m/majors/{slug}
 /m/:slug  /m/majors/:slug  301
 /m/:slug.html  /m/majors/:slug  301
 
