@@ -9,12 +9,37 @@
  * 桌面访问保持原样. 用户主动加 ?desktop=1 可强制桌面版.
  */
 
+const MOBILE_TOP_PAGES = new Set([
+  "search", "index", "catalog", "recommendations", "wishlist", "me", "offline",
+]);
+
 export async function onRequest(context) {
-  const { request, next } = context;
+  const { request, next, env } = context;
   const url = new URL(request.url);
 
-  // 1) 已经在 mobile 路径下: 不动
+  // 1) 已经在 mobile 路径下: 不动 (但要先排除 m/ 顶层页通配)
   if (url.pathname === "/m" || url.pathname.startsWith("/m/")) {
+    // Day 41+: m/ 顶层页 (search/index/catalog/...) 被 _redirects /m/:slug 通配误吞 → 404
+    // 在 middleware 层直接 serve 物理文件, 绕过 _redirects 通配.
+    const segs = url.pathname.replace(/^\/m\/?/, "").split("/").filter(Boolean);
+    // 只对 /m/{slug} 或 /m/{slug}.html (单段) 拦截, 不动 /m/majors/{x} (双段)
+    if (segs.length === 1) {
+      let slug = segs[0];
+      // 去掉 .html 后缀
+      if (slug.endsWith(".html")) slug = slug.slice(0, -5);
+      if (MOBILE_TOP_PAGES.has(slug)) {
+        const target = `/m/${slug}.html`;
+        try {
+          // 用 env.ASSETS 直接拿物理文件 (CF Pages 提供)
+          const assetResp = await env.ASSETS.fetch(new URL(target, url));
+          if (assetResp && assetResp.status === 200) return assetResp;
+        } catch (e) {
+          console.warn("[m-middleware] asset fetch failed", slug, e);
+        }
+        // fallback: 302 浏览器跟 target, 让浏览器拿到 .html
+        return Response.redirect(new URL(target, url), 302);
+      }
+    }
     return next();
   }
   // 2) 排除 API / data / 静态资源
@@ -28,8 +53,6 @@ export async function onRequest(context) {
     return next();
   }
   // 2.5) Day 41: PC 顶层页 (/search.html) 响应式自适应, mobile UA 直通不要 302 到 /m/
-  // 原因: /m/search.html 被 _redirects /m/:slug 通配误吞 → 404
-  // PC /search.html 有 viewport meta + 7 个 @media breakpoint, 移动端宽度自适应
   if (url.pathname === "/search.html" || url.pathname === "/search") {
     return next();
   }
