@@ -227,8 +227,8 @@ def render_hero_business(data, *, title, summary, category, degree, duration, ta
   <div class="biz-grain"></div>
   
   <div class="biz-title-zone">
-  <h1 class="biz-title-main">Strategic Management</h1>
-    <h2 class="biz-title-main-cn"><span class="biz-title-cn-accent">战略管理</span> · 决策科学</h2>
+  <h1 class="biz-title-main">{title}</h1>
+    <h2 class="biz-title-main-cn"><span class="biz-title-cn-accent">{title}</span> · 商业核心</h2>
   <div class="biz-hero-quote">
       "If you don't know where you're going, you might not get there."
       <span class="biz-hero-quote-sig">— Yogi Berra</span>
