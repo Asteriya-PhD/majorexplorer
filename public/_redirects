@@ -1,4 +1,14 @@
 # Cloudflare Pages _redirects
+# Day 41 修复: m/ 顶层页 (search/index/catalog/...) 被 m/:slug 通配误吞 → 301 到 m/majors/ 后 404
+# 解决: 在通配前加 6 条白名单, 让 m/search.html 等直达原文件
+/m/search.html       /m/search.html       200
+/m/index.html        /m/index.html        200
+/m/catalog.html      /m/catalog.html      200
+/m/recommendations.html  /m/recommendations.html  200
+/m/wishlist.html     /m/wishlist.html     200
+/m/me.html           /m/me.html           200
+/m/offline.html      /m/offline.html      200
+
 # Day 35.7 修复: 移动 UA 自动 302 路径错误
 # 问题: CF Pages 移动 UA 访问 /{slug} 自动 302 到 /m/{slug} (错的)
 # 实际 mobile 路径是 /m/majors/{slug}
