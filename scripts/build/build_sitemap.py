@@ -33,29 +33,30 @@ MANIFEST = PUBLIC / "data" / "manifest.json"
 DEFAULT_BASE = "https://majorexplorer.com"
 
 # Top-level pages — priority 0.9
+# Day 47.6: clean URL (无 .html 后缀, CF Pages 308 redirect → canonical)
 TOP_PAGES = [
-    "majors.html",
-    "search.html",
-    "wishlist.html",
-    "preferences.html",
-    "recommendations.html",
+    "majors",
+    "search",
+    "wishlist",
+    "preferences",
+    "recommendations",
 ]
 
 # Mobile top-level pages — priority 0.5
 MOBILE_PAGES = [
-    "m/index.html",
-    "m/majors.html",
-    "m/search.html",
-    "m/wishlist.html",
-    "m/preferences.html",
-    "m/recommendations.html",
+    "m",
+    "m/majors",
+    "m/search",
+    "m/wishlist",
+    "m/preferences",
+    "m/recommendations",
 ]
 
 # Legal / support pages — priority 0.3
 LEGAL_PAGES = [
-    "privacy.html",
-    "terms.html",
-    "disclaimer.html",
+    "privacy",
+    "terms",
+    "disclaimer",
 ]
 
 
@@ -127,11 +128,11 @@ def build_sitemap_xml(base: str) -> str:
             loc, file_mtime_iso(PUBLIC / page), "weekly", "0.9",
         ))
 
-    # 3. Major detail pages (PC /<slug>.html) — priority 0.8
+    # 3. Major detail pages (PC /<slug>) — priority 0.8, clean URL
     majors = collect_major_slugs()
     for entry in majors:
         slug = entry["slug"]
-        loc = f"{base}/{slug}.html"
+        loc = f"{base}/{slug}"
         lines.extend(_url_block(
             loc, major_lastmod(slug), "monthly", "0.8",
         ))
