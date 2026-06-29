@@ -43,7 +43,10 @@ const Rec = loadRecommender();
 // mm() 自动做 school_id → edu_id 翻译, 调用方仍可用老式 school_id (如 420)
 const mm = (sid, interests) => {
   const eid = sidToEid[String(sid)] || String(sid);
-  return Rec.majorMatch(eid, interests, null, sam, syn);
+  // sam key = school_id (sid); chsi_edu_id (eid) 是另一套 key. 优先 sam 的 key.
+  // Day 37: production sam key=1007 (sid). test 沿用 sid 直传, 跳过翻译.
+  const realKey = (sam && sam[String(sid)]) ? String(sid) : eid;
+  return Rec.majorMatch(realKey, interests, null, sam, syn);
 };
 
 // ══════════════════════════════════════════════════════
@@ -166,9 +169,9 @@ test("5.3 null allMajorsById (880 校场景)", () => {
 });
 
 test("5.4 null synonymMap (老调用方兼容)", () => {
-  // 校 420 有 人工智能, 不传 synonyms 时只 exact match (Step 3.4 v1: 用 edu_id)
-  const m = Rec.majorMatch(sidToEid["420"], [{ major: "人工智能", score: 4 }], null, sam, null);
-  // expanded = {"人工智能"} only, no expand → exact match in 华中师大 all_majors
+  // sam key 含 人工智能 (e.g. 102): 不传 synonyms 时只 exact match
+  const m = Rec.majorMatch("102", [{ major: "人工智能", score: 4 }], null, sam, null);
+  // expanded = {"人工智能"} only, no expand → exact match
   // userScore=4, +0.2 = 4.2
   assert.equal(m, 4.2, "null syn 但 exact 仍命中");
 });
