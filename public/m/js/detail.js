@@ -186,8 +186,11 @@
   if (ctaBtn) ctaBtn.addEventListener("click", e => { e.preventDefault(); openModal(); });
 
   // Day 36 P1-12: 顶部 heart 按钮 (mobile _template.html 专用)
+  // Day 41 fix: PC /js/share.js 也绑 #top-heart-btn (Day 35.9) → 双弹窗.
+  // 检测 __heartBound flag (share.js 行 770 设), 若已绑则跳过.
   const topHeartBtn = document.getElementById("top-heart-btn");
-  if (topHeartBtn) {
+  if (topHeartBtn && !topHeartBtn.__heartBound) {
+    topHeartBtn.__heartBound = true;
     topHeartBtn.addEventListener("click", (e) => {
       e.preventDefault();
       openModal();
