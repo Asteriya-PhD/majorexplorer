@@ -11,6 +11,8 @@ from .overview_v2 import render_overview_v2, render_pitfalls_v2, OVERVIEW_V2_CSS
 from .overview_simple import render_overview_simple, OVERVIEW_SIMPLE_CSS, is_simple_format
 from .themes import HERO_FN, THEME_CSS
 
+# Day 38 polish: medicine 41 篇 v4 渲染 — 走专属 v4_medicine (Mayo Clinic 级)
+
 # ── 心愿单注入 (chip / FAB / 12 主题卡) — 4 页 v1 一致 ──
 try:
     import sys as _sys
@@ -526,7 +528,16 @@ def _normalize_xuanke(items):
 
 
 def render_v4(data: dict, style: str) -> str:
-    """通用 12 套极致渲染"""
+    """通用 12 套极致渲染 (Day 38: +medicine 分支走 v4_medicine)"""
+    if style == "medicine":
+        # 临床医学/口腔/中医/护理等 41 篇走 Mayo Clinic 级独立渲染
+        import sys
+        from pathlib import Path as _P
+        _scripts_dir = str(_P(__file__).resolve().parents[1])  # skills/.../scripts
+        if _scripts_dir not in sys.path:
+            sys.path.insert(0, _scripts_dir)
+        from v4_medicine import render_v4_medicine  # noqa
+        return render_v4_medicine(data)
     if style not in HERO_FN:
         raise ValueError(f"Unknown v4 style: {style}")
 
