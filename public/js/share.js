@@ -360,7 +360,8 @@
         <div class="share-card-handle"></div>
         <div class="share-card-title">长按图片 → 保存到相册</div>
         <div class="share-card-tip">然后在微信/朋友圈/小红书选择图片发送, 朋友扫码即可查看完整专业介绍</div>
-        <img class="share-card-img" src="${url}" alt="分享名片" draggable="false">
+        <img class="share-card-img" src="${url}" alt="分享名片" draggable="false"
+             onerror="this.onerror=null;this.outerHTML='<div class=\\'share-card-img-fallback\\'>图片生成失败<br><br>链接已复制, 请直接粘贴分享:<br><b>'+location.href+'</b></div>';">
         <div class="share-card-actions">
           <button class="share-card-btn-primary" data-card-close>我已保存, 完成</button>
         </div>
@@ -457,21 +458,29 @@
   // ── 移动端分享名片 (Day 35.6) ──
   // 1080×1500 固定比例, 含: 大标题 + 简介 + 二维码 + 网址 + 水印
   // iOS 长按 <img> 可保存到相册, 这是 iOS Web 唯一可靠的存相册方式
+  // Day 35.10 修复: card 不能用 position:fixed + top:-10000px (某些浏览器 scrollHeight=0)
+  // 改成 visibility:hidden 但仍在 DOM 里, 让 layout 真实计算
   async function generateShareCard() {
     const html2canvas = await loadHtml2Canvas();
     const card = document.createElement('div');
     card.id = '__share-card-tmp';
     card.style.cssText = `
+      position: absolute;
+      left: 0;
+      top: 0;
       width: 1080px;
+      min-height: 1500px;
       padding: 80px 70px 140px;
       background: linear-gradient(155deg, #FAF7F2 0%, #F0E8DA 100%);
       font-family: 'Songti SC', 'SimSun', serif;
       color: #1A1A1A;
-      position: fixed;
-      top: -10000px; left: 0;
-      z-index: -1;
       box-sizing: border-box;
+      z-index: 2147483647;
+      visibility: visible;
     `;
+    // 移动到屏幕外但不隐藏 (visibility:hidden 会被 html2canvas 也截空白)
+    card.style.left = '-99999px';
+
     const slug = (location.pathname.split('/').pop().replace('.html', '') || 'major').trim();
     const title = (window.__TITLE__ || document.title.split(' · ')[0] || slug).trim();
     const url = location.href;
@@ -522,7 +531,11 @@
       qrImg.onerror = () => resolve();
       setTimeout(resolve, 4000);
     });
+    // 强制 reflow + 等字体
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
+
+    const realHeight = Math.max(card.scrollHeight, card.offsetHeight, 1500);
 
     try {
       const canvas = await html2canvas(card, {
@@ -531,10 +544,19 @@
         backgroundColor: '#FAF7F2',
         logging: false,
         width: 1080,
-        height: card.scrollHeight,
+        height: realHeight,
         windowWidth: 1080,
-        windowHeight: card.scrollHeight,
+        windowHeight: realHeight,
         foreignObjectRendering: false,
+        // Day 35.10 关键: onclone 回调让 html2canvas 渲染时 card 是 visible
+        onclone: (clonedDoc) => {
+          const clonedCard = clonedDoc.getElementById('__share-card-tmp');
+          if (clonedCard) {
+            clonedCard.style.left = '0';
+            clonedCard.style.top = '0';
+            clonedCard.style.visibility = 'visible';
+          }
+        },
       });
       return await new Promise((resolve, reject) => {
         canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob null')), 'image/png', 0.92);
