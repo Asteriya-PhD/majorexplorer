@@ -322,62 +322,83 @@
   }
 
   // ── Day 35.5 移动端分享: 直接 share files ──
-  // 先生成长图 blob, 然后 navigator.share({files:[file]})
-  // 系统面板会自动出现「保存到相册」「微信」「朋友圈」「QQ」等
+  // ── Day 35.6 移动端分享: 显示名片 modal 让用户长按保存 ──
+  // iOS Web 不支持 Web Share API 唤起微信 (系统限制), 但支持长按 <img> 保存到相册
+  // 改: 不再 navigator.share, 直接生成 1080×1500 名片图, 显示 modal, 用户长按 → 保存到相册
   async function openMobileShare() {
-    const tip = showToast('正在生成长图…');
+    const tip = showToast('正在生成分享名片…');
     let blob;
     try {
-      blob = await generateImageBlob();
+      blob = await generateImageBlob('card');
     } catch (e) {
-      console.error('[share mobile] generate failed', e);
-      tip.textContent = '生成失败';
+      console.error('[share mobile] card failed', e);
+      tip.textContent = '生成失败, 请尝试复制链接';
       setTimeout(() => tip.remove(), 1800);
-      // 降级到 2 选项弹层
       buildMobileFallback();
       return;
     }
     tip.remove();
-
     const file = new File([blob], `${location.pathname.split('/').pop().replace('.html', '') || 'major'}-${SITE}.png`, {
       type: 'image/png',
     });
-    const url = location.href;
-    const title = document.title;
-    const text = title + ' — ' + SITE;
 
-    // 优先 share files (iOS 13+ / Android Chrome 75+)
+    // 优先 navigator.share({files}) — Android Chrome 通常能唤起微信/QQ
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
-        // text 包含链接 + 引导文案, 让某些 App (Android) 尝试自动 paste
-        const richText = `${title}\n${url}\n\n长按图片发给朋友, 或复制链接粘贴`;
-        // 同时把链接放剪贴板 (iOS 微信不会自动 paste, 用户切回需手动粘贴)
-        copyLink(url);
-        await navigator.share({ files: [file], title, text: richText, url });
+        copyLink(location.href);
+        await navigator.share({
+          files: [file],
+          title: document.title,
+          text: `${document.title}\n${location.href}`,
+        });
         track('share_native_files');
-        // 用户切回页面 (visibilitychange) 给个 toast 提示
-        onReturnFromShare();
-        return;
-      } catch (e) {
-        // 用户取消 → 结束; 系统拒绝 → 降级
-        if (e && e.name === 'AbortError') return;
-      }
-    }
-    // 降级 1: 只分享链接 (无 file 时也能用)
-    if (navigator.share) {
-      try {
-        const richText = `${title}\n${url}\n\n长按发送给朋友, 或复制链接粘贴`;
-        copyLink(url);
-        await navigator.share({ title, text: richText, url });
-        track('share_native_url');
-        onReturnFromShare();
         return;
       } catch (e) {
         if (e && e.name === 'AbortError') return;
+        // share 失败 → 降级 modal
       }
     }
-    // 降级 2: 自建 2 选项弹层 (复制 + 长图)
-    buildMobileFallback();
+
+    // 降级: 显示长按 modal (iOS 也能用, 长按图片 → 保存到相册)
+    showShareCardModal(blob);
+  }
+
+  // ── 移动端名片 modal (iOS 长按保存) ──
+  function showShareCardModal(blob) {
+    const url = URL.createObjectURL(blob);
+    const slug = location.pathname.split('/').pop().replace('.html', '') || 'major';
+    // 自动复制链接兜底
+    copyLink(location.href);
+
+    // 先关闭现有 sheet
+    document.querySelectorAll('.share-sheet, .share-card-modal').forEach(el => el.remove());
+
+    const modal = document.createElement('div');
+    modal.className = 'share-card-modal';
+    modal.innerHTML = `
+      <div class="share-card-mask" data-card-close></div>
+      <div class="share-card-panel" role="dialog" aria-label="分享名片">
+        <div class="share-card-handle"></div>
+        <div class="share-card-title">长按图片保存到相册</div>
+        <div class="share-card-tip">保存后, 在微信/朋友圈/小红书选择图片发送, 朋友扫码即可查看完整专业介绍</div>
+        <img class="share-card-img" src="${url}" alt="分享名片" draggable="false">
+        <div class="share-card-actions">
+          <button class="share-card-btn-primary" data-card-close>完成</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    document.documentElement.classList.add('share-sheet-open');
+
+    modal.addEventListener('click', (ev) => {
+      if (ev.target.closest('[data-card-close]')) {
+        modal.remove();
+        document.documentElement.classList.remove('share-sheet-open');
+        URL.revokeObjectURL(url);
+      }
+    });
+    setTimeout(() => modal.setAttribute('data-open', 'true'), 16);
+    track('share_card_modal');
   }
 
   // ── 用户切回页面 (share 后从微信/QQ 回来) 提示 ──
@@ -443,8 +464,109 @@
     requestAnimationFrame(() => sheet.setAttribute('data-open', 'true'));
   }
 
-  // ── 提取长图生成逻辑, 让 openMobileShare 复用 ──
-  async function generateImageBlob() {
+  // ── 提取长图生成逻辑, 让 openMobileShare / exportImage 复用 ──
+  // Day 35.6 加 mode: 'full' (PC 长图, 整页) 或 'card' (移动端分享名片 1080×1500)
+  async function generateImageBlob(mode = 'full') {
+    if (mode === 'card') return await generateShareCard();
+    return await generateFullPageImage();
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ── 移动端分享名片 (Day 35.6) ──
+  // 1080×1500 固定比例, 含: 大标题 + 简介 + 二维码 + 网址 + 水印
+  // iOS 长按 <img> 可保存到相册, 这是 iOS Web 唯一可靠的存相册方式
+  async function generateShareCard() {
+    const html2canvas = await loadHtml2Canvas();
+    const card = document.createElement('div');
+    card.id = '__share-card-tmp';
+    card.style.cssText = `
+      width: 1080px;
+      padding: 80px 70px 140px;
+      background: linear-gradient(155deg, #FAF7F2 0%, #F0E8DA 100%);
+      font-family: 'Songti SC', 'SimSun', serif;
+      color: #1A1A1A;
+      position: fixed;
+      top: -10000px; left: 0;
+      z-index: -1;
+      box-sizing: border-box;
+    `;
+    const slug = (location.pathname.split('/').pop().replace('.html', '') || 'major').trim();
+    const title = (window.__TITLE__ || document.title.split(' · ')[0] || slug).trim();
+    const url = location.href;
+    const tagline = (document.querySelector('.hero-tagline, .lede, p.lede')?.textContent || '').trim().slice(0, 200);
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
+
+    card.innerHTML = `
+      <div style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 22px; letter-spacing: 4px; color: #B8323A; text-transform: uppercase; margin-bottom: 30px;">
+        § Major Explorer · 高考专业导览
+      </div>
+      <div style="font-size: 96px; font-weight: 600; line-height: 1.15; color: #1A1A1A; margin-bottom: 40px; letter-spacing: 0.02em;">
+        ${escapeHtml(title)}
+      </div>
+      <div style="width: 80px; height: 4px; background: #B8323A; margin-bottom: 36px;"></div>
+      <div style="font-size: 30px; line-height: 1.65; color: #4A4A4A; margin-bottom: 50px; max-width: 940px;">
+        ${escapeHtml(tagline) || '专业介绍 · 课程 · 院校 · 雇主 · 薪资 · 避坑'}
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 50px; margin-top: 40px;">
+        <img src="${qrUrl}" crossorigin="anonymous" style="width: 260px; height: 260px; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; background: white; padding: 10px;" alt="QR">
+        <div style="flex: 1; padding-top: 12px;">
+          <div style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 20px; color: #8B7355; letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;">
+            SCAN TO READ
+          </div>
+          <div style="font-size: 26px; line-height: 1.55; color: #1A1A1A; word-break: break-all; font-family: 'PingFang SC', sans-serif;">
+            扫码查看完整专业介绍<br>课程 · 院校 · 雇主 · 薪资 · 避坑
+          </div>
+          <div style="margin-top: 20px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 22px; color: #B8323A; letter-spacing: 1px;">
+            ${escapeHtml(SITE)}
+          </div>
+        </div>
+      </div>
+      <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 100px; background: linear-gradient(90deg, #B8323A 0%, #D97706 100%); display: flex; align-items: center; justify-content: space-between; padding: 0 70px; box-sizing: border-box;">
+        <div style="font-family: 'Songti SC', serif; font-size: 32px; font-weight: 600; color: white; letter-spacing: 0.05em;">
+          ${escapeHtml(SITE)}
+        </div>
+        <div style="font-family: 'PingFang SC', sans-serif; font-size: 22px; color: rgba(255,255,255,0.92);">
+          Major Explorer · 高考专业导览
+        </div>
+      </div>
+    `;
+    document.body.appendChild(card);
+
+    // 等 QR 图加载完成
+    const qrImg = card.querySelector('img');
+    await new Promise((resolve) => {
+      if (qrImg.complete && qrImg.naturalWidth > 0) return resolve();
+      qrImg.onload = () => resolve();
+      qrImg.onerror = () => resolve();
+      setTimeout(resolve, 4000);
+    });
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    try {
+      const canvas = await html2canvas(card, {
+        scale: 1,
+        useCORS: true,
+        backgroundColor: '#FAF7F2',
+        logging: false,
+        width: 1080,
+        height: card.scrollHeight,
+        windowWidth: 1080,
+        windowHeight: card.scrollHeight,
+        foreignObjectRendering: false,
+      });
+      return await new Promise((resolve, reject) => {
+        canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob null')), 'image/png', 0.92);
+      });
+    } finally {
+      card.remove();
+    }
+  }
+
+  // ── PC 端长图 (整页 + 水印) ──
+  async function generateFullPageImage() {
     const html2canvas = await loadHtml2Canvas();
     const wrapper = document.createElement('div');
     wrapper.id = '__share-wrapper-tmp';

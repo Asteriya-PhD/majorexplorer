@@ -392,3 +392,87 @@
 
 /* 阻止 body 滚动 (sheet open 时) */
 html.share-sheet-open { overflow: hidden; }
+
+/* ── Day 35.6 移动端名片 modal ── */
+.share-card-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  pointer-events: none;
+}
+.share-card-modal[data-open="true"] { pointer-events: auto; }
+.share-card-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  opacity: 0;
+  transition: opacity 220ms;
+}
+.share-card-modal[data-open="true"] .share-card-mask { opacity: 1; }
+.share-card-panel {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  background: #FFFFFF;
+  border-radius: 18px 18px 0 0;
+  padding: 12px 20px calc(28px + env(safe-area-inset-bottom)) 20px;
+  max-height: 88vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.share-card-modal[data-open="true"] .share-card-panel {
+  transform: translateY(0);
+}
+.share-card-handle {
+  width: 36px; height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  margin: 0 auto 14px;
+}
+.share-card-title {
+  font-family: var(--font-heading, 'Songti SC', 'SimSun', serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.share-card-tip {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  text-align: center;
+  line-height: 1.55;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+.share-card-img {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 18px;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  -webkit-touch-callout: default;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.share-card-actions {
+  display: flex;
+  gap: 10px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.share-card-btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #B8323A, #D97706);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  padding: 14px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.share-card-btn-primary:active { opacity: 0.85; }
