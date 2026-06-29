@@ -205,62 +205,36 @@
   }
 
   // ── 弹层 ──
-  // Day 35.3 简化: 移动端只 2 选项 (复制 + 长图), PC 端 6 选项 (微信扫码 + 4 平台 + 长图)
+  // Day 35.5 PC 简化: 微信 (scheme) + QQ (scheme) + 复制链接 + 长图, 去微博/小红书/朋友圈
   function buildSheet() {
-    if (document.querySelector('.share-sheet')) return;
+    if (document.querySelector('.share-sheet:not([data-mobile-fallback])')) return;
     loadCSS(SHARE_CSS_HREF);
-    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-    const gridHTML = isMobile ? `
-      <button class="share-opt" data-action="copy">
-        <span class="share-ico" style="background:#666">链</span>
-        <span class="share-label">复制链接</span>
-      </button>
-      <button class="share-opt" data-action="image">
-        <span class="share-ico" style="background:#B8323A">图</span>
-        <span class="share-label">生成长图</span>
-      </button>
-    ` : `
-      <button class="share-opt" data-action="wechat">
-        <span class="share-ico" style="background:#07C160">微</span>
-        <span class="share-label">微信好友</span>
-      </button>
-      <button class="share-opt" data-action="moments">
-        <span class="share-ico" style="background:#07C160">圈</span>
-        <span class="share-label">朋友圈</span>
-      </button>
-      <button class="share-opt" data-action="qq">
-        <span class="share-ico" style="background:#12B7F5">Q</span>
-        <span class="share-label">QQ</span>
-      </button>
-      <button class="share-opt" data-action="weibo">
-        <span class="share-ico" style="background:#E6162D">博</span>
-        <span class="share-label">微博</span>
-      </button>
-      <button class="share-opt" data-action="xhs">
-        <span class="share-ico" style="background:#FF2442">书</span>
-        <span class="share-label">小红书</span>
-      </button>
-      <button class="share-opt" data-action="copy">
-        <span class="share-ico" style="background:#666">链</span>
-        <span class="share-label">复制链接</span>
-      </button>
-    `;
     const sheet = document.createElement('div');
     sheet.className = 'share-sheet';
     sheet.innerHTML = `
       <div class="share-sheet-mask" data-share-close></div>
       <div class="share-sheet-panel" role="dialog" aria-label="分享">
         <div class="share-sheet-handle"></div>
-        <div class="share-sheet-title">${isMobile ? '保存后分享给朋友' : '分享给朋友'}</div>
-        <div class="share-sheet-grid ${isMobile ? 'is-mobile-compact' : ''}">
-          ${gridHTML}
+        <div class="share-sheet-title">分享给朋友</div>
+        <div class="share-sheet-grid">
+          <button class="share-opt" data-action="wechat">
+            <span class="share-ico" style="background:#07C160">微</span>
+            <span class="share-label">微信</span>
+          </button>
+          <button class="share-opt" data-action="qq">
+            <span class="share-ico" style="background:#12B7F5">Q</span>
+            <span class="share-label">QQ</span>
+          </button>
+          <button class="share-opt" data-action="copy">
+            <span class="share-ico" style="background:#666">链</span>
+            <span class="share-label">复制链接</span>
+          </button>
         </div>
-        ${!isMobile ? '<div class="share-sheet-divider"></div>' : ''}
-        ${!isMobile ? `
+        <div class="share-sheet-divider"></div>
         <button class="share-opt share-opt-wide" data-action="image">
           <span class="share-ico" style="background:#B8323A">图</span>
           <span class="share-label">生成长图 (带水印, 适合转发)</span>
-        </button>` : ''}
+        </button>
         <button class="share-cancel" data-share-close>取消</button>
         <div class="share-sheet-brand">来自 ${SITE} · 长图带品牌水印, 适合转发</div>
       </div>
@@ -278,36 +252,37 @@
       const title = document.title;
       const text = title + ' — ' + SITE;
 
-      // 优先 Web Share API (移动端最爽)
-      if (action === 'native' && navigator.share) {
+      // ── PC scheme URL 调起客户端 (Day 35.5) ──
+      // 微信: weixin:// → 调起微信客户端
+      // QQ:   tencent://message/?Menu=yes&Url=...&Title=...  调起 QQ 客户端
+      // 无客户端: 弹提示 (Web 永远无法唤起时给用户清晰指引)
+      if (action === 'wechat' || action === 'qq') {
+        const ua = navigator.userAgent;
+        const isWin = /Windows/i.test(ua);
+        const isMac = /Mac/i.test(ua);
+        const schemes = {
+          wechat: 'weixin://',
+          qq: 'tencent://message/?Menu=yes&Url=' + encodeURIComponent(url) + '&Title=' + encodeURIComponent(text),
+        };
+        const scheme = schemes[action];
+        const label = action === 'wechat' ? '微信' : 'QQ';
+        // 尝试唤起, 1.5s 后还在原页面说明没装客户端
+        const start = Date.now();
+        let hidden = false;
+        const onHide = () => { hidden = true; };
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') onHide();
+        });
         try {
-          await navigator.share({ title, text, url });
-          track('share_native');
-        } catch (e) { /* 用户取消 */ }
-        closeSheet();
-        return;
-      }
-
-      // scheme URL (微信/朋友圈/QQ/微博/小红书)
-      const schemes = {
-        wechat: 'weixin://',
-        moments: 'weixin://',
-        qq: 'https://connect.qq.com/widget/shareqq/index.html?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title),
-        weibo: 'https://service.weibo.com/share/share.php?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(text),
-        xhs: 'https://www.xiaohongshu.com/discovery/item?url=' + encodeURIComponent(url),
-      };
-      if (schemes[action]) {
-        // 微信/朋友圈 在桌面浏览器走二维码提示, 移动端直接 scheme
-        if (action === 'wechat' || action === 'moments') {
-          if (/Mobi|Android/i.test(navigator.userAgent)) {
-            location.href = schemes[action];
-          } else {
-            // PC: 弹二维码 (用第三方 API)
-            showQRCode(url, action === 'moments' ? '用微信扫一扫，分享到朋友圈' : '用微信扫一扫，分享给好友');
+          window.location.href = scheme;
+        } catch (_) { /* ignore */ }
+        setTimeout(() => {
+          if (!hidden && Date.now() - start > 1200) {
+            showToast(`未检测到 ${label} 客户端, 请打开 ${label} 粘贴链接`);
+            // 同时复制链接兜底
+            copyLink(url);
           }
-        } else {
-          window.open(schemes[action], '_blank', 'noopener');
-        }
+        }, 1500);
         track('share_' + action);
         closeSheet();
         return;
@@ -331,24 +306,12 @@
   }
 
   function openSheet() {
-    // Day 35.3: 移动端优先 Web Share API (iOS Safari / Android Chrome 原生支持, 弹系统面板)
-    // 失败 (桌面浏览器/不支持) 才显示自定义弹层
+    // Day 35.5 移动端: 先生成长图, 直接 navigator.share({files:[blob]})
+    // iOS/Android 系统面板会出现「保存到相册/微信好友/朋友圈/QQ/微博/小红书」一键分发
+    // 失败 (桌面浏览器 / 老 WebView) 才降级到自建弹层
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-    if (isMobile && navigator.share) {
-      const url = location.href;
-      const title = document.title;
-      const text = title + ' — ' + SITE;
-      navigator.share({ title, text, url })
-        .then(() => { track('share_native'); })
-        .catch(() => {
-          // 用户取消 / 系统不支持 → fallback 弹层
-          buildSheet();
-          document.documentElement.classList.add('share-sheet-open');
-          requestAnimationFrame(() => {
-            const sheet = document.querySelector('.share-sheet');
-            if (sheet) sheet.setAttribute('data-open', 'true');
-          });
-        });
+    if (isMobile) {
+      openMobileShare();
       track('share_open');
       return;
     }
@@ -359,6 +322,181 @@
       if (sheet) sheet.setAttribute('data-open', 'true');
     });
     track('share_open');
+  }
+
+  // ── Day 35.5 移动端分享: 直接 share files ──
+  // 先生成长图 blob, 然后 navigator.share({files:[file]})
+  // 系统面板会自动出现「保存到相册」「微信」「朋友圈」「QQ」等
+  async function openMobileShare() {
+    const tip = showToast('正在生成长图…');
+    let blob;
+    try {
+      blob = await generateImageBlob();
+    } catch (e) {
+      console.error('[share mobile] generate failed', e);
+      tip.textContent = '生成失败';
+      setTimeout(() => tip.remove(), 1800);
+      // 降级到 2 选项弹层
+      buildMobileFallback();
+      return;
+    }
+    tip.remove();
+
+    const file = new File([blob], `${location.pathname.split('/').pop().replace('.html', '') || 'major'}-${SITE}.png`, {
+      type: 'image/png',
+    });
+    const url = location.href;
+    const title = document.title;
+    const text = title + ' — ' + SITE;
+
+    // 优先 share files (iOS 13+ / Android Chrome 75+)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title, text, url });
+        track('share_native_files');
+        return;
+      } catch (e) {
+        // 用户取消 → 结束; 系统拒绝 → 降级
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+    // 降级 1: 只分享链接 (无 file 时也能用)
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+        track('share_native_url');
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+    // 降级 2: 自建 2 选项弹层 (复制 + 长图)
+    buildMobileFallback();
+  }
+
+  // ── 移动端降级弹层: 复制链接 + 生成长图 ──
+  function buildMobileFallback() {
+    // 复用 buildSheet 但强制 isMobile 风格
+    const sheet = document.createElement('div');
+    sheet.className = 'share-sheet';
+    sheet.setAttribute('data-mobile-fallback', 'true');
+    sheet.innerHTML = `
+      <div class="share-sheet-mask" data-share-close></div>
+      <div class="share-sheet-panel" role="dialog" aria-label="分享">
+        <div class="share-sheet-handle"></div>
+        <div class="share-sheet-title">分享给朋友</div>
+        <div class="share-sheet-grid is-mobile-compact">
+          <button class="share-opt" data-action="copy">
+            <span class="share-ico" style="background:#666">链</span>
+            <span class="share-label">复制链接</span>
+          </button>
+          <button class="share-opt" data-action="image">
+            <span class="share-ico" style="background:#B8323A">图</span>
+            <span class="share-label">保存长图</span>
+          </button>
+        </div>
+        <button class="share-cancel" data-share-close>取消</button>
+        <div class="share-sheet-brand">来自 ${SITE} · 长图带品牌水印, 适合转发</div>
+      </div>
+    `;
+    document.body.appendChild(sheet);
+    sheet.addEventListener('click', async (ev) => {
+      const close = ev.target.closest('[data-share-close]');
+      if (close) { closeSheet(); return; }
+      const opt = ev.target.closest('.share-opt');
+      if (!opt) return;
+      const action = opt.dataset.action;
+      const url = location.href;
+      if (action === 'copy') {
+        const ok = await copyLink(url);
+        showToast(ok ? '已复制链接' : '复制失败');
+        track('share_copy');
+        setTimeout(closeSheet, 1200);
+      }
+      if (action === 'image') {
+        closeSheet();
+        exportImage();
+        track('share_image');
+      }
+    });
+    document.documentElement.classList.add('share-sheet-open');
+    requestAnimationFrame(() => sheet.setAttribute('data-open', 'true'));
+  }
+
+  // ── 提取长图生成逻辑, 让 openMobileShare 复用 ──
+  async function generateImageBlob() {
+    const html2canvas = await loadHtml2Canvas();
+    const wrapper = document.createElement('div');
+    wrapper.id = '__share-wrapper-tmp';
+    wrapper.style.cssText = 'position:relative;width:100%;background:#FFFFFF;';
+    const nodes = Array.from(document.body.children).filter(n =>
+      !n.classList.contains('share-sheet') &&
+      !n.classList.contains('share-fab') &&
+      !n.classList.contains('share-toast') &&
+      !n.classList.contains('share-qr-modal') &&
+      !n.classList.contains('hero-heart-bubble')
+    );
+    const originals = nodes.map(n => ({ node: n, parent: n.parentNode, next: n.nextSibling }));
+    nodes.forEach(n => wrapper.appendChild(n));
+    document.body.appendChild(wrapper);
+
+    const animatedSelectors = ['.fade-up', '.fade-in', '.reveal', '.scroll-reveal', '[data-reveal]'];
+    const restoreOps = [];
+    animatedSelectors.forEach(sel => {
+      wrapper.querySelectorAll(sel).forEach(el => {
+        const op = { el, opacity: el.style.opacity, transform: el.style.transform, transition: el.style.transition };
+        restoreOps.push(op);
+        el.style.setProperty('opacity', '1', 'important');
+        el.style.setProperty('transform', 'none', 'important');
+        el.style.setProperty('transition', 'none', 'important');
+        el.classList.add('visible', 'is-visible', 'is-revealed');
+      });
+    });
+
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
+
+    try {
+      const W = Math.max(wrapper.scrollWidth, document.documentElement.scrollWidth);
+      const H = Math.max(wrapper.scrollHeight, document.documentElement.scrollHeight);
+      const canvas = await html2canvas(wrapper, {
+        scale: 2, useCORS: true, backgroundColor: '#FFFFFF', logging: false,
+        width: W, height: H, windowWidth: W, windowHeight: H,
+        scrollX: 0, scrollY: 0, foreignObjectRendering: false,
+      });
+
+      // 加水印
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      const pad = Math.round(w * 0.025);
+      ctx.save();
+      ctx.fillStyle = 'rgba(184, 50, 58, 0.92)';
+      const tagH = Math.round(h * 0.04);
+      ctx.fillRect(0, h - tagH, w, tagH);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `600 ${Math.round(tagH * 0.4)}px "Songti SC", "PingFang SC", serif`;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'left';
+      ctx.fillText(SITE, pad, h - tagH / 2);
+      ctx.textAlign = 'right';
+      ctx.font = `${Math.round(tagH * 0.32)}px "PingFang SC", sans-serif`;
+      ctx.fillText('Major Explorer · 高考专业导览', w - pad, h - tagH / 2);
+      ctx.restore();
+
+      return await new Promise((resolve, reject) => {
+        canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob null')), 'image/png', 0.92);
+      });
+    } finally {
+      restoreOps.forEach(({ el, opacity, transform, transition }) => {
+        el.style.opacity = opacity; el.style.transform = transform; el.style.transition = transition;
+      });
+      originals.forEach(({ node, parent, next }) => {
+        if (next && next.parentNode === wrapper) wrapper.insertBefore(node, next);
+        else if (next) parent.insertBefore(node, next);
+        else parent.appendChild(node);
+      });
+      wrapper.remove();
+    }
   }
 
   function closeSheet() {
@@ -404,6 +542,7 @@
   }
 
   // ── 初始化 ──
+  // Day 35.5: 加顶栏心心 + hero-heart 心愿单联动
   function init() {
     // 所有 [data-share-trigger] 自动绑
     document.querySelectorAll('[data-share-trigger]').forEach((btn) => {
@@ -415,12 +554,86 @@
       });
     });
 
+    // ── 心愿单联动 (顶栏心心 + hero-heart) ──
+    bindHeartButtons();
+
     // 全局快捷: Cmd/Ctrl+S 触发生成长图 (桌面端快捷)
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'S') {
         e.preventDefault();
         exportImage();
       }
+    });
+  }
+
+  // ── Day 35.5 心愿单联动 ──
+  // 顶栏心心 #top-heart-btn + hero-heart #heart-btn + .hero-heart 全部接管
+  // 调用 WishlistStore.add / .remove / .get, 加心跳动画 + 气泡提示
+  function bindHeartButtons() {
+    const slug = (window.__SLUG__ || location.pathname.split('/').pop().replace('.html', '')).trim();
+    const title = (window.__TITLE__ || document.title.split(' · ')[0] || '').trim();
+
+    // 选所有可能的心心按钮 (顶栏 + hero)
+    const btns = Array.from(document.querySelectorAll('#top-heart-btn, .hero-heart'));
+    if (!btns.length) return;
+
+    // 初始状态: 已收藏 → is-on
+    const isOn = !!(window.WishlistStore && WishlistStore.get && WishlistStore.get(slug));
+    btns.forEach(b => isOn && b.classList.add('is-on'));
+
+    // 注入气泡元素 (DOM 树挂在 hero-heart 后)
+    const heroHeart = document.querySelector('.hero-heart');
+    let bubble = null;
+    if (heroHeart) {
+      bubble = document.createElement('div');
+      bubble.className = 'hero-heart-bubble';
+      bubble.textContent = '已加入志愿推荐 ✓';
+      heroHeart.parentNode.insertBefore(bubble, heroHeart.nextSibling);
+    }
+
+    function showBubble() {
+      if (!bubble) return;
+      bubble.setAttribute('data-show', 'true');
+      setTimeout(() => bubble.setAttribute('data-show', 'false'), 3200);
+    }
+
+    function beat(btn) {
+      btn.classList.remove('beat');
+      // 强制重启动画
+      void btn.offsetWidth;
+      btn.classList.add('beat');
+    }
+
+    btns.forEach(btn => {
+      if (btn.__heartBound) return;
+      btn.__heartBound = true;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!window.WishlistStore) {
+          showToast('心愿单暂不可用');
+          return;
+        }
+        const nowOn = WishlistStore.get(slug);
+        if (nowOn) {
+          WishlistStore.remove(slug);
+          btn.classList.remove('is-on');
+          showToast('已移出心愿单');
+        } else {
+          WishlistStore.upsert({
+            slug,
+            title,
+            tags: [],
+            score: 0,
+            note: '',
+            addedAt: Date.now(),
+          });
+          btn.classList.add('is-on');
+          showBubble();
+        }
+        beat(btn);
+        track(nowOn ? 'wishlist_remove' : 'wishlist_add');
+      });
     });
   }
 

@@ -1,8 +1,91 @@
-/* share.css — 分享 FAB + 弹层 + Toast + QR (PC + 移动通用)
+/* share.css — 分享 FAB + 弹层 + Toast + QR + 顶栏心心 (PC + 移动通用)
  *
- * 入口元素: [data-share-trigger] (PC FAB / mobile 顶部 ↗ 按钮)
+ * 入口元素:
+ *   - [data-share-trigger] (PC FAB + mobile 右下角浮动分享)
+ *   - #top-heart-btn (mobile 顶栏右侧心心, Day 35.5 替换原 ↗)
+ *   - .hero-heart #heart-btn (mobile hero 大爱心, 现有心愿单入口)
  * 弹层/Toast/Qr DOM 由 share.js 动态注入
  */
+
+/* ── Mobile 顶栏心心按钮 (Day 35.5 替换原 ↗ 分享) ── */
+.top-btn-heart {
+  font-size: 1.25rem !important;
+  color: var(--muted-2, #6B7280);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), color 180ms;
+  -webkit-tap-highlight-color: transparent;
+}
+.top-btn-heart.is-on {
+  color: var(--accent, #B8323A);
+}
+/* 心跳动画 (用户点击 / 初始加载时已收藏) */
+@keyframes shareHeartBeat {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.35); }
+  50%  { transform: scale(0.95); }
+  75%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.top-btn-heart.beat {
+  animation: shareHeartBeat 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Hero 大爱心强化 (Day 35.5) ── */
+.hero-heart {
+  position: absolute;
+  top: 56px;
+  right: 18px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  padding: 10px 16px;
+  min-height: 44px;
+  font-family: var(--font-heading, 'Songti SC', serif);
+  font-size: 0.875rem;
+  color: var(--fg, #1A1A1A);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-heart:active { transform: scale(0.94); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12); }
+.hero-heart .heart-ico { font-size: 1.25rem; color: var(--muted-2, #6B7280); transition: color 200ms, transform 200ms; line-height: 1; }
+.hero-heart .heart-label { font-weight: 500; letter-spacing: 0.04em; }
+.hero-heart.is-on { background: var(--accent, #B8323A); border-color: var(--accent, #B8323A); color: #FBF8F1; }
+.hero-heart.is-on .heart-ico { color: #FBF8F1; }
+.hero-heart.beat .heart-ico { animation: shareHeartBeat 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* 已收藏气泡提示 (click 后自动消失) */
+.hero-heart-bubble {
+  position: absolute;
+  top: 110px;
+  right: 18px;
+  z-index: 6;
+  background: var(--accent, #B8323A);
+  color: #FBF8F1;
+  font-family: var(--font-heading, 'Songti SC', serif);
+  font-size: 0.8125rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(184, 50, 58, 0.32);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.hero-heart-bubble[data-show="true"] {
+  animation: shareBubbleIn 3200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes shareBubbleIn {
+  0%   { opacity: 0; transform: translateY(-4px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  80%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
 
 /* ── PC FAB 浮动按钮 (fixed 右下角, 跟 wishlist FAB 同侧错开) ── */
 .share-fab {
