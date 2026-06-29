@@ -501,7 +501,6 @@
       left: 0;
       top: 0;
       width: 1080px;
-      min-height: 1500px;
       padding: 80px 70px 140px;
       background: linear-gradient(155deg, #FAF7F2 0%, #F0E8DA 100%);
       font-family: 'Songti SC', 'SimSun', serif;
@@ -567,7 +566,7 @@
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     await (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
 
-    const realHeight = Math.max(card.scrollHeight, card.offsetHeight, 1500);
+    const realHeight = Math.max(card.scrollHeight, card.offsetHeight, 600);
 
     try {
       const canvas = await html2canvas(card, {
@@ -773,37 +772,104 @@
         showToast('心愿单暂不可用');
         return;
       }
-      const nowOn = WishlistStore.get(slug);
-      if (nowOn) {
-        WishlistStore.remove(slug);
-        btn.classList.remove('is-on');
-        if (heroHeart) heroHeart.classList.remove('is-on');
-        showToast('已移出心愿单');
-      } else {
-        WishlistStore.upsert({
-          slug,
-          title,
-          tags: [],
-          score: 0,
-          note: '',
-          addedAt: Date.now(),
+      const existing = WishlistStore.get(slug);
+      if (existing) {
+        // 已收藏 → 直接弹打分 modal (允许调整)
+        showScoreModal(slug, title, existing.score || 0, () => {
+          btn.classList.add('is-on');
+          if (heroHeart) heroHeart.classList.add('is-on');
         });
-        btn.classList.add('is-on');
-        if (heroHeart) {
-          heroHeart.classList.add('is-on');
-          // 触发 hero-heart 原本的 beat 动画 (如果有)
-          const heroIco = heroHeart.querySelector('.heart-ico, .heart-on, .heart-off');
-          if (heroIco) {
-            heroIco.classList.remove('beat');
-            void heroIco.offsetWidth;
-            heroIco.classList.add('beat');
-          }
-        }
-        showToast('已加入志愿推荐 ✓');
+        return;
       }
-      beat();
-      track(nowOn ? 'wishlist_remove' : 'wishlist_add');
+      // 未收藏 → 加入 + 立刻弹打分 (Day 35.13 用户要求)
+      WishlistStore.upsert({
+        slug,
+        title,
+        tags: [],
+        score: 0,
+        note: '',
+        addedAt: Date.now(),
+      });
+      btn.classList.add('is-on');
+      if (heroHeart) {
+        heroHeart.classList.add('is-on');
+        const heroIco = heroHeart.querySelector('.heart-ico, .heart-on, .heart-off');
+        if (heroIco) {
+          heroIco.classList.remove('beat');
+          void heroIco.offsetWidth;
+          heroIco.classList.add('beat');
+        }
+      }
+      showToast('已加入志愿推荐 ✓');
+      // 弹打分 modal 让用户评分
+      setTimeout(() => showScoreModal(slug, title, 0, () => {}), 320);
+      track('wishlist_add');
     });
+  }
+
+  // ── 心愿单打分 modal (Day 35.13) ──
+  // 用户加心愿单时立即评分, 影响 recommender 排序权重
+  function showScoreModal(slug, title, currentScore = 0, onUpdate) {
+    document.querySelectorAll('.share-score-modal').forEach(el => el.remove());
+    let selected = currentScore;
+    const labels = ['未评分', '一般', '还行', '推荐', '强烈推荐', '第一志愿'];
+    const modal = document.createElement('div');
+    modal.className = 'share-score-modal';
+    modal.innerHTML = `
+      <div class="share-score-mask" data-score-close></div>
+      <div class="share-score-panel" role="dialog" aria-label="心愿打分">
+        <div class="share-score-handle"></div>
+        <div class="share-score-title">${escapeHtml(title)}</div>
+        <div class="share-score-subtitle">为这个专业打分 (影响志愿推荐排序)</div>
+        <div class="share-score-stars" data-score-stars>
+          ${[1,2,3,4,5].map(i => `<button class="share-score-star ${i <= currentScore ? 'is-on' : ''}" data-score="${i}" aria-label="${i}星">★</button>`).join('')}
+        </div>
+        <div class="share-score-label" data-score-label>${labels[currentScore] || '点星星评分'}</div>
+        <div class="share-score-actions">
+          <button class="share-score-btn-ghost" data-score-skip>跳过</button>
+          <button class="share-score-btn-primary" data-score-save>保存评分</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    document.documentElement.classList.add('share-sheet-open');
+
+    // 星点击
+    modal.querySelectorAll('[data-score]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selected = parseInt(btn.dataset.score, 10);
+        modal.querySelectorAll('[data-score]').forEach(b => {
+          b.classList.toggle('is-on', parseInt(b.dataset.score, 10) <= selected);
+        });
+        const labelEl = modal.querySelector('[data-score-label]');
+        if (labelEl) labelEl.textContent = labels[selected] || '点星星评分';
+      });
+    });
+
+    function close() {
+      modal.remove();
+      document.documentElement.classList.remove('share-sheet-open');
+    }
+    modal.addEventListener('click', (ev) => {
+      if (ev.target.closest('[data-score-close]')) close();
+      if (ev.target.closest('[data-score-skip]')) {
+        close();
+        if (onUpdate) onUpdate();
+      }
+      if (ev.target.closest('[data-score-save]')) {
+        if (window.WishlistStore && WishlistStore.update) {
+          WishlistStore.update(slug, { score: selected });
+        } else if (window.WishlistStore && WishlistStore.upsert) {
+          const old = WishlistStore.get(slug) || {};
+          WishlistStore.upsert({ ...old, slug, title, score: selected });
+        }
+        showToast(`已评分 ${selected} 星 ⭐`);
+        track('wishlist_score');
+        close();
+        if (onUpdate) onUpdate();
+      }
+    });
+    setTimeout(() => modal.setAttribute('data-open', 'true'), 16);
   }
 
   if (document.readyState === 'loading') {

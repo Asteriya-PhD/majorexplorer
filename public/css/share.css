@@ -476,3 +476,111 @@ html.share-sheet-open { overflow: hidden; }
   -webkit-tap-highlight-color: transparent;
 }
 .share-card-btn-primary:active { opacity: 0.85; }
+
+/* ── Day 35.13 心愿单打分 modal ── */
+.share-score-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1060;
+  pointer-events: none;
+}
+.share-score-modal[data-open="true"] { pointer-events: auto; }
+.share-score-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 220ms;
+}
+.share-score-modal[data-open="true"] .share-score-mask { opacity: 1; }
+.share-score-panel {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, calc(-50% + 24px));
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 24px 24px 20px;
+  width: min(380px, calc(100vw - 32px));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+.share-score-modal[data-open="true"] .share-score-panel {
+  transform: translate(-50%, -50%);
+}
+.share-score-handle {
+  width: 36px; height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+.share-score-title {
+  font-family: var(--font-heading, 'Songti SC', serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 4px;
+}
+.share-score-subtitle {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  margin-bottom: 20px;
+}
+.share-score-stars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.share-score-star {
+  font-size: 2.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #E5E7EB;
+  padding: 4px;
+  line-height: 1;
+  font-family: inherit;
+  transition: transform 120ms, color 160ms;
+  -webkit-tap-highlight-color: transparent;
+}
+.share-score-star.is-on {
+  color: #B8323A;
+}
+.share-score-star:active { transform: scale(1.2); }
+.share-score-label {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin-bottom: 20px;
+  min-height: 1.25rem;
+}
+.share-score-actions {
+  display: flex;
+  gap: 10px;
+}
+.share-score-btn-ghost {
+  flex: 1;
+  background: transparent;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+  border-radius: 999px;
+  padding: 12px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+.share-score-btn-ghost:active { background: #F3F4F6; }
+.share-score-btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #B8323A, #D97706);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  padding: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.share-score-btn-primary:active { opacity: 0.85; }
