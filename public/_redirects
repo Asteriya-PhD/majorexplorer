@@ -2,9 +2,13 @@
 # Day 41+ 终极方案: m/ 顶层页物理文件复制到 m/majors/ (同 627 专业详情同路径)
 # 通配 /m/:slug /m/majors/:slug 301 命中后, 物理文件存在直接 serve.
 # Day 35.7 微信分享链接修复保留.
+# Day 47.5: 数字 slug 兜底 (老 sitemap / 外链引用 050104 这种 MOE 代码)
 
 /m/:slug  /m/majors/:slug  301
 /m/:slug.html  /m/majors/:slug  301
+
+# 数字 MOE 代码 slug → search (避免老死链, 不去占位 404 页)
+/majors/:code([0-9]{6})  /search.html?q=:code  301
 
 # 404 兜底
 /*  /404.html  404

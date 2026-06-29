@@ -6,8 +6,9 @@
  *   - HTML 网络失败 → fallback 到 /offline (CF Pages 308 去掉 .html, 直接缓存最终 URL)
  * 版本号: 改这里强制升级
  * Day 47 bump: v3 → v4 (launch SOP)
+ * Day 47.5: PC vs mobile 拆开 cache 名 (避免 install 互相覆盖 SHELL)
  */
-const CACHE_NAME = "explorer-v4-day47-launch";
+const CACHE_NAME = "explorer-pc-v4-day47-5";
 const OFFLINE_URL = "/offline";
 const SHELL = [
   "/",
