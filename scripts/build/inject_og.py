@@ -30,6 +30,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CURATED = REPO_ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
+PUBLIC_HTML = REPO_ROOT / "public"  # Day 36: 目标改为 public/*.html (curated 下没 HTML)
 
 DEFAULT_BASE = "https://[PLACEHOLDER_DOMAIN]"
 OG_MARKER = "<!-- BEGIN_SEO_OG -->"
@@ -46,7 +47,7 @@ OG_TEMPLATE = (
 
 def list_targets() -> list[Path]:
     return sorted(
-        p for p in CURATED.glob("*.html")
+        p for p in PUBLIC_HTML.glob("*.html")
         if not p.stem.endswith("-demo") and p.stem != "manifest"
     )
 
