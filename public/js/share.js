@@ -174,49 +174,64 @@
   }
 
   // ── 弹层 ──
+  // Day 35.3 简化: 移动端只 2 选项 (复制 + 长图), PC 端 6 选项 (微信扫码 + 4 平台 + 长图)
   function buildSheet() {
     if (document.querySelector('.share-sheet')) return;
     loadCSS(SHARE_CSS_HREF);
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    const gridHTML = isMobile ? `
+      <button class="share-opt" data-action="copy">
+        <span class="share-ico" style="background:#666">链</span>
+        <span class="share-label">复制链接</span>
+      </button>
+      <button class="share-opt" data-action="image">
+        <span class="share-ico" style="background:#B8323A">图</span>
+        <span class="share-label">生成长图</span>
+      </button>
+    ` : `
+      <button class="share-opt" data-action="wechat">
+        <span class="share-ico" style="background:#07C160">微</span>
+        <span class="share-label">微信好友</span>
+      </button>
+      <button class="share-opt" data-action="moments">
+        <span class="share-ico" style="background:#07C160">圈</span>
+        <span class="share-label">朋友圈</span>
+      </button>
+      <button class="share-opt" data-action="qq">
+        <span class="share-ico" style="background:#12B7F5">Q</span>
+        <span class="share-label">QQ</span>
+      </button>
+      <button class="share-opt" data-action="weibo">
+        <span class="share-ico" style="background:#E6162D">博</span>
+        <span class="share-label">微博</span>
+      </button>
+      <button class="share-opt" data-action="xhs">
+        <span class="share-ico" style="background:#FF2442">书</span>
+        <span class="share-label">小红书</span>
+      </button>
+      <button class="share-opt" data-action="copy">
+        <span class="share-ico" style="background:#666">链</span>
+        <span class="share-label">复制链接</span>
+      </button>
+    `;
     const sheet = document.createElement('div');
     sheet.className = 'share-sheet';
     sheet.innerHTML = `
       <div class="share-sheet-mask" data-share-close></div>
       <div class="share-sheet-panel" role="dialog" aria-label="分享">
         <div class="share-sheet-handle"></div>
-        <div class="share-sheet-title">分享给朋友</div>
-        <div class="share-sheet-grid">
-          <button class="share-opt" data-action="wechat">
-            <span class="share-ico" style="background:#07C160">微</span>
-            <span class="share-label">微信好友</span>
-          </button>
-          <button class="share-opt" data-action="moments">
-            <span class="share-ico" style="background:#07C160">圈</span>
-            <span class="share-label">朋友圈</span>
-          </button>
-          <button class="share-opt" data-action="qq">
-            <span class="share-ico" style="background:#12B7F5">Q</span>
-            <span class="share-label">QQ</span>
-          </button>
-          <button class="share-opt" data-action="weibo">
-            <span class="share-ico" style="background:#E6162D">博</span>
-            <span class="share-label">微博</span>
-          </button>
-          <button class="share-opt" data-action="xhs">
-            <span class="share-ico" style="background:#FF2442">书</span>
-            <span class="share-label">小红书</span>
-          </button>
-          <button class="share-opt" data-action="copy">
-            <span class="share-ico" style="background:#666">链</span>
-            <span class="share-label">复制链接</span>
-          </button>
+        <div class="share-sheet-title">${isMobile ? '保存后分享给朋友' : '分享给朋友'}</div>
+        <div class="share-sheet-grid ${isMobile ? 'is-mobile-compact' : ''}">
+          ${gridHTML}
         </div>
-        <div class="share-sheet-divider"></div>
+        ${!isMobile ? '<div class="share-sheet-divider"></div>' : ''}
+        ${!isMobile ? `
         <button class="share-opt share-opt-wide" data-action="image">
           <span class="share-ico" style="background:#B8323A">图</span>
           <span class="share-label">生成长图 (带水印, 适合转发)</span>
-        </button>
+        </button>` : ''}
         <button class="share-cancel" data-share-close>取消</button>
-        <div class="share-sheet-brand">来自 ${SITE}</div>
+        <div class="share-sheet-brand">来自 ${SITE} · 长图带品牌水印, 适合转发</div>
       </div>
     `;
     document.body.appendChild(sheet);
@@ -285,6 +300,27 @@
   }
 
   function openSheet() {
+    // Day 35.3: 移动端优先 Web Share API (iOS Safari / Android Chrome 原生支持, 弹系统面板)
+    // 失败 (桌面浏览器/不支持) 才显示自定义弹层
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    if (isMobile && navigator.share) {
+      const url = location.href;
+      const title = document.title;
+      const text = title + ' — ' + SITE;
+      navigator.share({ title, text, url })
+        .then(() => { track('share_native'); })
+        .catch(() => {
+          // 用户取消 / 系统不支持 → fallback 弹层
+          buildSheet();
+          document.documentElement.classList.add('share-sheet-open');
+          requestAnimationFrame(() => {
+            const sheet = document.querySelector('.share-sheet');
+            if (sheet) sheet.setAttribute('data-open', 'true');
+          });
+        });
+      track('share_open');
+      return;
+    }
     buildSheet();
     document.documentElement.classList.add('share-sheet-open');
     requestAnimationFrame(() => {
