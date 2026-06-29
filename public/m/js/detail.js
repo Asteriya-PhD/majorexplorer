@@ -185,6 +185,15 @@
   if (heartBtn) heartBtn.addEventListener("click", openModal);
   if (ctaBtn) ctaBtn.addEventListener("click", e => { e.preventDefault(); openModal(); });
 
+  // Day 36 P1-12: 顶部 heart 按钮 (mobile _template.html 专用)
+  const topHeartBtn = document.getElementById("top-heart-btn");
+  if (topHeartBtn) {
+    topHeartBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openModal();
+    });
+  }
+
   // ─── 浏览历史 (写入 slug + 时间) ───
   function loadHistory() {
     try {

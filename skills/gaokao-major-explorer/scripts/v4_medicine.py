@@ -504,8 +504,9 @@ def _render_medicine_pitfalls(data: dict) -> str:
     if not items:
         return ""
     return (
-        '<h3>避坑指南</h3>'
+        '<section id="pitfalls"><h3>避坑指南</h3>'
         '<div class="m-pits">' + "".join(items) + '</div>'
+        '</section>'
     )
 
 

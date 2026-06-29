@@ -4,6 +4,7 @@ v4_styles/render.py — 通用 v4 渲染 orchestrator (cs/finance/law/education/
 替代原 891 行 if/elif hero 链, 调用 dispatch 表生成 hero + 主体 9 个 section.
 """
 from pathlib import Path
+import html  # Day 36 P0-13: meta description 转义防 < 5 所 破坏 HTML 属性
 from .base import FONT_URLS, get_base_css, COUNT_UP_JS, BASE_V4_CSS, _dedup_by_name, soft_break_name, get_first_char
 from .body_bg import get_body_bg_css
 from .overview_v2 import render_overview_v2, render_pitfalls_v2, OVERVIEW_V2_CSS
@@ -506,9 +507,17 @@ def _normalize_xuanke(items):
         # subject → name (组合名, e.g. "物理 + 化学 (90% 老八校要求)")
         if "name" not in normalized and "subject" in normalized:
             normalized["name"] = normalized["subject"]
-        # required → reason (原因/院校要求, e.g. "全国 90% 院校城乡规划 首选物理")
+        # combo → name (Day 36 P1-18 修复: 15 篇 combo/item 字段漂移)
+        if "name" not in normalized and "combo" in normalized:
+            normalized["name"] = normalized["combo"]
+        if "name" not in normalized and "item" in normalized:
+            normalized["name"] = normalized["item"]
+        # required → reason (原因/院校要求)
         if "reason" not in normalized and "required" in normalized:
             normalized["reason"] = normalized["required"]
+        # rationale → reason (Day 36 P1-18)
+        if "reason" not in normalized and "rationale" in normalized:
+            normalized["reason"] = normalized["rationale"]
         # course 兼容: 别名 schema 没 course, 给默认
         if "course" not in normalized:
             normalized["course"] = "3+1+2 选科组合"
@@ -700,7 +709,8 @@ def render_v4(data: dict, style: str) -> str:
           <div class="xuanke-pct">{x.get("pct", 0)}%</div>
         </div>'''
         for x in xuanke
-    ) if xuanke else '<p>选科数据待补充</p>'
+    ) if xuanke else ''
+    # Day 36 P0-14: 隐藏 placeholder, 不渲染选科 section
 
     # ── HERO (dispatch) ──
     hero_html = HERO_FN[style](
@@ -726,7 +736,7 @@ def render_v4(data: dict, style: str) -> str:
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 {_WL_HEAD}
 <title>{title}专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="{summary[:100]}">
+<meta name="description" content="{html.escape(summary)[:100]}">
 <style>
 {FONT_URLS[style]}
 {get_base_css()}

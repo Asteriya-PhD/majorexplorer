@@ -528,7 +528,7 @@ def render_schools(schools, hubei_only=False):
     if not schools:
         return ""
     # 湖北优先, 但目前 mock 全是湖北的 + 跨省, 先全列
-    items = schools[:8]
+    items = schools  # Day 36 P1-14: 不再硬截 [:8]
     rows = []
     for i, s in enumerate(items, 1):
         rank_raw = s.get("rank", "")
@@ -585,16 +585,17 @@ def render_schools(schools, hubei_only=False):
 
 
 def render_quote(quote_data, title=""):
-    """quote_data = [{quote, name, school, tag}] → 取前 3 个卡片堆叠"""
+    """quote_data = [{quote, current, year, source, ...}] → 取前 5 个卡片堆叠 (Day 36 P1-15/16 修)"""
     if not quote_data:
         return ""
     items = []
-    for q in quote_data[:3]:
+    for q in quote_data[:5]:  # Day 36 P1-15: 3 → 5 与 PC 持平
         if not isinstance(q, dict):
             continue
         text = q.get("quote", q.get("text", ""))
-        by = q.get("name", "") or q.get("school", "")
-        sig = q.get("tag", "")
+        # Day 36 P1-16: 字段别名 → current 是岗位, name 是校友名
+        by = q.get("current", "") or q.get("name", "") or q.get("school", "")
+        sig = q.get("year", "") or q.get("source", "") or q.get("tag", "")
         if not text:
             continue
         by_full = f"{by} · {sig}" if by and sig else (by or sig)
@@ -909,7 +910,8 @@ def render_one(slug, data, theme_color, chsi_sat=None, chsi_fallback=None):
     # 八·就业方向
     sec8 = render_employment(data.get("employment_direction"))
     # 九·深造路径
-    sec9 = render_deep_study(data.get("deep_study"))
+    sec9 = ""  # Day 36 P1-13: PC 8 节无 deep_study, mobile 同步下线 (6/24 PC 删)
+    # 第 9 节 (深造路径 deep_study) 跟随 PC 下线 — 用户已拍 Day 28 回滚 08
     # 十·学长学姐说 (top 3)
     sec10 = render_quote(data.get("alumni_quotes"))
     # 十一·选科要求
@@ -1008,6 +1010,26 @@ def render_one(slug, data, theme_color, chsi_sat=None, chsi_fallback=None):
         "{{GRAD_RATE}}": grad_tier,
         "{{SATISFACTION}}": satisfaction,
     }
+    # Day 36 P0-15: meta description + og:image + discipline-breadcrumb
+    import html as _html
+    desc = _html.escape(tagline or summary or title)[:120]
+    discipline = category or "工学"
+    breadcrumb = discipline
+    if moe:
+        breadcrumb += f" · {moe}"
+    breadcrumb += f" · {title}"
+    meta_tags = (
+        f'<meta name="description" content="{desc} · Major Explorer">\n'
+        f'<meta property="og:title" content="{title}专业介绍 2026 高考 | Major Explorer">\n'
+        f'<meta property="og:description" content="{desc}">\n'
+        f'<meta property="og:image" content="https://majorexplorer.com/assets/og-card.png">\n'
+        f'<meta property="og:url" content="https://majorexplorer.com/m/majors/{slug}.html">\n'
+        f'<meta property="og:type" content="article">\n'
+        f'<link rel="canonical" href="https://majorexplorer.com/m/majors/{slug}.html">\n'
+        f'<script type="application/ld+json">{{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{"@type":"ListItem","position":1,"name":"{_html.escape(discipline)}","item":"https://majorexplorer.com/m/catalog.html"}},{{"@type":"ListItem","position":2,"name":"{_html.escape(title)}"}}]}}</script>\n'
+        f'<div class="discipline-breadcrumb" style="display:none">{_html.escape(breadcrumb)}</div>'
+    )
+    replacements["{{META_TAGS}}"] = meta_tags
     for k, v in replacements.items():
         html = html.replace(k, v)
     # 注入 tags + sections

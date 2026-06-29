@@ -15,6 +15,13 @@
 
 <title>未命名专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/manifest.html">
+  <meta property="og:url" content="https://majorexplorer.com/manifest.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="未命名专业介绍 2026 高考 | Major Explorer">
+  <meta property="og:type" content="article">
+
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Long+Cang&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -96,6 +103,38 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
 /* 院校/公司名: 允许在 <wbr> 软断点换行, 禁止在汉字字符间断 */
 .bento-name, .company-name { word-break: keep-all; overflow-wrap: break-word; }
 
+/* ============================================================
+   深造路径 — 方案 B 横向 bar 列表 (2026-06-24)
+   替代 .path-card 5+2 末行孤零: 2 列固定, 4+4 整齐,
+   长名+括号补充说明有水平空间, 视觉延续 salary 横条语言.
+   ============================================================ */
+.path-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 24px 32px; margin-top: 32px; position: relative; z-index: 1; }
+.path-bar { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: start; padding: 8px 0; }
+.path-bar-pct { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.1; text-align: right; padding-top: 2px; color: #1A1A1A; /* fallback — 12 主题各自覆盖 */ }
+.path-bar-unit { font-size: 0.75rem; font-weight: 500; margin-left: 1px; opacity: 0.8; }
+.path-bar-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.path-bar-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.4; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-sub { font-size: 0.75rem; opacity: 0.7; line-height: 1.5; word-break: keep-all; overflow-wrap: break-word; }
+.path-bar-track { height: 6px; background: rgba(0, 0, 0, 0.08); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.path-bar-fill { height: 100%; background: #1A1A1A; opacity: 0.85; border-radius: 3px; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.path-bar-bullets { margin: 4px 0 0; padding-left: 0; list-style: none; font-size: 0.8125rem; line-height: 1.6; opacity: 0.85; }
+.path-bar-bullets li { position: relative; padding-left: 12px; }
+.path-bar-bullets li::before { content: '·'; position: absolute; left: 0; opacity: 0.6; }
+
+/* ============================================================
+   07 就业方向 — 方案 G (2026-06-24, name+sub inline 单行 + 按 pct 排序)
+   2 列 grid + name 粗体大字 + sub 灰小不粗体, 全 1 行 (nowrap+ellipsis).
+   数据驱动: 智能切括号 — 复用现有 JSON, 无需 synth.
+   ============================================================ */
+.direction-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 18px 40px !important; max-width: none !important; margin-top: 32px; position: relative; z-index: 1; }
+.direction { display: grid !important; grid-template-columns: 76px 1fr !important; align-items: center; gap: 16px !important; padding: 12px 0 !important; border-bottom: none !important; }
+.direction-pct { font-size: 1.5rem !important; font-weight: 700 !important; }
+.direction-body { display: flex !important; flex-direction: column !important; gap: 6px !important; min-width: 0 !important; }
+.direction-name { font-size: 0.9375rem !important; font-weight: 600 !important; line-height: 1.3 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+.direction-name .direction-sub { font-weight: 400 !important; font-size: 0.75rem !important; opacity: 0.65 !important; margin-left: 4px !important; }
+.direction-bar { height: 8px !important; border-radius: 4px !important; }
+.direction-bar-fill { border-radius: 4px !important; }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -109,7 +148,6 @@ section.tab p { text-wrap: pretty; word-break: keep-all; overflow-wrap: anywhere
    grid !important 由主题流体 auto-fit 取代, container padding 由 clamp 取代
    ============================================================ */
 @media (max-width: 480px) {
-  /* hero-stats: 2x2 cell 长内容 (学科 / 学制·学位 等) overflow 通病 */
   .hero-stats { gap: 0 !important; }
   .hero-stats .stat,
   .hero-stats > .stat { padding: 12px 12px !important; min-width: 0 !important; overflow: hidden !important; }
@@ -939,7 +977,7 @@ footer .data-source { color: #6B5D3F; }
           <div class="hu-stat"><span class="hu-stat-seal">正</span><div class="stat-label">学 科 门 类</div><div class="stat-value"></div></div>
           <div class="hu-stat"><div class="stat-label">学 制 · 学 位</div><div class="stat-value">4Y · </div></div>
           <div class="hu-stat"><div class="stat-label">难 度 评 定</div><div class="stat-value">★★★☆☆</div></div>
-          <div class="hu-stat"><div class="stat-label">版 本 修 订</div><div class="stat-value">2026-06-21T22:31:56.873701</div></div>
+          <div class="hu-stat"><div class="stat-label">版 本 修 订</div><div class="stat-value">2026-06-23T07:32:17.231113</div></div>
         </div>
         <ul class="hu-toc">
           <li><span class="hu-toc-cnum">壹</span><span class="hu-toc-name">速览 · 专业全貌</span><span class="hu-toc-pg">p. 02</span></li>
@@ -954,9 +992,7 @@ footer .data-source { color: #6B5D3F; }
 </header>
 
 <section class="tab" id="overview">
-  <div class="watermark">01</div>
-  <div class="container">
-    <div class="section-num">01 / 10 · 速览</div>
+  <div class="watermark">01</div><div class="container"><div class="section-num">01 / 8 · 速览</div>
     <h2>速览</h2>
     <p class="lede drop-cap ovv-lede"></p><div class="ovv-card fade-up"><div class="ovv-card-head"><span class="ovv-card-num">01 / 02</span><h3 class="ovv-card-title">这个专业学什么?</h3><span class="ovv-card-tag">Foundations · Directions · Skills</span></div></div>
   </div>
@@ -965,9 +1001,7 @@ footer .data-source { color: #6B5D3F; }
 
 
 <section class="tab" id="curriculum">
-  <div class="watermark">03</div>
-  <div class="container">
-    <div class="section-num">03 / 10 · 课程</div>
+  <div class="watermark">02</div><div class="container"><div class="section-num">02 / 8 · 课程</div>
     <h2>主要课程</h2>
     <p class="curriculum-lede">全国通用 4 年制框架, 不同高校在大三/大四有不同方向分流。</p>
     <div class="curriculum-grid">
@@ -977,9 +1011,7 @@ footer .data-source { color: #6B5D3F; }
 </section>
 
 <section class="tab" id="schools">
-  <div class="watermark">04</div>
-  <div class="container">
-    <div class="section-num">04 / 10 · 院校</div>
+  <div class="watermark">03</div><div class="container"><div class="section-num">03 / 8 · 院校</div>
     <h2>院校分布</h2>
     <p class="lede">教育部学科评估第四轮 (2017, 第五轮 2022 部分公开)。A+ = 前 2% 或前 2 所, A = 前 2-10%, A- = 前 10-20%。</p>
     <div class="bento">
@@ -989,9 +1021,7 @@ footer .data-source { color: #6B5D3F; }
 </section>
 
 <section class="tab" id="companies">
-  <div class="watermark">05</div>
-  <div class="container">
-    <div class="section-num">05 / 10 · 头部雇主</div>
+  <div class="watermark">04</div><div class="container"><div class="section-num">04 / 8 · 头部雇主</div>
     <h2>头部雇主</h2>
     <p class="lede">S = 顶级, A = 知名, B = 大量招。校招薪资为 2024 秋招主流 offer 中位数。底部 bar = 近 5 年招聘量趋势。</p>
     <div class="company-grid">
@@ -1001,9 +1031,7 @@ footer .data-source { color: #6B5D3F; }
 </section>
 
 <section class="tab" id="salary">
-  <div class="watermark">06</div>
-  <div class="container">
-    <div class="section-num">06 / 10 · 薪资</div>
+  <div class="watermark">05</div><div class="container"><div class="section-num">05 / 8 · 薪资</div>
     <h2>薪资分布</h2>
     <p class="lede">数据源: 麦可思 2024 + 招聘平台 2024 校招采样。单位: 万/年。P25/P50/P75 = 25/50/75 百分位。≈ 表示估算值。↗ = 3 年变化。进入视口时数字滚动。</p>
     <table class="salary-table">
@@ -1018,9 +1046,7 @@ footer .data-source { color: #6B5D3F; }
 </section>
 
 <section class="tab" id="directions">
-  <div class="watermark">07</div>
-  <div class="container">
-    <div class="section-num">07 / 10 · 就业方向</div>
+  <div class="watermark">06</div><div class="container"><div class="section-num">06 / 8 · 就业方向</div>
     <h2>就业方向</h2>
     <p class="lede">毕业 1-3 年的去向分布, 占比合计 100%。</p>
     <div class="direction-list">
@@ -1029,21 +1055,10 @@ footer .data-source { color: #6B5D3F; }
   </div>
 </section>
 
-<section class="tab" id="deep-study">
-  <div class="watermark">08</div>
-  <div class="container">
-    <div class="section-num">08 / 10 · 深造路径</div>
-    <h2>深造路径</h2>
-    <div class="path-grid">
-<p>深造数据待补充</p>
-    </div>
-  </div>
-</section>
+<!-- 08 深造路径 section 已下线 2026-06-24 (与 07 就业方向重复), 后台重做后再恢复 -->
 
 <section class="tab" id="quotes">
-  <div class="watermark">09</div>
-  <div class="container">
-    <div class="section-num">09 / 10 · 学长学姐说</div>
+  <div class="watermark">07</div><div class="container"><div class="section-num">07 / 8 · 学长学姐说</div>
     <h2>学长学姐说</h2>
     <p class="lede">真实在校生/毕业生观点, 有夸有劝退, 自己判断。</p>
     <div class="quotes">
@@ -1053,13 +1068,11 @@ footer .data-source { color: #6B5D3F; }
 </section>
 
 <section class="tab" id="xuanke">
-  <div class="watermark">10</div>
-  <div class="container">
-    <div class="section-num">10 / 10 · 选科要求</div>
+  <div class="watermark">08</div><div class="container"><div class="section-num">08 / 8 · 选科要求</div>
     <h2>选科要求 (新高考 3+1+2)</h2>
     <p class="lede">基于 2024 年全国开设此专业院校的招生选科要求统计。覆盖率越高, 你的选科组合能报的院校越多。</p>
     <div class="xuanke-list">
-<p>选科数据待补充</p>
+
     </div>
   </div>
 </section>
@@ -1102,7 +1115,7 @@ footer .data-source { color: #6B5D3F; }
 
 <footer>
   <div class="container">
-    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html -->
+    <div class="footer-nav">  <!-- ✅ Day 5 Bug 3 fix (2026-06-18): L3 死链兜底 + L2 直链 /majors.html; Day 24 修复: 删重复的"主页专业入口"(/majors.html 与 /#majors 等价), "偏好推荐" 改名 "填报考偏好" -->
       <a class="footer-nav-link" href="/majors.html">📚 返回专业目录</a>
       <a class="footer-nav-link" href="/wishlist.html">🎒 我的心愿单</a>
       <a class="footer-nav-link" href="/preferences.html">📝 填报考偏好</a>
@@ -1162,7 +1175,7 @@ footer .data-source { color: #6B5D3F; }
 <!-- Wishlist UI: 共享 store + helpers + 本页 chip/FAB 启动 + 搜专业 chat -->
 <script src="/js/wishlist-store.js"></script>
 <script src="/js/ui-helpers.js"></script>
-<script src="/js/major-search.js?v=fb456afa"></script>
+<script src="/js/major-search.js"></script>
 <script>
 (function () {
   "use strict";
@@ -1175,7 +1188,7 @@ footer .data-source { color: #6B5D3F; }
     if (chatHost) {
       window.MajorSearch.mountChat(chatHost, {
         size: 'compact',
-        placeholder: '搜其他专业…  比如「计算机」「临床医学」「金融学」',
+        placeholder: '搜其他专业…  比如「编程」「医生」「考公」「金融」',
       });
     }
   }
@@ -1310,11 +1323,5 @@ footer .data-source { color: #6B5D3F; }
 })();
 </script>
 
-
-
-<!-- 分享 FAB + 长图导出 (Day 35 share 注入) -->
-<button type="button" class="share-fab" data-share-trigger aria-label="分享">↗</button>
-<link rel="stylesheet" href="/css/share.css?v=day35p15">
-<script src="/js/share.js?v=day35p15" defer></script>
 </body>
 </html>

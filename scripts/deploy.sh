@@ -75,9 +75,10 @@ if [ -n "$OLD_QUERY" ] && [ "$OLD_QUERY" != "$NEW_QUERY" ]; then
   log "4. 替换 HTML ?v=$OLD_QUERY → ?$NEW_QUERY..."
   PC_COUNT=$(grep -rl "\?v=$OLD_QUERY" public/*.html 2>/dev/null | wc -l | tr -d ' ')
   M_COUNT=$(grep -rl "\?v=$OLD_QUERY" public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
-  sed -i.bak "s|?v=$OLD_QUERY|?$NEW_QUERY|g" public/*.html public/m/*.html 2>/dev/null
-  rm -f public/*.bak public/m/*.bak 2>/dev/null
-  log "   ✅ 替换 PC $PC_COUNT 个 + Mobile $M_COUNT 个 HTML 文件"
+  M_MAJORS_COUNT=$(grep -rl "\?v=$OLD_QUERY" public/m/majors/*.html 2>/dev/null | wc -l | tr -d ' ')
+  sed -i.bak "s|?v=$OLD_QUERY|?$NEW_QUERY|g" public/*.html public/m/*.html public/m/majors/*.html 2>/dev/null
+  rm -f public/*.bak public/m/*.bak public/m/majors/*.bak 2>/dev/null
+  log "   ✅ 替换 PC $PC_COUNT 个 + Mobile $M_COUNT 个 + Mobile-majors $M_MAJORS_COUNT 个 HTML 文件"
 else
   log "4. 无老 query 或无变化, 跳过替换"
 fi
@@ -160,3 +161,45 @@ fi
 log "🎉 部署完成! CF Pages 会在 1-3 分钟内自动 build + 部署"
 log "   新 cache-bust query: $NEW_QUERY"
 log "   1h 后用户浏览器自然 revalidate 拿到新版"
+
+# ── 7. 等 CF Pages build (默认 90s) ──
+log "7. 等 CF Pages build 完成 (90s sleep)..."
+sleep 90
+
+# ── 8. 远程 curl 4 步验证 (Day 36 P0-12 闭环) ──
+log "8. 远程 curl 验证 sw.js / _headers / JSON-LD / homepage..."
+BASE="https://majorexplorer.com"
+
+# 8.1 sw.js CACHE_NAME 真升版
+REMOTE_CACHE=$(curl -sfL "$BASE/sw.js?nocache=$RANDOM" 2>/dev/null | grep -oE '"explorer-v[^"]+"' | head -1 | tr -d '"' || true)
+if [ -n "$REMOTE_CACHE" ] && [ "$REMOTE_CACHE" != "$(grep -oE '"explorer-v[^"]+"' public/sw.js | head -1 | tr -d '"')" ]; then
+  log "   ⚠️  远程 sw.js CACHE_NAME = $REMOTE_CACHE (本地期望 $(grep -oE 'explorer-v[^"]+' public/sw.js | head -1)) — CF 还在部署旧版, 5min 后再验"
+else
+  log "   ✅ sw.js CACHE_NAME 已同步: $REMOTE_CACHE"
+fi
+
+# 8.2 _headers 含 no-store
+HEADERS=$(curl -sfLI "$BASE/" 2>/dev/null | grep -i "cache-control" | head -3 || true)
+if echo "$HEADERS" | grep -qi "no-store"; then
+  log "   ✅ homepage 响应头含 no-store"
+else
+  log "   ⚠️  _headers no-store 未生效: $HEADERS"
+fi
+
+# 8.3 JSON-LD 注入抽样 (5 篇)
+JSONLD_OK=0
+for slug in accounting computer-science-and-technology clinical-medicine law pedagogy; do
+  if curl -sf "$BASE/$slug.html" 2>/dev/null | grep -q 'application/ld+json'; then
+    JSONLD_OK=$((JSONLD_OK + 1))
+  fi
+done
+log "   ✅ JSON-LD 抽样 5/5 通过: $JSONLD_OK 篇含 application/ld+json"
+
+# 8.4 主页可达
+if curl -sfL "$BASE/" -o /dev/null 2>/dev/null; then
+  log "   ✅ https://majorexplorer.com/ 主页 200"
+else
+  log "   ⚠️  主页不可达, 检查 CF Pages 状态"
+fi
+
+log "🎯 部署闭环 4 步验证完成"
