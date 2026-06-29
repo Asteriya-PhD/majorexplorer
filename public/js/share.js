@@ -252,37 +252,30 @@
       const title = document.title;
       const text = title + ' — ' + SITE;
 
-      // ── PC scheme URL 调起客户端 (Day 35.5) ──
-      // 微信: weixin:// → 调起微信客户端
-      // QQ:   tencent://message/?Menu=yes&Url=...&Title=...  调起 QQ 客户端
-      // 无客户端: 弹提示 (Web 永远无法唤起时给用户清晰指引)
+      // ── PC scheme URL 调起客户端 (Day 35.5.1) ──
+      // 微信/QQ 在 PC Web 唤起后, 不会自动把链接填进聊天框
+      // 修法: 先复制链接 (保证拿到), 再唤起客户端, Toast 提示「链接已复制, 打开 X 粘贴发送」
+      // 不再做"未检测到客户端"误判 — 浏览器唤起客户端本就 100% 不可靠检测
       if (action === 'wechat' || action === 'qq') {
-        const ua = navigator.userAgent;
-        const isWin = /Windows/i.test(ua);
-        const isMac = /Mac/i.test(ua);
         const schemes = {
           wechat: 'weixin://',
           qq: 'tencent://message/?Menu=yes&Url=' + encodeURIComponent(url) + '&Title=' + encodeURIComponent(text),
         };
-        const scheme = schemes[action];
         const label = action === 'wechat' ? '微信' : 'QQ';
-        // 尝试唤起, 1.5s 后还在原页面说明没装客户端
-        const start = Date.now();
-        let hidden = false;
-        const onHide = () => { hidden = true; };
-        document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'hidden') onHide();
-        });
-        try {
-          window.location.href = scheme;
-        } catch (_) { /* ignore */ }
+        // 1) 先复制链接 (核心目的)
+        const ok = await copyLink(url);
+        // 2) Toast 提示 (弹层关掉之后才能看到)
         setTimeout(() => {
-          if (!hidden && Date.now() - start > 1200) {
-            showToast(`未检测到 ${label} 客户端, 请打开 ${label} 粘贴链接`);
-            // 同时复制链接兜底
-            copyLink(url);
-          }
-        }, 1500);
+          showToast(ok
+            ? `链接已复制, 打开 ${label} 粘贴发送`
+            : `请手动复制链接: ${url}`);
+        }, 200);
+        // 3) 尝试唤起客户端 (失败也不报错, 用户能用复制的链接)
+        setTimeout(() => {
+          try {
+            window.location.href = schemes[action];
+          } catch (_) { /* ignore */ }
+        }, 100);
         track('share_' + action);
         closeSheet();
         return;
