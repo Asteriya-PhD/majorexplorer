@@ -6,7 +6,7 @@
  *   - HTML 网络失败 → fallback 到 /offline (CF Pages 308 去掉 .html, 直接缓存最终 URL)
  * 版本号: 改这里强制升级
  */
-const CACHE_NAME = "explorer-v3-30ea0279";
+const CACHE_NAME = "explorer-v3-e8e9bffc";
 const OFFLINE_URL = "/offline";
 const SHELL = [
   "/",
