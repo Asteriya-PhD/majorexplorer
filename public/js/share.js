@@ -66,6 +66,8 @@
   // ── 长图生成 (html2canvas → canvas → blob → 触发下载) ──
   // 根因 (Day 35 v2): 原 selector 选到 hero 内的 .container, 只截首屏
   // 修法: 用 wrapper div 临时包住 body 所有子节点, 截 wrapper (html2canvas 官方推荐)
+  // 根因 (Day 35.4): .fade-up 滚动入场动画 opacity:0, wrapper 后 IntersectionObserver
+  //   不触发, html2canvas 渲染出来整片透明空白. 修: 临时强制所有 .fade-up 到 visible 状态.
   async function exportImage() {
     const html2canvas = await loadHtml2Canvas();
     const tip = showToast('正在生成图片…');
@@ -84,6 +86,27 @@
     const originals = nodes.map(n => ({ node: n, parent: n.parentNode, next: n.nextSibling }));
     nodes.forEach(n => wrapper.appendChild(n));
     document.body.appendChild(wrapper);
+
+    // ── Day 35.4 关键修复: 强制所有 fade-up/scroll 动画元素到 visible 终态 ──
+    // IntersectionObserver 在 DOM 重组后不再触发, .visible class 没加, 元素 opacity:0
+    // 临时清空 transition + 强制 opacity:1 / transform:none
+    const animatedSelectors = ['.fade-up', '.fade-in', '.reveal', '.scroll-reveal', '[data-reveal]'];
+    const restoreOps = [];
+    animatedSelectors.forEach(sel => {
+      wrapper.querySelectorAll(sel).forEach(el => {
+        const op = {
+          el,
+          opacity: el.style.opacity,
+          transform: el.style.transform,
+          transition: el.style.transition,
+        };
+        restoreOps.push(op);
+        el.style.setProperty('opacity', '1', 'important');
+        el.style.setProperty('transform', 'none', 'important');
+        el.style.setProperty('transition', 'none', 'important');
+        el.classList.add('visible', 'is-visible', 'is-revealed'); // 兜底加可见 class
+      });
+    });
 
     // 等 layout settle (字体/图片/SVG 异步加载)
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -104,6 +127,8 @@
         windowHeight: H,
         scrollX: 0,
         scrollY: 0,
+        // Day 35.4: 禁掉 html2canvas 的 foreignObject rendering (对 inline style + animation 支持差)
+        foreignObjectRendering: false,
       });
     } catch (e) {
       console.error('[share] export failed', e);
@@ -111,6 +136,12 @@
       setTimeout(() => tip.remove(), 2200);
       return;
     } finally {
+      // ── 恢复动画元素 style ──
+      restoreOps.forEach(({ el, opacity, transform, transition }) => {
+        el.style.opacity = opacity;
+        el.style.transform = transform;
+        el.style.transition = transition;
+      });
       // ── 恢复 DOM: 把节点搬回 body 原位置 ──
       originals.forEach(({ node, parent, next }) => {
         if (next && next.parentNode === wrapper) {
