@@ -1,21 +1,15 @@
 # Cloudflare Pages _redirects
-# Day 42 修复 (4d769656, 不完整): m/ 顶层页 (search/index/catalog/...) 被 m/:slug 通配误吞 → 301 到 m/majors/ 后 404
-# Day 41 完整修复 (a2eea2a8 + 后续): 加 14 条白名单 (.html + 无后缀)
-# CF Pages pretty URL: 自动 .html ↔ 无后缀 308 (先于 _redirects), 必须 .html + 无后缀都加
-/m/search.html          /m/search.html          200
-/m/search               /m/search.html          200
-/m/index.html           /m/index.html           200
-/m/index                /m/index.html           200
-/m/catalog.html         /m/catalog.html         200
-/m/catalog              /m/catalog.html         200
-/m/recommendations.html /m/recommendations.html 200
-/m/recommendations      /m/recommendations.html 200
-/m/wishlist.html        /m/wishlist.html        200
-/m/wishlist             /m/wishlist.html        200
-/m/me.html              /m/me.html              200
-/m/me                   /m/me.html              200
-/m/offline.html         /m/offline.html         200
-/m/offline              /m/offline.html         200
+# Day 41+ 修复: m/ 顶层页 clean URL → .html (避免 self-rewrite 死循环)
+# 只写 clean→html 一边: 浏览器跟 301 到 .html 后, _redirects 无规则匹配 (因为没写 .html source),
+# CF Pages 直接 serve 物理文件, 不再 308 回去 (物理文件已存在, pretty URL no-op). 无循环.
+# 物理文件 public/m/{search,index,catalog,recommendations,wishlist,me,offline}.html 都存在
+/m/wishlist             /m/wishlist.html        301
+/m/search               /m/search.html          301
+/m/index                /m/index.html           301
+/m/catalog              /m/catalog.html         301
+/m/recommendations      /m/recommendations.html 301
+/m/me                   /m/me.html              301
+/m/offline              /m/offline.html         301
 
 # Day 35.7 修复: 移动 UA 自动 302 路径错误
 # 问题: CF Pages 移动 UA 访问 /{slug} 自动 302 到 /m/{slug} (错的)
