@@ -748,6 +748,9 @@
   // Day 35.9: 只绑顶栏心心 (#top-heart-btn), 不绑 .hero-heart (那个有 generator 自带逻辑)
   // 避免两个 handler 重复触发 + 视觉上"两个爱心"实际就是同一个功能
   function bindHeartButtons() {
+    // Day 41 fix: mobile 域 (pathname 以 /m/ 开头) 由 /m/js/detail.js 处理 #top-heart-btn
+    // 这里跳过避免双弹窗 + 让 mobile 弹 .wish-modal 风格 (与移动 UI 一致)
+    if (location.pathname.startsWith('/m/') || location.pathname.startsWith('/m')) return;
     const slug = (window.__SLUG__ || location.pathname.split('/').pop().replace('.html', '')).trim();
     const title = (window.__TITLE__ || document.title.split(' · ')[0] || '').trim();
 
