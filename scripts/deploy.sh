@@ -83,13 +83,20 @@ else
 fi
 
 # ── 4.5 sw.js CACHE_NAME 升版 (Day 32 关键修复) ──
+# 修: 原正则 [a-zA-Z-]*-v[0-9]+-[a-z0-9]+ 要求 v 后面紧跟数字, 但实际 cache 名是 explorer-vf-xxx, 从来没匹配上
+# 改成更宽松的: const CACHE_NAME = "explorer-v*";
 log "4.5 sw.js CACHE_NAME 升版 (强制 client cache 失效)..."
+NEW_QUERY_HASH="${NEW_QUERY#v=}"
+NEW_CACHE="explorer-v${NEW_QUERY_HASH:0:1}-${NEW_QUERY_HASH}"
 for sw in public/sw.js public/m/sw.js; do
   [[ -f "$sw" ]] || continue
-  NEW_CACHE="explorer-v$((${NEW_QUERY#v=}:0:1))-${NEW_QUERY#v=}"
-  sed -i.bak -E "s/const CACHE_NAME = \"[a-zA-Z-]*-v[0-9]+-[a-z0-9]+\"/const CACHE_NAME = \"$NEW_CACHE\"/" "$sw"
-  rm -f "${sw}.bak"
-  echo "   ✓ $sw → $NEW_CACHE"
+  if grep -q 'const CACHE_NAME = "explorer-v' "$sw"; then
+    sed -i.bak -E 's|const CACHE_NAME = "explorer-v[^"]*"|const CACHE_NAME = "'"$NEW_CACHE"'"|' "$sw"
+    rm -f "${sw}.bak"
+    echo "   ✓ $sw → $NEW_CACHE"
+  else
+    echo "   ⚠️  $sw 未匹配 CACHE_NAME, 跳过"
+  fi
 done
 
 # ── 5. 验证替换完整 (无残留) ──

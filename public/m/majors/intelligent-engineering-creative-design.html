@@ -862,7 +862,7 @@
 <header class="topbar is-detail">
   <a class="top-btn" href="javascript:history.length>1?history.back():location.href='../index.html'" aria-label="返回">‹</a>
   <div class="top-crumb">智能工程与创意设计 · 08080805T + 130505</div>
-  <a class="top-btn" href="javascript:navigator.share?navigator.share({title:document.title}):void(0)" aria-label="分享">↗</a>
+  <button type="button" class="top-btn" data-share-trigger aria-label="分享">↗</button>
 </header>
 
 <!-- 滚动进度条 (顶部 2px, 主色) -->
@@ -1187,5 +1187,11 @@
     window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
   }
 </script>
+
+
+<!-- 分享 FAB + 长图导出 (Day 35 share 注入) -->
+<button type="button" class="share-fab" data-share-trigger aria-label="分享">↗</button>
+<link rel="stylesheet" href="../css/share.css">
+<script src="../js/share.js" defer></script>
 </body>
 </html>

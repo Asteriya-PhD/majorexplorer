@@ -6,7 +6,7 @@
  *   - HTML 网络失败 → fallback 到 /offline (CF Pages 308 去掉 .html, 直接缓存最终 URL)
  * 版本号: 改这里强制升级
  */
-const CACHE_NAME = "explorer-vf-fb456afa";
+const CACHE_NAME = "explorer-v0-shareDay35";
 const OFFLINE_URL = "/offline";
 const SHELL = [
   "/",
@@ -19,7 +19,9 @@ const SHELL = [
   "/offline",
   "/manifest.json",
   "/css/shared.css",
+  "/css/share.css",
   "/js/data-loader.js",
+  "/js/share.js",
   "/js/major-search.js",
   "/js/pc-search.js",
   "/js/topbar.js",

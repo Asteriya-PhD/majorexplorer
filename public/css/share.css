@@ -1,0 +1,270 @@
+/* share.css — 分享 FAB + 弹层 + Toast + QR (PC + 移动通用)
+ *
+ * 入口元素: [data-share-trigger] (PC FAB / mobile 顶部 ↗ 按钮)
+ * 弹层/Toast/Qr DOM 由 share.js 动态注入
+ */
+
+/* ── PC FAB 浮动按钮 (fixed 右下角, 跟 wishlist FAB 同侧错开) ── */
+.share-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 92px; /* 避开 wishlist FAB (24 + 56 + 12 = 92) */
+  z-index: 94;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #B8323A, #D97706);
+  color: #FAFAF7;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.375rem;
+  box-shadow: 0 8px 24px rgba(184, 50, 58, 0.32);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms;
+  font-family: inherit;
+}
+.share-fab:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(184, 50, 58, 0.4);
+}
+.share-fab:active { transform: scale(0.95); }
+@media (max-width: 640px) {
+  .share-fab {
+    right: 16px;
+    bottom: 78px; /* 避开 mobile wishlist FAB (16 + 50 + 12) */
+    width: 46px;
+    height: 46px;
+    font-size: 1.25rem;
+  }
+}
+
+/* ── Sheet 容器 + 遮罩 ── */
+.share-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+.share-sheet[data-open="true"] { pointer-events: auto; }
+.share-sheet-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 220ms;
+}
+.share-sheet[data-open="true"] .share-sheet-mask { opacity: 1; }
+
+/* ── Panel (移动端底部弹出 / PC 居中弹窗) ── */
+.share-sheet-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  border-radius: 16px 16px 0 0;
+  padding: 12px 20px calc(20px + env(safe-area-inset-bottom)) 20px;
+  transform: translateY(100%);
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.share-sheet[data-open="true"] .share-sheet-panel { transform: translateY(0); }
+@media (min-width: 768px) {
+  .share-sheet-panel {
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    top: 50%;
+    transform: translate(-50%, calc(-50% + 24px));
+    width: 380px;
+    border-radius: 16px;
+    padding: 20px 24px 24px;
+    max-height: none;
+  }
+  .share-sheet[data-open="true"] .share-sheet-panel {
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ── Handle (移动端顶部小条) ── */
+.share-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  margin: 0 auto 12px;
+}
+@media (min-width: 768px) { .share-sheet-handle { display: none; } }
+
+.share-sheet-title {
+  font-family: var(--font-heading, 'Songti SC', 'SimSun', serif);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* ── 6 个分享目标 ── */
+.share-sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.share-opt {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  color: #1A1A1A;
+  transition: background 160ms;
+}
+.share-opt:active { background: rgba(0, 0, 0, 0.05); }
+.share-opt-wide {
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(184, 50, 58, 0.06);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.share-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-size: 1.125rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.share-opt-wide .share-ico { width: 32px; height: 32px; font-size: 0.9375rem; }
+.share-label {
+  font-size: 0.8125rem;
+  color: #374151;
+}
+
+.share-sheet-divider {
+  height: 1px;
+  background: #E5E7EB;
+  margin: 4px 0 12px;
+}
+
+.share-cancel {
+  display: block;
+  width: 100%;
+  background: #F3F4F6;
+  color: #1A1A1A;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.share-cancel:active { background: #E5E7EB; }
+@media (min-width: 768px) { .share-cancel { display: none; } }
+
+.share-sheet-brand {
+  text-align: center;
+  font-size: 0.6875rem;
+  color: #9CA3AF;
+  margin-top: 12px;
+  letter-spacing: 0.08em;
+}
+
+/* ── Toast ── */
+.share-toast {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.84);
+  color: #FFFFFF;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  z-index: 1100;
+  pointer-events: none;
+  font-family: inherit;
+  animation: shareToastIn 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+}
+@keyframes shareToastIn {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 8px)); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* ── QR Code 模态 (PC 微信扫码用) ── */
+.share-qr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+}
+.share-qr-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.share-qr-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 24px;
+  width: min(320px, calc(100vw - 32px));
+  text-align: center;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+}
+.share-qr-hint {
+  font-size: 0.9375rem;
+  color: #374151;
+  margin-bottom: 16px;
+  font-family: var(--font-heading, 'Songti SC', 'SimSun', serif);
+}
+.share-qr-img {
+  width: 240px;
+  height: 240px;
+  display: block;
+  margin: 0 auto 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+}
+.share-qr-url {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  margin-bottom: 16px;
+  font-family: var(--font-num, ui-monospace, monospace);
+  letter-spacing: 0.04em;
+}
+.share-qr-close {
+  background: #F3F4F6;
+  color: #1A1A1A;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* 阻止 body 滚动 (sheet open 时) */
+html.share-sheet-open { overflow: hidden; }
