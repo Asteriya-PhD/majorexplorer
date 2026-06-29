@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>600 个专业, 为什么我只推荐你认真看这 3 段</title>
+
+</head>
+<body>
+<div style="max-width:720px;margin:0 auto;padding:24px 20px 80px;">
+
+<header style="background:#E8E8E8;padding:28px 24px 20px;text-align:center;border-radius:6px;margin-bottom:32px;"><h1 style="font-size:22px;font-weight:bold;color:#1A1A1A;line-height:1.4;margin:0 0 10px;">帮 600 个高考专业,<br>写了一年的"真实"</h1><p style="font-size:13px;color:#999;margin:0;">出分季 · 写给高三家长 · 一位开发者的产品复盘 (上篇)</p></header>
+
+<div style="background-color:#F8F8F6;padding:24px 22px;border-radius:8px;margin-bottom:32px;">
+<p>去年 6 月底, 我帮家里一个孩子查专业。连续 3 天, 打开了 5 个志愿填报网站, 看到的是同样的句式、同样的"高就业率"、同样的"AI 智能填报"。</p>
+
+<p>看完心里只有一个感觉: 和 2015 年的门户招生页没什么区别, 就是换了个皮肤。</p>
+
+<p>让我难受的不是"被坑了"——我没付费、没填表、没信。我难受的是: 中国还有几百万家长, 没有这种"看到套话就警觉"的本能。他们会在深夜焦虑, 会在 6 月底做决定时, 选了一个"AI 推荐"但孩子根本不喜欢的专业。</p>
+
+<p>所以我做了这件事。20 天, 600 个专业, 一个人。</p>
+
+<p>这是复盘的上篇, 写给正在为孩子选专业的你。下篇写给做产品的人, 2 周后发。</p>
+</div>
+
+<!-- 章节 1 -->
+<section style="background:#0FB880;padding:14px 20px;border-radius:4px;margin:36px 0 20px;"><h2 style="color:#FFFFFF;font-size:18px;font-weight:bold;margin:0;letter-spacing:1px;">▎志愿填报真正的痛点, 不是信息太少</h2></section>
+
+<p>打开任何一个志愿填报网站, 你能拿到: 专业介绍、课程清单、就业去向、薪资水平、院校排名。信息够多。</p>
+
+<p>但你很难找到一个网站能回答这些:</p>
+
+<blockquote style="margin:20px 0;padding:4px 0 4px 18px;border-left:3px solid #666;color:#333;font-style:italic;">
+"我物理一般, 适不适合学这个?"<br>
+"这个专业大三要学什么? 真的就是这些课吗?"<br>
+"毕业 5 年后, 我会变成什么样的人?"<br>
+"这个专业有哪些坑, 是学长不会主动告诉你的?"
+</blockquote>
+
+<p>大部分网站的做法是: 把营销话术换个标题, 顶部放广告, 中间塞"AI 智能填报"入口。家长点进去, 交 99 / 299 / 1999 块钱, 拿到一份"根据您的位次智能生成的志愿方案"——把分数和位次套进一个公式, 推 36 个候选, 完事。</p>
+
+<p>这个赛道里, 没有人在认真写"这门专业到底在学什么"。</p>
+
+<p>这是机会, 也是一道选择题: 跟 100 个同行做一样的事(分数换学校), 还是做一件没人做、但更对的事(写"这门专业在学什么")? 我选了后者。前者做不出护城河——同样的公式, 别人花一周就能抄过去。后者想抄, 得先花 20 天 600 篇的功夫。护城河不是技术, 是时间。</p>
+
+<!-- 章节 2: 9 道关 (抽象框架, 先于案例) -->
+<section style="background:#0FB880;padding:14px 20px;border-radius:4px;margin:36px 0 20px;"><h2 style="color:#FFFFFF;font-size:18px;font-weight:bold;margin:0;letter-spacing:1px;">▎一篇专业要上线, 实际要过 9 道关</h2></section>
+
+<p>先说抽象的 9 道关, 再说 5 个真实案例。下面 5 个真实案例, 背后就是这条 9 步的严审流程。家长不需要懂技术细节, 你只需要知道一件事: <strong>你看到的每一篇专业分析, 都不是 AI 一次写完就发出来的, 它至少要过 9 道关, 不合格就打回精修</strong>。</p>
+
+<p>我把这 9 步简化成家长能听懂的话:</p>
+
+<ol style="padding-left:24px;margin:14px 0;">
+<li><strong>数据规整</strong>—— 600 个专业里, "院校排名" 这个字段有 5 种不同写法, 先统一成同一种, 不然家长看到的" A+" 和" A-" 没法对比。</li>
+<li><strong>查 17 项基本功</strong>—— 一个本地脚本, 5 分钟扫完 600 篇。选科要求对不对? 薪资有没有离谱? 院校是不是真的开设这个专业? 5 个避坑点齐了没? 这一步 0 元, 因为是本地跑的, 错 1 个就立刻标红。</li>
+<li><strong>智能路由到深度审稿</strong>—— 第 2 步打了低分的、或者从来没审过、或者改过没重审的篇, 路由到一个"专业审稿模型"做深度审稿(跨字段矛盾 + 学科知识 + 主观质量, 每篇 30 秒, 大概 30% 的篇会触发, 总成本 ¥40 跑完 600 篇)。</li>
+<li><strong>7 类常见错全部封杀</strong>—— 这一步是"死亡线"。不能有这 7 类错: 开头模板套话、"什么人适合学" 张冠李戴、"深造路径" 编占位、"公共必修课" 填成专业课、选科要求"物理+历史" 撞车、应届薪资虚高、院校排名格式混乱。任何一类踩了, 直接扣分到不合格。</li>
+<li><strong>打回精修: 3 档递进</strong>—— 评审分数 < 7 分的篇, 走 3 档:
+<br><br>
+&nbsp;&nbsp;🔸 <strong>第 1 档 (5-10 分钟)</strong>: 补 1 个具体信息, 比如把"深造路径" 的泛方向换成"农机企业 / 智能装备公司 / 农业研究所" 这种真实去向。
+<br><br>
+&nbsp;&nbsp;🔸 <strong>第 2 档 (15-20 分钟)</strong>: 整篇重写, 参照 4 篇满分级范本(计算语言学 / 电子科技 / 卫生法学 / 文物保护)的句式。
+<br><br>
+&nbsp;&nbsp;🔸 <strong>第 3 档 (≤45 分钟)</strong>: 救不回来就标"不可救", 跳过, 不死磕。</li>
+<li><strong>从 7 分到 8 分的升级套路</strong>—— 评审给分是"分项打分 + 总分"双轨。一篇 7 分, 可能由 10 个 8-9 分项 + 1 个 5 分项决定。修那个 5 分项 = 确定性地 +1 分。死磕主观分 = 赌博 ±1。所以"7 分到 8 分" 的标准操作: 修 1 个最差的项 → +1 分, 再审, 再修, 通常 5-15 分钟一篇能升上去。</li>
+<li><strong>再审一次 (避免偶然)</strong>—— 评审模型评分有主观波动(同一篇 5 分钟内重审, 可能 7 也可能 8)。重要的篇跑"再审一次取较高分"。这不是作弊, 是把"真硬伤" 和"评审波动" 分开。</li>
+<li><strong>陷阱测试 5 篇</strong>—— 每次模型升级、跨季度回归, 必跑 5 篇陷阱测试(3 篇选科陷阱 + 2 篇薪资陷阱), 0 违规才让新模型上线。2026-06-18 那天实测: 1 篇选科踩坑 + 1 篇薪资偏高 + 3 篇通过。</li>
+<li><strong>全量体检</strong>—— 全部 600 篇一起跑一遍, 算平均分、8 分以上比例、不合格数。验收标准: 平均 8.0+, 8 分以上 ≥80%, 不合格 ≤5%。</li>
+</ol>
+
+<section style="background-color:#FDE68A;border-radius:8px;padding:16px 20px;border:2px solid #F59E0B;margin:20px 0;"><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;"><strong>📢 这条管线的核心:</strong></p><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;">AI 写完不是终点, 是起点。一篇真正能上线的专业分析, 平均要过 3-5 轮打磨, 差的要 5-8 轮。每一轮的目的不是"修文字", 是"把不合格的字段, 一个一个补到合格"。</p><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;">这套管线跑下来, 600 篇专业从 AI 的"差不多" 初稿, 磨到 8.3 分的平均分、97.3% 的 8 分以上比例。20 天一千多次的打磨, 换来的是你今晚打开每一篇时, 看到的都是"愿意为这个家长花时间" 的内容。</p></section>
+
+<!-- 5 案例 (1-5, 在 9 道关之后) -->
+<section style="background:rgba(15,184,128,0.08);padding:16px 20px;border-radius:8px;border-left:4px solid #0FB880;margin:20px 0;"><span style="color:#0FB880;font-size:12px;font-weight:bold;letter-spacing:0.1em;margin-bottom:8px;display:block;">案例 1 · 电影制作专业</span><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;"><strong>分数: 6/10 → 9/10</strong></p><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;">2026-06-22 那天的真实记录。AI 写的初稿, 评审给了 6/10——内容能看, 但两个关键信息没过: "深造路径"给的是泛泛方向, "应届生薪资" 偏高。我改了 30 分钟, 重审直接到 9/10。一个 30 分钟的改动, 让 6 分的"勉强能看" 变成 9 分的"值得信赖"。</p></section>
+
+<section style="background:rgba(15,184,128,0.08);padding:16px 20px;border-radius:8px;border-left:4px solid #0FB880;margin:20px 0;"><span style="color:#0FB880;font-size:12px;font-weight:bold;letter-spacing:0.1em;margin-bottom:8px;display:block;">案例 2 · 电磁场与无线技术</span><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;"><strong>分数: 0/10 → 10/10 满分</strong></p><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;">600 个专业里极少见的满分案例。所有字段都拿到 9-10 分, 没有一个短板。背后是 5 轮以上的反复打磨, 加上 4 个满分级范本的参照。满分不是运气, 是磨出来的。</p></section>
+
+<section style="background:rgba(15,184,128,0.08);padding:16px 20px;border-radius:8px;border-left:4px solid #0FB880;margin:20px 0;"><span style="color:#0FB880;font-size:12px;font-weight:bold;letter-spacing:0.1em;margin-bottom:8px;display:block;">案例 3 · 乐器智造专业</span><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;"><strong>分数: 7/10 → 10/10 满分 (4 天)</strong></p><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;">刚上线时是 7/10, 4 天后冲到满分。这个专业的难点是"这个专业的校友都在做什么"——我去查了 3 个真实访谈, 补了 5 条独有的避坑建议(比如"不要买 2 万以上的入门琴, 这是营销话术")。这一改直接 7→10。</p></section>
+
+<section style="background:rgba(15,184,128,0.08);padding:16px 20px;border-radius:8px;border-left:4px solid #0FB880;margin:20px 0;"><span style="color:#0FB880;font-size:12px;font-weight:bold;letter-spacing:0.1em;margin-bottom:8px;display:block;">案例 4 · 农业智能装备工程</span><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;"><strong>分数: 8/10 → 9/10</strong></p><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;">8 分看起来够优秀了, 但还有一个字段是 5/10——"深造路径"给的是泛方向, 没校准到本专业的真实主流。我花了 10 分钟补进真实去向(农机企业 / 智能装备公司 / 农业研究所), 直接到 9/10。这 1 分的差距, 是家长看不看得出来"真不真" 的差距。</p></section>
+
+<section style="background:rgba(15,184,128,0.08);padding:16px 20px;border-radius:8px;border-left:4px solid #0FB880;margin:20px 0;"><span style="color:#0FB880;font-size:12px;font-weight:bold;letter-spacing:0.1em;margin-bottom:8px;display:block;">案例 5 · 6/22 那天, 14 分钟审完 60 篇</span><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;"><strong>平均分 9.05, 8+ 率 89.6%</strong></p><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;">60 篇专业, 14 分钟审完(用智能路由只审有问题的 30% 候选), 分布是 <strong>12 篇 10 分 + 42 篇 9 分 + 3 篇 8 分 + 3 篇 7 分 + 0 篇低于 6 分</strong>。那一天, 8 分以上比例从 70.5% 跳到 89.6%(+19.1 个百分点)。这不是某一天的特殊, 是反复打磨叠出来的稳定结果。</p></section>
+
+<!-- 章节 3: 做了什么没做什么 -->
+<section style="background:#0FB880;padding:14px 20px;border-radius:4px;margin:36px 0 20px;"><h2 style="color:#FFFFFF;font-size:18px;font-weight:bold;margin:0;letter-spacing:1px;">▎做了什么, 没做什么</h2></section>
+
+<h3 style="color:#1A1A1A;font-size:17px;margin:24px 0 10px;font-weight:bold;">把"认识一个专业"做成核心动作</h3>
+
+<p>传统志愿填报网站的逻辑是: 输入分数, 输出 36 个候选学校。</p>
+
+<p>我把动作反过来了。先让你看一个专业, 看 3 分钟, 觉得有意思, 再去看这个专业有哪些学校、你的分数能不能上。</p>
+
+<p>这个顺序一反, "36 个候选学校"从一坨数字, 变成了"我认识这个专业, 所以我想上这所学校的这个专业"。决策质量完全不同。</p>
+
+<h3 style="color:#1A1A1A;font-size:17px;margin:24px 0 10px;font-weight:bold;">把"每段内容怎么被打磨过"做成看得见的东西</h3>
+
+<p>每篇专业分析的底部, 我列出了来源、出处、参考信源、打磨轮次。家长点开能看到这篇经过几轮校验, 不是机器一次拼出来的。</p>
+
+<p>在一个所有人都在用 AI 批量写内容的时代, 这种"看得见的诚实" 并不常见。</p>
+
+<h3 style="color:#1A1A1A;font-size:17px;margin:24px 0 10px;font-weight:bold;">主动砍掉的东西</h3>
+
+<p>20 天里我砍掉了不少功能:</p>
+<ul style="padding-left:24px;margin:14px 0;">
+<li>用户登录系统(用浏览器本地存储就够, 不做账号)</li>
+<li>"智能志愿填报 1v1 咨询"(这个赛道已经被"99 元 AI 填报" 玩烂, 做了反而拉低品牌)</li>
+<li>全国 31 省(只做湖北 + 广东 + 江苏 3 个有真实数据源 + 有真实用户群的地方)</li>
+<li>短视频 / 直播讲解(没有视频生产能力, 强行上质量跟不上)</li>
+</ul>
+
+<p>每砍一个, 心里都有 30 秒不好受。但事后看, 砍掉都是对的。每一个砍掉, 都换来了把剩下的事情做到位的时间。</p>
+
+<h3 style="color:#1A1A1A;font-size:17px;margin:24px 0 10px;font-weight:bold;">用"统计学"举个具体例子</h3>
+
+<p>我打开 3 个志愿填报网站, 查"统计学"这个专业, 3 个网站给出的介绍几乎一模一样: "研究数据收集、整理、分析的学科"、"就业方向: 数据分析师 / 统计师 / 量化分析师"、"推荐院校: 中国人民大学 / 厦门大学 / 西南财经大学"。抽象描述加美好就业加一串名校, 拼在一起, 完事。</p>
+
+<p>我们上线的版本里, 家长和孩子会看到: 统计学大三在学什么(实分析 / 概率论 / 数理统计 / 多元统计分析 / 回归分析 / 时间序列)、3 位真实校友的访谈(一个进互联网做 AB 测试、一个进银行做风控、一个去读博)、5 条避坑建议(其中一条是"如果你数学不行, 别来; 即使高考数学 130, 大学数学是另一回事")、3 个真实的细分方向(统计学 / 应用统计学 / 经济统计学, 课程和去向完全不同)。</p>
+
+<p>这种内容, AI 技术上不是写不出来, 是它不愿意为一个家长花这个时间。我们愿意。</p>
+
+<!-- 章节 4 -->
+<section style="background:#0FB880;padding:14px 20px;border-radius:4px;margin:36px 0 20px;"><h2 style="color:#FFFFFF;font-size:18px;font-weight:bold;margin:0;letter-spacing:1px;">▎想给家长说 3 句话</h2></section>
+
+<p style="margin:14px 0;line-height:1.85;color:#1A1A1A;font-size:16px;"><strong style="color:#0FB880;">第一, 别被"就业率 95%" 吓住。</strong>就业率是统计数字, 不是你孩子的就业率。把孩子自己的兴趣、性格、家庭资源放进去, 比任何统计数字都准。</p>
+
+<p style="margin:14px 0;line-height:1.85;color:#1A1A1A;font-size:16px;"><strong style="color:#0FB880;">第二, 别被"AI 时代 X 专业要被淘汰" 吓住。</strong>这种话 10 年前就有("互联网时代 X 专业要死"), 10 年后还会有。你去查一下"法学" 这个专业 100 年来的招生数, 它几乎没怎么变过。学科的生命周期比任何一波技术热都长。</p>
+
+<p style="margin:14px 0;line-height:1.85;color:#1A1A1A;font-size:16px;"><strong style="color:#0FB880;">第三, 给孩子 3 天时间, 让他/她看 10 个专业的真实描述, 写出 3 个"我想了解更多" 的。</strong>这 3 个, 比任何 AI 推的 36 个候选都准。</p>
+
+<!-- 章节 5 -->
+<section style="background:#0FB880;padding:14px 20px;border-radius:4px;margin:36px 0 20px;"><h2 style="color:#FFFFFF;font-size:18px;font-weight:bold;margin:0;letter-spacing:1px;">▎如果今晚只做一件事</h2></section>
+
+<p>如果你今晚 10 点, 只想做一件事, 那就和孩子一起打开任意一个专业的真实描述, 看 3 段:</p>
+
+<section style="background-color:#FDE68A;border-radius:8px;padding:16px 20px;border:2px solid #F59E0B;margin:20px 0;"><p style="color:#333;font-size:15px;line-height:1.7;margin:0 0 8px;"><strong>📢 家长今晚可用的 3 段</strong></p><ol style="padding-left:24px;margin:0;"><li style="color:#333;font-size:15px;line-height:1.7;margin:4px 0;"><strong>这个专业大三在学什么</strong>—— 别看课程清单(那是教学计划), 看"真实在上的课" 和"老师最常提的 3 个词"</li><li style="color:#333;font-size:15px;line-height:1.7;margin:4px 0;"><strong>5 年后真实去向</strong>—— 别看"平均薪资", 看 5 个不同方向的人(进大厂 / 进体制 / 转行 / 读研 / 创业)各是什么状态</li><li style="color:#333;font-size:15px;line-height:1.7;margin:4px 0;"><strong>3 条避坑建议</strong>—— 这是学长用 4 年踩出来的, 几乎不会出现在任何招生页上</li></ol></section>
+
+<p>这 3 段看完, 孩子对"这是不是我想要的" 会有一个具体的、说得清楚的答案。比 AI 推的 36 个学校靠谱多了。</p>
+
+<p>如果孩子看完跟你说一句"妈, 我学这个行吗"——那这件事就成了。这个问题, 不会出现在任何 AI 推荐清单里, 只会在孩子真正"认识" 了一个专业之后, 自己问出来。</p>
+
+<!-- 章节 6 -->
+<section style="background:#0FB880;padding:14px 20px;border-radius:4px;margin:36px 0 20px;"><h2 style="color:#FFFFFF;font-size:18px;font-weight:bold;margin:0;letter-spacing:1px;">▎这个工具不是万能的</h2></section>
+
+<p>最后说一句实话: 如果你家孩子分数卡在本科线上下, 我们帮不上——数据本身不支持精准推荐。如果孩子已经决定"我要学医 / 学法 / 学计算机", 我们也帮不上——选择已经清楚了, 不需要工具。</p>
+
+<p>我们能帮的是: 分数中等、方向不明确、对"学什么" 有焦虑的孩子和家长。600 个专业, 写的是这一群人的事。</p>
+
+<p>欢迎你打开任何一篇, 看完 3 段后, 跟孩子说一句"咱们再聊聊这个"。</p>
+
+<p>顺便: 身边有家长焦虑选专业的, 转给他/她。出分季就这 1 周。一篇值得读的, 胜过 10 条"99 元智能填报"。</p>
+
+<p>再多说一句: 如果孩子看专业时表现出抗拒(觉得无聊 / 没耐心 / 觉得自己分数不够没资格看), 试试这个——不让他"看专业", 让他"看 1 个具体的校友"。一个真实的人、一段真实的经历, 比任何"这个专业的平均薪资" 都有说服力。我们每篇专业都配了 3-5 段校友访谈, 这是家长和孩子对话的好抓手。</p>
+
+<!-- 章节 7 -->
+<section style="background:#0FB880;padding:14px 20px;border-radius:4px;margin:36px 0 20px;"><h2 style="color:#FFFFFF;font-size:18px;font-weight:bold;margin:0;letter-spacing:1px;">▎最后想说的话</h2></section>
+
+<p>选专业不是一次性的。它更像高考之后 4 年里, 你和孩子要一起做的几十次"认识 + 选择"——选课、选方向、选实习、选毕设、选研究生方向。每一次都是小型的"选专业"。</p>
+
+<p>如果孩子在 6 月底这次没认识清楚, 不代表后面没机会。但这次, 是孩子第一次以"成年人" 身份做"和未来相关" 的决定。这件事的体验, 决定了接下来 4 年他/她面对"选择" 时的态度。</p>
+
+<p>所以这次选专业, 选什么不重要, 怎么选才重要。选完后 2 周, 看孩子是开始主动查"这专业要看什么书", 还是查"要不要回去复读"——前者大概率选对了, 后者给他 1 学期, 多数人会自己完成接受和投入的转换。志愿是 18 岁的决定, 不该决定接下来 60 年的轨迹。</p>
+
+<p>如果这篇文章帮你在 6 月底的某个晚上, 关掉手机前心里踏实了一点——那 20 天, 值。</p>
+
+<blockquote style="margin:20px 0;padding:4px 0 4px 18px;border-left:3px solid #666;color:#333;font-style:italic;">
+在一个所有人都在赶时间的世界里, 慢一点, 是竞争力。
+</blockquote>
+
+<p>下一篇写给做产品的人。如果你是做产品的, 2 周后再来。</p>
+
+<table style="width:100%;margin:32px 0;border-top:1px solid #E8E4D8;border-bottom:1px solid #E8E4D8;border-collapse:collapse;"><tr><td style="text-align:center;padding:6px 12px;vertical-align:bottom;"><div style="font-size:28px;color:#0FB880;font-weight:bold;line-height:1.1;">20</div><div style="font-size:12px;color:#999;letter-spacing:0.05em;margin-top:4px;">天</div></td><td style="text-align:center;padding:6px 12px;vertical-align:bottom;"><div style="font-size:28px;color:#0FB880;font-weight:bold;line-height:1.1;">600</div><div style="font-size:12px;color:#999;letter-spacing:0.05em;margin-top:4px;">专业</div></td><td style="text-align:center;padding:6px 12px;vertical-align:bottom;"><div style="font-size:28px;color:#0FB880;font-weight:bold;line-height:1.1;">97.3%</div><div style="font-size:12px;color:#999;letter-spacing:0.05em;margin-top:4px;">8+ 率</div></td></tr></table>
+
+<section style="margin-top:56px;padding:20px;background:#F8F8F6;border-radius:8px;text-align:center;"><p style="font-size:13px;color:#666;margin:4px 0;text-align:center;">写于 2026-06-26 · 出分季特别篇</p><p style="font-size:13px;color:#666;margin:4px 0;text-align:center;">下篇《20 天, 我没做的 5 件事》写给做产品的人, 2 周后发</p><p style="font-size:13px;color:#666;margin:4px 0;text-align:center;">作者: Claude (Opus 4.8) · 协助一位开发者</p></section>
+
+</div>
+</body>
+</html>

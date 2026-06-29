@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>20 天, 1227 个 commit, 我没做的 5 件事</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-2: #4a4a4a;
+    --ink-3: #888;
+    --bg: #f8f8f5;
+    --bg-2: #ebebe5;
+    --accent: #1f3a5f;
+    --accent-2: #c46b3f;
+    --line: #d4d4cc;
+    --line-2: #e4e4dc;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Songti SC", "Source Han Serif SC", "Noto Serif CJK SC", serif;
+    line-height: 1.85;
+    font-size: 17px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 28px 96px; }
+  header.kicker {
+    text-align: center;
+    color: var(--ink-3);
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    margin-bottom: 24px;
+  }
+  h1.title {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    margin: 0 0 12px;
+  }
+  .sub {
+    text-align: center;
+    color: var(--ink-2);
+    font-size: 14px;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    margin-bottom: 40px;
+  }
+  .lede {
+    font-size: 18px;
+    line-height: 1.9;
+    color: var(--ink);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+    margin: 32px 0 40px;
+  }
+  .lede p { margin: 12px 0; }
+  .lede .drop::first-letter {
+    font-size: 56px;
+    line-height: 1;
+    float: left;
+    margin: 4px 8px 0 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  section { margin: 48px 0; }
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 56px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 32px 0 12px;
+    color: var(--ink);
+  }
+  p { margin: 14px 0; }
+  blockquote {
+    margin: 24px 0;
+    padding: 0 0 0 20px;
+    border-left: 3px solid var(--ink);
+    color: var(--ink-2);
+    font-style: italic;
+  }
+  .takeaway {
+    background: var(--bg-2);
+    border-left: 4px solid var(--accent);
+    padding: 18px 22px;
+    margin: 24px 0;
+    font-size: 16px;
+  }
+  .takeaway .lbl {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    font-family: -apple-system, sans-serif;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .pivot {
+    background: #fff;
+    border: 1px dashed var(--accent-2);
+    padding: 16px 20px;
+    margin: 24px 0;
+    color: var(--ink-2);
+    font-size: 15px;
+  }
+  .pivot b { color: var(--accent-2); }
+  .stat {
+    display: flex;
+    justify-content: space-around;
+    margin: 32px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+  }
+  .stat div { text-align: center; }
+  .stat div b { display: block; font-size: 32px; color: var(--accent); font-weight: 700; line-height: 1.1; }
+  .stat div span { font-size: 12px; color: var(--ink-3); letter-spacing: 0.05em; }
+  footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  footer p { margin: 4px 0; }
+  @media (max-width: 600px) {
+    .wrap { padding: 24px 18px 64px; }
+    h1.title { font-size: 24px; }
+    body { font-size: 16px; }
+    .stat { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="kicker">PRODUCT RETROSPECTIVE · 产品复盘</header>
+<h1 class="title">20 天, 1227 个 commit,<br>我没做的 5 件事</h1>
+<div class="sub">一位开发者, 一份不太标准的产品复盘 · 下篇(给做产品的人)</div>
+
+<div class="lede">
+<p class="drop">20 天, 600 个专业分析, 平均质量分 8.3, 8+ 率 97.3%, 0 残余。从湖北一个省, 扩到广东、江苏两个省, 移动端独立重做, 主题 12 套, 上线就绪。</p>
+
+<p>这是数字。数字背后真正发生的事, 我用 5 句话讲完。</p>
+
+<p>这不是一份"产品经理方法论", 是 20 天里我为 1227 个 commit 买的单——有些是加班到凌晨 3 点买的单, 有些是用户反馈后连夜返工买的单, 有些是"我以为这样改会好, 改了之后想撤回" 买的单。每一条都真金白银。</p>
+
+<p>这篇写给做产品的人。如果你不是, 上篇给家长, 你可能也看过了。</p>
+</div>
+
+<section>
+<h2>前提: 这是一份"反共识" 的产品</h2>
+
+<p>先说前提, 不然后面 5 句话你听着会觉得是鸡汤。</p>
+
+<p>我做的产品叫"高考专业探索", 形态是: 输入分数 → 看到 600 个专业的真实描述 → 自己认识 → 自己选。它不是"AI 推 36 个学校", 它是"让你认识一个专业"。</p>
+
+<p>这个产品形态在整个赛道上, 是反共识。所有人都在卷"分数 → 36 校" 的转化漏斗, 我做的是"认识 → 自己选"。漏斗更深、转化更慢, 但用户最终做的决定更扎实, LTV 更高。</p>
+
+<p>这个反共识, 决定了我接下来做的所有决定, 都是"反常识" 的。理解这一点, 你才能看懂下面 5 句话。</p>
+</section>
+
+<section>
+<h2>5 句话, 5 个反共识判断</h2>
+
+<h3>1. 质量是 moat, 不是装饰</h3>
+
+<p>用户能闻出来"AI 糊的" 和"手写的", 那是这个产品活下去的唯一理由。在一个所有人都在用 AI 写内容的时代, 不用 AI 是反共识, 也是壁垒。</p>
+
+<p>具体怎么做: AI(m3) 写初稿, 我建一条 4 层质量管线堵它。第 1 层启发式规则扫 schema, 第 2 层 m3 自审, 第 3 层我审, 第 4 层多轮重写。AI 不当"内容生产者", AI 当"质量审计员"。</p>
+
+<p>代价: 前 3 天我身边所有人都问我"你不用 AI 批量, 速度慢了 10 倍, 怎么跟别人竞争? "</p>
+
+<p>我的回答: 别人用 AI 一次生成, 家长看完 1 篇就闻出"AI 味", 5 篇之后流失; 我用 4 层管线 + 5 轮打磨, 家长看完 1 篇会告诉身边 3 个朋友。速度慢 10 倍, 但留存高 30 倍, LTV 反而更高。</p>
+
+<div class="pivot">
+<b>反共识在哪:</b> 大多数产品决策是"速度优先", 先堆量再优化。我的决策是"质量优先", 宁愿少做, 也要做对。20 天过去, 我用 4 层管线 + 5 轮打磨的 600 个专业, 竞争对手用 AI 1 周能堆 10 倍数量——但 30 天后, 他们的用户留存是我的 1/3。这是 30 天后才会显现的护城河。
+</div>
+</section>
+
+<section>
+<h3>2. 工具链决定节奏</h3>
+
+<p>一个人干 600 个专业的内容, 听起来不可能, 但"启发式全量 + 关键节点 LLM 校验" 的审计架构, 把"一个人"变成"一支队"。</p>
+
+<p>具体怎么做: 我写了一个 100% 跑全量的脚本(启发式, 5 分钟跑完 600 篇, 检查 17 个 schema 维度), 它告诉我"哪 100 篇可能有问题"。然后我再用 m3 (一个强推理 LLM) 对这 100 篇做深度审计(每篇 30 秒, 找出真实问题)。两层组合, 我一个人, 一晚能审 100 篇。</p>
+
+<p>没有这个工具链, 我不可能在 20 天里完成这件事。靠"目测", 我最多审 50 篇就累了。靠"LLM 跑全量", 1 篇 ¥1.5 × 600 = ¥900, 跑完我破产。</p>
+
+<p>工具链的真实架构, 是 smart_audit.py 智能路由 + 双层: Layer 1 启发式 100% 跑全量(0 元, 5 分钟), Layer 2 m3 LLM 智能路由(只跑 30% 候选, ¥40 跑完 600 篇)。</p>
+
+<p>Layer 2 触发条件有 5 个: (1) 启发式打了低分; (2) 从没审过; (3) 历史分 < 7; (4) 上次审过之后改过; (5) 5% 随机抽样。277 篇实测: 9.3h/¥140 → 2-3h/¥40, 覆盖 95%+。</p><p>具体怎么搭这套工具链? 真实架构比 3 层复杂, 是 <strong>5 路由触发 + 9 步流水线 + 3 档重试</strong>:</p>
+<ul>
+<li><strong>Layer 1: 启发式规则 (100% 跑, 0 元)</strong>—— 一个 600 行的 Python 脚本, 跑 17 个 schema 维度(选科合规、薪资校准、院校真实开设、深造路径占比、避坑指南数量等), 5 分钟扫完 600 篇, 0 元, 因为是本地 CPU 跑。</li>
+<li><strong>Layer 2: 智能路由 (5 触发条件, ~30% 跑)</strong>—— 启发式打了低分 / 从没审过 / 历史 < 7 / 上次审过改过 / 5% 随机抽样, 命中任一就路由到 m3 做深度审计 (跨字段矛盾 + 学科知识 + 主观质量, 每篇 30 秒, ¥0.5)。</li>
+<li><strong>9 步流水线 (Step 0-9)</strong>—— Step 0 repair rank 字段(5 种格式统一) → Step 1 audit driven → Step 2 anti-pollution 7 rule → Step 3 hand-code → Step 4 render → Step 5 audit verify → Step 6 Tier 1/2/3 retry → Step 7 commit → Step 8 schema cleanup → Step 9 full batch audit。600 篇全过这条流水线。</li>
+<li><strong>Tier 1/2/3 重试</strong>—— 审计 < 7 的篇: Tier 1 补 1 个硬伤字段(5-10 min) → Tier 2 完全重写 + 参考 4 个 P0 优秀案例(15-20 min) → Tier 3 标 irreducible 跳过(≤45 min), 不死磕。</li>
+<li><strong>variance verify + smoke fixture</strong>—— m3 评分 ±1 主观波动, 重要篇跑 R2 取高; 每次新 prompt / 切 provider 必跑 5 篇陷阱(3 选科 + 2 薪资), 0 违规才让上线。</li>
+</ul>
+
+<p>这套架构让 600 篇内容, 20 天里审完 2 轮, 总成本 ¥40-80(单轮 ¥40, 双轮 ¥80)。如果用 LLM 全量替代, ¥1800/轮 × 2 轮 = ¥3600。如果纯人工, 30 天+ 一个人累瘫。5 路由 + 9 步 + 3 档 + variance + smoke, 是性价比最优解。</p>
+</section>
+
+<section>
+<h3>3. 撤退的勇气比前进的勇气更稀缺</h3>
+
+<p>我做过的 2 个回滚决定:</p>
+
+<p><strong>回滚 1: 8 条深造路径, 改 4 小时后撤回。</strong>有个用户看了 8 个专业的网页, 反馈说"就业方向" 和"深造路径" 两块内容重复。我花了一整个下午, 几乎全部重写, 改完打开一看——仍然觉得重复。那天晚上, 我把所有改动撤回, 分支删除, 8 个专业恢复原样。</p>
+
+<p><strong>回滚 2: 移动端渐进优化, 否决 3 次后重做。</strong>我做了 3 套方案, A 方案(渐进优化)、A+C 方案(混合)、B 方案(完全重做), 全部被我自己否了。最终咬牙做了 B 方案, 移动端 PWA + 5 tab 底部 dock + Editorial 大字报。</p>
+
+<p>这 2 个回滚, 让我心里有 30 秒不好受。但事后看, 每一个都救了我: 回滚 1 救了我"用工程量换效果" 的诱惑, 回滚 2 救了我"为了不沉没成本而硬上" 的陷阱。</p>
+
+<div class="pivot">
+<b>反共识在哪:</b> 大多数团队的"敏捷" 文化, 是"做了再改" 文化, 不是"做了再撤" 文化。"撤" 在很多团队里是政治不正确——你撤了, 等于承认"前几天白干了"。但其实撤是产品决策里最被低估的杠杆。撤的勇气 = 对自己判断力的诚实。
+</div>
+
+<p>撤退的判断标准, 我用了 3 条:</p>
+<ul>
+<li><strong>改完后我自己看一遍, 仍然觉得没变好</strong>——如果改之前和改之后的产品体验我作为用户都分不出来, 那这个改就是无效的, 撤。</li>
+<li><strong>改的成本大于回报的可能性</strong>——改到第 3 个小时, 改完还要再花 5 小时收尾 + 1 天测, 但"改成功" 的概率只有 30%, 算下来期望值是负的, 撤。</li>
+<li><strong>用户的反馈是"还有这个问题" 不是"换成那个"</strong>——用户说"7→8 的路径重复" 是诊断; 用户说"8 应该长这样" 是替代方案。如果只有诊断没有方案, 我硬上 = 50% 概率跑偏, 撤。</li>
+</ul>
+</section>
+
+<section>
+<h3>4. 移动端不是优化, 是重做</h3>
+
+<p>网站本来的设计目标如果只是桌面, 移动端要单独想一遍。不要渐进优化, 不要混合方案, 直接重做。赌对了回报巨大。</p>
+
+<p>具体怎么做: 我把桌面端完全不动, 单独做了一个 mobile 子站(通过 UA sniff 路由), 用了 PWA 装到桌面, 5 tab 底部 dock, Editorial 大字报视觉。代码量是 PC 端 30%, 但设计目标是"用 1 根拇指看完一个专业"。</p>
+
+<p>代价: 3 天。回报: 微信生态可用。一个家长从朋友圈点开一个专业分享, 5 秒能加载, 1 根拇指能看完, 装到桌面后下次直接进。这件事桌面端做不到, 渐进优化也做不到。</p>
+
+<div class="takeaway">
+<span class="lbl">★ 反共识</span>
+"响应式设计" 是 2014-2020 的主流叙事。但 2026 年, 移动端用户的行为和桌面端已经完全不同——他们用 1 根拇指在 5 秒钟内做决定, 不是 30 秒内。用桌面的交互假设去套移动端, 怎么优化都救不回来。
+</div>
+</section>
+
+<section>
+<h3>5. "少做" 是产品里最被低估的能力</h3>
+
+<p>20 天里我主动砍掉的东西:</p>
+<ul>
+<li>用户登录系统(用浏览器本地存储就够, 不做账号)</li>
+<li>"智能志愿填报 1v1 咨询"(这个赛道已经被"99 元 AI 填报"玩烂, 做了反而拉低品牌)</li>
+<li>全国 31 省(只做湖北 + 广东 + 江苏 3 个有真实数据源 + 有真实用户群的地方)</li>
+<li>短视频 / 直播讲解(没有视频生产能力, 强行上质量跟不上)</li>
+<li>原生 App(PWA 90% 体验够用, 不值得 30 天工作量)</li>
+</ul>
+
+<p>每一个砍掉的决定都让我心里有 30 秒不好受——那些是"看起来很自然" 的功能, 不做显得"产品不完整"。但事后看, 砍掉是对的。每一个砍掉, 都让我有时间把剩下的事情做到位。</p>
+
+<p>对一个 20 天结束的项目, 留下来的不应该是"我做了多少", 应该是"我没做什么, 为什么没做"。</p>
+
+<div class="pivot">
+<b>反共识在哪:</b>
+大多数产品方法是"加法"——你想加什么功能? 我的方法是"减法"——你这个功能砍掉, 用户还在吗? 如果还在, 砍。如果不在, 留。这 20 天我做的"减法" 比"加法" 多 3 倍, 产品反而更聚焦。
+</div>
+
+<p>"少做" 的 4 个判别标准:</p>
+<ul>
+<li><strong>用户不会为这个功能付钱</strong>——比如"用户登录系统", 我做产品不为账号, 为内容, 不做。</li>
+<li><strong>做了反而拉低品牌</strong>——比如"1v1 智能咨询", 这个赛道已经被"99 元 AI 填报" 玩烂, 我加这个功能, 家长会觉得"原来这个产品和 99 元那个是一类", 反而拉低品牌。</li>
+<li><strong>投入产出比算不过来</strong>——比如"全国 31 省", 每个省要 3-5 天数据, 31 省 100+ 天, 我 20 天周期根本做不完, 不如只做 3 个有数据源的省。</li>
+<li><strong>团队没有生产能力</strong>——比如"短视频讲解", 我团队只有写代码的人, 没有视频制作能力, 强行上质量跟不上, 反而拉低品牌。</li>
+</ul>
+
+<p>这 4 条加起来, 砍掉了 5 个"看起来该做" 的功能, 留下了 1 个"我必须做" 的功能: 4 层质量管线 + 5 轮打磨, 把 600 个专业从 m3 的初稿做到可上线。少做不是"懒", 少做是"清楚什么该做、什么不该做"。这是产品里最难的能力。</p>
+</section>
+
+<section>
+<h2>我希望你读完能想起一件事</h2>
+
+<p>这 5 句话不是鸡汤, 是这 20 天里我为 1227 个 commit 买的单。</p>
+
+<p>最后说一句可能不讨喜的话: 接下来 5 年, AI 写内容会越来越便宜, 也会有越来越多的"志愿填报工具" 用 AI 在 1 周内堆出 600 个专业。我们不会跟这件事拼速度——因为拼不过, 也不该拼。</p>
+
+<p>我们能做的是: 让你点开任何一个专业, 看到的内容里, 有 3 个具体的校友案例、5 个真实的院校特色课、1 张真实的薪资分布图、5 条"学长不会主动说" 的避坑建议。这些, 短期内 AI 做不出来——不是技术上做不出来, 是它不愿意为一个家长花这个时间。</p>
+
+<p>而我们愿意。</p>
+
+<p>最后, 1 个小决定, 1 个大道理: 我做的所有"反共识" 决定, 在做的当下都是"心里没底" 的。不用 AI 写, 心里没底——会不会慢到死? 砍掉 5 个功能, 心里没底——会不会被骂不完整? 移动端重做, 心里没底——3 天赌输了怎么办? 8 条路径改了 4 小时再撤回, 心里没底——会不会被用户骂" 你怎么改回去了"?</p>
+
+<p>每一次心里没底, 我都按"反共识" 做了。然后 20 天后回看, 几乎每一次都是对的。这个规律如果你相信, 接下来 12 个月可以省很多焦虑: 任何让你"心里没底" 的反共识判断, 大概率是值得做的——因为"心里没底" 意味着"周围没人这么干过", 而"周围没人这么干过" 意味着"做对了就是壁垒"。</p>
+
+<p>如果你身边有做产品或做内容的朋友, 建议把这篇转给他。理由: 接下来 12 个月, 所有人都会面对"用 AI 写还是自己写" "扩品类还是做深" "省钱还是省时间" 这些问题。我的选择不一定是你的最优解, 但它是一份有数据、有时间、有取舍的样本, 也许能帮你少走 3 个月弯路。</p>
+
+<blockquote>
+在一个所有人都在赶时间的世界里, 慢一点, 是竞争力。
+</blockquote>
+
+<div class="stat">
+<div><b>20</b><span>天</span></div>
+<div><b>1227</b><span>commits</span></div>
+<div><b>600</b><span>专业</span></div>
+<div><b>97.3%</b><span>8+ 率</span></div>
+</div>
+
+</section>
+
+<footer>
+<p>写于 2026-06-26 · 产品复盘 · 下篇(给做产品的人)</p>
+<p>上篇《帮 600 个高考专业, 写了一年的"真实"》写给家长, 已发</p>
+<p>项目内完整复盘(含 commit / 决策 / 数据细节): <code>docs/retrospectives/2026-06-26_project-retrospective.html</code></p>
+</footer>
+
+</div>
+</body>
+</html>

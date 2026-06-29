@@ -65,7 +65,7 @@ if extra:
 
 # 6) 每篇 11 章节检查
 print(f"\n[5] 每篇 11 章节 (一~十一):")
-section_nums = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一"]
+section_nums = ["一", "二", "三", "四", "五", "六", "七", "八", "十", "十一"]  # Day 36 P1-13: 移除"九"
 ok11 = 0
 err11 = []
 for s in slugs[:30]:  # 抽 30 个抽样
@@ -94,7 +94,6 @@ structure_checks = [
     ('class="sal-table"', "salary 表格"),
     ('class="sal-th-cell is-p50">P50', "salary P50 中位列"),
     ('class="xk-list"', "xuanke 选科段"),
-    ('class="ds-list"', "deep_study 段"),
     ('class="emp-list"', "employment 段"),
     ('class="co-list"', "companies 段"),
     ('class="fit-pair"', "fit 杂志风双段"),

@@ -65,11 +65,13 @@
   }
 
   function _clamp(n) {
-    n = parseInt(n, 10);
-    if (isNaN(n)) return 3;
-    if (n < 1) return 1;
-    if (n > 5) return 5;
-    return n;
+    // Day 36 P1-10: 仅在非数字时 fallback 3, 不要把 0/NaN 一律替换为 1
+    if (!Number.isFinite(n)) return 3;
+    const i = parseInt(n, 10);
+    if (isNaN(i)) return 3;
+    if (i < 1) return 1;
+    if (i > 5) return 5;
+    return i;
   }
 
   const WishlistStore = {
@@ -140,6 +142,34 @@
         _write(items);
         return { ok: true, updated: true };
       }
+      // Day 36 P0-7: 与 upsert 区别 — update 不要求 slug 存在, 不抛错 (silent fallback to upsert for new)
+      return this.upsert({ slug, title, style, category, score, rating, tag, comment });
+    },
+
+    /**
+     * Day 36 P0-7: 增量更新已存在条目 (来自 share.js:864 shareScore modal)
+     * patch = { score?, tag?, comment?, style?, category?, title? }
+     * 不存在时 silent fallback: 调用 upsert 创建
+     */
+    update(slug, patch = {}) {
+      if (!slug) return { ok: false, reason: "missing slug" };
+      const items = _read();
+      const idx = items.findIndex((x) => x.slug === slug);
+      if (idx < 0) {
+        // slug 不存在 -> silent upsert 创建
+        return this.upsert({ slug, ...patch });
+      }
+      // 存在 -> 浅合并, 保留未指定字段
+      for (const k of ["title", "style", "category", "tag", "comment"]) {
+        if (patch[k] !== undefined && patch[k] !== "") items[idx][k] = patch[k];
+      }
+      if (patch.rating !== undefined || patch.score !== undefined) {
+        items[idx].score = _clamp(patch.rating != null ? patch.rating : patch.score);
+        items[idx].rating = items[idx].score;
+      }
+      _write(items);
+      return { ok: true, updated: true };
+    },
       if (items.length >= MAX) {
         return { ok: false, reason: "full", limit: MAX };
       }

@@ -300,7 +300,9 @@
 
     const { collegesById, collegesByEid, schoolHistory, groupsLatest, specialties, yfyd, schoolAllMajors, majorSynonyms, chsiByEduId } = data;
     if ((!collegesById && !collegesByEid) || !schoolHistory || !groupsLatest || !specialties || !yfyd) {
-      throw new Error("recommend: data is incomplete");
+      // Day 36 P1-11: 不 throw, 返回 stats 让 UI 友好降级
+      console.warn("recommend: data is incomplete");
+      return { stats: { error: "data_incomplete", cards: [], generated_at: new Date().toISOString() } };
     }
     // 自动反查位次
     if ((user.rank == null) && (user.score != null)) {

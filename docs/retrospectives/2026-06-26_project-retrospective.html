@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目复盘 · 2026-06-07 → 2026-06-26 · gaokao-hubei-mvp</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-2: #4a4a4a;
+    --ink-3: #888;
+    --bg: #fafaf7;
+    --bg-2: #f0eee8;
+    --accent: #8b1a1a;
+    --accent-2: #c46b3f;
+    --line: #d8d4c8;
+    --line-2: #e8e4d8;
+    --good: #2d6a3e;
+    --warn: #b56a1a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Songti SC", "Source Han Serif SC", "Noto Serif CJK SC", serif;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 32px 96px; }
+
+  /* 顶部 */
+  header.meta {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 24px;
+    margin-bottom: 48px;
+  }
+  header.meta .kicker {
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+  }
+  header.meta h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 8px 0 16px;
+    line-height: 1.25;
+  }
+  header.meta .sub {
+    color: var(--ink-2);
+    font-size: 15px;
+  }
+  header.meta .stats {
+    display: flex; gap: 32px; flex-wrap: wrap;
+    margin-top: 20px;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+  }
+  header.meta .stats span b { font-size: 18px; color: var(--accent); font-weight: 700; }
+
+  /* 章节 */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 24px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  h2 .num {
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  h3 {
+    font-size: 18px;
+    margin: 32px 0 12px;
+    color: var(--ink);
+  }
+  p { margin: 12px 0; }
+
+  /* 修正提示框 */
+  .correction {
+    background: #fff5e6;
+    border-left: 4px solid var(--warn);
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .correction b { color: var(--warn); }
+
+  /* 时间线 */
+  .timeline { margin: 24px 0; }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .tl-date {
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    color: var(--ink-2);
+    padding-top: 2px;
+  }
+  .tl-date b { color: var(--ink); font-weight: 600; }
+  .tl-date .cmmt { color: var(--ink-3); font-size: 11px; display: block; margin-top: 2px; }
+  .tl-content { font-size: 15px; }
+  .tl-content .tag {
+    display: inline-block;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 11px;
+    color: var(--ink-3);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    margin-right: 4px;
+    border-radius: 2px;
+  }
+  .tl-content .tag.hot { background: #fce8e8; color: var(--accent); border-color: #e8c0c0; }
+  .tl-content .tag.key { background: #e6f0e8; color: var(--good); border-color: #b8d4be; }
+
+  /* 表格 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line-2);
+    vertical-align: top;
+  }
+  th {
+    background: var(--bg-2);
+    color: var(--ink-2);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  td .date { color: var(--ink-3); font-size: 12px; }
+  td code { background: var(--bg-2); padding: 1px 4px; font-size: 12px; }
+
+  /* 决策点卡片 */
+  .decisions { display: grid; gap: 16px; margin: 24px 0; }
+  .dec {
+    border: 1px solid var(--line);
+    padding: 16px 20px;
+    background: #fff;
+  }
+  .dec .head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+  }
+  .dec .head .date { color: var(--accent); font-weight: 600; }
+  .dec .head .verdict { color: var(--ink-3); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .dec h4 { margin: 4px 0 8px; font-size: 16px; }
+  .dec .action {
+    font-size: 14px; color: var(--ink-2);
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+  }
+  .dec .rollback { color: var(--warn); font-size: 13px; margin-top: 6px; }
+
+  /* 质量曲线 */
+  .qchart {
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .qrow {
+    display: grid;
+    grid-template-columns: 90px 1fr 70px;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+  }
+  .qrow .lbl { color: var(--ink-2); }
+  .qrow .bar {
+    height: 18px;
+    background: var(--line-2);
+    position: relative;
+    overflow: hidden;
+  }
+  .qrow .bar i {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  }
+  .qrow .val { text-align: right; color: var(--ink); font-weight: 600; }
+
+  /* 前端节点列表 */
+  .frontend-list { margin: 20px 0; }
+  .frontend-list li {
+    padding: 8px 0 8px 24px;
+    border-bottom: 1px solid var(--line-2);
+    position: relative;
+    list-style: none;
+  }
+  .frontend-list li::before {
+    content: "■";
+    position: absolute; left: 4px; top: 8px;
+    color: var(--accent);
+    font-size: 10px;
+  }
+  .frontend-list li .d { color: var(--ink-3); font-size: 13px; font-family: -apple-system, sans-serif; margin-right: 8px; }
+  .frontend-list li code { background: var(--bg-2); padding: 1px 4px; font-size: 12px; font-family: -apple-system, sans-serif; }
+
+  /* 教训 */
+  .lessons { counter-reset: l; }
+  .lessons li {
+    list-style: none;
+    padding: 10px 0 10px 36px;
+    border-bottom: 1px solid var(--line-2);
+    position: relative;
+  }
+  .lessons li::before {
+    counter-increment: l;
+    content: counter(l);
+    position: absolute; left: 0; top: 10px;
+    width: 24px; height: 24px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+  .lessons li b { color: var(--accent); }
+
+  footer {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 2px solid var(--ink);
+    font-family: -apple-system, "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  footer p { margin: 4px 0; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 24px 16px 64px; }
+    header.meta h1 { font-size: 26px; }
+    .tl-row { grid-template-columns: 80px 1fr; gap: 12px; }
+    .qrow { grid-template-columns: 70px 1fr 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="meta">
+  <div class="kicker">Retrospective · 第一次完整复盘</div>
+  <h1>20 天, 1227 个 commit,<br>把 600 个高考专业从 0 做到可上线</h1>
+  <div class="sub">gaokao-team-b · 2026-06-07 → 2026-06-26 · 复盘者: Claude (Opus 4.8)</div>
+  <div class="stats">
+    <span><b>20</b> 天</span>
+    <span><b>1227</b> commits</span>
+    <span><b>600</b> 专业</span>
+    <span><b>97.3%</b> 8+ 率(峰值)</span>
+    <span><b>3</b> 省份(湖北/广东/江苏)</span>
+  </div>
+</header>
+
+<div class="correction">
+  <b>本版修正前两版的 3 处错误</b>:
+  (1) 真实跨度 20 天, 不是 14 / 16 天;
+  (2) 项目 init 阶段是 6/7-6/10, 不是从 6/11 开始;
+  (3) "Day N" 编号是当时工程量估算, 非物理时间 — 本报告全部改用真实日期 + commit timestamp。
+</div>
+
+<!-- ===== 一 ===== -->
+<section>
+<h2><span class="num">01</span> 开发进度: 真实日期轴</h2>
+
+<h3>阶段 A · 数据基建 (6/7-6/10) · 4 天 · 40 commits</h3>
+<div class="timeline">
+  <div class="tl-row">
+    <div class="tl-date"><b>6/7</b><span class="cmmt">9 commits</span></div>
+    <div class="tl-content">
+      <span class="tag key">init</span>
+      2024 真实数据(555edu / dxsbb OCR) + 广东/江苏 MVP 真实数据 + 5 份核心文档 + codegraph 启用
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/8</b><span class="cmmt">15 commits</span></div>
+    <div class="tl-content">
+      <span class="tag hot">密集数据</span>
+      湖北/广东/江苏 2025 真实投档表(OCR) + MinerU Flash OCR 锁定为项目架构级规定 + 概率模型 std 校准(物理 0.289 / 历史 0.367) + <b>canghe-major-explorer skill 上线 + 5 风格引擎</b>
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/9</b><span class="cmmt">0 commits</span></div>
+    <div class="tl-content" style="color:var(--ink-3)">周末无 commit</div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/10</b><span class="cmmt">16 commits</span></div>
+    <div class="tl-content">
+      5 套极致风格 + 满数据 + 装饰横条
+    </div>
+  </div>
+</div>
+
+<h3>阶段 B · 主题 + 前端 (6/11-6/14) · 4 天 · 111 commits</h3>
+<div class="timeline">
+  <div class="tl-row">
+    <div class="tl-date"><b>6/11</b><span class="cmmt">21 commits</span></div>
+    <div class="tl-content">
+      70 精品专业 v2 + 12 主题定版(AGRI/ARTS/GONGAN/BUSINESS) + V2 LLM 全文重写(95% 准确率) + hero 设计 6 版
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/12</b><span class="cmmt">42 commits</span></div>
+    <div class="tl-content">
+      前端 v1(7 commits) + 按需生成 v1 + Hybrid Synth Pipeline + CF/DeepSeek 凭据落地
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/13</b><span class="cmmt">26 commits</span></div>
+    <div class="tl-content">
+      Agent Pipeline 试做 + 学科门类 POC + 国家战略 chip
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/14</b><span class="cmmt">22 commits</span></div>
+    <div class="tl-content">
+      chsi 爬虫突破阿里云反爬(100 校/14.6s) + 学科门类全 5 步 + 目录页 536 专业下钻
+    </div>
+  </div>
+</div>
+
+<h3>阶段 C · 移动端 + 首批(6/15-6/18) · 4 天 · 412 commits</h3>
+<div class="timeline">
+  <div class="tl-row">
+    <div class="tl-date"><b>6/15</b><span class="cmmt">39 commits</span></div>
+    <div class="tl-content">
+      移动 PWA(8 commit push main, UA sniff + sw.js v2) + 移动端算法统一(33 单测) + 第一批 49 专业(v8 hardfix 40/44 clean) + Batch 3+4(31 精品)
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/16</b><span class="cmmt">30 commits</span></div>
+    <div class="tl-content">
+      50 跨学科(mimo 429 限速 26 篇重跑) + 法务 3 文件(terms/privacy/disclaimer)
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/17</b><span class="cmmt"><b>189</b> commits</span></div>
+    <div class="tl-content">
+      <span class="tag hot">峰值</span> 47 篇严管线打磨 + ABCD 收工 + 隐私审计 + PWA 4 修
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/18</b><span class="cmmt">162 commits</span></div>
+    <div class="tl-content">
+      smart_audit.py(9.3h→2-3h, ¥140→¥40) + audit_registry.json + manifest 重建(210→277)
+    </div>
+  </div>
+</div>
+
+<h3>阶段 D · 质量飞轮(6/19-6/23) · 5 天 · 582 commits</h3>
+<div class="timeline">
+  <div class="tl-row">
+    <div class="tl-date"><b>6/19</b><span class="cmmt">145 commits</span></div>
+    <div class="tl-content">
+      40+ 大批(密集 polish 日) + R1 variance 167 篇 + 多 agent 冲突
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/20</b><span class="cmmt">126 commits</span></div>
+    <div class="tl-content">
+      6 个 polish 批次 + <b>PC+Mobile 自适应</b>(746 文件 <code>clamp(1024, 92vw, 1280)</code>)
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/21</b><span class="cmmt">71 commits</span></div>
+    <div class="tl-content">
+      Tier 2 真重写 14 篇(12/12 promote) + R2 variance 23 篇
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/22</b><span class="cmmt">165 commits</span></div>
+    <div class="tl-content">
+      60 + 18 HIGH(avg 8.88, 8+ 90.09%) + wl-chip top 修
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/23</b><span class="cmmt">70 commits</span></div>
+    <div class="tl-content">
+      <span class="tag hot">上线日</span> 28 LOW + 74 补漏 + 30 polish(8+ 97.3%, 5×10) + Prelaunch-2 SEO 641 文件
+    </div>
+  </div>
+</div>
+
+<h3>阶段 E · 收尾扩量(6/24-6/26) · 3 天 · 77 commits</h3>
+<div class="timeline">
+  <div class="tl-row">
+    <div class="tl-date"><b>6/24</b><span class="cmmt">14 commits</span></div>
+    <div class="tl-content">
+      移动端 xuanke schema 4 类兼容(151 文件) + 30 slugs 单科错修 + salary 排序 3 层根因 + <span class="tag">08 深造路径 4 小时硬改后回滚</span>
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/25</b><span class="cmmt">62 commits</span></div>
+    <div class="tl-content">
+      扩三省 recommender(湖北+广东+江苏, 4000/2660/3053) + <b>4 层 cache 锁死</b>
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date"><b>6/26</b><span class="cmmt">1 commit</span></div>
+    <div class="tl-content" style="color:var(--ink-3)">今天 · 写这份复盘</div>
+  </div>
+</div>
+</section>
+
+<!-- ===== 二 ===== -->
+<section>
+<h2><span class="num">02</span> 6 个决策点(无心理描写)</h2>
+<div class="decisions">
+  <div class="dec">
+    <div class="head"><span class="date">6/8</span><span class="verdict">架构级规定</span></div>
+    <h4>PaddleOCR/Docker 容器方案废, MinerU SDK 锁定</h4>
+    <div class="action">commit <code>c84c36ad</code> — OCR 路线全部切换到 MinerU Flash, 解决 cap 9749 物理全表问题。</div>
+  </div>
+  <div class="dec">
+    <div class="head"><span class="date">6/13</span><span class="verdict">弃用</span></div>
+    <h4>放弃 Agent Pipeline</h4>
+    <div class="action"><code>agent_batch.py</code> Phase 1 跑 5 篇验证失败(虚构课程/校名/就业), 改走"本地定主题 + 并行批量 + 人工审"循环。</div>
+  </div>
+  <div class="dec">
+    <div class="head"><span class="date">6/15</span><span class="verdict">重做非优化</span></div>
+    <h4>移动端 PWA(不是渐进优化)</h4>
+    <div class="action">A/A+C/B 3 方案全被否决, 改走 PWA + 5 tab 底部 dock + Editorial 大字报 + UA sniff 独立 mobile HTML。</div>
+  </div>
+  <div class="dec">
+    <div class="head"><span class="date">6/15</span><span class="verdict">统一</span></div>
+    <h4>PC+Mobile 算法统一</h4>
+    <div class="action">双套算法导致 mobile 数字飘, 合一 + 33 PC 单测 + Playwright 4 e2e。</div>
+  </div>
+  <div class="dec">
+    <div class="head"><span class="date">6/17</span><span class="verdict">严管线</span></div>
+    <h4>Day 3 Team B 47 篇走 m3 + 严管线</h4>
+    <div class="action">m3 写初稿 + 严管线 5 轮打磨(估 22-25h)而非 LLM 一次批量(2h), 8+ 率 100% 含 5 个 10/10。</div>
+  </div>
+  <div class="dec rollback">
+    <div class="head"><span class="date">6/24</span><span class="verdict">回滚</span></div>
+    <h4>08 深造路径 4 小时硬改后回滚</h4>
+    <div class="action">commit <code>eea2dcad</code>(分支 <code>fix/deep-study-paths</code>)被丢弃, <code>git checkout -- public/ ...</code> + 分支删除, 8 篇恢复原状。617 篇原 deep_study 备份到 <code>_backup_deep_study_2026-06-24/</code>(gitignored)。</div>
+    <div class="rollback">6/24 那天 14 commits 全部是修其他, 没有任何 deep_study commit。</div>
+  </div>
+  <div class="dec">
+    <div class="head"><span class="date">6/25</span><span class="verdict">扩量</span></div>
+    <h4>扩到 3 省(湖北+广东+江苏)</h4>
+    <div class="action">2024 数据先跑, dropdown + sessionStorage, 8 单测 + Playwright 三省 e2e。</div>
+  </div>
+</div>
+</section>
+
+<!-- ===== 三 ===== -->
+<section>
+<h2><span class="num">03</span> 质量曲线(只列有数字的日期)</h2>
+<div class="qchart">
+  <div class="qrow"><span class="lbl">6/18</span><div class="bar"><i style="width:83%"></i></div><span class="val">83.0%</span></div>
+  <div class="qrow"><span class="lbl">6/19 R1</span><div class="bar"><i style="width:75.2%"></i></div><span class="val">75.2%</span></div>
+  <div class="qrow"><span class="lbl">6/19 R2</span><div class="bar"><i style="width:91.47%"></i></div><span class="val">91.47%</span></div>
+  <div class="qrow"><span class="lbl">6/22</span><div class="bar"><i style="width:90.09%"></i></div><span class="val">90.09%</span></div>
+  <div class="qrow"><span class="lbl">6/23 中</span><div class="bar"><i style="width:97.3%"></i></div><span class="val">97.3%</span></div>
+  <div class="qrow"><span class="lbl">6/23 末</span><div class="bar"><i style="width:100%"></i></div><span class="val">100% 覆盖</span></div>
+</div>
+<p style="font-size:13px;color:var(--ink-3);font-family:-apple-system,sans-serif">6/19 那天 8+ 率<strong style="color:var(--ink)">先降后升</strong>是真实发生的: R1 报 75.2% → R2 重审后 91.47%。处理方式: R2 同篇跑 2 次取高, 区分"variance stuck"和"真硬伤"。</p>
+</section>
+
+<!-- ===== 四 ===== -->
+<section>
+<h2><span class="num">04</span> 前端设计节点(按真实日期)</h2>
+<ul class="frontend-list">
+  <li><span class="d">6/8</span><code>27cac201</code> canghe-major-explorer skill 上线 + 5 风格引擎(P0 范本)</li>
+  <li><span class="d">6/10</span><code>d264a236</code> 5 套极致风格 + 满数据 + 装饰横条</li>
+  <li><span class="d">6/11-6/12</span> 12 主题定版 + BASE_CSS v4 继承修复(commit <code>b6b5cf8</code>) + OG 卡 5→10→20 + 20 主题 Playwright 验</li>
+  <li><span class="d">6/13</span> 学科门类 2 层架构(commit <code>b0cc0d6</code> + <code>1558215</code>) + 国家战略 chip 10 行业 18 精品</li>
+  <li><span class="d">6/14</span> 13 门类 92 大类 536 专业下钻目录页(<code>c7a98fa</code>) + chsi 2950 校 + 868 专业全抓</li>
+  <li><span class="d">6/15</span> 移动端 PWA(8 commit push main, 11 章节 + 心愿打分 + 13 门类 + UA sniff + sw.js v2)</li>
+  <li><span class="d">6/20</span> PC+Mobile 自适应(容器 <code>clamp(1024, 92vw, 1280)</code>, 746 文件重渲染, Mobile env <code>safe-area-inset-top</code> + 2 断点)</li>
+  <li><span class="d">6/22</span> CS 主题暗色适配(<code>cs.py :root --ink:#F8FAFC</code>, 修 12 处 fallback, 重渲染 20 篇)</li>
+  <li><span class="d">6/23</span> Prelaunch-2 SEO(2 commit, 641 文件 +7401/-1111, sitemap 616 + JSON-LD 1808 + _headers 5/5 + Plausible Pro 17 页)</li>
+  <li><span class="d">6/24</span> Mobile xuanke 4 schema 兼容(<code>73a6e4ba</code>) + salary 排序 3 层根因(<code>bd3934a9</code>, 674 文件 +3313/-6406)</li>
+  <li><span class="d">6/25</span> 4 层 cache 锁死(CF HTML/JS + 浏览器 disk + sw.js 4h 兜底, <code>_headers /sw.js no-store</code> + <code>deploy.sh</code> Step 5.5 验证)</li>
+</ul>
+</section>
+
+<!-- ===== 五 ===== -->
+<section>
+<h2><span class="num">05</span> commit 强度曲线</h2>
+<table>
+  <tr><th>日期</th><th>commits</th><th>备注</th></tr>
+  <tr><td>6/7</td><td>9</td><td>init + 数据 + 文档</td></tr>
+  <tr><td>6/8</td><td>15</td><td>湖北/广东/江苏 2025 数据 + OCR 架构切换</td></tr>
+  <tr><td>6/9</td><td>0</td><td>周末</td></tr>
+  <tr><td>6/10</td><td>16</td><td>5 套极致风格</td></tr>
+  <tr><td>6/11</td><td>21</td><td>12 主题定版</td></tr>
+  <tr><td>6/12</td><td>42</td><td>前端 v1 + Hybrid pipeline</td></tr>
+  <tr><td>6/13</td><td>26</td><td>学科门类 POC</td></tr>
+  <tr><td>6/14</td><td>22</td><td>chsi 爬虫突破</td></tr>
+  <tr><td>6/15</td><td>39</td><td>移动 PWA + 首批 49</td></tr>
+  <tr><td>6/16</td><td>30</td><td>50 跨学科 + 法务</td></tr>
+  <tr><td><b>6/17</b></td><td><b>189</b></td><td><b>峰值 — 47 篇 m3 + 严管线 + 收工</b></td></tr>
+  <tr><td>6/18</td><td>162</td><td>smart_audit + manifest 重建</td></tr>
+  <tr><td>6/19</td><td>145</td><td>大批 polish + R1 variance</td></tr>
+  <tr><td>6/20</td><td>126</td><td>6 个 polish 批次 + 746 文件重渲染</td></tr>
+  <tr><td>6/21</td><td>71</td><td>Tier 2 重写 + R2 variance</td></tr>
+  <tr><td>6/22</td><td>165</td><td>60 + 18 HIGH</td></tr>
+  <tr><td>6/23</td><td>70</td><td>上线日 — Prelaunch-2 SEO</td></tr>
+  <tr><td>6/24</td><td>14</td><td>08 回滚 + schema/salary 修</td></tr>
+  <tr><td>6/25</td><td>62</td><td>扩 3 省 + 4 层 cache</td></tr>
+  <tr><td>6/26</td><td>1</td><td>复盘</td></tr>
+</table>
+<p style="font-size:13px;color:var(--ink-3);font-family:-apple-system,sans-serif">峰值 <strong style="color:var(--accent)">6/17: 189 commits</strong> — 47 篇 m3 + 严管线 + ABCD 收工 + 隐私审计 + PWA 4 修。次峰 6/18: 162 commits — smart_audit + manifest 重建。</p>
+</section>
+
+<!-- ===== 六 ===== -->
+<section>
+<h2><span class="num">06</span> 我没记录到、不补的事</h2>
+<p>本报告只列有 git / memory / commit 证据的内容, 不补"我估计 / 印象中 / 大概"。</p>
+<ul class="lessons" style="margin-top:16px">
+  <li>每篇 polish 真实工时 — 只有阶段性估时, 没逐篇记</li>
+  <li>决策前的犹豫期 — 无据</li>
+  <li>"心路历程" 类描述 — 全删</li>
+  <li>"用户体验" 类 — 无</li>
+  <li>未实现的计划 — 列了的不代表真做了, 只列 commit 验证过的</li>
+</ul>
+</section>
+
+<footer>
+  <p>git log 反查 · 1227 commits · 6/7-6/26</p>
+  <p>memory 锚点: ~140 个 memory 文件在 <code>~/.claude/projects/.../memory/</code></p>
+  <p>如有数字疑问, 以 <code>git log --format='%h|%ai|%s'</code> 为准</p>
+</footer>
+
+</div>
+</body>
+</html>
