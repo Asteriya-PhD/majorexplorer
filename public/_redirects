@@ -16,9 +16,9 @@
 # 实际 mobile 路径是 /m/majors/{slug}
 #
 # 方案: 强制重定向 /m/{slug} 到正确路径 /m/majors/{slug} (兜底)
-# target 加 .html 后缀避免 pretty URL 二次 308 死循环
-/m/:slug  /m/majors/:slug.html  301
-/m/:slug.html  /m/majors/:slug.html  301
+# 注意: target 不加 .html, 因为 :slug 已经包含 .html 后缀 (来自 :slug.html 通配)
+/m/:slug  /m/majors/:slug  301
+/m/:slug.html  /m/majors/:slug  301
 
 # 404 兜底: 任何不存在的路径 → 品牌 404.html (不跳出站)
 /*  /404.html  404
