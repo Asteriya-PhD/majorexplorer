@@ -358,11 +358,11 @@
       <div class="share-card-mask" data-card-close></div>
       <div class="share-card-panel" role="dialog" aria-label="分享名片">
         <div class="share-card-handle"></div>
-        <div class="share-card-title">长按图片保存到相册</div>
-        <div class="share-card-tip">保存后, 在微信/朋友圈/小红书选择图片发送, 朋友扫码即可查看完整专业介绍</div>
+        <div class="share-card-title">长按图片 → 保存到相册</div>
+        <div class="share-card-tip">然后在微信/朋友圈/小红书选择图片发送, 朋友扫码即可查看完整专业介绍</div>
         <img class="share-card-img" src="${url}" alt="分享名片" draggable="false">
         <div class="share-card-actions">
-          <button class="share-card-btn-primary" data-card-close>完成</button>
+          <button class="share-card-btn-primary" data-card-close>我已保存, 完成</button>
         </div>
       </div>
     `;
@@ -688,73 +688,67 @@
   }
 
   // ── Day 35.5 心愿单联动 ──
-  // 顶栏心心 #top-heart-btn + hero-heart #heart-btn + .hero-heart 全部接管
-  // 调用 WishlistStore.add / .remove / .get, 加心跳动画 + 气泡提示
+  // Day 35.9: 只绑顶栏心心 (#top-heart-btn), 不绑 .hero-heart (那个有 generator 自带逻辑)
+  // 避免两个 handler 重复触发 + 视觉上"两个爱心"实际就是同一个功能
   function bindHeartButtons() {
     const slug = (window.__SLUG__ || location.pathname.split('/').pop().replace('.html', '')).trim();
     const title = (window.__TITLE__ || document.title.split(' · ')[0] || '').trim();
 
-    // 选所有可能的心心按钮 (顶栏 + hero)
-    const btns = Array.from(document.querySelectorAll('#top-heart-btn, .hero-heart'));
-    if (!btns.length) return;
+    const btn = document.querySelector('#top-heart-btn');
+    if (!btn) return;
 
-    // 初始状态: 已收藏 → is-on
     const isOn = !!(window.WishlistStore && WishlistStore.get && WishlistStore.get(slug));
-    btns.forEach(b => isOn && b.classList.add('is-on'));
+    if (isOn) btn.classList.add('is-on');
 
-    // 注入气泡元素 (DOM 树挂在 hero-heart 后)
+    // 同步 hero-heart 视觉状态 (用户点顶栏或 hero 都应联动)
     const heroHeart = document.querySelector('.hero-heart');
-    let bubble = null;
-    if (heroHeart) {
-      bubble = document.createElement('div');
-      bubble.className = 'hero-heart-bubble';
-      bubble.textContent = '已加入志愿推荐 ✓';
-      heroHeart.parentNode.insertBefore(bubble, heroHeart.nextSibling);
-    }
+    if (heroHeart && isOn) heroHeart.classList.add('is-on');
 
-    function showBubble() {
-      if (!bubble) return;
-      bubble.setAttribute('data-show', 'true');
-      setTimeout(() => bubble.setAttribute('data-show', 'false'), 3200);
-    }
-
-    function beat(btn) {
+    function beat() {
       btn.classList.remove('beat');
-      // 强制重启动画
       void btn.offsetWidth;
       btn.classList.add('beat');
     }
 
-    btns.forEach(btn => {
-      if (btn.__heartBound) return;
-      btn.__heartBound = true;
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!window.WishlistStore) {
-          showToast('心愿单暂不可用');
-          return;
+    if (btn.__heartBound) return;
+    btn.__heartBound = true;
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!window.WishlistStore) {
+        showToast('心愿单暂不可用');
+        return;
+      }
+      const nowOn = WishlistStore.get(slug);
+      if (nowOn) {
+        WishlistStore.remove(slug);
+        btn.classList.remove('is-on');
+        if (heroHeart) heroHeart.classList.remove('is-on');
+        showToast('已移出心愿单');
+      } else {
+        WishlistStore.upsert({
+          slug,
+          title,
+          tags: [],
+          score: 0,
+          note: '',
+          addedAt: Date.now(),
+        });
+        btn.classList.add('is-on');
+        if (heroHeart) {
+          heroHeart.classList.add('is-on');
+          // 触发 hero-heart 原本的 beat 动画 (如果有)
+          const heroIco = heroHeart.querySelector('.heart-ico, .heart-on, .heart-off');
+          if (heroIco) {
+            heroIco.classList.remove('beat');
+            void heroIco.offsetWidth;
+            heroIco.classList.add('beat');
+          }
         }
-        const nowOn = WishlistStore.get(slug);
-        if (nowOn) {
-          WishlistStore.remove(slug);
-          btn.classList.remove('is-on');
-          showToast('已移出心愿单');
-        } else {
-          WishlistStore.upsert({
-            slug,
-            title,
-            tags: [],
-            score: 0,
-            note: '',
-            addedAt: Date.now(),
-          });
-          btn.classList.add('is-on');
-          showBubble();
-        }
-        beat(btn);
-        track(nowOn ? 'wishlist_remove' : 'wishlist_add');
-      });
+        showToast('已加入志愿推荐 ✓');
+      }
+      beat();
+      track(nowOn ? 'wishlist_remove' : 'wishlist_add');
     });
   }
 
