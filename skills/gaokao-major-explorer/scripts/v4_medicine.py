@@ -23,6 +23,7 @@ Mayo 专属:
 """
 import json
 import re
+import html  # Day 47 P0-13: meta description 转义防 < 5 所 破坏 HTML 属性
 from pathlib import Path
 
 # ── 心愿单注入 (chip / FAB / 12 主题卡) — 4 页 v1 一致 ──
@@ -504,7 +505,7 @@ def _render_medicine_pitfalls(data: dict) -> str:
     if not items:
         return ""
     return (
-        '<section id="pitfalls"><h3>避坑指南</h3>'
+        '<section id="pitfalls"><h2>避坑指南</h2>'
         '<div class="m-pits">' + "".join(items) + '</div>'
         '</section>'
     )
@@ -832,7 +833,7 @@ def render_v4_medicine(data: dict) -> str:
 <link rel="dns-prefetch" href="https://fonts.loli.net">
 {_WL_HEAD}
 <title>{title}专业介绍 2026 高考 | Major Explorer</title>
-<meta name="description" content="严谨 · 冷静 · 鸟瞰。{summary[:80]}">
+<meta name="description" content="严谨 · 冷静 · 鸟瞰。{html.escape(summary)[:80]}">
 <style>
 {FONT_URL}
 {V4_BASE_CSS}

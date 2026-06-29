@@ -604,6 +604,7 @@ def render_v4(data: dict, style: str) -> str:
           <span class="bento-rank">{s.get("rank", "")}</span>
           <div class="bento-name">{soft_break_name(s.get("name", ""))}</div>
           <div class="bento-tag">{s.get("tag", "")}</div>
+          {f'<span class="bento-tier tier-{s.get("tier", "").lower().replace(" ","")}">{s.get("tier", "")}</span>' if s.get("tier") else ''}
         </div>'''
         for i, s in enumerate(top_schools)
     ) if top_schools else '<div style="grid-column: 1/-1; padding: 24px;">院校数据待补充</div>'
