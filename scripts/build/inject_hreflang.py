@@ -33,12 +33,14 @@ PUBLIC = REPO_ROOT / "public"
 HREFLANG_START = "<!-- BEGIN_SEO_HREFLANG -->"
 HREFLANG_END = "<!-- END_SEO_HREFLANG -->"
 
-# Match canonical href. Accepts either:
+# Match the entire canonical link tag (including trailing > or />).
+# Accepts either attribute order:
 #   <link rel="canonical" href="...">
+#   <link rel="canonical" href="..."/>
 #   <link href="..." rel="canonical">
-# (some pages use reverse attribute order)
+# Captures href in group 1, full tag (with closing) in group 2.
 CANONICAL_RE = re.compile(
-    r'<link\s+(?:rel="canonical"\s+href="([^"]+)"|href="([^"]+)"\s+rel="canonical")',
+    r'(<link\s+(?:rel="canonical"\s+href="([^"]+)"|href="([^"]+)"\s+rel="canonical")\s*/?>)',
     re.IGNORECASE,
 )
 
@@ -68,7 +70,8 @@ def inject_into_html(html: str) -> str | None:
     if not canonical_m:
         return None  # skip page without canonical
 
-    canonical_href = canonical_m.group(1) or canonical_m.group(2)
+    canonical_href = canonical_m.group(2) or canonical_m.group(3)
+    canonical_tag_full = canonical_m.group(1)  # full <link ...> including trailing >
     block = build_hreflang_block(canonical_href)
 
     # Strip old block (idempotent).
@@ -78,8 +81,7 @@ def inject_into_html(html: str) -> str | None:
     )
     cleaned = strip_re.sub("", html)
 
-    # Insert immediately after the canonical link tag.
-    canonical_tag_full = canonical_m.group(0)
+    # Insert immediately after the full canonical tag (preserves closing > or />).
     if canonical_tag_full not in cleaned:
         return None
     return cleaned.replace(
