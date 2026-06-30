@@ -1,4 +1,4 @@
-# Major 精品质量流水线 v1.5 (Day 49 HTML 渲染质量门上线)
+# Major 精品质量流水线 v1.6 (Day 56 双保险 + 双零 baseline)
 
 > 写于 2026-06-17, 47 篇验证: 平均 7.69/10, 100% ≥7, 64% ≥8.
 > 目标: 后续主题稳定达到 **平均 8.0/10** 水准.
@@ -6,6 +6,95 @@
 > 2026-06-18 v1.2: 新增 m3 audit 升级套路 (修 audit 5-6 硬伤 > 追主观波动), E 阶段 7 篇 7→8/10 验证 3 audit iterations 7.14→7.43→8.00.
 > 2026-06-19 v1.4: 新增 §"在线按需合成 SOP" (CF Pages Function + D1 + GH Action + 跨 provider fallback + rate limit + 失败死信上报), 用户搜未收录专业一键 🔄 实时生成. Session 1-2 实测成功, 端到端验证待 Session 3 Playwright.
 > 2026-06-30 v1.5: 新增 §"渲染后 HTML 质量门" (`scripts/audit/render_quality.py` 13 条规则, Layer 0, 0¥ <2s/625 篇). 历史 P0 痛点 (html-escape/jsonld-0-injection/salary-p25-gt-p75/38-alumni-placeholder) 全部规则化. Pre-commit warn-only 至 Day 55, Day 56+ 切 ERROR 阻塞.
+> 2026-06-30 v1.6: 🛡️ **Day 56 双保险上线 + 双零 baseline 达成**. Pre-commit step 5 切硬阻塞 (单字符 `failed=1` 改动), 3 个 batch 工具 (fix_xuanke_field_name / fix_salary_note_placement / fix_salary_note_residual) 累计修 187 处违规, 0¥ 0 误改. **625/625 clean, 0 ERROR / 0 WARN** (历史首次双零). 详见「🛡️ Day 56 双保险」章节.
+
+---
+
+## 🛡️ Day 56 双保险架构 (v1.6 核心新增)
+
+> **双保险 = 预 commit 硬阻塞 + 全量 baseline 持续监控**. 任何 HTML/数据 bug 想进 main, 必中其一.
+
+### 架构图
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  防线 1: 预 commit 硬阻塞 (.githooks/pre-commit, 5 检查)      │
+│  ─────────────────────────────────────────────────────────────  │
+│  Step 1: backfill 5 字段 (discipline/sub_discipline/menjia/...) │
+│  Step 2: L1 启发式 (check_major.py --staged, 6 anti-pollution) │
+│  Step 3: manifest drift (rebuild_manifest.py --check)          │
+│  Step 4: aggregates drift (build_aggregates.py --check)         │
+│  Step 5: ⭐ render_quality --staged (Day 56+ ERROR 硬阻塞)      │
+│                                                                 │
+│  ↓ 任一失败 → 阻断 commit exit 1, 修后再 commit                  │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  防线 2: 全量 baseline 双零 (625 篇, 每周一 8am cron)            │
+│  ─────────────────────────────────────────────────────────────  │
+│  python3 scripts/audit/render_quality.py --all --sync-registry  │
+│                                                                 │
+│  13 规则:                                                       │
+│    8 ERROR (阻断): SAL-MONO-1/2, SAL-CAP-1, HTML-PC-1/2/3/4,   │
+│                    HTML-MB-1, FIELD-1, FIELD-4                  │
+│    5 WARN  (Day 56 全清零): SAL-NOTE-1, FIELD-2, FIELD-3       │
+│                                                                 │
+│  ↓ registry.totals.render_quality_errors 涨 → 立刻 alert        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 双零 baseline (2026-06-30 达成)
+
+| 指标 | Day 49 起点 | Day 50-52 中间 | **Day 56 完工** |
+|---|---|---|---|
+| 扫描篇数 | 625/625 | 625/625 | 625/625 |
+| ERROR | 0 | 0 | **0** |
+| WARN | 73 | 26 | **0** |
+| 耗时 | 1.1s | ~0.9s | **0.8s** |
+| 成本 | 0¥ | 0¥ | **0¥** |
+
+### 7 commit 战果 (Day 49-56)
+
+| commit | 内容 | WARN/ERROR 变化 |
+|---|---|---|
+| `ba5cbc15` (Day 49) | Day 49.1 baseline 起点 | 73 WARN / 0 ERROR |
+| `f63eae73` (Day 50) | A.1 FIELD-3 xuanke alias → name (15 篇) | 73 → 58 |
+| `6d4948f3` (Day 51) | A.2 SAL-NOTE-1 删错位 note (37 篇, 删 86) | 58 → 33 |
+| `41d29271` (Day 52) | A.3 FIELD-2 hero_quote 修 (4 截短 + 3 加 sig) | 33 → 26 |
+| `18d533c6` (Day 56) | B pre-commit step 5 切 ERROR 硬阻塞 | — |
+| `534322d3` (Day 56) | 16 篇 backfill 5 字段 (pre-commit step 1 解锁) | — |
+| `0e1c4c5c` (Day 56) | A.4 SAL-NOTE-1 残留 42 迁 senior (26 篇) | **26 → 0** ✅ |
+
+### 3 个 batch 工具 (scripts/batch/) — 后续类似 fix 复用模板
+
+```bash
+# 1. 字段名规范化 (alias → canonical name, 保留原字段)
+#    Day 50 A.1: combo/item/subject/course → name (15 篇, 59 处)
+python3 scripts/batch/fix_xuanke_field_name.py [--dry-run]
+
+# 2. 删非 senior 错位 note (4 类关键词: 数据来源/应届分线/段位说明/校企对比)
+#    Day 51 A.2: 37 篇删 86 处纯错位 note
+python3 scripts/batch/fix_salary_note_placement.py [--dry-run]
+
+# 3. 迁残留 note 到 senior 末尾 + 分类前缀 ([应届分线] / [段位细分] / [经验范围] / [元数据])
+#    Day 56 A.4: 26 篇迁 42 处真实数据到 senior, 加分类前缀
+python3 scripts/batch/fix_salary_note_residual.py [--dry-run]
+```
+
+3 工具累计 修 86 + 42 + 59 = 187 处违规, 0¥, 0 误改, 全 dry-run 验证后跑.
+
+### 新 ERROR 修复 SOP (Day 56+ 触发后)
+
+1. 看 hook 输出, 找到 ERROR 行 (哪个 slug + 哪条规则)
+2. 跑 `python3 scripts/audit/render_quality.py --slug <slug>` 看具体违规
+3. 修 source JSON (或 HTML, 看规则)
+4. 跑 `python3 scripts/audit/render_quality.py --slug <slug>` 复验 → ✅
+5. 跑 `python3 scripts/audit/render_quality.py --all --sync-registry` 同步 registry
+6. 重 commit (hook 应过)
+
+**绕过**: 仅 `git commit --no-verify` (不推荐, 需在 PR 描述说明)
+
+**详细规则参考** → `docs/RENDER_QUALITY_RULES.md` (184 行, 13 规则 + STAGE_RANK + baseline 历史 + Day 56 切流说明)
 
 ---
 
@@ -213,12 +302,13 @@ python3 scripts/audit/render_quality.py --all --sync-registry
 - FIELD-1 alum-N 占位 12 次 (P0 bug 残余)
 - SAL-MONO-1 p25>p50 6 次
 
-**集成点**:
-- pre-commit hook step 5: `--staged` 模式, **Day 49-55 warn-only**, Day 56+ 切 ERROR 阻塞
+**集成点** (Day 56+ 双保险):
+- pre-commit hook step 5 (防线 1): `--staged` 模式, **ERROR 硬阻塞** (commit 立即 fail exit 1)
+- 每周一 8am cron `--all --sync-registry` (防线 2): 持续监控双零, 涨了 alert
 - smart_audit.py Layer 0 (run_layer0): L0 违规作为 m3 L2 路由依据
 - update_audit_registry.py: `--from-render-quality` 同步到 registry 顶层 `render_quality` key, schema v1.0 → v1.1
 
-**Day 56 切硬阻塞**: `.githooks/pre-commit` 第 5 步, 把注释 `# warn-only mode: do not set failed=1` 上面加一行 `failed=1`. 单字符改动.
+**Day 56 切硬阻塞**: `.githooks/pre-commit` 第 5 步, 把注释 `# warn-only mode: do not set failed=1` 上面加一行 `failed=1`. 单字符改动. 详见上方「🛡️ Day 56 双保险架构」章节.
 
 ### Step 5: Audit Verify (≥7 才继续)
 
@@ -369,19 +459,22 @@ Fix 2 audit → 8.00/10 ✓
 | ≥7 比例 | 100% | 95% |
 | ≥8 比例 | 80%+ | 50% |
 | 0 strong (字段完全缺失) | 0 | ≤5% |
+| **render_quality 双零** (Day 56+ 防线 2) | **0 ERROR / 0 WARN** | 0 ERROR |
 | 单篇耗时 | 30 min | 60 min |
 
 ---
 
 ## 已知坑 (避免)
 
-1. **deploy_to_public.py** ROOT 写死 `gaokao-hubei-mvp`, 不能用于 gaokao-team-b. 用手动 re.sub 替换路径.
+1. **deploy_to_public.py** ROOT 写死 `gaokao-team-b`, 不能用于 gaokao-hubei-mvp. 用手动 re.sub 替换路径.
 2. **content_audit.py** slug 用 filename, 不用 JSON 内 slug.
 3. **m3 audit "字段截断" 是显示 bug**, 数据完整即可, 不要因此改动.
 4. **m3 audit 评分主观**, 同一篇可能 6/10 或 8/10 不稳定, 取多次 audit 平均.
 5. **CC Write 在某些 worktree 会被 revert**, 启动前用 bash echo 测试.
 6. **session merge 时有 working tree 残留** → stash 后再 merge.
 7. **C session 习惯性留 "自主创业/其他" 占位**, 合并后必清理.
+8. **script 路径在 `scripts/audit/` 子目录** (Day 56+ 验证), `scripts/` 根下没有 `smart_audit.py` / `render_quality.py` / `update_audit_registry.py`. 早期 CLAUDE.md 写的 `scripts/smart_audit.py` 错误, v1.6 修正.
+9. **batch 工具复用**: 后续发现新 WARN 类型 (e.g. 字段缺失/格式错误), 仿照 `scripts/batch/fix_xuanke_field_name.py` 模板: dry-run + 真跑 + 验证 + 1 commit. 3 个现有工具已示范 alias-rename / keyword-delete / migrate-append 3 种 pattern.
 
 ---
 
@@ -401,7 +494,7 @@ Fix 2 audit → 8.00/10 ✓
 
 ---
 
-**最后更新**: 2026-06-18, Day 3 Team B E 阶段 7 篇 m3 audit 升级 7.14→7.43→8.00 验证 + v1.2 SOP 升级 + Day 5 Batch 4 选科+薪资 2 新 anti-pollution
+**最后更新**: 2026-06-30, Day 56 双保险上线 + 双零 baseline 达成 (625/625 clean, 0 ERROR / 0 WARN). v1.5→v1.6 主要变化: 新增「🛡️ Day 56 双保险架构」核心章节, pre-commit step 5 切硬阻塞, 3 个 batch 工具, Step 4.5 集成点扩到双保险, 验收标准加 "render_quality 双零", 已知坑加 #8 (script 路径) + #9 (batch 工具复用模板). 7 commit 修 187 处违规, 0¥.
 
 ---
 
