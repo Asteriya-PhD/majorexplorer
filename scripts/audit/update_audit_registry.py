@@ -56,6 +56,12 @@ def save_registry(reg):
     score_dist = defaultdict(int)
     for v in reg['majors'].values():
         score_dist[v.get('current_verdict') or 'unknown'] += 1
+    # Day 49: render_quality stats
+    rq = reg.get('render_quality', {})
+    rq_clean = sum(1 for v in rq.values() if not v.get('errors'))
+    rq_with_errors = sum(1 for v in rq.values() if v.get('errors'))
+    rq_error_count = sum(v.get('error_count', 0) for v in rq.values())
+    rq_warning_count = sum(v.get('warning_count', 0) for v in rq.values())
     reg['stats'] = {
         'audited_3+': sum(1 for v in reg['majors'].values() if v['audit_count'] >= 3),
         'audited_once': sum(1 for v in reg['majors'].values() if v['audit_count'] == 1),
@@ -63,8 +69,18 @@ def save_registry(reg):
         'currently_7-8': score_dist.get('合格', 0),
         'currently_6-7': score_dist.get('可接受', 0),
         'currently_below_6': score_dist.get('需修', 0),
+        # Day 49:
+        'rq_clean': rq_clean,
+        'rq_with_errors': rq_with_errors,
     }
     reg.setdefault('totals', {})['audited'] = len(reg['majors'])
+    # Day 49: render_quality 计数
+    reg['totals']['render_quality_checked'] = len(rq)
+    reg['totals']['render_quality_errors'] = rq_error_count
+    reg['totals']['render_quality_warnings'] = rq_warning_count
+    # bump schema version when render_quality first populated
+    if rq and reg.get('version') == '1.0':
+        reg['version'] = '1.1'
     REGISTRY.parent.mkdir(parents=True, exist_ok=True)
     json.dump(reg, open(REGISTRY, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
     return reg
@@ -217,6 +233,42 @@ def cmd_from_stdin():
     save_registry(reg)
     print(f'✅ stdin 登记 {len(entries)} 条')
 
+def apply_render_quality(reg, payload):
+    """Day 49: 从 render_quality_{ts}.json 写入 reg['render_quality'] 顶层 key.
+
+    Schema (顶层新增):
+      render_quality: {slug: {last_ts, last_check_at, errors: [str], warnings: [str], rule_counts}}
+    """
+    if 'render_quality' not in reg:
+        reg['render_quality'] = {}
+    rq = reg['render_quality']
+    ts = payload.get('ts')
+    last_check_at = datetime.datetime.fromtimestamp(ts, tz=datetime.timezone.utc).isoformat() if ts else datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
+    for r in payload.get('results', []):
+        slug = r.get('slug')
+        if not slug or slug.startswith('rq_'):
+            # 跳过 fixture-only slug (以 rq_ 开头)
+            continue
+        rq[slug] = {
+            'last_ts': ts,
+            'last_check_at': last_check_at,
+            'errors': [e.get('rule', '?') for e in r.get('errors', [])],
+            'warnings': [w.get('rule', '?') for w in r.get('warnings', [])],
+            'rule_counts': r.get('rule_counts', {}),
+            'error_count': len(r.get('errors', [])),
+            'warning_count': len(r.get('warnings', [])),
+        }
+
+
+def cmd_from_render_quality(path):
+    """Day 49: 从 render_quality_{ts}.json 同步到 registry"""
+    reg = load_registry()
+    payload = json.load(open(path))
+    apply_render_quality(reg, payload)
+    save_registry(reg)
+    print(f"✅ render_quality 同步 {len(payload.get('results', []))} 条进 registry")
+
+
 def cmd_stats():
     reg = load_registry()
     print('=== audit_registry.json 当前状态 ===')
@@ -236,6 +288,7 @@ def main():
     p.add_argument('--from-file', help='从单个 content_audit_{ts}.json 登记')
     p.add_argument('--from-dir', help='从目录批量登记')
     p.add_argument('--from-stdin', action='store_true', help='从 stdin 读 JSON')
+    p.add_argument('--from-render-quality', help='Day 49: 从 render_quality_{ts}.json 同步')
     p.add_argument('--stats', action='store_true', help='看当前状态')
     args = p.parse_args()
 
@@ -247,6 +300,8 @@ def main():
         cmd_from_dir(args.from_dir)
     elif args.from_stdin:
         cmd_from_stdin()
+    elif args.from_render_quality:
+        cmd_from_render_quality(args.from_render_quality)
     elif args.stats:
         cmd_stats()
     else:
