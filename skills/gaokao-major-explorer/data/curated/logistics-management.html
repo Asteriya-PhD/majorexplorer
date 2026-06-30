@@ -16,7 +16,7 @@
 <title>物流管理专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="物流管理是管理学下「供应链+仓储+运输+信息系统+国际货代」五栖交叉的应用型本科, 2024 中国物流总费用 18.6 万亿 + 跨境电商 + 智慧物流持续上行, 京东/顺丰/菜鸟 5 年 25-40">
 <style>
-@import url('https://fonts.loli.net/css2?family=IBM+Plex+Serif:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
   /* 响应式 token (Day 1 responsive overhaul 2026-06-19) */
@@ -222,19 +222,14 @@ footer .data-source { font-size: 0.75rem; opacity: 0.5; max-width: 600px; }
 
 
 
-body { background: #FAFAF6; color: #1A2438; font-family: 'IBM Plex Serif', 'Noto Serif SC', serif; }
-/* 招 #5: 公文纸底纹 + 政府蓝 radial 暗示红头 */
+body { background: #F5F2EA; color: #1A1F2E; font-family: 'Source Sans 3', 'PingFang SC', sans-serif; }
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse 700px 400px at 50% 0%, rgba(30, 58, 95, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 500px 300px at 80% 100%, rgba(192, 57, 43, 0.04) 0%, transparent 60%);
+  background-image:
+    linear-gradient(rgba(27, 58, 92, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 58, 92, 0.06) 1px, transparent 1px);
+  background-size: 64px 64px, 64px 64px;
 }
-body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
-  background:
-    repeating-linear-gradient(0deg, rgba(26, 36, 56, 0.012) 0px, transparent 1px, transparent 3px),
-    url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.30 0 0 0 0 0.18 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
-  opacity: 0.5;
-}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.22 0 0 0 0 0.36 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>"); opacity: 0.04; }
 
 
 /* === 速览 v2 — 3 子卡堆叠 === */
@@ -489,135 +484,286 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 }
 
 
-/* ── 招 #5: 国发文件红头 + 公文纸主体 ── */
-.hero { padding: 0; background: transparent; position: relative; z-index: 2; overflow: hidden; }
-.gov-red-header { background: #1E3A5F; border-bottom: 3px double #D4AF37; padding: 14px 40px; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #FAFAF6; letter-spacing: 0.15em; text-transform: uppercase; position: relative; z-index: 2; }
-.gov-red-header strong { font-family: 'IBM Plex Serif', serif; font-size: 0.875rem; font-weight: 700; color: #FAFAF6; letter-spacing: 0.2em; }
-.gov-red-header .doc-num { color: #D4AF37; }
-.gov-redline { height: 4px; background: linear-gradient(90deg, #C0392B 0%, #C0392B 40%, #D4AF37 40%, #D4AF37 60%, #C0392B 60%, #C0392B 100%); }
-.gov-paper { position: relative; padding: 56px 64px 64px; background: #FAFAF6; max-width: 1080px; margin: 0 auto; box-shadow: 0 4px 24px rgba(30, 58, 95, 0.08); }
-.gov-paper::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(0deg, rgba(26, 36, 56, 0.02) 0px, transparent 1px, transparent 3px); }
-.gov-paper::after { content: ""; position: absolute; top: 16px; right: 16px; bottom: 16px; left: 16px; border: 1px solid rgba(30, 58, 95, 0.1); pointer-events: none; }
-.gov-doc-title { font-family: 'Noto Serif SC', 'IBM Plex Serif', serif; font-size: clamp(1.875rem, 3.5vw, 2.5rem); font-weight: 900; color: #C0392B; text-align: center; letter-spacing: 0.4em; margin: 8px 0 8px; position: relative; }
-.gov-doc-no { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: #1E3A5F; letter-spacing: 0.2em; margin-bottom: 32px; position: relative; }
-.gov-doc-no::before, .gov-doc-no::after { content: "〔"; color: #1E3A5F; }
-.gov-doc-no::after { content: "〕"; }
-.gov-doc-line { width: 60%; height: 1px; background: linear-gradient(90deg, transparent, #C0392B, transparent); margin: 12px auto; opacity: 0.6; position: relative; }
-.gov-stamp { position: absolute; top: 32px; right: 32px; width: 96px; height: 96px; border: 2px solid #C0392B; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Noto Serif SC', serif; font-size: 0.625rem; font-weight: 700; color: #C0392B; text-align: center; line-height: 1.3; transform: rotate(-8deg); opacity: 0.85; z-index: 3; }
-.gov-stamp::before { content: "★"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.25rem; color: #C0392B; opacity: 0.3; }
-.gov-stamp-text { position: relative; z-index: 1; }
-.gov-seal-strip { position: absolute; top: 50%; right: -8px; transform: translateY(-50%); background: #C0392B; color: #FAFAF6; padding: 6px 10px; font-family: 'Noto Serif SC', serif; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.2em; writing-mode: vertical-rl; z-index: 3; }
-.gov-h1 { font-family: 'Noto Serif SC', 'IBM Plex Serif', serif; font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 900; color: #1A2438; text-align: center; line-height: 1.2; margin: 24px 0 16px; letter-spacing: 0.06em; position: relative; }
-.gov-tagline { font-family: 'IBM Plex Serif', 'Noto Serif SC', serif; font-size: 1.0625rem; color: #1A2438; text-align: center; margin: 0 auto 32px; max-width: 720px; line-height: 1.7; position: relative; }
-.gov-tagline::before { content: "— "; color: #C0392B; }
-.gov-tagline::after { content: " —"; color: #C0392B; }
-.gov-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 40px; position: relative; }
-.gov-tag { padding: 6px 14px; background: transparent; border: 1px solid #1E3A5F; font-family: 'Noto Serif SC', serif; font-size: 0.875rem; color: #1E3A5F; letter-spacing: 0.05em; }
-.gov-tag.primary { background: #1E3A5F; color: #FAFAF6; font-weight: 700; }
-.gov-stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #1E3A5F; border-bottom: 1px solid #1E3A5F; max-width: 880px; margin: 0 auto; position: relative; }
-.gov-stats .stat { padding: 20px 16px; border-right: 1px solid #C5C5B5; background: rgba(30, 58, 95, 0.02); position: relative; }
-.gov-stats .stat:last-child { border-right: none; }
-.gov-stats .stat::before { content: "〔" attr(data-num) "〕"; position: absolute; top: 6px; right: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 0.5625rem; color: #C0392B; }
-.gov-stats .stat-label { font-family: 'IBM Plex Serif', serif; font-size: 0.6875rem; color: #5A6A7A; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
-.gov-stats .stat-value { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 700; color: #1A2438; margin-top: 4px; }
-.gov-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 16px; border-top: 1px dashed #C5C5B5; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; color: #5A6A7A; letter-spacing: 0.1em; }
-section.tab { border-top: 1px solid #C5C5B5; border-bottom: 1px solid #C5C5B5; }
+.hero { padding: 0; background: transparent; border-bottom: 1px solid #FDBA74; position: relative; z-index: 2; overflow: hidden; }
+/* ── 教科书「打开的书」跨页布局 ── */
+.book-frame {
+  max-width: 1280px; margin: 0 auto; padding: 56px 32px 72px;
+  display: grid;
+  grid-template-columns: 52px 1fr 1fr;
+  gap: 0;
+  position: relative;
+  min-height: 600px;
+}
+/* 中央装订线阴影 — 让两页有「向内凹」的立体感 */
+.book-frame::before {
+  content: ""; position: absolute; left: calc(50% + 26px); top: 56px; bottom: 72px;
+  width: 36px; transform: translateX(-50%);
+  background: linear-gradient(90deg,
+    rgba(154, 52, 18, 0.10) 0%,
+    rgba(154, 52, 18, 0.18) 50%,
+    rgba(154, 52, 18, 0.10) 100%);
+  pointer-events: none; z-index: 1;
+}
+/* 书脊 */
+.book-spine {
+  background: linear-gradient(90deg, #FB923C 0%, #FDBA74 60%, rgba(253, 186, 116, 0.4) 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; border-right: 1px solid #C2410C;
+  box-shadow: 1px 0 0 rgba(154, 52, 18, 0.2), 2px 0 6px rgba(154, 52, 18, 0.12);
+}
+.book-spine-text {
+  font-family: 'Playfair Display', serif; font-size: 0.9375rem; color: #FFFBEB;
+  writing-mode: vertical-rl; letter-spacing: 0.28em; font-weight: 600;
+  text-shadow: 0 1px 0 rgba(154, 52, 18, 0.6);
+}
+.book-spine-text span { display: block; margin: 12px 0; }
+.book-spine-text .yr { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.75rem; opacity: 0.85; letter-spacing: 0.2em; }
+/* 左页 verso —— 章节扉言 */
+.book-verso {
+  padding: 32px 56px 32px 64px;
+  background: linear-gradient(90deg, #FEF3E2 0%, #FFFBEB 100%);
+  border-right: 1px solid rgba(253, 186, 116, 0.5);
+  position: relative;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.book-verso::after {  /* 内侧翻页阴影 */
+  content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 40px;
+  background: linear-gradient(90deg, transparent, rgba(154, 52, 18, 0.08));
+  pointer-events: none;
+}
+.chapter-marker {
+  display: inline-block; font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.875rem; color: #9A3412; letter-spacing: 0.18em;
+  margin-bottom: 28px; padding-bottom: 8px; border-bottom: 1px solid #FDBA74;
+}
+.chapter-marker::before { content: "❀ "; }
+.book-quote {
+  font-family: 'Caveat', cursive; font-size: 1.5rem; color: #57534E;
+  line-height: 1.55; margin: 24px 0; padding-left: 18px;
+  border-left: 2px solid #F59E0B;
+}
+.book-quote::before { content: "「"; color: #F59E0B; margin-right: 4px; }
+.book-quote::after  { content: "」"; color: #F59E0B; margin-left: 4px; }
+.book-quote-sig {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.875rem; color: #78716C; margin-top: 8px; padding-left: 18px;
+}
+.verso-footer {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding-top: 24px; border-top: 1px dashed #FDBA74;
+}
+.book-publisher {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.8125rem; color: #78716C; line-height: 1.6;
+}
+.book-publisher strong { color: #9A3412; font-style: normal;
+  font-family: 'Playfair Display', serif; }
+.book-page-num {
+  font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.5rem;
+  color: #C2410C; letter-spacing: 0.05em;
+}
+/* 右页 recto —— 主标题 + tagline + stats */
+.book-recto {
+  padding: 32px 56px 32px 64px;
+  background: linear-gradient(-90deg, #FEF3E2 0%, #FFFBEB 100%);
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.book-recto::before {  /* 内侧翻页阴影 */
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 40px;
+  background: linear-gradient(-90deg, transparent, rgba(154, 52, 18, 0.08));
+  pointer-events: none;
+}
+.recto-corner {
+  font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.75rem;
+  color: #9A3412; letter-spacing: 0.18em; text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.25rem, 4.2vw, 3.5rem);
+  font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;
+  color: #1C1917; margin: 0 0 12px;
+}
+.hero h1::after { content: ""; display: block; width: 56px; height: 2px; background: #9A3412; margin: 18px 0; opacity: 0.6; }
+.hero-tagline {
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.0625rem;
+  color: #57534E; margin: 0 0 24px; line-height: 1.7;
+}
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+.tag { padding: 5px 14px; background: transparent; border: 1px solid #FDBA74;
+  font-family: 'Cormorant Garamond', serif; font-size: 0.8125rem;
+  color: #1C1917; letter-spacing: 0.04em; }
+.tag.primary { background: rgba(154, 52, 18, 0.08); border-color: #9A3412; color: #9A3412; }
+/* hero-stats —— 2×2 grid, 给长内容 (学制·学位 4Y · 教育学/文学/理学学士) 留足空间 */
+.hero-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  border: 1px solid #FDBA74; margin-top: auto;
+}
+.stat { padding: 18px 20px; border-right: 1px solid #FDBA74; border-bottom: 1px solid #FDBA74; min-width: 0; overflow: hidden; }
+.stat:nth-child(2n) { border-right: none; }
+.stat:nth-last-child(-n+2) { border-bottom: none; }
+.stat-label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.6875rem;
+  color: #78716C; text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500; }
+/* 重要: 覆盖 base nowrap, 允许 stat-value 在 grid cell 内 wrap */
+.book-recto .stat-value { font-family: 'Playfair Display', serif; font-size: 1.0625rem; font-weight: 600;
+  color: #9A3412; margin-top: 4px; line-height: 1.4;
+  white-space: normal !important; word-break: break-word; overflow-wrap: anywhere; }
+/* 移动: 单列, 隐藏书脊 */
+@media (max-width: 900px) {
+  .book-frame { grid-template-columns: 1fr; gap: 16px; padding: 32px 20px 48px; min-height: 0; }
+  .book-frame::before { display: none; }
+  .book-spine { display: none; }
+  .book-verso, .book-recto { padding: 24px 16px; border-right: none; background: #FFFBEB; }
+  .book-verso::after, .book-recto::before { display: none; }
+  .hero-stats { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+}
+
+section.tab { border-top: 1px solid #F59E0B; border-bottom: 2px solid #F59E0B; }
 section.tab:first-of-type { border-top: none; }
-section.tab:last-of-type { border-bottom: none; }
-.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.bento-item { padding: 28px 24px 24px; background: #FFFFFF; border: 1px solid #C5C5B5; position: relative; transition: border-color 250ms, transform 250ms; }
-.bento-item::before { content: "■"; position: absolute; top: 20px; right: 20px; color: #1E3A5F; font-size: 0.75rem; opacity: 0.5; }
+.bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: #F97316; border: 1px solid #F97316; margin-top: 32px; position: relative; z-index: 1; }
+.bento { position: relative; }
+
 .bento-item:nth-child(3) { position: relative; }
-.bento-item:nth-child(3)::before, .bento-item:nth-child(6)::before, .bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #1E3A5F; z-index: 1; pointer-events: none; }
-.bento-item:hover { border-color: #1E3A5F; transform: translateY(-2px); }
-.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #1E3A5F; color: #FAFAF6; font-family: 'IBM Plex Serif', serif; font-size: 1.0625rem; font-weight: 700; }
-.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #1E3A5F; border: 1px solid #1E3A5F; font-family: 'IBM Plex Serif', serif; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 12px; }
-.bento-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 700; margin-bottom: 4px; color: #1A2438; padding-right: 80px; text-wrap: balance; line-height: 1.35; }
-.bento-tag { font-family: 'IBM Plex Serif', serif; font-size: 0.8125rem; color: #5A6A7A; line-height: 1.5; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(34, 197, 94, 0.85); z-index: 1; pointer-events: none; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(161, 98, 7, 0.85); z-index: 1; pointer-events: none; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(120, 53, 15, 0.85); z-index: 1; pointer-events: none; }
+.bento-item:nth-child(3) { position: relative; }
+.bento-item:nth-child(3)::before,
+.bento-item:nth-child(6)::before,
+.bento-item:nth-child(9)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(249, 115, 22, 0.85); z-index: 1; pointer-events: none; }
+.bento-item { padding: 32px 24px 24px; background: #FFFBEB; position: relative; transition: background 250ms; }
+.bento-item::before { content: "❀"; position: absolute; top: 20px; right: 20px; color: #F59E0B; font-size: 0.875rem; opacity: 0.4; }
+.bento-item:hover { background: #FFF7ED; }
+.bento-monogram { position: absolute; top: 20px; right: 50px; width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #9A3412; color: #FFFBEB; font-family: 'Playfair Display', serif; font-size: 1.0625rem; font-weight: 500; }
+.bento-rank { display: inline-block; padding: 3px 9px; background: transparent; color: #9A3412; border: 1px solid #9A3412; font-family: 'Cormorant Garamond', serif; font-variant: small-caps; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; margin-bottom: 12px; }
+.bento-name { font-family: 'Playfair Display', serif; font-size: 1.1875rem; font-weight: 500; margin-bottom: 4px; color: #1C1917; padding-right: 80px; text-wrap: balance; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.bento-tag { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #57534E; line-height: 1.5; }
+
 .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); grid-auto-rows: 1fr; gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.company { padding: 24px 22px 20px; background: #FFFFFF; border: 1px solid #C5C5B5; position: relative; transition: border-color 250ms, transform 250ms; }
-.company:hover { border-color: #1E3A5F; transform: translateY(-2px); }
-.company-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.company-monogram { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #1E3A5F; color: #FAFAF6; font-family: 'IBM Plex Serif', serif; font-size: 1rem; font-weight: 700; }
-.company-tier { padding: 2px 8px; border: 1px solid #1E3A5F; color: #1E3A5F; font-family: 'IBM Plex Serif', serif; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-.tier-S { background: #1E3A5F; color: #FAFAF6; }
+.company { padding: 28px 24px 22px; background: #FFFBEB; border: 1px solid #FDBA74; position: relative; transition: border-color 250ms, transform 250ms; }
+.company:hover { border-color: #9A3412; transform: translateY(-2px); }
+.company-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.company-monogram { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #9A3412; color: #FFFBEB; font-family: 'Playfair Display', serif; font-size: 1.0625rem; font-weight: 500; }
+.company-tier { padding: 2px 8px; border: 1px solid #9A3412; color: #9A3412; font-family: 'Cormorant Garamond', serif; font-variant: small-caps; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; }
+.tier-S { background: #9A3412; color: #FFFBEB; }
 .tier-A { background: transparent; }
-.tier-B { background: transparent; color: #5A6A7A; border-color: #C5C5B5; }
-.company-name { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; font-weight: 700; margin-bottom: 8px; color: #1A2438; }
-.company-meta { font-family: 'IBM Plex Serif', serif; font-size: 0.8125rem; color: #5A6A7A; line-height: 1.5; margin-bottom: 8px; }
-.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #E5E5DC; }
-.sparkline-bar { flex: 1; background: #C5C5B5; min-height: 2px; transition: background 250ms; }
-.company:hover .sparkline-bar { background: #1E3A5F; opacity: 0.8; }
-.sparkline-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; color: #5A6A7A; letter-spacing: 0.1em; margin-top: 4px; }
-.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFFFF; border: 1px solid #C5C5B5; position: relative; z-index: 1; }
-.salary-table th, .salary-table td { padding: 18px 24px; text-align: left; border-bottom: 1px solid #E5E5DC; font-size: 0.875rem; }
+.tier-B { background: transparent; color: #78716C; border-color: #FDBA74; }
+.company-name { font-family: 'Playfair Display', serif; font-size: 1.1875rem; font-weight: 500; margin-bottom: 10px; color: #1C1917; }
+.company-meta { font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: #57534E; line-height: 1.5; margin-bottom: 12px; }
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 24px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #FDBA74; }
+.sparkline-bar { flex: 1; background: #FDBA74; min-height: 2px; transition: background 250ms; }
+.company:hover .sparkline-bar { background: #9A3412; opacity: 0.7; }
+.sparkline-label { font-family: 'Inter', sans-serif; font-size: 0.6875rem; color: #78716C; letter-spacing: 0.05em; margin-top: 6px; }
+
+.salary-table { width: 100%; border-collapse: collapse; margin-top: 32px; background: #FFFBEB; border: 1px solid #FDBA74; position: relative; z-index: 1; }
+.salary-table th, .salary-table td { padding: 20px 24px; text-align: left; border-bottom: 1px solid #FDBA74; font-size: 0.9375rem; }
 .salary-table tr:last-child td { border-bottom: none; }
-.salary-table th { background: rgba(30, 58, 95, 0.04); font-family: 'IBM Plex Serif', serif; font-weight: 700; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.12em; color: #1E3A5F; }
-.salary-stage { font-family: 'Noto Serif SC', serif; font-weight: 700; color: #1A2438; }
-.salary-bar { display: inline-block; width: 80px; height: 6px; background: #E5E5DC; margin-left: 8px; vertical-align: middle; overflow: hidden; }
-.salary-bar-fill { display: block; height: 100%; background: #1E3A5F; }
-.yoy { display: inline-block; font-family: 'IBM Plex Serif', serif; font-size: 0.75rem; font-weight: 600; margin-left: 12px; padding: 2px 6px; }
-.yoy.up   { color: #1E3A5F; }
-.yoy.down { color: #C0392B; }
-.yoy.flat { color: #5A6A7A; }
-.approx { font-family: 'IBM Plex Mono', monospace; color: #5A6A7A; margin-right: 4px; }
+.salary-table th { background: rgba(254, 215, 170, 0.3); font-family: 'Playfair Display', serif; font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: #57534E; }
+.salary-stage { font-family: 'Playfair Display', serif; font-weight: 500; color: #1C1917; font-size: 1.0625rem; }
+.salary-bar { display: inline-block; width: 80px; height: 4px; background: #FED7AA; margin-left: 12px; vertical-align: middle; overflow: hidden; }
+.salary-bar-fill { display: block; height: 100%; background: #9A3412; }
+.yoy { display: inline-block; font-family: 'Playfair Display', serif; font-size: 0.8125rem; font-weight: 500; margin-left: 12px; padding: 2px 8px; }
+.yoy.up   { color: #15803D; }
+.yoy.down { color: #B91C1C; }
+.yoy.flat { color: #78716C; }
+.approx { font-family: 'Playfair Display', serif; color: #F59E0B; margin-right: 4px; }
+
 .direction-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E5E5DC; }
+.direction { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #FDBA74; }
 .direction:last-child { border-bottom: none; }
-.direction-name { font-family: 'Noto Serif SC', serif; font-weight: 600; font-size: 0.9375rem; color: #1A2438; }
-.direction-bar { height: 8px; background: #E5E5DC; overflow: hidden; }
-.direction-bar-fill { height: 100%; background: #1E3A5F; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.direction-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 700; text-align: right; font-size: 0.9375rem; color: #1A2438; }
+.direction-name { font-family: 'Playfair Display', serif; font-size: 1.0625rem; color: #1C1917; }
+.direction-bar { height: 6px; background: #FED7AA; overflow: hidden; }
+.direction-bar-fill { height: 100%; background: #9A3412; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.direction-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
+
 .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.path-card { padding: 32px 24px; background: #FFFFFF; border: 1px solid #C5C5B5; text-align: center; transition: border-color 250ms, transform 250ms; }
-.path-card:hover { border-color: #1E3A5F; transform: translateY(-2px); }
-.path-pct { font-family: 'Noto Serif SC', serif; font-size: 2.5rem; font-weight: 700; color: #1E3A5F; margin-bottom: 4px; letter-spacing: -0.02em; line-height: 1; }
-.path-name { font-family: 'Noto Serif SC', serif; color: #5A6A7A; font-size: 0.8125rem; margin-top: 8px; }
+.path-card { padding: 32px 24px; background: #FFFBEB; border: 1px solid #FDBA74; text-align: center; transition: border-color 250ms, transform 250ms; }
+.path-card:hover { border-color: #9A3412; transform: translateY(-2px); }
+.path-pct { font-family: 'Playfair Display', serif; font-size: 2.75rem; font-weight: 500; color: #9A3412; margin-bottom: 4px; line-height: 1; }
+.path-name { font-family: 'Inter', sans-serif; color: #57534E; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+
 .path-name { word-break: break-word; line-height: 1.4; hyphens: auto; }
+
 .quotes { margin-top: 32px; position: relative; z-index: 1; }
-.quote { padding: 28px 32px 24px; background: #FFFFFF; border: 1px solid #C5C5B5; border-left: 3px solid #1E3A5F; margin-bottom: 16px; transition: border-left-width 250ms, transform 250ms; }
-.quote:hover { border-left-width: 8px; transform: translateX(4px); }
-.quote-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.quote-avatar { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #1E3A5F; color: #FAFAF6; font-family: 'IBM Plex Serif', serif; font-size: 1rem; font-weight: 700; }
-.quote-byline strong { display: block; font-family: 'Noto Serif SC', serif; font-weight: 700; color: #1A2438; font-size: 0.875rem; }
-.quote-byline .quote-source { font-family: 'IBM Plex Serif', serif; color: #5A6A7A; font-size: 0.75rem; }
-.quote-text { font-family: 'Noto Serif SC', serif; font-size: 1.0625rem; line-height: 1.7; color: #1A2438; }
-.quote-text::before { content: "「"; color: #C0392B; }
-.quote-text::after { content: "」"; color: #C0392B; }
+.quote { padding: 32px 36px; background: #FFFBEB; border: 1px solid #FDBA74; border-left: 4px solid #F59E0B; margin-bottom: 20px; transition: border-left-width 250ms, transform 250ms, box-shadow 250ms; position: relative; }
+.quote:hover { border-left-width: 12px; transform: translateX(4px); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15); }
+.quote-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.quote-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #9A3412; color: #FFFBEB; font-family: 'Playfair Display', serif; font-size: 1.125rem; font-weight: 500; }
+.quote-byline strong { display: block; font-family: 'Playfair Display', serif; font-weight: 500; color: #1C1917; font-size: 1rem; }
+.quote-byline .quote-source { font-family: 'Inter', sans-serif; color: #78716C; font-size: 0.75rem; }
+.quote-text { font-family: 'Caveat', cursive; font-size: 1.625rem; line-height: 1.55; color: #1C1917; font-weight: 500; }
+.quote-text::before { content: "“"; color: #F59E0B; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-right: 4px; }
+.quote-text::after { content: "”"; color: #F59E0B; font-size: 1.4em; line-height: 0; vertical-align: -0.2em; margin-left: 4px; }
+
 .xuanke-list { margin-top: 32px; max-width: 720px; position: relative; z-index: 1; }
-.xuanke { display: grid; grid-template-columns: 200px 1fr 80px; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E5E5DC; }
+.xuanke { display: grid; grid-template-columns: 220px 1fr 80px; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid #FDBA74; }
 .xuanke:last-child { border-bottom: none; }
-.xuanke-name { font-family: 'Noto Serif SC', serif; font-weight: 600; font-size: 0.9375rem; color: #1A2438; }
-.xuanke-bar { height: 8px; background: #E5E5DC; overflow: hidden; }
-.xuanke-bar-fill { height: 100%; background: #1E3A5F; }
-.xuanke-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 700; text-align: right; font-size: 0.9375rem; color: #1E3A5F; }
-.curriculum-lede { color: #5A6A7A; font-size: 0.9375rem; margin: 0 0 32px; max-width: 720px; }
+.xuanke-name { font-family: 'Playfair Display', serif; font-size: 1.0625rem; color: #1C1917; }
+.xuanke-bar { height: 6px; background: #FED7AA; overflow: hidden; }
+.xuanke-bar-fill { height: 100%; background: #9A3412; }
+.xuanke-pct { font-family: 'Playfair Display', serif; font-weight: 500; text-align: right; font-size: 1.0625rem; color: #1C1917; }
+
+.curriculum-lede { font-family: 'Playfair Display', serif; color: #57534E; font-size: 1.0625rem; margin: 0 0 32px; max-width: 720px; }
 .curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 32px; position: relative; z-index: 1; }
-.curriculum-block { padding: 28px 24px; background: #FFFFFF; border: 1px solid #C5C5B5; transition: border-color 250ms, transform 250ms; }
-.curriculum-block:hover { border-color: #1E3A5F; transform: translateY(-2px); }
-.curriculum-title { font-family: 'Noto Serif SC', serif; font-size: 0.6875rem; color: #1E3A5F; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #C5C5B5; }
+.curriculum-block { padding: 32px 28px; background: #FFFBEB; border: 1px solid #FDBA74; transition: border-color 250ms, transform 250ms; }
+.curriculum-block:hover { border-color: #9A3412; transform: translateY(-2px); }
+.curriculum-title { font-family: 'Playfair Display', serif; font-size: 1.0625rem; color: #9A3412; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #FDBA74; font-weight: 500; }
 .course { padding: 8px 0; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9375rem; }
-.course-name { color: #1A2438; font-weight: 500; font-family: 'Noto Serif SC', serif; }
-.course-credit { color: #5A6A7A; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; margin-left: 8px; }
-.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFFFF; border: 1px solid #1E3A5F; text-align: center; position: relative; }
-.cta-block::before { content: "〔 关联志愿 · 推荐填报 〕"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #FAFAF6; padding: 0 16px; color: #1E3A5F; font-size: 0.75rem; letter-spacing: 0.2em; font-family: 'IBM Plex Serif', serif; }
-.cta-block h3 { font-family: 'Noto Serif SC', serif; font-size: 1.75rem; margin-bottom: 12px; color: #1A2438; position: relative; z-index: 1; }
-.cta-block p { color: #5A6A7A; margin: 0 auto 28px; max-width: 560px; position: relative; z-index: 1; }
-.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 1; }
-.cta-input { padding: 14px 18px; background: #FAFAF6; border: 1px solid #C5C5B5; color: #1A2438; font-family: 'Noto Serif SC', serif; font-size: 1rem; width: 180px; outline: none; }
-.cta-input:focus { border-color: #1E3A5F; }
-.cta-button { padding: 14px 36px; background: #C0392B; color: #FAFAF6; font-family: 'Noto Serif SC', serif; font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.1em; }
-.cta-note { font-family: 'IBM Plex Serif', serif; font-size: 0.75rem; color: #5A6A7A; margin-top: 16px; position: relative; z-index: 1; }
-.watermark { color: #1E3A5F; opacity: 0.04; }
-.section-num { color: #C0392B; font-family: 'IBM Plex Serif', serif; }
-section.tab h2 { font-family: 'Noto Serif SC', serif; color: #1A2438; }
-section.tab p { color: #1A2438; }
-section.tab p.lede { color: #5A6A7A; }
-section.tab h3 { color: #1A2438; font-family: 'Noto Serif SC', serif; }
-footer { background: #FAFAF6; border-top: 1px solid #C5C5B5; }
-footer .label { color: #1E3A5F; font-family: 'IBM Plex Serif', serif; }
-footer .data-source { color: #5A6A7A; }
-.drop-cap::first-letter { font-family: 'Noto Serif SC', serif; font-size: 4em; font-weight: 900; line-height: 0.9; float: left; margin: 0.05em 0.12em 0 0; color: #C0392B; }
+.course-name { font-family: 'Inter', sans-serif; color: #1C1917; }
+.course-credit { font-family: 'Playfair Display', serif; color: #78716C; font-size: 0.8125rem; margin-left: 8px; }
+
+.cta-block { margin-top: 32px; padding: 64px 48px; background: #FFFBEB; border: 2px solid #9A3412; text-align: center; position: relative; }
+.cta-block::before { content: "❀  ❀  ❀"; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); background: #FFFBEB; padding: 0 16px; color: #F59E0B; font-size: 1.25rem; letter-spacing: 0.5em; }
+.cta-block::after { content: "❀  ❀  ❀"; position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); background: #FFFBEB; padding: 0 16px; color: #F59E0B; font-size: 1.25rem; letter-spacing: 0.5em; }
+.cta-block h3 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 500; margin-bottom: 16px; color: #1C1917; }
+.cta-block p { font-family: 'Cormorant Garamond', serif; color: #57534E; margin: 0 auto 32px; max-width: 560px; font-size: 1.0625rem; }
+.cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.cta-input { padding: 14px 18px; background: #FFFFFF; border: 1px solid #FDBA74; color: #1C1917; font-family: 'Inter', sans-serif; font-size: 1rem; width: 180px; outline: none; }
+.cta-input:focus { border-color: #9A3412; }
+.cta-button { padding: 14px 40px; background: #9A3412; color: #FFFBEB; font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 500; letter-spacing: 0.06em; transition: background 200ms; }
+.cta-button:hover { background: #C2410C; }
+.cta-note { font-family: 'Inter', sans-serif; color: #78716C; font-size: 0.75rem; margin-top: 20px; }
+
+.watermark { color: #9A3412; opacity: 0.04; }
+.section-num { font-family: 'Playfair Display', serif; color: #9A3412; }
+section.tab h2 { font-family: 'Playfair Display', serif; }
+section.tab p { color: #1C1917; }
+section.tab p.lede { color: #57534E; }
+section.tab h3 { color: #1C1917; }
+footer { background: #FFFBEB; border-top: 1px solid #FDBA74; }
+footer .label { color: #9A3412; }
+footer .data-source { color: #78716C; }
+
+.drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 4.5em; font-weight: 500; line-height: 0.85; float: left; margin: 0.05em 0.12em 0 0; color: #9A3412; }
+
+/* ── eng (工程图纸) mobile patch — 顶部 DWG 三列 docket 在 390px 严重拥挤 ──
+   inline style 用 grid-template-columns: auto 1fr auto; 通过属性选择器降到单列堆叠 */
+@media (max-width: 480px) {
+  header.hero > div[style*="grid-template-columns: auto 1fr auto"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+  }
+  header.hero > div[style*="grid-template-columns: auto 1fr auto"] > span {
+    border: none !important;
+    padding: 0 !important;
+    font-size: 0.65rem !important;
+    text-align: left !important;
+  }
+  /* sci 同主题 docket meta (顶部 4-cell 杂志页眉) — 在 480px 已经堆叠为 2-row, 字体保持 */
+}
 
 
 /* ─── Wishlist inject: 顶部 chip + 右下 FAB + 12 主题卡 ─── */
@@ -924,45 +1070,29 @@ footer .data-source { color: #5A6A7A; }
 }
 
 </style>
-
-  <!-- BEGIN_SEO_OG --><meta property="og:image" content="https://[PLACEHOLDER_DOMAIN]/assets/og-default.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="article"><meta property="og:site_name" content="Major Explorer">
 </head>
 <body>
 
 <header class="hero">
-  <div class="gov-red-header">
-    <span class="doc-num">MAJOR · 〔2026〕第 供应链管理 号</span>
-    <strong>Major Explorer 编辑部</strong>
-    <span class="doc-num">专题资料 · 编辑部内阅</span>
+  <div style="border-bottom: 2px solid #1B3A5C; display: grid; grid-template-columns: auto 1fr auto; align-items: center; padding: 12px 24px; font-family: 'Roboto Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: #1B3A5C; position: relative; z-index: 2;">
+    <span style="border-right: 1px solid rgba(27,58,92,0.4); padding-right: 16px;">DWG-LOGISTICS-MANAGEMENT-2026-003</span>
+    <span style="text-align: center; font-weight: 600; padding: 0 16px;">物流管理 · 课程总览</span>
+    <span style="border-left: 1px solid rgba(27,58,92,0.4); padding-left: 16px;"><span style="color: #FF6B35;">SCALE 1:1 · </span>A4 LANDSCAPE</span>
   </div>
-  <div class="gov-redline"></div>
-  <div class="container" style="padding: 0;">
-    <div class="gov-paper">
-      <div class="gov-stamp">
-        <span class="gov-stamp-text">升学<br/>研究组</span>
-      </div>
-      <div class="gov-seal-strip">归档 · 内部资料</div>
-      <div class="gov-doc-title">专业介绍</div>
-      <div class="gov-doc-no">专题号 ME〔2026〕第 供应链管理 号</div>
-      <div class="gov-doc-line"></div>
-      <h1 class="gov-h1">物流管理</h1><div class="chsi-rating-badge" title="数据来源: 阳光高考 / 用户实名评分"><span>阳光高考</span><span class="chsi-score">★ 4.1/5</span></div>
+  <div class="container" style="padding-top: 64px;">
+    <div class="hero-decor" style="color: #FF6B35;">▶ 物流管理 · 制造业基础</div>
+    <h1 class="display" style="font-family: 'Inter', sans-serif; color: #1A1F2E; font-weight: 800; letter-spacing: -0.03em;">物流管理</h1>
 <div class="discipline-breadcrumb"><a href="/?discipline=12#majors">管理学</a><span class="bc-sep">›</span><a href="/?discipline=12&sub=1206#majors">物流管理与工程类</a><span class="bc-sep">›</span><span class="bc-current">物流管理</span></div>
-      <p class="gov-tagline">物流管理是管理学下「供应链+仓储+运输+信息系统+国际货代」五栖交叉的应用型本科, 2024 中国物流总费用 18.6 万亿 + 跨境电商 + 智慧物流持续上行, 京东/顺丰/菜鸟 5 年 25-40 万, 制造业供应链 5 年 30-50</p>
-      <div class="gov-tags">
-        <span class="gov-tag primary">供应链管理</span><span class="gov-tag primary">智慧物流</span><span class="gov-tag primary">仓储与配送</span>
-        <span class="gov-tag">交通运输</span><span class="gov-tag">物流信息系统</span><span class="gov-tag">冷链物流</span><span class="gov-tag">国际物流</span><span class="gov-tag">快递与电商物流</span>
-      </div>
-      <div class="gov-stats">
-        <div class="stat" data-num="01"><div class="stat-label">学 科 门 类</div><div class="stat-value">物流管理与工程类</div></div>
-        <div class="stat" data-num="02"><div class="stat-label">学 制 · 学 位</div><div class="stat-value">4Y · 管理学学士</div></div>
-        <div class="stat" data-num="03"><div class="stat-label">难 度 评 定</div><div class="stat-value">★★★☆☆</div></div>
-        <div class="stat" data-num="04"><div class="stat-label">编 纂 修 订</div><div class="stat-value">2026-06</div></div>
-      </div>
-      <div class="gov-foot">
-        <span>编纂: Major Explorer 编辑部 · 升学研究组</span>
-        <span>成文日期: 2026-06</span>
-        <span>份号: 0026-ME-LOGIST</span>
-      </div>
+    <p class="hero-tagline" style="color: #5C6373; max-width: 720px;">物流管理是管理学下「供应链+仓储+运输+信息系统+国际货代」五栖交叉的应用型本科, 2024 中国物流总费用 18.6 万亿 + 跨境电商 + 智慧物流持续上行, 京东/顺丰/菜鸟 5 年 25-40 万, 制造业供应链 5 年 30-50 万. 但 70% 毕业生前 3 年在仓</p>
+    <div class="hero-tags">
+      <span class="tag primary">供应链管理</span><span class="tag primary">智慧物流</span><span class="tag primary">仓储与配送</span>
+      <span class="tag">交通运输</span><span class="tag">物流信息系统</span><span class="tag">冷链物流</span><span class="tag">国际物流</span><span class="tag">快递与电商物流</span>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-label">学科<div class="chsi-rating-cell" title="数据来源: 阳光高考 / 用户实名评分"><span class="chsi-label">阳光高考 · 用户满意度</span><span class="chsi-meta">5 分制</span><span class="chsi-score">★ 4.1/5</span></div></div><div class="stat-value">物流管理与工程类</div></div>
+      <div class="stat"><div class="stat-label">学制 · 学位</div><div class="stat-value">4Y · 管理学学士</div></div>
+      <div class="stat"><div class="stat-label">难度</div><div class="stat-value">★★★☆☆</div></div>
+      <div class="stat"><div class="stat-label">数据更新</div><div class="stat-value">2026-06</div></div>
     </div>
   </div>
 </header>
@@ -1044,54 +1174,63 @@ footer .data-source { color: #5A6A7A; }
           <span class="bento-rank">★★★★★ (A)</span>
           <div class="bento-name">对外经济贸易大学</div>
           <div class="bento-tag">211/双一流, 物流管理与工程 B+ (第四轮), 国际物流+跨境电商+国贸复合, 商务部输送主渠道</div>
+          <span class="bento-tier tier-211">211</span>
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">北</div>
           <span class="bento-rank">★★★★☆ (A-)</span>
           <div class="bento-name">北京交通大学</div>
           <div class="bento-tag">211/双一流, 交通运输工程 A+ (第四轮) + 物流管理与工程, 运输+物流系统+智慧物流特色, 交通部输送</div>
+          <span class="bento-tier tier-211">211</span>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">上</div>
           <span class="bento-rank">★★★★☆ (A-)</span>
           <div class="bento-name">上海海事大学</div>
           <div class="bento-tag">交通运输工程 B+ (第四轮), 国际航运+港口+集装箱+海事特色, 中远海运/上海港输送主渠道</div>
+          
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">中</div>
           <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">中南财经政法大学</div>
           <div class="bento-tag">211, 工商管理 B+ (第四轮), 供应链+电商物流+采购+物流金融复合, 财经类特色</div>
+          <span class="bento-tier tier-211">211</span>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">大</div>
           <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">大连海事大学</div>
           <div class="bento-tag">交通运输工程 B+ (第四轮), 海事+港口+航运特色, 大连港/中远海运输送</div>
+          
         </div>
         <div class="bento-item fade-up" data-delay="80">
           <div class="bento-monogram">长</div>
           <span class="bento-rank">★★★★☆ (B+)</span>
           <div class="bento-name">长安大学</div>
           <div class="bento-tag">211, 交通运输工程 B+ (第四轮), 公路运输+物流系统特色, 交通部公路院输送</div>
+          <span class="bento-tier tier-211">211</span>
         </div>
         <div class="bento-item fade-up" data-delay="160">
           <div class="bento-monogram">北</div>
           <span class="bento-rank">★★★☆☆ (B)</span>
           <div class="bento-name">北京物资学院</div>
           <div class="bento-tag">北京市属, 物流管理与工程 C+ (第四轮), 冷链+应急+物流园区特色, 京东物流/中粮输送</div>
+          
         </div>
         <div class="bento-item fade-up" data-delay="240">
           <div class="bento-monogram">西</div>
           <span class="bento-rank">★★★☆☆ (B)</span>
           <div class="bento-name">西南交通大学</div>
           <div class="bento-tag">211, 交通运输工程 A- (第四轮), 铁路运输+物流+峨眉校区特色, 中铁/中交建输送</div>
+          <span class="bento-tier tier-211">211</span>
         </div>
         <div class="bento-item fade-up" data-delay="0">
           <div class="bento-monogram">浙</div>
           <span class="bento-rank">★★★☆☆ (B)</span>
           <div class="bento-name">浙江工商大学</div>
           <div class="bento-tag">浙江省属, 物流管理特色, 电商物流+跨境物流+菜鸟/阿里物流输送</div>
+          
         </div>
     </div>
   </div>
@@ -1106,6 +1245,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">京</div>
             <span class="company-tier tier-A">A</span>
+            
           </div>
           <div class="company-name">京东物流 (JDL) / 京东物流供应链</div>
           <div class="company-meta">校招 200-500 人 · 校招 12-25 万/年</div>
@@ -1122,6 +1262,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">顺</div>
             <span class="company-tier tier-A">A</span>
+            
           </div>
           <div class="company-name">顺丰速运 / 顺丰科技 (智慧物流+无人机+无人车)</div>
           <div class="company-meta">校招 200-500 人 · 校招 12-25 万/年</div>
@@ -1138,6 +1279,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">菜</div>
             <span class="company-tier tier-A">A</span>
+            
           </div>
           <div class="company-name">菜鸟网络 / 阿里物流 (电商物流+智慧物流)</div>
           <div class="company-meta">校招 100-300 人 · 校招 15-30 万/年</div>
@@ -1154,6 +1296,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
+            
           </div>
           <div class="company-name">中远海运 / MSC / 马士基 / DHL / FedEx (国际货代+航运)</div>
           <div class="company-meta">校招 50-150 人 · 校招 10-22 万/年 + 海外</div>
@@ -1170,6 +1313,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">华</div>
             <span class="company-tier tier-A">A</span>
+            
           </div>
           <div class="company-name">华为/比亚迪/宁德时代/特斯拉 (制造业供应链)</div>
           <div class="company-meta">校招 200-500 人 · 校招 15-30 万/年</div>
@@ -1186,6 +1330,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">德</div>
             <span class="company-tier tier-B">B</span>
+            
           </div>
           <div class="company-name">德邦/中通/圆通/申通/韵达/百世 (快递物流)</div>
           <div class="company-meta">校招 200-500 人 · 校招 8-15 万/年</div>
@@ -1202,6 +1347,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">美</div>
             <span class="company-tier tier-A">A</span>
+            
           </div>
           <div class="company-name">美团配送/达达/闪送/顺丰同城 (即时配送)</div>
           <div class="company-meta">校招 50-150 人 · 校招 12-25 万/年</div>
@@ -1218,6 +1364,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">中</div>
             <span class="company-tier tier-A">A</span>
+            
           </div>
           <div class="company-name">中国外运/招商局物流/中海集运 (国资物流)</div>
           <div class="company-meta">校招 50-150 人 · 校招 12-22 万/年</div>
@@ -1234,6 +1381,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">上</div>
             <span class="company-tier tier-B">B</span>
+            
           </div>
           <div class="company-name">上港集团/宁波港/广州港/青岛港 (港口物流)</div>
           <div class="company-meta">校招 50-150 人 · 校招 12-22 万/年</div>
@@ -1250,6 +1398,7 @@ footer .data-source { color: #5A6A7A; }
           <div class="company-head">
             <div class="company-monogram">鲜</div>
             <span class="company-tier tier-B">B</span>
+            
           </div>
           <div class="company-name">鲜生活/九曳供应链/顺丰冷运/京东冷链 (冷链物流)</div>
           <div class="company-meta">校招 10-50 人 · 校招 10-20 万/年</div>
@@ -1301,9 +1450,9 @@ footer .data-source { color: #5A6A7A; }
         </tr>
         <tr>
           <td class="salary-stage">10年+ (供应链总监/物流合伙人/学院副教授)</td>
-          <td class="num"><span class="approx">≈</span><span data-count="50" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:33.33333333333333%"></span></span><span class="yoy up">↗ +6%</span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="90" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:60.0%"></span></span></td>
-          <td class="num"><span class="approx">≈</span><span data-count="150" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="20" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:36.36363636363637%"></span></span><span class="yoy up">↗ +6%</span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="35" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:63.63636363636363%"></span></span></td>
+          <td class="num"><span class="approx">≈</span><span data-count="55" data-float="0">0</span> 万<span class="salary-bar"><span class="salary-bar-fill" style="width:100.0%"></span></span></td>
         </tr>
       </tbody>
     </table>
@@ -1585,7 +1734,7 @@ footer .data-source { color: #5A6A7A; }
 (function () {
   "use strict";
   if (!window.WishlistStore || !window.UIHelpers) return;
-  var META = { slug: 'logistics-management', title: '物流管理', style: 'administration', category: '物流管理与工程类' };
+  var META = { slug: 'logistics-management', title: '物流管理', style: 'eng', category: '物流管理与工程类' };
 
   // 0) 12 主题卡上方的 chat 栏 — 让用户从一个专业页跳到另一个
   if (window.MajorSearch) {
