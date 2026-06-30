@@ -9,6 +9,29 @@
 > 2026-06-30 v1.6: 🛡️ **Day 56 双保险上线 + 双零 baseline 达成**. Pre-commit step 5 切硬阻塞 (单字符 `failed=1` 改动), 3 个 batch 工具 (fix_xuanke_field_name / fix_salary_note_placement / fix_salary_note_residual) 累计修 187 处违规, 0¥ 0 误改. **625/625 clean, 0 ERROR / 0 WARN** (历史首次双零). 详见「🛡️ Day 56 双保险」章节.
 > 2026-06-30 v1.7: 文档瘦身, 路径修 (老 `scripts/smart_audit.py` → `scripts/audit/smart_audit.py`), 数字 277 → 625, deploy_to_public.py 已知坑标记已删 (改用 deploy.sh), 项目名 gaokao-team-b → gaokao-hubei-mvp.
 
+## 📅 物理日期映射 (Day N → YYYYMMDD)
+
+> "Day N" 是历史 Claude 估算日期, 不代表真实物理时间. 本文档正文仍用 Day N 引用 (不改写历史表述), 遇 Day N 翻此表即查真实日期.
+
+| Day | 日期 | 备注 |
+|---|---|---|
+| Day 1 | 20260606 | 项目起点 (DECISIONS.md ADR-001) |
+| Day 3 | 20260617 | Team B 47 篇验证通过 |
+| Day 5-7 | 20260618 | Batch 1-4 + smoke fixtures |
+| Day 8-15 | 20260619-21 | polish 8/11/5/14/5/6 + irreducible-6/7 |
+| Day 17-18 | 20260623 | 23 篇 R2 + Tier 2 12 篇 |
+| Day 22-28 | 20260624-25 | polish 100% + xuanke schema + chip |
+| Day 31-32 | 20260627 | deploy.sh 7 步 + Cache 三层 |
+| Day 35-47 | 20260629 | mobile PWA / SEO / 校友脱敏 / polish 收尾 |
+| Day 47.5-47.11 | 20260630-a | 8 commit (P0/P1/P2 收尾) |
+| Day 48 | 20260630-b | 5 commit (Day 48 phase) |
+| Day 49 | 20260630-c | 11 commit (render_quality 100% clean baseline) |
+| Day 50-52 | 20260630-d | 3 commit (FIELD-3 / SAL-NOTE / FIELD-2 清理) |
+| Day 56 | 20260630-e | 4 commit (backfill 16 篇 + 3 batch tool + 切硬阻塞 + 双零) |
+| Day 57 | 20260630-f | 1 commit (smart_audit 大修) |
+
+**未来 commit 规则**: 必用 `YYYYMMDD [session]` 格式, 不用 Day N. 详见 `docs/COMMIT_CONVENTION.md`.
+
 ---
 
 ## 🛡️ Day 56 双保险架构 (v1.6 核心新增)

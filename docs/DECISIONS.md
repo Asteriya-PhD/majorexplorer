@@ -544,7 +544,7 @@ SCF 部署模板 (`scf/deploy.sh` + `scf/template.yaml`) 孤悬, 无线上实例
 **状态**: ✅ 锁定
 
 ### 上下文
-README.md 仍写 "70+ 个热门本科专业", 但 `public/data/manifest.json` 实际含 475 个 slug, `public/sitemap.xml` 含 485 URL, `public/` 有 499 PC HTML + 488 Mobile HTML。Day 3 Team B 47 篇 + Day 5-27 持续补缺 + LLM 合成, 专业数从 70+ 增长到 475。
+README.md 仍写 "70+ 个热门本科专业", 但 `public/data/manifest.json` 实际含 475 个 slug, `public/sitemap.xml` 含 485 URL, `public/` 有 499 PC HTML + 488 Mobile HTML。Day 3 (2026-06-17) Team B 47 篇 + Day 5-27 (2026-06-18-25) 持续补缺 + LLM 合成, 专业数从 70+ 增长到 475。
 
 项目结构图未提 `functions/` / `migrations/` / `.github/workflows/` (CF Pages + GH Action 架构), 仍提 `core/` (已删)。
 

@@ -3,6 +3,18 @@
 > Day 49 (2026-06-30) 上线, 13 条规则全为启发式 (0¥, <2s/625 篇).
 > 入口: `python3 scripts/audit/render_quality.py --all` / `--slug <slug>` / `--staged` / `--fixtures <dir>`.
 
+## 📅 物理日期映射 (Day N → YYYYMMDD)
+
+> "Day N" 是历史 Claude 估算日期. 遇 Day N 翻此表即查真实日期.
+
+| Day | 日期 | 备注 |
+|---|---|---|
+| Day 49 | 20260630-c | render_quality 100% clean baseline (11 commit) |
+| Day 50-52 | 20260630-d | 3 commit (FIELD-3 / SAL-NOTE / FIELD-2 清理) |
+| Day 56 | 20260630-e | 4 commit (backfill 16 篇 + 切硬阻塞 + 双零) |
+
+**未来 commit 规则**: 必用 `YYYYMMDD [session]` 格式, 不用 Day N. 详见 `docs/COMMIT_CONVENTION.md`.
+
 ---
 
 ## 规则清单

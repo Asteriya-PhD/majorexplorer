@@ -1,6 +1,18 @@
 # DEPLOYMENT.md — Major Explorer 海外直链部署方案 v2
 
 > **状态**: 方案已定型, 实施进行中
+
+## 📅 物理日期映射 (Day N → YYYYMMDD)
+
+> "Day N" 是历史 Claude 估算日期. 遇 Day N 翻此表即查真实日期.
+
+| Day | 日期 | 备注 |
+|---|---|---|
+| Day 31 | 20260627 | deploy.sh 7 步定型 |
+| Day 32 | 20260625 | Cache 三层陷阱 SOP (Day 32 教训) |
+| Day 35-47 | 20260629 | mobile PWA / SEO / 校友脱敏 |
+
+**未来 commit 规则**: 必用 `YYYYMMDD [session]` 格式, 不用 Day N. 详见 `docs/COMMIT_CONVENTION.md`.
 > **最后更新**: 2026-06-12
 > **对应 ADR**: ADR-011 (过期) → ADR-016/017/018/019
 > **对应 plan**: `/Users/zhewenliu/.claude/plans/gentle-stargazing-hartmanis.md` (这份是项目内 mirror)
