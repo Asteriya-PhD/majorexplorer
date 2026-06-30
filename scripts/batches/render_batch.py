@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "skills/gaokao-major-explorer/scripts"))
 from generate_dashboard import generate_dashboard  # noqa: E402
 
 CUR = ROOT / "skills/gaokao-major-explorer/data/curated"
+PUBLIC = ROOT / "public"
 
 
 def main():
@@ -42,7 +43,7 @@ def main():
     ok, fail = [], []
     for slug, style in pairs:
         jp = CUR / f"{slug}.json"
-        hp = CUR / f"{slug}.html"
+        hp = PUBLIC / f"{slug}.html"
         if not jp.exists():
             print(f"  ⏭️  {slug}: json 不存在, 跳过")
             continue
