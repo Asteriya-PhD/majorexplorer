@@ -6,7 +6,7 @@
 
 ## 这是什么
 
-湖北高考专业深度分析平台, **475 个热门本科专业**的精编 dashboard, 每个专业包含:
+湖北高考专业深度分析平台, **625 个热门本科专业**的精编 dashboard, 每个专业包含:
 - 📚 **学习内容** — 基础课 / 方向分流 / 核心技能
 - 👤 **适合人群** — 性格 / 兴趣 / 价值观匹配
 - ⚠️ **避坑指南** — 6-7 个常见误区 (基于校友真实反馈)
@@ -18,19 +18,20 @@
 
 1. **位次驱动, 不是分数驱动** — 2025 年 580 分和 2024 年 580 分能上的学校完全不同, 真正稳的标尺是全省位次
 2. **3+1+2 选科硬过滤** — 物化生 / 史地政 / 各种组合严格匹配
-3. **三级冲稳保概率** — Gaussian CDF 估录取概率, 不是简单的"位次段匹配"
-4. **96 志愿完整生成** — 不是示例 8 所, 是真能填的 96 个方案
-5. **按需生成** — 没收录的专业, LLM 临时合成 (mock 模式可本地运行)
+3. **智能推荐** — 客户端 JS 跑 (98 志愿) + 心愿单 + 软科/学科评估 综合排序
+4. **按需生成** — 没收录的专业, LLM 临时合成 (CF Pages Function + GH Action, mock 模式可本地运行)
+5. **完整院校/雇主数据** — 院校 6-10 所 + 雇主 6-10 家 (S/A/B tier), 校友真实反馈 3-5 条
 
 ## 项目特点
 
-- ✅ 475 个精品专业 dashboard, 13 个主题 (CS / 工程 / 医学 / 教育 / 商科 / 公安 / 农林 / 艺术 / 等)
+- ✅ 625 个精品专业 dashboard, 13 个 style (CS / 工程 / 医学 / 教育 / 商科 / 公安 / 农林 / 艺术 / 等)
 - ✅ 2024 + 2025 湖北真实投档表 + 一分一段表
-- ✅ LLM 按需生成 (SCF 后端, 可选)
+- ✅ LLM 按需生成 (CF Pages Function + GH Action, 可选)
 - ✅ 心愿单 + 智能推荐 + 搜专业
 - ✅ PC + Mobile 双轨 (H 阶段对齐: PC 反馈 + 搜索报告, 移动端 dock 5 tab)
 - ✅ Cloudflare Web Analytics 接入 (2026-06-12, Core Web Vitals 监控)
 - ✅ 反馈 + 未收录报告闭环 (G 阶段, GH Issue 自动归档)
+- ✅ 质量门双保险 (Day 56+, 预 commit 硬阻塞 + 全量 baseline 双零)
 - ✅ 纯公益, 不变现
 - ✅ License: **AGPL-3.0** (允许自用, 禁止商用)
 - ✅ 部署: Cloudflare Pages 海外, 国内优选 IP 30-100ms
@@ -41,16 +42,14 @@
 gaokao-hubei-mvp/                ← 项目根
 ├── public/                      ← 静态站 (Cloudflare Pages 部署目标)
 │   ├── index.html               ← 主页
-│   ├── {475 slug}.html          ← 精品专业 dashboard (PC)
+│   ├── {625 slug}.html          ← 精品专业 dashboard (PC)
 │   ├── m/majors/{slug}.html     ← 精品专业 dashboard (Mobile)
 │   ├── css/, js/, data/         ← 静态资源 (客户端纯 JS 跑推荐)
-│   ├── sitemap.xml              ← SEO (485 URL)
+│   ├── sitemap.xml              ← SEO (~640 URL)
 │   └── robots.txt               ← SEO
 ├── functions/                   ← Cloudflare Pages Functions (TypeScript)
 │   ├── _middleware.ts           ← 手机 UA → /m/ 自动跳转
 │   └── api/                     ← synth 入队 + status 查询 + report 反馈
-├── scf/synth/                   ← LLM 按需合成 pipeline (Python, GH Action 跑)
-├── migrations/                  ← D1 schema (synth_jobs 队列)
 ├── .github/workflows/           ← GH Action cron */1 跑 synth_queue_worker
 ├── data/                        ← 投档表 / 一分一段表 (canonical CSV)
 ├── scripts/                     ← 工具脚本 (build_sitemap / inject_* / smart_audit / synth_*)
@@ -58,6 +57,8 @@ gaokao-hubei-mvp/                ← 项目根
 ├── docs/                        ← 文档
 ├── deploy/                      ← 部署脚本 (Cloudflare Pages 指南 + 优选 IP)
 ├── wrangler.toml                ← CF Pages 配置 + D1 binding
+├── CLAUDE.md                    ← 项目指引 (项目入口)
+├── AGENTS.md                    ← AI agent 入口 (与 CLAUDE.md 同内容, 别名)
 ├── LICENSE                      ← AGPL-3.0 全文
 ├── TRADEMARK.md                 ← 商标政策
 └── README.md
@@ -82,11 +83,13 @@ python3 -m http.server 8000
 |------|------|--------|
 | **🌐 访问** | **https://majorexplorer.com** | **用户 (高三生 / 家长)** |
 | 部署方案 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | 想部署的人 |
-| 决策记录 | [docs/DECISIONS.md](docs/DECISIONS.md) | 维护者 (19 个 ADR) |
-| 进度状态 | [docs/PROGRESS.md](docs/PROGRESS.md) | PM / 任何角色 |
+| 决策记录 | [docs/DECISIONS.md](docs/DECISIONS.md) | 维护者 (21+ 个 ADR, 含 ADR-021 FastAPI 删除) |
 | 架构 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构师 / 资深工程师 |
 | 数据 | [docs/DATA.md](docs/DATA.md) | 数据工程师 |
-| AI agent 入口 | [docs/AGENTS.md](docs/AGENTS.md) | AI agent |
+| 质量流水线 v1.6 | [docs/PIPELINE_major_quality.md](docs/PIPELINE_major_quality.md) | 写/改/批量生成 major JSON 前必读 |
+| HTML 渲染质量门 13 规则 | [docs/RENDER_QUALITY_RULES.md](docs/RENDER_QUALITY_RULES.md) | 理解 render_quality.py 规则 |
+| 部署方案 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | 想部署的人 (含 Cache 4 层锁死 SOP) |
+| AI agent 入口 | [AGENTS.md](AGENTS.md) (项目根) | AI agent |
 | 部署操作 | [deploy/cloudflare-pages.md](deploy/cloudflare-pages.md) | 部署者 |
 | 商标政策 | [TRADEMARK.md](TRADEMARK.md) | 想用 MajorExplorer 名字的人 |
 
@@ -114,4 +117,4 @@ CDN + DNS: Cloudflare
 
 ---
 
-最后更新: 2026-06-16 · H 阶段 PC 对齐 + 反馈闭环 + CLS 优化 (ADR-020)
+最后更新: 2026-06-30 · Day 56 双保险 + 双零 baseline 完工 (625/625 clean)

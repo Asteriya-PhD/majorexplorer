@@ -7,6 +7,7 @@
 > 2026-06-19 v1.4: 新增 §"在线按需合成 SOP" (CF Pages Function + D1 + GH Action + 跨 provider fallback + rate limit + 失败死信上报), 用户搜未收录专业一键 🔄 实时生成. Session 1-2 实测成功, 端到端验证待 Session 3 Playwright.
 > 2026-06-30 v1.5: 新增 §"渲染后 HTML 质量门" (`scripts/audit/render_quality.py` 13 条规则, Layer 0, 0¥ <2s/625 篇). 历史 P0 痛点 (html-escape/jsonld-0-injection/salary-p25-gt-p75/38-alumni-placeholder) 全部规则化. Pre-commit warn-only 至 Day 55, Day 56+ 切 ERROR 阻塞.
 > 2026-06-30 v1.6: 🛡️ **Day 56 双保险上线 + 双零 baseline 达成**. Pre-commit step 5 切硬阻塞 (单字符 `failed=1` 改动), 3 个 batch 工具 (fix_xuanke_field_name / fix_salary_note_placement / fix_salary_note_residual) 累计修 187 处违规, 0¥ 0 误改. **625/625 clean, 0 ERROR / 0 WARN** (历史首次双零). 详见「🛡️ Day 56 双保险」章节.
+> 2026-06-30 v1.7: 文档瘦身, 路径修 (老 `scripts/smart_audit.py` → `scripts/audit/smart_audit.py`), 数字 277 → 625, deploy_to_public.py 已知坑标记已删 (改用 deploy.sh), 项目名 gaokao-team-b → gaokao-hubei-mvp.
 
 ---
 
@@ -100,7 +101,7 @@ python3 scripts/batch/fix_salary_note_residual.py [--dry-run]
 
 ## 🧠 智能审计路由器 (Smart Audit Router) — 批量 audit 必用
 
-**问题**: 老 `scripts/batches/content_audit.py` 全量 LLM 审计 277 篇 ~9.3h / ¥140, 不敢对全量 HTML 跑.
+**问题**: 老 `scripts/batches/content_audit.py` 全量 LLM 审计 ~300 篇 ~9.3h / ¥140 (Day 18 baseline), 不敢对全量 HTML 跑.
 
 **解法**: `scripts/audit/smart_audit.py` 用 2 层架构:
 
@@ -119,7 +120,7 @@ Layer 2 触发条件 (满足任一):
   5. 5% 随机抽样 (sanity check)
 ```
 
-**实测 (277 篇)**:
+**实测 (Day 18, 277 篇 baseline)**:
 | 模式 | Layer 1 | Layer 2 | 总耗时 | 成本 | 覆盖率 |
 |------|---------|---------|--------|------|--------|
 | 全量 + 全量 | 5-20m | 9.3h | 9.5h | ¥140 | 100% |
@@ -129,7 +130,7 @@ Layer 2 触发条件 (满足任一):
 **用法 (5 个常用场景)**:
 
 ```bash
-# 1. 全 277 篇智能路由 (默认推荐)
+# 1. 全量智能路由 (默认推荐, 当前 625 篇, ~30% 走 L2)
 python3 scripts/audit/smart_audit.py
 
 # 2. dry-run: 只列候选, 不真跑 m3
@@ -152,8 +153,8 @@ python3 scripts/audit/smart_audit.py --dry-run --json | jq '.candidates[:5]'
 
 **何时用 `smart_audit.py`**:
 - 任何 batch 操作 (10+ 篇)
-- 想知道"全量 277 篇里哪些真需要审"
-- 想做"全量 277 篇质量体检"
+- 想知道"全量 625 篇里哪些真需要审"
+- 想做"全量 625 篇质量体检"
 - 想知道"上次 audit 后哪些改过需重审"
 
 ---
@@ -362,7 +363,7 @@ ENTREPRENEUR_MAP = {
 **用 `smart_audit.py` (推荐, 2-3h / ¥40)**:
 ```bash
 source .env
-# 全 277 篇智能路由, 只审 30% (~80 篇)
+# 全量智能路由 (当前 625 篇, ~30% 走 L2 ~190 篇)
 python3 scripts/audit/smart_audit.py
 # 验证全部 ≥7, 修不合格篇
 # Push 到 origin
@@ -466,14 +467,14 @@ Fix 2 audit → 8.00/10 ✓
 
 ## 已知坑 (避免)
 
-1. **deploy_to_public.py** ROOT 写死 `gaokao-team-b`, 不能用于 gaokao-hubei-mvp. 用手动 re.sub 替换路径.
+1. ~~**deploy_to_public.py** ROOT 写死 `gaokao-hubei-mvp`~~ — 2026-06-22 后已删, 改用 `bash scripts/deploy.sh "<msg>"` 一键部署 (Cache 4 层锁死 SOP 详见 `docs/DEPLOYMENT.md` 末节). 早期文档还提 `re.sub` workaround 已废弃.
 2. **content_audit.py** slug 用 filename, 不用 JSON 内 slug.
 3. **m3 audit "字段截断" 是显示 bug**, 数据完整即可, 不要因此改动.
 4. **m3 audit 评分主观**, 同一篇可能 6/10 或 8/10 不稳定, 取多次 audit 平均.
 5. **CC Write 在某些 worktree 会被 revert**, 启动前用 bash echo 测试.
 6. **session merge 时有 working tree 残留** → stash 后再 merge.
 7. **C session 习惯性留 "自主创业/其他" 占位**, 合并后必清理.
-8. **script 路径在 `scripts/audit/` 子目录** (Day 56+ 验证), `scripts/` 根下没有 `smart_audit.py` / `render_quality.py` / `update_audit_registry.py`. 早期 CLAUDE.md 写的 `scripts/smart_audit.py` 错误, v1.6 修正.
+8. **script 路径在 `scripts/audit/` 子目录** (Day 56+ 验证), `scripts/` 根下没有 `smart_audit.py` / `render_quality.py` / `update_audit_registry.py`. 早期文档写的 `scripts/smart_audit.py` 错误, v1.6 修正.
 9. **batch 工具复用**: 后续发现新 WARN 类型 (e.g. 字段缺失/格式错误), 仿照 `scripts/batch/fix_xuanke_field_name.py` 模板: dry-run + 真跑 + 验证 + 1 commit. 3 个现有工具已示范 alias-rename / keyword-delete / migrate-append 3 种 pattern.
 
 ---
@@ -494,7 +495,7 @@ Fix 2 audit → 8.00/10 ✓
 
 ---
 
-**最后更新**: 2026-06-30, Day 56 双保险上线 + 双零 baseline 达成 (625/625 clean, 0 ERROR / 0 WARN). v1.5→v1.6 主要变化: 新增「🛡️ Day 56 双保险架构」核心章节, pre-commit step 5 切硬阻塞, 3 个 batch 工具, Step 4.5 集成点扩到双保险, 验收标准加 "render_quality 双零", 已知坑加 #8 (script 路径) + #9 (batch 工具复用模板). 7 commit 修 187 处违规, 0¥.
+**最后更新**: 2026-06-30, v1.7 文档瘦身: 数字 277 → 625, 路径修 `scripts/smart_audit.py` → `scripts/audit/smart_audit.py` (6 处), 已知坑 #1 deploy_to_public.py 标记已删 (改用 deploy.sh), 项目名 `gaokao-team-b` → `gaokao-hubei-mvp`. 7 commit 修 187 处违规, 0¥.
 
 ---
 

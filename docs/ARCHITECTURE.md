@@ -19,7 +19,7 @@
                 │  functions/_middleware.ts                │
                 │    └─ UA mobile → 302 /m/                │
                 │                                          │
-                │  public/ (499 PC HTML + 488 Mobile HTML) │
+                │  public/ (638 HTML, 1 manifest + sitemap) │
                 │    ├─ index.html (主页, SSR 13 学科门类)  │
                 │    ├─ {slug}.html (专业 dashboard)       │
                 │    ├─ m/majors/{slug}.html (Mobile)      │
@@ -27,8 +27,8 @@
                 │    │   ├─ recommender.js (客户端推荐)     │
                 │    │   ├─ major-search.js (搜索)         │
                 │    │   ├─ wishlist-store.js (心愿单)     │
-                │    │   └─ manifest.json (475 majors)     │
-                │    ├─ sitemap.xml (485 URL)              │
+                │    │   └─ manifest.json (625 majors)     │
+                │    ├─ sitemap.xml (~640 URL)              │
                 │    └─ 404.html (真静态 404)              │
                 │                                          │
                 │  functions/api/ (Pages Functions, TS)    │
@@ -68,7 +68,7 @@
 ```
 浏览器 (用户)
     │
-    ├── public/js/recommender.js ─► public/data/manifest.json (475 majors)
+    ├── public/js/recommender.js ─► public/data/manifest.json (625 majors)
     │                                  │
     │                                  └─► public/data/curated/ (已删, Phase 2)
     │
@@ -131,7 +131,7 @@ dxsbb.com/6261 ─────────► fetch_dxsbb_6261.py ────�
 
                                    │
                                    ▼
-                           public/data/manifest.json (475 majors)
+                           public/data/manifest.json (625 majors)
                            public/data/colleges.json + school_*.json
                                    │
                                    ▼
@@ -355,7 +355,7 @@ while start < h:
 - 2 个 chsi docs + 3 截因子目录 → docs/_archive/2026-Q2/
 
 **保留 (生产路径)**:
-- public/ (499 PC + 488 Mobile HTML + 客户端 JS)
+- public/ (638 HTML + 客户端 JS)
 - functions/ (CF Pages Functions, TS)
 - scf/synth/ (Python 模块, GH Action 跑)
 - scripts/ (52 active: build_sitemap / inject_* / smart_audit / synth_* / backfill_* / fix_* 等)

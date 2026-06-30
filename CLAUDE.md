@@ -1,6 +1,6 @@
-# gaokao-team-b 项目指引
+# gaokao-hubei-mvp 项目指引
 
-> 这是 **Major 精品/批量生成** 的项目, 写于 2026-06-17, Day 3 Team B 47 篇验证通过后定型.
+> 这是 **Major 精品/批量生成** 的项目, 写于 2026-06-17, Day 3 47 篇验证通过后定型.
 > 2026-06-18 v1.1: 新增 `scripts/audit/smart_audit.py` 智能混合审计 (Layer 1 + 智能 Layer 2), batch 审计 9.3h→2-3h, ¥140→¥40.
 > 2026-06-30 v1.6: 质量管线双保险上线 + 双零 baseline 达成 (625/625 clean, 0 ERROR / 0 WARN). 详见末尾「🛡️ Day 56 双保险」章节.
 
@@ -10,7 +10,7 @@
 
 **任何 ≥10 篇的 batch audit, 用 `scripts/audit/smart_audit.py` 替代老 `content_audit.py`**.
 
-- 老方法: 全量 277 篇 ~9.3h / ¥140
+- 老方法: 全量 ~300 篇 ~9.3h / ¥140 (Day 18 baseline)
 - 新方法: 启发式 100% + LLM 智能路由 ~30% → 2-3h / ¥40, 覆盖 95%+ 真实 bug
 
 ```bash
@@ -91,8 +91,7 @@ python3 scripts/audit/update_audit_registry.py --rebuild
 
 ## 7 个已知坑 (避免重复踩)
 
-1. **`scripts/deploy_to_public.py` ROOT 写死 `gaokao-hubei-mvp`**, 不能用于本项目.
-   绕过: 手动 `re.sub(r'(src|href)="\.\./\.\./((?:js|css)/[^"]+)"', r'\1="/\2"', src)`
+1. ~~**`scripts/deploy_to_public.py` ROOT 写死 `gaokao-hubei-mvp`**, 不能用于本项目.~~  (Day 22 后 `deploy_to_public.py` 已删, 改用 `scripts/deploy.sh "<msg>"` 一键部署, 详见 `docs/DEPLOYMENT.md` Cache 4 层锁死 SOP).
 2. **`scripts/batches/content_audit.py` slug 用文件名**, 不用 JSON 内 slug.
    例: `computational-linguistics.json` → `--slugs computational-linguistics:humanities`
    **批量 (≥10 篇) 用 `scripts/audit/smart_audit.py` 替代**, 不要全量跑 content_audit.
@@ -101,7 +100,7 @@ python3 scripts/audit/update_audit_registry.py --rebuild
 5. **CC Write 在某些 worktree 会被 revert**, 启动前用 `echo test > file && cat file` 测试.
 6. **session merge 时可能有 working tree 残留** → `git stash` 后再 `git merge --no-ff`.
 7. **C session 习惯性留 "自主创业/其他" 占位 + salary string schema**, 合并后必清理.
-8. **script 路径**: 所有 audit 工具在 `scripts/audit/` (不是 `scripts/`). `smart_audit.py` / `render_quality.py` / `update_audit_registry.py` 全在子目录. 老 CLAUDE.md 写的 `scripts/smart_audit.py` 错误, v1.6 修正.
+8. **script 路径**: 所有 audit 工具在 `scripts/audit/` (不是 `scripts/`). `smart_audit.py` / `render_quality.py` / `update_audit_registry.py` 全在子目录. 早期文档写的 `scripts/smart_audit.py` 错误, v1.6 修正.
 
 ---
 
@@ -111,7 +110,7 @@ python3 scripts/audit/update_audit_registry.py --rebuild
 1. Audit Driven (必读 m3 audit issues)
 2. Anti-Pollution 4 Rules (前置必避)
 3. Hand-Write JSON (按专业逐字段, 完整 18 字段 schema)
-4. Render + Deploy (绕过 deploy_to_public.py ROOT bug)
+4. Render + Deploy (用 scripts/deploy.sh)
 4.5 render_quality.py 质量门 (Day 49+, 13 规则 0¥ <2s/625 篇)
 5. Audit Verify (≥7 才继续)
 6. Tier 1/2/3 Retry:
@@ -250,12 +249,12 @@ m3 content_audit: X/10 → Y/10 (优秀/合格, 0 strong, N 项 warning)
 ## 项目目录速查
 
 ```
-gaokao-team-b/
+gaokao-hubei-mvp/
 ├── skills/gaokao-major-explorer/    # 主要工作区
 │   ├── data/curated/                # 625 个 major JSON + HTML
 │   ├── scripts/                     # 渲染 + audit 工具
-│   └── SKILL.md                     # 技能定义 (379 行)
-├── public/                          # 部署镜像 (CF Pages serve)
+│   └── SKILL.md                     # 技能定义
+├── public/                          # 部署镜像 (CF Pages serve, 638 HTML)
 ├── scripts/                         # build_sitemap / inject_* / smart_audit / synth_*
 │   ├── audit/                       # ⭐ 质量门工具 (Day 49+)
 │   │   ├── render_quality.py        # 13 规则 Layer 0 (Day 49+, 双保险防线 2)
