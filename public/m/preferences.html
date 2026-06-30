@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#B8323A">
+<link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://fonts.loli.net">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📝</text></svg>">
+<title>填偏好 · Major Explorer 2026 高考</title>
+<meta name="description" content="一屏填完: 分数 / 位次 / 物理-历史 / 选科 / 意向城市 / 填报模式。">
+  <!-- SEO: canonical + Open Graph -->
+  <link rel="canonical" href="https://majorexplorer.com/preferences.html">
+  <meta property="og:url" content="https://majorexplorer.com/preferences.html">
+  <meta property="og:site_name" content="Major Explorer">
+  <meta property="og:title" content="填偏好 · Major Explorer 2026 高考">
+  <meta property="og:description" content="一屏填完: 分数 / 位次 / 物理-历史 / 选科 / 意向城市 / 填报模式。">
+  <meta property="og:type" content="article">
+
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/shared.css">
+<datalist id="city-suggest">
+  <option value="武汉">
+  <option value="上海">
+  <option value="北京">
+  <option value="广州">
+  <option value="深圳">
+  <option value="南京">
+  <option value="杭州">
+  <option value="成都">
+  <option value="西安">
+  <option value="天津">
+  <option value="重庆">
+  <option value="苏州">
+  <option value="厦门">
+  <option value="长沙">
+  <option value="合肥">
+  <option value="济南">
+  <option value="青岛">
+  <option value="宁波">
+  <option value="大连">
+  <option value="沈阳">
+  <option value="郑州">
+  <option value="福州">
+  <option value="黄石">
+  <option value="宜昌">
+  <option value="襄阳">
+  <option value="荆州">
+  <option value="十堰">
+</datalist>
+<link rel="stylesheet" href="css/shared.css">
+
+  <!-- BEGIN_PLAUSIBLE -->
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-JoO60gAuRbbJLQt8opHkb.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+  <script>
+(function(){
+  if (!window.addEventListener) return;
+  function report(kind, msg, src, ln, col, err) {
+    try {
+      var payload = JSON.stringify({
+        kind: kind, msg: String(msg || '').slice(0, 500),
+        src: src || '', line: ln || 0, col: col || 0,
+        url: location.href, ua: navigator.userAgent
+      });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/report', new Blob([payload], {type: 'application/json'}));
+      } else if (fetch) {
+        fetch('/api/report', {method: 'POST', body: payload, keepalive: true}).catch(function(){});
+      }
+    } catch (e) {}
+  }
+  window.addEventListener('error', function(e){
+    report('error', e.message, e.filename, e.lineno, e.colno, e.error);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    var r = (e && e.reason) || {};
+    report('reject', r.message || r.toString(), '', 0, 0, r);
+  });
+})();
+</script>
+  <!-- END_PLAUSIBLE -->
+
+  <!-- BEGIN_SEO_OG --><meta property="og:image" content="https://majorexplorer.com/assets/og-default.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="article"><meta property="og:site_name" content="Major Explorer">
+</head>
+<body>
+
+<main class="page">
+  <div class="container">
+
+    <div class="page-head">
+      <div class="eyebrow">Step 2 · Preferences</div>
+      <h1>填一下你的信息</h1>
+      <p class="lede">
+        一屏填完, 全部本地处理 (不上传服务器)。填好<strong>分数 + 选科 + 心愿单</strong>, 自动出冲 / 稳 / 保 三档志愿, 冲档拼一拼, 稳档重点关注, 保档稳妥兜底, 每张卡附推荐理由。
+      </p>
+    </div>
+
+    <div style="padding: 14px 18px; background: #FFF8E1; border: 1px solid #E8C766; border-left: 4px solid #D4AF37; border-radius: 8px; margin-bottom: 24px; font-size: 0.875rem; line-height: 1.6; color: #5C4A1F;">
+      志愿推荐支持 3 省 (湖北/广东/江苏), 顶部下拉切换省份即可。
+    </div>
+
+    <div id="ws-hint" style="padding: 12px 16px; background: var(--bg-soft); border-radius: 8px; margin-bottom: 32px; font-size: 0.875rem;">心愿单状态...</div>
+
+    <!-- 1. 基础信息 -->
+    <section style="margin-bottom: 40px;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 1px solid var(--line);">
+        <span class="caps" style="color: var(--accent); margin-right: 8px;">01</span>
+        我的基础信息
+      </h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-row">
+          <label for="f-score">高考分数</label>
+          <input type="number" id="f-score" placeholder="如 580" min="200" max="750" step="1">
+          <div class="hint">分数 / 位次至少填一个</div>
+        </div>
+        <div class="form-row">
+          <label for="f-rank">省排名 / 位次</label>
+          <input type="number" id="f-rank" placeholder="如 6300" min="1" max="600000" step="1">
+          <div class="hint">不填会用一分一段反查</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>科类</label>
+        <div class="radio-group">
+          <label><input type="radio" name="f-type" value="物理类" checked> 物理类</label>
+          <label><input type="radio" name="f-type" value="历史类"> 历史类</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>选科 (3 选 2, 含首选物/史)</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="f-xuanke" value="物理"> 物理</label>
+          <label><input type="checkbox" name="f-xuanke" value="历史"> 历史</label>
+          <label><input type="checkbox" name="f-xuanke" value="化学"> 化学</label>
+          <label><input type="checkbox" name="f-xuanke" value="生物"> 生物</label>
+          <label><input type="checkbox" name="f-xuanke" value="地理"> 地理</label>
+          <label><input type="checkbox" name="f-xuanke" value="政治"> 政治</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 我的偏好 -->
+    <section style="margin-bottom: 40px;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 1px solid var(--line);">
+        <span class="caps" style="color: var(--accent); margin-right: 8px;">02</span>
+        我的偏好
+      </h2>
+
+      <div class="form-row">
+        <label>意向城市 (最多 3 个 · 星级表示优先级)</label>
+        <div id="city-list" style="margin-bottom: 12px;"></div>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="f-city" placeholder="如 武汉 / 上海 (可输入或选下拉)" list="city-suggest" style="flex: 1;">
+          <button type="button" class="btn ghost" id="add-city" style="white-space: nowrap;">+ 添加</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>填报模式</label>
+        <div class="radio-group">
+          <label><input type="radio" name="f-mode" value="院校优先"> 院校优先 (重学校名气)</label>
+          <label><input type="radio" name="f-mode" value="专业优先"> 专业优先 (重专业匹配)</label>
+          <label><input type="radio" name="f-mode" value="均衡" checked> 均衡 (推荐)</label>
+        </div>
+        <div class="hint" style="margin-top: 4px;">
+          权重 = 专业匹配 × <em>a</em> + 城市匹配 × <em>b</em> + 学校档次 × <em>c</em>; 均衡 = (0.4, 0.3, 0.3)
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 36px;">
+      <a class="btn ghost" href="/wishlist.html">← 改心愿单</a>
+      <button class="btn primary" id="cta-go">
+        生成志愿推荐 →
+      </button>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="caps">Major Explorer · 2026 高考 · <span data-prov-text="{prov}">{prov}</span></div>
+    <div>数据存储于浏览器本地, 不上传服务器</div>
+  </div>
+</footer>
+
+<script src="js/wishlist-store.js"></script>
+<script src="js/ui-helpers.js"></script>
+<script src="js/preferences-form.js"></script>
+<script>
+  window.PreferencesForm.init();
+</script>
+
+  <script src="js/topbar.js?v=fb456afa"></script>
+
+
+<!-- 分享 FAB + 长图导出 (Day 35 share 注入) -->
+<button type="button" class="share-fab" data-share-trigger aria-label="分享">↗</button>
+<link rel="stylesheet" href="css/share.css?v=day35p15">
+<script src="js/share.js?v=day35p15" defer></script>
+
+<!-- Day 47.11 mobile dock -->
+<link rel="stylesheet" href="css/dock.css">
+<nav class="dock">
+  <a class="dock-tab" data-tab="home" href="index.html"><span class="ico">●</span>主页</a>
+  <a class="dock-tab" data-tab="catalog" href="catalog.html"><span class="ico">□</span>目录</a>
+  <a class="dock-tab" data-tab="recommendations" href="recommendations.html"><span class="ico">◐</span>推荐</a>
+  <a class="dock-tab" data-tab="wishlist" href="wishlist.html"><span class="ico">♡</span>收藏</a>
+  <a class="dock-tab" data-tab="me" href="me.html"><span class="ico">◔</span>我</a>
+</nav>
+<script src="js/dock.js"></script>
+</body>
+</html>

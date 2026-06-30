@@ -170,13 +170,14 @@
         req.onsuccess = () => resolve(req.result || []);
         req.onerror = () => resolve([]);
       });
+      // Day 47.11 P2-19 fix: 并行 get 多个 entries, 不串行
+      const entries = await Promise.all(allKeys.map(key => new Promise((resolve) => {
+        const req = store.get(key);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+      })));
       let staleCount = 0;
-      for (const key of allKeys) {
-        const entry = await new Promise((resolve) => {
-          const req = store.get(key);
-          req.onsuccess = () => resolve(req.result || null);
-          req.onerror = () => resolve(null);
-        });
+      for (const entry of entries) {
         if (!entry) continue;
         const versionMatch = entry.version === DATA_VERSION;
         const ageHours = entry.savedAt ? (Date.now() - entry.savedAt) / 3600000 : Infinity;

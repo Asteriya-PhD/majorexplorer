@@ -1,5 +1,8 @@
 /* me.js — 浏览历史 + 收藏统计 */
 (async () => {
+  const _esc = (s) => (s == null ? "" : String(s))
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   await M.init();
   const HKEY = "m.history.v1";
   const WKEY = "m.wishlist.v1";
@@ -27,12 +30,12 @@
     histRoot.innerHTML = histCount.slice(0, 10).map(h => {
       const m = M.manifestBySlug[h.slug];
       if (!m) return "";
-      return `<a class="hist-row" href="majors/${m.slug}.html" style="--theme: ${M.styleColor(m.style)};">
+      return `<a class="hist-row" href="majors/${_esc(m.slug)}.html" style="--theme: ${M.styleColor(m.style)};">
         <div class="hist-body">
-          <div class="hist-cat">${m.category}${h.star ? '<span class="star">★</span>' : ''}</div>
-          <div class="hist-title">${m.title}</div>
+          <div class="hist-cat">${_esc(m.category)}${h.star ? '<span class="star">★</span>' : ''}</div>
+          <div class="hist-title">${_esc(m.title)}</div>
         </div>
-        <div class="hist-time">${h.t || ''}</div>
+        <div class="hist-time">${_esc(h.t || '')}</div>
       </a>`;
     }).join("");
   }

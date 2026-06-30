@@ -1,5 +1,9 @@
 /* catalog.js — 13 章节 accordion + 搜索过滤 + URL hash 展开 + sub-row 跳 search */
 (async () => {
+  // Day 47.11 P2-26 XSS fix
+  const _esc = (s) => (s == null ? "" : String(s))
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   await M.init();
 
   // ───── 动态注入精品专业数 (替换静态 126) ─────
@@ -82,7 +86,7 @@
         if (slugsHere.length === 0) return "";
         const cnt = slugsHere.length;
         // 跳到 search.html?q=大类名, 让用户看到该大类的具体专业
-        return `<a class="sub-row" href="search.html?q=${encodeURIComponent(name)}"><span class="sub-name">${name}</span><span class="sub-count">${cnt}</span></a>`;
+        return `<a class="sub-row" href="search.html?q=${encodeURIComponent(name)}"><span class="sub-name">${_esc(name)}</span><span class="sub-count">${cnt}</span></a>`;
       }).join("");
       // 末尾"其他"行: 该门类剩余未匹配 (e.g. 法学 8 个细分法学: 民法/刑法/商法...)
       // 注意: 0 精品时 sub-class 整条已隐藏, 但"其他"行还要看门类有没有匹配 (e.g. 交叉学科=0 整章不显示)
@@ -95,12 +99,12 @@
       // 整章 0 精品 (header star=0) 时整章隐藏
       if ((star[d.code] || 0) === 0) return "";
       return `
-        <div class="chapter" data-code="${d.code}" data-ghost="${d.name.slice(0,1)}" style="--theme: var(${ck});">
+        <div class="chapter" data-code="${_esc(d.code)}" data-ghost="${_esc(d.name.slice(0,1))}" style="--theme: var(${ck});">
           <div class="chapter-head" data-toggle>
             <div class="chapter-meta">
-              <div class="chapter-num">No. ${d.code}</div>
-              <div class="chapter-name">${d.name}</div>
-              <div class="chapter-sub">${(d.sub || []).slice(0,4).map(s=>s.name).join(" · ")}${(d.sub||[]).length>4?" …":""}</div>
+              <div class="chapter-num">No. ${_esc(d.code)}</div>
+              <div class="chapter-name">${_esc(d.name)}</div>
+              <div class="chapter-sub">${(d.sub || []).slice(0,4).map(s=>_esc(s.name)).join(" · ")}${(d.sub||[]).length>4?" …":""}</div>
             </div>
             <div class="chapter-count">
               <span class="n">${star[d.code] || 0}<span class="star">★</span></span>

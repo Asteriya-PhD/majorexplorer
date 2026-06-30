@@ -6,6 +6,10 @@
  *   - 兼容: PC data via M.manifestBySlug[slug] 补 title/style/category 等展示字段
  */
 (async () => {
+  // Day 47.11 P2-26 XSS fix: HTML escape helper for innerHTML 注入
+  const _esc = (s) => (s == null ? "" : String(s))
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   await M.init();
   // 兜底: PC WishlistStore 可能没加载 (来自 6 个 dock HTML <script> 注入)
   if (window.WishlistStore && WishlistStore.migrate) {
@@ -66,18 +70,18 @@
       <div class="wish" style="--theme: ${M.styleColor(m.style)};">
         <div class="wish-head">
           <div>
-            <div class="wish-cat">${m.category}</div>
-            <h3 class="wish-title">${m.title}</h3>
+            <div class="wish-cat">${_esc(m.category)}</div>
+            <h3 class="wish-title">${_esc(m.title)}</h3>
             ${hasMeta ? `<div class="wish-meta">
               ${rating ? `<span class="wish-stars">${starStr(rating)}</span>` : ""}
-              ${tag ? `<span class="wish-tag">${tag}</span>` : ""}
+              ${tag ? `<span class="wish-tag">${_esc(tag)}</span>` : ""}
             </div>` : ""}
-            ${comment ? `<div class="wish-comment">"${comment}"</div>` : ""}
+            ${comment ? `<div class="wish-comment">"${_esc(comment)}"</div>` : ""}
           </div>
-          <span class="wish-x" data-rm="${m.slug}" aria-label="移除">×</span>
+          <span class="wish-x" data-rm="${_esc(m.slug)}" aria-label="移除">×</span>
         </div>
-        <a class="wish-quote" href="majors/${m.slug}.html">
-          ${m.tags && m.tags[0] ? `「${m.tags[0]}」 — 继续看 →` : "查看详情 →"}
+        <a class="wish-quote" href="majors/${_esc(m.slug)}.html">
+          ${m.tags && m.tags[0] ? `「${_esc(m.tags[0])}」 — 继续看 →` : "查看详情 →"}
         </a>
       </div>
     `}).join("");

@@ -1,5 +1,8 @@
 /* home.js — 主页: 本日精读 + 国家战略 + 13 门类 */
 (async () => {
+  const _esc = (s) => (s == null ? "" : String(s))
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   await M.init();
 
   // ───── 动态注入精品专业数 (替换静态 126) ─────
@@ -29,15 +32,15 @@
       const tags = (m.tags || []).slice(0, 3);
       const discNum = m.discipline ? `No. ${m.discipline}` : "";
       return `
-      <a class="feat" href="majors/${m.slug}.html" style="--theme: ${M.styleColor(m.style)};">
+      <a class="feat" href="majors/${_esc(m.slug)}.html" style="--theme: ${M.styleColor(m.style)};">
         <div class="feat-body">
           <div class="feat-meta">
-            <span class="feat-cat">${m.category || "—"}<span class="star">★</span></span>
-            <span class="feat-disc">${discNum}</span>
+            <span class="feat-cat">${_esc(m.category || "—")}<span class="star">★</span></span>
+            <span class="feat-disc">${_esc(discNum)}</span>
           </div>
-          <h3 class="feat-title">${m.title}</h3>
+          <h3 class="feat-title">${_esc(m.title)}</h3>
           <div class="feat-tags">
-            ${tags.map(t => `<span class="feat-tag">${t}</span>`).join("")}
+            ${tags.map(t => `<span class="feat-tag">${_esc(t)}</span>`).join("")}
           </div>
         </div>
         <div class="feat-arrow">→</div>
@@ -110,12 +113,12 @@
       const total = totalAll[d.code] || d.total || 0;
       const ck = colorKey[d.code] || "--accent";
       return `
-        <a class="chapter" href="catalog.html#d=${d.code}" data-ghost="${d.ghost}" style="--theme: var(${ck});">
+        <a class="chapter" href="catalog.html#d=${_esc(d.code)}" data-ghost="${_esc(d.ghost)}" style="--theme: var(${ck});">
           <div class="chapter-head">
             <div class="chapter-meta">
-              <div class="chapter-num">No. ${d.code}</div>
-              <div class="chapter-name">${d.name}</div>
-              <div class="chapter-sub">${d.sub}</div>
+              <div class="chapter-num">No. ${_esc(d.code)}</div>
+              <div class="chapter-name">${_esc(d.name)}</div>
+              <div class="chapter-sub">${_esc(d.sub)}</div>
             </div>
             <div class="chapter-count">
               <span class="n">${c.star}<span class="star">★</span></span>

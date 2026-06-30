@@ -693,15 +693,15 @@
     modal.innerHTML = `
       <div class="share-qr-mask" data-qr-close></div>
       <div class="share-qr-panel">
-        <div class="share-qr-hint">${hint}</div>
+        <div class="share-qr-hint">${escapeHtml(hint || "")}</div>
         <img class="share-qr-img" alt="QR"
              src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(url)}"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <div class="share-qr-fallback" style="display:none;">
-          <div class="share-qr-fallback-url">${url}</div>
+          <div class="share-qr-fallback-url">${escapeHtml(url || "")}</div>
           <div class="share-qr-fallback-tip">截图发给朋友, 或在微信粘贴打开</div>
         </div>
-        <div class="share-qr-url">${SITE}</div>
+        <div class="share-qr-url">${escapeHtml(SITE)}</div>
         <button class="share-qr-close" data-qr-close>关闭</button>
       </div>
     `;
@@ -834,7 +834,7 @@
         <div class="share-score-stars" data-score-stars>
           ${[1,2,3,4,5].map(i => `<button class="share-score-star ${i <= currentScore ? 'is-on' : ''}" data-score="${i}" aria-label="${i}星">★</button>`).join('')}
         </div>
-        <div class="share-score-label" data-score-label>${labels[currentScore] || '点星星评分'}</div>
+        <div class="share-score-label" data-score-label>${escapeHtml(labels[currentScore] || '点星星评分')}</div>
         <div class="share-score-actions">
           <button class="share-score-btn-ghost" data-score-skip>跳过</button>
           <button class="share-score-btn-primary" data-score-save>保存评分</button>
