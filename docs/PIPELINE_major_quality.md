@@ -1,10 +1,11 @@
-# Major 精品质量流水线 v1.4 (Day 7 在线按需合成上线)
+# Major 精品质量流水线 v1.5 (Day 49 HTML 渲染质量门上线)
 
 > 写于 2026-06-17, 47 篇验证: 平均 7.69/10, 100% ≥7, 64% ≥8.
 > 目标: 后续主题稳定达到 **平均 8.0/10** 水准.
 > 2026-06-18 v1.1: 新增 `scripts/audit/smart_audit.py` 智能混合审计 (Layer 1 启发式 + 智能 Layer 2 LLM), batch 审计从 9.3h/¥140 降到 2-3h/¥40.
 > 2026-06-18 v1.2: 新增 m3 audit 升级套路 (修 audit 5-6 硬伤 > 追主观波动), E 阶段 7 篇 7→8/10 验证 3 audit iterations 7.14→7.43→8.00.
 > 2026-06-19 v1.4: 新增 §"在线按需合成 SOP" (CF Pages Function + D1 + GH Action + 跨 provider fallback + rate limit + 失败死信上报), 用户搜未收录专业一键 🔄 实时生成. Session 1-2 实测成功, 端到端验证待 Session 3 Playwright.
+> 2026-06-30 v1.5: 新增 §"渲染后 HTML 质量门" (`scripts/audit/render_quality.py` 13 条规则, Layer 0, 0¥ <2s/625 篇). 历史 P0 痛点 (html-escape/jsonld-0-injection/salary-p25-gt-p75/38-alumni-placeholder) 全部规则化. Pre-commit warn-only 至 Day 55, Day 56+ 切 ERROR 阻塞.
 
 ---
 
@@ -179,6 +180,45 @@ new = re.sub(r'(src|href)=\"\.\./\.\./((?:js|css)/[^\"]+)\"', r'\1=\"/\2\"', src
 pathlib.Path(f'public/{slug}.html').write_text(new)
 "
 ```
+
+### Step 4.5: Day 49 v1.5 新增 — 渲染后 HTML 质量门 (render_quality.py)
+
+**跑完渲染立刻 check, 不等 m3 audit 才发现结构错**.
+
+```bash
+# 单篇
+python3 scripts/audit/render_quality.py --slug <slug>
+
+# 全量 (Day 49 baseline 625 篇 1.2s)
+python3 scripts/audit/render_quality.py --all --sync-registry
+```
+
+**13 条规则 (Layer 0 启发式 0¥ <2s)**: 详见 `docs/RENDER_QUALITY_RULES.md`.
+
+| 类别 | 规则 | 严重度 |
+|---|---|---|
+| 薪资单调 | SAL-MONO-1 (p25≤p50≤p75), SAL-MONO-2 (跨阶段), SAL-CAP-1 (资深 p75≤100), SAL-NOTE-1 | ERROR×3 + WARN×1 |
+| PC HTML | HTML-PC-1 (8 段), HTML-PC-2 (meta desc), HTML-PC-3 (JSON-LD), HTML-PC-4 (og 三件套) | ERROR×4 |
+| mobile | HTML-MB-1 (10 art-num 全有) | ERROR |
+| 字段 | FIELD-1 (alum-N 占位), FIELD-2 (hero_quote 署名), FIELD-3 (xuanke name), FIELD-4 (emp pct) | ERROR×2 + WARN×2 |
+
+**Day 49 baseline 实测 (修 SAL-MONO-2 误报后)**: 625 篇 1.1s 跑完, 493 clean (79%), 132 有 ERROR (21%, **全部已抽样验证为真问题**). 主要命中:
+- SAL-NOTE-1 note 错位 127 次
+- SAL-MONO-2 跨阶段倒挂 66 次 (修误报后, 100% 真; 几乎都是 5年细分顶端 高于 10年+ 细分常规)
+- FIELD-3 xuanke 字段名 59 次
+- HTML-PC-4 og 三件套不全 54 次 (SEO 注入流水线部分漂移)
+- SAL-CAP-1 资深 p75>100 37 次
+- HTML-PC-3 JSON-LD 缺失 34 次 (P0 bug 残余)
+- HTML-MB-1 mobile 段缺 15 次
+- FIELD-1 alum-N 占位 12 次 (P0 bug 残余)
+- SAL-MONO-1 p25>p50 6 次
+
+**集成点**:
+- pre-commit hook step 5: `--staged` 模式, **Day 49-55 warn-only**, Day 56+ 切 ERROR 阻塞
+- smart_audit.py Layer 0 (run_layer0): L0 违规作为 m3 L2 路由依据
+- update_audit_registry.py: `--from-render-quality` 同步到 registry 顶层 `render_quality` key, schema v1.0 → v1.1
+
+**Day 56 切硬阻塞**: `.githooks/pre-commit` 第 5 步, 把注释 `# warn-only mode: do not set failed=1` 上面加一行 `failed=1`. 单字符改动.
 
 ### Step 5: Audit Verify (≥7 才继续)
 
