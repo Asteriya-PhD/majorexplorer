@@ -708,24 +708,29 @@ def _normalize_xuanke_mobile(items):
     Schema B (Day 28 修 1):  {subject, pct, required}   → subject→name, required→reason
     Schema C (新发现 17 篇): {combo, pct, note}        → combo→name, note→reason
     Schema D (新发现 5 篇):  {item, pct, rationale}    → item→name, rationale→reason
+    Schema E (Day 49 修):    string 元素 → {name: str}
     """
     out = []
     for it in items or []:
-        if not isinstance(it, dict):
+        if isinstance(it, str):
+            # Day 49: 兼容 string 元素 (rare, 但导致整段缺失)
+            normalized = {"name": it}
+        elif isinstance(it, dict):
+            normalized = dict(it)
+            # name 字段: 4 种 schema 兼容
+            if "name" not in normalized:
+                for alias in ("subject", "combo", "item"):
+                    if alias in normalized:
+                        normalized["name"] = normalized[alias]
+                        break
+            # reason 字段: 4 种 schema 兼容
+            if "reason" not in normalized:
+                for alias in ("required", "note", "rationale"):
+                    if alias in normalized:
+                        normalized["reason"] = normalized[alias]
+                        break
+        else:
             continue
-        normalized = dict(it)
-        # name 字段: 4 种 schema 兼容
-        if "name" not in normalized:
-            for alias in ("subject", "combo", "item"):
-                if alias in normalized:
-                    normalized["name"] = normalized[alias]
-                    break
-        # reason 字段: 4 种 schema 兼容
-        if "reason" not in normalized:
-            for alias in ("required", "note", "rationale"):
-                if alias in normalized:
-                    normalized["reason"] = normalized[alias]
-                    break
         # course 字段: 缺失时默认
         if "course" not in normalized:
             normalized["course"] = "3+1+2 选科组合"
@@ -889,7 +894,10 @@ def render_one(slug, data, theme_color, chsi_sat=None, chsi_fallback=None):
     # 修 2026-06-23 Bug: PC 端 pitfalls 修复后 (commit 481fba9b) overview_v2 字段统一为
     # who_fits_yes/no list, mobile 仍读 fit 字典 → 488 篇 "适合谁" 整段消失
     fit_dict = ov2.get("fit")
-    if not isinstance(fit_dict, dict):
+    # Day 49 修: 即使 fit 字典存在但 yes+no 都为空, 也 fallback 到 who_fits_yes/no
+    if isinstance(fit_dict, dict) and (fit_dict.get("yes") or fit_dict.get("no")):
+        pass  # 用 fit 字典, 不 fallback
+    else:
         yes_l = ov2.get("who_fits_yes") or []
         no_l = ov2.get("who_fits_no") or []
         if yes_l or no_l:
