@@ -35,7 +35,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CURATED = REPO_ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
 
-DEFAULT_BASE = "https://[PLACEHOLDER_DOMAIN]"
+DEFAULT_BASE = "https://majorexplorer.com"
 
 # Markers — we use HTML comments to fence the injected blocks so re-runs are idempotent.
 JSONLD_START = "<!-- BEGIN_SEO_JSONLD -->"
