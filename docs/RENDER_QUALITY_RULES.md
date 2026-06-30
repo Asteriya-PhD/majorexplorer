@@ -144,6 +144,35 @@ python3 scripts/audit/render_quality.py --all --no-warn
 - **xuanke 字段名 → WARN** (renderer 已 defensive normalize 到 `name`, 不阻断)
 - **note 仅 senior → WARN** (历史数据沿用, 阻断风险大)
 
+## Day 56 切硬阻塞 (2026-06-30)
+
+**触发条件**: Day 49-55 期间 render_quality ERROR 走 warn-only, 累积 100% 0-ERROR baseline
+**改动**: `.githooks/pre-commit` step 5 把 `warn_only` 改为 `failed=1`, 任何新 HTML ERROR 立即阻断 commit
+
+**新 ERROR 修复 SOP**:
+1. 跑 `python3 scripts/audit/render_quality.py --slug <slug>` 看具体违规规则
+2. 修 source JSON (或 HTML, 看规则)
+3. 跑 `python3 scripts/audit/render_quality.py --slug <slug>` 复验
+4. 跑 `python3 scripts/audit/render_quality.py --all --sync-registry` 同步 registry
+5. 重 commit (hook 应过)
+
+**绕过**: 仅 `git commit --no-verify` (不推荐, 需在 PR 描述说明原因)
+
+**持续监控**:
+- 每周一 8am cron 跑 `--all --sync-registry`, 结果 `test_results/render_quality_weekly.json` 留历史
+- `data/audit_registry.json` 的 `totals.render_quality_errors` 应保持 0, 涨了立刻 alert
+
+## Day 50-52 WARN 清理 (2026-06-30 完工)
+
+| 规则 | 修前 | 修后 | 工具 |
+|---|---|---|---|
+| FIELD-3 xuanke 字段名 (combo/item → name) | 59 | 0 | `scripts/batch/fix_xuanke_field_name.py` (15 篇) |
+| SAL-NOTE-1 非 senior note 删 | 128 | 42 | `scripts/batch/fix_salary_note_placement.py` (37 篇, 删 86) |
+| FIELD-2 hero_quote 10-200 字 + 署名 | 7 | 0 | 手审 7 篇 (4 截短 + 3 加 sig) |
+
+**SAL-NOTE-1 残留 42 处** (经验范围 + 真实段位) → 下个 session 手审
+**scripts/batch/***: 留作后续类似批量 fix 复用
+
 ## 修复指引 (baseline 249 ERROR)
 
 | Rule | 修法 |

@@ -7,7 +7,8 @@
 #   2. git staged 有 major JSON L1 错误 (anti-pollution 4 rules / schema 漂移)
 #   3. public/data/manifest.json 跟 curated/ 漂移 (新 major 没进 manifest)
 #   4. aggregates.json 跟 manifest 漂移 (门类数对不上)
-#   5. Day 49: render_quality.py --staged (HTML 结构 + 薪资单调 + 字段完整, warn-only 至 Day 55)
+#   5. Day 49: render_quality.py --staged (HTML 结构 + 薪资单调 + 字段完整)
+#      Day 49-55: warn-only, Day 56+: ERROR 阻塞 commit
 #
 # 绕过: `git commit --no-verify` (不推荐)
 # 安装: 见 scripts/install-hooks.sh (首次配置: `git config core.hooksPath .githooks`)
@@ -108,7 +109,7 @@ fi
 # 5. Day 49: render_quality.py --staged (HTML 结构 + 薪资单调 + 字段完整)
 # ─────────────────────────────────────────────
 echo ""
-echo -e "${BLUE}[5/5] Day 49 HTML 质量门 (render_quality.py --staged, warn-only 至 Day 55)${NC}"
+echo -e "${BLUE}[5/5] Day 49 HTML 质量门 (render_quality.py --staged, Day 56+ ERROR 阻塞)${NC}"
 if [ -f scripts/audit/render_quality.py ]; then
   python3 scripts/audit/render_quality.py --staged 2>&1 | tail -30 || true
   RQ_EXIT=${PIPESTATUS[0]}
@@ -118,10 +119,11 @@ if [ -f scripts/audit/render_quality.py ]; then
     echo -e "${RED}  ❌ render_quality catastrophic (manifest 坏?) ${NC}"
     failed=1
   else
-    # Day 49-55: warn-only.  Day 56+: 把下面 exit 1 改成 exit 0 即切换为 ERROR 阻塞
-    echo -e "${YELLOW}  ⚠️  render_quality 有 ERROR (Day 49-55 warn-only, Day 56+ 会 ERROR 阻塞)${NC}"
+    # Day 56+: ERROR 阻塞 (warn-only 阶段已结束 Day 49-55)
+    echo -e "${RED}  ❌ render_quality 有 ERROR (Day 56+ 硬阻塞, 必须修)${NC}"
     echo -e "${YELLOW}     修法: python3 scripts/audit/render_quality.py --slug <slug> 看具体违规${NC}"
-    # warn-only mode: do not set failed=1
+    echo -e "${YELLOW}     或全量: python3 scripts/audit/render_quality.py --all${NC}"
+    failed=1
   fi
 else
   echo -e "${YELLOW}  ⏭️  scripts/audit/render_quality.py 不存在, 跳过${NC}"
