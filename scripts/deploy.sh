@@ -61,6 +61,10 @@ log "   ✅ 无漏 add"
 NEW_QUERY="v=$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d%H%M%S)"
 log "3. 生成 cache-bust query: ?$NEW_QUERY"
 
+# ── 3a. (Day-47 SEO) 全量注入 JSON-LD + canonical + OG 到 637 篇 curated (non-fatal) ──
+log "3a. inject_jsonld 全量 SEO 注入到 curated/ (idempotent, non-fatal)..."
+python3 scripts/build/inject_jsonld.py --no-backup 2>&1 | tail -3 || warn "inject_jsonld 失败 (non-fatal, 继续 deploy)"
+
 # 检测老 query (用于 sed 替换)
 OLD_QUERY=""
 if grep -rqE '\?v=[a-zA-Z0-9]+' public/*.html 2>/dev/null; then
