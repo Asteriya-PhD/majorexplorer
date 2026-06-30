@@ -55,7 +55,13 @@
     try {
       localStorage.setItem(KEY, JSON.stringify(items));
     } catch (e) {
+      // Day 47.8 P2-16 fix: QuotaExceededError 等给用户提示, 不静默
       console.warn("[wishlist] write failed", e);
+      if (e && e.name === "QuotaExceededError") {
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("wishlist:quota_exceeded", { detail: { error: e } }));
+        }
+      }
       return;
     }
     // 跨页通过 storage 事件; 同页通过 custom event

@@ -556,7 +556,8 @@
       // CTA 卡片 (2026-06-25 改造: 加「职业/政策/城市 引导」+ 同义词推荐, 减少散户误上报)
       if (showSynthCTA) {
         const syns = _resolveIntentSynonyms(query);
-        const guidance = INTENT_GUIDANCE[query];
+        // Day 47.8 P2-9 fix: query 加 trim, 空格敏感导致 guidance miss
+        const guidance = INTENT_GUIDANCE[(query || "").trim()] || INTENT_GUIDANCE[query];
         const isLikelyIntent = !!guidance || syns.length > 0;
         const title = isLikelyIntent
           ? '「<strong>' + _escapeHtml(query) + '</strong>」不是本科专业名'

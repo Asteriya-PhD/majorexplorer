@@ -736,8 +736,11 @@
     bindHeartButtons();
 
     // 全局快捷: Cmd/Ctrl+S 触发生成长图 (桌面端快捷)
+    // Day 47.8 P2-5 fix: 加 focus 检查, 避免 input/textarea 内触发吞字符
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'S') {
+        const tag = (e.target && e.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
         e.preventDefault();
         exportImage();
       }

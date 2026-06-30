@@ -30,10 +30,12 @@
             (sum, sc) => sum + (sc.majors ? sc.majors.length : 0),
             0
           );
+          // Day 47.8 P2-15 fix: escape d.name 防 disciplines[code].name 含 < 等破坏 HTML
+          const safeName = String(d.name || "未知").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
           return `
         <a href="/?discipline=${code}#majors" class="discipline-pill" data-discipline="${code}">
           <span class="discipline-pill-icon">${d.icon || "📚"}</span>
-          <span class="discipline-pill-name">${d.name}</span>
+          <span class="discipline-pill-name">${safeName}</span>
           <span class="discipline-pill-count">${subCount} 类 · ${majorCount} 专业</span>
         </a>`;
         })

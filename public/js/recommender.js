@@ -375,9 +375,11 @@
         ruanke: s.ruanke_level || "",
       }));
 
-      // 4 年位次 history brief
+      // 4 年位次 history brief — 仅取 2023+ 防止老数据塞满体积 (Day 47.8 P2-17)
       const histBrief = {};
       for (const yr of Object.keys(hist)) {
+        const y = parseInt(yr, 10);
+        if (y < 2023) continue;
         histBrief[yr] = hist[yr].median_rank;
       }
 
