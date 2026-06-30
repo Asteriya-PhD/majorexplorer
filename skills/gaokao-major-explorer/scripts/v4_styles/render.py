@@ -621,10 +621,11 @@ def render_v4(data: dict, style: str) -> str:
         return f'          <div class="sparkline">\n{bars}\n          </div>\n          <div class="sparkline-label">近 5 年招聘量趋势</div>'
 
     companies_html = "\n".join(
-        f'''        <div class="company fade-up" data-delay="{(i % 4) * 80}">
+        f'''        <div class="company fade-up" data-delay="{(i % 4) * 80}"{' data-gov="1"' if co.get("type") == "gov" else ''}>
           <div class="company-head">
             <div class="company-monogram">{get_first_char(co.get("name", ""))}</div>
             <span class="company-tier tier-{co.get("tier", "B")}">{co.get("tier", "B")}</span>
+            {f'<span class="company-type-tag" data-type="{co.get("type")}">{("gov" if co.get("type") == "gov" else co.get("type", ""))}</span>' if co.get("type") and co.get("type") != "company" else ''}
           </div>
           <div class="company-name">{soft_break_name(co.get("name", ""))}</div>
           <div class="company-meta">{co.get("headcount", "")} · 校招 {co.get("salary", "")}</div>
