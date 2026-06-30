@@ -196,6 +196,26 @@ def run_layer1(slug):
         return (True, True)  # error 当 error
 
 
+def run_layer0(slug):
+    """Day 49: 跑 render_quality.py --slug (HTML 结构 + 薪资单调), 返回 (has_error, has_warning)"""
+    try:
+        r = subprocess.run(
+            ['python3', 'scripts/audit/render_quality.py', '--slug', slug],
+            capture_output=True, text=True, cwd=ROOT, timeout=60
+        )
+        # exit 0=clean, 1=有 ERROR, 2=catastrophic
+        has_error = (r.returncode == 1)
+        has_warning = (r.returncode in (0, 1)) and ('⚠️  警告' in r.stdout)
+        # exit 2 当 error (catastrophic)
+        if r.returncode == 2:
+            return (True, True)
+        return (has_error, has_warning)
+    except subprocess.TimeoutExpired:
+        return (False, True)  # timeout 当 warning
+    except Exception:
+        return (False, False)  # 跑不起来不算 error (graceful)
+
+
 def route_layer2(majors, history, args):
     """
     智能路由: 决定哪些 major 需要跑 Layer 2 (m3 audit)
@@ -215,6 +235,13 @@ def route_layer2(majors, history, args):
         h = history.get(slug, {})
         latest_score = h.get('latest_score')
         latest_ts = h.get('latest_ts')
+
+        # 规则 0: Layer 0 HTML 结构 (Day 49, render_quality.py, 跑在 L1 之前)
+        l0_error, l0_warning = run_layer0(slug)
+        if l0_error:
+            reasons.append('L0-error')
+        elif l0_warning:
+            reasons.append('L0-warning')
 
         # 规则 1: Layer 1 错误
         has_error, has_warning = run_layer1(slug)
