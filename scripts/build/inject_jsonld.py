@@ -187,7 +187,17 @@ def build_breadcrumb_ld(slug: str, data: dict) -> dict:
 
 
 def build_faq_ld(slug: str, data: dict) -> dict | None:
-    items = build_faq_items(data.get("pitfalls", "") or data.get("overview_v2", {}).get("pitfalls", ""))
+    pitfalls = data.get("pitfalls") or data.get("overview_v2", {}).get("pitfalls", "")
+    # pitfalls may be list[dict] (modern schema) or str (legacy). Stringify to
+    # "myth: reality" lines so split_pitfalls can tokenize consistently.
+    if isinstance(pitfalls, list):
+        pitfalls_str = "\n".join(
+            f"{p.get('myth', '')}: {p.get('reality', '')}" if isinstance(p, dict) else str(p)
+            for p in pitfalls
+        )
+    else:
+        pitfalls_str = str(pitfalls or "")
+    items = build_faq_items(pitfalls_str)
     if not items:
         return None
     return {

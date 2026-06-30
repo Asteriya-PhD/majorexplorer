@@ -566,9 +566,15 @@ def render_v4(data: dict, style: str) -> str:
     national_strategy_tags = data.get("national_strategy_tags", [])
 
     # ── 课程 ──
-    def render_courses(block_name: str, courses: list) -> str:
+    def render_courses(block_name: str, courses) -> str:
         if not courses:
             return ""
+        # Defensive: schema 期望 list[str|dict], 但部分 JSON 把课程写成
+        # 逗号/顿号分隔的字符串 (LLM drift / 手工 polish 笔误). 这里按
+        # 中英文逗号/顿号/分号切分, 避免被当作字符序列逐字渲染.
+        if isinstance(courses, str):
+            import re as _re
+            courses = [s.strip() for s in _re.split(r"[,,;；,、]+", courses) if s.strip()]
         items = []
         for c in courses:
             # Defensive: courses may be list[str] (LLM drift — just course names) or list[dict]

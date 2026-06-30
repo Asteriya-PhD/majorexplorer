@@ -25,6 +25,11 @@ if m_entry:
 
 style = data.get("style", "humanities") or "humanities"
 html = render_v4(data, style)
-out = PUBLIC / f"{slug}.html"
-out.write_text(html, encoding="utf-8")
-print(f"✓ rendered {slug} → {out.name} ({len(html)} bytes)")
+# Day 57 fix: 写双份 (public + curated). public/ 是部署镜像, curated/ 是
+# inject_jsonld / inject_og 的 source-of-truth (默认扫 curated 目录, 缺它
+# 则 SEO/og 注入直接 broken, 线上缺 og:title/JSON-LD).
+public_out = PUBLIC / f"{slug}.html"
+curated_out = CURATION / f"{slug}.html"
+public_out.write_text(html, encoding="utf-8")
+curated_out.write_text(html, encoding="utf-8")
+print(f"✓ rendered {slug} → public/{public_out.name} + curated/{curated_out.name} ({len(html)} bytes)")
