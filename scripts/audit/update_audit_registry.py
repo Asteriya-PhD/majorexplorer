@@ -143,6 +143,21 @@ def apply_entries(reg, entries, manifest_by_slug):
             r['current_score'] = entry['score']
             r['current_verdict'] = to_verdict(entry['score'])
             r['last_audit_at'] = entry['date']
+        # Day 57+: 从 curated/<slug>.json 读 flag/irreducible_* 字段并合并到 registry
+        if (r.get('flag') is None or r.get('flag') == ''):
+            curated_path = ROOT / 'skills/gaokao-major-explorer/data/curated' / f'{slug}.json'
+            if curated_path.exists():
+                try:
+                    c = json.load(open(curated_path))
+                    f = c.get('flag')
+                    if f:
+                        r['flag'] = f
+                        if c.get('irreducible_reason'):
+                            r['irreducible_reason'] = c['irreducible_reason']
+                        if c.get('irreducible_score') is not None:
+                            r['irreducible_score'] = c['irreducible_score']
+                except Exception:
+                    pass
 
 def cmd_rebuild():
     """全量重建: 扫 test_results/ 全部 content_audit_*.json"""
