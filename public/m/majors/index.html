@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#B8323A">
-<link rel="manifest" href="../manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="../icon-512.png">
-<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Major Explorer · 当志愿开始有了形状</title>
-<link rel="stylesheet" href="../css/base.css">
-<link rel="stylesheet" href="../css/topbar.css">
-<link rel="stylesheet" href="../css/dock.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/dock.css">
 <style>
   /* page-specific */
   .hero {
@@ -66,6 +66,7 @@
   <!-- BEGIN_SEO_HREFLANG -->
   <link rel="alternate" hreflang="zh-CN" href="https://majorexplorer.com/m/index.html">
   <!-- END_SEO_HREFLANG -->>
+<meta name="description" content="看清专业再谈志愿 — 高考志愿不踩坑。本省冲/稳/保 3 档推荐,457 个精品专业深度分析,湖北/广东/江苏考生首选。">
 <meta property="og:title" content="看清专业,再谈志愿 · Major Explorer">
 <meta property="og:description" content="高考志愿不踩坑。本省冲/稳/保 3 档志愿推荐 (支持湖北/广东/江苏), 457 个精品专业深度分析。">
 <meta property="og:image" content="https://majorexplorer.com/og-image.png">
@@ -110,6 +111,27 @@
   <!-- BEGIN_SEO_TWITTER -->
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="看清专业,再谈志愿 · Major Explorer"><meta name="twitter:description" content="高考志愿不踩坑。本省冲/稳/保 3 档志愿推荐 (支持湖北/广东/江苏), 457 个精品专业深度分析。"><meta name="twitter:image" content="https://majorexplorer.com/og-image.png">
   <!-- END_SEO_TWITTER -->
+  <!-- BEGIN_AGGREGATE_JSONLD -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Major Explorer",
+  "alternateName": "看清专业再谈志愿",
+  "url": "https://majorexplorer.com/",
+  "description": "高考志愿不踩坑。457 个精品专业深度分析, 覆盖 13 个学科门类, 支持湖北 / 广东 / 江苏考生。",
+  "inLanguage": "zh-CN",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://majorexplorer.com/m/search.html?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+  </script>
+  <!-- END_AGGREGATE_JSONLD -->
   </head>
 <body>
 
@@ -211,10 +233,10 @@
 <script src="../js/recommender.js"></script>
 <script src="../js/major-search.js"></script>
 <script src="../js/wishlist-store.js"></script>
-<script src="../js/loader.js"></script>
-<script src="../js/dock.js"></script>
-<script src="../js/home.js"></script>
-<script src="../js/scroll-helpers.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/home.js"></script>
+<script src="js/scroll-helpers.js"></script>
 
   <!-- PWA: SW registration + install banner + update toast -->
   <script>
@@ -224,7 +246,7 @@
     var installTimer = null;
 
     // SW register + update listener
-    navigator.serviceWorker.register('../sw.js').then(function(reg) {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var newWorker = reg.installing;
         if (!newWorker) return;
