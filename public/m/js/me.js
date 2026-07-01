@@ -30,7 +30,7 @@
     histRoot.innerHTML = histCount.slice(0, 10).map(h => {
       const m = M.manifestBySlug[h.slug];
       if (!m) return "";
-      return `<a class="hist-row" href="majors/${_esc(m.slug)}.html" style="--theme: ${M.styleColor(m.style)};">
+      return `<a class="hist-row" href="/m/majors/${_esc(m.slug)}.html" style="--theme: ${M.styleColor(m.style)};">
         <div class="hist-body">
           <div class="hist-cat">${_esc(m.category)}${h.star ? '<span class="star">★</span>' : ''}</div>
           <div class="hist-title">${_esc(m.title)}</div>

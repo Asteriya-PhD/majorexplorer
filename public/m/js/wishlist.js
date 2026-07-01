@@ -80,7 +80,7 @@
           </div>
           <span class="wish-x" data-rm="${_esc(m.slug)}" aria-label="移除">×</span>
         </div>
-        <a class="wish-quote" href="majors/${_esc(m.slug)}.html">
+        <a class="wish-quote" href="/m/majors/${_esc(m.slug)}.html">
           ${m.tags && m.tags[0] ? `「${_esc(m.tags[0])}」 — 继续看 →` : "查看详情 →"}
         </a>
       </div>

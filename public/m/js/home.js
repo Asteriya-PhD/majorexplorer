@@ -32,7 +32,7 @@
       const tags = (m.tags || []).slice(0, 3);
       const discNum = m.discipline ? `No. ${m.discipline}` : "";
       return `
-      <a class="feat" href="majors/${_esc(m.slug)}.html" style="--theme: ${M.styleColor(m.style)};">
+      <a class="feat" href="/m/majors/${_esc(m.slug)}.html" style="--theme: ${M.styleColor(m.style)};">
         <div class="feat-body">
           <div class="feat-meta">
             <span class="feat-cat">${_esc(m.category || "—")}<span class="star">★</span></span>

@@ -83,7 +83,7 @@
         title: highlight(m.title, f),
         cat: m.category,
         star: true,
-        href: `majors/${m.slug}.html`,
+        href: `/m/majors/${m.slug}.html`,
         theme: M.styleColor(m.style),
       }))});
     }
