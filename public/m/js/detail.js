@@ -46,13 +46,28 @@
   // ─── 主题色动态注入 (覆盖 HTML :root SSR fallback, 防 FOUC 已写在 :root 里) ───
   const m = M.manifestBySlug[slug];
   if (m && m.theme_color) {
+    // Fallback: 旧 schema theme_color 是字符串 (e.g. "#14b8a6"),
+    // 新 schema 是对象 {primary, deep, soft, gold}. 容错两种格式.
+    let primary, deep, soft, gold;
+    if (typeof m.theme_color === "string") {
+      primary = m.theme_color;
+      // 用同一颜色派生深色, 软色留空 → CSS 兜底
+      deep = primary;
+      soft = primary;
+      gold = "#B5934A"; // 默认金
+    } else {
+      primary = m.theme_color.primary;
+      deep = m.theme_color.deep;
+      soft = m.theme_color.soft;
+      gold = m.theme_color.gold;
+    }
     const root = document.documentElement.style;
-    root.setProperty("--theme", m.theme_color.primary);
-    root.setProperty("--theme-deep", m.theme_color.deep);
-    root.setProperty("--theme-soft", m.theme_color.soft);
-    root.setProperty("--theme-gold", m.theme_color.gold);
+    root.setProperty("--theme", primary || "");
+    root.setProperty("--theme-deep", deep || primary || "");
+    root.setProperty("--theme-soft", soft || primary || "");
+    root.setProperty("--theme-gold", gold || "#B5934A");
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", m.theme_color.primary);
+    if (meta && primary) meta.setAttribute("content", primary);
   }
 
   // ─── 心愿单 helpers (基于 PC WishlistStore) ───
