@@ -8,7 +8,7 @@
  * Day 47 bump: v3 → v4 (launch SOP)
  * Day 47.5: PC vs mobile 拆开 cache 名 (避免 install 互相覆盖 SHELL)
  */
-const CACHE_NAME = "explorer-mobile-v4-day48-2";
+const CACHE_NAME = "explorer-mobile-v4-day48-3";
 const OFFLINE_URL = "/m/offline";
 const SHELL = [
   "/m/",
