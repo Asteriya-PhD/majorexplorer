@@ -55,6 +55,13 @@ self.addEventListener("activate", e => {
   self.clients.claim();
 });
 
+// 接收 page 端 SKIP_WAITING 消息, 立即激活新 SW
+self.addEventListener("message", e => {
+  if (e.data && e.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
   // 仅处理同源 GET

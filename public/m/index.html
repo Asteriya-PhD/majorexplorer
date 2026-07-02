@@ -247,13 +247,14 @@
     var installTimer = null;
 
     // SW register + update listener
-    navigator.serviceWorker.register('sw.js').then(function(reg) {
+    navigator.serviceWorker.register('/m/sw.js').then(function(reg) {
       reg.addEventListener('updatefound', function() {
         var newWorker = reg.installing;
         if (!newWorker) return;
         newWorker.addEventListener('statechange', function() {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            showUpdateToast();
+            // 强制立即激活新 SW
+            reg.waiting && reg.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
         });
       });

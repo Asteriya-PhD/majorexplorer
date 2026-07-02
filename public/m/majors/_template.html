@@ -968,9 +968,36 @@
     update();
   })();
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
-  }
+  // Service Worker 注册 + 自动更新
+if ('serviceWorker' in navigator) {
+  // 注册 (无 controller 时首次 install, 有 controller 时检测 update)
+  navigator.serviceWorker.register('/m/sw.js').then(function(reg) {
+    // 检查是否有 waiting worker (新 SW 已就绪, 等用户关页面)
+    if (reg.waiting && navigator.serviceWorker.controller) {
+      // 提示用户或自动激活
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+    reg.addEventListener('updatefound', function() {
+      var newWorker = reg.installing;
+      if (!newWorker) return;
+      newWorker.addEventListener('statechange', function() {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // 新 SW 已安装, 强制激活 + 刷新页面
+          reg.waiting && reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      });
+    });
+  }).catch(function() {});
+  
+  // controller 变化 = 新 SW 接管, 强制刷新页面加载新资源
+  var refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
+
 </script>
 
 

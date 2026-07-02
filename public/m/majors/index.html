@@ -308,6 +308,14 @@
       setTimeout(function() { if (toast.parentNode) toast.remove(); }, 30000);
     }
   })();
+  
+  // 新 SW 接管 → 强制刷新加载新资源
+  var _refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (_refreshing) return;
+    _refreshing = true;
+    window.location.reload();
+  });
   </script>
 </body>
 </html>
