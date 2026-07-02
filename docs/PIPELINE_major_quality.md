@@ -1,4 +1,4 @@
-# Major 精品质量流水线 v1.6 (Day 56 双保险 + 双零 baseline)
+# Major 精品质量流水线 v1.8 (Day 59 借鉴橙皮书专家)
 
 > 写于 2026-06-17, 47 篇验证: 平均 7.69/10, 100% ≥7, 64% ≥8.
 > 目标: 后续主题稳定达到 **平均 8.0/10** 水准.
@@ -8,6 +8,7 @@
 > 2026-06-30 v1.5: 新增 §"渲染后 HTML 质量门" (`scripts/audit/render_quality.py` 13 条规则, Layer 0, 0¥ <2s/625 篇). 历史 P0 痛点 (html-escape/jsonld-0-injection/salary-p25-gt-p75/38-alumni-placeholder) 全部规则化. Pre-commit warn-only 至 Day 55, Day 56+ 切 ERROR 阻塞.
 > 2026-06-30 v1.6: 🛡️ **Day 56 双保险上线 + 双零 baseline 达成**. Pre-commit step 5 切硬阻塞 (单字符 `failed=1` 改动), 3 个 batch 工具 (fix_xuanke_field_name / fix_salary_note_placement / fix_salary_note_residual) 累计修 187 处违规, 0¥ 0 误改. **625/625 clean, 0 ERROR / 0 WARN** (历史首次双零). 详见「🛡️ Day 56 双保险」章节.
 > 2026-06-30 v1.7: 文档瘦身, 路径修 (老 `scripts/smart_audit.py` → `scripts/audit/smart_audit.py`), 数字 277 → 625, deploy_to_public.py 已知坑标记已删 (改用 deploy.sh), 项目名 gaokao-team-b → gaokao-hubei-mvp.
+> 2026-07-02 v1.8: 🌸 **借鉴花叔 orange-book-expert skill (5 步流水线)**, 落地 2 条原则: (1) 每个 Tier 2 polish 前写 `research-<slug>-<日期>.md` 调研档案, 可追溯/新人接手; (2) 写的人不审自己, Tier 2 重写 commit 标 `needs-m3-audit` 交独立 worker audit. 模板 `skills/gaokao-major-explorer/references/research-template.md`. 不学 3 点: 整体 5 步结构 / 8-agent 蜂群 / 反 AI slop 风格. 详见「🌸 借鉴橙皮书」章节.
 
 ## 📅 物理日期映射 (Day N → YYYYMMDD)
 
@@ -179,6 +180,70 @@ python3 scripts/audit/smart_audit.py --dry-run --json | jq '.candidates[:5]'
 - 想知道"全量 625 篇里哪些真需要审"
 - 想做"全量 625 篇质量体检"
 - 想知道"上次 audit 后哪些改过需重审"
+
+---
+
+## 🌸 借鉴橙皮书: 调研档案 + 独立审校 (Day 59 新增, 来自花叔 huashu 生态)
+
+> **背景**: 2026-07-02 装了花叔 `orange-book-expert` skill (5 步流水线: 调研/规划/写作/审校/发布), 发现有 2 条原则**直接适用于我们 major 精品流程**, 当天落地。
+
+### 借鉴 1: 每个 polish 前写 `research-<slug>-<日期>.md` 调研档案
+
+**为什么需要**: 现在 polish 流程里, 思考/搜索/发现都活在 session 里, 断了就丢。多人并发 polish 同一篇时, 互相看不到对方调研。Day 14 串台 (gongan 数学) / Day 18 风景园林 985 误标 等 bug, 都属于"调研档案缺失"导致的重复踩坑。
+
+**怎么做**:
+- 模板: `skills/gaokao-major-explorer/references/research-template.md`
+- 路径: `skills/gaokao-major-explorer/references/research/<slug>-<YYYYMMDD>.md`
+- 时机: **动 JSON 前** 5-10 min 填 1-5 节, 改完填第 7 节
+- 跟 JSON 在同一次 commit 里
+
+**适用场景** (建议但不强求):
+- 任何 Tier 2 完全重写 (15-20 min/篇, 调研档案 ROI 高)
+- 任何 audit ≤ 6 的 polish
+- 任何多人并发 polish 同一篇 (防止重复调研)
+
+**不适用的场景** (跳过不写):
+- Tier 1 补 weak field (5-10 min, 不值得)
+- 简单的 schema 修复 (脚本跑就行)
+
+### 借鉴 2: 写的人不审自己 (独立 agent 强制)
+
+**为什么需要**: 现在 m3 audit 都是"自己写完自己跑 audit", 确认偏误问题真实存在 (Day 14 gongan 数学 4/10 自己审没发现串台)。
+
+**怎么做 (新增强制规则)**:
+
+> **任何 Tier 2 重写 (审计 ≤ 6), 写完不要立刻自己跑 m3 audit。把 JSON 提交到 git, 在 commit message 里标 `needs-m3-audit`, 切到下一个任务或交回主 session 由独立 worker 跑 audit。**
+
+具体 3 种走法:
+1. **同 session 不同 agent**: 主 agent 写完 → 切 subagent 跑 audit (用 `model: haiku` 或 `sonnet` 节省成本)
+2. **跨 session**: 写完 commit 留 TODO, 下次 session 起手任务清单里加 `audit <commit-hash>`
+3. **smoke fixture 验证**: 写完跑 `render_quality.py --slug <slug>` (Day 49+ 已硬阻塞) 至少保证 schema 不错, m3 audit 留给独立 worker
+
+**不适用的场景**:
+- Tier 1 补 weak field (1-2 字段小改, 独立审 ROI 低)
+- 简单的脚本批量修 (Day 56 3 个 batch 工具已经无 agent)
+
+### 借鉴后 SOP 微调 (Day 59+ 起)
+
+| 场景 | 旧流程 | 新流程 (借鉴后) |
+|------|--------|----------------|
+| Tier 2 重写 (审计 ≤ 6) | 自己写 → 自己 audit → commit | 自己写 → commit 标 `needs-m3-audit` → 切独立 worker audit |
+| Tier 1 补 field (审计 7-8) | 自己写 → 自己 audit → commit | 同旧 (不变, ROI 低) |
+| 多人并发 polish 同一篇 | 各写各的, 互相不知 | 共享 `research-<slug>-*.md` 调研档案 |
+| 不可逆重大修改 (改 top_schools / 改 category) | 自己写完 commit | 先写调研档案 → 自己写 → commit 标 `needs-m3-audit` |
+
+### 不借鉴的 3 个点 (避免硬套)
+
+- ❌ **不学 5 步流水线整体结构** — 我们 9 步流水线更适配"工厂批量"(625 篇), 橙皮书 5 步是"单本精工"(1-3 小时/本)
+- ❌ **不学 8-agent 蜂群 worktree** — 我们 polish 用 worktree 串行已经够, 蜂群 ROI 不匹配我们的"单篇 5-15 min"节奏 (P1 跳过原因)
+- ❌ **不学"案例生动 + 反 AI slop"风格** — 我们要"专业准确 + 招录数据精确", 案例可读性服从专业性
+
+### 引用与起源
+
+- 完整橙皮书专家 skill: `~/.claude/skills/orange-book-expert/SKILL.md`
+- 调研 SOP 来源: `~/.claude/skills/orange-book-expert/references/phase-1-research.md`
+- 审校 SOP 来源: `~/.claude/skills/orange-book-expert/references/phase-4-review.md`
+- 花叔原 skill: `alchaincyf/huashu-skills` (huashu-research + huashu-agent-swarm + huashu-md-to-pdf)
 
 ---
 
