@@ -26,9 +26,26 @@ _MAJOR_SCHEMA = json.loads((ROOT / 'schema' / 'major_schema.json').read_text())
 _MAJOR_VALIDATOR = _jsonschema.Draft7Validator(_MAJOR_SCHEMA)
 
 def validate_schema(data: dict) -> list[str]:
-    """JSON Schema 校验 — 返回错误列表,空 = 通过. check_major.py 自身的 anti-pollution 在更下层."""
-    return [f"  schema: {list(e.absolute_path)}: {e.message}"
-            for e in _MAJOR_VALIDATOR.iter_errors(data)]
+    """JSON Schema 校验 — 返回错误列表,空 = 通过. check_major.py 自身的 anti-pollution 在更下层.
+    schema_version 必填降级为 warning (Day 59 v1 闸门,等 polish 自然补,见 check_schema_version)"""
+    errs = []
+    for e in _MAJOR_VALIDATOR.iter_errors(data):
+        path = list(e.absolute_path)
+        # 降级: schema_version 必填 → warning (Day 59 v1 闸门温和启动)
+        if path == [] and "schema_version" in e.message and "required" in e.message:
+            continue
+        errs.append(f"  schema: {path}: {e.message}")
+    return errs
+
+def check_schema_version(data: dict) -> list[str]:
+    """schema v1 闸门 (Day 59): 缺 schema_version 报 warning (不阻塞,等 polish 自然补)
+       写错版本号(非 1.0)报 ERROR 阻塞 commit."""
+    v = data.get('schema_version')
+    if v is None:
+        return [f"  schema_version: 缺字段 (应 '1.0',Day 59 闸门 — 等 polish 时自然补)"]
+    if v != '1.0':
+        return [f"  schema_version: {v!r} 不是 '1.0' (Day 59 v1 闸门)"]
+    return []
 
 REQUIRED_FIELDS = [
     'title', 'slug', 'style', 'category', 'degree', 'duration_years',
@@ -164,6 +181,16 @@ def check_major(slug):
 
     # 0. JSON Schema 校验 (Day 59: 18 字段必备 + 格式, 单一真相在 schema/major_schema.json)
     errors.extend(validate_schema(d))
+
+    # 0.5 schema_version 闸门 (Day 59: 缺字段 warning, 错版本号 ERROR)
+    schema_ver_errs = check_schema_version(d)
+    if schema_ver_errs:
+        # 缺 schema_version → warning (不阻塞,等 polish 自然补)
+        # 错版本号 → error (阻塞)
+        if "不是 '1.0'" in schema_ver_errs[0]:
+            errors.extend(schema_ver_errs)
+        else:
+            warnings.extend(schema_ver_errs)
 
     # 1. 必填字段检查
     missing = [f for f in REQUIRED_FIELDS if f not in d]

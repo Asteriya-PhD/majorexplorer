@@ -1,9 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Asteriya-PhD/majorexplorer/schema/major_schema.json#v1",
+  "version": "1.0.0",
   "title": "Gaokao Major Curated JSON",
-  "description": "Day 3 47 篇验证通过后定型 (2026-06-17),Day 59 抽到独立文件做单一真相. 18 字段必备,严格度 '只校验 required' 模式 — 不开 additionalProperties,允许老数据 schema drift 暂存.",
+  "description": "Day 3 47 篇验证通过后定型 (2026-06-17),Day 59 抽到独立文件做单一真相 + schema_version 闸门. 19 字段必备,严格度 '只校验 required' 模式 — 不开 additionalProperties,允许老数据 schema drift 暂存.",
   "type": "object",
   "required": [
+    "schema_version",
     "title",
     "slug",
     "style",
@@ -24,6 +27,11 @@
     "overview_v2"
   ],
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0"],
+      "description": "Day 59 v1 闸门: 新 major 必须 1.0, 老 major 经 polish 自动升 1.0"
+    },
     "slug": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9_-]*$",

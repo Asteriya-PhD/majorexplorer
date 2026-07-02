@@ -58,6 +58,8 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
     # 先做 schema 归一化 (m3 输出跟 curated 略不同, 渲染前需对齐)
     from scf.synth.llm import _normalize_m3_to_curated
     data = _normalize_m3_to_curated(data)
+    # Day 59: LLM 输出自动补 schema_version 1.0 (v1 闸门)
+    data.setdefault('schema_version', '1.0')
     errors: list[str] = []
     warnings: list[str] = []
 
