@@ -68,9 +68,9 @@ python3 scripts/build/inject_jsonld.py --no-backup 2>&1 | tail -3 || warn "injec
 # 检测老 query (用于 sed 替换)
 OLD_QUERY=""
 if grep -rqE '\?v=[a-zA-Z0-9]+' public/*.html 2>/dev/null; then
-  OLD_QUERY=$(grep -hoE '\?v=[a-zA-Z0-9]+' public/*.html | sort -u | head -1 | sed 's/?v=//')
+  OLD_QUERY=$(grep -hoE '\?v=[a-zA-Z0-9]+' public/*.html | sort -u | head -1 | sed 's/?v=/v=/')
   if [ -n "$OLD_QUERY" ]; then
-    log "   老 query: ?v=$OLD_QUERY"
+    log "   老 query: ?$OLD_QUERY"
   fi
 fi
 
@@ -105,19 +105,27 @@ for sw in public/sw.js public/m/sw.js; do
 done
 
 # ── 5. 验证替换完整 (无残留) ──
+# Day 59 fix: 当 OLD_QUERY == NEW_QUERY 时 (HEAD 没前进, 上次 deploy commit 失败 / 中断),
+# step 4 跳过替换, 此处不应再用"老 query 残留"标准卡 deploy.
+# 否则会无限死循环 (deploy 失败 → HEAD 不动 → 永远 OLD==NEW → 永远 err)
 log "5. 验证替换..."
-REMAINING=$(grep -l "?v=$OLD_QUERY" public/*.html public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
-if [ "$REMAINING" -gt 0 ]; then
-  err "$REMAINING 个 HTML 还有老 ?v=$OLD_QUERY 残留, 部署失败"
+if [ -n "$OLD_QUERY" ] && [ "$OLD_QUERY" != "$NEW_QUERY" ]; then
+  REMAINING=$(grep -l "?v=$OLD_QUERY" public/*.html public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$REMAINING" -gt 0 ]; then
+    err "$REMAINING 个 HTML 还有老 ?v=$OLD_QUERY 残留, 部署失败"
+  fi
+  HAS_NEW=$(grep -l "&$NEW_QUERY\|?$NEW_QUERY" public/*.html public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
+  log "   ✅ $HAS_NEW 个 HTML 已带新 ?$NEW_QUERY"
+  # sw.js 验证 (仅当 step 4 真替换过时)
+  OLD_CACHES=$(grep -E 'const CACHE_NAME' public/sw.js public/m/sw.js 2>/dev/null | grep -v "explorer-v[0-9]+-${NEW_QUERY#v=}" | head -3 || true)
+  if [ -n "$OLD_CACHES" ]; then
+    err "sw.js CACHE_NAME 还有老值: $OLD_CACHES"
+  fi
+  log "   ✅ sw.js CACHE_NAME 已升版"
+else
+  log "   ⚠️  OLD_QUERY == NEW_QUERY (HEAD 没前进, 上次 deploy commit 失败 / 中断)"
+  log "   ✅ step 4 跳过替换 → step 5 验证也跳过, step 6 仍会 commit 当前 modified"
 fi
-HAS_NEW=$(grep -l "&$NEW_QUERY\|?$NEW_QUERY" public/*.html public/m/*.html 2>/dev/null | wc -l | tr -d ' ')
-log "   ✅ $HAS_NEW 个 HTML 已带新 ?$NEW_QUERY"
-# sw.js 验证
-OLD_CACHES=$(grep -E 'const CACHE_NAME' public/sw.js public/m/sw.js 2>/dev/null | grep -v "explorer-v[0-9]+-${NEW_QUERY#v=}" | head -3 || true)
-if [ -n "$OLD_CACHES" ]; then
-  err "sw.js CACHE_NAME 还有老值: $OLD_CACHES"
-fi
-log "   ✅ sw.js CACHE_NAME 已升版"
 
 # ── 5.5 _headers 验证 (Day 32 v5 必备) ──
 log "5.5 _headers /sw.js no-store 验证..."
