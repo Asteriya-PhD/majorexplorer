@@ -141,7 +141,9 @@ if ! grep -qE 'no-store' public/_headers 2>/dev/null; then
   err "_headers 缺 no-store 配置, sw.js 走兜底 max-age=14400 4h 锁死"
 fi
 # 验证 /sw.js 路由真的设了 no-store
-if ! awk '/^\/sw\.js$/{f=1; next} f && /no-store/{exit 0} f && /^[A-Z]/{exit 1}' public/_headers | grep -q .; then
+# Day 59 fix: 旧写法 `awk ... | grep -q .` 在 awk exit 0 时输出空, grep 在空 stdin 上 exit 1 → 误报
+# 改成直接看 awk exit code (awk exit 0 = 找到, exit 1 = 没找到, exit 2 = 错误)
+if ! awk '/^\/sw\.js$/{f=1; next} f && /no-store/{exit 0} f && /^[A-Z]/{exit 1}' public/_headers >/dev/null; then
   err "_headers /sw.js 路由没设 no-store (或被覆盖), 部署失败"
 fi
 log "   ✅ /sw.js /m/sw.js 都设了 no-store"
