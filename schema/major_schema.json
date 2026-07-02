@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Gaokao Major Curated JSON",
+  "description": "Day 3 47 篇验证通过后定型 (2026-06-17),Day 59 抽到独立文件做单一真相. 18 字段必备,严格度 '只校验 required' 模式 — 不开 additionalProperties,允许老数据 schema drift 暂存.",
+  "type": "object",
+  "required": [
+    "title",
+    "slug",
+    "style",
+    "category",
+    "degree",
+    "duration_years",
+    "tags",
+    "summary",
+    "hero_quote",
+    "curriculum",
+    "top_schools",
+    "top_companies",
+    "salary",
+    "employment_direction",
+    "deep_study",
+    "alumni_quotes",
+    "xuanke_req_list",
+    "overview_v2"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "description": "kebab-case, 字母数字开头, 可含 - 和 _"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "cs", "eng", "medicine", "education", "finance", "law",
+        "humanities", "sci", "administration", "agri", "arts",
+        "gongan", "business"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "description": "MOE 学科代码 + 名称, 如 '080901 计算机科学与技术'"
+    },
+    "degree": {
+      "type": "string",
+      "description": "授予学位, 如 '工学学士'"
+    },
+    "duration_years": {
+      "type": "integer",
+      "enum": [4, 5]
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 10
+    },
+    "hero_quote": {
+      "type": "string"
+    },
+    "curriculum": {
+      "type": "object",
+      "description": "3 个中文 key 是新版 (Day 26+), 5 个英文 key 是老版 — 两种都合法, 渲染器兼容. 严禁专业课放公共必修 (Day 5 致命 bug)"
+    },
+    "top_schools": {
+      "type": "array",
+      "description": "5 校按方向分流, 不要用 985/211 标签 (Day 23 致命 bug)"
+    },
+    "top_companies": {
+      "type": "array"
+    },
+    "salary": {
+      "type": "object",
+      "properties": {
+        "p25": { "type": "number", "minimum": 0 },
+        "p50": { "type": "number", "minimum": 0 },
+        "p75": { "type": "number", "minimum": 0 }
+      },
+      "description": "应届起薪, 万元/年, 3 个分位"
+    },
+    "employment_direction": {
+      "type": ["object", "array"],
+      "description": "Day 59 抓出 schema drift: 老篇是 array of {name,dest,pct,desc}, 新篇是 object 分组 — 两种都合法"
+    },
+    "deep_study": {
+      "type": ["object", "array"]
+    },
+    "alumni_quotes": {
+      "type": "array",
+      "minItems": 2
+    },
+    "xuanke_req_list": {
+      "type": "array",
+      "description": "选科要求 (3+1+2), 见 check_major.py L1 检查"
+    },
+    "overview_v2": {
+      "type": "object",
+      "required": ["lede", "pitfalls"],
+      "properties": {
+        "lede": { "type": "string", "minLength": 20, "description": "Day 59 设 20 字符下限; 50 字符是 anti-pollution 标准, 仍由 check_major.py 强制" },
+        "who_fits": { "type": ["array", "string"], "description": "新篇 array, 老篇 string — 兼容" },
+        "who_fits_no": { "type": ["array", "string"] },
+        "pitfalls": { "type": "array", "minItems": 1, "description": "≥1 条即可, ≥3 条由 check_major.py anti-pollution 强制" }
+      }
+    },
+    "data_source": { "type": "string" },
+    "difficulty": { "type": "string" },
+    "updated_at": { "type": "string" }
+  }
+}

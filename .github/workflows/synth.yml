@@ -66,8 +66,8 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          # synth_trigger.py + scf/synth/* 需要 pypinyin + requests + anthropic (m3 SDK)
-          pip install pypinyin==0.51.0 requests==2.32.3 anthropic>=0.40
+          # 改用根 requirements.txt (Day 59 统一依赖管理),版本号锁在文件里
+          pip install -r requirements.txt
 
       - name: Drain queue
         env:

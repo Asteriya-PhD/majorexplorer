@@ -5,8 +5,14 @@ synth/validator.py — JSON schema 校验 + 5 维质量分.
 校验失败时返回 (False, issues[]) 供反喂 prompt.
 """
 from __future__ import annotations
+import json as _json
 import re
 from typing import Any
+
+# Day 59: 共享 schema/major_schema.json 单一真相 (check_major.py 同样加载)
+import pathlib as _pathlib
+_ROOT = _pathlib.Path(__file__).resolve().parents[2]
+_MAJOR_SCHEMA = _json.loads((_ROOT / 'schema' / 'major_schema.json').read_text())
 
 # 13 个合法 style (与 generate_dashboard.py:16 STYLE_TOKENS 一致)
 VALID_STYLES = {
@@ -57,6 +63,12 @@ def validate(data: dict) -> tuple[bool, list[str], list[str]]:
 
     if not isinstance(data, dict):
         return False, ["JSON 顶层不是对象"], []
+
+    # Day 59: JSON Schema 校验 (与 check_major.py 共享 schema/major_schema.json)
+    import jsonschema as _jsonschema
+    _v = _jsonschema.Draft7Validator(_MAJOR_SCHEMA)
+    for _e in _v.iter_errors(data):
+        errors.append(f"[schema] {'/'.join(str(p) for p in _e.absolute_path) or '<root>'}: {_e.message}")
 
     # ── 必填字段 ──
     for k in REQUIRED_TOP:

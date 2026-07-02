@@ -20,6 +20,16 @@ from collections import defaultdict
 ROOT = pathlib.Path(__file__).parent.parent.parent
 CURATED = ROOT / 'skills' / 'gaokao-major-explorer' / 'data' / 'curated'
 
+# Day 59: JSON Schema 单一真相 (18 字段必备 + 5 字段类型/格式)
+import jsonschema as _jsonschema
+_MAJOR_SCHEMA = json.loads((ROOT / 'schema' / 'major_schema.json').read_text())
+_MAJOR_VALIDATOR = _jsonschema.Draft7Validator(_MAJOR_SCHEMA)
+
+def validate_schema(data: dict) -> list[str]:
+    """JSON Schema 校验 — 返回错误列表,空 = 通过. check_major.py 自身的 anti-pollution 在更下层."""
+    return [f"  schema: {list(e.absolute_path)}: {e.message}"
+            for e in _MAJOR_VALIDATOR.iter_errors(data)]
+
 REQUIRED_FIELDS = [
     'title', 'slug', 'style', 'category', 'degree', 'duration_years',
     'tags', 'summary', 'hero_quote', 'curriculum', 'top_schools',
@@ -151,6 +161,9 @@ def check_major(slug):
 
     errors = []
     warnings = []
+
+    # 0. JSON Schema 校验 (Day 59: 18 字段必备 + 格式, 单一真相在 schema/major_schema.json)
+    errors.extend(validate_schema(d))
 
     # 1. 必填字段检查
     missing = [f for f in REQUIRED_FIELDS if f not in d]
