@@ -49,20 +49,36 @@ class D1:
         }
 
     def query(self, sql: str, params: list | None = None) -> dict:
+        """D1 查询, 瞬时错误 (网络抖动 / 5xx / 429) 自动重试 2 次.
+
+        GH Action cron 每 ~40min 跑一次, claim_next/update_progress 在 try 外,
+        一次 CF API 抖动 = 整个 workflow 红. 指数退避 1s/2s 吸收瞬时故障.
+        """
         body = {"sql": sql, "params": params or []}
-        req = urllib.request.Request(
-            f"{self.base}/query", data=json.dumps(body).encode("utf-8"),
-            headers=self.headers, method="POST",
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as e:
-            err = e.read().decode("utf-8", errors="replace")
-            raise RuntimeError(f"D1 query failed: HTTP {e.code} {err[:300]}") from e
-        if not data.get("success"):
-            raise RuntimeError(f"D1 query failed: {data.get('errors', [])}")
-        return data.get("result", [{}])[0]
+        last_err: Exception | None = None
+        for attempt in range(3):
+            req = urllib.request.Request(
+                f"{self.base}/query", data=json.dumps(body).encode("utf-8"),
+                headers=self.headers, method="POST",
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+            except urllib.error.HTTPError as e:
+                err = e.read().decode("utf-8", errors="replace")
+                if e.code == 429 or e.code >= 500:
+                    last_err = RuntimeError(f"D1 query failed (transient): HTTP {e.code} {err[:300]}")
+                    time.sleep(2 ** attempt)
+                    continue
+                raise RuntimeError(f"D1 query failed: HTTP {e.code} {err[:300]}") from e
+            except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+                last_err = RuntimeError(f"D1 query failed (transient): {type(e).__name__}: {e}")
+                time.sleep(2 ** attempt)
+                continue
+            if not data.get("success"):
+                raise RuntimeError(f"D1 query failed: {data.get('errors', [])}")
+            return data.get("result", [{}])[0]
+        raise last_err
 
     def first(self, sql: str, params: list | None = None) -> dict | None:
         r = self.query(sql, params)

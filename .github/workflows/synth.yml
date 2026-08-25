@@ -44,7 +44,7 @@ concurrency:
 jobs:
   drain:
     runs-on: ubuntu-latest
-    timeout-minutes: 35  # Day 7: m3 retry + deepseek fallback 可能 15-25min, 留 buffer
+    timeout-minutes: 50  # Day 60: synth_trigger 内部预算 30min + checkout/pip ~5min, 35min 会误杀 (08-06 两次 cancelled)
     permissions:
       contents: write  # 需要 push 触发 CF Pages 重新部署
 
@@ -75,6 +75,9 @@ jobs:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_D1_DATABASE_ID: ${{ secrets.CF_D1_DATABASE_ID }}
+          # 死信上报用 (scripts/synth/synth_queue_worker.py report_dead_to_github), 缺了会静默跳过
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           # 手动触发: 走 synth_trigger.py 一次 (不入队列)
           RUN_TITLE: ${{ inputs.title }}
           RUN_SLUG: ${{ inputs.slug }}
