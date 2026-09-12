@@ -7,7 +7,16 @@ import json
 import os
 from pathlib import Path
 
-CURATED = Path("skills/gaokao-major-explorer/data/curated")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+CURATED = REPO_ROOT / "skills" / "gaokao-major-explorer" / "data" / "curated"
+
+
+def curated_path(slug: str) -> Path:
+    """slug 白名单校验后拼路径 (防路径穿越, Mimosa L3 加固 2026-09-12)."""
+    import re
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,80}", slug):
+        raise ValueError(f"非法 slug: {slug!r}")
+    return CURATED / f"{slug}.json"
 
 # 7 组模板: (slug, group, timeline)
 # group A: 临床医学系 (10 篇) - 5+3+X 规培
@@ -40,7 +49,7 @@ GROUP_G = ["uyghur-traditional-medicine"]
 
 def get_salary_p50(slug: str, year: str) -> int | None:
     """读 salary 字段, 取某年限的 p50 用于交叉对照"""
-    p = CURATED / f"{slug}.json"
+    p = curated_path(slug)
     if not p.exists():
         return None
     d = json.load(open(p, encoding='utf-8'))
@@ -142,7 +151,7 @@ def main():
 
     # Group A: 临床医学系
     for slug in GROUP_A:
-        p = CURATED / f"{slug}.json"
+        p = curated_path(slug)
         if not p.exists():
             skipped.append(slug)
             continue
@@ -153,7 +162,7 @@ def main():
 
     # Group B: 基础医学系
     for slug in GROUP_B:
-        p = CURATED / f"{slug}.json"
+        p = curated_path(slug)
         if not p.exists():
             skipped.append(slug)
             continue
@@ -164,7 +173,7 @@ def main():
 
     # Group C: 预防医学
     for slug in GROUP_C:
-        p = CURATED / f"{slug}.json"
+        p = curated_path(slug)
         if not p.exists():
             skipped.append(slug)
             continue
@@ -175,7 +184,7 @@ def main():
 
     # Group D: 中医系
     for slug in GROUP_D:
-        p = CURATED / f"{slug}.json"
+        p = curated_path(slug)
         if not p.exists():
             skipped.append(slug)
             continue
@@ -186,7 +195,7 @@ def main():
 
     # Group E: 法医
     for slug in GROUP_E:
-        p = CURATED / f"{slug}.json"
+        p = curated_path(slug)
         if not p.exists():
             skipped.append(slug)
             continue
@@ -197,7 +206,7 @@ def main():
 
     # Group F: 临床药学
     for slug in GROUP_F:
-        p = CURATED / f"{slug}.json"
+        p = curated_path(slug)
         if not p.exists():
             skipped.append(slug)
             continue
@@ -208,7 +217,7 @@ def main():
 
     # Group G: 维医
     for slug in GROUP_G:
-        p = CURATED / f"{slug}.json"
+        p = curated_path(slug)
         if not p.exists():
             skipped.append(slug)
             continue

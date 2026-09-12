@@ -12,9 +12,9 @@
   function load(k) { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch { return []; } }
   function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
 
-  // 头部统计
+  // 头部统计 (心愿单主存储已迁移到 gk.wishlist.v1 → WishlistStore; 旧 key 仅兜底)
   const histCount = load(HKEY);
-  const wishCount = load(WKEY);
+  const wishCount = (window.WishlistStore && WishlistStore.all) ? WishlistStore.all() : load(WKEY);
   document.getElementById("hist-count").textContent = histCount.length;
   document.getElementById("wish-count").textContent = wishCount.length;
 

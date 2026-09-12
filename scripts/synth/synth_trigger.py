@@ -107,6 +107,17 @@ def synth_one(
         print(f"  ℹ️  标准化: {title!r} → {normalized!r}")
         title = normalized
         summary["title"] = title
+    # 安防: title 来自用户上报 (D1 队列), 会插进 12 个 hero 主题 <h1> / <title>.
+    # 正规专业名永远不含 HTML 特殊字符 — 在源头剥掉, 防 stored XSS / HTML 注入.
+    import re as _re
+    _clean = _re.sub(r"[<>\"'`&\\]", "", title).strip()
+    if _clean != title:
+        print(f"  🔒 title 清洗: {title!r} → {_clean!r}")
+        title = _clean
+        summary["title"] = title
+    if not title:
+        summary["error"] = "title 清洗后为空"
+        return summary
     print(f"✅ Step 1: 是本科专业 ({title})")
 
     # ── 2. web search ──

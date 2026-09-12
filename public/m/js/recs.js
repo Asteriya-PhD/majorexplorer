@@ -141,7 +141,7 @@
         <button class="del-city" type="button" aria-label="删除 ${esc(c.city)}">✕</button>
       </div>`;
     }).join("");
-    localStorage.setItem(CITY_KEY, JSON.stringify(cities));
+    try { localStorage.setItem(CITY_KEY, JSON.stringify(cities)); } catch (e) { /* Safari 无痕等场景写失败不致命 */ }
   }
   function addCity(name) {
     name = (name || "").trim();
@@ -204,6 +204,8 @@
     if (!score) return null;
     const xuanke = Array.from(document.querySelectorAll("#pick-chips .chip.on"))
       .map(b => b.dataset.pick).filter(Boolean);
+    // 首选科决定科类 (物理类/历史类) — 之前硬编码 "物理类", 历史类用户结果全错
+    const type = xuanke.includes("历史") ? "历史类" : "物理类";
     const segBtn = document.querySelector('.seg[data-pref="weight"] button.on');
     const modeMap = { school: "院校优先", balanced: "均衡", major: "专业优先" };
     const mode = modeMap[segBtn && segBtn.dataset.v] || "均衡";
@@ -217,7 +219,7 @@
         style: w.style,
       }));
     // cities: 内存数组 [{city, score}], 没添加就用空 (PC 默认 [{武汉, 5}], mobile 兜底)
-    return { score, type: "物理类", xuanke, interests, cities: cities.length ? cities : [{ city: "武汉", score: 3 }], mode };
+    return { score, type, xuanke, interests, cities: cities.length ? cities : [{ city: "武汉", score: 3 }], mode };
   }
 
   // ─── PC Recommender 调用 + 渲染 ───

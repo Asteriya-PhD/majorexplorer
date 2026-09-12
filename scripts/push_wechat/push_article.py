@@ -25,10 +25,20 @@ ENV = ROOT / ".env"
 load_dotenv(ENV)
 
 API = "https://api.weixin.qq.com/cgi-bin"
+# SSRF 加固 (Mimosa L3 2026-09-12): 请求目标必须命中微信官方 API allowlist
+ALLOWED_API_BASE = "https://api.weixin.qq.com/cgi-bin/"
+
+
+def _api_url(path_and_qs: str) -> str:
+    """拼 API URL 并强制 allowlist 校验, 防 API 常量被改后打内网."""
+    url = f"{API}/{path_and_qs}"
+    if not url.startswith(ALLOWED_API_BASE):
+        raise RuntimeError(f"API 目标不在 allowlist: {url}")
+    return url
 
 
 def get_token(appid: str, secret: str) -> str:
-    url = f"{API}/token?grant_type=client_credential&appid={appid}&secret={secret}"
+    url = _api_url(f"token?grant_type=client_credential&appid={appid}&secret={secret}")
     data = json.loads(urllib.request.urlopen(url, timeout=10).read())
     if "access_token" not in data:
         raise RuntimeError(f"获取 token 失败: {data}")
@@ -47,7 +57,7 @@ def upload_cover(token: str, cover_path: Path) -> str:
         f"Content-Type: {mime}\r\n\r\n"
     ).encode("utf-8") + cover_bytes + f"\r\n--{boundary}--\r\n".encode("utf-8")
 
-    url = f"{API}/material/add_material?access_token={token}&type=image"
+    url = _api_url(f"material/add_material?access_token={token}&type=image")
     req = urllib.request.Request(
         url, data=body,
         headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
@@ -78,7 +88,7 @@ def create_draft(
     # 关键: ensure_ascii=False + UTF-8 bytes + 显式 charset 头
     # (用 requests.post 会中文乱码, urllib 不会)
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    url = f"{API}/draft/add?access_token={token}"
+    url = _api_url(f"draft/add?access_token={token}")
     req = urllib.request.Request(
         url, data=body,
         headers={"Content-Type": "application/json; charset=utf-8"},
@@ -92,7 +102,7 @@ def create_draft(
 def delete_draft(token: str, media_id: str) -> dict:
     """删除草稿 (用于重推前清旧)"""
     body = json.dumps({"media_id": media_id}, ensure_ascii=False).encode("utf-8")
-    url = f"{API}/draft/delete?access_token={token}"
+    url = _api_url(f"draft/delete?access_token={token}")
     req = urllib.request.Request(
         url, data=body,
         headers={"Content-Type": "application/json; charset=utf-8"},
@@ -103,7 +113,7 @@ def delete_draft(token: str, media_id: str) -> dict:
 def verify_draft(token: str, media_id: str, key_phrases: list[str]) -> dict:
     """验证草稿内容 (读 API 回来对关键词)"""
     body = json.dumps({"media_id": media_id}, ensure_ascii=False).encode("utf-8")
-    url = f"{API}/draft/get?access_token={token}"
+    url = _api_url(f"draft/get?access_token={token}")
     req = urllib.request.Request(
         url, data=body,
         headers={"Content-Type": "application/json; charset=utf-8"},

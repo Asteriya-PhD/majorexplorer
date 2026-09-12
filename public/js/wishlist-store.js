@@ -70,9 +70,11 @@
     }
   }
 
-  function _clamp(n) {
-    // Day 36 P1-10: 仅在非数字时 fallback 3, 不要把 0/NaN 一律替换为 1
-    if (!Number.isFinite(n)) return 3;
+    /** 0 = 未评分 (share.js 收藏未打分时存 0, 不再误当 1 星参与推荐加权) */
+    function _clamp(n) {
+      // Day 36 P1-10: 仅在非数字时 fallback 3, 不要把 0/NaN 一律替换为 1
+      if (n === 0) return 0;
+      if (!Number.isFinite(n)) return 3;
     const i = parseInt(n, 10);
     if (isNaN(i)) return 3;
     if (i < 1) return 1;
@@ -148,8 +150,33 @@
         _write(items);
         return { ok: true, updated: true };
       }
-      // Day 36 P0-7: 与 upsert 区别 — update 不要求 slug 存在, 不抛错 (silent fallback to upsert for new)
-      return this.upsert({ slug, title, style, category, score, rating, tag, comment });
+      // 新 slug → 委托 add push (Day 36 P0-7 误改成 this.upsert 造成无限递归, 2026-09-06 修复)
+      return this.add(slug, { title, style, category, score, rating, tag, comment });
+    },
+
+    /** 加入一条新记录 (满 MAX 拒绝)
+     *  Day 36 P0-7 edit 误删本方法签名导致整文件 SyntaxError, 2026-09-06 恢复.
+     */
+    add(slug, { title, style, category, score, rating, tag, comment } = {}) {
+      if (!slug) return { ok: false, reason: "missing slug" };
+      const items = _read();
+      const cleanScore = _clamp(score != null ? score : rating);
+      if (items.length >= MAX) {
+        return { ok: false, reason: "full", limit: MAX };
+      }
+      items.push({
+        slug,
+        title: title || "",
+        style: style || "humanities",
+        category: category || "",
+        score: cleanScore,
+        rating: rating !== undefined ? _clamp(rating) : cleanScore,
+        tag: tag || "",
+        comment: comment || "",
+        addedAt: new Date().toISOString(),
+      });
+      _write(items);
+      return { ok: true, added: true };
     },
 
     /**
@@ -175,23 +202,6 @@
       }
       _write(items);
       return { ok: true, updated: true };
-    },
-      if (items.length >= MAX) {
-        return { ok: false, reason: "full", limit: MAX };
-      }
-      items.push({
-        slug,
-        title: title || "",
-        style: style || "humanities",
-        category: category || "",
-        score: cleanScore,
-        rating: rating !== undefined ? _clamp(rating) : cleanScore,
-        tag: tag || "",
-        comment: comment || "",
-        addedAt: new Date().toISOString(),
-      });
-      _write(items);
-      return { ok: true, added: true };
     },
 
     /** 从 mobile 旧 localStorage key 一次性迁移数据

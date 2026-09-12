@@ -376,6 +376,7 @@ def apply_discipline_breadcrumb(html: str, data: dict) -> str:
     - data 缺 discipline + sub_discipline 时静默跳过
     """
     import re
+    from html import escape as _escape  # 局部导入: 参数 html 遮蔽了模块
     disc = data.get("discipline")
     sub = data.get("sub_discipline")
     title = data.get("title", "")
@@ -392,7 +393,7 @@ def apply_discipline_breadcrumb(html: str, data: dict) -> str:
         f'<span class="bc-sep">›</span>'
         f'<a href="/?discipline={disc}&sub={sub}#majors">{sub_name}</a>'
         f'<span class="bc-sep">›</span>'
-        f'<span class="bc-current">{title}</span>'
+        f'<span class="bc-current">{_escape(str(title))}</span>'
         f'</div>'
     )
 
@@ -754,7 +755,7 @@ def render_v4(data: dict, style: str) -> str:
 <!-- inline favicon: 防止 file:// / http 访问时控制台 404 favicon.ico -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>📘</text></svg>">
 {_WL_HEAD}
-<title>{title}专业介绍 2026 高考 | Major Explorer</title>
+<title>{html.escape(str(title))}专业介绍 2026 高考 | Major Explorer</title>
 <meta name="description" content="{html.escape(summary)[:100]}">
 <style>
 {FONT_URLS[style]}
