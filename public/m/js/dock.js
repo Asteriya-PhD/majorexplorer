@@ -25,4 +25,15 @@
       }
     });
   }
+
+  // 3. data-prov-text: 替换 {prov} 占位符 (与 PC topbar.js 一致)
+  //    之前只有 PC topbar.js 做替换, mobile recommendations/preferences 裸显 "{prov}位次"
+  try {
+    var PROV_DISPLAY = { hubei: '湖北', guangdong: '广东', jiangsu: '江苏' };
+    var provKey = sessionStorage.getItem('gk.province.v1');
+    var provDisplay = PROV_DISPLAY[provKey] || '湖北';
+    document.querySelectorAll('[data-prov-text]').forEach(function (el) {
+      el.textContent = el.dataset.provText.replace('{prov}', provDisplay);
+    });
+  } catch (e) { /* sessionStorage 不可用时保持占位符原文 */ }
 })();
