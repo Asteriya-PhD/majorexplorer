@@ -246,12 +246,21 @@ COUNT_UP_JS = """
 # 院校 / 公司名软换行 helper — 在「大学/学院/医学院/学部/学校/中心」后插 <wbr>
 # 防止换行点落到「大」「学」之间, 同时不改变文本
 def _dedup_by_name(items: list, key: str = "name") -> list:
-    """Drop duplicate dicts (by item[key]) while preserving order — defensive against bad data."""
+    """Drop duplicate dicts (by item[key]) while preserving order — defensive against bad data.
+
+    ⚠️ 2026-10-01: 键值为 None/空 的条目不再互相去重 (改用序号占位)。
+    原实现里 N 条 `current` 缺失的语录 key 都是 None → 只剩 1 条, 静默丢数据。
+    """
     seen, kept = set(), []
-    for it in items or []:
+    for i, it in enumerate(items or []):
         k = it.get(key) if isinstance(it, dict) else it
-        if k in seen: continue
-        seen.add(k); kept.append(it)
+        if k is None or (isinstance(k, str) and not k.strip()):
+            kept.append(it)          # 无标识 → 不参与去重
+            continue
+        if k in seen:
+            continue
+        seen.add(k)
+        kept.append(it)
     return kept
 
 _SOFT_BREAK_PAT = re.compile(r'(医学院|医学中心|大学|学院|学校|学部)(?=.)')

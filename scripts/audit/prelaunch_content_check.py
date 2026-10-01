@@ -43,7 +43,10 @@ def norm(s):
         return ''
     import html as _h
     s = _h.unescape(str(s))
-    s = re.sub(r'<[^>]+>', '', s)
+    # ⚠️ 只剥真正的 HTML 标签; 不能用 <[^>]+> —— 会把正文里的
+    # "通过率 < 15%/科, ... 考不出注会" 当标签整段吃掉
+    # (2026-10-01 实测踩过, 导致 5 篇内容在位却被判"未渲染")
+    s = re.sub(r'<(?:!--.*?-->|/?[a-zA-Z][^<>]*?)>', '', s, flags=re.DOTALL)
     s = re.sub(r'\s+', '', s)
     for a, b in (('，', ','), ('。', '.'), ('、', ','), ('；', ';'),
                  ('：', ':'), ('（', '('), ('）', ')'), ('！', '!'),
@@ -108,7 +111,11 @@ def check_a_freshness(slug, d, pc, mb):
                 probe(f'quotes[{i}]', q.get('quote'), pc, 10)
 
     if mb:
+        # ⚠️ render_mobile.py:831 只渲染 emp_list[:8] —— 超出 8 条的方向
+        # 不显示是设计上限, 不是 bug, 不计入闸门 (否则 23 篇永久噪音)。
         for i, e in enumerate(d.get('employment_direction') or []):
+            if i >= 8:
+                break
             if isinstance(e, dict):
                 probe(f'empdir[{i}].desc', e.get('desc'), mb, 10)
     return errs
@@ -151,12 +158,15 @@ def check_c_seo(slug, d, pc, mb):
             if n > 1:
                 errs.append(f'C/{name}-{label} 块重复 {n} 次 (inject 脚本非幂等)')
     # meta 三件套 (只查 PC, 移动端不依赖)
+    # ⚠️ 用正则实际探测, 不能用 `label in pc` —— label 是人类可读名
+    #    ("JSON-LD"), 不是 HTML 里的字面量, 那样会 625 篇全误报。
     if pc:
-        for pat, label in (
-                (r'<meta name="twitter:card"', 'twitter:card'),
-                (r'<script type="application/ld\+json">', 'JSON-LD')):
-            if label not in pc:
-                errs.append(f'C/PC 缺 {label}')
+        if not re.search(r'<meta\s+name="twitter:card"', pc):
+            errs.append('C/PC 缺 twitter:card meta')
+        if not re.search(r'<script\s+type="application/ld\+json"', pc):
+            errs.append('C/PC 缺 JSON-LD 结构化数据')
+        if not re.search(r'<meta\s+property="og:title"', pc):
+            errs.append('C/PC 缺 og:title')
     return errs
 
 

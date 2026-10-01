@@ -190,7 +190,12 @@ def norm(s):
     if s is None:
         return ''
     s = unescape(str(s))
-    s = re.sub(r'<[^>]+>', '', s)
+    # ⚠️ 2026-10-01 修: 不能无条件用 <[^>]+> 剥标签 —— 正文里的
+    # "CPA 通过率 < 15%/科, ... 考不出注会也不代表没出路" 会被误当标签
+    # 连同中间整段一起吃掉, 导致"内容明明在 HTML 里"被判为"未渲染"
+    # (accounting / grassland-science / marine-engineering 等 5 篇)。
+    # 只剥真正的 HTML 标签 (前面是 > 或行首, 且不含裸 & )。
+    s = re.sub(r'<(?:!--.*?-->|/?[a-zA-Z][^<>]*?)>', '', s, flags=re.DOTALL)
     s = re.sub(r'[\s‌‍﻿]+', '', s)
     # 全角标点 → 半角
     for a, b in (('，', ','), ('。', '.'), ('、', ','), ('；', ';'),

@@ -562,7 +562,13 @@ def render_v4(data: dict, style: str) -> str:
     salary = data.get("salary", {})
     directions = _coerce_named(data.get("employment_direction", []), "name")
     deep_study = data.get("deep_study", {})  # 留 JSON 字段, 08 section 暂下线 (2026-06-24)
-    quotes = _coerce_named(_dedup_by_name(data.get("alumni_quotes", []), "current"), "current")
+    # alumni_quotes 去重:
+    #   2026-10-01 修 —— 原来按 `current` 去重。但 Day 49 校友脱敏把所有
+    #   `current` 统一改成 "校友 (脱敏)", 5 条语录 current 全同名 →
+    #   _dedup_by_name 只剩 1 条, 页面上白丢 4 条校友语录 (12 篇受影响)。
+    #   语录的天然身份是 quote 文本本身, 按 quote 去重才对。
+    quotes = _coerce_named(
+        _dedup_by_name(data.get("alumni_quotes", []), "quote"), "current")
     xuanke = _normalize_xuanke(data.get("xuanke_req_list", []))
     national_strategy_tags = data.get("national_strategy_tags", [])
 
