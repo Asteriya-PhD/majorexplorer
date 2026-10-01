@@ -130,6 +130,36 @@ else
 fi
 
 # ─────────────────────────────────────────────
+# 6. 2026-10-01: adversarial_check.py --staged (内容正确性对抗审查)
+#
+#    与第 5 步 render_quality 分工:
+#      render_quality  = 结构 (字段在不在/段齐不齐/薪资单调)
+#      adversarial     = 内容 (渲染漂移/双端分叉/串台/数值矛盾/占位符)
+#
+#    现状 warn-only: 存量 ERROR 3072 条 (emp-desc) 需全量重渲才能清,
+#    立即切硬阻塞会挡住所有 commit。存量清零后再切 ERROR。
+# ─────────────────────────────────────────────
+echo ""
+echo -e "${BLUE}[6/6] 对抗性内容审查 (adversarial_check.py --staged)${NC}"
+if [ -f scripts/audit/adversarial_check.py ]; then
+  STAGED_ADV=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "curated/.*\.json$" | grep -v "manifest.json\|TEMPLATE.json" || true)
+  if [ -n "$STAGED_ADV" ]; then
+    python3 scripts/audit/adversarial_check.py --staged 2>&1 | tail -20 || true
+    ADV_EXIT=${PIPESTATUS[0]}
+    if [ "$ADV_EXIT" -eq 0 ]; then
+      echo -e "${GREEN}  ✅ 对抗审查 clean${NC}"
+    else
+      echo -e "${YELLOW}  ⚠️  对抗审查有 ERROR (warn-only, 不阻塞; 存量清理后切 ERROR)${NC}"
+      echo -e "${YELLOW}     查: python3 scripts/audit/adversarial_check.py --slug <slug>${NC}"
+    fi
+  else
+    echo -e "${YELLOW}  ⏭️  无 staged major JSON, 跳过${NC}"
+  fi
+else
+  echo -e "${YELLOW}  ⏭️  scripts/audit/adversarial_check.py 不存在, 跳过${NC}"
+fi
+
+# ─────────────────────────────────────────────
 # 总结
 # ─────────────────────────────────────────────
 echo ""

@@ -833,7 +833,11 @@ def render_employment(emp_list):
             continue
         name = e.get("name", "")
         ratio = e.get("ratio", "") or f"{e.get('pct', 0)}%"
-        desc = e.get("description", "")
+        # 2026-10-01 修: 字段名是 `desc` (curated JSON 全部 626 篇实测),
+        # 原代码读 `description` → 恒为空 → 566 篇/4224 个 emp-div 空白,
+        # 线上就业方向只剩标题+百分比, 描述文字全部丢失。
+        # 保留 description 作为兼容 (synth/LLM 合成产物可能用该键名)。
+        desc = e.get("desc") or e.get("description") or ""
         pct = e.get("pct", 0)
         try:
             pct_num = float(pct)
