@@ -93,16 +93,27 @@ def inject_into_html(html: str) -> str | None:
     )
 
     # Strip old block (idempotent).
+    #
+    # 2026-10-01 修幂等性: 原正则前导 `[ \t]*\n?[ \t]*` 会把 </head> 前的
+    # 换行一起吃掉, 导致每次 inject 都比上次多/少一个空行 → `new_html != html`
+    # 永远成立 → 每跑一次就重写全站 (实测污染 1274 个文件)。
+    # 改法: 只吃掉行首缩进, 保留换行; 替换为空串后再折叠多余空行。
     strip_re = re.compile(
-        r"[ \t]*\n?[ \t]*" + re.escape(TWITTER_START) + r".*?" + re.escape(TWITTER_END),
+        r"[ \t]*" + re.escape(TWITTER_START) + r".*?" + re.escape(TWITTER_END),
         re.DOTALL,
     )
     cleaned = strip_re.sub("", html)
+    # 幂等归一 —— 只折叠 3+ 连续空行 (2 个空行是原有排版, 不能动)。
+    # ⚠️ 不要用 re.sub(r"[ \t]+\n","\n") 这类全文件空白归一: 它会顺手改写
+    # CSS 区空行, 在 1274 个 PC 文件上制造纯空白 diff。
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    # 只规整 </head> 紧邻的空隙: strip 后残留的空行会让每轮 inject 都多插一个
+    cleaned = re.sub(r"\n[\s]*(?=</head>)", "\n  ", cleaned)
 
     # Insert before </head>.
     if "</head>" not in cleaned:
         return None
-    return cleaned.replace("</head>", f"\n  {block}\n  </head>", 1)
+    return cleaned.replace("</head>", f"{block}\n  </head>", 1)
 
 
 def process_file(html_path: Path, *, dry_run: bool, backup: bool) -> tuple[str, bool, int]:

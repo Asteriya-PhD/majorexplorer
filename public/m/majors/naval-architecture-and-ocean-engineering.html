@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://majorexplorer.com/assets/og-card.png">
 <meta property="og:url" content="https://majorexplorer.com/m/majors/naval-architecture-and-ocean-engineering.html">
 <meta property="og:type" content="article">
-<link rel="canonical" href="https://majorexplorer.com/m/majors/naval-architecture-and-ocean-engineering.html">
+  <link rel="canonical" href="https://majorexplorer.com/m/majors/naval-architecture-and-ocean-engineering.html">
   <!-- BEGIN_SEO_HREFLANG -->
   <link rel="alternate" hreflang="zh-CN" href="https://majorexplorer.com/m/majors/naval-architecture-and-ocean-engineering.html">
   <!-- END_SEO_HREFLANG -->
@@ -869,7 +869,6 @@
   }
   .footer-meta .mark .dot { color: var(--accent); }
 </style>
-
   <!-- BEGIN_SEO_TWITTER -->
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="船舶与海洋工程专业介绍 2026 高考 | Major Explorer"><meta name="twitter:description" content="从万吨巨轮到深海钻井平台，船舶与海洋工程用流体力学与结构力学把人类活动推向更远的蓝色疆域。"><meta name="twitter:image" content="https://majorexplorer.com/assets/og-card.png">
   <!-- END_SEO_TWITTER -->
@@ -1079,7 +1078,7 @@
         <p>8 大就业方向及占比.</p>
       </div>
       <div class="emp-list">
-        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">船舶与海工设计院/所</div><div class="emp-ratio">30%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:30.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">船厂与制造企业</div><div class="emp-ratio">25%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:25.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">船级社与检验机构</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">海上风电与新能源</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">海事局与科研高校</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc"></div></div>
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">船舶与海工设计院/所</div><div class="emp-ratio">30%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:30.0%;"></div></div><div class="emp-desc">起薪中上，项目经验积累后晋升路径清晰。</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">船厂与制造企业</div><div class="emp-ratio">25%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:25.0%;"></div></div><div class="emp-desc">起薪稳定，工艺与生产管理岗位需求大。</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">船级社与检验机构</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc">起薪中等，持证后薪资与职级提升明显。</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">海上风电与新能源</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc">新兴方向，起薪与成长性较好。</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">海事局与科研高校</div><div class="emp-ratio">15%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:15.0%;"></div></div><div class="emp-desc">稳定性高，适合走体制或科研路线。</div></div>
       </div>
     </section>
   
@@ -1180,11 +1179,37 @@
     update();
   })();
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
-  }
-</script>
+  // Service Worker 注册 + 自动更新
+if ('serviceWorker' in navigator) {
+  // 注册 (无 controller 时首次 install, 有 controller 时检测 update)
+  navigator.serviceWorker.register('/m/sw.js').then(function(reg) {
+    // 检查是否有 waiting worker (新 SW 已就绪, 等用户关页面)
+    if (reg.waiting && navigator.serviceWorker.controller) {
+      // 提示用户或自动激活
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+    reg.addEventListener('updatefound', function() {
+      var newWorker = reg.installing;
+      if (!newWorker) return;
+      newWorker.addEventListener('statechange', function() {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // 新 SW 已安装, 强制激活 + 刷新页面
+          reg.waiting && reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      });
+    });
+  }).catch(function() {});
+  
+  // controller 变化 = 新 SW 接管, 强制刷新页面加载新资源
+  var refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
 
+</script>
 
 <!-- 分享 FAB + 长图导出 (Day 35 share 注入) -->
 

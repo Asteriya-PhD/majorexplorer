@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://majorexplorer.com/assets/og-card.png">
 <meta property="og:url" content="https://majorexplorer.com/m/majors/materials-physics.html">
 <meta property="og:type" content="article">
-<link rel="canonical" href="https://majorexplorer.com/m/majors/materials-physics.html">
+  <link rel="canonical" href="https://majorexplorer.com/m/majors/materials-physics.html">
   <!-- BEGIN_SEO_HREFLANG -->
   <link rel="alternate" hreflang="zh-CN" href="https://majorexplorer.com/m/majors/materials-physics.html">
   <!-- END_SEO_HREFLANG -->
@@ -869,7 +869,6 @@
   }
   .footer-meta .mark .dot { color: var(--accent); }
 </style>
-
   <!-- BEGIN_SEO_TWITTER -->
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="材料物理专业介绍 2026 高考 | Major Explorer"><meta name="twitter:description" content="材料物理是解开材料性能密码的「金钥匙」— 知道为什么, 才能知道怎么做."><meta name="twitter:image" content="https://majorexplorer.com/assets/og-card.png">
   <!-- END_SEO_TWITTER -->
@@ -1090,7 +1089,7 @@
         <p>8 大就业方向及占比.</p>
       </div>
       <div class="emp-list">
-        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">半导体/集成电路 (材料/表征)</div><div class="emp-ratio">25%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:25.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">新能源 (电池/光伏材料)</div><div class="emp-ratio">22%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:22.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">科研院所/高校 (基础研究)</div><div class="emp-ratio">20%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:20.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">航空航天/军工 (材料认证)</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">其他 (电子/材料企业)</div><div class="emp-ratio">11%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:11.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">读博 (材料/物理)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div>
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">半导体/集成电路 (材料/表征)</div><div class="emp-ratio">25%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:25.0%;"></div></div><div class="emp-desc">华为海思/中芯国际/长江存储, 半导体材料研发/表征/测试, 硕博为主</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">新能源 (电池/光伏材料)</div><div class="emp-ratio">22%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:22.0%;"></div></div><div class="emp-desc">宁德时代/比亚迪/隆基绿能, 电池材料/光伏材料研发, 市场化薪资高</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">科研院所/高校 (基础研究)</div><div class="emp-ratio">20%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:20.0%;"></div></div><div class="emp-desc">中科院物理所/化学所/高校, 材料物理基础研究, 读博是主路径</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">航空航天/军工 (材料认证)</div><div class="emp-ratio">12%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:12.0%;"></div></div><div class="emp-desc">航空工业/航天科技, 材料认证/检测, 稳定但薪资一般</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">其他 (电子/材料企业)</div><div class="emp-ratio">11%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:11.0%;"></div></div><div class="emp-desc">磁性材料/高分子材料/陶瓷材料, 研发/测试/工艺</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">06</span><div class="emp-name">读博 (材料/物理)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">国内博士 (清华/北大/中科大/复旦) / 出国 (MIT/斯坦福/剑桥材料强校)</div></div>
       </div>
     </section>
   
@@ -1191,11 +1190,37 @@
     update();
   })();
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
-  }
-</script>
+  // Service Worker 注册 + 自动更新
+if ('serviceWorker' in navigator) {
+  // 注册 (无 controller 时首次 install, 有 controller 时检测 update)
+  navigator.serviceWorker.register('/m/sw.js').then(function(reg) {
+    // 检查是否有 waiting worker (新 SW 已就绪, 等用户关页面)
+    if (reg.waiting && navigator.serviceWorker.controller) {
+      // 提示用户或自动激活
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+    reg.addEventListener('updatefound', function() {
+      var newWorker = reg.installing;
+      if (!newWorker) return;
+      newWorker.addEventListener('statechange', function() {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // 新 SW 已安装, 强制激活 + 刷新页面
+          reg.waiting && reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      });
+    });
+  }).catch(function() {});
+  
+  // controller 变化 = 新 SW 接管, 强制刷新页面加载新资源
+  var refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
 
+</script>
 
 <!-- 分享 FAB + 长图导出 (Day 35 share 注入) -->
 

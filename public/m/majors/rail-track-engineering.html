@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://majorexplorer.com/assets/og-card.png">
 <meta property="og:url" content="https://majorexplorer.com/m/majors/rail-track-engineering.html">
 <meta property="og:type" content="article">
-<link rel="canonical" href="https://majorexplorer.com/m/majors/rail-track-engineering.html">
+  <link rel="canonical" href="https://majorexplorer.com/m/majors/rail-track-engineering.html">
   <!-- BEGIN_SEO_HREFLANG -->
   <link rel="alternate" hreflang="zh-CN" href="https://majorexplorer.com/m/majors/rail-track-engineering.html">
   <!-- END_SEO_HREFLANG -->
@@ -869,7 +869,6 @@
   }
   .footer-meta .mark .dot { color: var(--accent); }
 </style>
-
   <!-- BEGIN_SEO_TWITTER -->
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="轨道工程专业介绍 2026 高考 | Major Explorer"><meta name="twitter:description" content="轨道工程是研究铁路轨道结构的工学学科 — 从轨道力学分析到无缝线路设计，从道岔结构到地铁轨道维护，本质是力学与铁路工程的交叉学科，是高铁平稳运行和地铁安全的核心保障."><meta name="twitter:image" content="https://majorexplorer.com/assets/og-card.png">
   <!-- END_SEO_TWITTER -->
@@ -1070,7 +1069,7 @@
         <p>8 大就业方向及占比.</p>
       </div>
       <div class="emp-list">
-        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">国家铁路集团工务段 (线路检修/养护/工程)</div><div class="emp-ratio">38%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:38.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">城市地铁集团工务 (工务通号/线路维护)</div><div class="emp-ratio">28%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:28.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">铁路规划设计院 (轨道设计/线路设计)</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">中国中铁/中国铁建 (铁路施工)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc"></div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">继续深造 (轨道工程/道路与铁道 硕博)</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc"></div></div>
+        <div class="emp-row"><div class="emp-head"><span class="emp-num">01</span><div class="emp-name">国家铁路集团工务段 (线路检修/养护/工程)</div><div class="emp-ratio">38%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:38.0%;"></div></div><div class="emp-desc">工务段线路检修/养护岗 8-16 万; 央企稳定, 需要夜班和户外.</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">02</span><div class="emp-name">城市地铁集团工务 (工务通号/线路维护)</div><div class="emp-ratio">28%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:28.0%;"></div></div><div class="emp-desc">地铁工务/线路维护岗 10-18 万; 稳定, 福利好.</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">03</span><div class="emp-name">铁路规划设计院 (轨道设计/线路设计)</div><div class="emp-ratio">18%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:18.0%;"></div></div><div class="emp-desc">轨道设计岗 15-28 万; 985/211 硕士为主.</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">04</span><div class="emp-name">中国中铁/中国铁建 (铁路施工)</div><div class="emp-ratio">10%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:10.0%;"></div></div><div class="emp-desc">施工/技术岗 10-18 万; 需要跟项目走.</div></div><div class="emp-row"><div class="emp-head"><span class="emp-num">05</span><div class="emp-name">继续深造 (轨道工程/道路与铁道 硕博)</div><div class="emp-ratio">6%</div></div><div class="emp-bar"><div class="emp-fill" style="--w:6.0%;"></div></div><div class="emp-desc">本专业读研比例一般, 硕博走高校教职/设计院核心岗.</div></div>
       </div>
     </section>
   
@@ -1171,11 +1170,37 @@
     update();
   })();
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('../sw.js').catch(() => null));
-  }
-</script>
+  // Service Worker 注册 + 自动更新
+if ('serviceWorker' in navigator) {
+  // 注册 (无 controller 时首次 install, 有 controller 时检测 update)
+  navigator.serviceWorker.register('/m/sw.js').then(function(reg) {
+    // 检查是否有 waiting worker (新 SW 已就绪, 等用户关页面)
+    if (reg.waiting && navigator.serviceWorker.controller) {
+      // 提示用户或自动激活
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+    reg.addEventListener('updatefound', function() {
+      var newWorker = reg.installing;
+      if (!newWorker) return;
+      newWorker.addEventListener('statechange', function() {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // 新 SW 已安装, 强制激活 + 刷新页面
+          reg.waiting && reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      });
+    });
+  }).catch(function() {});
+  
+  // controller 变化 = 新 SW 接管, 强制刷新页面加载新资源
+  var refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
 
+</script>
 
 <!-- 分享 FAB + 长图导出 (Day 35 share 注入) -->
 

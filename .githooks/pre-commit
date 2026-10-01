@@ -160,6 +160,35 @@ else
 fi
 
 # ─────────────────────────────────────────────
+# 7. 2026-10-01: prelaunch_content_check.py --staged (上线前内容闸门, 硬阻塞)
+#
+#    第 5/6 步查的是 "JSON 写得对不对 / 字段在不在";
+#    本步查的是 "渲染出来对不对" —— 三类线上事故的拦截器:
+#      A 渲染新鲜度: 改了 JSON 忘了重渲 (alum-N 12 篇就是这样上线的)
+#      B 渲染丢失:   渲染器字段名不匹配导致静默空白 (emp-desc 4224 处)
+#      C SEO 块:     重渲丢注入块 / 重复注入污染
+#      D 内容底线:   占位符 / 空壳必填字段
+#    成本 ~0.15s/篇, 0¥。staged 模式下只查本次改动的专业。
+# ─────────────────────────────────────────────
+echo ""
+echo -e "${BLUE}[7/7] 上线前内容闸门 (prelaunch_content_check.py --staged)${NC}"
+if [ -f scripts/audit/prelaunch_content_check.py ]; then
+  python3 scripts/audit/prelaunch_content_check.py --staged 2>&1 | tail -25 || true
+  PL_EXIT=${PIPESTATUS[0]}
+  if [ "$PL_EXIT" -eq 0 ]; then
+    echo -e "${GREEN}  ✅ 内容闸门通过 (可上线)${NC}"
+  else
+    echo -e "${RED}  ❌ 内容闸门未通过 (阻断 commit)${NC}"
+    echo -e "${YELLOW}     A 未渲染 → 改完 JSON 必须重渲: python3 scripts/build/render_one.py <slug>${NC}"
+    echo -e "${YELLOW}       (mobile: python3 scripts/build/render_mobile.py --slug <slug>)${NC}"
+    echo -e "${YELLOW}     查明细: python3 scripts/audit/prelaunch_content_check.py --slug <slug>${NC}"
+    failed=1
+  fi
+else
+  echo -e "${YELLOW}  ⏭️  scripts/audit/prelaunch_content_check.py 不存在, 跳过${NC}"
+fi
+
+# ─────────────────────────────────────────────
 # 总结
 # ─────────────────────────────────────────────
 echo ""

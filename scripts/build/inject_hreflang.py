@@ -75,11 +75,22 @@ def inject_into_html(html: str) -> str | None:
     block = build_hreflang_block(canonical_href)
 
     # Strip old block (idempotent).
+    #
+    # 2026-10-01 修幂等性 (同 inject_twitter_card.py): 原正则前导
+    # `[ \t]*\n?[ \t]*` 会吃掉换行, 每跑一次文件内容都变 → 判定"有改动"
+    # → 全量重写 (实测污染 1274 个文件)。改为保留换行 + 插入点归一。
     strip_re = re.compile(
-        r"[ \t]*\n?[ \t]*" + re.escape(HREFLANG_START) + r".*?" + re.escape(HREFLANG_END),
+        r"[ \t]*" + re.escape(HREFLANG_START) + r".*?" + re.escape(HREFLANG_END),
         re.DOTALL,
     )
     cleaned = strip_re.sub("", html)
+    # 幂等归一 —— 只折叠 3+ 连续空行 (2 个空行是原有排版, 不能动)。
+    # ⚠️ 不要对整文件做 re.sub(r"[ \t]+\n","\n") 之类的全文件空白归一,
+    # 它会改写 CSS 区, 制造大量纯空白 diff。
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    # canonical 紧邻处: strip 残留空行会让每轮 inject 多插一个
+    cleaned = re.sub(r"\n[\s]*(?=<link rel=\"canonical\")", "\n  ",
+                     cleaned)
 
     # Insert immediately after the full canonical tag (preserves closing > or />).
     if canonical_tag_full not in cleaned:
